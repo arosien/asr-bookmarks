@@ -1,0 +1,1112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>CocoaDevCentral: Intro to Bindings</title>
+	<link rel="stylesheet" href="/css/cocoadevcentral.css" type="text/css" />
+	<link REL="shortcut icon" HREF="/faviconnew.ico" TYPE="image/x-icon">
+</head>
+<body>
+
+
+<div class="docheader">
+	
+	<b><a href="/">CocoaDevCentral.com</a></b> . <a href="http://cocoadevcentral.com/archives.php">Articles</a> .
+	<i><a href="/articles/000080.php">Introduction to Cocoa Bindings</a></i>
+	
+	<span style="float: right"><a href="/message.page"><img src="/images/global/mini-envelope-opaque.png" valign="middle" style="background-color: white" alt="Email" /> Feedback</a></span>
+
+
+</div>
+
+
+
+<div class="content">
+	
+	<img class="title" src="/images/articles/000080.png" alt="Introduction to Cocoa Bindings" />
+
+	<br />
+	
+	<p>
+	<img src="/images/articles/bindings-icon-nsobject.png" border="0" /><br />
+	Cocoa Bindings in a nutshell: <em>write less code</em>
+	</p>
+	
+	<p>
+	Historically, Cocoa developers have had to keep data objects and view objects in sync manually.
+	If you want to use a table view, you
+	implement datasource methods. Each method interprets the table view's
+	request, and makes sure data ends up in the right place.
+	</p>
+	
+		
+	<p>
+	This is actually a pretty good deal, though. By just writing a few methods, you give life to
+	very rich, full-featured tables. Cocoa does a lot of the hard work.
+	</p>
+	
+	<p>
+	But if you have multiple controls that depend on each other, there's more work involved. If a
+	dropdown changes, you have to make sure the contents of a table gets updated.
+	</p>
+	
+	<p>
+	Bindings gives you a way to define <em>relationships</em>, and Cocoa figures out what to do at runtime.
+	You have to write less code, which means faster development and more functionality <q>for free.</q>
+	</p>
+	
+	<p>
+	You can mix and match Cocoa Bindings with datasource and delegate methods, so <b>if your target users
+	have Panther installed, there are very few reasons to not use bindings.</b>
+	</p>
+
+	<p>
+	<br />
+	<i>Note that Cocoa Bindings are synonymous with the <q>controller layer</q>, though bindings is the
+	preferred term.</i>
+	</p>
+	
+</div>
+
+<!--
+
+<div class="content" style="background-color: #f0f0f0; color: #3e3e3e">
+
+<div class="content" style="text-align: center; background-color: #e4e4e4">
+
+	<a href="http://maxify.com" target="_new"><img src="/maxify-ondemand-ad.png" border="0"></a>
+	<br />
+	<i>Advertisement</i>
+	
+	
+		<span style="font-style: italic; font-weight: bold; color: #067e2a">Cocoa Dev Central users:</span>
+		
+		We need to improve our server situation to handle new additions, but the site generates no revenue to speak of. If you can help us get donated or
+		steeply discounted Xserves, <a href="/message.page" style="color: black;">please contact us</a>.</em>
+		 Jul.26.2004
+
+
+</div>
+
+-->
+
+<div class="content">
+	
+	<br />
+	
+	<h3>A Simple Approach to Bindings</h3>
+	
+	<p>
+	Cocoa Bindings is a far-reaching topic, but I'm going to focus on a simple, practical
+	example.
+	</p>
+	
+	<p>
+	You're going to take a fictional email client called <b>MailDemo</b> that uses only
+	the classic datasource methods, and convert it into one that uses Cocoa Bindings.
+	</p>
+
+	<p>
+	To keep things simple, the
+	app only has three classes: <b>Mailbox</b>, <b>Email</b> and <b>MyController</b>.
+	</p>
+	
+	
+	<img src="/images/articles/bindings-maildemo.png" border="0" />
+
+	
+	<br />
+	
+	<p>
+	Download the project so you can follow along and make the changes as they're
+	described. Note that this is <i>not</i> the finished project, just the starting point:
+	</p>
+	
+	<p>
+	&gt; <a href="/downloads/MailDemo.dmg">Download the MailDemo Xcode project</a> 109k
+	</p>
+
+
+	<br />
+	
+	<h3>Requirements</h3>
+	
+	<p>
+	Learning about bindings requires that you have a firm grasp on the
+	basics. To get value from this tutorial, you need to be comfortable with Xcode,
+	Interface Builder, and have a solid understanding
+	of Objective-C syntax in general.
+	</p>
+	
+	<p>
+	A basic understanding of key-value coding is also helpful, as the entire bindings
+	system is built upon it and related protocols.
+	</p>
+	
+</div>
+
+<div class="content">
+
+	
+	<h3>Define the <q>Email</q> Class</h3>
+	
+	<p>
+	The <b>Email</b> class is very basic. It has one member:
+	</p>
+
+	<div class="filename">Email.h</div>	
+	<div class="example">
+@interface <em>Email</em> : NSObject
+{
+  NSMutableDictionary * <em>properties</em>;
+}
+
+- (NSMutableDictionary *) properties;
+- (void) setProperties: (NSDictionary *)newProperties;
+
+@end
+</div>
+	
+	
+	<p>
+	There aren't members for the address, subject or date. All of the email's
+	information is stored in the <b>properties</b> dictionary. This design
+	makes it easy to change the behavior of the application later and requires
+	less code.
+	</p>
+	
+	<p>
+	I want to give each new <b>Email</b> object some reasonable values right from the start.
+	This is taken care of in the init method:
+	</p>
+	
+<div class="filename">Email.m (<i>excerpt</i>)</div>
+<div class="example">
+- (id) <em>init</em>
+{
+  if (self = [super init])
+  {
+  
+    NSArray * keys   = [NSArray arrayWithObjects:
+      <em>@"address"</em>, <em>@"subject"</em>, <em>@"date"</em>, <em>@"body"</em>, nil];
+			
+    NSArray * values = [NSArray arrayWithObjects:
+      <strong>@"test@test.com"</strong>, <strong>@"Subject"</strong>, <strong>[NSDate date]</strong>, <strong>[NSString string]</strong>, nil];
+			
+    <em>properties</em> = [[NSMutableDictionary alloc]
+      initWithObjects: <strong>values</strong> forKeys: <em>keys</em>];
+        
+  }     
+  return self;
+}
+</div>
+	
+	<p>
+	The only other methods implemented are the basic accessors for the actual properties
+	dictionary object. All the setting/getting of individual values inside the dictionary is handled
+	automatically by key-value coding.
+	</p>
+	
+	<br />
+	
+	<p>
+	<i>The class is called <b>Email</b> and not Message because the term &quot;message&quot; has
+	a special meaning in Objective-C. Using it as a name for a data class could lead to
+	confusion.</i>
+	</p>
+
+</div>
+	
+
+<div class="content">
+
+	
+	<h3>Define the &quot;Mailbox&quot; Class</h3>
+	
+	<p>
+	The <b>Mailbox</b> class is also very simple by design. It has two members: a properties
+	dictionary and a mutable array to hold <b>Email</b> objects.
+	</p>
+	
+	<div class="filename">Mailbox.h</div>	
+<div class="example">
+@interface <em>Mailbox</em> : NSObject {
+
+    NSMutableDictionary * <em>properties</em>;
+    NSMutableArray      * <em>emails</em>;
+}
+
+- (NSMutableDictionary *) properties;
+- (void) setProperties: (NSDictionary *)newProperties;
+
+- (NSMutableArray *) emails;
+- (void) setEmails: (NSArray *) newEmails;
+
+@end
+</div>
+
+	<br />
+	
+	<p>
+	I set a default title for the mailbox inside the init method:
+	</p>
+	
+	
+<div class="filename">Mailbox.m (<i>excerpt</i>)</div>
+<div class="example">
+- (id) <em>init</em>
+{
+  if (self = [super init])
+  {
+    NSArray * keys   = [NSArray arrayWithObjects: <em>@"title"</em>, nil];
+    NSArray * values = [NSArray arrayWithObjects: <strong>@"New Mailbox"</strong>, nil];
+    
+    <em>properties</em> = [[NSMutableDictionary alloc]
+                      initWithObjects: <strong>values</strong> forKeys: <em>keys</em>];
+        
+    <em>emails</em> = [[NSMutableArray alloc] init];
+  }
+  return self;
+}
+</div>
+
+	<br />
+	
+	<p>
+	And that's it for the data classes. On to the controller.
+	</p>
+
+	
+</div>
+
+	
+<div class="content">
+
+	
+	<h3>Define the &quot;MyController&quot; Class</h3>
+	
+	<p>
+	As usual, the controller class defines the core structure of the application.
+	I've declared outlets to each UI object, and also a mutable array of mailboxes;
+	</p>
+	
+	<div class="filename">MyController.h (excerpt)</div>
+	<div class="example">
+@interface <em>MyController</em> : NSObject
+{
+  IBOutlet id <em>mailboxTable</em>;
+  IBOutlet id <em>emailTable</em>;
+  IBOutlet id <em>previewPane</em>;
+  IBOutlet id <em>mailboxStatusLine</em>;        
+  IBOutlet id <em>emailStatusLine</em>;
+    
+  NSMutableArray *<em>_mailboxes</em>;
+}
+</div>
+
+	<br />
+	
+	<p>
+	Here are the declared methods for the <b>MyController</b> class:
+	</p>
+
+	<div class="example">
+<strong>// simple accessors</strong>
+
+- (NSMutableArray *) mailboxes;
+- (void) setMailboxes: (NSArray *)newMailboxes;
+
+<strong>// UI action methods</strong>
+
+- (IBAction) <em>addEmail</em>:      (id)sender;
+- (IBAction) <em>addMailbox</em>:    (id)sender;
+- (IBAction) <em>removeEmail</em>:   (id)sender;
+- (IBAction) <em>removeMailbox</em>: (id)sender;
+</div>
+
+	<p>
+	The action methods are pretty self-explanatory. They simply create or remove <b>Email</b> or <b>Mailbox</b> objects. <b>MyController</b> also implements
+	the standard NSTableView datasource methods and receives updates from the preview pane via NSTextView's delegate messages.
+	</p>	
+	
+	<br />
+	
+	<h3>MyController Implementation</h3>
+	
+	<p>
+	I'm of course not going to list the entire contents of <b>MyController.m</b>, but I'm
+	going to highlight one of the datasource methods:
+	</p>
+
+	<div class="filename">MyController.m (<i>excerpt</i>)</div>
+<div class="example">
+
+... setObjectValue:(id)object forTableColumn:(id)column row:(int)row
+{
+    NSString * key = [column identifier];
+    
+    if (table == <strong>mailboxTable</strong>)
+    {
+        Mailbox * mailbox = [[self mailboxes] <strong>objectAtIndex</strong>: row];
+        [[mailbox properties] <em>setObject</em>: object <em>forKey</em>: key];
+        
+        [mailboxTable <em>reloadData</em>];
+    }
+    
+    if (table == <strong>emailTable</strong>)
+    {
+        // get current mailbox
+        
+        int mailboxRow = [mailboxTable selectedRow];
+        if (mailboxRow &lt; 0) return;
+        Mailbox * mailbox = [[self mailboxes] <strong>objectAtIndex</strong>: mailboxRow];
+        
+        NSArray * emails = [mailbox emails];
+        Email * theEmail = [emails <strong>objectAtIndex</strong>: row];
+        
+        [[theEmail properties] <em>setObject</em>: object <em>forKey</em>: key];
+        
+        [emailTable <em>reloadData</em>];
+    }
+}    
+</div>
+	
+	<p>
+	So the point here is that I check which table is making the request, and then do manual updates
+	between data objects and table views. And after the data has been updated, I need to make sure
+	that I refresh the tables and views that are affected by the changes.
+	</p>
+
+	<p>
+	This is the infamous &quot;glue code.&quot;
+	</p>
+	
+	<p>
+	<b>Except for location of the source data, most table datasource method are basically
+	the same.</b> This is a sure sign that the process can be generalized. That's exactly
+	what the bindings system does.
+	</p>
+	
+</div>
+
+
+<div class="content">
+	
+	<br />
+	
+	<h3>First Step into Bindings</h3>
+	
+	<p>
+	From within the MailDemo Xcode project, <b>double-click MainMenu.nib to open it in Interface Builder</b>.
+	</p>
+	
+	
+	<img src="/images/articles/bindings-nib1.png" border="0" />
+	
+
+	<p>
+	Cocoa Bindings is a very broad topic, but the main classes we're interested in for this
+	application are <b>NSObjectController</b> and <b>NSArrayController</b>. Select the
+	"Controllers" pane from the object palette.
+	</p>
+
+	<img src="/images/articles/bindings-controllers-pane.png" border="0" />
+	
+	<p>
+	The magic green boxes of the NSController family:<br />
+	<i>NSUserDefaultsController, NSObjectController, and NSArrayController</i>
+	</p>
+	
+	<br />
+
+	<img src="/images/articles/bindings-controlleralias.png" border="0" style="float: right" />
+	
+	<p>
+	<strong>1.</strong> Drag the <b>NSObjectController</b> icon (the middle one) to your MainMenu palette. Double click the
+	title of the icon and rename it to <q>ControllerAlias</q>. Then, control-drag a connection <i>from</i> the green
+	<cite>ControllerAlias</cite> <i>to</i> the blue <var>MyController</var> object, and approve the connection to the <b>content</b>
+	outlet.
+	</p>
+	
+	<p>
+	This little green box is your <b><q>bridge</q> between the code in MyController.m and the
+	bindings system.</b>
+	</p>
+	
+	<br />
+	
+	<p>
+	<strong>2.</strong> Now drag a <b>NSArrayController</b> onto the MainMenu document window and rename it to <cite>Mailboxes</cite>.
+	This will represent the <i>mailboxes</i> array that's declared in <var>MyController.h</var>.
+	</p>
+
+	<p>
+	<strong>3.</strong> Drag out another <b>NSArrayController</b> and name it <cite>Emails</cite>. This will track
+	the currently selected <b>Mailbox</b>, and represent its
+	<i>emails</i> array.
+	</p>
+
+	<p>
+	Your MainMenu document window should now look like this:
+	</p>
+	
+	<img src="/images/articles/bindings-nib2.png" border="0" />
+	
+</div>
+
+
+<div class="content">
+
+	<br />
+	
+	<img src="/images/articles/bindings-inspector1.png" style="float: right" border="0" />
+	
+	<h3>Configure the NSArrayControllers</h3>
+	
+	<p>
+	Now that you know which NSControllers you're going to use to represent the data, it's time to hook
+	them up. The process of assigning bindings is not the typical control-drag affair.
+	</p>
+	
+	<p>
+	You define bindings for an object by choosing the <b>Bindings dropdown from the
+	inspector window.</b>
+	</p>
+	
+	<p>
+	The <cite>ControllerAlias</cite> doesn't need any bindings configured. It has a connection to
+	<var>MyController</var> via the content outlet.
+	</p>
+	
+	<p>
+	Select the <cite>Mailboxes</cite> object and bring up its bindings inspector. Click the Bind checkbox and provide
+	the settings show in the table here to the left (also reflected in the screenshot to the right).
+	</p>
+	
+	<table cellpadding="4" cellspacing="2" style="float: left; margin-right: 10px; width: 210px">	
+		<tr class="icon"><th colspan="2">
+		<img src="/images/articles/bindings-icon-nsarray.png" border="0" />
+		<br /><cite>Mailboxes</cite> - NSArrayController
+		</th></tr>
+		<tr><td class="cell1">Bind to:</td> <td class="cell2"><cite>ControllerAlias</cite></td></tr>
+		<tr><td class="cell1">Controller Key:</td> <td class="cell2">selection</td></tr>
+		<tr><td class="cell1">Model Key Path:</td> <td class="cell2">mailboxes</td></tr>
+	</table>
+	
+	<p>
+	In essence, the <cite>Mailboxes</cite> array controller is saying: <b>Take the thing that <cite>ControllerAlias</cite> points at, and let me manage the
+	contents of its <q>mailboxes</q> array.</b>
+	</p>
+	
+	<p>
+	You're delegating the responsibility of managing the array of Mailbox objects
+	to an instance of <b>NSArrayController</b>. You give it some general guidelines of what you want
+	to accomplish and it handles most of the details.
+	</p>
+	
+	<br />
+	
+
+	<h3>What Do These Fields Mean?</h3>
+	
+	<p>
+	Without getting into too much detail just yet, the <i>Controller Key</i> is the name of
+	an NSController method. The <i>Model Key Path</i> is the keypath used on the
+	destination object to retrieve a value.
+	</p>
+	
+	<p>
+	Here's another way to look at it:
+	</p>
+	<blockquote>
+	<cite>ControllerAlias</cite> &gt; <b>Controller Key:</b> selection == <var>MyController</var><br />
+	<var>MyController</var> &gt; <b>Model Key Path:</b> mailboxes == the <i>mailboxes</i> NSMutableArray
+	</blockquote>
+	
+	<br />
+	<h3>Object Class Name</h3>
+	
+	<img src="/images/articles/bindings-inspector2.png" border="0" style="float: right" />
+	
+	<p>
+	The last thing I need to do for the <cite>Mailboxes</cite> array controller is to tell it the class name of the
+	objects that are in its source array.
+	</p>
+	
+	<p>
+	Select the <cite>Mailboxes</cite> icon and open the <i>Attributes</i> pane of the
+	inspector, which will look similar to the window at the right. Set the
+	<b>Object Class Name</b> to <q>Mailbox</q>.
+	</p>
+	
+	<p>
+	Note this is the singular form of Mailbox (not <q>mailboxes</q>), because I'm specifying
+	the class name of the objects <i>inside</i> the array.
+	</p>
+	
+	<div style="clear: both"></div>
+</div>
+	
+
+<div class="content">
+	<br />
+	
+	<h3>Setup the <q>Emails</q> Controller</h3>
+	
+	<table cellpadding="4" cellspacing="2" style="float: left; margin-right: 10px; width: 210px">	
+		<tr class="icon"><th colspan="2">
+		<img src="/images/articles/bindings-icon-nsarray.png" border="0" />
+		<br /><cite>Emails</cite> - NSArrayController
+		</th></tr>
+		<tr><td class="cell1">Bind to:</td> <td class="cell2"><cite>Mailboxes</cite></td></tr>
+		<tr><td class="cell1">Controller Key:</td> <td class="cell2">selection</td></tr>
+		<tr><td class="cell1">Model Key Path:</td> <td class="cell2">emails</td></tr>
+		<tr><td class="cell1">Object Class Name:</td> <td class="cell2">Email</td></tr>
+	</table>
+	
+	
+	<p>
+	In the user interface, the email table displays only the messages in the currently selected
+	Mailbox. Each Email resides in a Mailbox, so I'll <b>bind the contentArray of
+	<cite>Emails</cite> to <cite>Mailboxes</cite></b>.
+	</p>
+	
+	<p>
+	Bring up the Bindings inspector panel for the <cite>Emails</cite> object
+	and fill in the settings shown here on the left.
+	</p>
+	
+	<p>
+	I specify <q>selection</q> as the <b>Controller Key</b> because I only want the Email objects from
+	the <i>currently selected</i> Mailbox. The <b>Model Key Path</b> of <q>emails</q> refers to the <i>emails</i>
+	mutable array defined in Mailbox.h.
+	</p>
+	
+	<p>
+	Remember that the <b>Object Class Name</b> has to be set to <q>Email</q> in the Attributes panel of the inspector.
+	It's actually pretty easy to forget this step entirely, so always check here first if the
+	behavior isn't as you expect.
+	</p>
+
+
+	<div style="clear: both"></div>
+</div>
+
+<div class="content">
+
+	<br />
+	
+	<h3>Visualizing the Relationships</h3>
+	
+	<p>
+	So what exactly has been done here? Let's reflect.
+	</p>
+	
+	<img src="/images/articles/bindings-relationship1.png" style="float: right;" border="0" />
+	
+	<p>
+	I started out with just the standard <var>MyController</var> blue cube.
+	</p>
+	
+	<p>
+	I then added an NSObjectController object called <cite>ControllerAlias</cite>, and connected
+	its <b>content</b> outlet to <var>MyController</var>.
+	</p>
+	
+	<p>Next, I added an NSArrayController called <cite>Mailboxes</cite>, and bound it to
+	<cite>ControllerAlias</cite> with a Model Key Path of <q>mailboxes</q>.
+	</p>
+	
+	<p>
+	Finally, I added an NSArrayController called <cite>Emails</cite>, which I bound to
+	<cite>Mailboxes</cite> with a Controller Key of <q>selection</q> and a Model Key Path
+	of <q>emails</q>.
+	</p>
+	
+	<br />
+	
+	<h3>The Result</h3>
+	
+	<p>
+	Since <cite>Emails</cite> is bound to the <b>selection</b> of <cite>Mailboxes</cite>,
+	the contents of the <cite>Emails</cite> array controller will change whenever a new
+	mailbox is selected.
+	</p>
+	
+	<p>
+	The reason I keep mentioning this is that's it's a critical concept in
+	bindings.
+	</p>
+
+</div>
+
+<div class="content">
+
+	<br />
+	<img src="/images/articles/bindings-column1.png" style="float: right;" border="0" />
+	<h3>Bind the Mailbox Column</h3>
+
+
+		
+	<p>
+	Now I'm going to set the UI elements to use the NSController
+	objects.
+	</p>
+
+	<p>
+	First, select the mailboxes table view and disconnect its datasource and delegate outlets so
+	that we're working without a net. You'll often use delegate connections in conjuction with
+	bindings, but not for this example.
+	</p>
+	
+	<p>
+	In most cases, you don't want to set bindings for the table itself. Instead, you
+	bind the table's <i>columns</i>.
+	</p>
+	
+	<p>
+	<b>Select the column</b> in the mailboxes table, and bring up the Bindings panel
+	of the inspector.
+	</p>
+
+	<p>
+	Fill in the bindings settings for the column as show in the table below (and the screenshot).
+	</p>
+
+	<table cellpadding="4" cellspacing="2" style="float: left; margin-right: 10px; width: 230px">	
+		<tr class="icon"><th colspan="2">
+		<b>Mailboxes table column</b>
+		</th></tr>
+		<tr><td class="cell1">Bind to:</td> <td class="cell2"><cite>Mailboxes</cite></td></tr>
+		<tr><td class="cell1">Controller Key:</td> <td class="cell2">arrangedObjects</td></tr>
+		<tr><td class="cell1">Model Key Path:</td> <td class="cell2">properties.title</td></tr>
+	</table>
+
+	<p>
+	I'm binding to the <b>arrangedObjects</b> key of the <cite>Mailboxes</cite> array controller.
+	You generally use this key when you want all of the objects available in the array.
+	</p>	
+	
+	<p>
+	I bind the key path to <b>properties.title</b>, which accesses the value of the <q>title</q>
+	key from the <i>properties</i> dictionary declared in Mailbox.h.
+	</p>
+
+	<br />
+	
+	<h3>Connect Target/Action</h3>
+	
+	<p>
+	Now, disconnect the actions for the <q>plus</q> and <q>minus</q> buttons located below the mailbox
+	table. Select each individually and choose <b>Disconnect</b> in the <q>Connections</q>
+	pane of the inspector.
+	</p>
+	
+	<p>
+	Now Control-drag from the <b>plus</b> button to the <cite>Mailboxes</cite>
+	array controller. Select the <b>add:</b> action and click <b>Connect</b>. Do the same for the <b>minus</b>
+	button, but connect it to the <b>remove:</b> action.
+	</p>
+	
+	<p>
+	We're done with the mailboxes table.
+	</p>
+	
+</div>
+
+<div class="content">
+	
+	<br />
+	
+	<table cellpadding="4" cellspacing="2" style="float: right; margin-left: 10px; width: 230px">	
+		<tr class="icon"><th colspan="2">
+		<b>&quot;Address&quot; column</b>
+		</th></tr>
+		<tr><td class="cell1">Bind to:</td> <td class="cell2"><cite>Emails</cite></td></tr>
+		<tr><td class="cell1">Controller Key:</td> <td class="cell2">arrangedObjects</td></tr>
+		<tr><td class="cell1">Model Key Path:</td> <td class="cell2">properties.address</td></tr>
+		<tr class="icon"><th colspan="2">
+		<b>&quot;Subject&quot; column</b>
+		</th></tr>
+		<tr><td class="cell1">Bind to:</td> <td class="cell2"><cite>Emails</cite></td></tr>
+		<tr><td class="cell1">Controller Key:</td> <td class="cell2">arrangedObjects</td></tr>
+		<tr><td class="cell1">Model Key Path:</td> <td class="cell2">properties.subject</td></tr>
+		<tr class="icon"><th colspan="2">
+		<b>&quot;Date&quot; column</b>
+		</th></tr>
+		<tr><td class="cell1">Bind to:</td> <td class="cell2"><cite>Emails</cite></td></tr>
+		<tr><td class="cell1">Controller Key:</td> <td class="cell2">arrangedObjects</td></tr>
+		<tr><td class="cell1">Model Key Path:</td> <td class="cell2">properties.date</td></tr>
+	</table>
+
+	<h3>Configure the <q>Emails</q> Table</h3>
+		
+	<p>
+	Now, repeat the same process for the emails table.
+	</p>
+	
+	<p>
+	1. Disconnect the datasource and delegate outlets
+	</p>
+	
+	<p>
+	2. Bind the columns as shown in the diagrams to the right. Note
+	that this time you're binding to the <cite>Emails</cite> array controller.
+	</p>
+	
+	<p>
+	3. Disconnect the actions for the plus and minus buttons under the
+	emails table, then reconnect them (use control-drag, don't bind) to the
+	<b>add:</b> and <b>remove:</b> actions of the <cite>Emails</cite> object.
+	</p>
+	
+	
+	<div style="clear: both"></div>
+</div>
+
+<div class="content">
+
+	<br />
+	
+	<h3>Configure the Preview Pane</h3>
+	
+	<p>
+	Finally, we have the preview pane, which is a text view. There is no <q>value</q> binding
+	available (*) with NSTextView, but its <b>data</b> binding will work fine for our purposes.
+	</p>
+	
+	<p>
+	Before you set up the binding, double-click the preview pane to select it, then disconnect
+	the delegate outlet.
+	</p>
+	
+	<table cellpadding="4" cellspacing="2" style="float: right; margin-left: 10px; width: 230px">	
+		<tr class="icon"><th colspan="2">
+		<b>Preview Pane</b>
+		</th></tr>
+		<tr><td class="cell1">Bind to:</td> <td class="cell2"><cite>Emails</cite></td></tr>
+		<tr><td class="cell1">Controller Key:</td> <td class="cell2">selection</td></tr>
+		<tr><td class="cell1">Model Key Path:</td> <td class="cell2">properties.body</td></tr>
+	</table>
+
+	<p>
+	Select the preview pane by double-clicking it, and set the bindings to match those in the table
+	to the right.
+	</p>
+	
+	<p>
+	Notice that for the preview pane, I'm still binding to the <cite>Emails</cite> array controller,
+	but I'm using the Controller Key <b>selection</b> because I want to use the
+	currently selected Email object.
+	</p>
+	
+	<br />
+	
+	<p>
+	* <i>Incidentally, this is why the default value of the <q>body</q> key in the Email properties
+	dictionary is [NSString string]. The <b>data</b> binding can't cope with a literal string like
+	@&quot;message body&quot;. A more proper initial value would be [NSData data], but a string
+	results in less confusion for this tutorial.</i>
+	</p>
+
+	
+</div>
+
+<div class="content">
+
+	<br />
+	
+	<h3>Test Drive</h3>
+
+
+	<p>
+	Everything's hooked up so we should be ready to roll. Double-check that all the delegate
+	and datasource outlets are disconnected, then do a <q>build and run</q> from Xcode.
+	</p>
+	
+	<p>
+	MailDemo should behave the same as before, but without using any datasource methods.
+	You'll notice the status lines under each table don't get updated, and we'll correct
+	shortly.
+	</p>
+	
+	<br />
+	
+	<h3>Ditch the Glue Code</h3>
+	
+	<p>
+	There are two comments in MyController.m that contain the term <q>glue code</q>
+	</p>
+
+<div class="filename"></div>
+<div class="example">
+/* begin glue code */ (line 48)
+...
+/* end glue code */   (line 338)
+</div>
+
+	<p>
+	<b>You can go ahead and delete <i>all</i> 288 lines of code between these two comments.</b>
+	All you should have left is init, dealloc, and the get/set methods for the mailboxes
+	array.
+	</p>
+	
+	<p>
+	Build and run the application again, and you'll see that it still works!
+	</p>
+		
+	<br />
+
+	<h3>Remove the IBOutlets</h3>
+
+	<p>
+	Open MainMenu.nib back up in Interface Builder and disconnect all the outlets for
+	<var>MyController</var> by selecting it and bringing up the <b>Connections</b> panel
+	of the inspector.
+	</p>
+
+	<p>
+	Then, in MyController.h, delete the declarations of the IBOutlets and
+	UI action methods. You should end up with this:
+	</p>
+
+<div class="filename">MyController.h</div>
+<div class="example">
+@interface <em>MyController</em> : NSObject
+{
+    NSMutableArray * _mailboxes;
+}
+
+- (NSMutableArray *) mailboxes;
+- (void) setMailboxes: (NSArray *)newMailboxes;
+
+@end
+</div>
+
+	<br />
+	
+	<p>
+	This is the <i>entire</i> controller. You have a real, functioning Mac OS X application with
+	multiple sortable, synchronized tables - all in a few dozens lines of code.
+	</p>
+	
+	<p>
+	The app isn't useful because it can't save files, but it's important
+	to note that it took <b>288 lines of code just to make the UI work. With bindings, all
+	of that goes away.</b>
+	</p>
+
+	<p>
+	In reality, this is <i>very</i> little code considering what it gives you.
+	In many other development environments, getting the same functionality would take
+	much more code. But with Cocoa Bindings, you don't even need this small amount.
+	</p>
+	
+	
+</div>
+
+<div class="content">
+
+	<br />
+	
+	<h3>Finishing Touches</h3>
+	
+	<p>
+	The last remaining issue is the <q>count</q> status line below the mailbox and
+	email tables.
+	</p>
+	
+	<p>
+	This is a slightly different situation than binding a table column or a text view. You need
+	to somehow get the count of mailboxes, and then you also need a way to provide a template
+	for display of the information. You need a string constructed like:
+	</p>
+	
+	<blockquote>
+	<q><i>&lt;count of mailboxes array&gt;</i> Mailboxes</q>
+	</blockquote>
+	
+	<p>
+	This is similar to the format strings used in NSLog().
+	</p>
+	
+	<p>
+	I'm going to use two items in the bindings toolbox to handle this: <b>display patterns</b>
+	and <b>array operators</b>.
+	</p>
+	
+	<img src="/images/articles/bindings-inspector3.png" style="float: right;" border="0" />	
+	
+	
+	<br />
+	
+	<h3>Display Patterns and Array Operators</h3>
+	
+	<p>
+	Select the text item below the mailboxes table. Bring up its Bindings in the inspector,
+	and match them to the screenshot on the right.
+	</p>
+	
+	<p>
+	I'm binding to the arrangedObjects controller key of <cite>Mailboxes</cite>, but I
+	specify <b>@count</b> operator for the model key path. This <b>returns the number of
+	elements in arrangedObjects array.</b>
+	</p>
+	
+	<p>
+	In the display pattern box, I enter the string <b>%{value1}@ Mailboxes</b>.
+	</p>
+	
+	
+	<p>
+	The display pattern combined with the <b>@count</b> will result in a string similar
+	to <q>7 Mailboxes</q>.
+	</p>
+	
+	<p>
+	Repeat the same process for the status text field below the emails table, but
+	bind to the <cite>Emails</cite> array controller instead.
+	</p>
+	
+	<div style="clear: both"></div>
+	
+	<table cellpadding="4" cellspacing="2" style="float: left; margin-right: 10px; width: 275px">	
+		<tr class="icon"><th colspan="2">
+		<b>&quot;Mailbox count&quot; text field</b>
+		</th></tr>
+		<tr><td class="cell1">Bind to:</td> <td class="cell2"><cite>Mailboxes</cite></td></tr>
+		<tr><td class="cell1">Controller Key:</td> <td class="cell2">arrangedObjects</td></tr>
+		<tr><td class="cell1">Model Key Path:</td> <td class="cell2">@count</td></tr>
+		<tr><td class="cell1">Display Pattern:</td> <td class="cell2">%{value1}@ Mailboxes</td></tr>
+	</table>
+
+	<table cellpadding="4" cellspacing="2" style="float: left; margin-right: 10px; width: 275px">	
+		<tr class="icon"><th colspan="2">
+		<b>&quot;Email count&quot; text field</b>
+		</th></tr>
+		<tr><td class="cell1">Bind to:</td> <td class="cell2"><cite>Emails</cite></td></tr>
+		<tr><td class="cell1">Controller Key:</td> <td class="cell2">arrangedObjects</td></tr>
+		<tr><td class="cell1">Model Key Path:</td> <td class="cell2">@count</td></tr>
+		<tr><td class="cell1">Display Pattern:</td> <td class="cell2">%{value1}@ Emails</td></tr>
+	</table>
+	
+	<div style="clear: both"></div>
+
+</div>
+
+<div class="content">
+	
+	<br />
+	
+	<h3>Congratulations!</h3>
+	
+	<p>
+	If you have a reasonable understanding of what you just accomplished, you've gone a long way
+	towards understanding bindings. The best way to get a better understanding is to
+	create your own project and start playing around with the other tools.
+	</p>
+	
+	<p>
+	Cocoa Bindings is a very deep topic and touches a lot of areas in Cocoa. Future articles will
+	explore other areas of bindings and related technologies. Consider this article a prerequisite
+	for future topics.
+	</p>
+	
+	<br />
+	
+	<p>
+	Cocoa Dev Central always welcomes <a href="/message.page">feedback</a>, particularly requests for future
+	topics. Also let us know if anything needs clarification.
+	</p>
+	
+	
+	<br />
+	
+	<h3>Further Reading</h3>
+	
+	
+	<div class="furtherreading">
+
+		<div class="body">
+			
+			<table cellpadding="2" cellspacing="2" style="width: 100%"> 
+
+
+			    <tr>
+			    	<td class="icon"><a href="/articles/000084.php"><img src="/images/global/miniglobe-orange.png" alt="Local Page" valign="middle" border="0" /></a></td>
+			    	<td><a href="/articles/000084.php">Saving Cocoa Application Data</a></td>
+			    	<td>a tutorial to add saving to the MailDemo application</td>
+			    </tr>
+
+			    <tr>
+			    	<td class="icon"><a href="http://theocacao.com/"><img src="/images/global/miniglobe-blue.png" alt="Remote Site" valign="middle" border="0" /></a></td>
+			    	<td><a href="http://theocacao.com/">Cocoa Dev Central Blog</a></td>
+			    	<td>author's personal site</td>
+			    </tr>
+
+
+				<tr><td colspan="3">&nbsp;</td></tr>
+				
+				<tr>
+					<td class="icon"><a href="http://homepage.mac.com/mmalc/CocoaExamples/controllers.html"><img src="/images/global/miniglobe-grey.png" alt="Related Site" valign="middle" border="0" /></a></td>
+					<td><a href="http://homepage.mac.com/mmalc/CocoaExamples/controllers.html">mmalc's Cocoa Bindings</a></td>
+					<td>a great collection of examples and hints</td>
+				</tr>
+
+				<tr>
+					<td class="icon"><a href="http://www.cocoadev.com/index.pl?CocoaBindings"><img src="/images/global/miniglobe-grey.png" alt="Related Site" valign="middle" border="0" /></a></td>
+					<td><a href="http://www.cocoadev.com/index.pl?CocoaBindings">Bindings at CocoaDev.com</a></td>
+					<td>peer-edited docs on bindings</td>
+				</tr>
+
+				<tr>
+					<td class="icon"><a href="http://www.macdevcenter.com/pub/a/mac/2004/04/06/cocoa.html?page=1"><img src="/images/global/miniglobe-grey.png" alt="Related Site" valign="middle" border="0" /></a></td>
+					<td><a href="http://www.macdevcenter.com/pub/a/mac/2004/04/06/cocoa.html?page=1">MacDevCenter on Bindings</a></td>
+					<td>article on bindings at O'Reilly</td>
+				</tr>
+
+
+				<tr><td colspan="3">&nbsp;</td></tr>
+
+
+				<tr>
+					<td class="icon"><img src="/images/global/mini-apple.png" alt="Apple" /></td>
+					<td><a href="http://developer.apple.com/documentation/Cocoa/Conceptual/CocoaBindings/">Cocoa Bindings - Conceptual</a></td>
+					<td>overview of Cocoa Bindings with examples</td>
+				</tr>
+
+				<tr>
+					<td class="icon"><img src="/images/global/mini-apple.png" alt="Apple" /></td>
+					<td><a href="http://developer.apple.com/documentation/Cocoa/Reference/CocoaBindingsRef/">Cocoa Bindings - Reference</a></td>
+					<td>reference for the bindings available to Cocoa objects</td>
+				</tr>
+
+				<tr>
+					<td class="icon"><img src="/images/global/mini-apple.png" alt="Apple" /></td>
+					<td><a href="http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSController.html">NSController</a></td>
+					<td>class reference for NSController (abstract superclass)</td>
+				</tr>
+
+				<tr>
+					<td class="icon"><img src="/images/global/mini-apple.png" alt="Apple" /></td>
+					<td><a href="http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSArrayController.html">NSArrayController</a></td>
+					<td>class reference for NSArrayController</td>
+				</tr>
+
+			</table>
+		</div>
+	</div>
+	
+	
+	
+	<p class="footer">
+	author: <a href="/message.page">Scott Stevenson</a> / 
+	&copy; 2004 <a href="http://treehouseideas.com/">Tree House Ideas</a>, <a href="/">Cocoa Dev Central</a>
+	</p>
+
+	<div style="clear: both"></div>
+	
+</div>
+
+</body>
+</html>
