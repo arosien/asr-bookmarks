@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+<title>Sam Ruby: Abstractions vs Patterns</title>
+<link rel="stylesheet" href="/css/blogx.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="/css/print.css" type="text/css" media="print"/>
+<link rel="shortcut icon" href="/favicon.ico"/>
+<meta name="ICBM" content="35.708298,-78.695515"/>
+<script defer="defer" src="/js/comment_form.js"></script>
+<script defer="defer" src="/js/jquery-1.3.2.min.js"></script>
+<script defer="defer" src="/js/jq_localize_dates.js"></script>
+</head>
+
+<body id="intertwingly-net" onload="initCommentForm(document.getElementById('comments_form'))">
+
+<header>
+<h1><a class="banner-anchor" href="http://intertwingly.net/blog/">intertwingly</a></h1>
+<form method="get" action="http://intertwingly.net/blog/">
+<label for="q">Search</label>
+<input type="search" id="q" name="q" placeholder="Search" value=""/>
+</form>
+<p>It&#8217;s just data</p>
+</header>
+
+<article>
+<header>
+<h3><a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns">Abstractions vs Patterns</a></h3>
+<time title="GMT" datetime="2005-03-08T14:39:07Z">Tue 08 Mar 2005 at 14:39</time>
+</header>
+<p>What follows is some random thoughts on
+<a href="http://www.intertwingly.net/blog/2005/02/28/Secular-Simplicity">
+simplicity</a> and abstract/unrestricted vs
+explicit/uniform/constrained.</p>
+<ul>
+<li>
+<a href="http://www.answers.com/topic/abstraction#Thesaurus">Abstraction</a>:
+The condition of being so lost in solitary thought as to be unaware
+of one&#8217;s surroundings</li>
+<li><a href="http://www.answers.com/pattern">Pattern</a>:&#160; A
+person or thing considered worthy of imitation.</li></ul>
+<h3 id="network">Networks</h3>
+<p>In SOAP/WSDL, the network is abstracted away.&#160; A service is
+associated with a port, which is associated with a binding, which
+is associated with a transport and a port type.&#160; Port types
+can define any number of operations, each of which associates input
+messages with output messages.&#160;</p>
+<p>In REST/HTTP, the network is explicit.&#160; Every resource is
+associated with a URI that is expected to implement a uniform set
+of operations (in particular, <code>GET</code>, <code>POST</code>,
+<code>PUT</code>, <code>DELETE</code>).&#160; In particular, much
+as every Java object is expected to implement
+<code>toString</code>, every URI is expected to respond to
+<code>GET</code>.</p>
+<p>See also
+<a href="http://www.intertwingly.net/stories/2002/07/20/restSoap.html">
+REST + SOAP</a>.</p>
+<h3 id="examples">Other Examples</h3>
+<p>Smaller, and sometimes less clear, examples:</p>
+<p>Rasmus Lerdorf
+<a href="http://www.oracle.com/technology/pub/articles/php_experts/rasmus_php.html">
+states</a> that <em>Database abstraction is mostly a myth</em>; and
+describes the &#8220;shared nothing&#8221; architecture of PHP
+&#8212; essentially touting the <b>lack</b> of a feature as a
+selling point of PHP.</p>
+<p>In <a href="http://java.sun.com/products/jdo/index.jsp">JDO</a>,
+persistence is explicit.</p>
+<p>In
+<a href="http://www.ecma-international.org/publications/standards/Ecma-357.htm">
+E4X</a>, XML is explicit.</p>
+<p>In HTML, presentation is often intermixed with content.&#160; In
+CSS, presentation is every bit &#8212; if not more so &#8212; as
+explicit; it is simply re-factored into a uniform mechanism.</p>
+<p>The
+<a href="http://ant.apache.org/manual/develop.html#writingowntask">implementation
+of Ant</a> dispatches the information found in the build.xml file
+to tasks implemented in Java based on a simple design patterns and
+introspection.</p>
+<p>In
+<a href="http://java.sun.com/j2ee/tutorial/1_3-fcs/doc/WebComponents3.html">
+Java Web Application Archive</a> files, and in
+<a href="http://www.slash7.com/flashback/2005/03/rails_what_goes.html#more">
+Ruby on Rails</a>, directory names (and in some cases, file names)
+convey important information.</p>
+<p>
+<a href="http://www.rubygarden.org/ruby?DuckTyping">DuckTyping</a>
+replaces pre-planned hierarchies with similarities in
+structure.&#160; In Python, it is common for a method to accept a
+<em>file-like object</em> as opposed to requiring that such an
+object explicitly inherit from a specific file class.</p>
+<p>In Python, indentation is uniform and constrained.</p>
+<h3 id="identifiers">Identifiers</h3>
+<p>Identifiers in Java may be associated with packages, classes,
+interfaces, methods, fields, constants, variables, or parameters
+without restriction.&#160;</p>
+<p><a href="http://www.rubycentral.com/book/intro.html">In
+Ruby</a>, the first characters of a name indicate how the name is
+used.&#160; Local variables, method parameters, and method names
+should all start with a lowercase letter or with an underscore.
+Global variables are prefixed with a dollar sign ($), while
+instance variables begin with an &#8216;at&#8217; sign (@). Class
+variables start with two &#8216;at&#8217; signs (@@). Finally,
+class names, module names, and constants should start with an
+uppercase letter.</p>
+<p>In Perl, <a href="http://www.answers.com/sigil">sigils</a>
+convey data type information.&#160; In C/C++,
+<a href="http://en.wikipedia.org/wiki/Hungarian_notation">Hungarian
+notation</a> was once quite popular.</p>
+<p>Some Java and C# programmers adopt prefixes for privately scoped
+class members (example: prefixing with an underscore or
+<code>m_</code>).</p>
+<h3 id="Patterns">Patterns</h3>
+<p>JavaBeans is a pattern that requires the developer or IDE to
+write more code.&#160; In general, public properties need not be
+named the same as the protected or private field that
+&#8220;backs&#8221; it.</p>
+<p>In Python, you only write data descriptors when you need to
+override <code>__get__</code>, <code>__set__</code>, or
+<code>__delete__</code>.&#160; The nearest equivalent to the
+concept of &#8220;private&#8221; involves a naming convention.</p>
+<p>In Ruby, public members and the private members that back them
+are associated with <code>attr</code> declarations.</p>
+<p>In all three languages, constructors/initializers tend to
+contain a lot of logic of the form <code>this.foo=foo</code> (or
+<code>self.foo=foo</code> in Python, or <code>@foo=foo</code> in
+Ruby).</p>
+<h3 id="Footnotes">Parting Thoughts</h3>
+<p>A toddler can often recognize a cat by pattern.&#160; It is not
+until high school or college that a teenager understands the
+classification of <em>felis domesticus</em>.</p>
+<p>Patterns tend to surface common details.&#160; Abstractions tend
+to hide unnecessary details.&#160; Those that favor abstractions
+see them as hiding complexity.&#160; Those that don&#8217;t tend to
+see abstractions as adding complexity.&#160; &#8220;Now you have
+two problems&#8221;</p>
+<p>Depending on your point of view,
+<a href="http://www-128.ibm.com/developerworks/blogs/dw_blog_comments.jspa?blog=481&amp;entry=73582">
+this example</a> is either complex (two or four languages, little
+separation of concerns), or simple (view-source, copy paste, one
+can safely make simple changes without understanding how everything
+works).</p>
+<p>Once people lock into either patterns or abstractions, they tend
+to become religious about them.</p>
+<p>Despite the emotional attachments that people have with both,
+there is no universal abstraction or universal set of patterns that
+everybody will agree upon.&#160; There certainly is no universal
+consistency in the examples cited above.&#160; Additions and
+counter-examples in comments and trackbacks are welcome.</p>
+<p>In the long run, I feel that &#8220;fewest moving parts&#8221;
+generally wins out over &#8220;hides the details I don&#8217;t care
+about&#8221;.</p>
+
+<footer>
+</footer>
+</article>
+<div class="ad">
+<script type="text/javascript"><!--
+google_ad_client = "pub-7627325548543983";
+google_ad_width = 468;
+google_ad_height = 60;
+google_ad_format = "468x60_as";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+<hr/>
+
+<a id="comments"></a>
+<section>
+<header>
+<h2><time title="GMT" datetime="2005-03-08">Tue 08 Mar 2005</time></h2>
+</header>
+
+<article>
+<a id="c1110303977"></a>
+<header>
+<h3>Sam Ruby: Abstractions vs Patterns</h3>
+</header>
+<p>Sam Ruby: Abstractions vs Patterns: In the long run, I feel that &#8220;fewest moving parts&#8221; generally wins out over &#8220;hides the details I don&#8217;t care about&#8221;....</p>
+Excerpt from <a href="http://keithdevens.com/weblog/archive/2005/Mar/08/Abstractions-vs-Patterns">Keith's Weblog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110303977"><time title="GMT" datetime="2005-03-08T17:46:17Z">17:46</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1110311196"></a>
+<p>Sam Ruby trying to put a definition to the word &#8220;simple&#8221;. Seriously, it&#8217;s not as easy to define as you think....</p>
+Excerpt from <a href="http://del.icio.us/url/df12a3a134732febca245076b85c7fe5">del.icio.us/rtomayko/kiss</a>
+ at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110311196"><time title="GMT" datetime="2005-03-08T19:46:36Z">19:46</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1110314031"></a>
+<p>Garbage collection was still a controversial abstraction a couple years ago. These days? I dunno. Also: <a href="http://blogs.msdn.com/ericlippert/archive/2003/10/06/53150.aspx">October 45th?&#160; No problem!</a></p>
+Posted by <a href="http://franklinmint.fm" title="p69-100.acedsl.com">Robert Sayre</a> at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110314031"><time title="GMT" datetime="2005-03-08T20:33:51Z">20:33</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1110315118"></a>
+<p>How do you relate your thoughts to the chapter about abstraction and patterns in <a rel="nofollow" href="http://www.dreamsongs.com/NewFiles/PatternsOfSoftware.pdf?page=33">Patterns of Software</a> by Richard Gabriel?</p>
+Posted by <a rel="nofollow" href="http://www.mycgiserver.com/~gpiancastelli/blog/" title="213.209.199.48">Giulio Piancastelli</a> at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110315118"><time title="GMT" datetime="2005-03-08T20:51:58Z">20:51</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1110317828"></a>
+<p>Homing in on a detail, the quiz relies on PHP&#8217;s <a href="http://www.php.net/shuffle">shuffle</a> converting a &#8220;dictionary&#8221; to a &#8220;list&#8221;. The description of shuffle is just &#8220;This function shuffles (randomizes the order of the elements in) an array&#8221;. It&#8217;s only until you scroll down the comments that you find out it also replaces the associative with indexed keys.</p>
+<p>Think there&#8217;s a sharp learning curve there for anyone who wants to understand the code but is not familiar with PHP&#8217;s idea of an array, be they programmer or not. Would that make it a candidate for hiding or is the learning curve worth it?</p>
+<p>Thinking along the lines of the <a href="http://www.procata.com/blog/archives/2004/05/05/api-design/">this</a>;</p>
+<blockquote><p><br />
+good API designs happen when designers think of ... client programmers as users.</p></blockquote>
+<p>An interesting study could be when the school puts a version of the quiz on their website to help other students. Can imagine some helpful, volunteer, Java-dad, having scratched their head over how it works then recommending a switch to JSP.</p>
+<p>Also interesting to compare apis like <a href="http://curl.haxx.se/libcurl/">libcurl</a> to the like of <a href="http://xulplanet.com/references/objref/XMLHttpRequest.html">XMLHttpRequest</a>.</p>
+Posted by <a title="84-72-34-176.dclient.hispeed.ch">anonymous</a> at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110317828"><time title="GMT" datetime="2005-03-08T21:37:08Z">21:37</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1110320174"></a>
+<p>Anne van Kesteren : Abstractions vs Patterns - Need some time to read this and links....</p>
+Excerpt from <a href="http://dev.upian.com/hotlinks/archives/2005/03/08/#item31876">HotLinks - Level 1</a>
+ at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110320174"><time title="GMT" datetime="2005-03-08T22:16:14Z">22:16</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-03-09">Wed 09 Mar 2005</time></h2>
+</header>
+
+<article>
+<a id="c1110337770"></a>
+<p>Somebody took the simple out of SOAP and I hate him.</p>
+Posted by <a href="http://www.kbcafe.com" title="CPE0006e018be48-CM014080216407.cpe.net.cable.rogers.com">Randy Charles Morin</a> at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110337770"><time title="GMT" datetime="2005-03-09T03:09:30Z">03:09</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1110337882"></a>
+<p>That was a successful test of the Moron-Ruby peace treaty.</p>
+Posted by <a href="http://www.kbcafe.com" title="CPE0006e018be48-CM014080216407.cpe.net.cable.rogers.com">Randy Charles Morin</a> at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110337882"><time title="GMT" datetime="2005-03-09T03:11:22Z">03:11</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1110378183"></a>
+<p><a href="http://www.intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110314031">Robert</a>: There certainly is an abstraction underlying garbage collection, much as there is an abstraction underlying malloc.&#160; I&#8217;d certainly lump garbage collection into the same category that I placed <a href="http://www.intertwingly.net/blog/2005/02/27/Last-Battlefield">TCP/IP into</a>.</p>
+<p><a href="http://www.intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110315118">Giulio</a>: It seems to me that Richard is focusing mainly on macro-patterns at an architectural level, and I am focusing on micro-patterns at a syntax level.&#160; That being said, we seem to have a similar outlook, and I particularly like some of the images that he shares which span the overlap between the two, like the following:</p>
+<blockquote class="quote"><p>What he learned about painting surprised me. I expected that the lessons
+would talk about drawing skills and how to reproduce what you saw in reality by
+attending to each detail in order to create an accurate reproduction. What he
+learned instead was that by using the nature of the medium, the paint, the brush,
+and brush strokes, he could create the same effects as those of reality through
+reflected light and by the oil on canvas. So, instead&#8212;as I expected&#8212;of spending
+hours painting each branch on a conifer, my father would dab and push with a
+thick brush to create the effect of needled branches, and from a proper viewing
+distance his conifers looked as real as real.
+</p></blockquote>
+<p><a href="http://www.intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110317828">anonymous</a>: One thing I particularly like about PHP is not that the functions are well named or that the documentation is perfect (neither are true), but when I need something, I often find it.&#160; I didn&#8217;t set out to demonstrate the use of <code>shuffle</code>, I set out to create a vocabulary quiz application.&#160; In any case, I&#8217;d welcome anybody to try to recode that example into JSP.&#160; You quickly end up with the code/data ratio getting to the point where the webpage is obscured, so you refactor your business logic into a bean, and then create a WAR file, and...&#160; </p>
+<p><a href="http://www.intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110337770">Randy</a>: You can do better.</p>
+Posted by <a href="http://www.intertwingly.net/blog/" title="66.57.27.65">Sam Ruby</a>
+ at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110378183"><time title="GMT" datetime="2005-03-09T14:23:03Z">14:23</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-03-10">Thu 10 Mar 2005</time></h2>
+</header>
+
+<article>
+<a id="c1110476153"></a>
+<p>Sam, feel free to <a href="http://www.mycgiserver.com/~gpiancastelli/blog/gems/quiz/quiz.jsp">play</a> and to look at the <a href="http://www.mycgiserver.com/~gpiancastelli/blog/gems/quiz/quiz.jsp.txt">source</a>. I didn&#8217;t search for an alternative implementation, just ported every single functionality to Java.</p>
+<p>Still no need for a bean, WAR file, or whatever. The amount of Java code needed to implement the missing features with respect to PHP (that is, <code>shuffle</code> and <code>array_flip</code>) is more or less equal to the JavaScript code needed for your dynamic magic: if the latter doesn&#8217;t obscure the web page, the former does not as well; indeed both could be factored into separate files, but then you&#8217;d need additional packaging, and the View One Source trick would be lost.</p>
+<p>What I didn&#8217;t like implementing my Java version:</p>
+<ul>
+<li>you need to tweak a bit an XML configuration file for the container, to associate an URL to a filesystem path.</li>
+<li>despite this configuration, you still need to specify the whole absolute path to the initialization file. (If there&#8217;s a simpler way, please let me know.)</li>
+<li>lots of casts, especially annoying when working with the collections framework (hashtables, lists, and such) and primitive data types. (Java 5 has autoboxing, though.)</li>
+<li>obviously, having to implement an external implementation for flipping and shuffling maps.</li>
+<li>the errors I got, they were more or less exclusively related to static typing rather than functionality.</li>
+</ul>
+<p> <br />
+But, I don&#8217;t know if don&#8217;t get your point, or if I get it because it&#8217;s nothing new: yes, typically, so-called scripting languages like PHP offer much more functionalities than so-called mainstream languages like Java; so, you end up fighting the language because of static typing (oh, I did not cast an <code>Object</code> to an <code>Objecy[]</code>, silly me), but you <em>also</em> fight the library, which still lacks some interesting features.</p>
+<p>As for the PHP features, at first they seemed strange and unnatural: flipping maps could be a danger, because you may end up with partially flipped maps, and substituting keys in a shuffled map it&#8217;s awkward. Indeed they seem to go well together, so perhaps someone put some thoughts designing them. Don&#8217;t know how many languages feature those, anyway: but PHP has always seemed to me a gigantic cauldron containing more or less everything and its dog.</p>
+Posted by <a href="http://www.mycgiserver.com/~gpiancastelli/blog/" title="213.209.199.41">Giulio Piancastelli</a> at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110476153"><time title="GMT" datetime="2005-03-10T17:35:53Z">17:35</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-03-11">Fri 11 Mar 2005</time></h2>
+</header>
+
+<article>
+<a id="c1110532620"></a>
+<header>
+<h3>Links for 2005-03-09 [del.icio.us]</h3>
+</header>
+<p>Abstractions vs Patterns Whao! Ruby does a brain-dump on a bunch of programming/design thoughts. He edges &#8220;SOAP vs. REST&#8221; into &#8220;Ignorance is bliss vs. The Law of Leaky Abstractions.&#8221; Fired Google Blogger Lands A New Job Mark...</p>
+Excerpt from <a href="http://feeds.feedburner.com/cote?m=351">Cote's Weblog: Coding, Austin, etc.</a>
+ at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110532620"><time title="GMT" datetime="2005-03-11T09:17:00Z">09:17</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-03-12">Sat 12 Mar 2005</time></h2>
+</header>
+
+<article>
+<a id="c1110604518"></a>
+<header>
+<h3>Patterns And Abstractions, Oh My!</h3>
+</header>
+<p>Sam Ruby: A toddler can often recognize a cat by pattern. It is not until high school or college that a teenager understands the classification of felis domesticus. Read Sam&#8217;s comparison of patterns vs. abstractions here. It&#8217;s thought provoking....</p>
+Excerpt from <a href="http://davidwatson.org/index.cgi/2005/03/09#ruby_patterns_abstractions">davidwatson.org   </a>
+ at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110604518"><time title="GMT" datetime="2005-03-12T05:15:18Z">05:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-03-13">Sun 13 Mar 2005</time></h2>
+</header>
+
+<article>
+<a id="c1110748759"></a>
+<header>
+<h3>A vocabulary quiz application in JSP</h3>
+</header>
+<p>Responding to a PHP vs JSP challenge to create a vocabulary test application....</p>
+Excerpt from <a href="http://www.mycgiserver.com/~gpiancastelli/blog/archives/000106.html">Through the blogging-glass</a>
+ at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1110748759"><time title="GMT" datetime="2005-03-13T21:19:19Z">21:19</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-03-18">Fri 18 Mar 2005</time></h2>
+</header>
+
+<article>
+<a id="c1111164541"></a>
+<header>
+<h3>Misc</h3>
+</header>
+<p>Some (not at all) random things, seen in the Matrix: Excellent post from Sam Ruby on &#8220;Abstractions vs. Patterns&#8221; Interesting description of &#8220;Speech-Act-Based Protocols in Computer-Mediated Collaborative Design&#8221;, seen at Carlos' site. ... And then...</p>
+Excerpt from <a href="http://jroller.com/page/MasterMark/20050318#misc">Process Perfection</a>
+ at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1111164541"><time title="GMT" datetime="2005-03-18T16:49:01Z">16:49</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-03-22">Tue 22 Mar 2005</time></h2>
+</header>
+
+<article>
+<a id="c1111503092"></a>
+<header>
+<h3>Patterns And Abstractions, Oh My!</h3>
+</header>
+<p>Sam Ruby: A toddler can often recognize a cat by pattern. It is not until high school or college that a teenager understands the classification of felis domesticus. Read Sam&#8217;s comparison of patterns vs. abstractions here. It&#8217;s thought provoking....</p>
+Excerpt from <a href="http://www.davidwatson.org/index.cgi/2005/03/09#ruby_patterns_abstractions">davidwatson.org   </a>
+ at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1111503092"><time title="GMT" datetime="2005-03-22T14:51:32Z">14:51</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-07-26">Tue 26 Jul 2005</time></h2>
+</header>
+
+<article>
+<a id="c1122416108"></a>
+<header>
+<h3>Misc</h3>
+</header>
+<p>Some (not at all) random things, seen in the Matrix: Excellent post from Sam Ruby on &#8220;Abstractions vs. Patterns&#8221; Interesting description of &#8220;Speech-Act-Based Protocols in Computer-Mediated Collaborative Design&#8221;, seen at Carlos' site. ... And then...</p>
+Excerpt from <a href="http://jroller.com/page/MasterMark?entry=misc">Process Perfection</a>
+ at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1122416108"><time title="GMT" datetime="2005-07-26T22:15:08Z">22:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-02-28">Wed 28 Feb 2007</time></h2>
+</header>
+
+<article>
+<a id="c1172662460"></a>
+<header>
+<h3>Hasty Generalizations</h3>
+</header>
+<p>Jon Udell:&#160; Only if you consider the Google maps interface of today and the MapQuest interface that existed at the time Google maps was introduced as being &#8220;roughly the same&#8221;.&#160; I don&#8217;t.&#160; The abstractions and patterns...
+<a href="http://www.intertwingly.net/blog/2007/02/28/Hasty-Generalizations">[more]</a><br /><br />Trackback from <a title="vanadium.sabren.com">Sam Ruby</a></p> at
+<a href="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns#c1172662460"><time title="GMT" datetime="2007-02-28T11:34:20Z">11:34</time></a>
+</article>
+
+<hr/>
+</section>
+<section>
+<h2>Add your comment</h2>
+<a id="commentForm"></a>
+<form method="post" action="http://intertwingly.net/blog/2005/03/08/Abstractions-vs-Patterns" accept-charset="utf-8"
+  id="comments_form" onsubmit="if (this.bakecookie.checked) rememberMe(this)">
+<article>
+<input name="parent" type="hidden" value="1919"/>
+<input name="title" type="hidden" value="Abstractions vs Patterns"/>
+<label for="name">Name:</label><br/>
+<input maxlength="50" id="name" name="name" size="75" type="text" value=""/><br/>
+<br/>
+<label for="email">E-mail:</label><br/>
+<input maxlength="75" id="email" name="email" size="75" type="email" value=""/><br/>
+<br/>
+<label for="url">URI:</label><br/>
+<input maxlength="100" id="url" name="url" size="75" type="url" value=""/><br/>
+<br/>
+<label for="comment">Comment:</label><br/>
+<textarea cols="59" id="comment" name="comment" rows="12"></textarea>
+<br/>
+<input name="preview" type="submit" value="Preview"/>
+<input type="button" onclick="forgetMe(this.form)" value="Clear Info"/>
+<input type="checkbox" name="bakecookie" id="bakecookie"/>
+<label for="bakecookie">Remember info?</label>
+</article>
+</form>
+
+</section>
+
+<aside>
+
+<h2>mingle</h2>
+
+<nav>
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Sam_Ruby">About</a></li>
+<li><a href="http://twitter.com/samruby">Twitter</a></li>
+<li><a href="/blog/comments.html">Comments</a></li>
+<li><a id="navbar_register" href="/blog/registry/">Register</a></li>
+<li><a href="/stats/">Statistics</a></li>
+<li><a href="/blog/archives/">Archives</a></li>
+<li><a href="http://planet.intertwingly.net/">Planet</a></li>
+<li><a href="http://code.intertwingly.net/public/">Code</a></li>
+<li><a href="http://www.pragprog.com/titles/rails4/agile-web-development-with-rails-4th-edition">Rails</a></li>
+<li><a href="http://www.oreilly.com/catalog/9780596529260/">RESTful</a></li>
+<li><a href="/blog/2005/05/16/Disclaim-This">Disclaimer</a></li>
+</ul>
+
+</nav>
+
+</aside>
+
+<footer>
+<ul>
+
+<li>HTTP
+<ul>
+<li><a href="http://tools.ietf.org/html/rfc2616">RFC 2616</a></li>
+<li><a href="http://www.ietf.org/html.charters/httpbis-charter.html">httpbis</a></li>
+<li>URI
+<ul>
+<li><a href="http://tools.ietf.org/html/rfc3986">RFC 3986</a></li>
+<li><a href="http://bitworking.org/projects/URI-Templates/">URI Template</a></li>
+</ul>
+</li>
+</ul>
+</li>
+
+<li>HTML
+<ul>
+<li><a href="http://www.w3.org/html/wg/">Working Group</a></li>
+<li><a href="http://www.whatwg.org/">WHATWG</a></li>
+<li>Specs
+<ul>
+<li><a href="http://www.w3.org/TR/REC-html40/">HTML 4.01</a></li>
+<li><a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a></li>
+</ul>
+</li>
+<li>Drafts
+<ul>
+
+<li><a href="http://www.w3.org/html/wg/html5/">HTML 5</a></li>
+<li><a href="http://www.w3.org/html/wg/markup-spec/">Markup Language</a></li>
+<li><a href="http://dev.w3.org/html5/offline-webapps/">Web Workers</a></li>
+<li><a href="http://dev.w3.org/html5/html-author/">HTML Author</a></li>
+<li><a href="http://dev.w3.org/html5/rdfa/Overview.html#rdfa">RDFa</a></li>
+<li><a href="http://dev.w3.org/html5/pubnotes/">Publication Notes</a></li>
+<li><a href="http://dev.w3.org/html5/html4-differences/">HTML4 Differences</a></li>
+<li><a href="http://dev.w3.org/html5/offline-webapps/">Offline Web Applications</a></li>
+<li><a href="http://dev.w3.org/html5/html-design-principles/">Design Principles</a></li>
+<li><a href="http://dev.w3.org/html5/web-forms-2/">Web Forms 2.0</a></li>
+
+</ul>
+</li>
+</ul>
+</li>
+
+<li>Atom
+<ul>
+<li><a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Format</a></li>
+<li><a href="http://www.atomenabled.org/developers/protocol/atom-protocol-spec.php">Protocol</a></li>
+<li>Extensions
+<ul>
+<li><a href="http://tools.ietf.org/html/rfc4685">Threading</a></li>
+<li><a href="http://tools.ietf.org/html/rfc5005">Paging and Archiving</a></li>
+
+<li><a href="http://tools.ietf.org/html/rfc4946">License</a></li>
+</ul>
+</li>
+</ul>
+</li>
+
+</ul>
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs xmlns:xlink="http://www.w3.org/1999/xlink">
+    <radialGradient id="i1" fx=".4" fy=".2" r=".7">
+      <stop stop-color="#FE8" offset="0"></stop>
+      <stop stop-color="#D70" offset="1"></stop>
+    </radialGradient>
+    <radialGradient id="i2" fx=".8" fy=".5" xlink:href="#i1"></radialGradient>
+    <radialGradient id="i3" fx=".5" fy=".9" xlink:href="#i1"></radialGradient>
+    <radialGradient id="i4" fx=".1" fy=".5" xlink:href="#i1"></radialGradient>
+  </defs>
+  <g stroke="#940">
+    <path d="M73,29c-37-40-62-24-52,4l6-7c-8-16,7-26,42,9z" fill="url(#i1)"></path>
+    <path d="M47,8c33-16,48,21,9,47l-6-5c38-27,20-44,5-37z" fill="url(#i2)"></path>
+    <path d="M77,32c22,30,10,57-39,51l-1-8c3,3,67,5,36-36z" fill="url(#i3)"></path>
+
+    <path d="M58,84c-4,20-38-4-8-24l-6-5c-36,43,15,56,23,27z" fill="url(#i4)"></path>
+    <path d="M40,14c-40,37-37,52-9,68l1-8c-16-13-29-21,16-56z" fill="url(#i1)"></path>
+    <path d="M31,33c19,23,20,7,35,41l-9,1.7c-4-19-8-14-31-37z" fill="url(#i2)"></path>
+  </g>
+</svg>
+</footer>
+
+</body>
+</html>
+
