@@ -1,0 +1,240 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+
+	<!-- BEGIN META TAG INFO -->
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+	<link rel="home" href="/">
+	<link rel="find" href="/search/">
+	<link rel="stylesheet" type="text/css" href="/css/adcstyle.css" title="fonts">
+	<script language="JavaScript" src="/js/adc.js" type="text/javascript"></script>
+	<!-- END META TAG INFO -->
+	
+	<!-- BEGIN TITLE -->
+	<title>Dynamic HTML and XML: The XMLHttpRequest Object</title>
+	<!-- END TITLE -->
+
+</head>
+
+<!-- BEGIN BODY OPEN -->
+<body>
+<!--END BODY OPEN -->
+
+<!-- START CENTER OPEN -->
+<center>
+<!-- END CENTER OPEN -->
+
+	<!-- BEGIN LOGO AND SEARCH -->
+	<!-- SiteCatalyst code version: H.8. Copyright 1997-2006 Omniture, Inc. --><script language="JavaScript"><!--/* RSID: */var s_account="appleglobal,appleusdeveloper"//--></script><script language="JavaScript" type="text/javascript" src="http://images.apple.com/global/metrics/js/s_code_h.js"></script><script language="JavaScript"><!--s.pageName=document.title+" (US)";s.server=""s.channel="www.us.developer"s.pageType=""s.prop1=""s.prop2=""s.prop3=""s.prop4=document.location;/* E-commerce Variables */s.campaign=""s.state=""s.zip=""s.events=""s.products=""s.purchaseID=""s.eVar1=""s.eVar2=""s.eVar3=""s.eVar4=""s.eVar5=""/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/var s_code=s.t();if(s_code)document.write(s_code)//--></script><!-- End SiteCatalyst code version: H.8. -->	<!-- googleoff: all -->	<div id="adcnavheader">	<table width="680" border="0" cellspacing="0" cellpadding="0">		<tr>			<td><img width="480" height="25" src="/images/1dot.gif" alt=""></td>			<td><img width="200" height="25" src="/images/1dot.gif" alt=""></td>		</tr>		<tr valign="top">			<!-- START ADC LOGO -->			<td align="left" width="480"><h6><a href="/"><img width="245" height="30" src="/images/developer_logo.gif" alt="Apple Developer Connection" border="0"></a></h6></td>			<!-- END ADC LOGO -->			<td align="right" width="200">			<!-- START SEARCH TABLE -->				<form name="MidSearch" method="post" action="http://developer.apple.com/cgi-bin/simpsearch.pl">				<table border="0" cellpadding="0" cellspacing="0">					<tr>						<td colspan="2"><img width="1" height="8" src="/images/1dot.gif" alt=""></td>					</tr>					<tr align="right">						<td><input onblur="if (value == '') {value = 'Search'}" onfocus="if (value == 'Search') {value =''}" type="text" value="Search" name="Search"></td>						<td><input type="image" src="/images/btn_search.gif" alt="Search" class="searchbutton"></td>					</tr>					<tr>						<td colspan="2"><img width="1" height="3" src="/images/1dot.gif" alt=""></td>					</tr>					<tr>						<td colspan="2" align="left"><a href="/search/">Advanced Search</a></td>					</tr>					<tr>						<td colspan="2"><img src="/images/1dot.gif" width="1" height="5" alt=""></td>					</tr>					</table>				</form>			<!-- END SEARCH TABLE -->			</td>		</tr>		<tr>			<td colspan="3"><img width="680" height="10" src="/images/1dot.gif" alt=""></td>		</tr>	</table>	<!-- START ADC NAVBAR-->	<table width="680" border="0" cellpadding="0" cellspacing="0">		<tr>			<td width="27"><img height="1" width="27" src="/images/1dot.gif" alt=""></td>			<td width="313"><img height="1" width="313" src="/images/1dot.gif" alt=""></td>			<td width="340"><img height="1" width="340" src="/images/1dot.gif" alt=""></td>		</tr>		<tr bgcolor="#DBDBDB">			<td align="right"><a href="https://connect.apple.com/cgi-bin/WebObjects/MemberSite.woa/wa/promo?source=ADCLOG&amp;code=ADCLOG-NEX" target="_top"><img width="25" height="24" src="/images/btn_login_arrow.gif" border="0" alt="Member Login"></a></td>			<td align="left" class="textpadding"><a href="https://connect.apple.com/cgi-bin/WebObjects/MemberSite.woa/wa/promo?source=ADCLOG&amp;code=ADCLOG-NEX" target="_top">Log In</a> | <a href="/membership/" target="_top">Not a Member?</a></td>			<td align="right" class="textpadding"><a href="/support/" target="_top">Support</a> <img width="7" height="1" src="/images/1dot.gif" alt=""></td>		</tr>		<tr>			<td colspan="3"><img height="1" width="680" src="/images/1dot_919699.gif" alt=""></td>		</tr>	</table>	</div>	<!-- END ADC NAVBAR-->	<!-- googleon: all -->
+	<!-- END LOGO AND SEARCH -->
+		
+		
+	<!-- START BREADCRUMB -->
+	<div id="breadcrumb">
+	<table width="680" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td><img width="340" height="10" src="/images/1dot.gif" alt=""></td>
+			<td><img width="340" height="10" src="/images/1dot.gif" alt=""></td>
+		</tr>
+		<tr valign="middle">
+			<td align="left"><a href="/">ADC Home</a> &gt; <a href="/internet/">Internet & Web</a> &gt; <a href="/internet/webcontent/">Web Content</a> &gt;</td>
+			<td align="right"><!-- DROP DOWN INCLUDE GOES HERE IF NEEDED --></td>
+		</tr>
+		<tr>
+			<td colspan="2"><img width="680" height="35" src="/images/1dot.gif" alt=""></td>
+		</tr>
+	</table>
+	</div>
+	<!-- END BREADCRUMB -->
+
+	<!-- START MAIN CONTENT -->
+	
+	<!-- START WIDE COLUMN -->
+	<table width="680" border="0" cellpadding="0" cellspacing="0">
+		<tr align="left" valign="top">
+			<td><h1><img src="../images/xmlhttpreq.gif" alt="Dynamic HTML and XML: The XMLHttpRequest Object" width="439" height="74"></h1>
+
+
+<p>As deployment of XML data and web services becomes more widespread, you may occasionally find it convenient to connect an HTML presentation directly to  XML data for interim updates without reloading the page. Thanks to the little-known <code>XMLHttpRequest</code> object, an increasing range of web clients can retrieve and submit XML data directly, all in the background. To convert retrieved XML data into renderable HTML content, rely on the client-side Document Object Model (DOM) to read the XML document node tree and compose HTML elements that the user sees.</p>
+
+<h2>History and Support</h2>
+<p>Microsoft first implemented the <code>XMLHttpRequest</code> object in Internet Explorer 5 for Windows as an ActiveX object. Engineers on the Mozilla project implemented a compatible native version for Mozilla 1.0 (and Netscape 7). Apple has done the same starting with Safari 1.2.</p>
+
+<p>Similar functionality is covered in a proposed W3C standard, <a href="http://www.w3.org/TR/DOM-Level-3-LS/">Document Object Model (DOM) Level 3 Load and Save Specification</a>. In the meantime, growing support for the <code>XMLHttpRequest</code> object means that is has become a <em>de facto</em> standard that will likely be supported even after the W3C specification becomes final and starts being implemented in released browsers (whenever that might be).</p>
+
+<h2>Creating the Object</h2>
+<p>Creating an instance of the <code>XMLHttpRequest</code> object requires branching syntax to account for browser differences in the way instances of the object are generated. For Safari and Mozilla, a simple call to the object's constructor function does the job:</p>
+<pre class="sourcecodebox">var req = new XMLHttpRequest();
+</pre>
+<p>For the ActiveX branch, pass the name of the object to the ActiveX constructor:</p>
+<pre class="sourcecodebox">var req = new ActiveXObject("Microsoft.XMLHTTP");
+</pre>
+<p>The object reference returned by both constructors is to an abstract object that works entirely out of view of the user. Its methods control all operations, while its properties hold, among other things, various data pieces returned from the server.
+
+<h2>Object Methods</h2>
+<p>Instances of the <code>XMLHttpRequest</code> object in all supported environments share a concise, but powerful, list of methods and properties. Table 1 shows the methods supported by Safari 1.2, Mozilla, and Windows IE 5 or later.
+</p>
+
+<h3>Table 1. Common XMLHttpRequest Object Methods</h3>
+	<table width="680" border="0" cellpadding="0" cellspacing="0" class="graybox"><tr>
+<tr>
+	<th>Method</th><th>Description</th>
+</tr>
+<tr>
+	<td><code>abort()</code></td><td>Stops the current request</td>
+</tr>
+<tr>
+	<td><code>getAllResponseHeaders()</code></td><td>Returns complete set of headers (labels and values) as a string</td>
+</tr>
+<tr>
+	<td><code>getResponseHeader("<i>headerLabel</i>")</code></td><td>Returns the string value of a single header label</td>
+</tr>
+<tr>
+	<td><code>open("<i>method</i>", "<i>URL</i>"[, <i>asyncFlag</i>[, "<i>userName</i>"[, "<i>password</i>"]]])</code></td><td>Assigns destination URL, method, and other optional attributes of a pending request</td>
+</tr>
+<tr>
+	<td><code>send(<i>content</i>)</code></td><td>Transmits the request, optionally with postable string or DOM object data</td>
+</tr>
+<tr>
+	<td><code>setRequestHeader("<i>label</i>", "<i>value</i>")</code></td><td>Assigns a label/value pair to the header to be sent with a request</td>
+</tr>
+</table>
+
+<p>Of the methods shown in Table 1, the <code>open()</code> and <code>send()</code> methods are the ones you'll likely use most. The first, <code>open()</code>, sets the scene for an upcoming operation. Two required parameters are the HTTP method you intend for the request and the URL for the connection. For the method parameter, use <code>"GET"</code> on operations that are primarily data retrieval requests; use <code>"POST"</code> on operations that send data to the server, especially if the length of the outgoing data is potentially greater than 512 bytes. The URL may be either a complete or relative URL (but see security issues below).
+</p>
+
+<p>An important optional third parameter is a Boolean value that controls whether the upcoming transaction should be handled asynchronously. The default behavior (<code>true</code>) is to act asynchronously, which means that script processing carries on immediately after the <code>send()</code> method is invoked, without waiting for a response. If you set this value to <code>false</code>, however, the script waits for the request to be sent and for a response to arrive from the server. While it might seem like a good idea to wait for a response before continuing processing, you run the risk of having your script hang if a network or server problem  prevents completion of the transaction. It is safer to send asynchronously and design your code around the <code>onreadystatechange</code> event for the request object.</p>
+
+<p>The following generic function includes branched object creation, event handler assignment, and submission of a GET request. A single function argument is a string containing the desired URL. The function assumes that a global variable, <code>req</code>, receives the value returned from the object constructors. Using a global variable here allows the response values to be accessed freely inside other functions elsewhere on the page. Also assumed in this example is the existence of a <code>processReqChange()</code> function that will handle changes to the state of the request object.</p>
+
+<pre class="sourcecodebox">var req;
+
+function loadXMLDoc(url) {
+	req = false;
+    // branch for native XMLHttpRequest object
+    if(window.XMLHttpRequest && !(window.ActiveXObject)) {
+    	try {
+			req = new XMLHttpRequest();
+        } catch(e) {
+			req = false;
+        }
+    // branch for IE/Windows ActiveX version
+    } else if(window.ActiveXObject) {
+       	try {
+        	req = new ActiveXObject("Msxml2.XMLHTTP");
+      	} catch(e) {
+        	try {
+          		req = new ActiveXObject("Microsoft.XMLHTTP");
+        	} catch(e) {
+          		req = false;
+        	}
+		}
+    }
+	if(req) {
+		req.onreadystatechange = processReqChange;
+		req.open("GET", url, true);
+		req.send("");
+	}
+}</pre>
+
+<p><b>Note:</b> It is essential that the data returned from the server be sent with a <code>Content-Type</code> set to <code>text/xml</code>. Content that is sent as <code>text/plain</code> or <code>text/html</code> is accepted by the instance of the request object however it will only be available for use via the <code>responseText</code> property.</p>
+
+<h2>Object Properties</h2>
+<p>Once a request has been sent, scripts can look to several properties that all implementations have in common, shown in Table 2. All properties are read-only.
+</p>
+
+<h3>Table 2. Common XMLHttpRequest Object Properties</h3>
+	<table width="680" border="0" cellpadding="0" cellspacing="0" class="graybox"><tr>
+<tr>
+	<th>Property</th><th>Description</th>
+</tr>
+<tr>
+	<td><code>onreadystatechange</code></td><td>Event handler for an event that fires at every state change</td>
+</tr>
+<tr>
+	<td><code>readyState</code></td><td>Object status integer:<br />0 = uninitialized<br />1 = loading<br />2 = loaded<br />3 = interactive<br />4 = complete</td>
+</tr>
+<tr>
+	<td><code>responseText</code></td><td>String version of data returned from server process</td>
+</tr>
+<tr>
+	<td><code>responseXML</code></td><td>DOM-compatible document object of data returned from server process</td>
+</tr>
+<tr>
+	<td><code>status</code></td><td>Numeric code returned by server, such as 404 for "Not Found" or 200 for "OK"</td>
+</tr>
+<tr>
+	<td><code>statusText</code></td><td>String message accompanying the status code</td>
+</tr>
+</table>
+
+<p>Use the <code>readyState</code> property inside the event handler function that processes request object state change events. While the object may undergo interim state changes during its creation and processing, the value that signals the completion of the transaction is <code>4</code>.</p>
+
+<p>You still need more confirmation that the transaction completed successfully before daring to operate on the results. Read the <code>status</code> or <code>statusText</code> properties to determine the success or failure of the operation. Respective property values of <code>200</code> and <code>OK</code> indicate success.</p>
+
+<p>Access data returned from the server via the <code>responseText</code> or <code>responseXML</code> properties. The former provides only a string representation of the data. More powerful, however, is the XML document object in the <code>responseXML</code> property. This object is a full-fledged <code>document</code> node object (a DOM <code>nodeType</code> of 9), which can be examined and parsed using W3C Document Object Model (DOM) node tree methods and properties. Note, however, that this is an XML, rather than HTML, document, meaning that you cannot count on the DOM's HTML module methods and properties. This is not really a restriction because the Core DOM module gives you ample ways of finding element nodes, element attribute values, and text nodes nested inside elements.</p>
+
+<p>The following listing shows a skeletal <code>onreadystatechange</code> event handler function that allows processing of the response content only if all conditions are right.</p>
+
+<pre class="sourcecodebox">function processReqChange() {
+    // only if req shows "loaded"
+    if (req.readyState == 4) {
+        // only if "OK"
+        if (req.status == 200) {
+            // ...processing statements go here...
+        } else {
+            alert("There was a problem retrieving the XML data:\n" +
+                req.statusText);
+        }
+    }
+}</pre>
+
+<p>If you are concerned about possible timeouts of your server process, you can modify the <code>loadXMLDoc()</code> function to save a global time-stamp of the <code>send()</code> method, and then modify the event handler function to calculate the elapsed time with each firing of the event. If the time exceeds an acceptable limit, then invoke the <code>req.abort()</code> method to cancel the send operation, and alert the user about the failure.</p>
+
+<h2>Security Issues</h2>
+<p>When the <code>XMLHttpRequest</code> object operates within a browser, it adopts the same-domain security policies of typical JavaScript activity (sharing the same "sandbox," as it were). This has some important implications that will impact your application of this feature.</p>
+
+<p>First, on most browsers supporting this functionality, the page that bears scripts accessing the object needs to be retrieved via <code>http:</code> protocol, meaning that you won't be able to test the pages from a local hard disk (<code>file:</code> protocol) without some extra security issues cropping up, especially in Mozilla and IE on Windows. In fact, Mozilla requires that you wrap access to the object inside <code>UniversalBrowserRead</code> security privileges. IE, on the other hand, simply displays an alert to the user that a potentially unsafe activity may be going on and offers a chance to cancel.</p>
+
+<p>Second, the domain of the URL request destination must be the same as the one that serves up the page containing the script. This means, unfortunately, that client-side scripts cannot fetch web service data from other sources, and blend that data into a page. Everything must come from the same domain. Under these circumstances, you don't have to worry about security alerts frightening your users.</p>
+
+<h2>An Example: Reading XML Data from iTunes RSS Feeds </h2>
+<p>You can play with <a href="XMLHttpRequestExample/example.html">an example</a> that points to four static XML files for demonstration purposes. The data sources are snapshots of some iTunes Store-related RSS feeds. Because the actual feeds are hosted at a third-party domain, the mixed domains of the example file and live RSS sources prevents a truly dynamic example.</p>
+
+<p>When you choose one of the four listing categories, the script loads the associated XML file for that category. Further scripts extract various element data from the XML file to modify the options in a second <code>select</code> element. A click on one of the items reads a different element within that item's XML data. That data happens to be HTML content, which is displayed within the example page without reloading the page.</p>
+
+<p>Note that the sample data includes some elements whose tag names contain namespace designations. Internet Explorer for Windows (at least through Version 6) does not implement the DOM <code>getElementsByTagNameNS()</code> function. Instead it treats namespace tag names literally. For example, the <code>&lt;content:encoded&gt;</code> element is treated as an element whose tag name is <code>content:encoded</code>, rather than a tag whose local name is <code>encoded</code> and whose prefix is <code>content</code>. The example includes a utility API function called <code>getElementTextNS()</code> which handles the object model disparities, while also retrieving the text node contained by the desired element.</p>
+
+<p>If you <a href="xmlhttprequest.dmg">download the examples (DMG 2.0MB)</a>, you can test it yourself by placing it in your personal web server's Sites folder, and accessing the page via the <code>http:</code> protocol. Keep all files, including the XML samples, in the same directory.</p>
+
+<h2>A Cool Combo</h2>
+<p>For years, advanced client-side developers have frequently wanted a clean way
+to maintain a "connection" with the server so that transactions can occur in the
+background, and newly updated data gets inserted into the current page. Many
+have tortured themselves by using techniques such as hidden self-refreshing
+frames and "faceless" Java applets. In lieu of a W3C standard still under
+development, the Microsoft-born <code>XMLHttpRequest</code> object fills an
+important gap that should inspire application development creativity. The
+feature is a welcome addition to Safari.</p>
+
+				<p><b>Updated:</b> 2005-06-24</p>
+
+
+			</td>
+		</tr>
+	</table>
+	<!-- END WIDE COLUMN -->
+
+	<!-- END MAIN CONTENT -->
+
+	<!-- START BOTTOM APPLE NAVIGATION -->
+		<!-- googleoff: all -->	<!-- START FOOTER TABLE -->	<div id="footer" align="center">	<table width="680" border="0" cellspacing="0" cellpadding="0">		<tr>			<td><img width="680" height="1" src="/images/1dot_919699.gif" alt=""><br>			<img src="/images/1dot.gif" width="680" height="17" alt=""></td>		</tr>		<tr>			<td align="center">				<p>Get information on <a href="http://www.apple.com/" target="_top">Apple</a> products.<br>				Visit the Apple Store <a href="http://store.apple.com" target="_top">online</a> or at <a href="http://www.apple.com/retail/" target="_top">retail</a> locations.<br>				1-800-MY-APPLE</p>				<p>Copyright &copy; 2010 Apple Inc.<br>				<a href="http://www.apple.com/legal/" target="_top">All rights reserved.</a> | <a href="http://www.apple.com/legal/" target="_top">Terms of use</a> | <a href="http://www.apple.com/legal/privacy/" target="_top">Privacy Notice</a></p>			</td>		</tr>		<tr>			<td><img width="680" height="20" src="/images/1dot.gif" alt=""></td>		</tr>	</table>	</div>	<!-- END FOOTER TABLE -->	<!-- googleon: all -->
+	<!-- END BOTTOM APPLE NAVIGATION -->
+
+<!-- START CENTER CLOSE -->
+</center>
+<!-- END CENTER CLOSE -->
+
+</body>
+</html>
