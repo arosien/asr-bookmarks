@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Gmail Agent API / Mail Notifier &amp; Address Importer :: Johnvey</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link rel="stylesheet" title="Stylesheet of the gods" href="/etc/global.css" />
+<script language="JavaScript" src="/etc/global.js"></script>
+<script language="JavaScript">
+var sexy = new jvScrambler("sexy", "scram", "GMAIL AGENT API / MAIL NOTIFIER &amp; ADDRESS IMPORTER");
+</script>
+<style type="text/css">
+#frBotInCol img	{ border: 1px solid #ccc; padding: 5px; background: #fff; }
+</style>
+</head>
+
+<body>
+<div id="container">
+<div id="frTopLeft"><a href="/"><img src="/images/header-logo.gif" width="217" height="53" alt="Johnvey.com" title="Johnvey.com" border="0" class="headerLogo" /></a></div>
+<div id="frTopRight">
+<ul id="nav">
+<li><a href="/" title="Blog" onmouseover="sexy.go('PURVEYOR OF FINE WORDS')" onmouseout="sexy.reset()">BLOG</a></li>
+<li><a href="/photos/" title="Photos" onmouseover="sexy.go('PHOTOGRAPHIC HALL OF RECORDS')" onmouseout="sexy.reset()">PHOTOS</a></li>
+<li><a href="/features/" title="Features" onmouseover="sexy.go('SUPER-EXTENDED LP EDITION')" onmouseout="sexy.reset()">FEATURES</a></li>
+<li><a href="/work/" title="Work" onmouseover="sexy.go('MONEY MAKES THE WORLD GO \'ROUND')" onmouseout="sexy.reset()">WORK</a></li>
+<li><a href="/about/" title="About" onmouseover="sexy.go('PERSON IN A GLASS HOUSE')" onmouseout="sexy.reset()">ABOUT</a></li>
+</ul>
+</div>
+<h1 id="logo"><span id="scram">GMAIL AGENT API / MAIL NOTIFIER &amp; ADDRESS IMPORTER</span></h1>
+
+<div id="frBotSingle">
+<style type="text/css">
+	code	{ font-size: 1.3em; color: #007;}
+	.code 	{ background: #eef2ff; border: 1px solid #ddd; padding: 10px; white-space: nowrap; font-family: Courier New, monospace !important; font-size: .8em !important; }
+	.code .comment	{ color: green; }
+	.ss		{ padding: 5px; border: 1px solid #ccc; margin-bottom: 10px; }
+</style>
+
+	<div style="float:right;margin:0 3px 5px 0">
+	<script type="text/javascript"><!--
+	google_ad_client = "pub-7121527275972198";
+	google_ad_width = 250;
+	google_ad_height = 250;
+	google_ad_format = "250x250_as";
+	google_ad_type = "text";
+	google_ad_channel ="";
+	google_color_border = "CCCCCC";
+	google_color_bg = "F5F5F5";
+	google_color_link = "333333";
+	google_color_text = "333333";
+	google_color_url = "557700";
+	//--></script>
+	<script type="text/javascript"
+	  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+	</script>
+	</div>
+	<h2>Gmail Agent API</h2>
+
+	<p><em>July 5, 2004</em></p>
+
+
+	<p><strong>Update 5/18/2005:</strong> The long awaited SourceForge project for this API has been created.  Eric Larson has been gracious enough to help out with the project.  See <a href="http://sourceforge.net/projects/gmail-api">http://sourceforge.net/projects/gmail-api</a> for the latest release.</p>
+	
+	<h3>What is it?</h3>
+	<div style="float:right;width:215px;clear:right">
+	<a href="/images/gmailapi/gmail-balloon.gif"><img src="/images/gmailapi/t_gmail-balloon.gif" width="200" height="70" alt="Screenshot: balloon notification" border="0" class="ss" /></a>
+	<a href="/images/gmailapi/gmail-accounts.gif"><img src="/images/gmailapi/t_gmail-accounts.gif" width="200" height="244" alt="Screenshot: multiple account support" border="0" class="ss" /></a>
+	</div>	
+	<p>There are two distinct components here: an open source Gmail API written for the .NET framework, and a proof of concept Windows application built on top of that API that provides basic remote Gmail functions.</p>
+	<p>I developed these tools in the hopes of encouraging others to create interesting Gmail services. Admittedly, this project may not have a very long shelf life, as <a href="http://www.eweek.com/print_article/0,1761,a=125289,00.asp" title="Google's Brin Talks on Gmail Future">Sergey has intimated</a> possible mail forwarding and RSS support, not to mention Gmail's recent listing of <a href="http://gmail.google.com/support/bin/request.py" title="Gmail Send Feedback Info Page">upcoming features</a> <em>(Gmail login required)</em> that estimates a slew of features that are listed as &#8220;working on it&#8221; or &#8220;we'll try&#8221;. The <em>address book import</em> is currently listed as &#8220;sometime soon&#8221; but it's actually available now in the Contacts window.  As Sergey mentioned, an enterprise version of Gmail would be well received, and I have no doubt that there would an API to go along with that (I recently integrated a <a href="http://www.google.com/appliance/" title="Google Search Appliance page">Google Search Appliance</a>, and can attest to its extensibility).  Whether or not Google is interested in pursuing such features for the public side remains to be seen.  Nonetheless, I hope to keep this project going, and wouldn't mind joining the Gmail team &#8212; there are lots of features I'd like to see implemented in Gmail.
+	</p>
+	<p>This project has been mentioned by <a href="http://www.infoworld.com/article/04/10/22/43OPstrategic_1.html">InfoWorld</a>, <a href="http://www.smh.com.au/articles/2004/07/19/1090089087100.html">The Sydney Morning Herald</a>, <a href="http://www.amazon.com/exec/obidos/ASIN/0596008570/johnveycom-20?creative=327641&camp=14573&link_code=as1">Google Hacks</a>, and <a href="http://www.adaptivepath.com/publications/essays/archives/000385.php">Adaptive Path</a>.</p>
+
+	<h3>Who's using it?</h3>
+	<p>Other projects that are related to the Gmail Agent API:</p>
+	<table class="listing">
+		<tr>
+		 <th>Project</th>
+			<th>Platform</th>
+	    	<th>Description</th>
+		</tr>
+		<tr>
+			<td><a href="http://sourceforge.net/projects/jgmail/">JGmail</a></td>
+			<td>Java</td>
+		 <td>An open source port of this API.<br />
+			 <em>Author:</em> Todd Lindner</td>
+		</tr>
+		<tr>
+			<td><a href="http://gmail-lite.sourceforge.net/">Gmailer</a></td>
+			<td>PHP</td>
+			<td>An open source API for Gmail. Also included is <em>Gmailer-lite</em>, a bare HTML version of Gmail that doesn't require Javascript.<br />
+				<em>Author:</em> Ying Hung Gan</td>
+		</tr>
+		<tr>
+			<td><a href="http://libgmail.sourceforge.net/">libgmail</a></td>
+			<td>Python</td>
+			<td>An open source API for Gmail.<br />
+				<em>Author:</em> <a href="http://sourceforge.net/users/xfollower/">xfollower</a></td>
+		</tr>
+		<tr>
+			<td><a href="http://gmailerxp.sourceforge.net/">GmailerXP</a></td>
+			<td>.NET</td>
+			<td>A Windows application that extends the proof of concept app here by replicating the entire Gmail interface as a Windows application.<br />
+				<em>Author:</em> Abiel Jaquez</td>
+		</tr>
+		<tr>
+			<td><a href="http://gpopper.com/gnotify/">GNotify</a></td>
+			<td>.NET</td>
+			<td>A Windows system tray notifier that includes audible alerts in addition to balloon tips.<br />
+				<em>Author:</em> Michael Isabella</td>
+		</tr>
+		<tr>
+			<td><a href="http://toolbar.google.com/gmail-helper/">Gmail Notifier</a></td>
+			<td>Win32</td>
+			<td>The official Gmail system tray notifier.<br />
+				<em>Author:</em> Google</td>
+		</tr>
+	</table>
+	<h3>About the Gmail Agent Applet</h3>
+	<p>I'm sure most of you are more interested in the applet, so here are the features:</p>
+	<ul>
+		<li>Multiple account support</li>
+		<li>Balloon notification of new messages with message preview</li>
+		<li>Address book view and import (from tab-delimited text files)</li>
+	</ul>
+	<p>The system requirements are:</p>
+	<ul>
+		<li>Windows 98SE, or higher</li>
+		<li>Microsoft .NET Framework v1.1</li>
+	</ul>
+	<p>I have implemented a couple recommendations to make this <a href="http://www.mono-project.com/about/index.html" title="Mono Project">Mono</a> compatible but the results are still spotty. Let me know if you've successfully debugged this under Mono. If you are interested in POP access to Gmail, check out <a href="http://gpopper.com/gpopper/" title="Pop Goes the Gmail">GPopper</a> (formerly known as Pop Goes the Gmail).</p>
+	<p><strong>This is a proof of concept application</strong>, and there are plenty of idiosyncracies. It works great for me, but your results may vary.  I welcome anyone who wants to contribute to polishing this app.</p>
+	<p><a href="#dl">Download the installer &raquo;</a></p>
+	
+	
+	<h3>About the Gmail Agent API</h3>
+	<p>The goal of the API is to provide an extensible foundation for interfacing with Gmail. The objects in this namespace should be abstracted enough to be able to be adpated to any future changes Gmail makes.</p>
+	<p>Read the <strong><a href="docs/" title="MSDN-style documentation" target="_blank">documentation for Gmail Agent API 0.6.1</a></strong> to see what's available.</p>
+	<p>The main workhorse of this class is <code>GmailAdapter</code>. It is responsible for communicating with Gmail and maintaining the login and session information through the duration of the application.  The GmailSession object holds all the state information for a single Gmail account, including a GmailThreadCollection of GmailThread objects. The GmailContact object represents a single Gmail address book entry.  Again, GmailAdapter provides the methods to fill a GmailContact with information from Gmail.</p>
+	<p style="text-align:center;">
+		<strong>Connection Overview</strong><br /><br />
+		<img src="/images/gmailapi/gmail-diagram.gif" width="588" height="326" alt="" border="0" />
+	</p>
+	<p>One oddity with the API is that it uses TLS instead of SSL for the encryption layer.  For reasons unknown, the SSL provider was extremely intermittent and often failed to establish a secure link so I manually set the <code>ServicePointManager</code> to use TLS 1.0.  This seems to be a common problem among .NET developers, and if anyone has a stable solution, I'd love to hear about it.</p>
+
+	<p>Here is a bare-bones example of how to establish a connection with Gmail using the API:</p>
+	<p class="code">
+		<span class="comment">// init new adapter</span><br />
+		GmailAdapter gmail = new GmailAdapter();<br />
+		<br />
+		<span class="comment">// create new session and assign username and password</span><br />
+		GmailSession myAccount = new GmailSession();<br />
+		myAccount.Username = "googler";<br />
+		myAccount.Password = "showmethemoney";<br />
+		<br />
+		<span class="comment">// login and retrieve mailbox info</span><br />
+		GmailAdapter.RequestResponseType loginResult = gmail.Refresh(myAccount);<br />
+		<br />
+		<span class="comment">// display mailbox info</span><br />
+		if(loginResult == GmailAdapter.RequestResponseType.Success) {<br />
+			<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// show new inbox count</span><br />
+			&nbsp;&nbsp;&nbsp;&nbsp;Console.WriteLine("New Threads: " + myAccount.DefaultSearchCounts["Inbox"]);<br />
+			<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// if new threads exist, show the subject of the first one</span><br />
+			&nbsp;&nbsp;&nbsp;&nbsp;if(myAccount.UnreadThreads.Count > 0) {<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GmailThread newThread = (GmailThread)myAccount.UnreadThreads[0];<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Console.WriteLine("Latest thread subject: " + newThread.SubjectHtml);<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+		}<br />
+	</p>
+
+	
+		<h3><a name="dl">Source and binaries</a></h3>
+		<p><strong>Download the latest source code from the <a href="http://sourceforge.net/projects/gmail-api">Gmail API SourceForge project page</a>.</strong></p>
+		<p><strong>Download the Windows help file version of the <a href="docs/GmailAgentApi.chm">API documentation</a></strong>.<br />The online <a href="docs/" title="MSDN-style documentation" target="_blank"><strong>HTML version</strong></a> is also available.</p>
+		<p><strong><span style="color:maroon">&raquo;</span> Discuss the API and its applications over at the <a href="http://groups-beta.google.com/group/GmailAgent/">Gmail Agent Google Group</a>.</strong></p>
+		<p>All material released on this page relating to Gmail is licensed under the <a href="http://www.gnu.org/copyleft/gpl.html" title="GPL text">GNU General Public License</a>.</p>
+	
+	<hr />	
+		
+	<h3>About the Gmail engine and protocol</h3>
+	<p>You've probably noticed that Gmail's interface is extremely fast when compared to other web-based email systems like Yahoo! Mail and Hotmail. This is a result of Gmail's placement of the UI engine on the client-side as a JavaScript module.  Whenever you log in to Gmail, a copy of the UI engine is loaded into one of the HTML page frames and remains there for the duration of your session (credit has to be given to <a href="http://oddpost.com" title="Oddpost webmail">Oddpost</a> for being the first ones who perfected this idea).  Subsequent actions from the Gmail interface are then routed through the Gmail UI engine in your browser, which in turn makes HTTP requests (via the <a href="http://jibbering.com/2002/4/httprequest.html" title"using the xml http request object">XmlHttpRequest</a> object) to the Gmail server, interprets the DataPack (more on this later), and updates the UI dynamically. In contrast, Hotmail and Yahoo! Mail follow traditional web application models and reload the entire UI after almost every action.</p>
+	
+	<p>The item most relevant to this project is what I refer to as the &#8220;DataPack&#8221;, a base HTML file that contains only JavaScript array declarations that the UI engine parses and then uses to determine what to update.  The advantages of this should be immediately obvious: reduced traffic load, and increased functionality &#8212; especially for developers who no longer have to resort to crude &#8220;screen scraping&#8221; techniques to interface with web applications.  Although the ideal situation for external developers would be an XML-based DataPack, the JavaScript version is sufficient (and I suspect it was chosen for performance reasons as well).</p>
+	
+	<p>The DataPack format consists of individual &#8220;DataItems&#8221;, or JavaScript arrays wrapped in a envelope function. An example:</p>
+	
+	<p class="code">D(["ts",0,50,106,0,"Inbox","fd36721220",154]);</p>
+	
+	<p>The function <code>D()</code> references a runtime evaluator within the Gmail engine, which then interprets the attached array parameters.  The <code>"ts"</code> element indicates that this is a threadlist summary item, and the subsequent elements denote start index, threads per page, estimated total, threadlist title, threadlist timestamp, and total threads.  This is the same format that is applied to all array parameters sent through the DataPack:</p>
+	
+	<p class="code">[<em>&lt;DataItem_name&gt;</em>(,<em>&lt;custom_attribute&gt;</em>)]</p>
+	
+	<p>The mappings to all the DataItems can be found in the engine code source (<code>/gmail?view=page&amp;name=js</code>).  For instance, <code>qu</code> contains quota information, while <code>ct</code> contains category (a.k.a. labels) definitions.  Read through that file if you really want to get everything you can out of Gmail.</p>
+	
+	<p>Determining the right URL to retrieve the DataPack is pretty straightforward, as most requests will return the same basic information, such as quota, category count, and inbox count.  The main thing that changes is the threadlist summary, which depends on what page you're looking at.  All the main folders &#8212; inbox, starred, trash, spam, etc. &#8212; are all really just pre-defined searches within Gmail.  For example, the inbox DataPack URL is:</p>
+	
+	<p class="code">/gmail?search=inbox&amp;view=tl&amp;start=0&amp;init=1&amp;zx=</p>
+	
+	<p>The search query for all unread threads is:</p>
+	
+	<p class="code">/gmail?search=query&amp;q=is%3Aunread&amp;view=tl&amp;start=0&amp;init=1&amp;zx=</p>
+	
+	<p>The main parameters are <code>search=</code> and <code>q=</code>, which define what set of threads the user is requesting.  The <code>zx=</code> parameter is a proxy cache defeater, and I've omitted it here for brevity.  See <code>GmailAdapter.MakeUniqueUrl()</code> for more information.</p>
+	
+	<p>Gmail exploits another advantage of the DataPack model to increase efficiency by allowing for an empty document.  This is employed by the 2-minute auto-refresh request.  The inbox URL adds a few more parameters:</p>
+	
+	<p class="code">/gmail?view=tl&search=inbox&start=0&tlt=fd8dfa2e31&fp=c155594240dcc7cb&auto=1&zx=</p>
+	
+	<p>The <code>tlt=</code> parameter is the thread list timestamp, which is treated like a checksum in determining the state of the client versus the mailbox state on the server.  If the client timestamp is older than the one on the server, then a full DataPack is sent.  Otherwise, Gmail sends an essentially empty DataPack.  </p>
+	
+	<h3>Revision History</h3>
+	<p><strong>Update 2/27/2005:</strong> The API is currently broken, due to Gmail's protocol change.  I don't have time to work on the project, but I have received some fixes that I will review as soon as possible. -JH</p>
+	<p><strong>v0.6.1 (10/24/04):</strong>Fixed some proxy issues, and updated API to recognize the "Drafts" folder.</p>
+	<p><strong>v0.6.0 (9/6/04):</strong> Version 0.6 Released. This version adds proxy support, compiles under Mono (I think), and changes the default click behavior for the icon to open the Gmail site.</p>
+	<p><strong>v0.5.1 (8/15/04):</strong> I've updated the API to work with the new login procedure.  Download version 0.5.1 below. The changes were minor (Gmail moved the <em>GV</em> variable from a client-side Javascript call to a HTTP response header call), but a quirk with the .NET cookie handler was mucking things up. Apparently, sending a subdomained cookie (e.g. <em>gmail.google.com</em> instead of just <em>.google.com</em>) to the HttpWebRequest class causes it to report an invalid cookie domain. Bug or feature? You decide.</p>
+	<p><strong>v0.5.0 (7/5/04):</strong> Initial version released.</strong></p>
+	
+	<h3>Feedback</h3>
+	
+	<p>Head over to the <a href="http://groups-beta.google.com/group/GmailAgent/">Gmail Agent Google Group</a> to discuss the project, or feel free to <a href="/contact/" title="Contact me">contact me directly</a> with any questions.</p>
+</div>
+
+<div id="copyright">
+	2001&#8211;2005 A brief exploration through the marvelous mind of <a href="/contact/">Johnvey Hwang</a>.
+	All material released on this page relating to Gmail is licensed under the <a href="http://www.gnu.org/copyleft/gpl.html" title="GPL text">GNU General Public License</a>.
+	Everything else is released under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">Creative Commons License</a>.  Gmail is a registered trademark of Google Inc.
+</div>
+
+</div>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+<script type="text/javascript">
+_uacct = "UA-626632-1";
+urchinTracker();
+</script>
+
+<!--
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="">
+<dc:title>Johnvey.com</dc:title>
+<dc:date>2005</dc:date>
+<dc:creator><Agent>
+<dc:title>Johnvey Hwang</dc:title>
+</Agent></dc:creator>
+<dc:rights><Agent>
+<dc:title>Johnvey Hwang</dc:title>
+</Agent></dc:rights>
+<dc:source rdf:resource="http://johnvey.com"/>
+<license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/2.0/" />
+</Work>
+<License rdf:about="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+<permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+<permits rdf:resource="http://web.resource.org/cc/Distribution" />
+<requires rdf:resource="http://web.resource.org/cc/Notice" />
+<requires rdf:resource="http://web.resource.org/cc/Attribution" />
+<prohibits rdf:resource="http://web.resource.org/cc/CommercialUse" />
+<permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+<requires rdf:resource="http://web.resource.org/cc/ShareAlike" />
+</License>
+</rdf:RDF>
+-->
+</body>
+</html>
