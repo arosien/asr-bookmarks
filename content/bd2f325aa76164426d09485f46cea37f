@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Flux - Job Scheduler. Automated Workflow Engine. Managed File Transfer. Everything through the Browser. Full
+    Java API.</title>
+  <link href="/css/facebox.css" rel="stylesheet" type="text/css"/>
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css"/>
+  <link href="/css/slider.css" rel="stylesheet" type="text/css"/>
+
+  <script src="/js/jquery-1.3.2.min.js" type="text/javascript"></script>
+
+  <script type="text/javascript" src="http://use.typekit.com/alp7uhg.js"></script>
+  <script type="text/javascript">try {
+    Typekit.load();
+  } catch(e) {
+  }</script>
+
+  <script type="text/javascript" src="/js/jquery-easing-1.3.pack.js"></script>
+  <script type="text/javascript" src="/js/jquery-easing-compatibility.1.2.pack.js"></script>
+  <script type="text/javascript" src="/js/coda-slider.1.1.1.pack.js"></script>
+
+
+  <script src="/js/facebox.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    jQuery(document).ready(function($) {
+      $('a[rel*=facebox]').facebox({
+        loading_image: 'images/ajax-loader.gif',
+        close_image: 'images/closelabel.gif'
+      });
+    });
+
+    var theInt = null;
+    var $crosslink, $navthumb;
+    var curclicked = 0;
+
+    theInterval = function(cur) {
+      clearInterval(theInt);
+
+      if (typeof cur != 'undefined')
+        curclicked = cur;
+
+      $crosslink.removeClass("active-thumb");
+      $navthumb.eq(curclicked).parent().addClass("active-thumb");
+      $(".stripNav ul li a").eq(curclicked).trigger('click');
+
+      theInt = setInterval(function() {
+        $crosslink.removeClass("active-thumb");
+        $navthumb.eq(curclicked).parent().addClass("active-thumb");
+        $(".stripNav ul li a").eq(curclicked).trigger('click');
+        curclicked++;
+        if (3 == curclicked)
+          curclicked = 0;
+
+      }, 5000); /* slider speed configured here */
+    };
+
+    $(function() {
+      $("#main-photo-slider").codaSlider();
+
+    $navthumb
+      = $(".nav-thumb");
+    $crosslink
+      = $(".cross-link");
+
+    $navthumb
+    .
+      click(function() {
+        var $this =
+        $(this);
+        theInterval($this.parent().attr('href').slice(1) - 1);
+        return false;
+      });
+
+      theInterval();
+    });
+  </script>
+
+  <!-- google analytics -->
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-17636277-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script> <!-- end google analytics -->
+</head>
+
+<body>
+
+
+<div id="header-wrapper-outer">
+  <div id="header">
+    <div class="logo"><a href="/"><img src="/images/logo.png" width="99" height="35" alt=""/></a></div>
+    <div id="navbar">
+      <ul>
+        <li><a class="home active"
+       href="/"><span>HOME</span></a></li>
+        <li><a class="features inactive"
+       href="/features/"><span>FEATURES</span></a></li>
+        <li><a class="download inactive"
+       href="/download/"><span>DOWNLOAD</span></a></li>
+        <li><a class="support inactive"
+       href="/support/"><span>SUPPORT</span></a></li>
+        <li><a class="buy inactive"
+       href="/buy/"><span>BUY</span></a></li>
+        <li><a class="customers inactive"
+       href="/customers/"><span>CUSTOMERS</span></a></li>
+        <li><a class="ourlatest inactive"
+       href="/latest/"><span>OUR LATEST</span></a></li>
+        <li><a class="company inactive"
+       href="/company/"><span>COMPANY</span></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var activeItems = $('#navbar .active');
+
+    // Deselect home if more than one item is active
+    if (activeItems.length > 1) {
+      $(activeItems[0]).removeClass('active');
+    }
+  });
+</script>
+<!--Start of CONTENT-->
+<div id="homepage-content-wrapper">
+  <div id="homepage-content">
+    <div class="top-text">Flux performs job scheduling, automated workflow, managed file transfer, and workload automation</div>    <div class="top-content">
+
+
+      <div class="slider-wrap">
+        <div id="slider-container">
+          <div id="main-photo-slider" class="csw">
+            <div class="panelContainer">
+                <div class="panel" title="">
+                  <div class="wrapper">
+                    <a rel="facebox"
+                       href="lightbox.html?image=screenshot-welcome&amp;title=Flux 7.10 Generally Available"><img
+                      src="/images/screenshot-thumbnail-welcome.png" width="440" height="266"
+                      alt=""/></a>
+                  </div>
+                </div> <!-- panel -->
+              <div class="panel" title="">
+                <div class="wrapper">
+                  <a rel="facebox"
+                     href="lightbox.html?image=screenshot-home&amp;title=Automate IT Processes and File Transfers"><img
+                    src="/images/screenshot-thumbnail-home.png" width="440" height="266"
+                    alt=""/></a>
+                </div>
+              </div> <!-- panel -->
+              <div class="panel" title="Monitor Jobs and Manage File Transfers">
+                <div class="wrapper">
+                  <a rel="facebox"
+                     href="lightbox.html?image=screenshot-audittrail&amp;title=Monitor Jobs and Manage File Transfers"><img
+                    src="/images/screenshot-thumbnail-audittrail.png" width="440" height="266"
+                    alt=""/></a>
+                </div>
+              </div> <!-- panel -->
+<!--              <div class="panel" title="Automated Workflows and Error Handling">
+                <div class="wrapper">
+                  <a rel="facebox"
+                     href="lightbox.html?image=screenshot-logs&amp;title=Automated Workflows and Error Handling"><img
+                    src="/images/screenshot-thumbnail-logs.png" width="440" height="266"
+                    alt=""/></a>
+                </div>
+              </div> --> <!-- panel -->
+            </div> <!-- panelContainer -->
+          </div>
+        </div>
+        <!--end of slider-container-->
+        <div class="cross-links-container">
+
+          <div>
+              <a href="#1" class="cross-link active-thumb">
+                <span class="title nav-thumb">Flux&nbsp;&thinsp;7.10 Generally Available</span>
+                <span
+                  class="desc">Download the official Flux 7.10 release. New Web-based Operations Console. Better file transfer monitor in the Operations Console. Better performance.</span>
+              </a>
+          </div>
+
+          <div>
+            <a href="#2" class="cross-link active-thumb">
+              <span class="title nav-thumb">Automate IT Processes and File Transfers</span>
+              <span
+                class="desc">Automate when your processes run. Watch FTP servers for incoming files to process.</span>
+            </a>
+          </div>
+
+          <div>
+            <a href="#3" class="cross-link">
+              <span class="title nav-thumb">Monitor Jobs and Manage File Transfers</span>
+              <span
+                class="desc">Monitor all jobs, workflows, and file transfers through your browser. The Flux Operations
+                  Console monitors everything dynamically right in your browser.</span>
+            </a>
+          </div>
+
+<!--          <div>
+            <a href="#3" class="cross-link">
+              <span class="title nav-thumb">Automated Workflows and Error Handling</span>
+              <span class="desc">Create jobs and file transfers using multi-step, automated workflows, including conditional branching and looping. Some Flux users design workflows with hundreds of steps.</span>
+            </a>
+          </div> -->
+
+        </div> <!-- cross-links-container -->
+      </div> <!-- slider-wrap -->
+
+    </div>
+    <!--end of top-content-->
+
+
+    <div class="three-boxes">
+      <div class="box-one">
+        <div class="icon-left"><img src="/images/watch-ftp-server-icon.jpg" width="48" height="45"
+                                    alt=""/></div>
+        <div class="text-right">
+          <div class="text">
+            <h1>Watch FTP Servers</h1>
+
+            <p>Watch FTP servers for changes. Securely transfer files. </p>
+          </div>
+          <!--end of text-->
+          <a href="/features/#2"><img src="/images/find-out-more-btn.jpg"
+                                                           width="158" height="30" alt=""/></a>
+        </div>
+        <!--end of text-right-->
+      </div>
+      <!--end of box-one-->
+
+      <div class="box-two">
+        <div class="icon-left"><img src="/images/embed-flux-icon.jpg" width="45" height="48"
+                                    alt=""/></div>
+        <div class="text-right">
+          <div class="text">
+            <h1>Embed Flux</h1>
+
+            <p>Embed Flux in your Java apps. </p>
+          </div>
+          <!--end of text-->
+          <a href="/features/#10"><img src="/images/find-out-more-btn.jpg"
+                                                            width="158" height="30" alt=""/></a>
+        </div>
+        <!--end of text-right-->
+      </div>
+      <!--end of box-two-->
+
+      <div class="box-three">
+        <div class="icon-left"><img src="/images/see-all-features-icon.jpg" width="45" height="45"
+                                    alt=""/></div>
+        <div class="text-right">
+          <div class="text">
+            <h1>SEE ALL FEATURES</h1>
+
+            <p>Look at everything Flux can do to automate your enterprise.</p>
+          </div>
+          <!--end of text-->
+          <a href="/features/"><img src="/images/find-out-more-btn.jpg"
+                                                         width="158" height="30" alt=""/></a>
+        </div>
+        <!--end of text-right-->
+      </div>
+      <!--end of box-three-->
+
+    </div>
+    <!--end of three-boxes-->
+
+
+  </div>
+  <!--end of homepage-content-->
+</div>
+<!--end of homepage-content-wrapper-->
+<!--end of CONTENT-->
+
+<div id="footer-outer-wrapper">
+  <div id="footer">
+    <div class="top">
+      <div class="column-one">
+        <p class="link">
+          <span class="icon"><img src="/images/footer-email-support-icon.jpg" width="16" height="12" alt=""/></span>
+          <a href="mailto:support@fluxcorp.com">email flux support</a>
+        </p>
+      </div>
+
+      <div class="column-two">
+        <p class="link">
+          <span class="icon"><img src="/images/footer-twitter-icon.jpg" width="16" height="11" alt=""/></span>
+          <a href="/latest/">connect with us on twitter</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="column-one">
+        <p class="link">
+          <span class="icon"><img src="/images/footer-call-suport-icon.jpg" width="15" height="14" alt=""/></span>
+          <span id="footerPhone">call flux support <b>+1&nbsp;702.789.0907</b></span>
+        </p>
+      </div>
+
+      <div class="column-two">
+        <p class="link">
+          <span class="icon"><img src="/images/footer-rss-feed-icon.jpg" width="15" height="15" alt=""/></span>
+          <a href="/latest/">Get the latest from our blogs</a>
+        </p>
+      </div>
+
+      <div class="copyright">&copy; 2000-2010 flux corporation</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
