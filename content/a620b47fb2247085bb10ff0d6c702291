@@ -1,0 +1,2069 @@
+21bb
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>YouSendIt: Online File Sharing and collaboration with FTP Replacement - Send Large Files and Email Attachments with Managed File Transfer Solution</title>
+
+<meta name="description" content="YouSendIt is the most popular online file sharing software that provides secure file transfer and allows you to easily send large files and large email attachments online, with outlook plugin and other productivity software . Replace FTP with a simple managed file transfer and document sharing service that is easy to use and deploy for online team collaboration." />
+
+<meta name="keywords" content="Online File sharing software, FTP, send large files, secure file transfer, managed file transfer, service, email attachment, YouSendIt, online file storage, team collaboration, document sharing, outlook plugin email" />
+
+<script type="text/javascript" src="/en/js/yui_library_js/yahoo-dom-event.js"></script>
+<script type="text/javascript" src="/en/js/yui_library_js/dragdrop.js"></script>
+<script type="text/javascript" src="/en/js/yui_library_js/container.js"></script>
+
+
+<!-- Deliver CSS files and IE specific css -->
+<link rel="stylesheet" type="text/css" href="en/css/yui_library_css/fonts-min.css" /><link rel="stylesheet" type="text/css" href="en/css/yui_library_css/container.css" /><link rel="stylesheet" type="text/css" href="en/css/box.css" /><link rel="stylesheet" type="text/css" href="en/css/newui_font.css" /><link rel="stylesheet" type="text/css" href="en/css/new_screen.css" /><link rel="stylesheet" type="text/css" href="en/css/company.css" />
+<!-- If a branded user access the partner site, the below code make sure the user's banner Image is positioned properly -->
+
+<style>
+</style>
+
+<link href="/en/css/home.css" rel="stylesheet" type="text/css" />
+
+<!--
+Add the partner CSS, if you identify its a partner
+-->
+
+   
+
+<script language="Javascript">
+<!--
+var axel = Math.random() + "";
+var ord = axel * 1000000000000000000;
+
+function show_modal_popup()
+{
+  var accttype = "GST";
+  if(accttype == "GST")
+    return false;
+
+  // if cookie is null show the modal popup else return false;
+  var cookie_value=  readCookie('no_modal');
+  var sess_cookie =readCookie('browser_cookie');
+  if(sess_cookie !=null || cookie_value!=null){    //  this means either session cookie or dont ask me again cookie is found to be set
+    return false;
+  }
+
+  Set_Cookie('browser_cookie','dont_show','');
+
+  YAHOO.namespace("example.container");
+
+  if (!YAHOO.example.container.wait) {
+    LOCALE = "en";
+
+    // Initialize the temporary Panel to display while waiting for external content to load
+
+    YAHOO.example.container.wait =
+                    new YAHOO.widget.Panel("wait",
+                                                    { width: "600px",
+                                                      fixedcenter: true,
+                                                      close: true,
+                                                      draggable: false,
+                                                      zindex:4,
+                                                      modal: true,
+                                                      visible: false
+                                                    }
+                                                );
+
+    YAHOO.example.container.wait.setHeader("YouSendIt");
+    YAHOO.example.container.wait.setBody("<br><div style=\"font-size:13px;\"><b>Use YouSendIt Express for Faster Uploads</b><br><br>If you are sending larger files try using our desktop application, YouSendIt Express - available for PC and Mac. It's free, protects against network interruptions, and provides faster upload speeds.<br><br>Express makes file transfers even more convenient and you don't even need to open a browser! (<a href=\"/cms/faq#uploadrecommendation\" target=\"_blank\">learn more</a>)</div><div><br><a href=\"/cms/standalone-app\" title=\"Download YouSendIt Express\"><img src=\"/"+LOCALE+"/images/panel_ysiexpress-2.png\" alt=\"Download YouSendIt Express\"></a> &nbsp;&nbsp;&nbsp;<input type=\"image\" id=\"NoThanks\" src=\"/"+LOCALE+"/images/panel_nothanks-2.png\" value=\"NoThanks\" alt=\"No Thanks\" title=\"No Thanks\"name=\"NoThanks\"><br><div style=\"text-align: left\"><input type=\"checkbox\" name=\"no_modal\"  onclick=\"Set_Cookie(\'no_modal\',\'no_popup\',30);\">&nbsp;&nbsp;Do not show this information</div></div>");
+
+    YAHOO.example.container.wait.render(document.body);
+
+  }
+
+  // Show the Panel
+  YAHOO.example.container.wait.show();
+  YAHOO.util.Event.addListener("NoThanks", "click", YAHOO.example.container.wait.hide, YAHOO.example.container.wait, true);
+
+}
+
+function getQueryVariable(variable) {
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i=0;i<vars.length;i++) {
+	var pair = vars[i].split("=");
+	if (pair[0] == variable) {
+		return pair[1];
+		}
+	}
+}
+
+function Set_Cookie(name,value,days)
+{
+        if (days) {
+                var date = new Date();
+                date.setTime(date.getTime()+(days*24*60*60*1000));
+                var expires = "; expires="+date.toGMTString();
+        }
+        else var expires = "";
+        document.cookie = name+"="+value+expires+"; path=/";
+}
+function readCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+}
+
+
+//-->
+<!-- Function added to show modal popup to BAS user when they upload file>100MB -->
+
+function show_ppu_subscribe_modal()
+{
+
+  YAHOO.namespace("example.container");
+
+  if (!YAHOO.example.container.wait) {
+    LOCALE = "en";
+
+    // Initialize the temporary Panel to display while waiting for external content to load
+
+    YAHOO.example.container.wait =
+                    new YAHOO.widget.Panel("show",
+                                                    { width: "583px",
+                                                      fixedcenter: true,
+                                                      close: false,
+                                                      draggable: false,
+                                                      zindex:4,
+                                                      modal: true,
+                                                      visible: false
+                                                    }
+                                                );
+
+YAHOO.example.container.wait.setHeader("YouSendIt");
+
+YAHOO.example.container.wait.setBody("<div class=\"blue12px\" style=\"margin:10px 0 20px 0px; text-align:center; width:560px;\"><b>The size of your file is over 100MB.  <br />Please choose one of the options below to send your file.</b></div><table width=\"563\" border=\"0\" cellspacing=\"7\" cellpadding=\"0\" style=\"background:url(en/images/bk_outer.gif) no-repeat;\"><tr><td width=\"50%\" valign=\"top\" height=\"180\" align=\"center\" background=\"en/images/bk_blueplane.gif\"><div class=\"blue14px\" style=\"margin:10px 0 15px 0;\"><b>UPGRADE TO YOUSENDIT</b></div><div style=\"font-size:12px;\">Click here to send and receive<br> multiple files up to 2 GB each. <br> <br>Note: If you choose this option, information entered will be lost.</div><br><br><a class=\"whiteButton\" href=\"/settings.php\"><span>SUBSCRIBE NOW</span></a></td><td width=\"\" height=\"180\" valign=\"top\" align=\"center\"  background=\"en/images/bk_greenplane.gif\"><div class=\"blue14px\" style=\"margin:10px 0 15px 0;\"><b>PREMIUM DELIVERY</b></div><div style=\"font-size:12px;\">Send this file using our <br>Premium Delivery option <br>for only $8.99</div><br><br><br><br><input type=\"IMAGE\" src=\"en/images/selectnow.gif\" id=\"PREMIUM DELIVERY\" value=\"Select Now\" name=\"PREMIUM DELIVERY\"></td></tr></table></div>");
+
+
+    YAHOO.example.container.wait.render(document.body);
+
+  }
+      // Show the Panel
+    YAHOO.example.container.wait.show();
+    function fnCallback() {
+       if(ge("fid0")){
+ 	      ge("fid0").checked =true;  //Automatically check the "Premium Delivery" option
+    
+204d
+          ge("continue-gif").style.display="block";  //show the continue button
+              continue_to_pay();			  //function to show "continue" button
+       }
+             YAHOO.example.container.wait.hide();
+
+    }
+  YAHOO.util.Event.addListener("PREMIUM DELIVERY", "click", fnCallback);
+}
+
+</script>
+
+<SCRIPT LANGUAGE="JavaScript">
+	function replaceHTTP(){
+		document.body.innerHTML = document.body.innerHTML.replace(new RegExp("http:","g"),"https:");
+	}
+</SCRIPT>
+
+
+<script>
+  document.domain = "yousendit.com";
+</script>
+<script src="/en/js/urchin.js" type="text/javascript"></script>
+<script src="/en/js/prototype.js" type="text/javascript"></script>
+<script src="/en/js/yui.js" type="text/javascript"></script>
+<script src="/en/js/yuiconnection111.js" type="text/javascript"></script>
+<script src="/en/js/ysi111.js" type="text/javascript"></script>
+<script src="/en/js/login.js" type="text/javascript"></script>
+
+<script src="/en/js/ysiupload360.js" type="text/javascript"></script>
+<script src="/en/js/ysijsres.js.php" type="text/javascript"></script>
+</head>
+<body id="homepage" class=" yui-skin-sam" >
+<script>
+      var hostUrl = "www.yousendit.com";
+    var hostName = hostUrl.split(".",1);
+    var OmnitureReportSuiteId = 'ysi-2010';
+  </script>
+<script src="/en/js/s_code280.js"></script>
+
+<!-- Start of id="container" -->
+<div id="container">
+    <!-- Start of id="header" -->
+  <div id="header">
+        			<!-- Start of class="logo" -->
+			<div id="banner-logo" class="logo" 			>
+
+			 
+			 
+				 
+				 <div style="float:left;">
+				   <a href="http://www.yousendit.com/?home=true"><img src="/en/images/logo.gif" alt="yousendit" width="207" height="94" id="master_ui_logo_img" style="display:inline;"/></a>
+				 </div>
+				
+
+			 
+				<div style="margin-right:10px; margin-top:10px; float:right; width:280px; height:99px; text-align:right;">
+												<a href="/login.php?es=">Login</a>
+									  |
+				   <a href="http://blog.yousendit.com" TARGET="_blank">Blog</a>
+					|
+				   <a href="/cms/contactus">Contact Us</a> <br><br>
+									 </div>
+
+			  </div>
+			<!-- End of class="logo" -->
+
+			<!-- Start of class="globalNav" -->
+			<div id="top-nav-bar">
+
+				            <ul id="top-main-menu">
+            
+<li>
+<!-- Bug Fix::#6488::Author:gl.deepak::Date:3/10/2008 -->
+    <a href="/cms/compareaccounts"  > <img src="../en/images/new-header/signup-off.jpg"   width="75" height="30" alt="Sign up" name="compareaccounts" class="navTabs" /></a>
+
+</li>
+
+<li>
+<img src="../en/images/new-header/button-divider.jpg" width="2" height="30" name="button-divider" class="navTabs" />
+</li>
+
+
+<li>
+
+    <a href="/signup.php?action=promo_display"  > <img src="../en/images/new-header/start-off.jpg"   width="165" height="30" alt="Promo Signup" name="promosignup" class="navTabs" /></a>
+
+</li>
+
+
+<li>
+<img src="../en/images/new-header/button-divider.jpg" width="2" height="30" name="button-divider" class="navTabs" />
+</li>
+
+
+<li>
+       <a href="http://www.yousendit.com/cms/applications"  > <img src="../en/images/new-header/applications-off.jpg"  width="109" height="30" alt="Application" name="application" class="navTabs" /></a>
+</li>
+
+
+<li>
+<img src="../en/images/new-header/button-divider.jpg" width="2" height="30" name="button-divider" class="navTabs" />
+</li>
+
+
+<li>
+
+	<a href="http://www.yousendit.com/cms/testimonialshome"  > <img src="../en/images/new-header/test-off.jpg"   width="112" height="30" alt="Testimonials" name="test" class="navTabs" /></a>
+
+</li>
+
+<li>
+<img src="../en/images/new-header/button-divider.jpg" width="2" height="30" name="button-divider" class="navTabs" />
+</li>
+
+<li>
+	<a href="http://www.yousendit.com/business"  > <img src="../en/images/new-header/enterprise-off.jpg"   width="86" height="30" alt="Enterprise" name="enterprise" class="navTabs" /></a>
+</li>
+
+<li>
+<img src="../en/images/new-header/button-divider.jpg" width="2" height="30" name="button-divider" class="navTabs" />
+</li>
+
+
+
+<li>
+
+	<a href="http://www.yousendit.com/cms/how"  > <img src="../en/images/new-header/how-off.jpg"   width="115" height="30" alt="How it works" name="how" class="navTabs" /></a>
+
+</li>
+
+            </ul>
+        
+				<ul id="top-sub-menu">
+				  							<li><a href="/login.php?es="><img src="/en/images/new-header/login.jpg" alt="Login" /></a></li>
+								   </ul>
+			</div>
+			<!-- End of class="globalNav" -->
+	
+
+    </div>
+    <!-- End of id="Header" -->
+    <!-- Include the proper Sub-master according to the main tab selected -->
+    <script>
+	// Omniture
+	omnitureProduct='';
+	omnitureBusiness='YouSendIt';
+	omnitureSubBusiness='webapp';
+	omnitureFirstLevelNav='';
+	omnitureSecondLevelNav='';
+	omnitureCustomerType='Application User'
+	// End Omniture
+	</script>
+<style type="text/css">
+#home_green_heading_main {
+	float: right;
+	width: 620px;
+}
+
+#home_green_heading_main a, #home_above_footer_main a {
+	text-decoration: underline;
+	color: #1F3CD6;
+	font-weight: bold;
+}
+
+#home_green_heading_main ul {
+	list-style: none;
+}
+
+#home_green_heading_main h1 {
+	font-size: 18.5px;
+	color: #99cc33;
+	padding-left: 10px;
+	padding-top: 20px;
+	font-weight: normal;
+}
+
+#home_green_heading_main h1 span {
+	font-weight: bold;
+}
+
+#home_green_heading_main h2 {
+	font-size: 17px;
+	color: #666666;
+	margin-top: 10px;
+	padding-left: 10px;
+}
+
+#home_green_heading_main h3 {
+	font-size: 14px;
+	color: #434F9B;
+	font-weight: bold;
+}
+
+#home_green_heading_main h4 {
+	font-size: 12px;
+}
+
+#home_green_heading_left {
+	width: 340px;
+	float: left;
+	background: url(/en/images/homepage/1px-solid-line.gif) repeat-y top right;
+	padding-right: 10px;
+	margin-top: 30px;
+}
+
+#home_green_heading_left h3 {
+	padding-left: 70px;
+	margin-bottom: 30px;
+	font-size: 17px;
+	font-weight: bold;
+}
+
+#bg_icon1 {
+	background: url(/en/images/homepage/icon1.gif) no-repeat top left;
+	padding-left: 70px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#bg_icon2 {
+	background: url(/en/images/homepage/icon4.png) no-repeat top left;
+	padding-left: 70px;
+	margin-top: 47px;
+	margin-bottom: 30px;
+}
+
+#bg_icon3 {
+	background: url(/en/images/homepage/icon3.gif) no-repeat top left;
+	padding-left: 70px;
+	margin-top: 39px;
+	height: 98px;
+}
+
+#home_green_heading_right {
+	width: 250px;
+	float: right;
+	margin-top: 30px;
+	padding-left: 20px;
+}
+
+#home_green_heading_right h3 {
+	margin-bottom: 30px;
+	font-size: 17px;
+}
+
+#home_green_heading_right li {
+	padding-bottom: 45px;
+}
+#li_header_dotted_line{
+	background: url('/en/images/homepage/1px-hdotted-line.gif') no-repeat 0px 80px;
+}
+#home_above_footer_main {
+	padding-top: 20px;
+  margin:auto;
+  text-align:left;
+}
+
+#home_above_footer_left {
+	width: 300px;
+	float: left;
+	background: url(/en/images/homepage/1px-dotted-line.gif) no-repeat top right;
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 150px;
+}
+
+#home_above_footer_left h1 {
+	font-size: 12px;
+	color: #336699;
+}
+
+#home_above_footer_middle {
+	width: 300px;
+	float: left;
+	background: url(/en/images/homepage/1px-dotted-line.gif) no-repeat top right;
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 150px;
+}
+
+#home_above_footer_middle h1 {
+	font-size: 12px;
+	color: #336699;
+}
+
+#home_above_footer_right {
+	width: 310px;
+	float: right;
+	padding-left: 20px;
+	padding-right: 10px;
+	padding-top: 10px;
+}
+
+#home_above_footer_right h1 {
+	font-size: 12px;
+	color: #336699;
+}
+
+#home_above_footer_right h2 {
+	font-size: 17px;
+	color: #336699;
+	font-weight: normal;
+	font-family: Georgia;
+	position:relative;
+}
+
+#home_above_footer_right h2 span {
+	font-size: 30px;
+	color: #336699;
+	font-weight: bold;
+}
+
+#home_above_footer_right h2 span.left_double_qoute {
+	margin-left: -18px;
+	margin-top:-10px;
+	position:absolute;
+}
+
+#home_above_footer_right h2 span.right_double_qoute {
+	margin-right: 12px;
+    margin-top:-8px;
+    position:absolute;
+}
+
+#home_above_footer_right em {
+	float: right;
+	font-style: normal;
+}
+</style>
+
+<div id="pageWrapper">
+    <div id="sendFilebox"  class="sendFilebox home-sendfile-box">
+    <fieldset id="fieldset">
+    
+221c
+<script>
+	// Omniture
+	omnitureBusiness='YouSendIt';
+
+	omnitureSubBusiness='Homepage';
+	omnitureProduct='homepage';
+
+	omnitureFirstLevelNav='';
+	omnitureSecondLevelNav='';
+	omnitureCustomerType='Application User'
+	// End Omniture
+	</script>
+<script>
+var BATCH_LOCK=0;
+var TOTAL_PPU_PRICE=0;
+var PPU_PRODUCT='';
+var PNREF='';
+var CC_FOUR='';
+var CC_EXP='';
+var CC_ID='';
+var DROPBOX = "";
+var UPLOAD_REDIRECT = "true";
+var SECURE_UPLOAD = "true";
+var SHOW_ADS = "true";
+var UPLOAD_FROM = "";
+
+var YSI_BASE_URL = "http://www.yousendit.com";
+var YSI_BASE_HOST = "www.yousendit.com";
+var PROGRESS_ID = "703828401";
+var PROGRESS_URL = "https://ftf-239.yousendit.com";
+var MOD_TYPE = 'c';
+var MAX_UPLOAD_COUNT = 1;
+var SPECIFIED_FTF = "";
+
+window.onload = function () {
+
+  if ("https://ftf-239.yousendit.com"=='http://ftf.yousendit.com') {
+     alert("System Error: Failed to get FTF [ERROR CODE:555]. \nPlease e-mail paidsupport@yousendit.com with this error message!");
+  }
+
+  init_iframe("file_upload_iframe");
+}
+
+</script>
+<script language="Javascript">
+var axel = Math.random() + "";
+var ord = axel * 1000000000000000000;
+</script>
+
+<div style="text-align:center;">
+<NOSCRIPT>
+<a style="font-size:11px; color:#FF6600;"><b>It seems JavaScript is either disabled or not supported by your browser.<br>JavaScript must be enabled in order for you to use YouSendIt.<br>
+Please enable JavaScript by changing your browser options and then try again!</b></a>
+</NOSCRIPT>
+</div>
+
+<form name="tform" method="post" id="tform" ENCTYPE="multipart/form-data" />
+<div id="upload-form-div">
+      <link href="/en/css/home.css" rel="stylesheet" type="text/css" />
+  <!--[if IE 7]>
+    <link href="/en/css/new_ie7.css" rel="stylesheet" type="text/css" />
+  <![endif]-->
+  <!--[if IE 6]>
+    <link href="/en/css/new_ie.css" rel="stylesheet" type="text/css" />
+  <![endif]-->
+
+<script type="text/javascript" src="/en/js/external.js">
+</script>
+
+<script type="text/javascript" src="/en/js/dom.js"></script>
+
+<script type="text/javascript" src="/en/js/upload_home.js"></script>
+
+<script LANGUAGE= "Javascript" type="text/javascript">
+document.domain = "yousendit.com";
+
+
+
+ function do_pay()
+ {
+   parent.cc_info.AuthorizePayment();
+ }
+
+function add_expiration()
+{
+  var chk = document.getElementById("file_expiry");
+   var id = document.getElementById("setExpiration");
+   if(chk.checked)
+   {
+      id.style.display='inline';
+   }else {
+     id.style.display='none';
+//    ge("download_days").value ='100';
+ //   ge("expiration_time").value ='7 DAY';
+   }
+
+}
+ function do_cancel()
+ {
+   BATCH_LOCK = 0;
+   showAdvancedOptions(false);
+ }
+
+ function success_payment()
+ {
+   parent.cc_info.ReadyToSend();
+ }
+
+ function showAdvancedOptions(status)
+ {
+        parent.window.location = 'login.php?es=115';
+      init_iframe_list("upload_file_list");
+
+    if(ge("pdf_price") && !status)
+    {
+      var f_price = ge("pdf_price").value;
+      if(ge("pdf_feature_price"))
+      {
+        ge("pdf_feature_price").style.marginLeft="150px";
+       ge("pdf_feature_price").innerHTML="<b style='padding-top:5px; margin-top:5px;'>Your total: $"+f_price+"</b>";
+        ge("pdf_feature_price").innerHTML = f_price;
+      }
+    }
+   if(status && validate_upload(UPLOAD_IFRAME_LIST, ge("acctType").value)) {
+     if(calculate_total_price() == 'false')
+     {
+       return false;
+     }
+
+	 ge("upload-options").style.display = "none";
+	 if (ge("step-two-subdiv-pdf"))
+	   ge("step-two-subdiv-pdf").style.display = "none";
+	 ge("file-expire").style.display = "none";
+
+     ge("total-feature-amount").style.display="block";
+     ge("total-feature-amount").style.marginLeft="100px";
+     ge("total-feature-amount").style.marginTop="10px";
+     ge("total-feature-amount").innerHTML="<b style='border-top: #000000 solid 1px; padding-top:5px; margin-top:5px;'>Your total: $"+TOTAL_PPU_PRICE+"</b>";
+     ge("step-one-div").style.display="none";
+     //ge("step-one-subdiv").style.display="none";
+     //ge("step-three-div").style.display="none";
+     //In case of safari, don't hide the file select part because safari looses its value whent its hided
+     if(!is_safari) {
+       ge("step-two-div").style.display="none";
+       ge("upload_file_list").style.display="none";
+       ge("step-two-subdiv").style.display="none";
+       if(ge('ff_message'))
+         ge('ff_message').style.display="none";
+     }
+     //ge("step-two-image").style.display="none";
+     //ge("add-file").style.display="none";
+     //ge("step-three-div").style.display="none";
+     //ge("show-advanced").style.display="none";
+     ge("credit_info").style.display="block";
+     ge("credit_user_info").style.display="block";
+	 ge("continue-gif").style.display="none";
+     disable_adv_options(true);
+   }
+
+   if(!status){
+   	 ge("upload-options").style.display = "block";
+   	 if (ge("step-two-subdiv-pdf"))
+       ge("step-two-subdiv-pdf").style.display = "block";
+   	 ge("file-expire").style.display = "block";
+					ge("step-one-div").style.display="block";
+     ge("step-two-subdiv").style.display="block";
+     ge("upload_file_list").style.display="block";
+
+     if(ge('ff_message'))
+       ge('ff_message').style.display="block";
+
+
+	 if (ge("add-file"))
+	     ge("add-file").style.display="block";
+     if (ge("show-advanced"))
+		 ge("show-advanced").style.display="block";
+
+     ge("credit_info").style.display="none";
+     ge("credit_user_info").style.display="none";
+     ge("step-two-div").style.display="block";
+     ge("step-two-subdiv").style.display="none";
+
+     if(ge("pdf-feature"))
+     {
+       ge("pdf-feature").style.display="block";
+       if (ge("step-two-subdiv-pdf"))
+         ge("step-two-subdiv-pdf").style.display="none";
+     }
+
+     ge("send-button-div").style.display="block";
+     ge("continue-gif").style.display="none";
+     ge("adv-options").style.display="block";
+     ge("total-feature-amount").style.display="none";
+
+	 ge("credit_info").style.display = "none";
+   ge("credit_user_info").style.display="none";
+
+     disable_adv_options(false);
+   }
+ }
+
+ function makePayment()
+ {
+     ge("credit_info").style.display="block";
+     ge("credit_user_info").style.display="block";
+ }
+
+
+ function validateMaxLength()
+ {
+     var maxAllowedCharacters = 100;
+     var counter = ge("msg").value.length;
+     if(counter >= maxAllowedCharacters) {
+	     alert("Maximum limit specified for message text is " + maxAllowedCharacters + " characters");
+    	 ge("msg").value = ge("msg").value.substring(0, maxAllowedCharacters);
+     }
+ }
+
+function getContact()
+{
+  ajax_getContacts();
+}
+
+function TrimString(sInString) {
+  sInString = sInString.replace( /^\s+/g, "" );
+  return sInString.replace( /\s+$/g, "" );
+}
+
+
+function displayContact(e)
+{
+  if(e.keyCode==8) return;
+  var match_rcpt = new Array();
+  var count = 0;
+
+
+  for(var x = 0; x < USER_CONTACTS.length; x++)
+  {
+  var rcpt_array = ge('rcpt').value.split(';');
+  var rcpt = TrimString(rcpt_array[rcpt_array.length-1]);
+    value = USER_CONTACTS[x];
+    if(value.indexOf(rcpt)==0) {
+      value = value + ';';
+      match_rcpt[count] = value;
+      count++;
+    }
+  }
+  if(match_rcpt.length==1) {
+    var last_pos = ge('rcpt').value.lastIndexOf(';');
+    var typed_rcpt = ge('rcpt').value.substr(0,last_pos+1);
+    ge('rcpt').value= typed_rcpt + match_rcpt[0];
+  }
+}
+
+function trimContacts()
+{
+  var last_pos = ge('rcpt').value.lastIndexOf(';');
+  if(last_pos+1 == ge('rcpt').value.length) {
+    var typed_rcpt = ge('rcpt').value.substr(0,last_pos);
+    ge('rcpt').value = typed_rcpt;
+  }
+}
+
+//for recipient's auto fill
+
+
+
+function auto_fill() {
+  YAHOO.example.ACJSArray = function() {
+    var oACDS;
+    var oAutoComp;
+    return {
+        init: function() {
+
+            // Instantiate first JS Array DataSource
+              oACDS = new YAHOO.widget.DS_JSArray(USER_CONTACTS);
+
+            // Instantiate first AutoComplete
+            oAutoComp = new YAHOO.widget.AutoComplete('rcpt','ContactsContainer', oACDS);
+            oAutoComp.queryDelay = 0;
+            oAutoComp.prehighlightClassName = "yui-ac-prehighlight";
+            oAutoComp.typeAhead = true;
+            oAutoComp.useShadow = true;
+
+        },
+
+        validateForm: function() {
+            // Validate form inputs here
+            return false;
+        }
+    };
+  }();
+  YAHOO.widget.AutoComplete.prototype.autoHighlight = false;
+  YAHOO.widget.AutoComplete.prototype.minQueryLength = 2;
+  YAHOO.widget.AutoComplete.prototype.delimChar = [',',';'];
+  YAHOO.util.Event.addListener(this,'load',YAHOO.example.ACJSArray.init);
+}
+
+
+function omniture_track_upload_start()
+{
+  if(PPU_PRODUCT)
+    s.products=";File Upload"+PPU_PRODUCT;
+	else
+	  s.products=";File Upload";
+  s.events="event6"
+	var s_code=s.t();if(s_code)document.write(s_code);
+}
+
+functi
+203d
+on hideFFSpan(ff_span_id,ff_span_name)
+{
+  var str = ge('ff_file_ids').value;
+  var str_name = ge('ff_file_names').value;
+  var str_status_name = ge('ff_status').value;
+
+  ge(ff_span_id).style.display="none";
+  str = str.replace(ff_span_id,"");
+  str_name = str_name.replace(ff_span_name,"");
+  str_status_name = str_status_name.replace(ff_span_name,"");
+
+  str = str.replace(/^;+/, '');
+  str = str.replace(/;+$/, '');
+  str_name = str_name.replace(/^;+/, '');
+  str_name = str_name.replace(/;+$/, '');
+  str_status_name = str_status_name.replace(/^;+/, '');
+  str_status_name = str_status_name.replace(/;+$/, '');
+
+  arr_str = str.split(";");
+  ge('ff_file_ids').value = str;
+  ge('ff_file_names').value = str_name;
+		ge('ff_status').value = str_status_name;
+
+  if(str == '')
+  {
+    ge('ff_file_forward').value = false;
+  		arr_str_length = 0;
+  }
+  else
+  {
+    arr_str_length = arr_str.length;
+  }
+  ge('ff_file_length').innerHTML= "&nbsp;<b>" + arr_str_length + " files </b>";
+
+    hideFfPdfInfo(ff_span_id);
+		uploadHideShow();
+}
+
+function hideFfPdfInfo(ufid) {
+  if (pdf_flag()) {
+    if (!parent.ge("pdf-cell").hasChildNodes()) {
+      rebuild_pdf_div();
+    }
+    var topDiv = parent.ge('list-of-files-topdf');
+    var i = 0;
+    while (topDiv.hasChildNodes()) {
+      var subDiv = topDiv.childNodes[i];
+      if (subDiv == null) {
+        break;
+      }
+      var innerChkBox = subDiv.childNodes[0];
+      var if_id = innerChkBox.getAttribute("if_id");
+      var this_if_id = "if-" + ufid;
+      if (this_if_id == if_id) {
+        if (topDiv.childNodes.length == 1) {
+          parent.ge("fid5").checked = false;
+          parent.ge("step-two-subdiv-pdf").style.display="none";
+        }
+        topDiv.removeChild(subDiv);
+      }
+      i++;
+
+      if (checkPdfStatus(false) <= 1) {
+        if (!ge("pdf-cell").hasChildNodes()) {
+          rebuild_pdf_div();
+        }
+        var pdf_cell = ge("pdf-cell");
+        var i = 0;
+        while (pdf_cell.hasChildNodes()) {
+          pdf_cell.removeChild(pdf_cell.childNodes[i]);
+        }
+        i++;
+      }
+    }
+    remove_ff_pdf_mark(ufid);
+  }
+}
+
+function uploadHideShow()
+{
+  var flag = true;
+  var str = ge('ff_file_ids').value;
+  if(str != '')
+		{
+    str = str.replace(/^;+/, '');
+    str = str.replace(/;+$/, '');
+    arr_str = str.split(";");
+				if(arr_str.length >= 5)
+				{
+      flag = false;
+				}
+		}
+  if (flag)
+  {
+				ge('step-two-div').style.display = 'block';
+				ge('add_upload_span').style.display = 'block';
+  }
+		else
+		{
+				ge('step-two-div').style.display = 'none';
+				ge('add_upload_span').style.display = 'none';
+		}
+}
+
+ </script>
+<script src="/en/js/effects.js" type="text/javascript"></script>
+
+<script type="text/javascript" language="javascript">
+      function toggleRow(rowID){
+        var rowa = document.getElementById(rowID + "_main");
+        var rowb = document.getElementById(rowID + "_sub");
+        var sp = document.getElementById(rowID + "_span");
+
+        if (rowb.style.display == 'none'){
+        rowb.style.display='';
+        sp.innerHTML = '[-]';
+        } else {
+        rowb.style.display='none';
+        sp.innerHTML = '[+]';
+        }
+      }
+
+
+</script>
+
+  <input type='hidden' id='ff_file_ids' name='ff_file_ids' value=''>
+  <input type='hidden' id='ff_file_names' name='ff_file_names' value=''>
+  <input type='hidden' id='ff_file_forward' name='ff_file_forward' value=''>
+  <input type='hidden' id='ff_pdf_mark' name='ff_pdf_mark' value=''>
+
+
+<div id="failed_upload" style="text-decoration:none; display:none;">
+    <b style="color:#FF6600;"> You have some failures on the batch of files you just uploaded.</b><br>
+    Do you want to proceed with sending notification(s) for your recipient(s) for the files uploaded successfully?<br>
+    <br>
+    <a onclick="send_email('yes');"><img src="/en/images/proceed.gif" border="0" style="cursor:pointer; margin-right:10px;"></a> <a onclick="send_email('no');"><img src="/en/images/cancel.gif" border="0" style="cursor:pointer;"></a> </div>
+<div id="all_failed_upload" style="text-decoration:none; display:none;">
+    <b style="color:#FF6600;"> We are very sorry that you were not able to send files right now. Please try again later..</b><br>
+    Please check and try again later.<br>
+    <br>
+    <a onclick="window.location='http://www.yousendit.com/transfer.php'"><img src="/en/images/proceed.gif" border="0" style="cursor:pointer; margin-right:10px;"></a>
+</div>
+
+
+    <!-- Start of class="mainFields" -->
+    <div class="mainFields">
+            <!-- not logged in -->
+
+        <div id="step-one-div">
+            <label for="recepientemail">To: <span style="font-weight:normal">(Separate multiple emails by comma)</span></label>
+            <input name="rcpt" type="text" class="textfield" id="rcpt" value=""  autocomplete='off'  onblur="ajax_call();"/>
+                    </div>
+        <div id="step-one-subdiv">
+            <label for="from" style="margin-top:2px">From: </label>
+ <input id="from" name="from" type="text" class="textfield" style="width:200px;" value="" autocomplete='off'  onblur="ajax_call();"/>
+
+            <div style="display:inline" id="remember-email-div">
+                <input type="checkbox" id="remail" name="remail" value="remail" checked="checked" />
+                <span style="font-size:9px; margin-left:-1px;">Remember my email</span>
+            </div>
+
+            <div style="color:#777777;">
+             <label for="Subject" style="margin-top:2px" >Subject (optional)</label>
+             <input type="text" style="height:20px;  width:300px; border:1px solid #DDDDDD;" id="upl_subject" maxlength="100" name="upl_subject"></input>
+         </div>
+
+
+            <input type="hidden" id="chk" name="chk" value="" />
+            <input type="hidden" id="subject" name="subject" class="tinput" />
+
+        <div style="color:#777777;">
+            <label for="EnterMessage" style="margin-top:2px">Enter message  (optional)</label>
+            <textarea style="width:300px;height:30px; border: 1px solid #DDDDDD;" id="msg" name="msg" onkeyup="validateMaxLength();"></textarea>
+         </div>
+                    </div>
+
+        <div id="partner_msg" style="margin-top:0px">
+     			        </div>
+
+        
+        <div id="step-two-div" style="position:relative; margin-top:-3px;">
+		<div id="credit_user_info" style="display:none">
+	            <div style="line-height: 12pt; font-size: 14px; color: #BB0000; font-weight: bold; padding-bottom:30px;">Please note that your credit card will be charged ONLY after your files are uploaded successfully.</div>
+       		 </div>
+
+            <div id="step-two-sub-div"  class="select-file-label" >
+                                  <label for="Selectafile">Select a file (Max Size 100 MB)
+                  <a href="/cms/compareaccounts" style="font-size:10px;"> Larger file?</a>
+                  </label>
+                            </div>
+                                <div id="upload_file_list" class="upload_file_list"  style="margin-top:0px;">
+                          
+<script>
+
+var UPLOAD_LIMIT = '20';
+var PROTOCOL = "https:";
+
+var YSI_BASE_URL = 'http://www.yousendit.com'
+var YSI_LOGIN_URL = "https://www.yousendit.com/login.php";
+
+var DROPBOX_RURL = "https://dropbox.yousendit.com/transfer.php?action=dropbox_status&dropbox=" + DROPBOX;
+var GET_INIT_URL = "https://ftf-234.yousendit.com/init/1366557953?mode=slow";
+var GET_STATUS_URL = "https://ftf-234.yousendit.com/status/1366557953.html";
+
+
+
+</script>
+
+<div>
+
+  <input style="width:240px" id="fname" name="fname" type="file" onChange="getSize('tform');" >
+<input id="pdf_mark" name="pdf_mark" type="hidden" value="false" />
+
+
+<!--
+The below script will make sure the file select field is empty when users hit the back button or reloads the page.
+-->
+<script>
+  if(ge('fname') && !ge('fname').value=='') {
+    getSize('tform');
+  }
+</script>
+
+</div>
+
+
+<div id="file_upload_iframe" upload_state="INIT" style="display: block">
+<input name="bid" class="tinput" id="bid" value="" type="hidden">
+<input id="rurl" name="rurl" value="https://www.yousendit.com/transfer.php?action=send_notification" type="hidden">
+<input id="eurl" name="eurl" value="https://www.yousendit.com/transfer.php?myaccount=true
+20d2
+" type="hidden">
+
+<!--Added for authentication check -->
+<input name="auth_req_chk" class="tinput" id="auth_req_chk" value="" type="hidden">
+
+<input type="hidden" id="dbox" name="dbox">
+<div id="selected-fname" name="selected-fname" style="font-size:11px; font-weight:900; font-family:Verdana; color:#1d499f;"></div>
+<input type="button" id="submit_upload" name="submit_upload" alt="Browse/Submit" onClick="submit_to_ftf();" style="display: none;">
+</div>
+
+<div id="progressDiv" style="display: none;">
+  <div align="left" class="content_bigger">
+    <div id="file-name"></div><br>
+    <iframe name="progressFRM" id="progressFRM" src="javascript:'';" width="420" height="80" scrolling="no" frameborder="0" marginheight="0" marginwidth="0">
+    </iframe>
+  </div>
+</div>
+
+
+
+<input name="pstate" class="tinput" id="pstate" value="INIT" type="hidden">
+
+            </div>
+        </div>
+        <div style="background-image:none; margin-top:-24px; margin-left:240px;"  id="upload-options"> <span id='add_upload_span' name='add_upload_span' ><a id="add_another_link" href="#" onClick="add_iframe('upload_file_list')">Add another file</a></span></div>
+
+<div class="fixMarginTop" style="margin-left: 140px;" id="pdf-feature">
+
+</div>
+
+  <div style="margin-left:140px; margin-top: 10px;" id="file-expire">
+
+  
+		<table border="0" id="setExpiration" style="display:none;">
+             <tr>
+               <td style="font-weight:normal;">Expire files in               </td>
+                 <td>
+                       <input type="hidden" id="expiration_time" name="expiration_time"  class="tinput" value="7 DAY"    />
+                                  </td></td>
+             </tr>
+            <tr>
+              <td style="font-weight:normal;">Expire files after</td>
+                <td style="font-weight:normal;">
+              <input style="width: 60px;font-family:Verdana;"  type="hidden"  id="download_days" name="download_days" value="100"  maxlength="9" />  download(s)</td>
+                </td>
+           </tr>
+        </table>
+
+                       <a href="#" onclick="Effect.Appear('adv-options')"></a>
+                    </div>
+
+
+        <div id="cc_success" style="display:none; background-color:#f3f3f3; padding:10px;">
+            <h1>Payment Confirmed</h1>
+        </div>
+        <div id="contentCTR" name="contentCTR" align="center" style="display: none; margin-top:-5px;">
+                        <iframe id="content-frm" src="javascript:'';" name="content-frm" scrolling="no" frameborder="0"  style="margin-left:-140px;" width="850" height="350" ; margin-top:-70px;"></iframe>
+        </div>
+    </div>
+
+	<div id="createHidden">
+		<input type="hidden" name="hidden_temp_1" value="" id="file_expiry_hidden" />
+		<input type="hidden" name="hidden_temp_2" value="" id="expiration_time_hidden" />
+		<input type="hidden" name="hidden_temp_3" value="" id="1_hidden" />
+		<input type="hidden" name="hidden_temp_4" value="" id="2_hidden" />
+		<input type="hidden" name="hidden_temp_5" value="" id="3_hidden" />
+	</div>
+           <div id="adv-options" class="upgradePromo" style="display:block; background-image:none;margin-top:13px;">
+     <div id="credit_user_info" style="display:none">
+            <div style="line-height: 12pt; font-size: 14px; color: #BB0000; font-weight: bold; padding-bottom:30px;">Please note that your credit card will be charged ONLY after your files are uploaded successfully.</div>
+        </div>
+            
+<script>
+NUM_PDF_FILES_TO_CHARGE = null;
+NUM_FREE_TRIALS_LEFT = null;
+NUM_PDF_FILES_TO_CONVERT = null;
+//Bug Fix::7319::Anamika.gl::10/23/2008
+PDF_INVALID_FLAG = false;
+
+function showDesc(feature_id) 
+{
+ if(ge("desc"+feature_id).style.display=='none') {
+   ge("desc"+feature_id).style.display = "block";
+   ge("plus"+feature_id).innerHTML = "[-]";
+ }
+ else {
+   ge("desc"+feature_id).style.display = "none";
+   ge("plus"+feature_id).innerHTML = "[+]";
+ }
+}
+
+function continue_to_pay()
+{
+  BATCH_LOCK=0;
+
+  //HAS_USER_CANCELLED = false;
+  //global variable to keep track of the number of pdf files that has to be charged for
+  NUM_PDF_FILES_TO_CHARGE = null;
+  //global variable to keep track of the number of free trial left for the user
+  NUM_FREE_TRIALS_LEFT = null;
+
+      alert("Please Sign up to use this feature!");
+    disable_adv_options(false);
+  
+if(!ge("fid1").checked) {
+  ge("step-two-subdiv").style.display="none";
+  ge("passpro").checked=false;
+  ge("passwd").value="";
+  ge("pass_conf").value="";
+  if (pdf_flag()) {
+    ge("step-two-subdiv-pdf").style.display="none";
+    ge("pdf_files_checkbox").checked=false;
+	//Bug Fix::7319::Anamika.gl::10/23/2008
+	PDF_INVALID_FLAG = false; 
+  }
+}
+  var feature = 0;
+        feature = ge("fid0");
+    if((feature != null) && (feature.checked || (feature.value != null && 'on' == feature.value))) {
+      BATCH_LOCK = BATCH_LOCK  + 1;
+    }
+
+    if((ge("fid0").checked|| (feature.value != null && 'on' == feature.value)) && 0==1) {
+      ge("step-two-subdiv").style.display="block";  
+      ge("passpro").checked=true;
+    }
+	//Bug Fix::7319::Anamika.gl::10/23/2008
+	 
+    if( (ge("fid0").checked && 0==5 && checkPdfStatus(true) == 0  && calcAllUploadFilesNum() >= 1 )
+        || (ge("fid0").checked && 0==5 
+		&& checkPdfStatus(true) > 0 && calcAllUploadFilesNum() >= 1	)) { 
+	//Bug Fix::7319::Anamika.gl::10/23/2008
+	  if(ge("fid0").checked && checkPdfStatus(true) == 0){
+			PDF_INVALID_FLAG= true;
+      if ((BATCH_LOCK & 1 ) == 1){
+        BATCH_LOCK = BATCH_LOCK - 1 ;
+      }
+	  }
+	  ge("step-two-subdiv-pdf").style.display="block";    
+      ge("pdf_files_checkbox").checked=true;	 
+    }
+    if( ge("fid0").checked && 0==2) {
+      ge("auth_req_chk").checked=true;
+    }
+
+          feature = ge("fid1");
+    if((feature != null) && (feature.checked || (feature.value != null && 'on' == feature.value))) {
+      BATCH_LOCK = BATCH_LOCK  + 2;
+    }
+
+    if((ge("fid1").checked|| (feature.value != null && 'on' == feature.value)) && 1==1) {
+      ge("step-two-subdiv").style.display="block";  
+      ge("passpro").checked=true;
+    }
+	//Bug Fix::7319::Anamika.gl::10/23/2008
+	 
+    if( (ge("fid1").checked && 1==5 && checkPdfStatus(true) == 0  && calcAllUploadFilesNum() >= 1 )
+        || (ge("fid1").checked && 1==5 
+		&& checkPdfStatus(true) > 0 && calcAllUploadFilesNum() >= 1	)) { 
+	//Bug Fix::7319::Anamika.gl::10/23/2008
+	  if(ge("fid1").checked && checkPdfStatus(true) == 0){
+			PDF_INVALID_FLAG= true;
+      if ((BATCH_LOCK & 2 ) == 2){
+        BATCH_LOCK = BATCH_LOCK - 2 ;
+      }
+	  }
+	  ge("step-two-subdiv-pdf").style.display="block";    
+      ge("pdf_files_checkbox").checked=true;	 
+    }
+    if( ge("fid1").checked && 1==2) {
+      ge("auth_req_chk").checked=true;
+    }
+
+          feature = ge("fid2");
+    if((feature != null) && (feature.checked || (feature.value != null && 'on' == feature.value))) {
+      BATCH_LOCK = BATCH_LOCK  + 4;
+    }
+
+    if((ge("fid2").checked|| (feature.value != null && 'on' == feature.value)) && 2==1) {
+      ge("step-two-subdiv").style.display="block";  
+      ge("passpro").checked=true;
+    }
+	//Bug Fix::7319::Anamika.gl::10/23/2008
+	 
+    if( (ge("fid2").checked && 2==5 && checkPdfStatus(true) == 0  && calcAllUploadFilesNum() >= 1 )
+        || (ge("fid2").checked && 2==5 
+		&& checkPdfStatus(true) > 0 && calcAllUploadFilesNum() >= 1	)) { 
+	//Bug Fix::7319::Anamika.gl::10/23/2008
+	  if(ge("fid2").checked && checkPdfStatus(true) == 0){
+			PDF_INVALID_FLAG= true;
+      if ((BATCH_LOCK & 4 ) == 4){
+        BATCH_LOCK = BATCH_LOCK - 4 ;
+      }
+	  }
+	  ge("step-two-subdiv-pdf").style.display="block";    
+      ge("pdf_files_checkbox").checked=true;	 
+    }
+    if( ge("fid2").checked && 2==2) {
+      ge("auth_req_chk").checked=true;
+    }
+
+          feature = ge("fid3");
+    if((feature != null) && (feature.checked || (feature.value != null && 'on' == feature.value))) {
+      BATCH_LOCK = BATCH_LOCK  + 8;
+    }
+
+    if((ge("fid3").checked|| (feature.value != null && 'on' == feature.value)) && 3==1) {
+      ge("step-two-subdiv").style.display="block";  
+      ge("passpro").checked=true;
+    }
+	//Bug Fix::7319::Anamika.gl::10/23/2008
+	 
+    if( (ge("fid3").checked && 3==5 && checkPdfStatus(true) == 0  && calcAllUploadFilesNum() >= 1 )
+        || (ge("fid3").checked && 3==5 
+		&& checkPdfStatus(true) > 0 && calcAllUploadFilesNum() >= 1	)) { 
+	//Bug Fix::7319::Anamika.gl::10/23/2008
+	  if(ge("fid
+218e
+3").checked && checkPdfStatus(true) == 0){
+			PDF_INVALID_FLAG= true;
+      if ((BATCH_LOCK & 8 ) == 8){
+        BATCH_LOCK = BATCH_LOCK - 8 ;
+      }
+	  }
+	  ge("step-two-subdiv-pdf").style.display="block";    
+      ge("pdf_files_checkbox").checked=true;	 
+    }
+    if( ge("fid3").checked && 3==2) {
+      ge("auth_req_chk").checked=true;
+    }
+
+    if(parent.ge('list-of-files-topdf'))
+{
+  var topDiv = parent.ge('list-of-files-topdf');
+  if(!topDiv.hasChildNodes()){
+	  ge("step-two-subdiv-pdf").style.display="none";   
+  }
+}
+
+
+free_trial_flag = 1;
+var el_charge_price = ge('charge_price_5');
+var files_to_be_converted = getNumFilesRequestedForPdfConversion();
+if(el_charge_price)
+{
+ var free_trials_left = el_charge_price.getAttribute('num_free_trials');
+ var is_subscribed = el_charge_price.getAttribute('is_subscribed');
+
+ if(free_trials_left > 0) 
+   free_trial_flag = 0;
+ if(files_to_be_converted > free_trials_left)
+   free_trial_flag = 1;
+
+ if(is_subscribed)
+   free_trial_flag = 0;
+}
+//Bug Fix::7534::Anamika.gl::10/30/2008
+var show_price_flag=0;
+if(files_to_be_converted>0)
+ show_price_flag=1;  
+if(0
+         || (''!='off' && ge("fid0").checked && ( 1)) || 0
+         || (''!='off' && ge("fid1").checked && ( 1)) || 0
+         || (''!='off' && ge("fid2").checked && ( 1)) || 0
+         || (''!='off' && ge("fid3").checked && ( 1)) || 0
+     ) {
+     //Bug Fix::7319::Anamika.gl::10/23/2008
+    if( calcAllUploadFilesNum() != 0 ){
+    	ge("send-button-div").style.display="none";
+     	ge("continue-gif").style.display="block";
+    }else {
+	//Bug Fix::7456::Anamika.gl::10/30/2008
+    	ge("send-button-div").style.display="block";
+    	ge("continue-gif").style.display="none";
+    }
+  } else {
+    ge("send-button-div").style.display="block";
+    ge("continue-gif").style.display="none";
+  }
+}
+
+/**
+ * Get the supported file types for PDF conversion.
+ * @return Array supportedFileTypes
+ */
+function getSupportedFileTypes() {
+    var supportedFileTypes = new Array();
+    return supportedFileTypes;
+}
+
+/**
+ * This function returns the number of files, the user is requesting for PDF conversion.
+ * Iterates through the outer div - list-of-files-topdf, to find all the child elements.
+ * If the child element is a checked checkbox, then increment the counter numPdfFilesCount
+ */
+function getNumFilesRequestedForPdfConversion()
+{
+ var numPdfFilesCount = 0;
+ var topDiv = parent.ge('list-of-files-topdf');
+ if(pdf_flag() && topDiv != null) {
+    for(var counter= 0; counter< topDiv.childNodes.length; counter++) {
+      var subDiv = topDiv.childNodes[counter];
+      if (subDiv == null) {
+        break;
+      }
+      var innerChkBox = subDiv.childNodes[0];
+      if(innerChkBox == null)
+        break;
+      //increment the counter only if the DOM element is a checked checkbox
+      if(innerChkBox.type == 'checkbox')
+      {
+        if(innerChkBox.checked)
+    numPdfFilesCount++;     
+      }
+    }
+  }
+  return numPdfFilesCount;
+}
+
+function toggleSendContinueButton()
+{
+  continue_to_pay();
+}
+
+function disable_adv_options(status)
+{
+  if(status) {
+        ge("desc0").style.display="none";
+    if(!ge("fid0").checked) {
+      ge("body0").style.display = "none";
+    } else {
+      if(0 == 5)
+      {
+						if(ge("plus0").innerHTML == "[-]")
+						{
+        ge("desc0").style.display="block";
+						}
+      ge("fid0").style.display = "none";   
+       if(ge("pdf_feature_price"))
+       {
+         var f_price = ge("pdf_feature_price").innerHTML;
+         var pdf_f_price = 8.99;
+         var num_files = get_num_files_to_be_charged(false);
+         if(num_files > 0)
+         {
+           pdf_price_elem = ge("pdf_feature_price");
+           prepare_price_display(num_files,pdf_price_elem,pdf_f_price);
+    }
+         else
+         {
+           if(ge("pdf-feature"))
+             ge("pdf-feature").style.display = "none";   
+         }
+       }   
+      }
+      else {
+						if(ge("plus0").innerHTML == "[-]")
+						{
+        ge("desc0").style.display="block";
+						}
+      ge("fid0").style.display = "none";   
+    }}
+  		      ge("desc1").style.display="none";
+    if(!ge("fid1").checked) {
+      ge("body1").style.display = "none";
+    } else {
+      if(1 == 5)
+      {
+						if(ge("plus1").innerHTML == "[-]")
+						{
+        ge("desc1").style.display="block";
+						}
+      ge("fid1").style.display = "none";   
+       if(ge("pdf_feature_price"))
+       {
+         var f_price = ge("pdf_feature_price").innerHTML;
+         var pdf_f_price = 3.99;
+         var num_files = get_num_files_to_be_charged(false);
+         if(num_files > 0)
+         {
+           pdf_price_elem = ge("pdf_feature_price");
+           prepare_price_display(num_files,pdf_price_elem,pdf_f_price);
+    }
+         else
+         {
+           if(ge("pdf-feature"))
+             ge("pdf-feature").style.display = "none";   
+         }
+       }   
+      }
+      else {
+						if(ge("plus1").innerHTML == "[-]")
+						{
+        ge("desc1").style.display="block";
+						}
+      ge("fid1").style.display = "none";   
+    }}
+  		      ge("desc2").style.display="none";
+    if(!ge("fid2").checked) {
+      ge("body2").style.display = "none";
+    } else {
+      if(2 == 5)
+      {
+						if(ge("plus2").innerHTML == "[-]")
+						{
+        ge("desc2").style.display="block";
+						}
+      ge("fid2").style.display = "none";   
+       if(ge("pdf_feature_price"))
+       {
+         var f_price = ge("pdf_feature_price").innerHTML;
+         var pdf_f_price = 3.99;
+         var num_files = get_num_files_to_be_charged(false);
+         if(num_files > 0)
+         {
+           pdf_price_elem = ge("pdf_feature_price");
+           prepare_price_display(num_files,pdf_price_elem,pdf_f_price);
+    }
+         else
+         {
+           if(ge("pdf-feature"))
+             ge("pdf-feature").style.display = "none";   
+         }
+       }   
+      }
+      else {
+						if(ge("plus2").innerHTML == "[-]")
+						{
+        ge("desc2").style.display="block";
+						}
+      ge("fid2").style.display = "none";   
+    }}
+  		      ge("desc3").style.display="none";
+    if(!ge("fid3").checked) {
+      ge("body3").style.display = "none";
+    } else {
+      if(3 == 5)
+      {
+						if(ge("plus3").innerHTML == "[-]")
+						{
+        ge("desc3").style.display="block";
+						}
+      ge("fid3").style.display = "none";   
+       if(ge("pdf_feature_price"))
+       {
+         var f_price = ge("pdf_feature_price").innerHTML;
+         var pdf_f_price = 3.99;
+         var num_files = get_num_files_to_be_charged(false);
+         if(num_files > 0)
+         {
+           pdf_price_elem = ge("pdf_feature_price");
+           prepare_price_display(num_files,pdf_price_elem,pdf_f_price);
+    }
+         else
+         {
+           if(ge("pdf-feature"))
+             ge("pdf-feature").style.display = "none";   
+         }
+       }   
+      }
+      else {
+						if(ge("plus3").innerHTML == "[-]")
+						{
+        ge("desc3").style.display="block";
+						}
+      ge("fid3").style.display = "none";   
+    }}
+  		  } else {
+        ge("body0").style.display = "block";  
+				if(ge("plus0").innerHTML == "[-]")
+				{
+      ge("desc0").style.display="block";
+				}
+    //ge("desc0").style.display="block";
+    ge("fid0").style.display = "block";  
+    ge("fid0").style.display = "inline";  
+    ge("fid0").checked = false;  
+   
+		      ge("body1").style.display = "block";  
+				if(ge("plus1").innerHTML == "[-]")
+				{
+      ge("desc1").style.display="block";
+				}
+    //ge("desc1").style.display="block";
+    ge("fid1").style.display = "block";  
+    ge("fid1").style.display = "inline";  
+    ge("fid1").checked = false;  
+   
+		      ge("body2").style.display = "block";  
+				if(ge("plus2").innerHTML == "[-]")
+				{
+      ge("desc2").style.display="block";
+				}
+    //ge("desc2").style.display="block";
+    ge("fid2").style.display = "block";  
+    ge("fid2").style.display = "inline";  
+    ge("fid2").checked = false;  
+   
+		      ge("body3").style.display = "block";  
+				if(ge("plus3").innerHTML == "[-]")
+				{
+      ge("desc3").style.display="block";
+				}
+    //ge("desc3").style.display="block";
+    ge("fid3").style.display = "block";  
+    ge("fid3").style.display = "inline";  
+    ge("fid3").checked = false;  
+   
+		  }
+}
+function prepare_price_display(num_files,pdf_price_elem,pdf_f_price)
+{
+  pdf_price_elem.innerHTML = num_files+" * "+" $"+pdf_f_price+" = "+"$"+(num_files * pdf_f_price).toFixed(2) ;
+
+}
+function initialize_vars()
+{
+  var el_charge_price = ge('charge_price_5');
+  var files_selected = getNumFilesRequestedForPdfConversion();
+  if(files_selected <= 0)
+    return;
+  var files_to_be_charged = 0;
+  i
+2035
+f(el_charge_price)
+  {
+    var free_trials_left = el_charge_price.getAttribute('num_free_trials');
+    NUM_FREE_TRIALS_LEFT = 5 + '_' + getFreeTrialsGettingUsed(free_trials_left, files_selected);
+    NUM_PDF_FILES_TO_CONVERT = files_selected;
+  }
+}
+
+function getFreeTrialsGettingUsed(free_trials_left, num_files)
+{
+  if(num_files >= free_trials_left)
+    return free_trials_left;
+  
+  if(num_files < free_trials_left)
+    return num_files;
+}
+
+function get_num_files_to_be_charged(show_alert)
+{
+  var el_charge_price = ge('charge_price_5');
+  var files_selected = getNumFilesRequestedForPdfConversion();
+  var files_to_be_charged = 0;
+  if(el_charge_price)
+  {
+    var free_trials_left = el_charge_price.getAttribute('num_free_trials');
+    NUM_FREE_TRIALS_LEFT = 5 + '_' + getFreeTrialsGettingUsed(free_trials_left, files_selected);
+    NUM_PDF_FILES_TO_CONVERT = files_selected;
+    var is_subscribed = el_charge_price.getAttribute('is_subscribed');
+    if(is_subscribed)       
+     return files_to_be_charged;
+    if(!is_subscribed && show_alert)
+    {
+      if((free_trials_left > 0) && (files_selected > free_trials_left))
+      {
+        if(!confirm("You have only " + free_trials_left + " free PDF conversions left. You will be charged for additional PDF conversions. Do you want to continue?"))
+        {
+          return 'false';
+        }
+      }
+    }
+  }
+  if(files_selected >= free_trials_left)
+    files_to_be_charged = (files_selected - free_trials_left);
+  else
+    files_to_be_charged = 0;
+
+  return files_to_be_charged;
+}
+
+
+function calculate_total_price() {
+  BATCH_LOCK = 0;
+  TOTAL_PPU_PRICE = 0;
+  PPU_PRODUCT = '';
+  var files_to_be_charged = get_num_files_to_be_charged(true);
+  if(files_to_be_charged == 'false')
+  {
+    return 'false';
+  }
+
+  //this variable holds the number of files that have to be charged for PDF conversion
+  if(files_to_be_charged > 0)
+    NUM_PDF_FILES_TO_CHARGE = files_to_be_charged;
+  var feature = 0;
+         feature = ge("fid0");
+    if((feature != null) && (feature.checked || (feature.value != null && 'on' == feature.value))) {
+      PPU_PRODUCT = PPU_PRODUCT+","+";"+"Premium Delivery";
+      if(0 != 5)
+      TOTAL_PPU_PRICE = TOTAL_PPU_PRICE + 8.99;
+      else
+      {
+        var amount = 8.99 * files_to_be_charged;
+        TOTAL_PPU_PRICE = TOTAL_PPU_PRICE + amount;
+      }
+      BATCH_LOCK = BATCH_LOCK  + 1;
+    }
+    TOTAL_PPU_PRICE = Math.floor(TOTAL_PPU_PRICE*100)/100;
+           feature = ge("fid1");
+    if((feature != null) && (feature.checked || (feature.value != null && 'on' == feature.value))) {
+      PPU_PRODUCT = PPU_PRODUCT+","+";"+"Password-Protected Secure Delivery";
+      if(1 != 5)
+      TOTAL_PPU_PRICE = TOTAL_PPU_PRICE + 3.99;
+      else
+      {
+        var amount = 3.99 * files_to_be_charged;
+        TOTAL_PPU_PRICE = TOTAL_PPU_PRICE + amount;
+      }
+      BATCH_LOCK = BATCH_LOCK  + 2;
+    }
+    TOTAL_PPU_PRICE = Math.floor(TOTAL_PPU_PRICE*100)/100;
+           feature = ge("fid2");
+    if((feature != null) && (feature.checked || (feature.value != null && 'on' == feature.value))) {
+      PPU_PRODUCT = PPU_PRODUCT+","+";"+"Certified Delivery with Tracking";
+      if(2 != 5)
+      TOTAL_PPU_PRICE = TOTAL_PPU_PRICE + 3.99;
+      else
+      {
+        var amount = 3.99 * files_to_be_charged;
+        TOTAL_PPU_PRICE = TOTAL_PPU_PRICE + amount;
+      }
+      BATCH_LOCK = BATCH_LOCK  + 4;
+    }
+    TOTAL_PPU_PRICE = Math.floor(TOTAL_PPU_PRICE*100)/100;
+           feature = ge("fid3");
+    if((feature != null) && (feature.checked || (feature.value != null && 'on' == feature.value))) {
+      PPU_PRODUCT = PPU_PRODUCT+","+";"+"Return Receipt";
+      if(3 != 5)
+      TOTAL_PPU_PRICE = TOTAL_PPU_PRICE + 3.99;
+      else
+      {
+        var amount = 3.99 * files_to_be_charged;
+        TOTAL_PPU_PRICE = TOTAL_PPU_PRICE + amount;
+      }
+      BATCH_LOCK = BATCH_LOCK  + 8;
+    }
+    TOTAL_PPU_PRICE = Math.floor(TOTAL_PPU_PRICE*100)/100;
+    }
+</script>
+<script src="/en/js/pdf_upload.js" type="text/javascript"></script>
+
+<div>
+  <table class="fixMargin" style=" width:350px"  cellspacing="0" cellpadding="0">
+                <tbody id = "body0">
+      <tr> 
+        <td style="width:350px; height:21px;">
+          <input onclick="continue_to_pay();" id="fid0" type="checkbox" style="margin-bottom:0px;" name="0" value="1" />
+          <a id="name0" style="font-size:11px; color:#000000; text-decoration:none"><b>Premium Delivery</b></a>
+          <a id="plus0" name="plus" style="cursor:pointer; text-decoration:none;" onClick="showDesc(0);">[+]</a>
+        </td>
+                 <td style="padding-right:50px; text-align:right;">
+                     </td>
+               </tr>
+      <tr>
+        <td colspan="2">
+          <span id="desc0" name="desc+0" style="display:none; font-size:10px; margin:0 20px 5px 20px;_margin:0px 0  0 22px; text-decoration:none;">Send files up to 2 GB with basic tracking, 14-day expiration, and unlimited downloads.</span>  </td>
+      </tr>  
+          </tbody>
+                        <tbody id = "body1">
+      <tr> 
+        <td style="width:350px; height:21px;">
+          <input onclick="continue_to_pay();" id="fid1" type="checkbox" style="margin-bottom:0px;" name="1" value="1" />
+          <a id="name1" style="font-size:11px; color:#000000; text-decoration:none"><b>Password-Protected Secure Delivery</b></a>
+          <a id="plus1" name="plus" style="cursor:pointer; text-decoration:none;" onClick="showDesc(1);">[+]</a>
+        </td>
+                 <td style="padding-right:50px; text-align:right;">
+                     </td>
+               </tr>
+      <tr>
+        <td colspan="2">
+          <span id="desc1" name="desc+1" style="display:none; font-size:10px; margin:0 20px 5px 20px;_margin:0px 0  0 22px; text-decoration:none;">Specify a password required to download your file.</span>  </td>
+      </tr>  
+            <tr>
+        <td>
+        <div id="step-two-subdiv" style="display:none; width:auto;">
+          <div id="setpassword" style="padding-left: 3px;">
+            <div style="width:105px; float:left; padding-top:4px;">Password:</div>
+            <div id="passwd_div"><input id="passwd" name="passwd" type="password" maxlength="12" /></div>
+            
+            <div style="clear:both;"></div>
+            
+            <div style="width:105px; float:left; margin-top:5px; padding-top:5px;">Confirm password:</div>			             <div id="confirm_passwd_div"><input id="pass_conf" name="pass_conf" maxlength="12" type="password" /></div>
+          </div>
+        </div>
+       </td>  
+      </tr>
+          </tbody>
+                        <tbody id = "body2">
+      <tr> 
+        <td style="width:350px; height:21px;">
+          <input onclick="continue_to_pay();" id="fid2" type="checkbox" style="margin-bottom:0px;" name="2" value="1" />
+          <a id="name2" style="font-size:11px; color:#000000; text-decoration:none"><b>Certified Delivery with Tracking</b></a>
+          <a id="plus2" name="plus" style="cursor:pointer; text-decoration:none;" onClick="showDesc(2);">[+]</a>
+        </td>
+                 <td style="padding-right:50px; text-align:right;">
+                     </td>
+               </tr>
+      <tr>
+        <td colspan="2">
+          <span id="desc2" name="desc+2" style="display:none; font-size:10px; margin:0 20px 5px 20px;_margin:0px 0  0 22px; text-decoration:none;">Recipients must login to download. See who downloaded your file and when.</span>  </td>
+      </tr>  
+          </tbody>
+                        <tbody id = "body3">
+      <tr> 
+        <td style="width:350px; height:21px;">
+          <input onclick="continue_to_pay();" id="fid3" type="checkbox" style="margin-bottom:0px;" name="3" value="1" />
+          <a id="name3" style="font-size:11px; color:#000000; text-decoration:none"><b>Return Receipt</b></a>
+          <a id="plus3" name="plus" style="cursor:pointer; text-decoration:none;" onClick="showDesc(3);">[+]</a>
+        </td>
+                 <td style="padding-right:50px; text-align:right;">
+                     </td>
+               </tr>
+      <tr>
+        <td colspan="2">
+          <span id="desc3" name="desc+3" style="display:none; font-size:10px; margin:0 20px 5px 20px;_margin:0px 0  0 22px; text-decoration:none;">
+2064
+Get an email notification informing you when your file is downloaded.</span>  </td>
+      </tr>  
+          </tbody>
+              </table>
+  
+  <div id="password-protected-div" style="display:none" >
+    <div><input name="passpro" type="checkbox" id="passpro" onClick="check();"></div>
+  </div>
+  <div id="pdf-files-div" style="display:none" >
+    <div><input name="pdf-files-checkbox" type="checkbox" id="pdf_files_checkbox" onClick="check_pdf();"></div>
+  </div>
+<!-- Added for authentication  -->
+  <div id="authentication-required-div" style="display:none" >
+    <div><input name="auth_req_chk" type="checkbox" id="auth_req_chk"></div>
+  </div>
+
+
+
+</div>
+  <div id="total-feature-amount" style="display:none"  name="total-feature-amount" content="bigger">
+  </div>
+        </div>
+        
+        <div id="send-button-div" style="background-image:none; margin-top:10px;">
+						<a href="#" onclick="omniture_track_upload_start();start_uploadmgr('home');" onMouseOver="imgOn('sendit');" onMouseOut="imgOver('sendit');"><img src="/en/images/btns/sendit_off.gif" alt="Send It" name="sendit" /></a>
+                                    <p>By clicking on the "Send It" button, <br>you agree to                YouSendIt's <a id = 'tos1' href="/cms/termsofservice">Terms of Service</a>.</p>
+            
+        </div>
+
+        <div id="continue-gif" style="display:none;margin-top:-3px;">
+          <a href="#" onclick="omniture_track_upload_start(); showAdvancedOptions(true); urchinTracker('/track_PPU/click_continue_button.html');" onMouseOver="imgOn('sendit');" onMouseOut="imgOver('sendit');"><img src="/en/images/continue.gif" alt="Send It" name="sendit" /></a>
+           <p>By clicking on the "Send It" button, you agree to <br/>
+                YouSendIt's <a id='tos2' href="/cms/termsofservice">Terms of Service</a>.</p>
+        </div>
+
+    </div>
+    <div class="blueBoxBtm" id="blueBoxBtm"></div>
+        <input type='hidden' id='acctTypeMaxSize' value = '' >
+    <input type='hidden' id='acctType' value = 'GST' >
+    <input type = 'hidden' id='partner' value = 'www' >
+    <input type = 'hidden' id='has_paid_before' value = '0' >
+    <input type = 'hidden' id='num_recipients' value = '3' >
+
+
+    
+	<div style="display:none; margin-top:-16px;" id="sending-file">
+		<h3 class="blueTitle"><a style="font-color:#1d499f">Sending In Progress...</a></h3>
+		Please do not close this page or click the back button until the sending is done. <br>
+	</div>
+<script type="text/javascript">
+     if(ge('ff_file_names'))
+     ge('ff_file_names').value = "";
+
+   if(ge('ff_status'))
+     ge('ff_status').value = "";
+
+
+ ge("rcpt").focus();
+  
+  </script>
+<div id="upload-form-btm"></div>
+</div>
+</form>
+    </fieldset>
+	</div>
+	<div id="content">
+		<!-- id="content" above id is required, when the file uploading is done the script calls this id to hide. -->
+		<div id="home_green_heading_main">
+			<h1><span>Send</span>, <span>receive</span> and <span>track</span> large and important files</h1>
+			<h2><b>Join <div id="sub_count" name="sub_count" style="display:inline"></div>million YouSendIt users</b></h2>
+			<div>
+				<div id="home_green_heading_left">
+					<h3>Why YouSendIt?</h3>
+					<div>
+							<div id="bg_icon1">
+							<h4>Send, receive & track files up to 2GB</h4>
+							Got files? See how to make sending, receiving and tracking them securely a matter of ease.<br />
+              <a href="/cms/how">Find Out How</a> &#187;</div>
+
+							<div id="bg_icon2">
+							<h4>Improve team productivity</h4>
+							Eliminate the barriers to higher team productivity in one minute flat.<br />
+              <a href="/cms/businessplusaccount&s=50028">Learn More</a> &#187;</div>
+
+							<div id="bg_icon3">
+							<h4>Enterprise-wide managed file transfer</h4>
+							Reduce risks and costs with secure managed file transfer that deploys in minutes.<br />
+              <a href="/cms/corporateaccounts&s=50029">Learn More</a> &#187;</div>
+					</div>
+				</div>
+				<div id="home_green_heading_right">
+					<h3>Buy Now</h3>
+					<ul>
+						<li>
+							<h4>Subscription</h4>
+							Get premium features and sending power with a subscription plan.<br />
+							<a href="/cms/compareaccounts">Compare Plans and Pricing</a> &#187;
+						</li>
+						<li id="li_header_dotted_line">
+							<h4>Pay-Per-Use</h4>
+							Premium services with pay as you go pricing.<br />
+							<a href="/cms/payperuse">Learn More</a> &#187;
+						</li>
+						<li>
+							<h4>Don't send files very often?</h4>
+							Our Lite account is perfect for the occasional sender.<br />
+							<a href="/cms/liteaccount&s=50027">Learn More</a> &#187;
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+   <div style="clear:both;"></div>
+   <!--
+<div style="display:block;" id="email_collection_form" name="email_collection_form">
+<script type="text/javascript" src="/en/js/email_collection.js"></script> -->
+<div id="email_collection_form" style="width:1000px;margin:auto;">
+	<!-- id="email_collection_form" above id is required, when the file uploading is done the script calls this id to hide. -->
+		<div id="home_above_footer_main">
+			<div id="home_above_footer_left">
+				<h1>Plug-ins &#38; Applications</h1>
+				 Download our free desktop application and plug-ins for Outlook, Photoshop and more.<br />
+				<a href='/cms/plugins'>Learn more</a> &#187;
+			</div>
+			<div id="home_above_footer_middle">
+				<h1>Take a Tour</h1>
+				 Learn more about how our services work by taking our interactive tour.<br />
+				<a href='/cms/takeatour'>Take the tour</a> &#187;
+			</div>
+			<div id="home_above_footer_right">
+				<h2><span class="left_double_qoute">&#8220;</span>YouSendIt delivers quality products that require minimal or no resources  to deploy, use, and administer.<span class="right_double_qoute">&#8221;</span></h2>
+				<br />
+				<em>-Vojta F. Borovian<br />&nbsp;Corporate Desktop Manager</em>
+<img style="margin-left:-15px;  width:90px; height:53px; margin-top:-10px" src="/en/images/thirdpartylogos/kelly-moore-paints-small.gif" alt="Kelly Moore Paints"></img>
+			</div>
+		</div>
+</div>
+<script type="text/javascript">
+      var orig_value = 10000000;
+  var orig_date = new Date(2009,07,07); //month is 0 - 11 in javascript
+  var today = new Date();
+  var one_day=1000*60*60*24;
+  var day_since = Math.ceil((today.getTime() - orig_date.getTime())/(one_day));
+  if(day_since<0)
+    day_since = 0;
+  var new_sub_count = (10000000 + day_since*8000)/1000000;
+  result = new_sub_count.toFixed(1);
+  if((result.substring(2,3))==0)
+    result = new_sub_count.toFixed(0);
+  ge('sub_count').innerHTML = result+' ';
+</script>
+    <!-- Bottom Leaderboard  -->
+
+ 	    <!-- This is for upload progress Bottom leader board ad -->
+
+  	    
+    <!-- Bottom Leaderboard -->
+		<div class="clearfloat">&nbsp;</div>
+    <!-- Start of id="footer" -->
+<div id="footer" style="text-align:center">
+  <ul>
+    <li><img src="../en/images/logo_small.gif" alt="yousendit" width="97" height="16" /> <span class="copyRight">&copy; 2004 - 2010&nbsp;</span></li>
+    
+    <li><a href="http://www.yousendit.com/cms/support">Contact Support</a></li>
+    <li><a href="http://www.yousendit.com/cms/careers">Careers</a></li>   
+    <li><a href="http://www.yousendit.com/cms/company">About us</a></li>
+    <li><a href="http://www.yousendit.com/cms/privacypolicy">Privacy</a></li>
+    <li><a href="http://www.yousendit.com/cms/dmca">DMCA</a></li>
+    <li><a href="http://www.yousendit.com/cms/termsofservice">Terms of Service</a></li>
+    <!-- Bug Fix::#7564::Author:gl.nirbhab.barat::Date:10/11/2008 -->
+    <!--<li><a href="http://www.yousendit.com/invite.php">Invite a Friend</a></li>-->
+    <li class="last"><a href="http://www.yousendit.com/cms/events">Events</a></li>
+  
+  </ul>
+</div>
+    <!-- End of id="footer" -->
+  <SCRIPT TYPE='text/javascript' LANGUAGE='JavaScript' SRC='/en/js/elqCfg.js'></SCRIPT>
+  <SCRIPT TYPE='text/javascript' LANGUAGE='JavaScript' SRC='/en/js/elqImg.js'></SCRIPT>
+ <div id="version" style="text-align: right; color: #ffffff; font-size: 10px; margin-right:11px;">
+ V-4.4.7-b4_60995_Thu Dec 16 10:56:47 PST 2010<br>
+ 192.168.40.31 </div>
+
+</div>
+<!-- End of id="container" -->
+
+
+124c
+<script language="JavaScript">
+s.pageName="upload"
+</script>
+<script>
+Event.observe(window, 'load', setupButtons, false);
+	// Omniture retagging
+	s.pfxID="ysi";
+	s.prop24="OldYSI";
+	omnitureLanguage="en";
+	omnitureSitename='OldYSI';
+
+	freeTrialType=getQueryVariable("acct_type");
+	actionType=getQueryVariable("action");
+
+	// Pro Signup
+	if (typeof actionType != "undefined" && actionType == 'upg-pro') {
+		omnitureSubBusiness="Transactional";
+		omnitureProduct="Pro";
+		}
+
+	// Pro Trial
+	if ((typeof actionType != "undefined" && actionType == 'show_promo_plan') && (typeof freeTrialType != "undefined" && freeTrialType == '')) {
+		omnitureSubBusiness="Transactional";
+		omnitureProduct="Pro";
+		}
+
+	// Business Plus Trial
+	if ((typeof actionType != "undefined" && actionType == 'show_promo_plan') && (typeof freeTrialType != "undefined" && freeTrialType == 'BS2')) {
+		s.pageName=s.pageName+"_"+freeTrialType;
+		omnitureSubBusiness="Transactional";
+		omnitureProduct="Business Plus";
+		}
+
+	// Corporate Suite Signup
+	if (typeof actionType != "undefined" && actionType == 'multiuser_admin') {
+		omnitureSubBusiness="Transactional";
+		omnitureProduct="Corporate Suite";
+		}
+
+	omniturePageName1=omnitureSimplePageName= s.pageName;
+	omniturePrefix='ysi';
+
+	// Global Omniture Variable
+	if (typeof omniturePrefix == "undefined" || omniturePrefix == '')
+		omniturePrefix = "Unknown";
+	if (typeof omnitureBusiness == "undefined" || omnitureBusiness == '')
+		omnitureBusiness = "Not set";
+	if (typeof omnitureSubBusiness == "undefined" || omnitureSubBusiness == '')
+		omnitureSubBusiness = "Not set";
+	if (typeof omniturePageName1 == "undefined" || omniturePageName1 == '')
+		omniturePageName1= "Not set";
+	if (typeof omnitureFirstLevelNav == "undefined" || omnitureFirstLevelNav == '')
+		omnitureFirstLevelNav= "Not set";
+	if (typeof omnitureSecondLevelNav == "undefined" || omnitureSecondLevelNav == '')
+		omnitureSecondLevelNav= "Not set";
+	if (typeof omnitureCustomerType == "undefined" || omnitureCustomerType == '')
+		omnitureCustomerType = "Not set";
+	if (typeof omnitureSitename == "undefined" || omnitureSitename == '')
+		omnitureSitename = "Unknown";
+	if (typeof omnitureProduct == "undefined" || omnitureProduct == '')
+		omnitureProduct = "Not set";
+	// End Global Omniture Variables
+
+	// Conversion Variables
+	s.pfxID=omniturePrefix;
+	s.channel=omnitureBusiness+"|"+omnitureSubBusiness;
+
+	s.eVar6=omnitureBusiness+"."+omnitureSubBusiness;
+	s.eVar25=omniturePrefix+"|"+omniturePageName1;
+	s.prop1=s.eVar25;
+	s.eVar24=omniturePrefix+"|"+omnitureSimplePageName;
+	s.prop2=s.eVar24;
+	s.prop10="";
+
+	s.hier1="en|us|GST|"+omnitureBusiness+"|"+omnitureSubBusiness+"|"+omnitureProduct;
+	s.prop11= "Logged Out";
+	s.prop3="GST"; //Account Type TBD?
+
+	s.eVar9=s.prop3;
+	s.eVar18=omnitureBusiness;
+	s.prop17=s.eVar18;
+	s.eVar19=omnitureSubBusiness;
+	s.prop18=s.eVar19;
+	s.prop19=omnitureFirstLevelNav;
+	s.prop20=omnitureSecondLevelNav;
+	s.prop22=omnitureCustomerType;
+	s.prop24=omnitureSitename;
+
+
+	// Set eVars
+	s.prop5 = location.protocol+"//"+location.hostname+location.pathname;
+	s.prop46=omnitureLanguage; // Language
+	s.eVar51=""
+ 	// End set eVars
+
+
+// End Conversion Variables
+
+// End Omniture retagging
+var s_code=s.t();if(s_code)document.write(s_code);
+</script>
+
+<script type="text/javascript">
+_uacct =  "UA-31390-1";
+urchinTracker();
+</script>
+
+<!-- BELOW PORTION IS FOR CHAT SUPPORT -->
+  <!-- BEGIN Invitation Positioning  -->
+  <script language="javascript" type="text/javascript">
+  var lpPosY = 100;
+  var lpPosX = 100;
+  </script>
+  <!-- END Invitation Positioning  -->
+  <!-- BEGIN HumanTag Monitor. DO NOT MOVE! MUST BE PLACED JUST BEFORE THE /BODY TAG --><script language='javascript' src='https://server.iad.liveperson.net/hc/69191305/x.js?cmd=file&file=chatScript3&site=69191305&&imageUrl=https://www.yousendit.com/en/images/chat_small'> </script><!-- END HumanTag Monitor. DO NOT MOVE! MUST BE PLACED JUST BEFORE THE /BODY TAG -->
+  <!-- BEGIN Monitor Tracking Variables  -->
+  <script language="JavaScript1.2">
+  if (typeof(tagVars) == "undefined") tagVars = "";
+  tagVars += "&SESSIONVAR!skill=Support";
+  </script>
+  <!-- End Monitor Tracking Variables  -->
+  <!-- BEGIN HumanTag Monitor. DO NOT MOVE! MUST BE PLACED JUST BEFORE THE /BODY TAG --><script language='javascript' src='https://server.iad.liveperson.net/hc/69191305/x.js?cmd=file&file=chatScript3&site=69191305&&imageUrl=https://www.yousendit.com/en/images/chat_small'> </script><!-- END HumanTag Monitor. DO NOT MOVE! MUST BE PLACED JUST BEFORE THE /BODY TAG -->
+</body>
+
+</html>
+
+0
+
