@@ -1,0 +1,2574 @@
+
+<html>
+
+<head>
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<title>Notes on the Eclipse Plug-in Architecture</title>
+<link rel="stylesheet" href="../default_style.css">
+<link rel="stylesheet" href="specific_style.css">
+</head>
+
+<body LINK="#0000ff" VLINK="#800080">
+<div align="right">&nbsp; <font face="Times New Roman, Times, serif" size="2">Copyright 
+  &copy; 2003 Bolour Computing</font> 
+  <table border=0 cellspacing=0 cellpadding=2 width="100%">
+    <tr> 
+      <td align=LEFT valign=TOP colspan="2" bgcolor="#0080C0"><b><font face="Arial,Helvetica"><font color="#FFFFFF">&nbsp;Eclipse 
+        Corner Article</font></font></b></td>
+    </tr>
+  </table>
+</div>
+<div align="left"> 
+  <h1><img src="images/Idea.jpg" height=86 width=120 align=CENTER></h1>
+</div>
+<p>&nbsp;</p>
+
+<h1 ALIGN="CENTER">Notes on the Eclipse Plug-in Architecture</h1>
+
+<blockquote>
+<b>Summary</b>
+
+<br> 
+Eclipse plug-ins embody an architectural pattern for building an
+application from constituent parts. This article presents an in-depth view
+of the participant roles and collaborations of this architectural pattern,
+as they exist in an instance of the Eclipse workbench.  The goal is to
+provide an understanding of plug-ins, and of how plug-in extensions are
+defined and processed, independently of the mechanics of using the Eclipse
+workbench to produce plug-ins.
+
+  <p><b> Azad Bolour, Bolour Computing</b> <br>
+    <font size="-1">July 3, 2003</font> </p>
+
+<p><b>Table of Contents</b> <br>
+
+<a href="#1.">1. Introduction</a>
+<br>
+<a href="#2.">2. The Eclipse Plug-in Model</a>
+<br>
+<a href="#3.">3. Extension Processing</a>
+<br>
+<a href="#4.">4. Example: An Extensible Arithmetic Function Service</a>
+<br>
+<a href="#5.">5. Listener Extensions and the Observer Pattern</a>
+<br>
+<a href="#6.">6. Summary and Conclusions</a>
+
+</blockquote>
+
+<hr width="100%">
+
+
+<a name="1."> </a>
+<h2>
+1. Introduction
+</h2>
+
+<p> <a href="http://www.eclipse.org">Eclipse</a> is an extensible platform
+for building IDEs. It provides a core of services for controlling a set of
+tools working together to support programming tasks.  Tool builders
+contribute to the Eclipse platform by wrapping their tools in pluggable
+components, called <i>Eclipse plug-ins</i>, which conform to Eclipse's
+plug-in contract.  The basic mechanism of extensibility in Eclipse is that
+new plug-ins can add new processing elements to existing plug-ins. And
+Eclipse provides a set of core plug-ins to bootstrap this process.
+For a general introduction to Eclipse as an extensible IDE platform, 
+see the literature available at <a href="http://www.eclipse.org">
+this site</a>.
+
+<p> Even though the Eclipse platform is specialized for building IDEs, the
+core of its concepts and facilities supports a general model for composing
+an application from constituent parts developed by multiple vendors.  This
+general model of system composition in Eclipse will be described and placed
+in the context of other software patterns in this article.  The article is
+intended for new plug-in developers who need to understand the overall
+model of how plug-ins work, either before, or in conjunction with, working
+through the mechanics of building plug-ins.
+
+<p> The article is structured as follows. Section 2 outlines the Eclipse
+plug-in model and the declarative specification of plug-ins and their
+relationships within this model.  Section 3 explains what plug-in
+developers must do programmatically to allow their plug-ins to be extended.
+Section 4 provides a complete example of an extensible plug-in and its
+extensions by other plug-ins. Section 5 contrasts the Eclipse plug-in
+model with the much simpler <i>observer pattern</i> of [1].  Section 6
+concludes the article by summarizing the main architectural concepts used
+in Eclipse plug-ins.
+
+<p> This article specifically avoids the mechanics of the required user
+interactions with the Eclipse plug-in development environment (PDE) to
+build and test plug-ins. See Beck and Gamma [2], Shavor, et. al. [3], the
+online help documentation, and other articles at <a
+href="http://www.eclipse.org">this site</a> for the required procedures to
+build and test plug-ins in the PDE.
+
+<p>
+The <a href="samples.zip">companion plug-ins zip file</a> includes
+the plug-in samples appearing in this article.
+<a href="#instructions">Installation instructions </a> 
+for the samples appear at the end of this article.
+Also accompanying this article is the
+<a href="doc/index.html">samples API reference</a>.
+
+<a name="2."> </a>
+<h2>
+2. The Eclipse Plug-in Model
+</h2>
+
+<p> A plug-in in Eclipse is a component that provides a certain type of
+service within the context of the Eclipse workbench. By a component here I
+mean an object that may be configured into a system at system deployment
+time. The Eclipse runtime provides an infrastructure to support the
+activation and operation of a set of plug-ins working together to provide a
+seamless environment for development activities.  Within a running Eclipse
+instance, a plug-in is embodied in an instance of some <var>plug-in
+runtime class</var>, or <var>plug-in class</var>, for short.  The plug-in
+class provides configuration and management support for the plug-in
+instance. A plug-in class in Eclipse must extend
+<var>org.eclipse.core.runtime.Plugin</var>, which is an abstract class that
+provides generic facilities for managing plug-ins.
+
+<p> An Eclipse installation includes a <code>plugins</code> folder where
+individual plug-ins are deployed. Each plug-in is installed in its own
+folder under the <code>plugins</code> folder. A plug-in is described in an
+XML manifest file, called <code>plugin.xml</code>, residing in the
+plug-in's folder. The manifest file tells the Eclipse runtime what it needs
+to know to activate the plug-in. 
+
+<p> The parsed contents of plug-in manifest files are made available
+programmatically through a <i>plug-in registry API</i>.  And parsed plug-in
+specifications are cached in an in-memory repository called the <i>plug-in
+registry</i>.  The Eclipse runtime instantiates an instance of each plug-in
+by using the plug-in registry API.  The plug-in registry API is also used
+by provider-supplied plug-in code to obtain information about 
+plug-ins.
+
+<p>
+Here is what a minimal plug-in manifest file looks like:
+
+<p>
+<table width=350 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;plugin
+  name="JUnit Testing Framework"
+  id="org.junit"
+  version="3.7"
+  provider-name="Eclipse.org"&gt;
+  &lt;runtime&gt;
+    &lt;library name="junit.jar"&gt;
+      &lt;export name="*"/&gt;
+    &lt;/library&gt;
+  &lt;/runtime&gt;
+&lt;/plugin&gt;
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 2.1. A Minimal Plug-in Manifest File.
+</td></tr> </table>
+
+<p> This manifest file describes a plug-in that provides the services of
+the <i>JUnit</i> testing infrastructure to the Eclipse workbench. (Note.
+To improve readability, the contents of Eclipse manifest files, such as
+this one, are reproduced in this article in their English localization.)
+
+<p>
+<a href="http://www.eclipse.org/documentation/html/plugins/org.eclipse.platform.doc.isv/doc/reference/misc/rplugman.html">
+The Eclipse Platform Plug-in Manifest Specification</a> documents
+the XML elements and attributes used in defining plug-ins.
+(This specification is also available in the Eclipse platform
+help documentation under <i>Platform Plug-In Developer Guide/Other
+reference information/Plug-in manifest</i>).
+
+<p> I am not going to focus on the contents of the plug-in manifest file
+at this time, except to note that each plug-in has a unique identifier (XML
+attribute <code>id</code>). The unique identifier is used to refer to a plug-in
+within the manifest files of other, related, plug-ins. The unique
+identifier may also be used within provider-supplied plug-in code to access
+the plug-in's running instance, as follows:
+
+<code>
+<pre>
+    Plugin p = Platform.getPlugin(pluginID);
+</pre>
+</code>
+
+<p>
+Plug-in instances are managed by the Eclipse runtime, and 
+are accessed by using the Eclipse platform as shown above. Plug-in
+instances are not constructed by application programs. 
+
+<h3>
+2.1. Plug-in Deployment and Activation
+</h3>
+
+<p>
+Deploying a plug-in in an Eclipse installation involves 
+copying the resources that constitute the plug-in (the manifest file, 
+jar files, and other resources) into an individual folder
+for the plug-in, under the installation's <code>plugins</code> directory.
+Such a plug-in can then be <i>activated</i> by the Eclipse runtime
+when it is required to perform some function. Activating a plug-in means
+loading its runtime class and instantiating and initializing its 
+instance. 
+
+<p> 
+The main function of a plug-in class is to do special processing during
+plug-in activation and deactivation, e.g., to allocate and release
+resources.  For simple plug-ins, like the <code>JUnit</code> plug-in above, no
+specific activation or deactivation processing is required, and therefore
+no specific plug-in class need be provided by the plug-in designer. In that
+case, the Eclipse runtime automatically provides a default plug-in class
+for the plug-in instance.
+
+<p> When the plug-in needs to do something specific to activate or
+deactivate itself, the plug-in designer subclasses
+<code>org.eclipse.core.runtime.Plugin</code>, provides overrides for the
+activation and deactivation methods of the class, respectively called
+<var>startup</var> and <var>shutdown</var>, and includes the
+fully-qualified name of this specific plug-in subclass as the value of the
+attribute <code>class</code> in the corresponding plug-in manifest file. 
+
+<p> Eclipse includes a plug-in management kernel, known as the Eclipse
+<i>platform</i>, or the Eclipse <i>runtime</i>, and certain core plug-ins
+that are present in every Eclipse deployment. The identities of these core
+plug-ins are hard-coded into the Eclipse platform, and the platform knows to
+activate these plug-ins in each running instance of Eclipse. Non-core
+plug-ins, on the other hand, are activated when required by other plug-ins,
+as described below.
+
+<p> In the Eclipse model, a plug-in may be related to another plug-in by one
+of two relationships: 
+
+<p>
+<ul>
+<li>
+<i>Dependency</i>. The roles in this relationship are <i>dependent
+plug-in</i> and <i>prerequisite plug-in</i>. A prerequisite plug-in supports the
+functions of a dependent plug-in.
+
+<li>
+<i>Extension</i>. The roles in this relationship are <i>host plug-in</i> and 
+<i>extender plug-in</i>. An extender plug-in extends the functions of a 
+host plug-in.  
+
+</ul>
+
+<p> These relationships are specified declaratively in plug-in manifest
+files through the XML elements <code>requires</code> and
+<code>extension</code> (the details of which appear in later subsections). 
+
+<p> A non-core plug-in that has been deployed in an Eclipse installation
+may be activated in a running instance of Eclipse if it is transitively
+related to a core Eclipse plug-in by the union of the dependency and the
+extension relations. Such a plug-in will be activated when its functions
+are required to support or to extend the functions of another plug-in.  A
+plug-in that is deployed but unreachable from any core plug-in via the
+dependency and extension relations might as well not be deployed from the
+point of view of plug-in activation.  Of course, even a reachable plug-in
+may remain unactivated in a running instance for some time (or for the
+lifetime of the instance), if no user action or other triggering event
+elicits its use.
+
+<h3>
+2.2. Dependency
+</h3>
+
+<p> When a plug-in is dependent on other plug-ins for its functions, the
+dependency is specified via a <code>requires</code> element in the plug-in manifest
+file.  Here is an example:
+
+<p>
+<table width=350 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;plugin
+   id="com.bolour.sample.eclipse.demo"
+   name="Extension Processing Demo"
+   version="1.0.0"&gt;
+   &lt;runtime&gt;
+      &lt;library name="demo.jar"/&gt;
+   &lt;/runtime&gt;
+   &lt;requires&gt;
+      &lt;import plugin="org.eclipse.ui"/&gt;
+   &lt;/requires&gt;
+&lt;/plugin&gt;
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 2.2. Specifying Plug-in Dependencies.
+</td></tr> </table>
+
+
+<p>
+In this example, the sample plug-in <code>com.bolour.sample.eclipse.demo</code> 
+is declared to be dependent on (i.e., to make use of) the base Eclipse
+UI plug-in <code>org.eclipse.ui</code>.
+
+<p> Dependency as defined in the plug-in manifest file is both a runtime
+and a compile-time directive. At runtime, Eclipse has to make sure that a
+prerequisite plug-in can be made available to a dependent plug-in when the
+dependent plug-in is activated. At compile time, Eclipse can be directed to
+augment the classpath for compiling a dependent plug-in by the jar files of
+all of its prerequisite plug-ins.
+
+<h3>
+2.3. Extension
+</h3>
+
+<p> When the facilities of a plug-in are to be made directly available to
+the user, one or more user interface elements have to be added to the base
+Eclipse workbench. For example, to make the workbench's <i>help</i> plug-in
+available to the user, <i>help</i> menu items must be added to the
+workbench user interface.
+
+<p> The process of adding some processing element or elements to a plug-in
+is known as an <i>extension</i>. This process is not restricted to UI
+elements, however. Any plug-in may allow other plug-ins to extend it by
+adding processing elements.  An extension is defined by an <i>extender
+plug-in</i> and causes a <i>host plug-in</i> to modify its behavior.
+Typically, this modification of behavior includes the addition of
+processing elements to the host plug-in (e.g., the addition of new menu
+items to the Eclipse workbench), and the customization of the behavior of
+these additional elements by services provided by the extender plug-in
+(e.g., the customization of new menu items by specific menu event
+handlers). 
+
+<p> In simple cases, a single act of extension adds a single <i>callback
+object</i> to the environment, through which the host and extender plug-ins
+communicate. The callback object is different from the host and extender
+plug-in objects. And unlike these objects, which are components that are
+automatically instantiated and managed by the Eclipse platform, a callback
+object is a <i>plain old Java objects</i> that is instantiated and managed
+specifically by provider-supplied code.  A single act of extension can also
+add more than one callback object to the environment.  For example, Eclipse
+allows a set of menus to be added to its user interface via a single
+extension. 
+
+<p> Note, however, that the extension model, per se, is quite general, and
+does not necessarily require that an extender plug-in provide custom
+callback objects. It is possible, for example, that the kind of behavior
+modification required of a host plug-in can be provided entirely by objects
+whose classes are known to the host plug-in at compile-time, so that an
+extension declaration serves merely to parameterize instances of such
+built-in classes.
+
+<p> Similarly, the extension model, per se, does not require that
+the host plug-in directly expose aspects of each of its extensions
+in its interface. For example, an extension may merely ask that
+an extender plug-in be notified of certain events known to occur
+in the host plug-in independently of the extender plug-in, without
+any changes visible in the host plug-in's interface.
+
+<p> A plug-in may allow itself to be augmented by different kinds of
+extensions. For example, the workbench UI allows both its menus and its
+editors to be extended. In each case, the extension must conform to a
+unique set of configuration and behavioral requirements. Therefore, an
+extensible plug-in provides different types of slots that extensions can
+plug into.  These slot types are called <i>extension points</i>.  In the
+remainder of this article I will use the compound form
+<i>extension-point</i> to refer to these slots.  An extension-point allows
+any number of extensions to be plugged into it.
+
+<p> <i>Extension</i> and <i>extension-point</i> are standard Eclipse
+plug-in terminology. <i>Host plug-in</i>, <i>extender plug-in</i>, and
+<i>callback object</i> are terms used in this article to describe 
+the different roles of objects in an extension.
+
+<p> Figure 1 illustrates the relationships between the participants of an
+extension, in this case, the extension of the Eclipse workbench by the menu
+items of the Eclipse help system.  In this extension, the host plug-in is
+the Eclipse workbench user interface, <code>org.eclipse.ui</code>, whose
+menus can be extended via an extension-point known as
+<code>actionSets</code>. The extender plug-in is the Eclipse help system's
+user interface, <code>org.eclipse.help.ui</code>.  In order to make help
+functions available to the user, the help UI plug-in uses the
+<code>actionSets</code> extension-point to extend the workbench UI plug-in
+by specific help-related menu items, among them, <i>Help-&gt;Help
+Contents</i> and <i>Search-&gt;Help</i>. The extension is defined by the
+extender plug-in. And in this case, the single extension augments the
+workbench UI by multiple menu items.
+
+
+<P>
+<spacer type=vertical size=10>
+
+<CENTER>
+<IMG SRC="images/eclipse_extensions.jpg" ALT="Figure-1" BORDER="0">
+</CENTER>
+
+<BR>
+<table align=center width=600>
+<tr><td>
+Figure 1. Participants of a plug-in extension. The workbench UI plug-in
+is extended by the workbench help plug-in via an
+<i>actionSets</i> extension that defines specific help-related menu items.
+</td></tr>
+</table>
+
+<P>
+<spacer type=vertical size=10>
+
+<p> 
+(The extension-point <i>power-strip</i> notation used in this article
+was devised by Don Estberg [5].)
+
+<p> Also shown in the figure are the classes of the extension's callback
+objects: that is, the classes of the help system's menu handlers.  As we
+will see shortly, callback classes are typically identified by name in the
+declarative specification of each extension.  Thus, this extension's
+<i>Help-&gt;Help Contents</i> menu specification declares its custom
+callback class (menu handler) to be <code>HelpContentsAction</code>.  And
+the extension's <i>Search-&gt;Help</i> menu specification declares its
+custom callback class (menu handler) to be
+<code>OpenHelpSearchPageAction</code> (see blow for details).
+
+<p> Note that to reduce clutter, package prefixes are not shown in this and
+later figures. Here the workbench plug-in class belongs to the
+<code>org.eclipse.ui.internal</code> package; and the help plug-in and
+related classes belong to the <code>org.eclipse.help.ui.internal</code>
+package.
+
+<p>
+The remainder of this section provides a detailed account of how 
+extension-points and extensions are defined. 
+
+<h4>
+2.3.1 Participants of an Extension
+</h4>
+
+<p>
+Let us now look more closely at the various roles played by the objects
+participating in an extension. There are two plug-in roles, <i>host</i>
+and <i>extender</i>, a generic role of a <i>callback</i> object,
+and <i>specific callback</i> roles defined by each extension-point. 
+
+<h5>
+2.3.1.1. The Host Plug-in Role
+</h5>
+
+<p> In the context of a particular extension, a plug-in that stands in the
+<i>host</i> role provides the extension-point and is extended.  In addition
+to providing services in its own right, such a plug-in also acts as the
+coordinator and controller of a number of extensions.  
+
+<p> Within the host plug-in's manifest file, an extension-point is declared
+in an <i>extension-point XML element</i>. Here is an example of
+such an element, culled from the base Eclipse workbench UI plug-in,
+<code>org.eclipse.ui</code>:
+
+<p>
+<table bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;plugin
+<img src="images/tag_1.gif" height=13 width=24 align=CENTER> id="org.eclipse.ui"
+    name="Eclipse UI"
+    version="2.1.0"
+    provider-name="Eclipse.org"
+    class="org.eclipse.ui.internal.UIPlugin"&gt;
+
+<img src="images/tag_2.gif" height=13 width=24 align=CENTER> &lt;extension-point id="actionSets" name="Action Sets" 
+      schema="schema/actionSets.exsd"/&gt;
+    &lt;!-- Other specifications omitted. --&gt;
+&lt;/plugin&gt;
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 2.3. Declaring an Extension-Point.
+</td></tr> </table>
+
+<p>
+The documentation for this extension-point is provided in a
+<a
+href="http://www.eclipse.org/documentation/html/plugins/org.eclipse.platform.doc.isv/doc/reference/extension-points/org_eclipse_ui_actionSets.html">
+reference page</a> 
+(and is also available in the Eclipse platform on-line help at 
+<i>Platform Plugin Developer Guide/Reference/Extension Points
+Reference/Workbench/org.eclipse.ui.actionSets</i>). The documentation
+indicates, among other things, that this extension-point provides a plug-in 
+slot for sets of menus, menu items, and buttons to be added to the 
+base Eclipse workbench. 
+
+<p>
+The extension-point specification 
+
+<img src="images/tag_2.gif" height=13 width=24 align=CENTER>
+
+defines a unique identifier for the extension-point within this host
+plug-in. To identify an extension-point uniquely in global context, the
+extension-point identifier is prepended with the unique identifier of the
+host plug-in
+
+(as in <img src="images/tag_1.gif" height=13 width=24 align=CENTER>)
+
+to form a <i>fully-qualified</i> identifier for the extension-point.
+Thus, the fully-qualified identifier of the <code>actionSets</code>
+extension-point of the Eclipse UI plug-in is
+<code>org.eclipse.ui.actionSets</code>. Plug-ins that extend an extension-point
+refer to it by its fully-qualified identifier. 
+
+<p>
+The extension-point specification 
+
+(<img src="images/tag_2.gif" height=13 width=24 align=CENTER>)
+
+also declares an XML schema for the extensions of this extension-point,
+which provides the syntax for declaring menus, menu items, and buttons to
+be added to the workbench UI.  We'll have more to say about the structure
+and contents of such a schema in section 2.3.3. 
+
+<h5>
+2.3.1.2. The Extender Plug-in Role
+</h5>
+
+<p> In the context of a particular extension, a plug-in that stands in the
+<i>extender</i> role defines the extension, typically making certain
+aspects of itself available to a host plug-in through the extension, and,
+in addition, causing the host plug-in to add certain processing elements to
+its environment. An extension is declared by using an
+<code>extension</code> XML element in the extender plug-in's manifest file.
+Here is an example of an extender plug-in, culled from the
+<code>org.eclipse.help.ui</code> plug-in manifest file, that extends the
+<code>actionSets</code> extension-point of Listing 2.3, by adding two menu
+items:
+
+<a name="listing2.5"> </a>
+<p>
+<table width=600 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+&lt;plugin
+        id="org.eclipse.help.ui"
+        name="Help System UI"
+        version="2.1.0"
+        provider-name="Eclipse.org"
+        class="org.eclipse.help.ui.internal.WorkbenchHelpPlugin"&gt;
+    &lt;!-- ... --&gt;
+    &lt;!-- Action Sets --&gt;
+    &lt;extension
+        <img src="images/tag_1.gif" height=13 width=24 align=CENTER> point="org.eclipse.ui.actionSets"&gt;
+        &lt;actionSet
+                label="Help"
+                visible="true"
+                id="org.eclipse.help.internal.ui.HelpActionSet"&gt;
+        <img src="images/tag_2.gif" height=13 width=24 align=CENTER> &lt;action
+                label="&amp;Help Contents"
+                icon="icons/view.gif"
+                helpContextId="org.eclipse.help.ui.helpContentsMenu"
+                tooltip="Open Help Contents"
+                class="org.eclipse.help.ui.internal.HelpContentsAction"
+                menubarPath="help/helpEnd"
+                id="org.eclipse.help.internal.ui.HelpAction"&gt;
+            &lt;/action&gt;
+            &lt;!-- ... other actionSet elements --&gt;
+        <img src="images/tag_3.gif" height=13 width=24 align=CENTER> &lt;action
+                label="&amp;Help..."
+                icon="icons/search_menu.gif"
+                helpContextId="org.eclipse.help.ui.helpSearchMenu"
+            <img src="images/tag_4.gif" height=13 width=24 align=CENTER> class="org.eclipse.help.ui.internal.OpenHelpSearchPageAction"
+                menubarPath="org.eclipse.search.menu/dialogGroup"
+                id="org.eclipse.help.ui.OpenHelpSearchPage"&gt;
+            &lt;/action&gt;
+        &lt;/actionSet&gt;
+    &lt;/extension&gt;
+&lt;!-- ... --&gt;
+&lt;/plugin&gt;
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 2.4. Declaring an Extension.
+</td></tr> </table>
+
+<p> 
+Note that in this extender plug-in, the <code>actionSets</code> extension-point
+is referred to by its fully-qualified identifier
+
+(<img src="images/tag_1.gif" height=13 width=24 align=CENTER>).
+
+<p> The portion of the <code>actionSets</code> extension shown in Listing 2.4 
+defines two actions
+
+(<img src="images/tag_2.gif" height=13 width=24 align=CENTER>,
+<img src="images/tag_3.gif" height=13 width=24 align=CENTER>).
+
+The actions shown are made available through the workbench menu items
+<i>Help-&gt;Help Contents</i> and <i>Search-&gt;Help</i>, respectively. 
+
+<h5>
+2.3.1.3. The Extension Callback Role
+</h5>
+
+<p> In the context of a particular extension, an object that stands in a
+<i>callback</i> role is a plain old Java object (not a plug-in) that is
+called by the host plug-in when certain events specified in the
+corresponding extension-point contract are recognized by the host plug-in.
+The interface for callback objects is provided by the host plug-in, and is
+documented in the documentation of the extension-point being extended. The
+implementation of callback objects is typically a custom class specific to
+the particular extension, and is furnished by the provider of the extender
+plug-in. Because the implementation of the callback object in the extender
+references the callback interface, which is typically packaged with the
+host, an extender plug-in typically also <i>depends on</i> the host
+plug-in.
+
+<a name="2.3.1.3.1."> </a>
+<h6>
+2.3.1.3.1. Specific Callback Roles
+</h6>
+
+<p> Each callback object fills a certain specific role within an extension.
+I will refer to these specific roles simply as <i>callback roles</i>. In
+the XML definition of an extension, callback roles are defined by child or
+descendent XML elements. The <code>actionSets</code> extension-point, for
+example, defines a descendent callback role known as <code>action</code>.
+Multiple callback objects may stand in this role within an
+<code>actionSets</code> extension, each servicing a particular workbench
+menu item or button.  
+
+<p> When a custom implementation of a callback object is required, the XML
+schema of the corresponding extension-point typically includes an attribute
+for specifying the fully-qualified name of the custom callback implementation
+class. For the <code>help</code> UI plug-in, the name of the XML attribute
+designating an <code>action</code> class is "<code>class</code>", 
+as exemplified in Listing 2.4
+
+(<img src="images/tag_4.gif" height=13 width=24 align=CENTER>).
+
+<p> But while the extender plug-in defines the required specific callback
+objects, and declares their custom implementation classes, the callback
+objects only come into existence as a result of specific action by the host
+plug-in (and usually only when they are required for the first time to
+perform some action on behalf of the extension).
+
+For example, in Listing 2.4 
+
+<img src="images/tag_4.gif" height=13 width=24 align=CENTER>,
+
+the <code>action</code> callback
+class for the workbench <i>Search-&gt;Help</i> menu is specified 
+by the extender plug-in <code>org.eclipse.help.ui</code> to be <code>OpenHelpSearchPageAction</code>
+(package <code>org.eclipse.help.ui.internal</code>).
+But the associated callback instance is created by the host plug-in
+<code>org.eclipse.ui</code>. In this case, the callback instance is created the
+first time the <i>Search-&gt;Help</i> menu item is invoked. 
+
+<p> As extension designers for an extender plug-in, we need to know about
+the callback roles of an extension, and supply concrete callback objects
+for these roles. The roles are defined as particular elements in the XML
+schema associated with the extension-point (see section 2.3.3), and are
+described in the documentation of the XML schema, which, among other
+things, must include the interfaces expected of callback objects filling
+each role.
+
+<p> For example, the <code>actionSets</code> 
+<a href="http://www.eclipse.org/documentation/html/plugins/org.eclipse.platform.doc.isv/doc/reference/extension-points/org_eclipse_ui_actionSets.html">
+reference page</a> introduced earlier
+specifies the callback interface for menu item actions to be <a
+href="http://www.eclipse.org/documentation/html/plugins/org.eclipse.platform.doc.isv/doc/reference/api/org/eclipse/ui/IWorkbenchWindowActionDelegate.html">
+org.eclipse.ui.IWorkbenchWindowActionDelegate</a>.  So the menu action handlers
+of the help system implement this interface. In this interface,
+the method whose implementation actually performs the menu action
+is declared as:
+
+<code>
+<pre>
+    public void run(org.eclipse.jface.action.IAction action);
+</pre>
+</code>
+
+<p> Therefore, when a new service is to be made accessible through the main
+workbench menu, the service's plug-in provides an implementation of
+<code>IWorkbenchWindowActionDelegate</code> in which the <code>run</code>
+method invokes the service. And the fully-qualified name of the
+implementation class is added to the service's plug-in manifest file as the
+callback class of the service's menu.
+
+<h5>
+2.3.1.4. Non-Specific Service Objects
+</h5>
+
+<p> Note that not all XML elements used in defining an extension correspond
+to custom callback roles. Some elements may be purely descriptive,
+supplying, for example, certain parameters to the host plug-in to shape
+corresponding UI elements, or to use in creating non-custom internal host
+objects representing parts of the extension.  In our example, an
+<code>actionSet</code> element in and of itself (i.e., independently of its
+child elements) does not define a custom callback object. But such an
+element does cause an internal object to come into existence within the
+<code>org.eclipse.ui</code> plug-in to represent the action set.
+
+<p> Similarly, the <code>actionSets</code> extension-point allows the
+declaration of new top-level workbench menus through an
+<code>actionSet</code> <code>menu</code> element. But the action associated
+with a top-level menu is generic: "expose the list of lower-level menu
+items". Therefore, there is no need for an extender-specific callback
+object to be associated with a top-level workbench menu. And the workbench
+top-level menus are represented by internal workbench UI objects.
+
+<p> As users of extension-points, we need not be concerned with these 
+non-specific internal objects supplied by the host plug-in.  But as designers
+of host plug-ins, we see that we have the flexibility to design complex
+extension structures, parts of which may be exposed as callbacks to be provided
+by extensions, and other parts of which would be generic, built-in to
+the host plug-in code, and possibly parameterizable through corresponding XML
+attributes of extensions.
+
+<h4>
+2.3.2. Relationships between Plug-ins and Extension Objects
+</h4>
+
+<p> The act of extension is quite a general concept in Eclipse, and to
+understand its full generality, it is useful to summarize the types of
+relationships that may exist between plug-in objects, extension-points, and
+callback objects.
+
+<ol>
+
+<p>
+<li>
+Multiple extension-points may exist in a host plug-in.
+
+<p>
+<li>
+A plug-in may act both as a host plug-in, exposing
+some extension-points, and as an extender plug-in, extending some
+plug-ins.
+
+<p>
+<li>
+Multiple plug-ins may extend a given extension-point. 
+
+<p>
+<li>
+A given plug-in may extend a given extension-point multiple 
+times. 
+
+<p>
+<li>
+An extender plug-in may include different extensions
+of different host plug-ins.
+
+<p>
+<li>
+A single act of extension of an extension-point by a 
+particular extension of a particular plug-in may create 
+multiple callback objects. 
+
+<p>
+<li>
+A plug-in can define extensions of its own extension-points.
+
+</ol>
+
+<p> Note. The idea of a plug-in extending itself may seem odd at first. 
+A prominent example of a self-extending plug-in is the workbench UI
+itself. This plug-in adds various facilities, e.g., editors,
+to its own UI by extending its own extension-points.
+
+<h4>
+2.3.3. Extension-Point Schemas
+</h4>
+
+<p> A particular extension is defined by an XML configuration element in an
+extender plug-in.  The element provides the information required to
+instantiate and initialize the required callback objects for that
+extension, as well as the information required to customize the interface
+and behavior of the host plug-in.  When a host plug-in designer creates an
+extension-point, in addition to declaring the extension-point in its
+manifest file, the designer is also responsible for defining the
+configuration syntax for extensions to that extension-point.  This syntax
+is defined as an XML schema and stored in a file with a <code>.exsd</code>
+extension, e.g., <code>actionSets.exsd</code>.  The schema definition then
+becomes part of the documentation of the host plug-in.  (Eclipse includes
+an XML schema editor and a corresponding formatter for this purpose.)
+
+<p> The extension-point schema lets extender plug-in designers know how to
+parameterize their extensions.  (Eclipse also provides an extension
+configuration editor that is driven by the XML schema of an 
+extension-point being extended.)
+
+<p> To get an idea of the structure and contents of extension-point
+schemas, you can browse the extension-point schemas for the Eclipse
+platform plug-ins. These schemas are available in each Eclipse installation
+below the folder <code>plugins/org.eclipse.platform.source_&lt;ver&gt;/src</code> 
+(where <code>&lt;ver&gt;</code> is the version of Eclipse). Under this folder, 
+the extension-point schemas for a given platform plug-in may be found in the
+folder <code>&lt;plugin&gt;_&lt;plugin_ver&gt;/schema</code>, where
+<code>&lt;plugin&gt;</code> is the id of the plug-in, and
+<code>&lt;plugin_ver&gt;</code> is the version of the plug-in. For example,
+for Eclipse 2.1, the <code>actionSets</code> extension-point schema,
+<code>actionSets.exsd</code>, may be found in the folder
+<code>org.eclipse.ui_2.1.0/schema</code> below the
+<code>platform.source</code> folder. 
+
+<p>
+Here is a considerably abbreviated version of <code>actionSets.exsd</code>:
+
+<p>
+<table width=600 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+&lt;schema targetNamespace="org.eclipse.ui"&gt;
+   &lt;element name="extension"&gt;
+      &lt;complexType&gt;
+         &lt;sequence&gt;
+        <img src="images/tag_1.gif" height=13 width=24 align=CENTER> &lt;element ref="actionSet" minOccurs="1" maxOccurs="unbounded"/&gt;
+         &lt;/sequence&gt;
+         &lt;attribute name="point" type="string" use="required"&gt; &lt;/attribute&gt;
+         &lt;attribute name="id" type="string"&gt; &lt;/attribute&gt;
+         &lt;attribute name="name" type="string"&gt; &lt;/attribute&gt;
+      &lt;/complexType&gt;
+   &lt;/element&gt;
+   &lt;element name="actionSet"&gt;
+      &lt;complexType&gt;
+         &lt;sequence&gt;
+            &lt;element ref="menu" minOccurs="0" maxOccurs="unbounded"/&gt;
+            &lt;element ref="action" minOccurs="0" maxOccurs="unbounded"/&gt;
+         &lt;/sequence&gt;
+         &lt;attribute name="id" type="string" use="required"&gt; &lt;/attribute&gt;
+         &lt;attribute name="label" type="string" use="required"&gt; &lt;/attribute&gt;
+         &lt;attribute name="visible" type="boolean"&gt; &lt;/attribute&gt;
+         &lt;attribute name="description" type="string"&gt; &lt;/attribute&gt;
+      &lt;/complexType&gt;
+   &lt;/element&gt;
+   &lt;element name="action"&gt;
+      &lt;complexType&gt;
+         &lt;choice&gt;
+            &lt;element ref="selection" minOccurs="0" maxOccurs="unbounded"/&gt;
+            &lt;element ref="enablement" minOccurs="0" maxOccurs="1"/&gt;
+         &lt;/choice&gt;
+         &lt;attribute name="id" type="string" use="required"&gt; &lt;/attribute&gt;
+         &lt;attribute name="label" type="string" use="required"&gt; &lt;/attribute&gt;
+         &lt;attribute name="toolbarPath" type="string"&gt;
+         &lt;attribute name="icon" type="string"&gt; &lt;/attribute&gt;
+         &lt;attribute name="tooltip" type="string"&gt; &lt;/attribute&gt;
+         &lt;attribute name="class" type="string"&gt; &lt;/attribute&gt;
+      &lt;/complexType&gt;
+   &lt;/element&gt;
+&lt;/schema&gt;
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 2.5. Extension-Point Schema Definition (<code>.exsd</code> File).
+</td></tr> </table>
+
+<p> 
+The schema defines an <code>actionSets</code> extension as an element that
+includes some attributes and a sequence of <code>actionSet</code>'s,
+and an <code>actionSet</code> as an element that includes some
+attributes and a sequence of <code>menu</code>s and <code>action</code>s.  
+
+<p> In the full version of this file, each attribute is annotated with a
+human-readable <i>documentation element</i>. The documentation elements of
+extension-point schemas are used to generate HTML reference pages for
+extension-points (e.g., <a 
+href="http://www.eclipse.org/documentation/html/plugins/org.eclipse.platform.doc.isv/doc/reference/extension-points/org_eclipse_ui_actionSets.html">
+the <code>actionSets</code> reference page</a> mentioned earlier in this
+article), similarly to the way in which Java API reference pages 
+are generated via <code>javadoc</code>. Such a reference page is made
+available as part of the documentation of the host plug-in, and is
+integrated with the workbench's help system. 
+
+<p>
+The reference page supports the two tasks that must be performed
+to plug new functionality into an extension-point, namely:
+
+<ul>
+
+<p>
+<li>
+Configuration of an extension in the extender plug-in's manifest file.
+
+<p>
+The reference page specifies the XML configuration syntax 
+required for the extension.
+
+<p>
+<li>
+Provision of custom implementations for the extension-point's callback objects.
+
+<p> The reference page includes an API section for documenting the callback
+interfaces expected by the host plug-in for each callback role.
+
+</ul>
+
+<h5>
+2.3.3.1. Extension Members
+</h5>
+
+<p> What goes into an extension-point schema definition is up to the
+designer of the host plug-in. And the extension XML in the 
+<a href="http://www.eclipse.org/documentation/html/plugins/org.eclipse.platform.doc.isv/doc/reference/misc/rplugman.html">
+Eclipse Platform Plug-in Manifest Specification</a> is defined as an XML
+<code>ANY</code>, meaning that it is arbitrary. That designation is too general,
+however. In fact, an XML extension specification is always a (possibly
+degenerate) sequence of elements. I will refer to an item within this
+sequence of elements as an <i>extension member</i>.  An
+<code>actionSets</code>
+extension, for example, is a sequence of <code>actionSet</code> members.
+Often the members of an extension have the same element type: that is,
+the sequence represents a homogeneous list of members. 
+
+<p> In XML, the number of elements of each type within a sequence may be
+bounded by using the <code>minOccurs</code> and the <code>maxOccurs</code>
+element definition attributes. This usage is illustrated in the
+<code>actionSets</code> schema (Listing 2.5, <img src="images/tag_1.gif"
+height=13 width=24 align=CENTER>), where an <code>actionSets</code>
+extension is specified to contain at least one, but an otherwise
+unrestricted number of <code>actionSet</code> elements.
+
+<p> When an extension-point defines a homogeneous sequence of members and
+allows its extensions to have more than one member, the extension-point is
+assigned a plural name. Such extension-points and their extensions
+may be referred to as <i>plural-form</i>. The plural form is typically
+provided as a shorthand for representing multiple single-member extensions.
+
+<p> The notion of an extension <i>member</i>, that is, a top-level XML
+element of an extension's (top-level) sequence, may be contrasted with the
+Eclipse notion of a <i>configuration element</i>, an arbitrary element
+(either a top-level element or a lower-level descendent element) in the XML
+specification of an extension. Both terms will be used here for the XML element
+itself and for its parsed programmatic representation. 
+
+<a name="3."> </a>
+<h2>
+3. Extension Processing
+</h2>
+
+<p> In section 2, the extension model of Eclipse was presented at a high
+level, and the declarative specifications of extensions and their callback
+objects was introduced. In this section, we will see how such declarations are
+processed programmatically to support the obligations of a host plug-in
+under an extension-point contract. In other words, we will see the kind of
+code host plug-in designers must write for each extension-point they
+define.
+
+<p> Consider again the plug-in <code>org.eclipse.ui</code> and its
+<code>actionsSets</code> extension-point. When this plug-in is activated,
+the extension declarations in all plug-ins that extend it must be
+processed, so that the UI knows how to configure its menus and buttons, and
+what callback objects to call when corresponding menu and button events
+occur. This section presents the API calls provided by the Eclipse platform
+to aid in this type of extension processing, and exemplifies the idioms
+used by plug-in developers to process extensions by using these API calls.
+
+<h3>
+3.1. Obtaining References to the Extensions of an Extension-Point
+</h3>
+
+<p>
+How are the extension declarations processed for a given extension-point? 
+Well, in general, the configuration of an extension is
+quite arbitrary. And the part of the system that has the knowledge
+of this configuration is the host plug-in, whose design produced
+the extension-point schema definition. 
+For example, the knowledge of how to process the <code>actionsSets</code>
+extension of the UI help plug-in, <code>org.eclipse.help.ui</code>,
+resides within the plug-in that defines the <code>actionsSets</code>
+extension-point, namely, the plug-in <code>org.eclipse.ui</code>. 
+
+<p> In order for a host plug-in to process the extensions of one of its 
+extension-points, it needs to be able to obtain a list of those extensions
+from the Eclipse runtime, and, for each extension, to get a parsed version
+of that extension's members.
+
+<p> Recall that the plug-in registry API provides programmatic access to
+the parsed representation of all available plug-in specifications. 
+This API provides methods for
+traversing the information about plug-ins, their components, and their
+relationships. A configuration element in the registry API (interface
+<var>IConfigurationElement</var>) represents the parsed version of an
+extension element in an extender plug-in's manifest file. 
+The following sample code shows how to use the plug-in registry 
+API to iterate over all members of all extensions of an extension-point.
+
+<p>
+<table width=600 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+package com.bolour.sample.eclipse.demo;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+
+public interface IProcessMember {
+    public Object process(IExtension extension, 
+      IConfigurationElement member);
+}
+
+package com.bolour.sample.eclipse.demo;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IPluginRegistry;
+import org.eclipse.core.runtime.Platform;
+
+public class ProcessExtensions {
+<img src="images/tag_1.gif" height=13 width=24 align=CENTER> public static void process(String xpid, IProcessMember processor) {
+        IPluginRegistry registry = Platform.getPluginRegistry();
+        IExtensionPoint extensionPoint =
+            registry.getExtensionPoint(xpid);
+        IExtension[] extensions = extensionPoint.getExtensions();
+        // For each extension ...
+    <img src="images/tag_2.gif" height=13 width=24 align=CENTER> for (int i = 0; i &lt; extensions.length; i++) {           
+            IExtension extension = extensions[i];
+        <img src="images/tag_3.gif" height=13 width=24 align=CENTER> IConfigurationElement[] elements = 
+              extension.getConfigurationElements();
+            // For each member of the extension ...
+        <img src="images/tag_4.gif" height=13 width=24 align=CENTER> for (int j = 0; j &lt; elements.length; j++) {
+                IConfigurationElement element = elements[j];
+            <img src="images/tag_5.gif" height=13 width=24 align=CENTER> processor.process(extension, element);               
+            }
+        }
+    }
+}
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 3.1. Iterating over the Extensions and the Members of an Extension-Point.
+</td></tr> </table>
+
+<p> The class <code>ProcessExtensions</code> provides an extension processing
+method <code>process</code> (<img src="images/tag_1.gif" height=13 width=24
+align=CENTER>), which uses the nested loop idiom for extension processing:
+loop over all extensions of the given extension-point
+
+(<img src="images/tag_2.gif" height=13 width=24 align=CENTER>),
+
+and for each extension, loop over all members of that extension
+
+(<img src="images/tag_4.gif" height=13 width=24 align=CENTER>).
+
+The <code>process</code> method is made generic by providing it with a
+member processing visitor: an instance of interface
+<code>IProcessMember</code> that is called back on for each member being
+processed
+
+(<img src="images/tag_5.gif" height=13 width=24 align=CENTER>).
+
+<p> Suppose this extension processing method is called with the
+id of the <code>actionSets</code> extension-point, namely,
+<code>org.eclipse.ui.actionSets</code>, as the first argument.  One of the
+extensions of the <code>actionSets</code> extension-point is the
+<code>help</code> extension of <a href="#listing2.5">Listing 2.4</a>, and
+that extension happens to have a single <code>actionSet</code> member. So
+when the <code>help</code> extension is reached in the outer loop, its
+<code>actionSet</code> member is supplied to the inner loop, and can be
+processed by the member processing visitor.
+
+<p> A similar processing loop occurs in the Eclipse workbench UI plug-in
+(the owner of the <code>actionSets</code> extension-point) when that
+plug-in is activated. And the UI plug-in can then pick apart the attributes
+and sub-elements of the <code>actionSet</code> member by using the methods of
+<var>IConfigurationElement</var> and related interfaces, and use them to
+configure the specified menu and button elements into the workbench user interface,
+and to instantiate the required callback objects, when required.
+
+<p> Within the member processing function called in the inner loop 
+
+<img src="images/tag_5.gif" height=13 width=24 align=CENTER>,
+of course, the host plug-in is free to do
+whatever is necessary to process each member, as directed by that
+member's XML configuration element. 
+
+<a name="shorthand"/>
+<h4>
+3.1.1. Extension-Point Member Traversal Shorthand
+</h4>
+
+<p>
+Listing 3.1 exemplifies the use of the method <code>IConfigurationElement[]
+getConfigurationElements()</code> to obtain the configurations of all members of 
+an extension
+
+(Listing 3.1 <img src="images/tag_3.gif" height=13 width=24 align=CENTER>).
+
+A method with an identical signature also exists for an extension-point as a
+whole, that is, for the interface <code>IExtensionPoint</code>, and returns
+the configurations of all members of all extensions of an extension-point.
+By using this <i>shorthand</i> method, the extension/member nested loop 
+(Listing 3.1, <img src="images/tag_2.gif" height=13 width=24 align=CENTER>,
+<img src="images/tag_4.gif" height=13 width=24 align=CENTER>)
+is reduced to a single loop spanning all members of all extensions of an
+extension-point. Often this simpler idiom is sufficient for processing 
+an extension-point.
+
+<h4>
+3.1.2. Extension Processing in Action
+</h4>
+
+<p> By supplying a concrete extension processing visitor to the
+<code>process</code> method of our generic extension processing class
+
+(Listing 3.1 <img src="images/tag_1.gif" height=13 width=24 align=CENTER>),
+
+we can get a taste of extension processing in action. For example, to output
+identifying information about all extension members for a given
+extension-point, the following implementation of the visitor interface
+<code>IProcessMember</code> may be used:
+
+<p>
+<table width=600 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+package com.bolour.sample.eclipse.demo;
+// imports ...
+public class PrintMemberIdentity implements IProcessMember {
+    private String memberLabelAttribute = null;
+    public PrintMemberIdentity(String memberLabelAttribute) {
+        this.memberLabelAttribute = memberLabelAttribute;
+    }
+    public Object process(IExtension extension, 
+      IConfigurationElement member) {
+        String label = 
+          extension.getDeclaringPluginDescriptor().getLabel() + "/"
+          + member.getAttribute(memberLabelAttribute);
+        System.out.println(label);
+        return label;
+    }
+    public static void test(String extensionPoint, 
+      String memberLabelAttribute) {
+        // Validate input ...
+        System.out.println("Extension members of " + extensionPoint + ":");
+        IProcessMember processor = 
+          new PrintMemberIdentity(memberLabelAttribute);
+        ProcessExtensions.process(extensionPoint, processor);
+    }
+}
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 3.2. Printing Identification Data for Extension-Point Members.
+</td></tr> </table>
+
+<p> 
+For <code>actionSet</code> members, there is a labeling attribute whose name
+is <code>label</code>. So to get a printout of the identifying information
+for all <code>actionSet</code>s present in the current instance of the
+workbench, the following call may be used:
+
+<code>
+<pre>
+    PrintMemberIdentity.test("org.eclipse.ui.actionSets", "label")
+</pre>
+</code>
+
+<p>
+And the call produces output lines such as:
+
+<pre>
+Java Development Tools UI/Java Element Creation
+Java Development Tools UI/Java Navigation
+Help System UI/Help
+CVS Team Provider UI/CVS
+Extension Processing Demo/Demo Menu Actions
+Eclipse UI/Resource Navigation
+...
+</pre>
+
+<p> This extension processing demo is included with the 
+companion plug-ins of this article. To try it out,
+see the plug-in <a href="#instructions">installation instructions </a> at
+the end of this article.
+
+<a name="3.2."> </a>
+<h3>
+3.2. Standardized Extension Processing
+</h3>
+
+<p> A principal function of extension processing is the instantiation of an
+extension's callback objects. As we shall see in section 3.3, for
+performance reasons, this function is normally performed in a lazy manner,
+as callback objects are required to do actual work. In this section,
+however, I will ignore this important performance optimization, and
+concentrate instead on the main functional aspects of callback
+instantiation.
+
+<p> Eclipse defines a standard for instantiating and initializing callback
+objects. As we have seen, a callback object is typically represented in a
+specific child-level or descendent XML element of an extension, and its
+fully-qualified class name is provided as the value of some attribute of
+this element. Also, the initial state of a callback object is usually
+completely parameterized by the corresponding element and its XML
+descendants. When these conditions hold, the callback object may be
+instantiated and initialized by using the standard callback object
+instantiation and initialization facilities of Eclipse.
+
+<p> Suppose that our extension processing code has traversed the parsed
+representation of an extension member to an element corresponding to a
+particular callback object (for example, an object standing in the
+<code>action</code> role within an <code>actionSets</code> extension).
+Suppose that this element is represented in a variable
+<code>IConfigurationElement element</code>, and that the name of this
+element's attribute designating the fully-qualified class name of the
+callback object is known to be <code>class</code>. Then, the method
+<code>createExecutableExtension(String classPropertyName)</code> of
+<code>IConfigurationElement</code> may be used to instantiate the callback
+object, as follows:
+
+<code>
+<pre>
+ICallback callback = (ICallback) element.createExecutableExtension("class")
+</pre>
+</code>
+
+<p>
+where <code>ICallback</code> is the expected interface for the 
+corresponding callback role.
+
+<p>
+The method <code>createExecutableExtension</code> does two things:
+
+<ol>
+
+<p>
+<li>
+Instantiate a member of the required class by using its
+0-argument public constructor (one must exist). 
+
+<p> The fully-qualified name of the required class is looked up in the
+configuration as the value of an attribute whose name is provided in the
+method's <code>classPropertyName</code> argument.
+
+<p>
+<li>
+Initialize this instance if it is initializable in a standard manner.
+
+<p>
+To become initializable in a standard manner, an extension class
+implements Eclipse's standard extension initialization interface
+<code>IExecutableExtension</code>:
+
+<code>
+<pre>
+package org.eclipse.core.runtime;
+public interface IExecutableExtension {
+   public void setInitializationData(IConfigurationElement config, 
+     String classPropertyName, Object data) throws CoreException;
+}
+</pre>
+</code>
+
+<p> So if the instantiated callback object is an instance of
+<code>IExecutableExtension</code>, the method
+<code>createExecutableExtension</code> automatically calls
+<code>setInitializationData</code> on this extension object, giving it the
+configuration element of the callback object as a parameter (as well as its
+class attribute name, and a data parameter whose details are beyond the
+scope of this article, but can safely be ignored for now (see the Eclipse
+documentation for more details)). 
+
+<p> What this initialization method actually does, of course, is up to the
+callback object's designer. The configuration of the callback object
+provided to this method as a parameter would drive the initialization
+process and would be reflected in the callback object's state by the
+initialization method. 
+
+</ol>
+
+<p>
+A complete example of the use of this machinery to instantiate
+and initialize callback objects appears in section 4.
+
+<p> Note. As mentioned earlier and as we shall see in the next section,
+this entire machinery is generally used in a lazy fashion only, i.e., 
+when the callback object is actually required to do specific work. In the
+same spirit, a callback object's initialization method should, to the
+extent possible, defer time-consuming work to subsequent method calls on
+the object that would require or benefit from such work. For example, when
+a callback object manages access to a set of resources, it is often
+possible and preferable to open a managed resource only when it is actually
+required in a subsequent method call to the callback object.
+
+<h3>
+3.3. Lazy Extension Processing
+</h3>
+
+<p> When a host plug-in is activated, an eager processing of its extensions
+would cause the activation of all of its extender plug-ins, and,
+recursively, their extender plug-ins, down the plug-in hierarchy (or, more
+accurately, through the plug-in extension network). Activating all plug-ins
+reachable from a given plug-in involves loading their classes. And
+processing all extension-points of these plug-ins means loading the custom
+callback classes of all extensions of these extension-points.  As a result,
+an eager extension processing regime can considerably slow down plug-in
+activation, and therefore system startup. 
+
+<p>
+Plug-in developers are therefore encouraged to attempt to delay
+the creation of extender-specific callback objects, until such 
+objects are actually required to perform some action.
+
+<h4>
+3.3.1. Using Virtual Proxies in Lazy Extension Processing
+</h4>
+
+<p> One way to implement a lazy activation regime is to use a <i>virtual
+proxy</i> for each callback object during the activation of a
+host plug-in.  (See the <i>virtual</i> usage of the <i>proxy
+pattern</i> in [1].) Such a proxy stands in the role
+of a real callback object, and causes the real callback object to be
+instantiated only when some action is required of it. Often, it is possible
+to provide, within the proxy class, certain generic functions that are
+required of a callback object. These functions can then be furnished to
+the host plug-in without reference to particular custom extension
+classes, and without the need to activate particular extender plug-ins.
+
+<p>
+When using virtual proxies to initialize the extensions of a
+host plug-in, only a limited number of extension classes,
+one for each extension-point role, would be loaded in activating
+a host plug-in.
+
+<p>
+As an example, the internal package <code>org.eclipse.ui.internal</code>
+contains an abstract virtual proxy class called <code>PluginAction</code> for UI
+actions, and a number of concrete subclasses of this class. 
+And initial extension processing for the <code>actionSets</code> extension
+point only instantiates such a proxy class for each UI action. 
+
+<p>
+A generic constructor for an <i>action</i> proxy is defined in the abstract 
+class <code>PluginAction</code>, and has the following signature:
+
+<code>
+<pre>
+    public PluginAction(IConfigurationElement actionElement, 
+      String runAttribute, String definitionId, int style)
+</pre>
+</code>
+
+<p> The parameter <code>actionElement</code> provides a reference to the
+parsed representation of an extension XML element representing an action.
+And the parameter <code>runAttribute</code> identifies the XML attribute
+that represents the name of the custom action class to be instantiated to
+perform the action.  The <code>PluginAction</code> proxy class simply keeps
+track of these properties for later use in instantiating and initializing
+the real action object. 
+
+<p> The proxy class fields action calls by implementing the workbench's
+<i>action</i> interface, called <code>IAction</code>. The first time a call
+is made on the <code>run</code> method of this interface, the proxy
+instantiates the custom action implementation class whose name is provided
+in <code>runAttribute</code>, The <code>run</code> method call is then
+dispatched to this custom action instance.  The custom action instance is
+known as the <i>action delegate</i>.
+
+<h5> 3.3.1.1. Callback Proxies versus Callback Adapters</h5>
+
+<p> In a canonical proxy pattern, both the proxy class and the delegate
+implementation class implement the <i>same</i> functional interface.  But
+it is not necessary to adhere to a strict interpretation of the proxy
+pattern in implementing the virtual proxies of callback objects. In fact,
+an implementation following the <i>adapter</i> pattern provides a more
+flexible mechanism for the purpose of lazy callback instantiation.
+
+<p> For example, the Eclipse UI action handler, <code>PluginAction</code>,
+is more precisely described as a <i>virtual adapter</i>. It implements a
+high-level interface <code>IAction</code> and adapts it to a lower-level
+interface, <code>IActionDelegate</code>, which is expected of implementers
+of custom action callbacks. And the two interfaces <code>IAction</code> and
+<code>IActionDelegate</code> are unrelated. The handler class
+<code>PluginAction</code> provides some basic services without reference to
+a particular custom action handler, and <i>adapts</i> the <code>run</code>
+method of of the workbench's <code>IAction</code> interface to the
+<code>run</code> method of the action callback interface
+<code>IActionDelegate</code> to actually perform a requested action. 
+
+<p> (Note that the interface <code>IWorkbenchWindowActionDelegate</code>
+expected of custom workbench menu and buttons handlers, mentioned earlier
+in <a href="#2.3.1.3.1.">section 2.3.1.3.1</a>, is derived from the action
+callback interface <code>IActionDelegate</code>.)
+
+<p> Even though Eclipse developers do not necessarily use a strict proxy
+regime to affect lazy callback instantiation, the term <i>proxy</i> is 
+commonly used in Eclipse parlance as a generic designation for internal objects
+used to <i>front</i> custom callback objects for the purpose of delaying
+their instantiation.
+
+<a name="4."> </a>
+<h2>
+4. Example: An Extensible Arithmetic Function Service
+</h2>
+
+<p> So far in this article, we have used only pre-existing extension-points.
+But with the machinery of extension processing in place, we are now ready
+to create an extension-point of our own. Our example extension-point
+is similar in its outline structure to the <code>actionSets</code> extension-point
+which we have been using so far. 
+
+<p>
+<ol>
+
+<li>
+
+It provides a slot for augmenting the functions of a host plug-in
+by a custom set of services. 
+
+<li>
+
+It has a plural form, so that each of its extensions 
+is free to add more than one service to the host plug-in.
+
+<li>
+
+It requires each extension to provide concrete callback 
+objects that embody the services provided by that extension.
+
+<li>
+
+It obligates the host to add elements to its user interface for each
+extension (actually for each member of each extension), so that the user
+may interact with the services provided by the extension.
+
+</ol>
+
+<p>
+In addition, our example provides for the specific initialization
+of callback objects by using the standard callback initialization facilities
+of Eclipse.
+
+<p> The goal is to illustrate these salient features of extensions with as
+simple an extension-point as possible. Our major concern, of course, is to
+illustrate architectural issues, patterns of usage, and extension
+processing.  User interface design issues are specifically excluded from
+this article.  In fact, our example uses a very simple user interface, just
+sufficient to illustrate the types of interactions required between the
+user interface functions and extension processing functions.
+
+<h3>
+4.1. The Example in Outline
+</h3>
+
+<p>
+The host plugin, which supplies the user interface for this example,
+will be referred to as the <i>UI plug-in</i>.
+
+<p> A single extension-point is defined in the UI plug-in, and supports the
+extension of the plug-in by a very simple type of service: a service that
+provides access to an integer arithmetic function of a single argument. The
+signature of the function is defined in the following callback interface:
+
+<code>
+<pre>
+package com.bolour.sample.eclipse.service.ui;
+public interface IFunction {
+    public long compute(long x) throws ArithmeticException;
+}
+</pre>
+</code>
+
+<p> In our example, each member of each extension will provide an
+implementation of such a function through a callback object
+that implements the <code>IFunction</code> interface. 
+
+<p> In order to illustrate the use of standard extension processing to
+initialize callback objects, we would like our functions to be configurable
+via configuration parameters (constants of the computation) supplied as XML
+attributes in extension declarations. Of course, we will have different
+classes of computations implemented by different callback classes, e.g.,
+addition of a parameter, multiplication by a parameter, etc.  And, in
+general, each type of computation would be parameterized differently. 
+
+<p> But to keep our example simple, we stipulate that our computations may
+be parameterized by at most one integer parameter.  For example, if the
+function doubles the value of its argument, then it is considered as a
+multiplication by a constant factor of 2. And in this case the value 2 is
+supplied as an XML configuration parameter in the extension declaration of
+the corresponding callback object.
+
+<p> The UI plug-in provides an input field to enter the argument of a
+service function, a result field to display the function's value, and a
+<i>constant</i> field to display the constant parameter (if any) used in
+the computation.  Each function also requires a specific button for
+invoking it, and a specific label for giving information about it.
+Therefore, for each member of each extension, the UI plug-in adds a
+corresponding button and label to its user interface. And when the button is
+selected, the UI plug-in calls back to the associated service function.
+
+<p>
+Figure 2 shows the UI plug-in's user interface for a typical configuration
+of extender plug-ins.
+
+<P>
+<spacer type=vertical size=10>
+
+<CENTER>
+<IMG SRC="images/functions_grid_view.jpg" ALT="Figure-2" BORDER="0">
+</CENTER>
+
+<BR>
+<table align=center width=600>
+<tr><td>
+Figure 2. Service UI plug-in's function invocation view. Extensions
+of this host plug-in declare arithmetic functions that are made
+accessible through this plug-in's function invocation view.
+</td></tr>
+</table>
+
+<p> The UI plug-in class is <code>com.bolour.sample.eclipse.service.ui</code>.
+The extension-point is called <code>functions</code>.
+
+<h3>
+4.2. The Extension-Point
+</h3>
+
+<p>
+The <code>functions</code> extension-point is declared in the UI
+plug-in manifest file as follows:
+
+<code>
+<pre>
+    &lt;extension-point id="functions" name="Functions" 
+      schema="schema/functions.exsd"/&gt;
+</pre>
+</code>
+
+<p> Here is the <a
+href="doc\com_bolour_sample_eclipse_service_ui_functions.html"> reference
+page</a> for this extension-point. (The source schema file for this
+extension, <code>functions.exsd</code> may be found in the <a
+href="samples.zip">companion plug-ins zip file</a>.) As indicated in the
+reference page, a <code>functions</code> extension is a sequence of
+<code>function</code> members each of which has the following attributes:
+
+<p>
+<ul>
+
+<li>
+<strong>class</strong>: The member function's custom callback class.
+
+<li>
+<strong>name</strong>: The member function's name. Used 
+in labeling the function on the user interface.
+
+<li>
+<strong>constant</strong>: An optional attribute used to parameterize
+the member's function by a constant.
+
+</ul>
+
+<p> Complete examples of extensions using these attributes appear in the
+next section. For now, here is an example extension member declaration for
+a multiplication function,
+<code>compute(x)&nbsp;=&nbsp;constant&nbsp;*&nbsp;x</code>, with a constant
+factor of 2:
+
+<code>
+<pre>
+&lt;function
+     name="DOUBLE"
+     constant="2"
+     class="com.bolour.sample.eclipse.service.multiplication.Multiplication"/&gt;
+</pre>
+</code>
+
+<p> In this case, the <code>Multiplication</code> class implements the
+standard Eclipse callback initialization interface
+<code>IExecutableExtension</code> to allow its instances to be initialized
+with the supplied constant factor.  The details are provided in <a
+href="#4.3.2.">section 4.3.2</a>.  Of course, the designer of a computation
+may decide not to parameterize it with a constant. The <i>echo</i>
+function, <code>compute(x)&nbsp;=&nbsp;x</code> (see <a
+href="#4.3.1.">section 4.3.1</a>), provides an example of such a
+non-parameterized computation. In this case, no specific initialization is
+required for the corresponding callback object, and the associated callback
+class would not implement <code>IExecutableExtension</code>.
+
+<p>
+Figure 3 shows the relationship between the functions UI plug-in 
+and its extensions. 
+
+<P>
+<spacer type=vertical size=10>
+
+<CENTER>
+<IMG SRC="images/services_extensions.jpg" ALT="Figure-3" BORDER="0">
+</CENTER>
+
+<CENTER>
+
+</CENTER>
+<BR>
+<table align=center width=600>
+<tr><td>
+Figure 3. The <code>functions</code> extension-point and its extensions.
+Sets of arithmetic functions are added to the UI
+plug-in by extending that plug-in's <code>functions</code> extension-point.  
+</td></tr>
+</table>
+
+<p> At this point, we have in place all the information we need to create
+sample extensions of the <code>functions</code> extension-point.  So before
+getting into the implementation details of the UI plug-in, we will
+present sample extensions of this extension-point. Section 4.3 presents two
+such sample extensions. Then in section 4.4 we will return to the implementation
+of the UI plug-in by providing the details of extension
+processing in that plug-in.
+
+<h3>
+4.3. Extension Examples
+</h3>
+
+<a name="4.3.1."> </a>
+<h4>
+4.3.1. Echo: A Simple Extension
+</h4>
+
+<p>
+The echo service provides a function that echoes its input
+to its output. Its service class is defined as:
+
+<p>
+<table width=550 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+package com.bolour.sample.eclipse.service.echo;
+import com.bolour.sample.eclipse.service.ui.IFunction;
+public class Echo implements IFunction {
+    public long compute(long x) {
+        return x;
+    }
+}
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 4.1. The Echo Callback Function Class.
+</td></tr> </table>
+
+<p>
+The echo plug-in makes itself available to the user by extending
+the <code>functions</code> extension-point. 
+Here is the specification of an echo 
+extension.
+
+<p>
+<table width=550 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+&lt;extension
+       id="functions.echo"
+       name="EchoFunction"
+       point="com.bolour.sample.eclipse.service.ui.functions"&gt;
+   &lt;function
+        name="ECHO"
+        class="com.bolour.sample.eclipse.service.echo.Echo"/&gt;
+&lt;/extension&gt;
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 4.2. An Echo Extension Specification.
+</td></tr> </table>
+
+<p>
+This specification declares the service callback class, and specifies
+the name of the service operation to be <code>ECHO</code>.
+
+<p>
+Note that in this simple case, no specific state is required
+to initialize an <code>Echo</code> object. So the optional 
+<code>constant</code> attribute is not used, and the 
+<code>Echo</code> callback class does not implement
+the <code>IExecutableExtension</code> interface.
+
+<a name="4.3.2."> </a>
+<h4>
+4.3.2. Multiplication: An Extension with Custom Initialization
+</h4>
+
+<p> Suppose now that the service function to be provided is the
+multiplication of the input argument by a constant value.  Such a service
+is more useful if it can be configured at deployment time with the required
+multiplication factor. The function attribute <code>constant</code> is used
+for this purpose.
+
+<p>
+Here is a sample multiplication extension.
+
+<p>
+<table width=600 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+&lt;extension
+    id="functions.multiplication"
+    name="MultiplicationFunctions"
+    point="com.bolour.sample.eclipse.service.ui.functions"&gt;
+  &lt;function
+     name="DOUBLE"
+     constant="2"
+     class="com.bolour.sample.eclipse.service.multiplication.Multiplication"/&gt;
+  &lt;function
+     name="TRIPLE"
+     constant="3"
+     class="com.bolour.sample.eclipse.service.multiplication.Multiplication"/&gt;
+&lt;/extension&gt;
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 4.3. A Multiplication Extension Specification.
+</td></tr> </table>
+
+<p>
+When this extension is processed, the attribute <code>constant</code> is 
+interpreted as a multiplication factor. 
+
+<p>
+The multiplication callback class is reproduced below (minimally redacted
+for brevity).
+
+<p>
+<table width=600 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+package com.bolour.sample.eclipse.service.multiplication;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
+import com.bolour.sample.eclipse.service.ui.IFunction;
+
+public class Multiplication implements IFunction, IExecutableExtension {
+    
+    private static final String FACTOR_ATTRIBUTE = "constant";
+    private int factor = 0;
+        
+<img src="images/tag_1.gif" height=13 width=24 align=CENTER> public long compute(long x) {      
+        return factor * x;
+    }
+<img src="images/tag_2.gif" height=13 width=24 align=CENTER> public void setInitializationData(IConfigurationElement member, 
+      String classPropertyName, Object data) throws CoreException {
+        
+    <img src="images/tag_3.gif" height=13 width=24 align=CENTER> String s = member.getAttribute(FACTOR_ATTRIBUTE);
+        try {
+        <img src="images/tag_4.gif" height=13 width=24 align=CENTER> factor = Integer.parseInt(s);
+        }
+        catch (NumberFormatException ex) {
+            // throw exception ...
+        }
+    }
+}
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 4.3. The Multiplication Function Callback Class.
+</td></tr> </table>
+
+<p>
+Note that the <code>compute</code> method 
+(<img src="images/tag_1.gif" height=13 width=24 align=CENTER>)
+of this class provides the implementation of the service interface
+<code>IFunction</code>, and that the <code>setInitializationData</code> method
+(<img src="images/tag_2.gif" height=13 width=24 align=CENTER>)
+of this class provides the implementation of the standard initialization
+interface <code>IExecutableExtension</code>. 
+
+<p> We will see in the next section that extension processing for the
+<code>functions</code> extension-point uses the standard callback
+instantiation method <code>createExecutableExtension</code>.  So because
+the <code>Multiplication</code> class implements the
+<code>IExecutableExtension</code> interface, the method
+<code>createExecutableExtension</code> automatically calls a callback
+instance's <code>setInitializationData</code> method, providing that
+instance's parsed XML element as a parameter. The initialization method can
+then extract the specified multiplication factor from the element's
+<code>constant</code> XML attribute, and keep track of it for future
+computations (<img src="images/tag_3.gif" height=13 width=24 align=CENTER>,
+<img src="images/tag_4.gif" height=13 width=24 align=CENTER>).
+
+
+<h3>
+4.4. Processing the "functions" Extension-Point
+</h3>
+
+<p> Now that we have examined some sample test cases for the
+<code>functions</code> extension-point, we are ready to dig deeper into the
+implementation of this extension-point and its defining UI plug-in.  Our
+extension-processing class is called <code>ProcessServiceMembers</code>.
+This class embodies the standard idioms of extension processing in Eclipse,
+specialized to the <code>functions</code> extension-point. In particular,
+this class implements a standard and lazy extension processing regime
+for the <code>functions</code> extension-point. A separate UI class
+called <code>FunctionsGrid</code> encapsulates all UI processing
+for our UI plug-in. 
+
+<p> As usual in lazy extension processing, processing is required
+in two distinct phases of the operation of the application.
+
+<p> In the host plug-in startup phase, there is an initial run through the
+members of all extensions of the <code>functions</code> extension-point for
+the purpose of obtaining the configurations of these members, creating
+generic callback proxies, and building the user interface of the host
+plug-in.  In this phase, our extension processing code repeatedly calls a
+UI method called <code>addFunction</code> to augment the host plug-in's
+user interface with function invocation elements for each extension
+function
+
+(see Listing 4.4 <img src="images/tag_5.gif" height=13 width=24 align=CENTER>)
+
+
+<p> Then, in the interactive phase of the application, the specific
+callback objects required to perform the computations of each configured
+function are created in a lazy fashion, as calls are received by proxy
+objects. During this phase, selecting the UI button for a function causes a
+callback to that function through a proxy callback object provided by the
+extension processing class.  The call is delegated by the proxy to the real
+callback object. And the first time such a call is made to each proxy, the
+real callback object is instantiated and initialized via standard extension
+processing.
+
+<p>
+Section 4.4.1 outlines the extension processing class.
+Section 4.4.2 outlines the parts of the UI class that 
+interact with extension processing. The bulk of the user interface
+code concerns UI details not directly related to extension processing
+and is therefore not presented in this article.
+
+<h4>
+4.4.1. The Extension Processing Class
+</h4>
+
+<p>
+Here is a redacted version of our initial extension processing function:
+
+<p>
+<table width=600 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+package com.bolour.sample.eclipse.service.ui;
+public class ProcessServiceMembers {
+    private static final String EXTENSION_POINT =
+        "com.bolour.sample.eclipse.service.ui.functions";
+    private static final String FUNCTION_NAME_ATTRIBUTE = "name";
+    private static final String CLASS_ATTRIBUTE = "class";
+    private static final String CONSTANT_ATTRIBUTE = "constant";
+<img src="images/tag_1.gif" height=13 width=24 align=CENTER> public static void process(FunctionsGrid grid) 
+      throws WorkbenchException {
+        IPluginRegistry registry = Platform.getPluginRegistry();
+        IExtensionPoint extensionPoint =
+          registry.getExtensionPoint(EXTENSION_POINT);
+        IConfigurationElement[] members =
+          extensionPoint.getConfigurationElements();
+        // For each service:
+    <img src="images/tag_2.gif" height=13 width=24 align=CENTER> for (int m = 0; m &lt; members.length; m++) {
+            IConfigurationElement member = members[m];
+            IExtension extension = member.getDeclaringExtension();
+            String pluginLabel = 
+              extension.getDeclaringPluginDescriptor().getLabel();
+            String functionName =
+              member.getAttribute(FUNCTION_NAME_ATTRIBUTE);
+            String label = pluginLabel + "/" + functionName;
+            Integer constant = null;
+            String s = member.getAttribute(CONSTANT_ATTRIBUTE);
+            if (s != null) {
+                try {
+                    constant = new Integer(s);
+                }
+            <img src="images/tag_3.gif" height=13 width=24 align=CENTER> catch (NumberFormatException ex) {
+                    // Invalid function. Inform the user ... and ignore.
+                    continue;
+                }
+            }
+        <img src="images/tag_4.gif" height=13 width=24 align=CENTER> IFunction proxy = new FunctionProxy(member);
+        <img src="images/tag_5.gif" height=13 width=24 align=CENTER> grid.addFunction(proxy, functionName, label, constant);
+        }
+    }
+    // ...
+}
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 4.4. Extension Member Processing for Service Functions.
+</td></tr> </table>
+
+<p>
+The extension processing loop
+(<img src="images/tag_2.gif" height=13 width=24 align=CENTER>)
+follows the <a href="#shorthand">shorthand
+idiom for getting the members of all extensions of an extension-point</a> 
+introduced in section 3.1.1.
+This run through the extension members of the <code>functions</code> extension-point
+creates a proxy callback object for each function 
+
+(<img src="images/tag_4.gif" height=13 width=24 align=CENTER>),
+
+and adds this proxy and its associated UI widgets to the UI 
+by calling the <code>addFunction</code> method of the UI's function
+grid
+
+(<img src="images/tag_5.gif" height=13 width=24 align=CENTER>).
+
+(The body of the <code>addFunction</code> method is presented later in 
+<a href="#listing4.6">Listing 4.6</a>
+
+<img src="images/tag_1.gif" height=13 width=24 align=CENTER>.)
+
+<p> Note that certain configuration errors, such as an invalid constant in
+our example, can be detected in a generic manner, that is, without recourse
+to specific callback objects (whose instantiations we are deferring). Such
+errors should be handled during initial extension processing, so that, to the
+extent possible, the host plug-in is not polluted with invalid callback
+objects and associated widgets. Thus, when a non-integral constant is encountered in the 
+initial extension processing of the <code>functions</code> extension-point,
+the corresponding misconfigured function is ignored
+
+(<img src="images/tag_3.gif" height=13 width=24 align=CENTER>).
+
+<p>
+During the interactive phase of the application, when a function 
+call is received by a callback proxy, it must be delegated to the 
+custom implementation of the function. And 
+that implementation is instantiated in a lazy fashion the
+first time a call is received by a proxy. The details appear
+in the following code fragment.
+
+<p>
+<table width=600 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+package com.bolour.sample.eclipse.service.ui;
+public class ProcessServiceMembers {
+    // ...
+    private static final String CLASS_ATTRIBUTE = "class";
+    // ...
+    private static class FunctionProxy implements IFunction {
+        private IFunction delegate = null;      // The real callback.
+        private IConfigurationElement element;  // Function's configuration.
+        private boolean invoked = false;        // Called already.
+        public FunctionProxy(IConfigurationElement element) {
+            this.element = element;
+        }
+        public final long compute(long x) throws ArithmeticException {
+            try {
+                getDelegate();
+            }
+            catch (Exception ex) {
+                throw new ArithmeticException("invalid function");
+            }
+            if (delegate == null) {
+                throw new ArithmeticException("invalid function");
+            }
+            return delegate.compute(x);
+        }
+        private final IFunction getDelegate() throws Exception {
+            if (invoked) {
+                return delegate;
+            }
+            invoked = true;
+            try {
+                Object callback =
+                  element.createExecutableExtension(CLASS_ATTRIBUTE);
+            <img src="images/tag_1.gif" height=13 width=24 align=CENTER> if (!(callback instanceof IFunction)) {
+                    // throw exception ...
+                }
+                delegate = (IFunction)callback;
+            }
+        <img src="images/tag_2.gif" height=13 width=24 align=CENTER> catch (CoreException ex) {
+                // process and rethrow ...
+            }
+            return delegate;
+        }
+    }
+}
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 4.5. Extension Member Processing for Service Functions.
+</td></tr> </table>
+
+<p>
+This is a straightforward example of the use of the virtual proxy pattern,
+and other than error processing, which is discussed in the next section,
+requires no further comment.
+
+<h5>
+4.4.1.1. Error Processing
+</h5>
+
+<p> In the previous section, we saw that certain configuration errors may
+be detected in a generic manner during initial extension processing, and
+can be handled at that time. Unfortunately, not all configuration errors
+are of this variety, since deferring the instantiation of callback objects in
+a lazy regime also defers the detection of errors related to instantiating
+and initializing callback objects. We will call configuration errors 
+that are detected during the interactive phase of the application, 
+<i>interaction time</i> configuration errors.
+
+<p> Interaction time configuration errors fall into two categories:
+interface mismatches: callback classes that do not implement their required
+callback interfaces, and creation/initialization errors, e.g., 
+non-existent classes, or invalid specific configuration parameters (for
+example, 0 denominator for a division function).  In Listing 4.5, interface
+mismatches are detected at
+
+<img src="images/tag_1.gif" height=13 width=24 align=CENTER>,
+
+and creation/initialization errors are detected at
+
+<img src="images/tag_2.gif" height=13 width=24 align=CENTER>.
+
+Note that an error detected anywhere within the execution of
+<code>createExecutableExtension</code>, including an error in the
+initialization of a callback object, is communicated back to the caller via
+a <code>CoreException</code>.
+
+<p> In our application, an interaction time configuration error causes an
+<code>ArithmeticException</code> to be thrown. The exception is handled in
+the UI trivially by displaying <code>error</code> in the <code>result</code> field of
+function invocations. However, our simple application does not disable the
+UI elements associated with such misconfigured functions once the
+configuration error is detected, and allows the user to repeat the failure. A
+more sophisticated application might dynamically disable or remove user
+interface elements associated with misconfigured members of extensions.
+
+<p>
+The <a href="samples.zip">companion plug-ins zip file</a> includes
+a sample plug-in, <code>errortest</code>, that exemplifies
+configuration errors. By default the <code>functions</code>
+extension that includes these errors is commented out.
+To test the effect of configuration errors in this application,
+uncomment the <code>functions.error</code> extension in the
+<code>errortest</code> plug-in's manifest file, and restart
+Eclipse.
+
+<p> In summary, the late detection of configuration errors in lazy
+extension processing makes it more difficult to handle configuration
+errors gracefully.  And in general, a tension exists between application
+startup performance, graceful error processing, and the customizability of
+callback objects standing in a given role.
+
+<h4>
+4.4.2. The User Interface Class
+</h4>
+
+<p> This section outlines the user interface class of the UI plug-in
+insofar as it interacts with the extension processing class.
+
+<p>
+For each function specification included in an extension of 
+the <code>functions</code> extension-point, initial extension
+processing adds a function invocation button and a corresponding 
+label to the UI plug-in's user interface. Here is an abbreviated
+version of the UI code used for this purpose:
+
+<a name="listing4.6"> </a>
+<p>
+<table width=600 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+package com.bolour.sample.eclipse.service.ui;
+
+public class FunctionsGrid {
+        private Composite buttons;      // Function invocation area.
+    // ...
+<img src="images/tag_1.gif" height=13 width=24 align=CENTER> public void addFunction(IFunction function, String functionName, 
+      String label, Integer constant) {
+        GridRow row = new GridRow(function, functionName, label, constant);
+    }
+    // ...
+    private class GridRow {
+        private IFunction function;     // Callback object.
+        private Button button;          // UI widget.
+        private Label functionLabel;    // UI widget.
+        // Constant of the computation (for display only).
+        private String constantDisplay; 
+
+        public GridRow(IFunction function, String functionName, 
+          String label, Integer constant) {
+            // ...
+        <img src="images/tag_2.gif" height=13 width=24 align=CENTER> this.function = function;
+            this.constantDisplay = 
+              constant == null ?  "none" : constant.toString();
+            button = new Button(buttons, SWT.NONE);
+            button.setText(functionName);
+            // ...
+            button.addSelectionListener(new SelectionListener() {
+                public void widgetSelected(SelectionEvent e) {
+                    handleButton(e);
+                }
+                // ...
+            });
+            functionLabel = new Label(buttons, SWT.NONE);
+            functionLabel.setText(label);
+            // ...
+        }
+    <img src="images/tag_3.gif" height=13 width=24 align=CENTER> public void handleButton(SelectionEvent e) {
+            String t = input.getText();
+            parameter.setText("");
+            try {
+                int x = Integer.parseInt(t);
+            <img src="images/tag_4.gif" height=13 width=24 align=CENTER> result.setText(String.valueOf(function.compute(x)));
+                parameter.setText(constantDisplay);
+            }
+            catch (Exception ex) {
+                result.setText("error");
+            }
+        }
+    }
+}
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 4.6. Adding a Function to the User Interface.
+</td></tr> </table>
+
+<p> Extension processing makes a call to the <code>addFunction</code>
+
+(<img src="images/tag_1.gif" height=13 width=24 align=CENTER>)
+
+method of the UI to build a <i>grid row</i> that includes the required button 
+and label. This method takes four arguments:
+
+<p>
+<ul>
+
+<li>
+<code>IFunction function</code>: provides the callback object to be called when the 
+button is selected. 
+
+<li>
+<code>String functionName</code>: provides the display name of the
+function's button. 
+
+<li>
+<code>String label</code>: provides the text of the associated label.
+
+<li>
+<code>Integer constant</code>: provides the constant parameter (if any) used in the 
+computation. The constant is transmitted to the UI for display purposes only, 
+and is displayed along with the result of a computation when the corresponding 
+button is selected.
+
+</ul>
+
+<p> Each invocation of the <code>addFunction</code> method is delegated to
+a <code>GridRow</code> constructor with identical parameters.  A
+<code>GridRow</code> encapsulates the representation of a function in the
+user interface. For each function, the <code>GridRow</code> constructor
+saves the reference to the callback object for future calls
+
+(<img src="images/tag_2.gif" height=13 width=24 align=CENTER>).
+
+It also associates a button event handler <code>handleButton</code>
+
+(<img src="images/tag_3.gif" height=13 width=24 align=CENTER>)
+
+with the button. When the button is later selected by the user, 
+the event handler obtains the user input from the UI input field, invokes the
+service function associated with the button on that input, and displays the
+resulting value of the function (<img src="images/tag_4.gif" height=13
+width=24 align=CENTER>). It also displays the constant parameter (if any)
+used in the computation. 
+
+<p> This completes the description of our arithmetic function invocation
+service  The function invocation UI plug-in and sample extender plug-ins
+are included in this article's companion samples.  See the <a
+href="#instructions">instructions</a> at the end of this article for
+configuring the companion plug-ins.
+
+<a name="5."> </a>
+<h3>
+5. Listener Extensions and the Observer Pattern
+</h3>
+
+<p>
+The previous section provided a simple example of what might be 
+called the <i>service extension pattern</i>. Each member of 
+a <i>service extension</i> defines a unique set of user 
+interface widgets, and events on these widgets trigger
+callbacks to objects unique to the extension.
+
+<p> Other usage patterns of extensions are possible, of course.  And
+in this section we briefly outline one such pattern that is akin to the
+<i>observer</i> design pattern of [1]. Our examination of this usage
+pattern leads naturally to a comparison of the extension model of Eclipse
+with the much simpler observer pattern.
+
+<p> In the language of Java APIs, observers are called
+<code>listeners</code>, and the pattern of extension usage discussed in
+this section may be called the <i>listener extension pattern</i>. In the
+listener extension pattern, multiple extension members may listen for the
+same event in a host plug-in. And the host plug-in notifies all these
+extension members, or rather their associated listener callbacks, when the
+event occurs.
+
+<p> The Eclipse JDT JUnit plug-in <code>org.eclipse.jdt.junit</code> uses such a
+pattern to allow multiple observers within the Eclipse workbench to get
+notification of testing events, such as the start or the completion of a
+JUnit test.  This usage is covered in the Beck and Gamma manuscript [2],
+which is where I was first introduced to the listener extension pattern.
+
+<p> In the listener extension pattern, the host plug-in acts as the
+<i>subject</i> of the observation, and extender plug-ins act as the
+<i>observers</i> or <i>listeners</i>.  The host plug-in therefore
+provides an extension-point that may be called <code>listeners</code>, and
+a corresponding interface that may be called <code>IListener</code>.  Each
+extender plug-in then extends the <code>listeners</code> extension-point by
+supplying a specific listener that implements the <code>IListener</code>
+interface, or by supplying a sequence of such listeners.
+
+<p> Because the listeners are then specified declaratively through the
+plug-in extension mechanism, these listeners can be automatically
+registered for event notification by extension processing. The first time
+notification is required, the subject plug-in processes its
+<code>listeners</code> members, and for each member, instantiates a
+specific listener callback object and registers that listener for event
+notification. 
+
+<p> The companion sample plug-ins include an example of the listener
+extension pattern, whose structure is shown in Figure 4. 
+
+<P>
+<spacer type=vertical size=10>
+
+<CENTER>
+<IMG SRC="images/listeners_extensions.jpg" ALT="Figure-4" BORDER="0">
+</CENTER>
+
+<CENTER>
+
+</CENTER>
+<BR>
+<table align=center width=600>
+<tr><td>
+Figure 4. Extension structure of the <i>listener</i> extension pattern.
+Each member of each <i>listener</i> extension provides a notification callback
+for <i>subject</i> events.
+</td></tr>
+</table>
+
+<p>
+In this example, an update of the subject causes notifications to be
+broadcast to all members of all extensions of the <code>listeners</code>
+extension-point.  
+
+<p>
+Here is the 
+<a href="doc/com_bolour_sample_eclipse_listener_subject_listeners.html">
+reference page of the <code>listeners</code>
+extension-point</a>. 
+
+<p> As configured out of the box, the example includes two plug-ins that
+extend the <code>listeners</code> extension-point, and are called
+<code>firstlistener</code> and <code>secondlistener</code>. Each of these
+plug-ins has an extension with two <code>listener</code> members,
+<code>ListenerX</code> and <code>ListenerY</code>. Thus, the first listener
+plug-in's extension specification looks like:
+
+<p>
+<table width=600 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+&lt;extension
+    point = "com.bolour.sample.eclipse.listener.subject.listeners"&gt;
+    &lt;listener 
+      class="com.bolour.sample.eclipse.listener.firstlistener.ListenerX"/&gt;
+    &lt;listener 
+      class="com.bolour.smaple.eclipse.listener.firstlistener.ListenerY"/&gt;
+&lt;/extension&gt;
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 5.1. A Listener Extension Specification.
+</td></tr> </table>
+
+<p> The host plug-in defines a menu item, which, when selected, causes the
+state of the subject to be updated. In turn, the state change in the
+subject causes listener notifications to be broadcast to each listener
+configured into the system. 
+
+<p> The listener callbacks in this example are trivial and simply print an
+informational message to standard output, as shown in the following
+listener class:
+
+<p>
+<table width=600 bgcolor="#CCCCCC"><tr><td>
+<code>
+<pre>
+package com.bolour.sample.eclipse.listener.firstlistener;
+import com.bolour.sample.eclipse.listener.subject.IListener;
+public class ListenerX implements IListener {
+    public void listen() {
+        System.out.println(this.getClass().getName() + " notified");
+    }
+}
+</pre>
+</code>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Listing 5.2. A Listener Callback Implementation.
+</td></tr> </table>
+
+<p>
+So running this example out of the box results in the following console
+messages:
+
+<p>
+<code>
+<pre>
+com.bolour.sample.eclipse.listener.secondlistener.ListenerX notified
+com.bolour.sample.eclipse.listener.secondlistener.ListenerY notified
+com.bolour.sample.eclipse.listener.firstlistener.ListenerX notified
+com.bolour.sample.eclipse.listener.firstlistener.ListenerY notified
+</pre>
+</code>
+
+</ol>
+
+<h3>
+5.1. The Eclipse Extension Model versus the Observer Pattern
+</h3>
+
+<p> As we have seen, the listener extension pattern is analogous to the
+observer pattern, except for its static deployment-time registration of
+listeners. So ignoring the dynamic nature of observer registrations,
+the observer pattern may be thought of as a specialization of 
+the Eclipse extension model. In fact, modulo dynamic registration,
+the extension model of Eclipse adds power to the observer pattern 
+at a number of levels:
+
+<ol>
+
+<p>
+<li>
+
+<strong>Callback Bundle versus Single Callback</strong>.
+A single extension may provide multiple callback objects.
+A single observer provides a single callback object.
+
+<p>
+<li>
+
+<strong>Differentiation of Extenders versus Uniform Treatment of Observers</strong>.
+Depending on the parameters of an extension and the specifics of the 
+extension-point contract, different extensions of a given extension-point
+can be treated differently. In contrast, the observer pattern treats
+all observers of a given subject uniformly, notifying every one
+of an observable event.
+
+<p>
+<li>
+
+<strong>Arbitrary Semantics in Host versus Fixed Notification Semantics in Subject</strong>.
+
+There can be arbitrary parameterized host semantics associated with an
+extension instance. Based on the configuration of the extension, the
+host can accept a variety of customizable responsibilities under the
+extension contract, e.g., the provision of user interface elements. 
+There is no such parameterization and customizability
+in the observer design pattern.
+
+</ol>
+
+<p> But a closer comparison exists between the Eclipse extension model and the
+extension model of a <i>microkernel</i> by so-called <i>internal servers</i>,
+e.g., OS device drivers (see, for example, the microkernel pattern in [4]).
+Both models allow a core set of services to be extended by additional
+provider-supplied services. But the Eclipse extension model generalizes the
+internal extension model of the microkernel architecture in two
+ways.  First, Eclipse plug-ins provide a packaging mechanism for sets of
+related extensions. Second, in Eclipse any plug-in may provide
+extension-points and make itself extensible by other plug-ins. In contrast,
+in the microkernel architecture, the microkernel core (e.g., an OS
+kernel) has unique standing as the sole extensible component in a system.
+
+<a name="6."> </a>
+<h2>
+6. Summary and Conclusions
+</h2>
+
+<p> The plug-in extension model of Eclipse provides a powerful and general
+paradigm for architecting extensible systems based on loosely-coupled
+components.  The principle use of this architecture, of course, is the
+Eclipse workbench.  But the basic extension model is an abstract
+architectural pattern quite apart from its specific incarnation in the
+workbench.
+
+<p>
+The principle facilities of this abstract model are:
+
+<ol>
+
+<p>
+<li>
+
+<strong>Deployment-time pluggable components</strong>.
+
+Plug-ins are components that are assembled into a system at deployment time. A
+plug-in is implemented in a running system as an instance of a plug-in
+class.  Characteristics of each plug-in are declaratively specified in a
+manifest file, which is interpreted at runtime to instantiate the plug-in
+and relate it to other plug-ins.
+
+<p> 
+<li> 
+
+<strong>Extension-points</strong>.
+
+A particular way in which a plug-in allows itself to be extended is embodied
+in an <i>extension-point</i>. An extension-point is defined by a plug-in that
+stands in a <i>host</i> role with respect to the extension-point, and may be
+extended by one or more plug-ins that stand in an <i>extender</i> role with
+respect the extension-point.  There is a contract associated
+with each extension-point.  The contract puts obligations on both the host
+and the extender plug-ins.
+
+<p>
+<li>
+
+<strong>Extensions as Parameterized Callback Bundles</strong>.
+
+An extension-point contract generally provides one or more
+callback interfaces, and requires extenders to provide custom
+implementations (callback objects) for these interfaces. Then 
+the host is obligated to call back on these callback objects under
+certain conditions specified in the contract, and based on a particular
+extension's configuration parameters. 
+
+<p>
+<li>
+
+<strong>Obligations of the Host</strong>.
+
+The host obligations under an extension-point contract may include
+additional requirements on the behavior of the host, such as a
+requirement on the host to augment its interface by additional
+processing elements.
+
+<p>
+<li>
+
+<strong>Obligations of the Extender</strong>.
+
+The extender describes the characteristics of an extension declaratively in
+its manifest file. The extension-point contract provides an XML schema for
+this description, and the extension specification in the extender's
+manifest file must conform to this schema. The schema includes slots for
+the concrete classes of the extension's callback objects, and for the
+parameters required to construct these objects. The concrete classes are
+furnished by the extender, and must conform to expected interfaces defined
+by the host. At runtime, the host instantiates the configured
+callback objects based on their configuration parameters.
+
+</ol>
+
+
+<p> In summary, Eclipse plug-ins offer a flexible model of extensibility,
+and their abstract architecture for composing systems out of
+loosely-coupled components provides a significant addition to the available
+repertoire of architectural patterns for software systems (see, e.g., [4]).
+
+<a name="instructions"> </a>
+<p><b>
+Sample Code Installation.
+</b>
+
+<p>
+To run the samples appearing in this article and view their source code,
+extract the contents of the <a href="samples.zip">companion plug-ins
+zip file</a> into your Eclipse installation.
+
+<p> 
+In order to interact with the samples through the workbench,
+you will have to enable their user interface elements
+as follows:
+
+<ul>
+
+<p>
+<li>
+<i>Extension Processing Demo</i>. 
+Bring up the <i>Windows-&gt;Customize
+Perspective</i> dialog, and under <i>Other</i>, enable <i>Demo Menu Actions</i>. 
+Close the dialog. The <i>Demo</i> menu should now be available.
+
+<p>
+<li>
+<i>Arithmetic Service</i>.
+Bring up the <i>Windows-&gt;Customize
+Perspective</i> dialog, and under <i>Window-&gt;Show View</i> enable 
+<i>Functions Grid View</i>, and close the dialog. In the workbench <i>Window-&gt;Show
+View</i> list, you should now see the list item <i>Functions Grid View</i>.
+Select that item to display the view for this sample.
+
+<p>
+<li>
+<i>Listener Extensions</i>.
+Bring up the <i>Windows-&gt;Customize
+Perspective</i> dialog, and under <i>Other</i> enable <i>Listener 
+Menu Actions</i>. Close the dialog. The <i>Listener</i> menu should now
+be available.
+
+</ul>
+
+<p> Note that for simplicity, <i>standard output</i> and <i>standard
+error</i> are used to display messages in these samples. By default, on a
+<i>win32</i> platform, Eclipse uses the <i>javaw</i> virtual machine, which
+does not have an associated console for standard IO. To bring up Eclipse on
+a <i>win32</i> platform with an associated console, the Eclipse executable
+may be asked to use <i>java</i>, rather than <i>javaw</i>, by using the
+<code>-vm</code> option, e.g.,
+
+<code>
+<pre>
+eclipse -vm C:\jdk1.3.1_02\jre\bin\java.exe
+</pre>
+</code>
+
+<p>
+The samples have been tested with Eclipse 2.1 and JDK 1.3.1_02
+on Windows 2000.
+
+<p><b>
+References
+</b> 
+
+<ol>
+<li value=1>
+Gamma, Erich, Richard Helm, Ralph Johnson, John Vlissides, 
+<i>Design Patterns, Elements of Reusable Object-Oriented Software</i>, 
+Addition-Wesley, 1995.
+<li value=2>
+Beck, Kent, and Erich Gamma,
+<a href="http://groups.yahoo.com/group/contributingtoeclipse/files/030410.pdf">
+<i>Contributing to Eclipse</i></a> 
+(pre-publication draft) 2003.
+<li value=3>
+Shavor, S., Jim D'Anjou, et. al. <i>The Java Developer's Guide to
+Eclipse</i>, Addison-Wesley, 2003.
+<li value=4>
+Buschmann, Frank, et. al., <i>Pattern-Oriented Software Architecture, A
+System of Patterns, Volume 1</i>,
+John Wiley and Sons, 1996.
+<li value=5>
+Estberg, Don. 
+<a href="http://eclipsewiki.swiki.net/2587"><i>How the Minimum Set of Platform
+Plugins Are Related</i></a>, Wiki Page 2587, Eclipse Wiki.
+
+</ol>
+
+<p><b>Acknowledgments</b> </br> This article originated in discussions within
+the <i>Silicon Valley Patterns Group</i> on Eclipse plug-ins. Thanks to the
+members of the group, and in particular to Tracy Bialik, Phil Goodwin, Jan
+Looney, Jerry Louis, Chris Lopez, Russ Rufer, Rich Smith, and Carol
+Thistlethwaite for the original conversations leading to these notes, and
+for many great suggestions for improving the content and presentation of
+the material.  Special thanks to Russ Rufer and Tracy Bialik for blazing
+the Eclipse trail for the rest of the group.  The group discussions were
+organized around a review of an early manuscript by Kent Beck and Erich
+Gamma: <a href="http://groups.yahoo.com/group/contributingtoeclipse/files/030410.pdf">
+Contributing to Eclipse </a>. These notes, therefore, owe much to Beck and
+Gamma for introducing us to the concepts and facilities of Eclipse
+plug-ins. Don Estberg devised the diagrammatic representation of
+extension-points used in this article, based on the <i>power-strip</i>
+metaphor. Thanks also to Don for his detailed comments. Finally, my thanks
+to Dennis Allard and Dan Conde for their generous offer of time in
+reviewing the final draft of this article, and to Jim des Rivi&egrave;res for his
+detailed review and numerous suggestions for enhancements.
+
+</body>
+
+</html>
+
