@@ -1,0 +1,1285 @@
+
+
+
+
+<?xml version "1.0" encoding "UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<title>XML.com: Show Me the Code</title>
+	<meta name="keywords" content="XML.com,O'Reilly Network,oreillynet,oreillynet.com,O'Reilly,OREILLY,Instruction, Programming,Web,Joe Gregorio,REST,protocol design,HTTP subset" />
+	<meta name="description" content="Joe Gregorio returns with another Restful Web column, taking up the issue of designing a REST protocol for your application." />
+	<meta name="date" content="Mar. 02, 2005" />
+	<meta name="pagename" content="Show Me the Code" />
+	<meta name="site" content="XML.com" />
+	<meta name="author" content="Joe Gregorio" />
+	<meta name="safariu_url" content="http://www.xml.com/pub/a/2005/03/02/restful.html" />
+
+
+
+<!-- feed autodiscovery links -->
+
+<link rel="alternate" type="application/rss+xml" title="XML.com Articles and Weblogs" href="http://feeds2.feedburner.com/oreilly/xml" />
+
+<!--
+
+<link rel="alternate" type="application/atom+xml" title="XML.com Articles and Weblogs" href="http://www.oreillynet.com/pub/feed/20" />
+<link rel="alternate" type="application/rdf+xml" title="XML.com Articles and Weblogs" href="http://www.oreillynet.com/pub/feed/20?format=rss1" />
+
+-->
+
+<!-- stylesheet -->
+<link rel="STYLESHEET" type="text/css" href="http://www.xml.com/styles/pc-px-msie.css" />
+<link rel="STYLESHEET" type="text/css" href="http://www.xml.com/styles/global.css" />
+<script language="JavaScript" type="text/javascript" src="http://www.xml.com/common.js"></script>
+<script language="JavaScript" type="text/javascript" src="http://www.xml.com/common.js"></script>
+
+<!-- urchin tag -->
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-31074-1";
+urchinTracker();
+</script>
+
+<!-- 
+<script src="http://www.xml.com/__utm.js" type="text/javascript"></script>
+
+-->
+
+<script type="text/javascript" src="http://www.xml.com/tabber.js"></script>
+
+<!-- additional css -->
+<link rel="stylesheet" type="text/css" href="http://www.oreillynet.com/styles/articles.css" />
+
+<!-- MyBuys libraries and style sheet -->
+<link href="http://t.p.mybuys.com/css/mbstyles.css" type="text/css" rel="stylesheet" id="mybuysstyles">
+<script type="text/javascript" src="http://t.p.mybuys.com/js/mybuys3.js"></script>
+<script type="text/javascript" src="http://t.p.mybuys.com/clients/OREILLY/js/setup.js"></script>
+<!-- End MyBuys libraries and style sheet -->
+
+</head>
+<body id="xml">
+<div id="page">
+<div id="header" class="noindex">
+
+
+<h1><div style="padding:5px;">
+<a href="/index.csp"><img src="/images/logo_tagline.jpg" width="135" height="74" border="0" hspace="0" vspace="0"  alt="XML.com: XML From the Inside Out" /></a>
+</div></h1>
+
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right" valign="bottom">
+<a href="/cs/user/login?x-redirect=/cs/user/home" class="tiny">Sign In/My Account</a>&nbsp;|&nbsp;<a href="http://epoch.oreilly.com/shop/cart.orm" class="tiny">View Cart</a>&nbsp;&nbsp;</td>
+</tr></table>
+
+
+
+
+
+<div id="newHead">
+
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/all.css" type="text/css" />
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/about-121707.css" />
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/store2.css" />
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreilly.com/styles/catalog.css" />
+
+<div id="nav" class="noindex">
+<ul>
+<li><a href="http://www.oreilly.com/">O'Reilly Home</a></li>
+<li><a href="http://news.oreilly.com/">Community</a></li>
+<li><a href="http://www.oreilly.com/store/">Books & Videos</a></li>
+<li><a href="http://safari.oreilly.com/?cid=orm-nav-global">Safari Books Online</a></li>
+<li><a href="http://conferences.oreillynet.com/">Conferences</a></li>
+<li><a href="http://training.oreilly.com/">Training</a></li>
+<li><a href="http://www.oreillyschool.com/">School of Technology</a></li>
+<li><a href="http://www.oreilly.com/about/">About</a></li>
+
+</ul>
+<div class="clear"></div>
+</div><!-- /#nav -->
+
+
+
+
+
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/all_new.css" />
+
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/all.css" />
+
+
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/main.css" />
+
+
+
+<div id="search-box">
+
+
+
+<b>
+We've expanded our <a href="http://xml.oreilly.com">XML news coverage</a> and improved our search! </b> Search for all things XML across O'Reilly!
+
+<br /><br />
+<div id="search-box" class="yui-skin-sam">
+
+            <form method="get" action="http://search.oreilly.com" id="search-form" name="searchfield">
+                <fieldset>
+
+
+
+                    <span id="search-title" style="color:#474747">Search</span>
+                    <span id="search-input">
+                        <span id="search-input-top">
+                            <span id="search-input-bot">
+                                <span id="search-field"><input style="//height: 25px;" id="q" name="q" type="text" maxlength="64" accesskey="s" value="" /></span>
+                                <span id="search-button"><input type="image" name="submit" src="http://www.oreilly.com/images/oreilly/search_bar_btn.gif" alt="Submit" onclick="return searchverif();" /></span>
+                                <span class="clear"></span>
+                            </span>
+    </span>
+                    </span>
+                            <div id="autocomplete"></div>
+                   
+                    <span id="search-tips"><a href="http://www.oreillynet.com/search/tips.csp" target="_blank">Search Tips</a></span>
+                </fieldset>
+            </form>
+
+<br />
+        </div><!-- /#search-box -->
+
+<br />
+        
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+<!--
+<h1><csinclude record="lc/3" field="html" /></h1>
+<br />
+-->
+
+
+<!-- tabs 
+<csinclude record="lc/15" field="html" />
+-->
+
+
+<div id="leaderboard">
+<img src="http://www.oreillynet.com/images/ads/ad-tag-vertical.gif" width="11" height="90" border="0" alt="advertisement" style="float:right;"/>
+
+<div style="width:728px;margin:0 auto;">
+<!-- ###Leaderbord here###-->
+  <!-- XML Leaderboard Ad -->
+
+<!--JavaScript Tag // Tag for network 5159: TechVertical // Website: OR - XML.com // Page: XML // Placement: ros_728x90 (425861) // created at: Oct 9, 2008 5:49:51 PM-->
+<script language="javascript"><!--
+document.write('<scr'+'ipt language="javascript1.1" src="http://adserver.adtechus.com/addyn/3.0/5159/425861/0/225/ADTECH;loc=100;target=_blank;key=key1+key2+key3+key4;grp=[group];misc='+new Date().getTime()+'"></scri'+'pt>');
+//-->
+</script><noscript><a href="http://adserver.adtechus.com/adlink/3.0/5159/425861/0/225/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" target="_blank"><img src="http://adserver.adtechus.com/adserv/3.0/5159/425861/0/225/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" border="0" width="728" height="90"></a></noscript>
+
+<!-- End of JavaScript Tag -->
+
+<!-- End ad -->
+<!-- ###END Leaderbord###-->
+</div>
+</div> <!-- end leaderboard -->
+
+<div id="colored-bar-ad" class="tinywhite" align="center" style="background-color:#cc0033;"><!-- XML Text link Ad -->
+
+<!--JavaScript Tag // Tag for network 5159: TechVertical // Website: OR - XML.com // Page: XML // Placement: text (425860) // created at: Oct 9, 2008 5:49:53 PM-->
+<script language="javascript"><!--
+document.write('<scr'+'ipt language="javascript1.1" src="http://adserver.adtechus.com/addyn/3.0/5159/425860/0/16/ADTECH;loc=100;target=_blank;key=key1+key2+key3+key4;grp=[group];misc='+new Date().getTime()+'"></scri'+'pt>');
+//-->
+</script><noscript><a href="http://adserver.adtechus.com/adlink/3.0/5159/425860/0/16/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" target="_blank"><img src="http://adserver.adtechus.com/adserv/3.0/5159/425860/0/16/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" border="0" width="1" height="1"></a></noscript>
+<!-- End of JavaScript Tag -->
+
+<!-- End ad --></div>
+
+
+<!-- </div>  end header -->
+<!--
+<div id="page-content">
+-->
+
+<div id="page-content" style="clear: left;">
+<div id="article" style="width: 650px;">
+
+
+<p>
+<!-- begin content-->
+
+
+<div align="center">
+<!-- begin ad tag -->
+<script language="JavaScript" type="text/javascript">
+//<![CDATA[
+var ord = (ord != null ? ord : Math.random()*10000000000000000 );
+document.write('<script language="JavaScript" src="http://ad.doubleclick.net/adj/ttm.xml/art;tn=3;tw=300;th=55;to=h;tcs=0;tcp=0;ta=center;tva=bottom;tc=ffffff;tnm=3;te=1;sz=100x50;ord=' + ord + '?" type="text/javascript"><\/script>');
+//]]>
+</script><noscript><a href="http://ad.doubleclick.net/adj/ttm.xml/art;tn=3;tw=300;th=55;to=h;tcs=0;tcp=0;ta=center;tva=bottom;tc=ffffff;tnm=3;te=1;sz=100x50;ord=123456789?" target="_blank"><img src="http://ad.doubleclick.net/adj/ttm.xml/art;tn=3;tw=300;th=55;to=h;tcs=0;tcp=0;ta=center;tva=bottom;tc=ffffff;tnm=3;te=1;sz=100x50;ord=123456789?" width="100" height="50" border="0" alt="" /></a></noscript>
+<!-- End ad tag -->
+</div>
+<br />
+
+<!-- begin  print-discuss-del.icio.us options -->
+<div style="margin: 0px 10px 0px 6px; float: right; width: 170px;">
+<a class="print" style="font-size:90%;" title="Go to a print-friendly version of this page." href="/lpt/a/1544">Print</a>
+
+
+<a class="subscribe" style="font-size:90%;" title="Subscribe" href="http://www.oreillynet.com/pub/feed/20">Subscribe to XML</a>
+
+
+
+</div>
+<!-- end  print-discuss-del.icio.us options -->
+
+
+
+<!-- ISI_LISTEN_START -->
+<span class=ISI_MESSAGE><!--  This article is brought to you by XML.com, your source for all XML news.  --></span>  
+<!-- content here -->
+
+<img src="http://www.xml.com/universal/images/111-rest.gif" alt="Show Me the Code" width="111" height="91" align="left" hspace="10" vspace="0" border="0" /><h2>Show Me the Code</h2>
+<div style="clear: left;">by <a href="/pub/au/225">Joe Gregorio</a></div>
+<div>March 02, 2005</div><br clear="all" />
+
+
+
+
+
+
+
+	<!-- mega preparse mp: -->
+<!--CS_PAGE_BREAK-->
+ 
+
+
+
+<p><!-- XML MPU Ad -->
+
+<!-- End ad -->
+<!-- me -->
+In my <a href=
+"http://www.xml.com/pub/a/2004/12/01/restful-web.html">inaugural
+article</a>, I outlined the four basic steps you needed to follow when
+creating a RESTful web service. Now let's take those basic steps and
+follow them through a worked example. To stay on familiar ground we'll
+create something that you may find familiar: a web bookmark
+service. It's <a href="http://del.icio.us">hip</a>, all the cool kids
+have one, and by the end of this article, so will we &#8212; or at least
+we'll have the specification for one. The actual implementation will
+be fleshed out over future articles.</p>
+
+<p>The idea of a bookmark service is that it allows you to store your web
+bookmarks in a centralized place. Newer services add a social aspect by allowing you to categorize your links by tags and
+then view all the links that people have marked with the same tag.</p>
+
+<p>To design such a service we need to answer our four questions.</p>
+<!-- sidebar begins -->
+<!-- don't move sidebars -->
+<!-- sidebar ends -->
+
+
+<ol>
+<li> What are the resources?  </li>
+<li> What are the representations?  </li>
+<li> What methods are supported at each resource?  </li>
+<li> What status codes could be returned?  </li>
+</ol>
+
+<h3>Resources</h3>
+
+<p>What are the resources for a bookmarking system? Each bookmark we
+add should be a resource. In addition, aggregations of bookmarks
+should also be resources. Here are some example resources:</p>
+
+<ul>
+<li>A single bookmark </li>
+<li>All the bookmarks I've ever created </li>
+<li>All the bookmarks I've ever created for some keyword </li>
+<li>My 20 most recent bookmarks </li>
+<li>The 20 most recent bookmarks for a specific keyword, across all users </li>
+<li>The 20 most recent bookmarks, across all users </li>
+<li>A list of all the keywords used by a user </li>
+<li> The 20 most popular keywords used by everyone </li>
+</ul>
+
+<p>There are many more aggregate resources we may want to build, but
+these examples should be enough to get us going.</p>
+
+<p>What we want to do here is scan the list repeatedly looking for
+similarities. You'll note that the first resource in the list is a
+single bookmark. Most of the rest are aggregations of bookmarks.  Only
+the keyword resources aren't covered so far, so we will make them
+their own kind of resource. In total we have three kinds of
+resources:</p>
+
+<dl>
+<dt><strong>Bookmark Resource</strong></dt>
+<dd>A single bookmark and associated information, such as when the
+bookmark was created.</dd>
+<dt><strong>Bookmark Collection Resource</strong></dt>
+<dd>A collection of individual bookmarks grouped together.</dd>
+<dt><strong>Keyword List Resource</strong></dt>
+<dd>A list of keywords.</dd>
+</dl>
+
+<p>Since we now know the types of resources we will be dealing with,
+let's define the URI space that those resources will be living in.</p>
+
+<p>It sounds so simple, doesn't it? "Let's define the URI space." How
+about, "Let's go fall off a log." Well, it actually
+isn't <em>that</em> difficult.</p>
+
+<p>We'll need one or two guiding principles to help us. One principle
+we'll follow is using the built-in hierarchy building that the URI
+"path" component allows. That is, we'll use the path portion of the
+URIs in our system to reflect the hierarchy of our
+resources. Conversely, if we have resources that are non-hierarchical
+we'll use either query parameters or <a href=
+"http://www.w3.org/DesignIssues/MatrixURIs.html">Matrix URIs</a>.</p>
+
+<p>In our system, each user's bookmarks belong to that user, so for the
+path component of our URIs, the user should be higher in the hierarchy
+(that is, to the left of the path) than the user's bookmarks. If
+bookmarks are categorized by tags, then the bookmarks would appear
+below (that is, to the right of) the tag in the path. In the following
+table the URIs listed are just relative URIs. We will flesh out the
+rest of the URI later.</p>
+
+<table width="550" border="1" align="center" cellpadding="0"  cellspacing="0">
+<tr>
+<th>URI</th>
+<th >Type of Resource</th>
+<th >Description</th>
+</tr>
+<tr>
+<td >[user]<code>/bookmark/[id]/</code></td>
+<td >Bookmark</td>
+<td >A single bookmark for "user".</td>
+</tr>
+<tr>
+<td ><code>[user]/bookmarks/</code></td>
+<td >Bookmark Collection</td>
+<td >The 20 most recent bookmarks for "user".</td>
+</tr>
+<tr>
+<td ><code>[user]/bookmarks/all/</code></td>
+<td >Bookmark Collection</td>
+<td >All the bookmarks for "user".</td>
+</tr>
+<tr>
+<td ><code>[user]/bookmarks/tags/[tag]</code></td>
+<td >Bookmark Collection</td>
+<td >The 20 most recent bookmarks for "user" that were filed in the
+category "tag".</td>
+</tr>
+<tr>
+  <td ><code>[user]/bookmarks/date/[Y]/[M]/</code></td>
+  <td >Bookmark Collection</td>
+  <td >All the bookmarks for "user" that were created in a certain year
+  [Y] or month [M].</td>
+</tr>
+<tr>
+  <td ><code>[user]/config/</code></td>
+  <td >Keyword List</td>
+<td >A list of all the "tags" a user has ever used.</td>
+</tr>
+</table>
+
+<!-- cara: joe has an annoying habit of saying 'foo" instead of
+"foo". Please fix these throughout, except in any code block --
+anything wrapped inside a <pre> tag. -->
+
+<p>The user "all" is a special user. The aggregate of all the users in
+the system is represented by the user "all". That is,
+<code>all/bookmarks/</code> is a Bookmark Collection of the 20 most
+recent bookmarks added to the system across all users.</p>
+
+<h3>Representations</h3>
+<p>Now for the second question, "What are the representations?"</p>
+
+<p>Here we don't have to get too creative, as an XML
+vocabulary for bookmarks already exists. <a href=
+"http://pyxml.sourceforge.net/topics/xbel/">XBEL</a> is the XML
+Bookmark Exchange Language. It was designed by the <a href=
+"http://www.python.org/sigs/xml-sig/">Python XML Special Interest
+Group</a>. Using an existing popular format will allow greater
+opportunities for reuse and remixing of our service once it is up and
+running.</p>
+
+<p>Let's look at XBEL and see how it fits in with our service.  First,
+we'll review some regular XBEL documents and then discuss what we need
+to add or remove to accommodate our service. Here is an example XBEL
+document containing a single bookmark.</p>
+
+<pre><code>&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE xbel PUBLIC 
+       "+//IDN python.org//DTD XML Bookmark Exchange
+        Language 1.0//EN//XML" 
+       "http://www.python.org/topics/xml/dtds/xbel-1.0.dtd"&gt;
+&lt;xbel version="1.0"&gt;
+   &lt;bookmark href=
+"<a href="http://www.xml.com/pub/a/2005/02/09/xml-http-request.html">http://www.xml.com/pub/a/2005/02/09/xml-http-request.html</a>"&gt;
+      &lt;title&gt;Very Dynamic Web Interfaces&lt;/title&gt;
+      &lt;desc&gt;Using XMLHttpRequest to build dynamic web
+            interfaces.
+      &lt;/desc&gt;
+   &lt;/bookmark&gt;
+&lt;/xbel&gt;</code></pre>
+
+<p><em>Example: XBEL Document for a single bookmark</em></p>
+
+<p>Note that most of the elements in an XBEL document are optional.
+Here is the simplest XBEL document containing just a single
+bookmark.</p>
+
+<pre><code>&lt;xbel version="1.0"&gt;
+   &lt;bookmark href=
+"<a href=
+"http://www.xml.com/pub/a/2005/02/09/xml-http-request.html">http://www.xml.com/pub/a/2005/02/09/xml-http-request.html</a>"
+/&gt;
+&lt;/xbel&gt;</code></pre>
+
+<p><em>Example: Shortest XBEL Document for a single bookmark</em></p>
+
+<p>To simplify, I'll drop the XML declaration and doctype on future
+examples. Here is a more complicated example with nested folders of
+bookmarks:</p>
+
+<pre><code>&lt;xbel version="1.0"&gt;
+  &lt;folder&gt;
+    &lt;title&gt;XML.com&lt;/title&gt;
+    &lt;folder&gt;
+      &lt;title&gt;Web Services&lt;/title&gt;
+      &lt;bookmark href=
+ "<a href="http://webservices.xml.com/pub/a/ws/2005/01/12/salz.html">http://webservices.xml.com/pub/a/ws/2005/01/12/salz.html</a>"&gt;
+        &lt;title&gt;Freeze the Core&lt;/title&gt;
+        &lt;desc&gt;Rich Salz explains why the 
+          web services core should be frozen.
+        &lt;/desc&gt;
+      &lt;/bookmark&gt;
+      &lt;bookmark href=
+           "<a href="http://www.xml.com/pub/a/2005/01/12/saml2.html">http://www.xml.com/pub/a/2005/01/12/saml2.html</a>"&gt;
+        &lt;title&gt;SAML 2&lt;/title&gt;
+      &lt;/bookmark&gt;
+    &lt;/folder&gt;
+    &lt;bookmark href=
+          "<a href="http://www.xml.com/pub/a/2005/02/09/xforms.html">http://www.xml.com/pub/a/2005/02/09/xforms.html</a>"&gt;
+      &lt;title&gt;Top 10 XForms Engines&lt;/title&gt;
+    &lt;/bookmark&gt;
+  &lt;/folder&gt;
+&lt;/xbel&gt;</code></pre>
+
+<p><em>Example: XBEL Document for a bookmark collection</em></p>
+
+<p>It appears that XBEL has most of the features we need for our
+bookmarking service. We can use an XBEL document with a single
+bookmark entry as the representation of a Bookmark Resource. We can
+also use an XBEL document with multiple bookmarks as the
+representation for a Bookmark Collection.</p>
+
+<p>There are only two things missing from XBEL. The first is a place
+for the URI of the Bookmark Resource for each bookmark in a Bookmark
+Collection. Each <code>&lt;bookmark/&gt;</code> element has an href attribute
+that's the bookmark URI. In addition to that information, we also want
+to store the URI of the Bookmark Resource. Luckily XBEL has a spot for
+additional metadata for each bookmark. You can add <code>&lt;metadata/&gt;</code>
+elements to the <code>&lt;info/&gt;</code> element. The XBEL specification requires
+that the <code>&lt;metadata/&gt;</code> element have an "owner" attribute that is
+unique, preferably a URI, that points to a description of the
+metadata added. Using the extensibility of the metadata element we can
+add a place for the URI of the Bookmark Resource for each
+bookmark.</p>
+
+<pre><code>&lt;xbel version="1.0"&gt;
+  &lt;bookmark href=
+"<a href="http://www.xml.com/pub/a/2005/02/09/xml-http-request.html">http://www.xml.com/pub/a/2005/02/09/xml-http-request.html</a>"&gt;
+    &lt;title&gt;Very Dynamic Web Interfaces&lt;/title&gt;
+    &lt;info&gt;
+      <b>&lt;metadata owner=
+              "http://example.com/documentation/xbel/edit" &gt;</b>
+        <b>http://example.com/jcgregorio/bookmark/12</b>
+      <b>&lt;/metadata&gt;</b>
+    &lt;/info&gt;
+    &lt;title&gt;Very Dynamic Web Interfaces&lt;/title&gt;
+    &lt;desc&gt;Using XMLHttpRequest to build dynamic web
+          interfaces.
+    &lt;/desc&gt;    
+  &lt;/bookmark&gt;
+&lt;/xbel&gt;</code></pre>
+
+<p><em>Example: Extended XBEL Document for a single bookmark</em></p>
+
+<p>In this example, we extended an XBEL Document for a single
+bookmark. An XBEL Document for a collection of bookmarks can be
+extended in the same way, by adding <code>&lt;metadata/&gt;</code> elements to all
+of the <code>&lt;bookmark/&gt;</code> elements.</p>
+
+<p>The URI we chose for the "owner" attribute is just a stand-in; we
+wouldn't really deploy this service by pointing to the example.com
+domain. Before we go public with the service we'll need to secure a
+place for our documentation and update that URI to point there.</p>
+
+<p>The second thing missing from XBEL is a place to hold category
+information. Again the "metadata" element is appropriate for this
+information. Here is an example of an XBEL document being extended to
+include the category tag. We allow multiple tags separated by
+whitespace as element content for such a "metadata" element.</p>
+
+<pre><code>&lt;xbel version="1.0"&gt;
+  &lt;bookmark href=
+"http://www.xml.com/pub/a/2005/02/09/xml-http-request.html"&gt;
+    &lt;title&gt;Very Dynamic Web Interfaces&lt;/title&gt;
+    &lt;info&gt;
+      <b>&lt;metadata owner=
+              "http://example.com/documentation/xbel/tags" &gt;</b>
+        <b>XML JavaScript XMLHttpRequest</b>
+      <b>&lt;/metadata&gt;</b>
+    &lt;/info&gt;
+    &lt;title&gt;Very Dynamic Web Interfaces&lt;/title&gt;
+    &lt;desc&gt;Using XMLHttpRequest to build dynamic web
+          interfaces.
+    &lt;/desc&gt;    
+  &lt;/bookmark&gt;
+&lt;/xbel&gt;</code></pre>
+
+<p><em>Example: Extended XBEL Document for a single bookmark</em></p>
+
+<p>The only thing we don't have is a representation for keywords.
+We only need something simple:</p>
+
+<pre><code>&lt;tags&gt;
+    &lt;tag&gt;dogs&lt;/tag&gt;
+    &lt;tag&gt;cats&lt;/tag&gt;
+    &lt;tag&gt;pets&lt;/tag&gt;
+&lt;/tags&gt;</code></pre>
+
+<p><em>Example: Keyword List Document</em></p>
+
+<h3>Methods</h3>
+
+<p>On to the third question, "What methods are supported at each
+resource?"</p>
+
+<p>Now we need to decide which methods are supported by which
+resources and which representations they will use. The Bookmark
+Resource represents a single bookmark, and we're using an XBEL
+document with just a single bookmark in it to represent such a
+resource. To retrieve the representation of a Bookmark Resource, we
+<code>GET</code> it. To update a bookmark, we will <code>PUT</code>
+the information to the Bookmark Resource. To remove a bookmark,
+we <code>DELETE</code> it.</p>
+
+<p>The operations on Bookmark Collection Resources
+include <code>GET</code> to retrieve a list of all the bookmarks in
+that collection, in the form of an XBEL document. And
+we'll <code>POST</code> an XBEL document with just a single bookmark
+to the Bookmark Collection Resource in order to add another bookmark
+to that collection.</p>
+
+<p>That gives us the following types of resources and the methods they
+support:</p>
+
+<table width="550"  border="1" align="center" cellspacing="0">
+<thead>
+<tr valign="top">
+	<th> Resource</th>
+	<th> Method</th>
+	<th > Representation</th>
+	<th > Description</th>
+</tr>
+</thead>
+<tbody>
+<tr valign="top">
+  <td colspan="4">Bookmark</td>
+</tr>
+<tr valign="top">
+<td >&nbsp;</td>
+<td ><code>GET</code></td>
+<td >Extended XBEL Document for a single bookmark</td>
+<td >Get a bookmark.</td>
+</tr>
+<tr valign="top">
+<td >&nbsp;</td>
+<td ><code>PUT</code></td>
+<td >Extended XBEL Document
+  for a single bookmark</td>
+<td >Update a bookmark.</td>
+</tr>
+<tr valign="top">
+<td >&nbsp;</td>
+<td ><code>DELETE</code></td>
+<td >n/a</td>
+<td>Delete a bookmark.</td>
+</tr>
+<tr valign="top">
+  <td colspan="4">Bookmark Collection</td>
+</tr>
+<tr valign="top">
+<td >&nbsp; </td>
+<td ><code>GET</code></td>
+<td >Extended XBEL Document
+  for a bookmark collection</td>
+<td >Get a collection of
+  bookmarks.</td>
+</tr>
+<tr valign="top">
+<td >&nbsp;  </td>
+<td ><code>POST</code></td>
+<td >Extended XBEL Document
+  for a single bookmark</td>
+<td >Add a bookmark to a
+  collection.</td>
+</tr>
+<tr valign="top">
+  <td colspan="4">Keyword Lists</td>
+</tr>
+<tr valign="top">
+<td >&nbsp; </td>
+<td ><code>GET</code></td>
+<td >Keyword List Document</td>
+<td >Get a list of keywords.</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Sanity Check</h3>
+
+<p>Have we maintained idempotency for our <code>GET</code>s?
+Yes, <code>GET</code> on a Bookmark Resource, or a Bookmark Collection
+Resource, or a Keyword List Resource doesn't change either the
+Bookmark, the Bookmark Collection, or the Keyword List Resource.</p>
+
+<p>Another check is to ensure that all of the methods that
+aren't <code>GET</code>s are non-idempotent. <code>PUT</code>ing a new
+representation and <code>DELETE</code>ing a Bookmark can definitely
+change the state of the server. Creating a new Bookmark
+with <code>POST</code> also changes the state, so none of them could be
+done by <code>GET</code>. We're good so far.</p>
+
+<h3>Status Codes</h3>
+
+<p>The only status code we will be explicitly looking for is
+<code>201 Created</code> when a new bookmark is created by POSTing to
+the Bookmark Collection Resource. Besides that any well-written client
+should have good default handling for 2xx status codes for success,
+3xx for redirection and 4xx codes for errors.</p>
+
+<h3>Example Interactions</h3>
+
+<p>Let's look at some examples of what we would expect to see "on
+the wire" for our protocol.</p>
+
+<p>We will for now assume that our service is hosted at http://example.com. To get the latest
+bookmarks for the user "jcgregorio" we do a <code>GET</code> on http://example.com/jcgregorio/bookmarks/recent/.
+What is returned will be an Extended XBEL document with the last 20
+bookmarks.</p>
+
+<pre><code>GET /jcgregorio/bookmarks/recent HTTP/1.1
+Authorization: Basic ZnJpZW5kczpvbmt1
+User-Agent: curl/7.10.3 (win32) libcurl/7.10.3
+Host: example.com
+Accept: application/xbel+xml</code></pre>
+
+<p>And we get the following response:</p>
+
+<pre><code>HTTP/1.1 200 OK
+Date: Sun, 13 Feb 2005 04:12:33 GMT
+Server: Apache/2.0.46 (Red Hat)
+Last-Modified: Sat, 12 Feb 2005 04:02:59 GMT
+ETag: "444338-263-d71fc2c0"
+Content-Length: 611
+Content-Type: application/xbel+xml
+
+&lt;xbel version="1.0"&gt;
+  &lt;bookmark href=
+ "<a href="http://webservices.xml.com/pub/a/ws/2005/01/12/salz.html">http://webservices.xml.com/pub/a/ws/2005/01/12/salz.html</a>"&gt;
+    &lt;title&gt;Freeze the Core&lt;/title&gt;
+     <b>&lt;metadata owner =
+              "http://example.com/documentation/xbel/edit" &gt;</b>
+       <b>http://example.com/jcgregorio/bookmark/1</b>
+     <b>&lt;/metadata&gt;</b>
+    &lt;desc&gt;Rich Salz explains why the 
+      web services core should be frozen.
+    &lt;/desc&gt;
+  &lt;/bookmark&gt;
+  &lt;bookmark href=
+           "<a href="http://www.xml.com/pub/a/2005/01/12/saml2.html">http://www.xml.com/pub/a/2005/01/12/saml2.html</a>"&gt;
+    &lt;title&gt;SAML 2&lt;/title&gt;
+    <b>&lt;metadata owner=
+              "http://example.com/documentation/xbel/edit" &gt;</b>
+      <b>http://example.com/jcgregorio/bookmark/2</b>
+    <b>&lt;/metadata&gt;</b>
+    &lt;desc&gt;Federated Identity&lt;/desc&gt;
+  &lt;/bookmark&gt;
+&lt;/xbel&gt;</code></pre>
+
+<p>Note that each bookmark has an extra "metadata" element that
+points to a Bookmark Resource for that bookmark.</p>
+
+<p>To create a new bookmark, we <code>POST</code> an XBEL document
+with a single bookmark to the appropriate Bookmark Collection.</p>
+
+<pre><code>POST /jcgregorio/bookmarks/ HTTP/1.1
+Authorization: Basic ZnJpsd5kczpvbmx5
+Content-Type: application/xbel+xml
+Host: example.com
+
+&lt;xbel version="1.0"&gt;
+  &lt;bookmark href=
+          "<a href="http://www.xml.com/pub/a/2005/02/09/xforms.html">http://www.xml.com/pub/a/2005/02/09/xforms.html</a>"&gt;
+    &lt;title&gt;Top 10 XForms Engines&lt;/title&gt;
+    <b>&lt;metadata owner=
+              "http://example.com/documentation/xbel/tags" &gt;</b>
+      XML XForms
+    <b>&lt;/metadata&gt;</b>
+    &lt;desc&gt;Review of available implementations.&lt;/desc&gt;
+  &lt;/bookmark&gt;&lt;xbel version="1.0"&gt;
+&lt;/xbel&gt;</code></pre>
+
+<p>The server could then respond with:</p>
+<pre><code>HTTP/1.1 201 Created
+Date: Sat, 12 Feb 2005 09:12:13 GMT
+Server: Apache/2.0.46 (Red Hat)
+Content-Length: 611
+Content-Type: application/xbel+xml
+Location: <b>http://example.com/jcgregorio/bookmark/3</b></code></pre>
+
+<p>Note that the server returned the status code of <code>201 Created</code> and
+a <code>Location:</code> header with the URI of the newly created Bookmark
+Resource.</p>
+
+<h3>What We Haven't Specified</h3>
+
+<p>Let's spend a minute covering the facets of our protocol that we
+<strong>haven't</strong> specified.</p>
+
+<p>We <strong>haven't</strong> specified an authentication mechanism for our
+protocol. That's because HTTP provides support for discovering the
+allowed authentication mechanisms via the <code>WWW-Authenticate:</code> header.
+This is a generic, and extensible, mechanism provided by HTTP to
+enumerate allowable authentications, and there's no advantage in
+trying to either route around it or hard code a specific
+authentication mechanism into our protocol.</p>
+
+<p>We <strong>haven't</strong> specified a
+compression mechanism for our protocol. XML is fairly verbose, and we
+could probably gain some speed by specifying that the files be
+transferred compressed. We haven't done that because, again, HTTP
+supports a generic and extensible mechanism for specifying when
+compression is allowed and what are the allowed types of
+compression.</p>
+
+<h3>Next Time</h3>
+
+<p>At the beginning of the Examples section I said
+&ldquo;assume that our service is hosted at http://example.com.&rdquo; That meant
+that all of the URIs for our system simply started with "http://example.com&rdquo;. It also
+assumed that we would publish the structure of our URIs into the
+bookmarking service. That's some pretty serious hand waving. What
+I've glossed over is the whole idea of service discovery, which
+I'll cover in a future article.</p>
+
+
+
+
+
+<!-- end content -->
+<!-- ISI_LISTEN_STOP -->
+
+
+<!-- talk back -->
+<a name="thread"></a>
+
+    <hr noshade size="1" />
+    <p><!-- img src="/images/talkback.gif" alt="Comment on this article" width="40" height="30" border="0" align="left">Share your experience in our forums.<br />
+    <i> (* You must be a <a href="/cs/user/login?x-redirect=http://www.xml.com/pub/a/2005/03/02/restful.html">member</a> of XML.com to use this feature.)</i>
+    <br /><a class="headline" href="/cs/user/create/cs_msg?x-lr=cs_disc/678&x-lr2=a/1544&page=">Comment on this Article</a -->
+    <br />
+
+
+
+<hr noshade="1" size="1" />
+<table width="100%">
+<tr>
+
+<td>
+
+    <a class="secondary" href="/pub/a/2005/03/02/restful.html?page=last&x-showcontent=off#thread" title="View message titles only">Titles Only</a>
+
+</td>
+
+<td>
+
+    <a class="secondary" href="/pub/a/2005/03/02/restful.html?page=last&x-maxdepth=0#thread" title="View message titles only">Titles Only</a>
+
+</td>
+
+<td>
+
+    <a class="secondary" href="/pub/a/2005/03/02/restful.html?page=last&x-order=date#thread" title="View messages in descending order by date/time">Newest First</a>
+
+</td>
+</tr>
+</table>
+
+<ul>
+<li><a href="/cs/user/view/cs_msg/3884">Change to Search Options</a><br />
+<font size="2">
+2007-09-21 16:21:25&nbsp;JNeumann</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3884&x-lr2=a/1544" title="Reply to this message">[Reply]</a--><br />
+<br />
+The article includes URIs that contain the actual criteria on which a search is based.  For instance: [user]/bookmarks/date/[Y]/[M]/.  What happens if the search options change?  What if you want to add the ability to search within a date range?  Do you make a new URI?  [user]/bookmarks/date_range/[Y_from]/[M_from]/[D_from]/[Y_to]/[M_to]/[D_to]/.<br />
+The URI with just /date then doesn't make much sense.  Should it actually be /for_year_and_month?  Also, what happens if we change our /date_range to only use years and months?  I'm not seeing much flexibility here.  Nor are the calls really self-documenting.  <br />
+
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/3661">Question on resource URI</a><br />
+<font size="2">
+2007-01-04 12:32:15&nbsp;PauloMerson</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3661&x-lr2=a/1544" title="Reply to this message">[Reply]</a--><br />
+<br />
+Great article! Quick question:<br />
+In the example, you use <br />
+"http://example.com/jcgregorio/bookmarks/recent/" <br />
+but in the URI table you use <br />
+"[user]/bookmarks" <br />
+for the 20 most recent bookmarks. <br />
+Should it be <br />
+"[user]/bookmarks/recent" instead?<br />
+Thanks!<br />
+Paulo Merson
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/3288">Accessing multiple ressources using GET</a><br />
+<font size="2">
+2006-02-06 13:50:00&nbsp;mawi100</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3288&x-lr2=a/1544" title="Reply to this message">[Reply]</a--><br />
+<br />
+In your article you describe different methods for accessing a certain subset of bookmarks. While these subsets in your example are clearly defined ('20 most recent') I am wondering how that would work in the following situation: I want to retrieve information from about 50 different sensors (eg. air quality sensors distributed in a city) where these sensors can be randomly selected from a list or by certain criteria. Would it make sense to add each single sensor to the end of the URL (such as '/bookmarks/id1/id15/id16/...')? Or would it make more sense to POST a XML file that contains the searched sensor ids? I guess the latter approach would not comply with REST, while the first approach implies a hierachy which does not exist. <br />
+What would be the best RESTful approach?  <br />
+Thanks a lot.
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/3676">Accessing multiple ressources using GET</a><br />
+<font size="2">
+2007-01-19 12:19:00&nbsp;aronr</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3676&x-lr2=a/1544" title="Reply to this message">[Reply]</a--><br />
+<br />
+This may help: "users should not derive metadata from the URI itself".  (From Hao He, "Implementing REST Web Services: Best Practices and Guidelines", http://www.xml.com/pub/a/2004/08/11/rest.html)<p><br />
+That implies that the number or codes in the URIs used by your RESTful service to identify unique, individual sensor readings should not correspond to a physical numbering or coding scheme used by those readings.  That's because that scheme could well change later on, or the service might need to support multiple numbering or coding schemes for such data.
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/3677">Accessing multiple ressources using GET</a><br />
+<font size="2">
+2007-01-19 12:13:48&nbsp;aronr</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3677&x-lr2=a/1544" title="Reply to this message">[Reply]</a--><br />
+<br />
+The above should have read: "sensors or sensor readings" rather than just "sensors'.
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/3678">Accessing multiple ressources using GET</a><br />
+<font size="2">
+2007-01-19 16:47:43&nbsp;aronr</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3678&x-lr2=a/1544" title="Reply to this message">[Reply]</a--><br />
+<br />
+One more followup (sign): According to Roy T. Fielding, it *can* be useful to have meaningful resource hierarchies, so the suggestion to not use specific codes for sensors in URIs is not meant to generally discourage that practice.  According to his quote, cited on the RestWiki:<p><br />
+"REST does not require that a URI be opaque. The only place where the word opaque occurs in my dissertation is where I complain about the opaqueness of cookies. In fact, RESTful applications are, at all times, encouraged to use human-meaningful, hierarchical identifiers in order to maximize the serendipitous use of the information beyond what is anticipated by the original application."<p><br />
+http://rest.blueoxen.net/cgi-bin/wiki.pl?RestAndUriOpacity#nid1SK<p><br />
+Specifically regarding providing sensor data, there is a RESTful service for earthquake engineering data whose API is published at:<p><br />
+http://it.nees.org/library/data/neescentral-web-services-api.php<p><br />
+Perhaps that might provide some guidance or at least inspiration for coming up with a URI hierarchy and conventions in your own application ...
+<br /><br />
+</ul>
+</ul>
+</ul>
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/2581">Minor correction</a><br />
+<font size="2">
+2005-03-04 22:20:10&nbsp;Mike Dierken</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/2581&x-lr2=a/1544" title="Reply to this message">[Reply]</a--><br />
+<br />
+Great article! Can't wait for the book.<p><br />
+Minor point - "Another check is to ensure that all of the methods that aren't GETs are non-idempotent." This is incorrect, as PUT and DELETE are always idempotent (repeating the request results in the same end state). The non-safe methods (the ones that modify data) should be done with something other than GET.
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/2579">Why PUT vs. POST?</a><br />
+<font size="2">
+2005-03-04 07:30:41&nbsp;velebak</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/2579&x-lr2=a/1544" title="Reply to this message">[Reply]</a--><br />
+<br />
+When updating bookmarks, you specify using PUT for a single but POST for a collection.  What benefit does PUT bring, and wouldn't a POST work just as well?<p><br />
+Thanks,<br />
+Keith Veleba
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/2582">Why PUT vs. POST?</a><br />
+<font size="2">
+2005-03-04 22:23:28&nbsp;Mike Dierken</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/2582&x-lr2=a/1544" title="Reply to this message">[Reply]</a--><br />
+<br />
+A PUT request is idempotent - it can be repeated and the client can be sure of the results. A POST has no such guarantee - it could append some text, and doing that twice results in something different than doing it once.<p><br />
+The benefit of repeatable requests is that if the network goes down, or a reply doesn't reach the client, your software can simply send the request again - the system as a whole becomes tolerant of failures.<p><br />
+In the example, the collection could be replace with a PUT, but that's a design choice of the developer.
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/2583">Why PUT vs. POST?</a><br />
+<font size="2">
+2005-03-05 07:34:05&nbsp;velebak</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/2583&x-lr2=a/1544" title="Reply to this message">[Reply]</a--><br />
+<br />
+That makes sense, I guess it's all in how your application code handles PUT and POST operations.  I was thinking too far down in the code again.  Thanks for the clarification!<p><br />
+Keith
+<br /><br />
+</ul>
+</ul>
+</ul>
+
+
+
+<br /><br />
+
+
+<!-- end content -->
+
+<!-- horizontal ad -->
+
+
+</div><!-- #article -->
+
+<div class="noindex">
+<div id="related" style="font:12px verdana,arial,helvetica,sans-serif;">
+
+
+<!-- MyBuys Zone and Parameters -->
+<div class="sidebar-item">
+<h3>Recommended for You</h3>
+<div class="sidebar-item-content" style="text-align: center; padding: 0px;">
+<!-- MyBuys Web Recommendation Zone -->
+<div mybuyszone="5"></div>
+<!-- End MyBuys Web Recommendation Zone -->
+<!-- MyBuys Page Parameters -->
+<script type="text/javascript">
+mybuys.setPageType("CONTENT_ITEM");
+mybuys.set("categoryid","http://purl.oreilly.com/resource-center/xml");
+</script>
+</div>
+</div>
+
+
+<!-- HireReach Widget -->
+
+<div style="text-align:center; padding-bottom:20px;">
+
+
+<script type='text/javascript'><!--//<![CDATA[ 
+var m3_u = (location.protocol=='https:')?'https://jobs.hrkspjbs.com/js.ashx':'http://jobs.hrkspjbs.com/js.ashx'; 
+var m3_r = Math.floor(Math.random()*99999999999); 
+document.write ("<sc"+"ri"+"pt type='text/javascript' src='"+m3_u); 
+document.write ("?pid=2B9C484E4C084CE1A90E33EB9CE8FE7B"); 
+document.write ("&amp;tl=" + m3_r); 
+document.write ("&amp;did=a1544"); 
+document.write ("&amp;loc=" + escape(window.location)); 
+if (document.referrer) document.write ("&amp;referer=" +
+escape(document.referrer)); 
+if (document.context) document.write ("&context=" +
+escape(document.context)); 
+document.write ("'></sc"+"ri"+"pt>");
+//]]>--></script>
+
+
+
+</div>
+
+<!-- sponsored developer resources
+<csperl file="grab" domain="on" record="sc/1851" field="html">
+
+$self->include("csinclude", {record => "$table/$ref_id", template => "tagged_articles.view"});
+-->
+
+
+<div style="text-align:center;background-color:#eee;padding-top:10px;padding-bottom:10px;">
+<img src="/images/ads/advertisement.gif" alt="Advertisement" style="padding-bottom:5px;" />
+
+
+<div align="center">
+
+<!-- Stylus Ad and Sponsored Zones -->
+
+<!-- Progress Software -->
+
+<!--
+<csperl>
+## code to insert ad tag 
+my $pathinfo = $cfg->{PATH_INFO} || $cgi->path_info();
+my ($junk,$table,$ref_id) = split /\//, $pathinfo, 3;
+## ads, here only on article pages and not on the wixml pages
+if ($ref_id) {
+  if ($ref_id !~ /^\d+$/) {
+    $ref_id = "/$ref_id";
+  }
+}
+
+my $f = new CS::Form( cfg => $cfg, table => "$table", id => "$ref_id" );
+        unless ($f->{r}->{ARGS}->{'adcode'} eq 'wixml') {
+  	          my %ARGS = ( 'co'     => 'dc',
+                               'pos'    => 'l',
+		               'height'	=> "240",
+		               'width'	=> "120",
+                               'page'   => "home",
+);
+           $id_subject = $f->{r}->{ARGS}->{'id_subject'} ;
+              #if ($id_subject =~ /10/) {
+              #       $ARGS{'page'} = 'databases';
+              #}
+              #if ($id_subject =~ /3/) {
+              #       $ARGS{'page'} = 'mobile';
+              #}
+if ($pathinfo =~ /^\/a\/\//) {
+    $ARGS{'page'} = 'art';
+}
+#if ($pathinfo =~ /^\/databases\//) {
+#    $ARGS{'page'} = 'databases';
+#}
+#if ($pathinfo =~ /^\/mobile\//) {
+#    $ARGS{'page'} = 'mobile';
+#}
+if ($pathinfo =~ /^\/resourceguide\//) {
+    $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /^\/buyersguide\//) {
+    $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /\/pt\// ) {
+   $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /\/r\// ) {
+   $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /\/p\// ) {
+   $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /\/rg\// ) {
+   $ARGS{'co'} = 'none';
+}
+
+
+my $ad = new CS::Ad( cfg => $self->{cfg}, params => \%ARGS );
+
+	             print $ad->AdTag;
+         }
+
+</csperl>
+!-->
+
+
+
+<!-- ### textbox start ###-->
+<div class="adtag " style=""><!-- dy -->
+<!-- begin ad tag -->
+<script language="JavaScript" type="text/javascript">
+//<![CDATA[
+var ord = (ord != null ? ord : Math.random()*10000000000000000 );
+document.write('<script language="JavaScript" src="http://ad.doubleclick.net/adj/ttm.oreillynet/textbox;sz=$widthx$height;tile=1;ord=' + ord + '?" type="text/javascript"><\/script>');
+//]]>
+</script><noscript><a href="http://ad.doubleclick.net/jump/ttm.oreillynet/textbox;sz=$widthx$height;tile=1;ord=9060052521?" target="_blank"><img src="http://ad.doubleclick.net/ad/ttm.oreillynet/textbox;sz=$widthx$height;ord=123456789?" width="$width" height="$height" border="0" alt="" /></a></noscript>
+<!-- End ad tag -->
+</div>
+
+
+
+<!-- ### end textbox###-->
+
+
+<br />
+
+
+
+<!-- sponsors -->
+<!-- ### skyscraper start ###-->
+    <!-- XML Skyscraper Ad -->
+
+
+<!--JavaScript Tag // Tag for network 5159: TechVertical // Website: OR - XML.com // Page: XML // Placement: ros_160x600 (425862) // created at: Oct 9, 2008 5:49:49 PM-->
+<script language="javascript"><!--
+document.write('<scr'+'ipt language="javascript1.1" src="http://adserver.adtechus.com/addyn/3.0/5159/425862/0/154/ADTECH;loc=100;target=_blank;key=key1+key2+key3+key4;grp=[group];misc='+new Date().getTime()+'"></scri'+'pt>');
+//-->
+</script><noscript><a href="http://adserver.adtechus.com/adlink/3.0/5159/425862/0/154/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" target="_blank"><img src="http://adserver.adtechus.com/adserv/3.0/5159/425862/0/154/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" border="0" width="160" height="600"></a></noscript>
+
+<!-- End of JavaScript Tag -->
+
+<!-- end ad -->
+<!-- ### end skyscraper ###-->
+</div>
+</div>
+
+</div><!-- #related -->
+</div><!-- end noindex -->
+
+
+</div><!-- #page-content -->
+
+<!-- footer -->
+
+<div style="clear:right;"></div>
+
+
+
+
+<br clear="all">
+
+<div id="footer" class="noindex">
+
+<!-- Start Quantcast tag -->
+
+<script type="text/javascript" src="http://edge.quantserve.com/quant.js"></script>
+<script type="text/javascript">
+_qacct="p-20l78bOOCbhcg";quantserve();</script>
+<noscript>
+<img src="http://pixel.quantserve.com/pixel/p-20l78bOOCbhcg.gif" style="display: none" height="1" width="1" alt="Quantcast"/></noscript>
+
+ <!-- End Quantcast tag -->
+
+<table border="0" style="padding-top:20px; padding-bottom:20px;">
+<tr><td align="left" width="25%" valign="top" style="padding-left: 20px; padding-right: 20px;">
+<a href="http://oreilly.com/"><img height="35" border="0" width="155" src="http://cdn.oreilly.com/images/standard/oreilly-logo-footer.gif" alt="O'Reilly Media"/></a>
+<br/><br/>
+&copy;2010, O'Reilly Media, Inc.<br/>(707) 827-7000 / (800) 998-9938<br/> All trademarks and registered trademarks appearing on oreilly.com are the property of their respective owners. </td>
+
+<td valign="top" class="footercol1">
+<ul>
+<li><a href="http://oreilly.com/about/"><strong>About O'Reilly</strong></a></li>
+
+<li><a href="http://oreilly.com/academic/">Academic Solutions</a></li>
+<li><a href="http://oreilly.com/contact.html">Contacts</a></li>
+<li><a href="http://oreilly.com/oreilly/cs/">Customer Service</a></li>
+<li><a href="http://oreilly.com/jobs/">Careers</a></li>
+<li><a href="http://press.oreilly.com/">Press Room</a></li>
+<li><a href="http://oreilly.com/oreilly/privacy.csp">Privacy Policy</a></li>
+<li><a href="http://oreilly.com/terms/">Terms of Service</a></li>
+<li><a href="http://oreilly.com/oreilly/author/intro.csp">Writing for O'Reilly</a></li>
+</ul>
+
+</td>
+
+<td valign="top" class="footercol2">
+<ul>
+<li><a href="http://oreilly.com/community/"><strong>Community</strong></a></li>
+<li><a href="http://oreilly.com/authors/">Authors</a></li>
+<li><a href="http://forums.oreilly.com/">Forums</a></li>
+<li><a href="https://members.oreilly.com/">Membership</a></li>
+<li><a href="http://elists.oreilly.com/">Newsletters</a></li>
+<li><a href="http://oreilly.com/feeds/">RSS Feeds</a></li>
+<li><a href="http://ug.oreilly.com/">User Groups</a></li>
+
+</ul>
+</td>
+
+<td valign="top" class="footercol3">
+<ul>
+<li><strong>More O'Reilly Sites</strong></li>
+<li><a href="http://igniteshow.com/">igniteshow.com</a></li>
+<li><a href="http://makerfaire.com/">makerfaire.com</a></li>
+<li><a href="http://makezine.com/">makezine.com</a></li>
+<li><a href="http://craftzine.com">craftzine.com</a></li>
+<li><a href="http://labs.oreilly.com">labs.oreilly.com</a></li>
+
+</ul>
+
+<ul>
+<li><strong>Partner Sites</strong></li>
+<li><a href="https://www.x.com/community/ppx/devzone">PayPal Developer Zone</a></li>
+<li><a href="http://insideria.com">InsideRIA</a></li>
+<li><a href="http://www.forbes.com/oreillyinsights/">O'Reilly Insights on Forbes.com</a></li>
+</ul>
+</td>
+</tr>
+</table>
+
+
+<!-- For maximum performance, place these tags at the bottom of the body section of the page(s) containing this search form.  -->
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/yui/2.6.0/build/utilities/utilities.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/yui/2.6.0/build/datasource/datasource-min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/yui/2.6.0/build/autocomplete/autocomplete-min.js"></script>
+<script type="text/javascript" src="//content.atomz.com/sp1003bcf0/publish/autocomplete_data.js?sp_js_cache_ver=3"></script>
+
+</div><!-- /#footer -->
+
+<!-- MyBuys Page Initialization -->
+<script type="text/javascript">
+mybuys.initPage();
+</script>
+<!-- End MyBuys Page Initialization -->
+
+<!-- path_info: /a/2005/03/02/restful.html -->
+<!-- table: a - ref_id: /2005/03/02/restful.html -->
+<!-- table: a - ref_id: /2005/03/02/restful.html -->
+<!-- table: a - ref_id: /2005/03/02/restful.html - cs_rid: 1544 -->
+<!-- 0 domain: www.xml.com - path_info: a/2005/03/02/restful.html -->
+<!-- 1 domain: www.xml.com - path_info: a/2005/03/02/restful.html -->
+<!-- 2 domain: www.xml.com - path_info: a/2005/03/02/restful.html -->
+<!-- 3 domain: www.xml.com - path_info: a/2005/03/02/restful.html -->
+<!-- 4 domain: xml.com - path_info: a/2005/03/02/restful.html -->
+<!-- 5 domain: xml - path_info: a/2005/03/02/restful.html -->
+<!-- 6 domain: xml - path_info: a/2005/03/02/restful.html s_channel: network -->
+<!-- 7 domain: xml - path_info: a/2005/03/02/restful.html -->
+<!-- 8 domain: www.xml.com - path_info: a/2005/03/02/restful.html -->
+
+<script language="JavaScript" type="text/javascript"><!--
+var s_account="ornetwork,orglobal"
+//--></script>
+<!-- SiteCatalyst code version: H.20.2. Copyright 1997-2009 Omniture, Inc. More info available at http://www.omniture.com  -->
+<script language="JavaScript" type="text/javascript" src="http://assets.oreilly.com/js/s_code.js"></script>
+<script language="JavaScript" type="text/javascript"><!--
+s.pageName="network:xml:show me the code"
+s.channel="network"
+s.prop1="network:xml"
+s.prop2="network:xml"
+s.prop3="network:xml"
+s.prop4="article"
+s.prop5="show me the code"
+s.prop6="x/a/1544"
+s.prop24="03/02/2005"
+s.prop21="joe gregorio"
+s.hier1="network,xml"
+/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+var s_code=s.t();if(s_code)document.write(s_code)//--></script>
+<!-- End SiteCatalyst code version: H.20.2. -->
+<!-- analytics.pl: 2010/12/17 9:13:19 -->
+
+
+
+
+
+</div></body> <!-- /#page -->
+
+
+</html>
+
