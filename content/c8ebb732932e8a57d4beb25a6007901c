@@ -1,0 +1,945 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="http://www.movabletype.org/" />
+
+<meta name="keywords" content="phil windley, phil, enterprise computing, information technology, web services, privacy, identity, security, " />
+<meta name="description" content="Organizations Get the IT They Deserve" />
+<meta name="author"  content="Phil Windley" />
+
+<title>Phil Windley's Technometria | Building Interactive Web Programs with Continuations</title>
+
+<link rel="stylesheet" href="http://www.windley.com/styles-site.css" type="text/css" />
+<link rel="alternate" type="application/atom+xml" title="Atom" href="http://www.windley.com/atom.xml" />
+<link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.windley.com/rss.xml" />
+
+<link rel="start" href="http://www.windley.com/" title="Home" />
+
+<link rel="prev" href="http://www.windley.com/archives/2005/02/cmswatch_twenty.shtml" title="CMSWatch Twenty to Watch" />
+
+
+<link rel="next" href="http://www.windley.com/archives/2005/02/hb211_is_out_of.shtml" title="HB211 Is Out of the House" />
+
+
+
+
+<script type="text/javascript" src="http://www.windley.com/mt.js"></script>
+
+<meta name="microid" 
+            content="mailto+http:sha1:b7c66e8e9529dc3c417538275610ef98f339b4cb" />
+
+
+<link rel="openid.server" href="https://www.signon.com/partner/openid" />
+<link rel="openid2.provider" href="https://www.signon.com/partner/openid" />
+<Link rel="openid.delegate" href="https://windley.signon.com" />
+<link rel="openid2.local_id" href="https://windley.signon.com"/>
+
+<link rel="stylesheet" 
+      href="http://www.windley.com/blogtools/0/9/blogtools.css" 
+      type="text/css" />
+
+
+
+
+
+
+
+
+
+
+
+<!--
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="http://www.windley.com/archives/2005/02/building_intera.shtml">
+<dc:title>Building Interactive Web Programs with Continuations</dc:title>
+<dc:description> Supposed I asked you to build a program to grab the current exchange rates from the Federal Reserve Bank in New York (FRBNY) in XML, prompt the user for the currency to exchange dollars for, then prompt the user...</dc:description>
+<dc:creator>windley</dc:creator>
+<dc:date>2005-02-16T15:06:57-07:00</dc:date>
+<license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/1.0/" />
+</Work>
+<License rdf:about="http://creativecommons.org/licenses/by-nc-sa/1.0/">
+<requires rdf:resource="http://web.resource.org/cc/Attribution" />
+<requires rdf:resource="http://web.resource.org/cc/Notice" />
+<requires rdf:resource="http://web.resource.org/cc/ShareAlike" />
+<permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+<permits rdf:resource="http://web.resource.org/cc/Distribution" />
+<permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+<prohibits rdf:resource="http://web.resource.org/cc/CommercialUse" />
+</License>
+</rdf:RDF>
+-->
+
+
+
+</head>
+
+<body onload="individualArchivesOnLoad(commenter_name)">
+
+<div id="container">
+
+<div id="banner">
+<h1><a href="http://www.windley.com/" accesskey="1">Phil Windley's Technometria</a></h1>
+<h2>Organizations Get the IT They Deserve</h2>
+</div>
+
+
+<div id="left">
+<div class="sidebar">
+
+<h2>
+Technometria
+</h2>
+<div class="link-note">
+<a href="http://www.windley.com/">Home</a><br/>
+<a href="http://www.windley.com/essays/2005/why_technometria">Why Technometria?</a><br/>
+<a href="http://www.windley.com/rss.xml"><img id="rss_logo" src="http://www.windley.com/images/feed.png" border="0" valign="bottom" align="right"/></a>
+<a href="http://www.windley.com/rss.xml">RSS</a> <br/>
+<a href="http://www.windley.com/atom.xml">Atom</a> <br/>
+<a href="http://rss.conversationsnetwork.org/series/technometria.xml">Podcast Feed</a><br/>
+<a href="http://fusion.google.com/add?source=atgs&feedurl=http%3A//www.windley.com/rss.xml"><img src="http://buttons.googlesyndication.com/fusion/add.gif" border="0" alt="Add to Google"></a><br/>
+<a href="http://add.my.yahoo.com/rss?url=http://www.windley.com/rss.xml">
+ <img border="0" src="http://us.i1.yimg.com/us.yimg.com/i/us/my/addtomyyahoo2.gif"/></a><br/>
+<a href="http://www.windley.com/cgi-bin/recommend.pl?name=technometria&title=Windley's%20Technometria&url=http://www.windley.com">Recommend This Site</a>
+</div>
+
+
+<h2>
+About Phil
+</h2>
+<div class="link-note">
+<a href="http://phil.windley.org">Brief Bio</a><br/>
+<a href="http://phil.windley.org">Contact Info</a><br/>
+<a href="http://twitter.com/windley">Phil on Twitter</a><br/>
+<a href="http://www.windley.com/speaking">Speaking</a><br/>
+<a href="http://www.windley.com/outlines/infoworld.html">InfoWorld</a><br/>
+<a href="http://www.windley.com/gallery/">Photo Albums</a><br/>
+<a href="http://www.windley.com/videos">Video Favorites</a><br/>
+<a href="http://www.windley.com/cto_forum">CTO Breakfast</a>
+</div>
+
+<h2>
+Essays
+</h2>
+<div class="link-note">
+<a href="http://www.windley.com/essays/2006">2006</a><br/>
+<a href="http://www.windley.com/essays/2005">2005</a><br/>
+<a href="http://www.windley.com/essays/2004">2004</a><br/>
+<a href="http://www.windley.com/essays/2003">2003</a><br/>
+<a href="http://www.windley.com/docs/">CIO White Papers</a>
+</div>
+
+<h2>
+Software
+</h2>
+<div class="link-note">
+<a href="http://www.windley.com/packages/">Packages</a>
+</div>
+
+<h2>
+Topic Guides
+</h2>
+
+<div class="link-note">
+<a href="http://www.windley.com/identity-policy/">Digital ID Policies</a><br/>
+<a href="http://www.windley.com/essays/2004/application_performance">Internet Application Performance</a><br/>
+<a href="http://www.windley.com/outlines/linux">Setting Up a Linux Server</a><br/>
+<a href="http://www.windley.com/outlines/public_service_tips">Public Service Tips</a>
+</div>
+
+<div id="categories">
+<h2>Categories</h2>
+<div class="link-note">
+<a href="http://www.windley.com/tagcloud">Blog TagCloud</a><br/>
+</div>
+</div><!--categories-->
+
+
+<h2>
+Archives
+</h2>
+
+<div class="link-note">
+
+<a href="http://www.windley.com/archives/2010/12/">December 2010</a><br />
+
+<a href="http://www.windley.com/archives/2010/11/">November 2010</a><br />
+
+<a href="http://www.windley.com/archives/2010/10/">October 2010</a><br />
+
+<a href="http://www.windley.com/archives/2010/09/">September 2010</a><br />
+
+<a href="http://www.windley.com/archives/2010/08/">August 2010</a><br />
+
+<a href="http://www.windley.com/archives/2010/07/">July 2010</a><br />
+
+<a href="http://www.windley.com/archives/2010/06/">June 2010</a><br />
+
+<a href="http://www.windley.com/archives/2010/05/">May 2010</a><br />
+
+<a href="http://www.windley.com/archives/2010/04/">April 2010</a><br />
+
+<a href="http://www.windley.com/archives/2010/03/">March 2010</a><br />
+
+<a href="http://www.windley.com/archives/2010/02/">February 2010</a><br />
+
+<a href="http://www.windley.com/archives/2010/01/">January 2010</a><br />
+
+<a href="http://www.windley.com/archives/2009/12/">December 2009</a><br />
+
+<a href="http://www.windley.com/archives/2009/11/">November 2009</a><br />
+
+<a href="http://www.windley.com/archives/2009/10/">October 2009</a><br />
+
+<a href="http://www.windley.com/archives/2009/09/">September 2009</a><br />
+
+<a href="http://www.windley.com/archives/2009/08/">August 2009</a><br />
+
+<a href="http://www.windley.com/archives/2009/07/">July 2009</a><br />
+
+<a href="http://www.windley.com/archives/2009/06/">June 2009</a><br />
+
+<a href="http://www.windley.com/archives/2009/05/">May 2009</a><br />
+
+<a href="http://www.windley.com/archives/2009/04/">April 2009</a><br />
+
+<a href="http://www.windley.com/archives/2009/03/">March 2009</a><br />
+
+<a href="http://www.windley.com/archives/2009/02/">February 2009</a><br />
+
+<a href="http://www.windley.com/archives/2009/01/">January 2009</a><br />
+
+<a href="http://www.windley.com/archives/2008/12/">December 2008</a><br />
+
+<a href="http://www.windley.com/archives/2008/11/">November 2008</a><br />
+
+<a href="http://www.windley.com/archives/2008/10/">October 2008</a><br />
+
+<a href="http://www.windley.com/archives/2008/09/">September 2008</a><br />
+
+<a href="http://www.windley.com/archives/2008/08/">August 2008</a><br />
+
+<a href="http://www.windley.com/archives/2008/07/">July 2008</a><br />
+
+<a href="http://www.windley.com/archives/2008/06/">June 2008</a><br />
+
+<a href="http://www.windley.com/archives/2008/05/">May 2008</a><br />
+
+<a href="http://www.windley.com/archives/2008/04/">April 2008</a><br />
+
+<a href="http://www.windley.com/archives/2008/03/">March 2008</a><br />
+
+<a href="http://www.windley.com/archives/2008/02/">February 2008</a><br />
+
+<a href="http://www.windley.com/archives/2008/01/">January 2008</a><br />
+
+<a href="http://www.windley.com/archives/2007/12/">December 2007</a><br />
+
+<a href="http://www.windley.com/archives/2007/11/">November 2007</a><br />
+
+<a href="http://www.windley.com/archives/2007/10/">October 2007</a><br />
+
+<a href="http://www.windley.com/archives/2007/09/">September 2007</a><br />
+
+<a href="http://www.windley.com/archives/2007/08/">August 2007</a><br />
+
+<a href="http://www.windley.com/archives/2007/07/">July 2007</a><br />
+
+<a href="http://www.windley.com/archives/2007/06/">June 2007</a><br />
+
+<a href="http://www.windley.com/archives/2007/05/">May 2007</a><br />
+
+<a href="http://www.windley.com/archives/2007/04/">April 2007</a><br />
+
+<a href="http://www.windley.com/archives/2007/03/">March 2007</a><br />
+
+<a href="http://www.windley.com/archives/2007/02/">February 2007</a><br />
+
+<a href="http://www.windley.com/archives/2007/01/">January 2007</a><br />
+
+<a href="http://www.windley.com/archives/2006/12/">December 2006</a><br />
+
+<a href="http://www.windley.com/archives/2006/11/">November 2006</a><br />
+
+<a href="http://www.windley.com/archives/2006/10/">October 2006</a><br />
+
+<a href="http://www.windley.com/archives/2006/09/">September 2006</a><br />
+
+<a href="http://www.windley.com/archives/2006/08/">August 2006</a><br />
+
+<a href="http://www.windley.com/archives/2006/07/">July 2006</a><br />
+
+<a href="http://www.windley.com/archives/2006/06/">June 2006</a><br />
+
+<a href="http://www.windley.com/archives/2006/05/">May 2006</a><br />
+
+<a href="http://www.windley.com/archives/2006/04/">April 2006</a><br />
+
+<a href="http://www.windley.com/archives/2006/03/">March 2006</a><br />
+
+<a href="http://www.windley.com/archives/2006/02/">February 2006</a><br />
+
+<a href="http://www.windley.com/archives/2006/01/">January 2006</a><br />
+
+<a href="http://www.windley.com/archives/2005/12/">December 2005</a><br />
+
+<a href="http://www.windley.com/archives/2005/11/">November 2005</a><br />
+
+<a href="http://www.windley.com/archives/2005/10/">October 2005</a><br />
+
+<a href="http://www.windley.com/archives/2005/09/">September 2005</a><br />
+
+<a href="http://www.windley.com/archives/2005/08/">August 2005</a><br />
+
+<a href="http://www.windley.com/archives/2005/07/">July 2005</a><br />
+
+<a href="http://www.windley.com/archives/2005/06/">June 2005</a><br />
+
+<a href="http://www.windley.com/archives/2005/05/">May 2005</a><br />
+
+<a href="http://www.windley.com/archives/2005/04/">April 2005</a><br />
+
+<a href="http://www.windley.com/archives/2005/03/">March 2005</a><br />
+
+<a href="http://www.windley.com/archives/2005/02/">February 2005</a><br />
+
+<a href="http://www.windley.com/archives/2005/01/">January 2005</a><br />
+
+<a href="http://www.windley.com/archives/2004/12/">December 2004</a><br />
+
+<a href="http://www.windley.com/archives/2004/11/">November 2004</a><br />
+
+<a href="http://www.windley.com/archives/2004/10/">October 2004</a><br />
+
+<a href="http://www.windley.com/archives/2004/09/">September 2004</a><br />
+
+<a href="http://www.windley.com/archives/2004/08/">August 2004</a><br />
+
+<a href="http://www.windley.com/archives/2004/07/">July 2004</a><br />
+
+<a href="http://www.windley.com/archives/2004/06/">June 2004</a><br />
+
+<a href="http://www.windley.com/archives/2004/05/">May 2004</a><br />
+
+<a href="http://www.windley.com/archives/2004/04/">April 2004</a><br />
+
+<a href="http://www.windley.com/archives/2004/03/">March 2004</a><br />
+
+<a href="http://www.windley.com/archives/2004/02/">February 2004</a><br />
+
+<a href="http://www.windley.com/archives/2004/01/">January 2004</a><br />
+
+<a href="http://www.windley.com/archives/2003/12/">December 2003</a><br />
+
+<a href="http://www.windley.com/archives/2003/11/">November 2003</a><br />
+
+<a href="http://www.windley.com/archives/2003/10/">October 2003</a><br />
+
+<a href="http://www.windley.com/archives/2003/09/">September 2003</a><br />
+
+<a href="http://www.windley.com/archives/2003/08/">August 2003</a><br />
+
+<a href="http://www.windley.com/archives/2003/07/">July 2003</a><br />
+
+<a href="http://www.windley.com/archives/2003/06/">June 2003</a><br />
+
+<a href="http://www.windley.com/archives/2003/05/">May 2003</a><br />
+
+<a href="http://www.windley.com/archives/2003/04/">April 2003</a><br />
+
+<a href="http://www.windley.com/archives/2003/03/">March 2003</a><br />
+
+<a href="http://www.windley.com/archives/2003/02/">February 2003</a><br />
+
+<a href="http://www.windley.com/archives/2003/01/">January 2003</a><br />
+
+<a href="http://www.windley.com/archives/2002/12/">December 2002</a><br />
+
+<a href="http://www.windley.com/archives/2002/11/">November 2002</a><br />
+
+<a href="http://www.windley.com/archives/2002/10/">October 2002</a><br />
+
+<a href="http://www.windley.com/archives/2002/09/">September 2002</a><br />
+
+<a href="http://www.windley.com/archives/2002/08/">August 2002</a><br />
+
+<a href="http://www.windley.com/archives/2002/07/">July 2002</a><br />
+
+<a href="http://www.windley.com/archives/2002/06/">June 2002</a><br />
+
+<a href="http://www.windley.com/archives/2002/05/">May 2002</a><br />
+
+</div>
+
+<h2>
+Utah Tech Organizations
+</h2>
+<div class="link-note">
+<a href="http://uug.byu.edu/">BYU Unix User's Group</a><br/>
+<a href="http://www.plug.org/">Provo Linux User's Group</a><br/>
+<a href="http://uvlug.org/modules/news/index.php">Utah Valley Linux User's Group</a><br/>
+<a href="http://ubuntu-utah.org">Ubuntu Utah</a><br/>
+<a href="http://www.sllug.org/">Salt Lake LUG</a><br/>
+<a href="http://fslc.usu.edu/">USU Free Software and Linux Club</a><br/>
+<a href="http://gubug.org/">Greater Utah BSD User Group</a><br/>
+<a href="http://uphpu.org/">Utah PHP Users Group</a><br/>
+<a href="http://utahpython.org/">Utah Python User Group</a><br/>
+<a href="http://urug.org/">Utah Ruby Users Group</a><br/>
+<a href="http://oalug.darkpenguin.com/">Ogden Area LUG</a><br/>
+<a href="http://www.su3g.org/">Southern Utah Unix Users Group</a><br/>
+<a href="http://www.utahsaint.org/">UtahSAINT</a><br/>
+</div>
+
+<div id="friends">
+<h2>
+Friends
+</h2>
+<div class="link-note">
+<span id="friend-list"></span>
+<a href="http://jkftech.org/">Kelly Flanagan</a><br/>
+<a href="http://lal.cs.byu.edu/~jones/blog/">Mike Jones</a><br/>
+<a href="http://www.charlesknutson.net/">Chuck Knutson</a><br/>
+<span id="kristen"><a href="http://kristendknight.blogspot.com/">Kristen Knight</a><br/></span>
+<a href="http://www.jessiemorris.com/">Jessie Morris</a><br/>
+<a href="http://whynotbecauseisaidso.blogspot.com/">Sheila Staley</a><br/>
+</div>
+</div>
+
+
+<h2>
+Copyright
+</h2>
+
+<div class="link-note">
+Copyright &copy; 2002-2009 PJW LC. <a href="http://creativecommons.org/licenses/by-nc-sa/1.0/">Some rights reserved</a>. Technometria is a trademark of PJW LC in the United States and other countries.
+</div>
+
+
+
+
+
+
+</div>
+</div>
+
+<div id="right">
+<div class="sidebar">
+
+
+<h2>I'm CTO of Kynetx</h2>
+<div class="link-note">
+<a href="http://www.kynetx.com">
+<img src="/images/kynetx_logo.jpg" alt="Kynetx - This Changes Everything" vspace="12">
+</a>
+<div id="crunchie" style="width: 150px">
+<script src="http://crunchies2010.techcrunch.com/wp-content/themes/crunchies/js/embed.js" type="text/javascript"></script><script type="text/javascript">cat="25";nom="MjU6S3luZXR4LCBJbmMu";cr_showBadge();</script>
+</div>
+</div>
+
+<!--
+<h2>Announcing Impact!</h2>
+<div class="link-note">
+<a href="http://kynetximpactspring2010.eventbrite.com/">
+<img src="http://eventbrite-s3.s3.amazonaws.com/eventlogos/1312033/526923041.jpg" alt="Impact Conference Spring 2010" width="150px" border="0" vspace="1">
+</a>
+<p align="center" style="margin:0px;padding:0px">April 27-28, 2010</p>
+<p align="right">
+  <a href="http://kynetximpactspring2010.eventbrite.com/">register now</a>
+</p>
+</div>
+-->
+
+<!--
+<h2>I'm Going to IIW X</h2>
+<div class="link-note">
+<a href="http://iiw10.eventbrite.com/"><img width="150px"
+src="http://www.windley.com/events/iiwx/IIW.gif"
+border="1" align="left" title="IIW2010 Registration banner"alt="IIW2010 Registration banner" /></a>
+<p align="right"><a href="http://iiw10.eventbrite.com/">register now</a></p>
+</div>
+-->
+
+<div id="tweets">Loading tweets...</div>
+
+<br/>
+<div id="kynetx_10"></div>
+
+<div style="margin:0px;">
+  <embed width="150" height="300" src="http://www.goodreads.com/images/widget/widget2.swf" 
+    quality="high" wmode="transparent" 
+    FlashVars="id=1322273&shelf=read&title=Phil's bookshelf: read&host=www.goodreads.com&sort=date_added&order=d&params=amazon,,dest_site,">
+  </embed>
+</div>
+
+<div style="margin:0px;">
+<a href="http://www.goodreads.com/user/show/1322273-phil" target="_blank"><img alt="Phil's  book recommendations, reviews, favorite quotes, book clubs, book trivia, book lists" border="0" height="32" src="http://www.goodreads.com/images/widget/widget_logo.gif" title="Phil's  book recommendations, reviews, favorite quotes, book clubs, book trivia, book lists" width="160" /></a>
+</div>
+
+<!--
+<div class="link-banner">
+<a href="/support_a_student"><img src="/images/supportStudent.png" border="0"/></a>
+</div>
+-->
+
+<h2>Free Newsletter!</h2>
+<div class="link-note">
+<form action="http://www.windley.com/cgi-bin/mojo/mojo.cgi" method="POST">
+ <input type="hidden" name="flavor" value="subscribe">
+<input type="text" name="email" value="email address" size="16"
+onFocus="if (this.value=='email address') {this.value=''};">
+<!--input type="text" name="email" value="email address" size="16"-->
+<input type="hidden" name="list" value="wecn">
+<input type="submit" value="Sign me up!"><br/>
+</form>
+&nbsp;(<a href="/newsletter_signup.shtml">Find out more...</a>)
+</div>
+
+<h2>
+Search
+</h2>
+ 
+<div class="link-note">
+<form method="get" action="http://www.windley.com/mt4.1/mt-search.cgi">
+<input type="hidden" name="IncludeBlogs" value="11" />
+<input type="hidden" name="Template" value="technometria" />
+<label for="search" accesskey="4">Search this site:</label><br />
+<input id="search" name="search" size="15" />
+<input type="submit" value="GO" />
+</form>
+</div>
+
+<!-- $MTInclude module="ActionStream1"$ -->
+
+
+<div class="widget-elsewhere widget">
+    <h2 style="padding-bottom:3px">Find Me Elsewhere</h2>
+    <div class="widget-content">
+        <ul class="activity-stream-list">
+
+            <li><a href="http://twitter.com/windley" rel="me" class="service-icon service-twitter">Twitter Profile</a></li>
+
+            <li><a href="http://del.icio.us/windley/" rel="me" class="service-icon service-delicious">del.icio.us Profile</a></li>
+
+            <li><a href="http://www.linkedin.com/in/windley" rel="me" class="service-icon service-linkedin">LinkedIn Profile</a></li>
+
+            <li><a href="http://www.google.com/reader/shared/06086536703522803109" rel="me" class="service-icon service-googlereader">Google Reader Profile</a></li>
+
+            <li><a href="http://flickr.com/photos/windley/" rel="me" class="service-icon service-flickr">Flickr Profile</a></li>
+
+            <li><a href="http://www.facebook.com/profile.php?id=510912768" rel="me" class="service-icon service-facebook">Facebook Profile</a></li>
+
+            <li><a href="http://www.conversationsnetwork.org/queue/17082" rel="me" class="service-icon service-ITCQ">IT Converasations Profile</a></li>
+
+            <li><a href="http://www.youtube.com/user/windleyp" rel="me" class="service-icon service-youtube">YouTube Profile</a></li>
+
+        </ul>
+    </div>
+</div>
+
+
+
+
+<h2>Digital Identity</h2>
+<div class="link-note" >
+<a href="http://www.amazon.com/exec/obidos/ASIN/0596008783/windleyofente-20"><img src="http://photos.windley.com/albums/Misc/cover_final_001.thumb.jpg"/></a><br/>
+<a href="http://www.amazon.com/exec/obidos/ASIN/0596008783/windleyofente-20">Buy the book</a>!
+</div>
+
+
+
+<h2>Upcoming Events</h2>
+<div class="link-note">
+
+Staying home
+</div>
+
+
+<h2>
+Recent Entries
+</h2>
+<div class="link-note">
+
+<li><a href="http://www.windley.com/archives/2010/12/readings_for_december_12_2010.shtml">Readings for December 12, 2010</a></li>
+
+<li><a href="http://www.windley.com/archives/2010/12/the_kynetx_rule_language_has_modules.shtml">The Kynetx Rule Language has Modules</a></li>
+
+<li><a href="http://www.windley.com/archives/2010/12/starting_a_high_tech_business_we_believe.shtml">Starting a High Tech Business: We Believe...</a></li>
+
+<li><a href="http://www.windley.com/archives/2010/12/capture_mode_and_emacs.shtml">Capture Mode and Emacs</a></li>
+
+<li><a href="http://www.windley.com/archives/2010/12/podcast_kaliya_hamlin_interview_me_on_personal_data_ecosystems.shtml">Podcast: Kaliya Hamlin Interview Me on Personal Data Ecosystems</a></li>
+
+<li><a href="http://www.windley.com/archives/2010/12/readings_weeks_of_nov_29th_and_dec_6th_2010.shtml">Readings Weeks of Nov 29th and Dec 6th, 2010</a></li>
+
+<li><a href="http://www.windley.com/archives/2010/12/podcast_ylian_sainthilaire_on_meshcentral.shtml">Podcast: Ylian Saint-Hilaire on MeshCentral</a></li>
+
+<li><a href="http://www.windley.com/archives/2010/12/starting_a_high_tech_business_move_as_a_pack.shtml">Starting a High Tech Business: Move As a Pack</a></li>
+
+<li><a href="http://www.windley.com/archives/2010/12/podcast_carmine_gallo_on_the_innovation_secrets_of_steve_jobs.shtml">Podcast: Carmine Gallo on The Innovation Secrets of Steve Jobs</a></li>
+
+<li><a href="http://www.windley.com/archives/2010/12/luncheon_improving_application_performance.shtml">Luncheon: Improving Application Performance</a></li>
+
+</div>
+
+
+<script type=text/javascript>
+var kvars = {};
+</script>
+
+<script type=text/javascript>
+kvars.foo = 5;
+kvars.bar = 'fizz';
+kvars.bizz = [1,2,3];
+</script>
+
+
+
+</div>
+</div>
+
+
+<div id="center">
+
+<div class="content">
+
+
+
+
+
+<!-- navigation -->
+<p align="right">
+
+<a href="http://www.windley.com/archives/2005/02/cmswatch_twenty.shtml">&laquo; CMSWatch Twenty to Watch</a> |
+
+<a href="http://www.windley.com/">Main</a>
+
+| <a href="http://www.windley.com/archives/2005/02/hb211_is_out_of.shtml">HB211 Is Out of the House &raquo;</a>
+
+</p>
+<!-- end navigation -->
+
+
+<div id="kynetx_11"></div>
+
+
+<!--bodystart-->
+<div class="microid-mailto+http:sha1:db08622d2237d370342f61e911fe8b0678a687cc">
+<script type="text/javascript">
+digg_url = 'http://www.windley.com/archives/2005/02/building_intera.shtml';
+digg_title = "Building Interactive Web Programs with Continuations";
+digg_topic = 'tech_news';
+digg_bodytext = " Supposed I asked you to build a program to grab the current exchange rates from the Federal Reserve Bank in New York (FRBNY) in XML, prompt the user for the currency to exchange dollars for, then prompt the user...";
+reddit_url='http://www.windley.com/archives/2005/02/building_intera.shtml';
+reddit_title="Building Interactive Web Programs with Continuations";
+</script>
+<h1>Building Interactive Web Programs with Continuations</h1>
+<div class="diggbutton">
+<script src="http://digg.com/tools/diggthis.js" type="text/javascript"></script>
+</div>
+<p> Supposed I asked you to build a program to grab the <a
+href="http://www.ny.frb.org/markets/fxrates/noon.cfm">current exchange rates
+from the Federal Reserve Bank in New York (FRBNY)</a> in XML, prompt the
+user for the currency to exchange dollars for, then prompt the user for the
+dollars to convert, and then display the result.  You might write a program
+that looks like this: </p>
+
+<ol>
+  <li>get the rates from the Federal Reserve Bank</li>
+  <li>show the first prompt and record the currency choice</li>
+  <li>show the second prompt and record the dollar amount</li>
+  <li>query the XML to extract the right information using the user input</li>
+  <li>calculate the result and display it</li>
+</ol>
+
+<p>
+In fact, other than grabbing and querying the XML, any beginning programming
+student could write this program.  You could probably do it in under 5
+minutes in your favorite language.  
+</p>
+
+<p>
+Now, suppose I asked you to convert your program to a Web application.
+Still a five minute job?  Hardy, and the increase in time is more than
+just the problem of building the Web pages.  What you&#8217;d probably do is put
+each of those steps into a separate script and then bind them all together
+with a little state machine in the CGI program that jumped to the right
+script based on state variables that you encoded in the URL, a hidden
+field, or a cookie.  Sadly, it wouldn&#8217;t end up looking anything like the program
+that you&#8217;d write if you were just grabbing the input from a terminal.  
+</p>
+
+<p>
+The problem with programming Web applications is two-fold: 
+</p>
+
+<ol>
+  <li>The data from each page has to be managed independently and stored in
+  a persistent manner that lives beyond execution of the CGI script.</li>
+  <li>The state of the program has to be managed explicitly by the
+  programmer. </li>
+</ol>
+
+<p>
+When you think about it, Web programming is a lot like assembly language
+programming&#8212;lots of gotos and <em>ad hoc</em> mechanisms for managing data.  <a
+href="http://www.hyperorg.com/blogger/">Dave Weinberger</a> wrote a book
+called <a href="http://www.amazon.com/exec/obidos/ASIN/1903985366/windleyofente-20">&#8220;Small Pieces Loosely Joined&#8221;</a> to describe the Web.  The problem is
+that that&#8217;s just what Web-based programs look like as well.  <a
+href="http://www.cs.utexas.edu/users/UTCS/notices/dijkstra/ewdobit.html">Dijkstra</a>
+must be <a href="http://www.acm.org/classics/oct95/">spinning in his
+grave</a>.   
+</p>
+<p>
+This leads to the question: what if I could write programs for the Web
+that were &#8220;structured&#8221; in the programming sense of that word?  The result
+would be Web programs that were more natural to write and easy to read.
+You&#8217;d no longer have to maintain the state of your program outside the
+language and the data could be kept in variables, where it belongs.  The
+answer is: you can.
+</p>
+
+<div id="a009826more"><div id="more">
+<p>
+There&#8217;s a concept in programming languages called a continuation.  A
+continuation is a function that represents the entire forward evaluation
+of the program from some point in the program.  Here&#8217;s a simple example.
+Suppose I&#8217;m evaluating this expression:
+</p>
+<pre class="code">
+(+ 4 (* 5 6))
+</pre>
+<p>
+Before I can determine the final sum, I have to compute the product of 5
+and 6.  So, after the value of <tt>(* 5 6)</tt> has been computed, we
+can ask &#8220;what remains to be done?&#8221;  The remaining work can be represented
+by the following function:
+</p>
+<pre class="code">
+(lambda (x) (+ 4 x))
+</pre>
+<p>
+This is the continuation of the computation from the point immediately
+after the product is calculated.  Some languages make such continuations
+first-class values and consequently you can get your hands on them and store them
+in variables so you can do things with them later. 
+</p>
+<p>
+If the language used to program the Web application, and the server,
+support continuations, the program doesn&#8217;t have to terminate to interact
+with the user.  Rather, it can suspend its operation at the point where
+user interaction is needed and capture the continuation.  That
+continuation can then be used to resume the operation of the program when
+the user submits the page.  
+</p>
+
+<p> To see how this looks in a real example, let&#8217;s return to the
+programming problem I posed at the beginning of this article.  I&#8217;ve coded it
+up as an interactive Web program in Scheme, because Scheme supports
+continuations.  Take a minute and <a target="_blank"
+href="http://scheme.windley.com/demos/exchange.ss">give it a
+try</a>. Here&#8217;s the main body of the program: </p>
+
+<pre class="code">
+(let* (
+    <font color="#AA00AA">;; get the rates from the federal reserve bank</font>
+    (rate-list (get-xml-fr-url (make-rate-url)))
+    <font color="#AA00AA">;; Show the first page and record the currency choice</font>
+    (country-id (extract-binding/single 
+             'country-id (get-rate-page rate-list)))
+    <font color="#AA00AA">;; show the second page and record the prompt amount</font>
+    (amount (extract-binding/single 
+             'amount (get-dollars-page rate-list country-id)))
+    <font color="#AA00AA">;; query the XML to get the rate for country-id</font>
+    (country-rate (get-rate-for-id country-id rate-list)) 
+    <font color="#AA00AA">;; extract the values from that rate</font>
+    (country (get-country-fr-rate country-rate))
+    (currency (get-currency-fr-rate country-rate))
+    (date (get-date-fr-rate country-rate))
+    (value (get-value-fr-rate country-rate))
+    )
+ (display-final-page country currency amount value date)
+)
+</pre>
+
+<p>
+If you&#8217;re not a Schemer, let me translate.  The lines after the
+<tt>let*</tt> are executed in sequence and each clause that follows is
+assigning the value returned by the expression on the right to the
+variable on the left.  So,
+</p>
+<pre class="code">
+(rate-list (get-xml-fr-url (make-rate-url)))
+</pre>
+<p>
+puts the XML that it gets from the FRBNY into a variable called <tt>rate-list</tt>. Lines beginning with a semicolon are comments.  You&#8217;ll see that there&#8217;s a line in the <tt>let*</tt> that correspond to each of the steps in the algorithm we gave above.  The expression <tt>(extract-binding/single &#8216;foo &#8230;)</tt> returns the value of the input field named <tt>foo</tt> on the page.  The final result displays the page with the results, which it calculates using the arguments calculated in the lines above.
+</p>
+
+<p> Of course, there&#8217;s more to this program than the main body. (You can
+see them all by <a
+href="http://classes.eclab.byu.edu/330/code/exchange.ss">downloading the
+source</a>.) There are subroutines that support it, but the control flow is
+exactly the same as what you&#8217;d write in any other complete program to do
+this task outside the Web.  Ditto for the data.  You just store it in
+variables and then use those variables when you need them, even after other
+HTTP interactions with the user.  Notice, for example, that we get
+<tt>country-id</tt> as the result of the the user submitting the first
+page, but don&#8217;t use it until after the user has submitted the second page.
+There were no heroics to store it in hidden fields of a database somewhere.
+We just treated it like any other variable.  </p>
+
+<p> My point in this is not to convince you to use Scheme, although I&#8217;d
+applaud you if you did.  This trick can be done rather easily in any
+language that supports continuations (like Python or Smalltalk) and, less
+easily, in most other languages.  Here are some resources that you can use
+to explore this concept further: </p>
+
+<ul>
+  <li><a
+  href="http://www.ccs.neu.edu/scheme/pubs/afp2002-f.ps.gz">Developing
+  Interactive Programs for the Web</a> by Matthias Felleisen. Summer School
+  on Advanced Functional Programming 2002. August 2002</li> 
+  <li><a
+  href="http://www.cs.brown.edu/~sk/Publications/Papers/Published/gkvf-web-server-on-hlos/paper.ps">Programming
+  the Web with High-Level Programming Languages</a> by Paul T. Graunke and
+  Shriram Krishnamurthi and Steve van der Hoeven and Matthias
+  Felleisen. European Symposium on Programming, 2001</li> 
+  <li><a
+  href="http://www.cs.brown.edu/~sk/Publications/Papers/Published/mfgkf-web-restructuring-cps-journal/paper.pdf">Automatically 
+  Restructuring Software for the Web</a> by Jacob Matthews, Robert
+  B. Findler, Paul T. Graunke, Shriram Krishnamurthi, Matthias Felleisen.
+  Journal of Automated Software Engineering. 2004.</li> 
+  <li><a href="http://www-106.ibm.com/developerworks/library/j-contin.html">Use Continuations to Develop Complex Web Applications</a> (Cocoon) by Abhijit Belapurkar.</li>
+  <li><a href="http://rifers.org/docs/usersguide/ch01.html">Using Rife</a> (Java)</li>
+  <li> <a href="http://beta4.com/seaside2/tutorial.html">Tutorial on  building Web applications in Seaside</a> (Smalltalk)</li>
+</ul>
+
+<p>
+A few notes about the program itself:
+</p>
+<ul>
+  <li>The program grabs the FRBNY XML file every time its run, but remember,
+  that&#8217;s only once per user, not for each page.</li>
+  <li>XPath is used to query the resulting XML.</li>
+  <li>The currency page (the one with the radio buttons) is generated from the
+  XML, so if the FRBNY adds a new currency tomorrow, the application will
+  adjust. </li>
+  <li>In a real application, you&#8217;d probably choose the currency and enter
+  the amount on one page.  The reason for splitting them here is simply for
+  demonstration purposes.</li>
+</ul>
+</div></div>
+
+<p class="posted">Posted by windley on February 16, 2005  3:06 PM</p>
+</div>
+<!--bodyend-->
+
+<p class="tags">
+<b>See related posts: </b>
+
+</p>
+
+
+
+
+
+<div class="recommend">
+<img src="/images/ico_facebook.jpeg" valign="middle" />&nbsp;<a href="http://www.facebook.com/sharer.php?u=http://www.windley.com/archives/2005/02/building_intera.shtml">Share this article on Facebook</a>
+</div>
+
+<div class="recommend">
+<img src="/images/ico_email.gif" valign="middle" />&nbsp;<a href="/cgi-bin/recommend.pl?name=technometria&title=Building Interactive Web Programs with Continuations&url=http://www.windley.com/archives/2005/02/building_intera.shtml">Email this article to a friend</a>
+</div>
+
+<div class="recommend">
+<img src="/images/ico_delicious.jpeg" valign="middle" />&nbsp;
+<a title="Click here to post this story to del.icio.us" href="http://del.icio.us/post?url=http://www.windley.com/archives/2005/02/building_intera.shtml&title=Building Interactive Web Programs with Continuations&tags=">Post  this article to del.icio.us</a>
+</div>
+
+
+<div class="recommend">
+<img src="/images/ico_printer.gif" valign="middle" />&nbsp;<a href="http://www.windley.com/cgi-bin/printthis.pl?url=http://www.windley.com/archives/2005/02/building_intera.shtml" onclick="window.open (this.href, 'comments', 'width=600, height=600, location=0, resizable=1, scrollbars=1, status=0, toolbar=0, directories=0'); return(false);" title="Click here to format this story for printing">Format this article for printing</A>
+</div>
+
+<div class="recommend">
+<img src="/images/ico_snurl.gif" valign="middle" />&nbsp;<a href="http://snurl.com/site/snip?link=http://www.windley.com/archives/2005/02/building_intera.shtml" target="_blank">Get the SNUrlfor this page</a>
+</div>
+
+
+<div id="comments" class="comments">
+    
+    
+        
+    <h2 class="comments-header">1 Comments</h2>
+    <div class="comments-content">
+        
+        <div class="comment" id="comment-852">
+    <div class="inner">
+        <!-- micro-id per http://www.windley.com/packages/microid/ -->
+        <div id="c852" class="microid-mailto+http:sha1:2b0f3f859ef0fe50cf4398e34271e890687f858d">
+        <div class="comment-header">
+<p class="comment-label">
+Comment from 
+<a title="http://blogs.inextenso.com/seaside/blog/learning/" href="http://blogs.inextenso.com/seaside/blog/learning/" rel="nofollow">Ian Prince</a>  at 
+<a href="#comment-852" title="Permalink to this comment">February 17, 2005  6:20 AM</a></p>            
+        </div>
+        <div class="comment-content">
+            <p>www.seaside.st links to is the most recent resources and tutorials on Smaltalk Seaside.</p>
+
+<p>Regards,</p>
+
+<p>Ian.</p>
+        </div>
+        <div class="comment-footer">
+        </div>
+    </div>
+</div>
+
+        
+    </div>
+        
+    
+    
+    
+
+    
+</div>
+
+
+
+</div><!--content-->
+
+</div><!--center-->
+<div style="clear: both;">&#160;</div>
+</div>
+
+<script type="text/javascript">
+var KOBJ_config ={
+   "rids": ["11"],
+   "blogname": escape("Phil Windley's Technometria"),
+   "blogurl": escape("http://www.windley.com/")
+};
+</script>
+<script type="text/javascript" src="http://init.kobj.net/js/shared/kobj-static.js"></script>
+
+<div class="link-note">
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-74440-1");
+pageTracker._trackPageview();
+</script>
+
+
+</div>
+
+
+
+</body>
+</html>
