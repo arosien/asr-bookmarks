@@ -1,0 +1,3036 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+<title>Sam Ruby: Continuations for Curmudgeons</title>
+<link rel="alternate" type="application/atom+xml" title="Continuations for Curmudgeons" href="http://intertwingly.net/blog/1946.atom"/>
+<link rel="stylesheet" href="/css/blogx.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="/css/print.css" type="text/css" media="print"/>
+<link rel="shortcut icon" href="/favicon.ico"/>
+<meta name="ICBM" content="35.708298,-78.695515"/>
+<script defer="defer" src="/js/comment_form.js"></script>
+<script defer="defer" src="/js/jquery-1.3.2.min.js"></script>
+<script defer="defer" src="/js/jq_localize_dates.js"></script>
+</head>
+
+<body id="intertwingly-net" onload="initCommentForm(document.getElementById('comments_form'))">
+
+<header>
+<h1><a class="banner-anchor" href="http://intertwingly.net/blog/">intertwingly</a></h1>
+<form method="get" action="http://intertwingly.net/blog/">
+<label for="q">Search</label>
+<input type="search" id="q" name="q" placeholder="Search" value=""/>
+</form>
+<p>It&#8217;s just data</p>
+</header>
+
+<article>
+<header>
+<h3><a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons">Continuations for Curmudgeons</a></h3>
+<time title="GMT" datetime="2005-04-13T10:47:12Z">Wed 13 Apr 2005 at 10:47</time>
+</header>
+<p>This essay is for people who, in web years, are older than
+dirt.&#160; More specifically, if there was a period of time in
+which you programmed in a language which did not have garbage
+collection, then I mean you.&#160; For most people these days, that
+means that you had some experience with a language named C.</p>
+<p>It is a pretty safe bet that &#8212; despite your deep technical
+background &#8212; you find that you have some genetic defect that
+makes it completely impossible for you to understand articles with
+titles like
+<a href="http://www.ps.uni-sb.de/~duchier/python/continuations.html">
+Continuations Made Simple and Illustrated</a>.&#160; And for some
+reason, that bothers you.</p>
+<p>If so, then maybe this article is for you.&#160; Think of
+yourself as a frog.&#160; Prepare to be
+<a href="http://allaboutfrogs.org/stories/boiled.html">boiled</a>.</p>
+<h3 id="stack">Local Variables</h3>
+<p>Let me start with something far, far, away from
+continuations.&#160; Something that you should be comfortable
+with.&#160; It should bring back memories of battles you heroically
+fought, and mostly won, long ago.&#160; This example is in C:</p>
+<pre class="code">#include &lt;stdio.h&gt;
+
+int* f(int n) {
+  int result = n + 1;
+  return &amp;result;
+}
+ 
+main() {
+  int *n1 = f(1);
+  int *n2 = f(2);
+ 
+  printf("%d\n", *n1);
+}</pre>
+<p>OK, now let&#8217;s walk through this program.&#160; First a
+function named <code>f</code> is defined.&#160; It takes in one
+argument, an integer named <code>n</code>.&#160; It adds one to
+that value, and stores the result in a local variable named
+<code>result</code>.&#160; Finally, <code>f</code> returns the
+address of <code>result</code>.</p>
+<p>At this point, any self respecting compiler should issue a
+warning.&#160; In fact, gcc does exactly that:</p>
+<pre class="code">test.c: In function 'f':
+test.c:5: warning: function returns address of local variable</pre>
+<p>The problem is that local variables are stored on the
+stack.&#160; And when <code>f</code> returns, it pops the stack,
+making this memory available for other uses.</p>
+<p>In this program, <code>main</code> calls <code>f</code>
+twice.&#160; Once with a value of <code>1</code> and once with a
+value of <code>2</code>.&#160; Quite likely, the second call will
+use the exact same storage layout as the first call, meaning that
+the first <code>result</code> will be overlaid.</p>
+<p>In fact, on my machine, this is exactly what happens.&#160; When
+I compile and run this example, I get the following result:</p>
+<pre class="code">3</pre>
+<p>If you now look around, you will notice that all the tadpoles
+that never really programmed in C have jumped out of the pond.</p>
+<h3 id="heap">ByValue vs ByReference</h3>
+<p>The above example could be fixed by using
+<code>malloc</code>.&#160; Of course, this would introduce a leak,
+so calls to <code>free</code> would also have to be added.&#160;
+Aren&#8217;t you glad that you are now programming in a language
+with garbage collection?</p>
+<p>Even so, there still are quirks that will snare the unsuspecting
+programmer.&#160; For this pair of examples, I will use
+JavaScript.&#160; If you like, you can run these in your favorite
+web browser.</p>
+<pre class="code">&lt;script&gt;
+  var v = 5;
+ 
+  function f() {
+    v = v + 1;
+    return v;
+  }
+ 
+  var x = f();
+  x = x - 2;
+  document.write(f());
+&lt;/script&gt;</pre>
+<p>In this script, <code>v</code> starts out at 5.&#160; Function
+<code>f</code> is called, and <code>v</code> gets incremented, and
+the result gets returned and stored in a variable named x.&#160;
+That variable is then decremented by two.&#160; Then <code>f</code>
+is called again, <code>v</code> get incremented again, and the
+result is printed.</p>
+<p>When I run this I get</p>
+<pre class="code">7</pre>
+<p>Now, lets change this example slightly.</p>
+<pre class="code">&lt;script&gt;
+  var v = [5];
+ 
+  function f() {
+    v[0] = v[0] + 1;
+    return v;
+  }
+ 
+  var x = f();
+  x[0] = x[0] - 2;
+  document.write(f()[0]);
+&lt;/script&gt;</pre>
+<p>The only difference between this script and the first script is
+that <code>v</code> is an array of length one.&#160; However, this
+difference is significant, because arrays are allocated on the
+heap, so <code>v</code> is really just a reference to the
+array.&#160; And after the first call, <code>x</code> is a
+reference to the <b>same</b> array, so when the value at index
+<code>0</code> is decremented by two, this affects the value
+referenced by <code>v</code>.</p>
+<p>Sure enough, when I run the new script, I get</p>
+<pre class="code">5</pre>
+<p>Inconsistent?&#160; Yes.&#160; Strange?&#160; Yes.&#160; But
+generally, this doesn&#8217;t cause too much problems.&#160; In any
+case, you avoid SEGVs as things allocated on the heap never go out
+of scope.&#160; They simply become eligible to be reclaimed when
+there is nothing left which references them.</p>
+<p>If you are still with me, you don&#8217;t realize it yet, but
+you are about to become dinner.</p>
+<h3 id="frame">Frames</h3>
+<p>Let&#8217;s recap.</p>
+<p>While a stack can be seen as a consecutive sequence of bytes, in
+most languages there are either conventions (which are not
+enforced) or policies (which are) which prevent a function from
+&#8220;popping&#8221; off more data than they pushed onto the
+stack.&#160; In other words, each active scope (e.g., a
+function) is separated from one another much in the same way as the
+little bars that you put in between groceries on the conveyor belt
+in line separate each person&#8217;s purchases.</p>
+<p>A procedure call pushes the return address (the address of the
+instruction after the call instruction) onto the stack, along with
+any arguments, and creates a new frame.&#160; A return statement
+uses this information to set the Instruction Pointer and Stack
+Pointer back to what it was as the point of call.</p>
+<p>Within the procedure, arguments and local variables may be
+located based on their offset from the start of the stack
+segment.</p>
+<h3 id="hash">Hashes</h3>
+<p>Everything so far has been very traditional computer
+science.&#160; Now, let&#8217;s start to diverge from that a
+bit.&#160; Instead of viewing a stack as a contiguous sequence of
+bytes, let&#8217;s view a stack as a linked list of frames.&#160;
+And instead of viewing a frame as a contiguous sequence of bytes,
+let&#8217;s substitute a dictionary or hashtable.</p>
+<p>Now instead of knowing that this data resides at a predetermined
+offset in the frame, you would look up <code>x</code> simply by
+looking up &#8220;<code>x</code>&#8221; in the frame&#8217;s hash
+table.</p>
+<p>In case you didn&#8217;t notice, this organization of frames is
+more oriented towards dynamic languages.</p>
+<h3 id="ruby">callcc</h3>
+<p>Now, let&#8217;s revisit the notion of a procedure call with
+this organization of frames.&#160; A procedure call creates a new
+frame, and stores the current context (consisting of both the
+instruction pointer and the stack pointer) in the new frame.&#160;
+The syntax for creating a new frame and storing the current context
+into a global variable named <code>$cc</code> in Ruby is:</p>
+<pre class="code">callcc{|$cc|}</pre>
+<p>The syntax for returning to this exact point, restoring both the
+instruction pointer and stack pointer, is:</p>
+<pre class="code">$cc.call</pre>
+<p>This is naturally called a continuation, as you are continuing
+where you left off.</p>
+<p>At this point, you are probably feeling a little bit
+disoriented.&#160; But go back and reread the above few paragraphs
+and examples.&#160; Other than the last examples being in a foreign
+language, all the words make sense.&#160; You are probably
+wondering &#8220;is that all there is?&#8221; and &#8220;what&#8217;s
+the big deal?&#8221;.&#160; If so, the answers are
+&#8220;pretty much yes&#8221;, and &#8220;read on&#8221;.</p>
+<p>One thing to note here is that as long as <code>$cc</code>
+retains its current value, the stack frame it refers to can not be
+reclaimed by garbage collection.&#160; Frames themselves are not
+automatically freed upon encountering <code>return</code>
+statements; instead they are subject to garbage collection.&#160;
+Simply by &#8220;continuing&#8221; at a prior point in the
+execution, and creating a new continuation, call
+&#8220;stacks&#8221; become arbitrary trees.</p>
+<h3 id="generator">Generators</h3>
+<p>At this point, discussions generally veer off into either
+<a href="http://www.rubycentral.com/ref/ref_c_continuation.html">contrived</a>
+or
+<a href="http://www.phubuh.org/Media/Writing/Continuations/">complicated</a>
+examples.&#160; Let&#8217;s instead take a simple example where the
+machinery for continuations is not quite so raw and exposed: Python
+generators.&#160; Here is an example that prints
+<a href="http://mathworld.wolfram.com/FibonacciNumber.html">Fibonacci
+numbers</a> less than 1000:</p>
+<pre class="code">def fib():
+  yield 0
+  i,j = 0,1
+  while True:
+    yield j
+    i,j = j,i+j
+ 
+for n in fib():
+  if n&gt;1000: break
+  print n</pre>
+<p>Instead of <code>return</code> statements, the fib function uses
+<code>yield</code> statements.&#160; This <em>yields</em> one
+number at a time out of the inexhaustible supply of Fibonacci
+numbers.&#160; The caller simply invokes that continuation as many
+times as desired, and all program state (instruction pointer, local
+variables) are restored, and the <code>fib</code> function starts
+back up where it left off.</p>
+<p>Once the loop is exited, the state if the <code>fib</code>
+function is eligible for reclaiming.</p>
+<p>Cool, eh?</p>
+<p>If you try to recode this without continuations, you will find
+that you will need to return a &#8220;token&#8221; which contains
+all the relevant state, and that token will need to be passed back
+in on subsequent calls.&#160; That&#8217;s pretty much what is
+happening under the covers.&#160; (Note: you may be tempted to use
+global variables instead.&#160; Don&#8217;t.&#160; Your code would
+no longer be reentrant, and if there were two callers, they would
+get confused).</p>
+<h3 id="cocoon">Cocoon</h3>
+<p>Now let&#8217;s look at a
+<a href="http://www-106.ibm.com/developerworks/library/j-contin.html#IDAO0GMB">
+web application</a>, this time in JavaScript.&#160; A single
+<code>function</code> implements the entire form based application
+that involves the display of three (or four, depending on the
+options selected) web pages.&#160; This is accomplished via the
+<code>cocoon.sendPageAndWait</code> primitive.</p>
+<p>This style of programming is quite different than the resource
+oriented approach advocated by
+<a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm">
+REST</a>.&#160;
+<a href="http://taint.org/2005/02/17/003334a.html">Some</a>,
+however, find it to be more intuitive.</p>
+<p>This hearkens back to the days in Basic when you coded things
+like</p>
+<pre class="code">10 print "Enter your name"
+20 input a$
+30 print "Hello, "; a$; "!"</pre>
+<p>When the computer got to the <code>input</code> statement, the
+operating system would suspend your program until the user provided
+an input.&#160; At which point, your program would be paged back
+into memory and would pick up exactly where it left off.</p>
+<h3 id="sax">SAX</h3>
+<p>A <a href="http://www.saxproject.org/">SAX</a> parser is an
+example of a task that could be recast as a generator.&#160; It
+consumes an <code>InputSource</code> byte by byte and occasionally
+emits <code>startElement</code>, <code>endElement</code>,
+<code>characters</code> and other events.&#160; After each event,
+the parser picks back up where it left off.</p>
+<p>While this organization is convenient for parser writers, many
+consumers find <a href="http://www.xmlpull.org/">XML Pull
+Parsers</a> easier to deal with.</p>
+<p>Judicious application of continuations allows both
+constituencies to be satisfied.&#160; From the user of the
+library&#8217;s perspective, they are using a pull parser.&#160;
+From the person who codes up the SAX handler, each event simply
+invokes a continuation.&#160; There is no memory bloat like you see
+with DOM style parsers.&#160; Everybody is happy.&#160;</p>
+<h3 id="ui">UI</h3>
+<p>Event programming, in general, is for wizards.&#160; These
+wizards live and breathe events.&#160; But even they regress every
+once and a while.&#160; You can tell when this happens when you see
+a modal dialog box.</p>
+<p>With
+<a href="http://www.ai.mit.edu/people/dquan/uist2003-uicont.pdf">User
+Interface Continuations</a>, even scripters can become &#163;337
+h4x0r UI gods.&#160; Without a modal dialog box in sight.</p>
+<h3 id="closure">Closures</h3>
+<p>Consider the following JavaScript:</p>
+<pre class="code">var msg = "Hello, world!";
+setTimeout(function(){alert(msg)}, 1000);</pre>
+<p>The use of <code>setTimeout</code> is common in JavaScript based
+animation.&#160; The first parameter is a function to be
+invoked.&#160; The second parameter is the number of
+miliseconds to wait until this string is executed.</p>
+<p>The question you should be asking yourself is &#8220;in which
+context is this function to be evaluated?&#8221;&#160; In particular,
+how does JavaScript go about looking for the value of
+<code>msg</code>?</p>
+<p>The answer is simple: in the current context.&#160; This, it turns out,
+is a closure, continuation&#8217;s more general cousin.&#160; Wrapped up in a 
+nice neat little package.</p>
+<p>Continuations are bookmarks &#8212; they tell you where to pick up after
+you last left off.  Closures are simply the current lexical stack &#8212; they
+represent the current local context and its immediate parent, recursively.</p>
+<h3 id="class">Classes</h3>
+<p>If the notion of a nested set of scopes residing on the heap seems
+foreign to you, it really shouldn&#8217;t.  Here&#8217;s an example in Java:</p>
+<pre>public class Scopes {
+
+  class Outer {
+    class Inner {
+       void alert() {System.out.println(msg);}
+    }
+    String msg = "Schweet!";
+    Inner inner = new Inner();
+  }
+
+  Outer outer = new Outer();
+
+  public static void main(String[] args) {
+    String msg = "Bogus!";
+     (new Scopes()).outer.inner.alert();
+  } 
+}</pre>
+<h3 id="epilogue">Epilogue</h3>
+<p>One thing that people don&#8217;t often tell you about
+continuations is that they don&#8217;t actually resume
+<em>exactly</em> where you left off.&#160; After all, if they did,
+you would end up in an infinite loop.&#160; The only thing that is
+really restored is a few pointers.&#160; Everything that resides on
+the heap, or is stored externally in places like files and databases, remains
+unaffected when you invoke a continuation.&#160; But like the
+<a href="#heap">ByValue or ByReference</a> discussion above, this
+doesn&#8217;t cause problems very often.&#160; In fact, it
+generally works out pretty much the way you would like it to,
+without you having to worry about it.</p>
+<p>When you realize this, you realize that there really is no magic
+in continuations.&#160; Sure, more things are put on the heap, but
+there are
+<a href="http://en.wikipedia.org/wiki/Garbage_collection_%28computer_science%29#Generational_GC_.28aka_Ephemeral_GC.29">
+ways to optimize this</a>.</p>
+<p>Oh, and by the way, you probably taste like chicken right about
+now.</p>
+
+<footer>
+<!--
+  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	   xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
+	   xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <rdf:Description
+      rdf:about="http://intertwingly.net/blog/1946.rdf"
+      trackback:ping="http://intertwingly.net/blog/1946.tb"
+      dc:title="Continuations for Curmudgeons"
+      dc:identifier="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons" />
+  </rdf:RDF>
+-->
+</footer>
+</article>
+<div class="ad">
+<script type="text/javascript"><!--
+google_ad_client = "pub-7627325548543983";
+google_ad_width = 468;
+google_ad_height = 60;
+google_ad_format = "468x60_as";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+<hr/>
+
+<a id="comments"></a>
+<section>
+<header>
+<h2><time title="GMT" datetime="2005-04-13">Wed 13 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1113392720"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p><a rel="nofollow" href="http://www.intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons">[link]</a>...</p>
+Excerpt from <a href="http://del.icio.us/url/d92a565d910244cebfcc90665a87aebd">del.icio.us/tag/python</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113392720"><time title="GMT" datetime="2005-04-13T11:45:20Z">11:45</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113393248"></a>
+<p>Actually in JavaScript <code>setTimeout</code> executes the code in the context of <code>window</code>. If you want to execute the code in the context you created it in, you need to use a closure:</p>
+<p>&#160; <code>setTimeout(function(){alert(msg)}, 1000);</code></p>
+Posted by <a href="http://novemberborn.net/" title="kf-nawij-tg04-0517.dial.kabelfoon.nl">Mark Wubben</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113393248"><time title="GMT" datetime="2005-04-13T11:54:08Z">11:54</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113393954"></a>
+<p>Mark: fixed.&#160; Thanks!</p>
+Posted by <a href="http://www.intertwingly.net/blog/" title="p62.n-nypop17.stsn.com">Sam Ruby</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113393954"><time title="GMT" datetime="2005-04-13T12:05:54Z">12:05</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113395840"></a>
+<p>Sam Ruby with a great explanation of continuations for those who easily understand &#8220;while (*p++ = *q++);&#8221; but keep wondering what this strange MIT CS speak might be about.......
+<a href="http://www.innoq.com/blog/st/2005/04/13/continuations_for_curmudgeons.html">[more]</a><br /><br />Trackback from <a title="www.innoq.com">Stefan Tilkov's Random Stuff</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113395840"><time title="GMT" datetime="2005-04-13T12:37:20Z">12:37</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113396323"></a>
+<header>
+<h3>Confused by Continuations?</h3>
+</header>
+<p>Sam Ruby gives a nice summary of them - especially useful for people who aren&#8217;t that familiar with Smalltalk or Ruby....</p>
+Excerpt from <a href="http://www.cincomsmalltalk.com/blog/blogView?showComments=true&amp;entry=3290833007">Smalltalk Tidbits, Industry Rants</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113396323"><time title="GMT" datetime="2005-04-13T12:45:23Z">12:45</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113405221"></a>
+<p>&#8220;At this point, discussions generally veer off into either contrived or complicated examples.&#8221;</p>
+<p>In fairness to conventional discussions, they are usually following a discussion of closures. The following illustrates that closures are sufficient, and that Python&#8217;s generators are extremely elegant. My Javascript code is much uglier.</p>
+<pre class="code">js&gt; makeFib = function(){
+
+        var i=0;
+        var j=1;
+
+        fib = function(){
+
+                var k = i;
+                i = j;
+                j = k + j;
+                return k;
+
+        }
+
+        return fib;
+
+}
+
+js&gt; printFib = function(fib1, fib2){
+        var i = fib1();
+        var j = fib2();
+        while( i &lt; 1000){
+                //works on rhino and xpcshell
+                print("fib1: " + i + " fib2: " + j);
+                i = fib1();
+                j = fib2();
+        }
+}
+
+js&gt; printFib(makeFib(),makeFib())
+fib1: 0 fib2: 0
+fib1: 1 fib2: 1
+fib1: 1 fib2: 1
+fib1: 2 fib2: 2
+fib1: 3 fib2: 3
+fib1: 5 fib2: 5
+fib1: 8 fib2: 8
+fib1: 13 fib2: 13
+fib1: 21 fib2: 21
+fib1: 34 fib2: 34
+fib1: 55 fib2: 55
+fib1: 89 fib2: 89
+fib1: 144 fib2: 144
+fib1: 233 fib2: 233
+fib1: 377 fib2: 377
+fib1: 610 fib2: 610
+fib1: 987 fib2: 987
+js&gt;</pre>
+<br />
+<br />
+Posted by <a href="http://franklinmint.fm" title="user-0cdfl9t.cable.mindspring.com">Robert Sayre</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113405221"><time title="GMT" datetime="2005-04-13T15:13:41Z">15:13</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113407168"></a>
+<header>
+<h3>Getting smarter</h3>
+</header>
+<p>Sam Ruby has an essay on continuations that will make you smarter. This essay is complement to the other essay on continuations that I linked to awhile back. When I read essays like these, I wish I had gutted it out and majored in computer science....</p>
+Excerpt from <a href="http://rc3.org/cgi-bin/less.pl?arg=6903">rc3.org Daily</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113407168"><time title="GMT" datetime="2005-04-13T15:46:08Z">15:46</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113410726"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p><a rel="nofollow" href="http://www.intertwingly.net/blog/1946.html">[link]</a>...</p>
+Excerpt from <a href="http://del.icio.us/url/2d2acc7812a6a29a50250d9e01832065">del.icio.us/tag/continuations</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113410726"><time title="GMT" datetime="2005-04-13T16:45:26Z">16:45</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113410729"></a>
+<header>
+<h3>[Python] Continuations for Curmudgeons</h3>
+</header>
+<p>Sam &#8220;Intertwingly&#8221; Ruby starts off his article with this: This essay is for people who, in web years, are older than dirt.&#160; More specifically, if there was a period of time in which you programmed in a language which did not have garbage...</p>
+Excerpt from <a href="http://farm.tucows.com/blog/_archives/2005/4/13/577904.html">The Farm: The Tucows Developers' Hangout</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113410729"><time title="GMT" datetime="2005-04-13T16:45:29Z">16:45</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113413772"></a>
+<p>Incidentally, I tried a similarly mechanical approach to explaining continuations a while ago, but more focused on the interpreter:<br />
+<a rel="nofollow" href="http://blog.ianbicking.org/continuations-a-concrete-approach.html">[link]</a></p>
+Posted by <a rel="nofollow" href="http://blog.ianbicking.org" title="66.100.151.155">Ian Bicking</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113413772"><time title="GMT" datetime="2005-04-13T17:36:12Z">17:36</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113414188"></a>
+<header>
+<h3>Are continuations unRESTful?</h3>
+</header>
+<p>I was reading through Sam Ruby&#8217;s excellent continuations lesson, and I noticed that he asserted continuations were &#8220;quite different&#8221; than......
+<a href="http://www.franklinmint.fm/blog/archives/000353.html">[more]</a><br /><br />Trackback from <a rel="nofollow" href="http://franklinmint.fm/" title="sparky.co.za">franklinmint.fm</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113414188"><time title="GMT" datetime="2005-04-13T17:43:08Z">17:43</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113414555"></a>
+<p>This still doesn&#8217;t beat that one famous sentence of sigmund freud ;)</p>
+Posted by <a rel="nofollow" href="http://blog.w-nz.com/" title="fia125-30-100.dsl.hccnet.nl">Bas Westerbaan</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113414555"><time title="GMT" datetime="2005-04-13T17:49:15Z">17:49</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113415459"></a>
+<p>Thanks for writing this - it helps a lot.&#160; Unless I&#8217;m mistaken, C coders (or at least, POSIX ones) have had continuations all along, in the form of setjmp() and longjmp().</p>
+Posted by <a rel="nofollow" href="mailto:david@duchene.ca" title="ip142176168114.trihedral.com">Dave Duchene</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113415459"><time title="GMT" datetime="2005-04-13T18:04:19Z">18:04</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113420905"></a>
+<p>You are mistaken &#8212; setjmp/longjmp don&#8217;t implement general continuation functionality.</p>
+Posted by <a href="http://www.sidhe.org/~dan/blog/" title="m815f36d0.tmodns.net">Dan</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113420905"><time title="GMT" datetime="2005-04-13T19:35:05Z">19:35</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113425124"></a>
+<header>
+<h3>More Continuations</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons is a great article that discribes how continuations are implemented. It makes it a bit easier for me to understand how continuations are used. Interesting, generators (iter methods in Magik) are implemented...</p>
+Excerpt from <a href="http://pezra.barelyenough.org/blog/2005/04/more-continuations.html">Peter Williams' Weblog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113425124"><time title="GMT" datetime="2005-04-13T20:45:24Z">20:45</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113427330"></a>
+<header>
+<h3>Continuations</h3>
+</header>
+<p>The inimitable Sam Ruby pens another masterpiece. Sam has a gift for distilling really nerdy stuff into Evian-clear prose. When I grow up, I want to be this guy.......
+<a href="http://www.xml-blog.com/archives/000321.html">[more]</a><br /><br />Trackback from <a title="pandora.hmdnsgroup.com">XML-BLOG</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113427330"><time title="GMT" datetime="2005-04-13T21:22:10Z">21:22</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113428830"></a>
+<p>Sam Ruby is one smart cookie.<br />
+I&#8217;ve been reading his blog for a while now for this insights into REST</p>
+<p>Anyway he has an excellent article on Continuations...</p>
+Posted by <a href="http://www.base4.net/viewcomments.aspx?Channel.ID=cb66f8b3-38a7-44fe-ab5b-8429eb8b2481" title="219-89-81-114.adsl.xtra.co.nz">Alex James</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113428830"><time title="GMT" datetime="2005-04-13T21:47:10Z">21:47</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113434110"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons....</p>
+Excerpt from <a href="http://keithdevens.com/weblog/archive/2005/Apr/13/Ruby.continuations">Keith's Weblog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113434110"><time title="GMT" datetime="2005-04-13T23:15:10Z">23:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113434448"></a>
+<header>
+<h3>links for 2005-04-13</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons (tags: continuations computerscience)......
+<a href="http://www.f1fe.com/blog/archives/000183.html">[more]</a><br /><br />Trackback from <a title="host3.christianwebhost.com">.:: a few thoughts on the subject by rob wright ::.</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113434448"><time title="GMT" datetime="2005-04-13T23:20:48Z">23:20</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113435837"></a>
+<pre class="code">var msg = "Hello, world!";
+setTimeout(function(){alert(msg)}, 1000);</pre>
+<p>This, I believe, is a closure, not a continuation.&#160; A continuation is a closure, but not vice versa.&#160; Can you please clarify why you say that this example represents a continuation?</p>
+Posted by <a href="http://www.whirlycott.com/phil/" title="146-115-29-46.c3-0.wtr-ubr1.sbo-wtr.ma.cable.rcn.com">Philip Jacob</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113435837"><time title="GMT" datetime="2005-04-13T23:43:57Z">23:43</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113435942"></a>
+<p>Simon Willison : Continuations for Curmudgeons - They aren&#8217;t as scary as you may have been lead to believe....</p>
+Excerpt from <a href="http://dev.upian.com/hotlinks/archives/2005/04/14/#item34053">HotLinks - Level 1</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113435942"><time title="GMT" datetime="2005-04-13T23:45:42Z">23:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-14">Thu 14 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1113441320"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons: "This essay is for people who, in web years, are older than dirt. More specifically, if there was a period of time in which you programmed in a language which did not have garbage collection, then I...</p>
+Excerpt from <a href="http://vasim.blogspot.com/2005/04/sam-ruby-continuations-for-curmudgeons.html">Adnans Sysadmin/Dev Blog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113441320"><time title="GMT" datetime="2005-04-14T01:15:20Z">01:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113441376"></a>
+<p>@Robert Sayre: In the JavaScript code you posted, you should make <code>fib</code> a local variable of <code>makeFib</code> (precede it with a <code>var</code> statement), or even <code>return</code> an anonymous <code>function</code>. Otherwise, <code>fib</code> would be globally available in the code. Here&#8217;s a <em>reproduction</em> of Sam&#8217;s Python code in JavaScript, using closures:</p>
+<pre class="code">fib = function(max, f) {
+    var k, i = 0, j = 1;
+    while(true) {
+        k = i, i = j, j = k + j;
+        if(k &gt; max) break; else f(k);
+    }
+}
+fib(1000, function(n) {
+    print n;
+});</pre>
+<br />
+<br />
+Posted by <a href="http://jonasgalvez.com/blog" title="201-1-130-90.dsl.telesp.net.br">Jonas Galvez</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113441376"><time title="GMT" datetime="2005-04-14T01:16:16Z">01:16</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113443127"></a>
+<header>
+<h3>Continuations explained</h3>
+</header>
+<p>Sam Ruby writes about Continuations. I stumbled over the name once but never cared to read more as it seemed somewhat obscure to me. Sam starts his article with this: This essay is for people who, in web years, are older than dirt. More...</p>
+Excerpt from <a href="http://www.martin-probst.com/archives/2005/04/14/continuations-explained/">Martins Notepad</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113443127"><time title="GMT" datetime="2005-04-14T01:45:27Z">01:45</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113445716"></a>
+<p>Jonas, sloppy declaration on my part. Your code isn&#8217;t really cricket though, as you can&#8217;t call it as many times as you want from the caller. btw, it doesn&#8217;t close over anything interesting. It&#8217;s just local variables and first-class functions.</p>
+Posted by <a href="http://www.franklinmint.fm" title="user-12ld2tn.cable.mindspring.com">Robert Sayre</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113445716"><time title="GMT" datetime="2005-04-14T02:28:36Z">02:28</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113446179"></a>
+<blockquote><p>And instead of viewing a frame as a contiguous sequence of bytes, let&#8217;s substitute a dictionary or hashtable. [&#8230;] first attempting to locate the name in the dictionary at the top of the stack, and then proceeding down the stack until it is located.</p></blockquote>
+<p>This confuses me. Do you mean that you look variables up by name, going through function frames as you go up the list? In other words, all variable names are global, but a function can overlay/shadow a previously defined variable by declaring one with the same name? Just like Perl&#8217;s <code>local</code> function does? If so, isn&#8217;t this completely irrelevant to the point? I think it only matters that the call frames are allocated on the heap and kept around, no?</p>
+Posted by <a href="http://plasmasturm.org/" title="lvr10.rrz.uni-koeln.de">Aristotle Pagaltzis</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113446179"><time title="GMT" datetime="2005-04-14T02:36:19Z">02:36</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113483744"></a>
+<p>If, after all this talking about what is and what is not a continuation, you&#8217;re feeling slightly confused, go over to Sam Ruby&#8217;s site ad read Continuations for Curmudgeons, where Sam, in his inimitable style, provides a very nice explanation.And in cas......
+<a href="http://bm.agylen.com/2005/04/14/continuations-for-curmudgeons/">[more]</a><br /><br />Trackback from <a title="bm.agylen.com">Agylen</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113483744"><time title="GMT" datetime="2005-04-14T13:02:24Z">13:02</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113490417"></a>
+<header>
+<h3>Continuations, slightly updated</h3>
+</header>
+<p>Frankly, I&#8217;m surprised how much interest&#160; Continuations for Curmudgeons generated.&#160; I guess that there was a demand for an explanation from the perspective of a C programmer, eh? Based on&#160; two&#160; bugs reported in&#160; one section, I&#8217;ve updated it...
+<a href="http://www.intertwingly.net/blog/2005/04/14/Continuations-slightly-updated">[more]</a><br /><br />Trackback from <a title="vanadium.sabren.com">Sam Ruby</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113490417"><time title="GMT" datetime="2005-04-14T14:53:37Z">14:53</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113491707"></a>
+<p>Sam Ruby: Continuations for Curmudgeons: "This essay is for people who, in web years, are older than dirt.&#160; More specifically, if there was a period of time in which you programmed in a language which did not have garbage collection, then I mean...</p>
+Excerpt from <a href="http://duncan.smeed.org/index/2005/04/14#msg4525">duncan.smeed.org | Duncan's Jotter</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113491707"><time title="GMT" datetime="2005-04-14T15:15:07Z">15:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113492462"></a>
+<p><a href="http://www.intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113415459">Dave</a>: another way to express what <a href="http://www.sidhe.org/~dan/blog/">Dan</a> said is that while those things that can be done with <code>setjmp</code> and <code>longjmp</code> can also be done with continuations, this represents but a small fraction of what continuations can do.</p>
+<p><a href="http://www.intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113446179">Aristotle</a>: yes, in most languages I am familiar with, scopes nest and inner declarations can hide outer declarations.&#160; Understanding how call frames relate was crucial to the process of my coming to understand what continuation are.&#160; Since you mention Perl, here&#8217;s an example that illustrates how defining a <code>sub</code> in that language captures the scope and how scopes can cause variables to shadow one another:</p>
+<pre class="code">{
+  my $msg = "x";
+  my $f;
+  {
+    my $msg = "y";
+    sub g() {
+      print $msg;
+    }
+    $f = *g;
+  }
+  &amp;$f();
+}</pre>
+Posted by <a href="http://www.intertwingly.net/blog/" title="cpe-066-057-027-065.nc.res.rr.com">Sam Ruby</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113492462"><time title="GMT" datetime="2005-04-14T15:27:42Z">15:27</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113497016"></a>
+<header>
+<h3>Continuations explained to C programmers</h3>
+</header>
+<p>Sam Ruby writes an awesome essay on continuations, taking you progressively from the close-to-the-metal execution stack in C to dynamic...
+<a href="http://www.anyware-tech.com/blogs/sylvain/archives/000179.html">[more]</a><br /><br />Trackback from <a title="10.21.96-84.rev.gaoland.net">Sylvain Wallez</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113497016"><time title="GMT" datetime="2005-04-14T16:43:36Z">16:43</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113499189"></a>
+<p>Thanks for responding, Dan.&#160; If setjmp() and longjmp() don&#8217;t implement continuations, what is missing to make it so?&#160; If I read things correctly, a continuation is basically just a snapshot of the stack (or stack-equivelent), which can be restored at will.&#160; Isn&#8217;t that what set/longjmp() do?</p>
+Posted by <a rel="nofollow" href="mailto:david@duchene.ca" title="ip142176168114.trihedral.com">Dave Duchene</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113499189"><time title="GMT" datetime="2005-04-14T17:19:49Z">17:19</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113500731"></a>
+<p>Sam Ruby: Continuations for Curmudgeons: "This essay is for people who, in web years, are older than dirt.&#160; More specifically, if there was a period of time in which you programmed in a language which did not have garbage collection, then I mean...</p>
+Excerpt from <a href="http://duncan.smeed.org/4525">Duncan's Jotter</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113500731"><time title="GMT" datetime="2005-04-14T17:45:31Z">17:45</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113500946"></a>
+<p>Dan from &#8220;Squawks of the Parrot&#8221; has a great explanation of continuations, that also explain closures and how they relate: <a href="http://www.sidhe.org/~dan/blog/archives/000156.html">[link]</a></p>
+<p>I wrote myself a summary:</p>
+<ul>
+<li>There is a chain of lexical scopes, each with local variables. When code needs to lookup a variable, it while search that environment, by iterating up that chain until it finds it. </li>
+<li>A closure is an function object that references a specific inner scope. It is said to &#8220;capture&#8221; that lexical scope. For example if you return an routine that references some local variables. Two closures can close over the same scope, thus sharing state as it gets modified.</li>
+<li>There is a second such chain which represents the chain of control (tracking which instruction you&#8217;re at in a given function). When a function is called, an exception occurs,... that chain gets involved. For example, when a function is invoked, a new lexical scope is created and a marker is also added to the control chain.</li>
+<li>If you take a chain of lexical variable scopes (as found in a closure) and associate it with a chain of control, you could use it these as the context for calling a routine (a set of instructions, defined by an entry address). A continuation is a routine pointer with a lexical scope and a control chain. Usually the lexical scope, control chain and instruction pointer are captured together.</li>
+<li>All control structures can be implemented with continuations. For example, when you register an exception handler, you capture a continuation; when the exception is thrown that continuation is invoked and you just continue running from the spot in the exception handler.</li>
+</ul>
+<p> *</p>
+Posted by <a href="http://blog.monstuff.com/" title="tide18.microsoft.com">Julien Couvreur</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113500946"><time title="GMT" datetime="2005-04-14T17:49:06Z">17:49</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113501537"></a>
+<p><a href="#c1113492462">Sam</a>, I know about closures in Perl, and I use them extensively, but they are beside the point. Searching up through the list of call frames has nothing to do with continuations. A continuation has to close over the <em>spatial</em> scope; searching up the call frame list addresses <em>temporal</em> scope.</p>
+<blockquote><p>in most languages I am familiar with, scopes nest and inner declarations can hide outer declarations.</p></blockquote>
+<p>Please ponder the following two pieces of code:</p>
+<p>* </p>
+<pre class="code">{
+    my $foo = "hello";
+    print "outer scope: $foo\n";
+    {
+        print "inner scope, pre-declaration: $foo\n";
+        my $foo = "world";
+        print "inner scope, post-declaration: $foo\n";
+    }
+}</pre>
+<p>* </p>
+<pre class="code">sub bar {
+    print "bar: before local: $foo\n";
+    local $foo = "hello";
+    print "bar: after local: $foo\n";
+    baz();
+    print "bar: after call: $foo\n";
+}
+
+sub baz {
+    print "baz: before local: $foo\n";
+    local $foo = "world";
+    print "baz: after local: $foo\n";
+}</pre>
+<p>In the first one, a declaration in an inner hides the corresponding one from an outer scope. There is no call frame involved.</p>
+<p>In the second one, a declaration in a scope where execution has moved into is hiding a declaration from a scope which execution was previously moving through. There is no nesting of lexical scopes involved. (The Perl world uses the term &#8220;dynamic scoping&#8221;, as opposed to &#8220;lexical scoping&#8221;, to talk about this concept.)</p>
+<p><em>Only</em> for the second case do you need to search up the list of <em>call frames</em> as opposed to the list of scopes, something you need to do in the first case.</p>
+Posted by <a href="http://plasmasturm.org/" title="lvr10.rrz.uni-koeln.de">Aristotle Pagaltzis</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113501537"><time title="GMT" datetime="2005-04-14T17:58:57Z">17:58</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113504950"></a>
+<header>
+<h3>Dirt, be thou proud!</h3>
+</header>
+<p>Even for us dirt farmers who understand and appreciate continuations, Sam&#8217;s writeup is still amusing....
+<a href="http://www.jimjag.com/imo/index.php?/archives/21-Dirt,-be-thou-proud!.html">[more]</a><br /><br />Trackback from <a title="alek.jaguNET.com">Jim's Ramblings</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113504950"><time title="GMT" datetime="2005-04-14T18:55:50Z">18:55</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113513247"></a>
+<p><a href="http://www.intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113500946">Julien</a>: When I originally read what Dan had written, it seemed much better than other explanations I had seen, but it was still too theoretical and abstract for me.&#160; It wasn&#8217;t until I saw how it was implemented in Parrot that I finally started to grasp the concept.</p>
+<p><a href="http://www.intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113501537">Aristotle</a>: Got it.&#160; Paragraph removed.&#160; It was incorrect, and didn&#8217;t add anything anyway.&#160; Thanks!</p>
+Posted by <a href="http://www.intertwingly.net/blog/" title="cpe-066-057-027-065.nc.res.rr.com">Sam Ruby</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113513247"><time title="GMT" datetime="2005-04-14T21:14:07Z">21:14</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113515584"></a>
+<p>Very nice article.<br />
+However, it&#8217;s Fibonacci, not Fibonnaci</p>
+<p>Francesco</p>
+Posted by <a rel="nofollow" href="http://www.fran.it/blog" title="adsl-ull-21-134.47-151.net24.it">Francesco Bellomi</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113515584"><time title="GMT" datetime="2005-04-14T21:53:04Z">21:53</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113516930"></a>
+<p>Francesco: fixed.&#160; Thanks!</p>
+Posted by <a href="http://www.intertwingly.net/blog/" title="cpe-066-057-027-065.nc.res.rr.com">Sam Ruby</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113516930"><time title="GMT" datetime="2005-04-14T22:15:30Z">22:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113522435"></a>
+<header>
+<h3>In Order of Importance?</h3>
+</header>
+<p>The inimitable David Heinemeier Hansson points out that in a recent set of slides by Sam Ruby, Rails is the fourth item from the top on a list of things Worth Watching. What&#8217;s item number three? Continuations. Sam also brings us Continuations for...</p>
+Excerpt from <a href="http://www.cincomsmalltalk.com/userblogs/avi/blogView?showComments=true&amp;entry=3290958808">HREF Considered Harmful</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113522435"><time title="GMT" datetime="2005-04-14T23:47:15Z">23:47</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113522438"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons .. make you smarterintertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeonstrack this site | 3 links...</p>
+Excerpt from <a href="http://blogdex.net/track.asp?id=11689978">blogdex - the weblog diffusion index</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113522438"><time title="GMT" datetime="2005-04-14T23:47:18Z">23:47</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-15">Fri 15 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1113537227"></a>
+<header>
+<h3>Continuations Article for Web MVC</h3>
+</header>
+<p>See Use continuations to develop complex Web applications...
+<a href="https://www.nearinfinity.com/intranet/display/RD/2005/04/14/Continuations+Article+for+Web+MVC">[more]</a><br /><br />Trackback from <a title="web1.nearinfinity.com">Confluence: Research and Development</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113537227"><time title="GMT" datetime="2005-04-15T03:53:47Z">03:53</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113542119"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>Sam Ruby has the best article I&#8217;ve read yet on Continuations. Although I, of course, am a curmudgeon C programmer. Stephen O&#8217;grady on mono: &#8220;developers I track are using it, and using it a lot.&#8221; The developers I track are using Ruby. And the more I...</p>
+Excerpt from <a href="http://www.baus.net/ruby-on-ruby-continuations">christopher baus.net</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113542119"><time title="GMT" datetime="2005-04-15T05:15:19Z">05:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113550623"></a>
+<p>In <a href="http://rife.dev.java.net">RIFE</a> (similarly to Cocoon) we have adopted a continuations style that doesn&#8217;t mandate their use throughout the whole web engine (which is what Seaside does iirc). There are a number of situations where continuations make your life easier, however there are even more situations where they don&#8217;t feel natural in a web application. The solution continuations solve best is one where you have a multi-step &#8216;island of functionality&#8217; that does one particular thing on its own and that shouldn&#8217;t be committed to the backend before the final step is finished. These are typically a wizard, a game, a multi-page admin intervention, a survey, ...</p>
+<p>You can find a presentation about RIFE continuations at <a href="http://rife.dev.java.net/servlets/ProjectDocumentList?folderID=757">java.net</a>. For more information, feel free to <a href="http://rifers.org/04_numberguess_continuations/src/implementations/tutorial/numberguess/Game.java.html">browse</a> some <a href="http://rifers.org/#D.4">sources</a> or read our <a href="http://rifers.org/wiki/display/RIFE/Web+continuations">wiki pages</a> about it.</p>
+Posted by <a href="http://rife.dev.java.net" title="213-193-174-89.adsl.easynet.be">Geert Bevin</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113550623"><time title="GMT" datetime="2005-04-15T07:37:03Z">07:37</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113559240"></a>
+<p>call/cc has been around a while in scheme. Did not find any mentioning of that fact.</p>
+Posted by <a rel="nofollow" href="mailto:bneppert  &lt;at/&gt; gmx &lt;dot/&gt; de" title="217.89.99.3">Burkhard Neppert</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113559240"><time title="GMT" datetime="2005-04-15T10:00:40Z">10:00</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113568809"></a>
+<p>Burkhard: my goal wasn&#8217;t to present a comprehensive history of continuations.&#160; My goal was to prevent the little froggies from jumping out of the pond.</p>
+Posted by <a href="http://www.intertwingly.net/blog/" title="cpe-066-057-027-065.nc.res.rr.com">Sam Ruby</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113568809"><time title="GMT" datetime="2005-04-15T12:40:09Z">12:40</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113574008"></a>
+<p>Sam Ruby does a great job of explaining continuations in his Continuations for Curmudgeons piece. I also discovered through Sam an article on using conitnuations in user interfaces.......
+<a href="http://www.windley.com/archives/2005/04/continuations_f.shtml">[more]</a><br /><br />Trackback from <a title="fbp-ore-bdr2-pl107697.serial.fiber.net">Phil Windley's Technometria</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113574008"><time title="GMT" datetime="2005-04-15T14:06:48Z">14:06</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113583179"></a>
+<p>Here is a Java implementation of continuation based on a Thread to keep the current state...</p>
+<p>Note that right now, the continuation thread is never killed (it is set to be a deamon thread so when the main thread dies, the program finish properly).</p>
+<pre class="code">public class ContinuationTest {
+	public static abstract class Continuation {
+		private Object result;
+		Thread continuationThread= new Thread(new Runnable() {
+			public void run() {
+				execute();
+			}
+		});
+		
+		public abstract Object execute();
+
+		public Continuation() {
+			continuationThread.setDaemon(true);
+		}
+		public synchronized Object doit() {
+			if (!continuationThread.isAlive()) {
+				continuationThread.start();
+			}
+			notify();
+			try {
+				wait();
+			} catch (InterruptedException e) {
+			}
+			return result;
+		}
+		public synchronized void yield(Object o) {
+			try {
+				result= o;
+				notify();
+				wait();
+			} catch (InterruptedException e) {
+			}
+		}
+		public void yield() {
+			try {
+				result= null;
+				notify();
+				wait();
+			} catch (InterruptedException e) {
+			}
+		}
+		
+	}
+	
+	private static Continuation fib= new Continuation() {
+		private int i, j;
+		public Object execute() {
+			yield(new Integer(0));
+			i= 0;
+			j= 1;
+			while (true) {
+				yield(new Integer(j));
+				i= j; j= i+j;
+			}
+		}
+		
+	};
+	
+	public static void main(String[] args) {
+		Integer result= null;
+		do {
+			result= (Integer) fib.doit();
+			System.out.println(result);
+		} while (result.intValue() &lt; 1000);
+	}
+}</pre>
+<br />
+<br />
+Posted by <a href="http://www.bloglines.com/blog/terminus" title="wwwout1.optimumgroup.com">Emmanuel Pirsch</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113583179"><time title="GMT" datetime="2005-04-15T16:39:39Z">16:39</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113583582"></a>
+<p>Sorry, I messed up the fib function.</p>
+<p>Use this one instead :</p>
+<pre class="code">private static Continuation fib= new Continuation() {
+		private int i, j;
+		public Object execute() {
+			yield(new Integer(0));
+			i= 0;
+			j= 1;
+			while (true) {
+				yield(new Integer(j));
+				int k= i;
+				i= j; 
+				j= k+j;
+			}
+		}
+		
+	};</pre>
+<br />
+<br />
+Posted by <a href="http://www.bloglines.com/blog/terminus" title="wwwout1.optimumgroup.com">Emmanuel Pirsch</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113583582"><time title="GMT" datetime="2005-04-15T16:46:22Z">16:46</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113590764"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>This essay is for people who, in web years, are older than dirt. More specifically, if there was a period of time in which you programmed in a language which did not have garbage collection, then I mean you. For most people these days, that means...</p>
+Excerpt from <a href="http://lambda-the-ultimate.org/node/view/643">Lambda the Ultimate - Programming Languages Weblog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113590764"><time title="GMT" datetime="2005-04-15T18:46:04Z">18:46</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113605225"></a>
+<header>
+<h3>Closures &amp; Continuations</h3>
+</header>
+<p>For some reason, closures and continuations are a topic that I regularly look into, and every time think I got it. Yet every time I dig into it again, I realize my understanding is still somewhat superficial and discover more. Sam Ruby just wrote an intro article to continuations. I found it a bit too hand-wavy to be really satisfying, but it made me want to completely get it this time ;-) I&#8217;ve been re-reading my bookmarks and new pages on the topic, especially in the context of Scheme and Javascript. Today&#8217;s post will stay rather general, summarizing what closures......
+<a href="http://blog.monstuff.com/archives/000243.html">[more]</a><br /><br />Trackback from <a title="srv3.purenrg.com">Curiosity is bliss</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113605225"><time title="GMT" datetime="2005-04-15T22:47:05Z">22:47</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113606934"></a>
+<header>
+<h3>Tax filing and Java</h3>
+</header>
+<p>JCP News from Brazil . . . also Poll: Breaking the last dependency Weblogs: Brazil, Clustering&#8217;s new alternative and JSF and JSP public review Also in Java Today: Continuations for Curmudgeons and duplication in customer and programmer tests...</p>
+Excerpt from <a href="http://weblogs.java.net/blog/editors/archives/2005/04/tax_filing_and.html">Editor's Daily Blog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113606934"><time title="GMT" datetime="2005-04-15T23:15:34Z">23:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113608719"></a>
+<header>
+<h3>Links for 2005-04-14 [del.icio.us]</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons sweet &#8212; a great intro to continuations. I can&#8217;t wait for perl6 ;) Freedom to Tinker: Why Use Remotely-Readable Passports? Government spokesman: &#8216;because contact-based chips are too non-standard&#8217;. what an...</p>
+Excerpt from <a href="http://del.icio.us/jm#2005-04-14">Happy Software Prole</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113608719"><time title="GMT" datetime="2005-04-15T23:45:19Z">23:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-16">Sat 16 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1113616577"></a>
+<p>Thanks for writing such a clear explanation!&#160; However, it seems to me that whenever you explain continuations, you should also warn people not to actually use them.&#160; There are good reasons why Guido van Rossum added generators to Python but not raw continuations.</p>
+<p>What&#8217;s essentially going on here is that stack frames are being repurposed as long-lived data structures.&#160; A data structure represented as an ordinary class tends to be less confusing than an implicit data structure in all but the simplest cases.&#160; Even Java&#8217;s inner classes are somewhat of a mixed blessing because of the difficulty of explaining them to newbies, so they&#8217;re good mostly for one-line anonymous methods.</p>
+Posted by <a href="http://slesinsky.org/brian/" title="adsl-67-118-123-235.dsl.snfc21.pacbell.net">Brian Slesinsky</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113616577"><time title="GMT" datetime="2005-04-16T01:56:17Z">01:56</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113619583"></a>
+<header>
+<h3>Closures &amp; Continuations</h3>
+</header>
+<p>For some reason, closures and continuations are a topic that I regularly look into, and every time think I got it. Yet every time I dig into it again, I realize my understanding is still somewhat superficial and discover more. Sam Ruby just wrote an...</p>
+Excerpt from <a href="http://blog.monstuff.com/archives/000243.html?from=rss2">Curiosity is bliss</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113619583"><time title="GMT" datetime="2005-04-16T02:46:23Z">02:46</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113628507"></a>
+<header>
+<h3>Not just for CS students</h3>
+</header>
+<p>Programmatic techniques that have until recently been the preserve of the CS students and the scripting elite are slowly trickling down to mainstream languages. Java proved you could have a common, not-entirely-nauseating general purpose language...</p>
+Excerpt from <a href="http://www.archgrove.co.uk/weblog/2005/04/15/not-just-for-cs-students">Archgrove - Implicit Definition</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113628507"><time title="GMT" datetime="2005-04-16T05:15:07Z">05:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113649935"></a>
+<p>...
+<a href="http://www.xhovemont.be/archive/2005/04/16/589.aspx">[more]</a><br /><br />Trackback from <a title="213.177.68.146">David's blog</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113649935"><time title="GMT" datetime="2005-04-16T11:12:15Z">11:12</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113694179"></a>
+<p>Continuations are older than dirt. Stack Recursion(aka Continuations) is not new and shiny. Go back to how Prolog&#8217;s backtracking inference engine works. It&#8217;s also standard technique for Digital Signal Processing(DSP) calculations of FIR digital filters. And so on and so on ...</p>
+<p>I wish this whole group of &#8220;Emerging Technology&#8221; Thought Leaders would stop taking credit for &#8220;new concepts&#8221; that have been around forever and then disparaging people by patronizing statements like:</p>
+<p>&#8220;It is a pretty safe bet that &#8212; despite your deep technical background &#8212; you find that you have some genetic defect that makes it completely impossible for you to understand articles with titles like Continuations Made Simple and Illustrated.&#8221;</p>
+<p>It&#8217;s not that people don&#8217;t understand the concepts, it&#8217;s because it&#8217;s misused or overhyped for the sake of being overhyped. Sort of what you&#8217;ve done here.</p>
+<p>And instead of throwing a concept at a problem, how about analyzing the problem domain before you go off and recommend a solution. For instance, the Fibonacci solution could&#8217;ve been solved using Binet&#8217;s Theorem (in Javascript):</p>
+<p>var C1 = Math.pow(5.0,0.5);<br />
+var PHI =&#160; (1+ C1)/2;<br />
+ <br />
+// Return the n&#8217;th Fibonacci number&#160; <br />
+function fib(n){<br />
+&#160; value = ((Math.pow(PHI,n+1) - Math.pow((1-PHI),n+1)))/C1;<br />
+&#160; return parseInt(value)<br />
+}&#160; </p>
+<p>Now you have a solution that is closed form, constant time as n -&gt; Infinity and is thread-safe if coded in multi-threaded language environments and lo and behold is a lot shorter ( or should I say more &#8220;agile&#8221; to be PC) than your bloated continuation solution.</p>
+Posted by <a title="ool-182d8893.dyn.optonline.net">Frank Bolander</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113694179"><time title="GMT" datetime="2005-04-16T23:29:39Z">23:29</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-17">Sun 17 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1113714937"></a>
+<header>
+<h3>Continuations and the e2e principle</h3>
+</header>
+<p>Exactly a decade ago, Alan, Tom, Dan, Dave, Brock, and I were under incredible pressure at work: we had a potentially huge application development deal in hand, and needed to do our best to close the deal. Sarah and Greg (and Transarc, unknown to...</p>
+Excerpt from <a href="http://www.iyers.org/continuations-and-the-e2e-principle/">Deep in the Heart of .... France?</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113714937"><time title="GMT" datetime="2005-04-17T05:15:37Z">05:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113748652"></a>
+<p>setjmp and longjmp are a very limited form of continuation--they can only &#8220;jump&#8221; up the stack to an existing caller. They don&#8217;t save a copy of the stack; they only save a pointer to a stack frame on the current stack.</p>
+<p>You can implement non-portable continuations in C by storing local variables on the heap and using &lt;code&gt;memcpy&lt;/code&gt; to save copies of the entire stack. When you invoke a continuation, you need to switch over to the saved stack.</p>
+<p>(And, yeah, there&#8217;s a closed-form solution for the Fibonacci series. It&#8217;s a toy example. Python&#8217;s generators are useful when there isn&#8217;t a closed form solution, or when it&#8217;s ridiculously complicated.)</p>
+Posted by <a rel="nofollow" href="mailto:nobody@nowhere.org" title="pool-64-223-92-231.burl.east.verizon.net">Eric</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113748652"><time title="GMT" datetime="2005-04-17T14:37:32Z">14:37</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113770230"></a>
+<header>
+<h3>Sam Ruby on Continuations</h3>
+</header>
+<p>...
+<a href="http://pluralsight.com/blogs/dbox/archive/2005/04/17/7467.aspx">[more]</a><br /><br />Trackback from <a title="pluralsight.com">Don Box's Spoutlet</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113770230"><time title="GMT" datetime="2005-04-17T20:37:10Z">20:37</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-18">Mon 18 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1113793371"></a>
+<p>Whilst the article is very well written I don&#8217;t think it makes a strong case for continuations in an OO language. Objects are very good at retaining state between calls! The following fib code is simpler and doesn&#8217;t require anything that a common OO language can&#8217;t do:</p>
+<pre class="code">class Fib {
+    int i = 0;
+    int j = 1;
+
+    int eval() {
+        final int result = i;
+        i = j;
+        j += result;
+
+        return result;
+    }
+
+    public static void main( final String[] notUsed ) {
+        final Fib f = new Fib();
+
+        for ( int n = f.eval(); n &lt;= 1000; n = f.eval() ) {
+            System.out.println( n );
+        }
+    }
+}</pre>
+<br />
+<br />
+Posted by <a href="mailto:howard.lovatt@iee.org" title="treetops-ln.tip.csiro.au">Howard Lovatt</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113793371"><time title="GMT" datetime="2005-04-18T03:02:51Z">03:02</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113797738"></a>
+<p>Now really, if you don&#8217;t understand them after this I&#8217;d give up programming. [link]...</p>
+Excerpt from <a href="http://talideon.com/linklog/?yr=2005&amp;amp;mth=4#b20050413220538">Talideon.com Linklog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113797738"><time title="GMT" datetime="2005-04-18T04:15:38Z">04:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113826697"></a>
+<header>
+<h3>Continuations Explained</h3>
+</header>
+<p>Continuations are a fascinating feature of some programming languages that...well, the problem is that they&#8217;re hard to describe, and groking their implementation can make your head spin. Thankfully, Sam Ruby has an excellent and lucid discussion of...</p>
+Excerpt from <a href="http://www.duke.edu/~bmp5/blog/2005/04/continuations-explained.html">Quabit: the Blog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113826697"><time title="GMT" datetime="2005-04-18T12:18:17Z">12:18</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113827554"></a>
+<p><a href="http://www.intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113793371">Howard</a>, simple generators can certainly be recast as objects &#8212; which, after all, can be viewed as collections of name/value pairs allocated on the heap.</p>
+<p>SAX is an example where the state is somewhat more involved, and more difficult to capture and restore.</p>
+Posted by <a href="http://www.intertwingly.net/blog/" title="cpe-066-057-027-065.nc.res.rr.com">Sam Ruby</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113827554"><time title="GMT" datetime="2005-04-18T12:32:34Z">12:32</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113843516"></a>
+<header>
+<h3>Continuation:&#160; still not quite convinced</h3>
+</header>
+<p>Sam Ruby and Don Box have posted a couple of interesting articles on continuations.&#160; Sam&#8217;s article is a good explanation of what continuations are for &quot;old-timers&quot; and gives a......
+<a href="http://beust.com/weblog/archives/000272.html">[more]</a><br /><br />Trackback from <a title="auma.pair.com">Otaku, Cedric's weblog</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113843516"><time title="GMT" datetime="2005-04-18T16:58:36Z">16:58</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-19">Tue 19 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1113873182"></a>
+<p>Sam Said :) &#8220;simple generators can certainly be recast as objects &#8212; which, after all, can be viewed as collections of name/value pairs allocated on the heap.&#8221;</p>
+<p>I agree totally with this comment, in fact I often use a Java Collection as a generator, i.e. extending AbstractCollection, AbstractList, etc., and instead of having an array storing values I calculate the value on the fly. I also use this for lazy evaluation of lists.</p>
+<p>I can also counter your SAX example with java.util.Scanner, which is a parser written as though it were an Iterator. Therefore I suspect that all such continuations can easily be recast as objects and that the existing Collections that are in most OO languages can be used to provide the base. In particular there is little difference between a continuation and an Iterator (which are in Java, C++, Smalltalk, etc.).</p>
+<p>I am not saying that continuations aren&#8217;t useful in none OO languages, just that having got OO and some form of Collection there is little need for the extra facility.</p>
+Posted by <a href="mailto:howard.lovatt@iee.org" title="treetops-ln.tip.csiro.au">Howard Lovatt</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113873182"><time title="GMT" datetime="2005-04-19T01:13:02Z">01:13</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113910330"></a>
+<p>Howard, some tasks that continuations can do can be accomplished by a generator, and some generators can easily be recast as an iterator.&#160; But the reverse is not always true.</p>
+<p>As an exercise, see if you can &#8220;easily&#8221; convert the following to not use iterators: <a href="http://cvs.sourceforge.net/viewcvs.py/python/python/dist/src/Lib/tokenize.py?view=markup">tokenize.py</a>.</p>
+<p>When Don Box mentioned that C# has a yield instruction, he did not mention mention that what C# has amounts to compiler magic: it takes the instructions and converts it into a state machine.&#160; Instead of capturing the scope, it makes copies of everything it references.&#160; Non-trivial stuff.</p>
+<p>In any case, Ruby is a thoroughly OO language, and Ruby programmers actually do make heavy use of <a href="http://www.intertwingly.net/blog/2005/04/18/Blocks-for-Box">blocks</a>.</p>
+Posted by <a href="http://www.intertwingly.net/blog/" title="cpe-066-057-027-065.nc.res.rr.com">Sam Ruby</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113910330"><time title="GMT" datetime="2005-04-19T11:32:10Z">11:32</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113925539"></a>
+<header>
+<h3>Continuaciones para cascarrabias</h3>
+</header>
+<p>Suelo consultar el blog de Sam Ruby, porque tiene comentarios breves pero muy interesantes. En este caso se me escap&#243; fue un articulillo un poco m&#225;s largo titulado &#8220;Continuations for Curmudgeons&#8221; (continuaciones para cascarrabias). Me ha resultado...</p>
+Excerpt from <a href="http://yapw.blogspot.com/2005/04/continuaciones-para-cascarrabias.html">Yet Another Programming Weblog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113925539"><time title="GMT" datetime="2005-04-19T15:45:39Z">15:45</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113945098"></a>
+<p>If i had read this about a year ago i might have gotten a decent grade at my functional programming exam. Anyway i&#8217;m really glad that i understand now, at least the basics, of this concept. I wonder if my professor knew that call-cc still involves frames... or maybe it was a test to see if i can figure it out my self ... well ...</p>
+Posted by <a href="mailto:bogdanutz@gmail.com" title="p16.pub.ro">bogdanutz</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113945098"><time title="GMT" datetime="2005-04-19T21:11:38Z">21:11</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113948914"></a>
+<header>
+<h3>About Continuations</h3>
+</header>
+<p>Sam Ruby wrote a piece on Continuations, Don Box followed up....</p>
+Excerpt from <a href="http://jroller.com/page/jejik/20050419#about_continuations">Jan-Erik's Weblog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113948914"><time title="GMT" datetime="2005-04-19T22:15:14Z">22:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113949099"></a>
+<p>Sam, I have posted a comment on your Blocks for Box discussion you reference. It basically says that inner classes cover much the same ground as closures, blocks, or what ever you want to call them and that inner classes have some advantages. The primary difference is that a Java inner class does not have write access to local variables (it can read final local variables).</p>
+<p>Some people find this too restrictive, but I like it because I have seen bad code written using blocks in other languages. The particular bit I like about the none-write restriction is that it decouples the inner class from the surrounding code more. In fact I would go as far as to say that I wished for, if, etc. were the same. IE I wish</p>
+<pre class="code">int[] list = { 1, 2, 3 };
+int sum = 0;
+for ( int item : list ) sum += item;</pre>
+<p>was illegal in Java. The bit I don&#8217;t like is that you can&#8217;t refactor the above into:</p>
+<pre class="code">int[] list = { 1, 2, 3 };
+int sum = 0;
+for ( int item : list ) sumIt( item );</pre>
+<p>IE you can&#8217;t take the block and turn it into a function and I think the block should behave like a function to increase the decoupling.</p>
+Posted by <a href="mailto:howard.lovatt@iee.org" title="treetops-ln.tip.csiro.au">Howard Lovatt</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113949099"><time title="GMT" datetime="2005-04-19T22:18:19Z">22:18</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113950513"></a>
+<p>Sam, I forgot to mention - why is tokenize.py so different than java.util.Scanner? Continuations can be converted to Iterators using a state machine. Therefore using Iterators the worst case is that you add an int to keep track of the state and a switch statement to select the state. In many cases the state already exists and needn&#8217;t be explicitly coded, e.g. fib. With continuations you have to explicitly code repeats, e.g. in fib example you needed to add while( true ) loop. Seems to be about the same overhead with each technique!</p>
+Posted by <a href="mailto:howard.lovatt@iee.org" title="treetops-ln.tip.csiro.au">Howard Lovatt</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113950513"><time title="GMT" datetime="2005-04-19T22:41:53Z">22:41</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-20">Wed 20 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1113957740"></a>
+<p>Howard, if you want <code>if</code>, <code>while</code>, <code>for</code> etc to be side effect free, you will quickly find that they are useless.</p>
+<p>Try untangling any non-trivial program into a flat state machine.&#160; It can be done, but it is not easy.&#160; It also requires more than an int - all local variables must be captured and accessed indirectly.</p>
+<p>One can make the case that all C++ programs can be coded in C (after all, the initial &#8220;compilers&#8221; were mere translators).&#160; The more interesting question isn&#8217;t whether it can be done, but whether concepts like classes and blocks are useful.</p>
+<p>Those that have programmed with these concepts tend to quickly find them useful.&#160; Those that haven&#8217;t tend not to know what they are missing.</p>
+<p>Both C# iterators and Java inner classes take significant short cuts, and therefore are limited in what they can do with respect to full blocks, closures, and continuations.</p>
+Posted by <a href="http://www.intertwingly.net/blog/" title="cpe-066-057-027-065.nc.res.rr.com">Sam Ruby</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113957740"><time title="GMT" datetime="2005-04-20T00:42:20Z">00:42</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1113988512"></a>
+<p>i18n (Globalization) usando Mono.Posix&#160;(i18n globalization using Mono.Posix) &#160;enzo writing in the blog&#160;Mono&#160;explains how to write and compile the class i18n in Mono.Posix and use it for internationalization of applications in...</p>
+Excerpt from <a href="http://www.zenitservices.com/PlanetCode/Apr2005/19.html">Extracts from Planeta Codigo</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1113988512"><time title="GMT" datetime="2005-04-20T09:15:12Z">09:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114004770"></a>
+<p>Continuations for Curmudgeons [lambda].......</p>
+Excerpt from <a href="http://gimbo.org.uk/archives/2005/04/index.html#001680">Gimboland</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114004770"><time title="GMT" datetime="2005-04-20T13:46:10Z">13:46</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114014769"></a>
+<header>
+<h3>Continuations</h3>
+</header>
+<p>Continuations for Curmudgeons. ]]&gt;...</p>
+Excerpt from <a href="http://www.equi4.com/jcw/archives/2005-04.html#e2005-04-19T22_09_44.txt">Jean-Claude Wippler</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114014769"><time title="GMT" datetime="2005-04-20T16:32:49Z">16:32</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-21">Thu 21 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1114047585"></a>
+<p>Sam, what you say is correct: both about untangling continuation code and adding features to languages. I guess we disagree on what is good, not on the principle itself.</p>
+<p>First untangling code, continuation code is often reminiscent of unstructured goto code and for the same reason that unstructured goto code is hard to untangle then so can continuation code. I guess we disagree on whether unstructured code is good or not.</p>
+<p>Second on features, this was my original point. Is it worth adding continuations, closures etc., when you already have classes? Particularly in Java which has inner classes? My call is no, yours is yes.</p>
+Posted by <a href="mailto:howard.lovatt@iee.org" title="treetops-ln.tip.csiro.au">Howard Lovatt</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114047585"><time title="GMT" datetime="2005-04-21T01:39:45Z">01:39</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114050207"></a>
+<p>Howard, it is not about structured vs unstructured.&#160; The question is whether one should always be required to use a heavyweight solution when a <a href="http://microjet.ath.cx/webrickguide/html/ProcHandler.html">lightweight</a> one will do.</p>
+Posted by <a href="http://www.intertwingly.net/blog/" title="cpe-066-057-027-065.nc.res.rr.com">Sam Ruby</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114050207"><time title="GMT" datetime="2005-04-21T02:23:27Z">02:23</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114054562"></a>
+<p>Sam, I don&#8217;t know about implementation detail for the lightweight heavyweight issue. My comments are based on <b>my</b> assumption that at runtime the two are fairly similar. To summarize:</p>
+<p>Pro closures/blocks<br />
+&#160; short syntax<br />
+&#160; write access to local variables</p>
+<p>Pro inner classes<br />
+&#160; can have fields<br />
+&#160; can have more than one method<br />
+&#160; can extend abstract classes and hence reuse code<br />
+&#160; no need for an extra concept</p>
+<p>So as a compromise I would suggest inner classes with shorter syntax and write access to local variables. This language may already exist, BETA, it certainly has short syntax and inner classes, I can&#8217;t remember about write access :)</p>
+Posted by <a href="mailto:howard.lovatt@iee.org" title="treetops-ln.tip.csiro.au">Howard Lovatt</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114054562"><time title="GMT" datetime="2005-04-21T03:36:02Z">03:36</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114079312"></a>
+<header>
+<h3>Old webdesign grudge</h3>
+</header>
+<p>Let me see if anyone agrees. A suggestion for web designers (and I mean all the bloggers out there, too): make the main text on your blog look good in your browser(s) by setting the default fonts (and mainly sizes)......
+<a href="http://www.jacek.cz/blog/archives/000059.html">[more]</a><br /><br />Trackback from <a title="uvirt8.globe.cz">Kopretinka</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114079312"><time title="GMT" datetime="2005-04-21T10:28:32Z">10:28</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114080275"></a>
+<p>Sam, except for my font size grudge (see the trackback), thanks for this! While I had a simple understanding of what continuations do before, now I know how they do it and that there are really the edge cases I suspected, but, as you say, since they don&#8217;t often cause problems, I feel better about continuations now. 8-)</p>
+Posted by <a href="http://jacek.cz/blog/" title="c703-fwngw.uibk.ac.at">Jacek (Kopretinka)</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114080275"><time title="GMT" datetime="2005-04-21T10:44:35Z">10:44</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114082041"></a>
+<p>Jacek: I get the following:</p>
+<blockquote><p>Your comment submission failed for the following reasons:</p>
+<p><b>You are not allowed to post comments</b>.<br />
+ <br />
+Please correct the error in the form below, then press Post to post your comment.</p></blockquote>
+<p>The comment I wanted to post follows:</p>
+<blockquote><p>I&#8217;m confused.</p>
+<p>My main content is 100%.&#160; That should translate to be the default size, right?</p>
+<p>I did not change my default font size for monospace fonts on either FireFox or IE.&#160; In both, they appear smaller than the surrounding text to me.&#160; Adjusting it slightly (120%) makes them closer.&#160; And the results smoothly scales with both browsers.</p>
+<p>I guess I could change my defaults, but then visitors would not see the results.</p>
+<p>Given my css file, what would you recommend changing?</p></blockquote>
+Posted by <a href="http://www.intertwingly.net/blog/" title="cpe-066-057-027-065.nc.res.rr.com">Sam Ruby</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114082041"><time title="GMT" datetime="2005-04-21T11:14:01Z">11:14</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114102375"></a>
+<p>Hi Sam, sorry about that &#8220;comments disabled&#8221; problem, too much IP banning (everybody), fixed now. 8-)</p>
+<p>My problem is with that 120% on monospace. If you don&#8217;t like your browser&#8217;s defaults because the default size is too small for you (or smaller than the other fonts) you can tweak that. Then you&#8217;ll be able to leave everything (the main textual content, that is) at 100%.&#160; The fact that others wouldn&#8217;t see the results of your font size tweaking is IMO good because others don&#8217;t necessarily have default monospace smaller than other fonts.</p>
+<p>I won&#8217;t send you a dead fish if you don&#8217;t do it - disrespecting others' defaults is too widespread. It was just that in this case I couldn&#8217;t use simple zoom to be able to read your (very good) post without being disturbed by variables sticking out of text. 8-)</p>
+Posted by <a href="http://jacek.cz/blog/" title="c703-fwngw.uibk.ac.at">Jacek</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114102375"><time title="GMT" datetime="2005-04-21T16:52:55Z">16:52</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114103800"></a>
+<p>Jacek - refresh, and see if that is any better.</p>
+Posted by <a href="http://www.intertwingly.net/blog/" title="cpe-066-057-027-065.nc.res.rr.com">Sam Ruby</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114103800"><time title="GMT" datetime="2005-04-21T17:16:40Z">17:16</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114103955"></a>
+<p>Sam, thanks, of course it&#8217;s better now. One more accessibility improvement on the Web, I consider my day very successful. 8-)</p>
+Posted by <a href="http://jacek.cz/blog/" title="c703-fwngw.uibk.ac.at">Jacek</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114103955"><time title="GMT" datetime="2005-04-21T17:19:15Z">17:19</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-22">Fri 22 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1114134312"></a>
+<header>
+<h3>Modal webapps, iterators and beyond</h3>
+</header>
+<p>Excellent, easy to understand for old fashioned programmers, the introductory lecture that Sam Ruby does about continuations, Continuations for Curmudgeons. Brian McCallister writes about guidelines to write webapps, including a reference to the...</p>
+Excerpt from <a href="http://memojo.com/blojsom/blog/sgala/?permalink=Modal_webapps_iterators_and_beyond.html">Boxes and Glue (Santiago Gala)</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114134312"><time title="GMT" datetime="2005-04-22T01:45:12Z">01:45</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114145392"></a>
+<p>Also take a look at java.util.concurrent.Exchanger in:</p>
+<p><a href="http://java.sun.com/j2se/1.5.0/docs/api/">[link]</a></p>
+<p>It does a yield like suspension of a thread:</p>
+<pre class="code">exchanger.exchange( dataBuffer );</pre>
+Posted by <a href="mailto:howard.lovatt@iee.org" title="treetops-ln.tip.csiro.au">Howard Lovatt</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114145392"><time title="GMT" datetime="2005-04-22T04:49:52Z">04:49</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-26">Tue 26 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1114491424"></a>
+<header>
+<h3>C# Continuations useful? Hell yeah!</h3>
+</header>
+<p>Last week, Sam Ruby posted a very interesting article on continuations for &#8220;people older than dirt&#8221; (a category which I, according to his definition, fall into). The topic became even more interesting when Don Box posted how you can use a very similar syntax in the next iteration of C#. Shortly thereafter, Cedric Beust posted that he wasn&#8217;t convinced on......
+<a href="http://www.hutteman.com/weblog/2005/04/26-224.html">[more]</a><br /><br />Trackback from <a title="63.247.85.10">public virtual MemoryStream</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114491424"><time title="GMT" datetime="2005-04-26T04:57:04Z">04:57</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-27">Wed 27 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1114620308"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>(posted by sighup, keywords: continuations,dynamic languages,python,ruby,javascript)...</p>
+Excerpt from <a href="http://www.list9.com/link/1664">list9 &gt; all members</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114620308"><time title="GMT" datetime="2005-04-27T16:45:08Z">16:45</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114641931"></a>
+<header>
+<h3>Amazing!</h3>
+</header>
+<p>If you have some background in programming, try to write a program to display&#160; Fibonacci numbers less than 1000. Here is my version in C++: void main() {&#160;&#160;&#160;&#160; int...</p>
+Excerpt from <a href="http://spaces.msn.com/members/peterzhoulei/Blog/cns!1p_t--BLVrVwdIG82gYyXurQ!360.entry">Flying Eagle</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114641931"><time title="GMT" datetime="2005-04-27T22:45:31Z">22:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-28">Thu 28 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1114681529"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>Wonderful article, helping us old C people to clue in. Link: Sam Ruby: Continuations for Curmudgeons. This essay is for people who, in web years, are older than dirt.&#160; More specifically, if there was a period of time in which......</p>
+Excerpt from <a href="http://virtualpragmatics.typepad.com/virtual_pragmatics/2005/04/sam_ruby_contin.html">Virtual Pragmatics</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114681529"><time title="GMT" datetime="2005-04-28T09:45:29Z">09:45</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1114683012"></a>
+<header>
+<h3>I&#8217;m older than dirt</h3>
+</header>
+<p>...
+<a href="http://e-nfrastructure.dk/blog/archive/2005/04/28/159.aspx">[more]</a><br /><br />Trackback from <a title="0x535baf6c.albnxx2.adsl-dhcp.tele.dk">Uffe's Blog</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114683012"><time title="GMT" datetime="2005-04-28T10:10:12Z">10:10</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-04-29">Fri 29 Apr 2005</time></h2>
+</header>
+
+<article>
+<a id="c1114785919"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons...</p>
+Excerpt from <a href="http://frogspit.blogspot.com/2005/04/sam-ruby-continuations-for-curmudgeons.html">frogspit</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1114785919"><time title="GMT" datetime="2005-04-29T14:45:19Z">14:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-05-05">Thu 05 May 2005</time></h2>
+</header>
+
+<article>
+<a id="c1115262922"></a>
+<header>
+<h3>Sam Ruby on Continuations</h3>
+</header>
+<p>This is an old link in web time, almost a month old. Regardless, if you haven&#8217;t read it and you&#8217;re interested in programming paradigms, you should. I&#8217;ve been a fan of Ruby and other scripting languages for a while so I had an basic understanding of...</p>
+Excerpt from <a href="http://www.developingstorm.com/2005/05/sam-ruby-on-continuations.php">DevelopingStorm</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1115262922"><time title="GMT" datetime="2005-05-05T03:15:22Z">03:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-05-09">Mon 09 May 2005</time></h2>
+</header>
+
+<article>
+<a id="c1115626439"></a>
+<header>
+<h3>Continuations</h3>
+</header>
+<p>Everybody who started in a language other than a web scripting one has written programs like this: WriteLn('What''s your name?'); ReadLn(name); WriteLn('What''s your age?'); ReadLn(age); WriteLn('Hello &#8216; + name + &#8217;, you are &#8216; + age + &#8217; years old.');...</p>
+Excerpt from <a href="http://www.zefhemel.com/archives/2005/05/09/continuations">ZefHemel.com</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1115626439"><time title="GMT" datetime="2005-05-09T08:13:59Z">08:13</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-05-10">Tue 10 May 2005</time></h2>
+</header>
+
+<article>
+<a id="c1115687706"></a>
+<header>
+<h3>Links for 2005-05-02 [del.icio.us]</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons Coroutines in C...</p>
+Excerpt from <a href="http://feeds.feedburner.com/PlasticBoyRSS?m=12">PlasticBoy</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1115687706"><time title="GMT" datetime="2005-05-10T01:15:06Z">01:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1115748922"></a>
+<header>
+<h3>Links for 2005-05-02 [del.icio.us]</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons Coroutines in C...</p>
+Excerpt from <a href="http://feeds.feedburner.com/PlasticBoyAtom?m=12">PlasticBoy</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1115748922"><time title="GMT" datetime="2005-05-10T18:15:22Z">18:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-05-25">Wed 25 May 2005</time></h2>
+</header>
+
+<article>
+<a id="c1116998116"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>I found this article on the concept of continuations really cool, which makes me older than dirt, I suppose....</p>
+Excerpt from <a href="http://jcrump65.blogspot.com/2005/04/sam-ruby-continuations-for-curmudgeons.html">Jeff's Blog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1116998116"><time title="GMT" datetime="2005-05-25T05:15:16Z">05:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1117017916"></a>
+<p>Sam Ruby has a much praised blog entry entitled &#8220;Continuations for Curmudgeons&#8221;. I didn&#8217;t like the tone of the article which seem to treat the C programmers as some kind of dinasaur with no interest in other languages (or language...</p>
+Excerpt from <a href="http://ljjccc.blogspot.com/2005/04/continuations-for-curmudgeons.html">Steve's Stuff</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1117017916"><time title="GMT" datetime="2005-05-25T10:45:16Z">10:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-06-22">Wed 22 Jun 2005</time></h2>
+</header>
+
+<article>
+<a id="c1119449713"></a>
+<header>
+<h3>Orthagonality, continuations and frogs</h3>
+</header>
+<p>This is the first post (excluding the test) to the Design Patterns NYC blog. Schedule permitting I&#8217;ll try to follow up the week&#8217;s discussion with a quick summary, at the very least the chapters covered and topics discussed. First, the turnout was...</p>
+Excerpt from <a href="http://dpsgnyc.blogspot.com/2005/06/orthagonality-continuations-and-frogs.html">Design Patterns NYC</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1119449713"><time title="GMT" datetime="2005-06-22T14:15:13Z">14:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-07-18">Mon 18 Jul 2005</time></h2>
+</header>
+
+<article>
+<a id="c1121715933"></a>
+<header>
+<h3>Continuation-based web programming</h3>
+</header>
+<p>People reading this blog might be forgiven for thinking that I don&#8217;t do software development for a living, so here&#8217;s some technical stuff to even up the balance. Spent some of the weekend reading up on continuation-based web programming. This......</p>
+Excerpt from <a href="http://biketrouble.typepad.com/bike_trouble/2005/07/continuationbas.html">markallerton.com</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1121715933"><time title="GMT" datetime="2005-07-18T19:45:33Z">19:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-07-24">Sun 24 Jul 2005</time></h2>
+</header>
+
+<article>
+<a id="c1122173171"></a>
+<header>
+<h3>User Guide - Part Three</h3>
+</header>
+<p>I was out for this weekend and will be busy the next few days, but today I&#8217;ll talk about continuations. I really don&#8217;t think I&#8217;m up to the task of explaining continuations, however this is a good introduction on the topic. So, what will...</p>
+Excerpt from <a href="http://jauvm.blogspot.com/2005/07/user-guide-part-three.html">the Jau Virtual Machine</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1122173171"><time title="GMT" datetime="2005-07-24T02:46:11Z">02:46</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-08-01">Mon 01 Aug 2005</time></h2>
+</header>
+
+<article>
+<a id="c1122869022"></a>
+<header>
+<h3>Continuations in SQL: Using #temporary table created in stored procedure in its</h3>
+</header>
+<p>...
+<a href="http://engineering.meta-comm.com/blogs/misha/PermaLink,guid,88282129-6da3-4dff-95e7-d19fa056be97.aspx">[more]</a><br /><br />Trackback from <a title="webwizard.meta-comm.com">Misha Bergal's blog</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1122869022"><time title="GMT" datetime="2005-08-01T04:03:42Z">04:03</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-08-12">Fri 12 Aug 2005</time></h2>
+</header>
+
+<article>
+<a id="c1123845332"></a>
+<header>
+<h3>My experiments with continuation in C#</h3>
+</header>
+<p>The blogs are buzzing with continuation support in C# 2.0 and what cool things can be done with it. <a rel="nofollow" href="http://www.intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons">[link]</a> explains the concept of continuation extremely well. I also found Don Box&#8217;s...</p>
+Excerpt from <a href="http://blogs.msdn.com/abhinaba/archive/2005/08/11/450785.aspx">I know the answer (its 42)</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1123845332"><time title="GMT" datetime="2005-08-12T11:15:32Z">11:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-08-21">Sun 21 Aug 2005</time></h2>
+</header>
+
+<article>
+<a id="c1124653536"></a>
+<header>
+<h3>Iterator, generator, coroutine and continuation...</h3>
+</header>
+<p>&#20170;&#22825;, &#26412;&#20358;&#25171;&#31639;&#23559;iterator&#24324;&#28165;&#26970;, &#28982;&#24460;&#20570;&#20491;&#32080;&#26463; &#27794;&#24819;&#21040;&#30475;&#20102;&#24190;&#20491;blog&#24460;, &#24478; iterator =&gt; generator =&gt; coroutine =&gt; continuation &#24840;&#20358;&#24840;&#35079;&#38620;, &#19968;&#30332;&#19981;&#21487;&#25910;&#25342; &#25152;&#20197;&#20808;&#25226;&#30446;&#21069;&#30475;&#21040;&#30340;&#35352;&#19979;&#20358;, &#20877;&#28040;&#21270;&#19968;&#38499;&#23376;... &#160; continuation&#36889;&#20491;&#35264;&#24565;, &#33258;&#24478;&#25105;&#22312;stackless python&#20013;&#30475;&#21040;&#24460; &#19968;&#30452;&#26159;&#33258;&#24049;&#24076;&#26395;&#30637;&#35299;&#30340;&#26481;&#35199; &#19981;&#36942;&#21487;&#33021;&#22240;&#28858;&#36039;&#36074;&#19981;&#22826;&#22909;, &#30070;&#26178;&#30475;&#20102;&#24190;&#27425;, &#37117;&#19981;&#26159;&#24456;&#28165;&#26970; &#20294;&#26159;, &#29694;&#22312;&#25105;&#35258;&#24471;,...</p>
+Excerpt from <a href="http://spaces.msn.com/members/newiyuil/Blog/cns!1pYGXjQHiSACgfoi0h8pFpfQ!144.entry">&#25171;&#30332;&#26178;&#38291;&#30340;&#23567;&#22320;&#26041;...</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1124653536"><time title="GMT" datetime="2005-08-21T19:45:36Z">19:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-09-13">Tue 13 Sep 2005</time></h2>
+</header>
+
+<article>
+<a id="c1126619128"></a>
+<header>
+<h3>Binkley: My kind of technical writer</h3>
+</header>
+<p>Sam Ruby writes about continuations for old-time programmers like me. Anyone who starts of a technical article with: This essay is for people who, in web years, are older than dirt. and after the first example observes: If you now look around, you...</p>
+Excerpt from <a href="http://binkley.blogspot.com/2005/09/my-kind-of-technical-writer.html">Planet Ruby</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1126619128"><time title="GMT" datetime="2005-09-13T13:45:28Z">13:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-09-23">Fri 23 Sep 2005</time></h2>
+</header>
+
+<article>
+<a id="c1127445365"></a>
+<header>
+<h3>Links for 2005-09-20 [del.icio.us]</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons Reengineer That Ad - Forbes.com RAA source code search [preview]: raggle/raggle <a rel="nofollow" href="http://feeds.feedburner.com/FeedForThought?m=38">[link]</a>...</p>
+Excerpt from <a href="http://feeds.feedburner.com/FeedForThought?m=38">feed for thought</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1127445365"><time title="GMT" datetime="2005-09-23T03:16:05Z">03:16</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-10-06">Thu 06 Oct 2005</time></h2>
+</header>
+
+<article>
+<a id="c1128559519"></a>
+<header>
+<h3>Python.</h3>
+</header>
+<p>So far, the things I like about Python: the functional programming stuff: filter/map/reduce ranges list comprehension sets and operations on sets loops and iterators/generators introspection continuations (code invocation context awarness) Things I...</p>
+Excerpt from <a href="http://serialhacker.org/rblog/2005/03/python.html">Technology reading</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1128559519"><time title="GMT" datetime="2005-10-06T00:45:19Z">00:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-10-09">Sun 09 Oct 2005</time></h2>
+</header>
+
+<article>
+<a id="c1128818723"></a>
+<p>From reading, I know continuations will be added in perl6 and are in ruby and python, but I really didn&#8217;t understand them. Like closures they are a simple idea but very powerful. Here is an post that explains continuations quite well....</p>
+Excerpt from <a href="http://www.rlb3.com/articles/2005/09/21/continuations-for-curmudgeons">RLB3.COM: Continuations for Curmudgeons</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1128818723"><time title="GMT" datetime="2005-10-09T00:45:23Z">00:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-11-15">Tue 15 Nov 2005</time></h2>
+</header>
+
+<article>
+<a id="c1132042519"></a>
+<header>
+<h3>Fun with Functional JavaScript</h3>
+</header>
+<p>My recent reading has included: The Secret Art of Futamura Projection Parenscript - Lisp dialect that compiles to JavaScript Continuations in Mozilla Continuations for Curmudgeons As a result, I&#8217;m in a very functional mood now, particularly with...</p>
+Excerpt from <a href="http://www.livejournal.com/users/atrustheotaku/310768.html">Thought Torrent</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1132042519"><time title="GMT" datetime="2005-11-15T08:15:19Z">08:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-11-29">Tue 29 Nov 2005</time></h2>
+</header>
+
+<article>
+<a id="c1133277318"></a>
+<header>
+<h3>A. Sundararajan: Continuations in JavaScript</h3>
+</header>
+<p>Rhino JavaScript engine (which is included in Mustang) supports Continuations. Rhino optimizer needs to be switched off to enable continuations &#8212; i.e., scripts are run in interpreted mode and Rhino does not generate bytecodes for scripts. In...</p>
+Excerpt from <a href="http://blogs.sun.com/roller/page/sundararajan?entry=continuations_in_javascript">Planet JDK</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1133277318"><time title="GMT" datetime="2005-11-29T15:15:18Z">15:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2005-12-13">Tue 13 Dec 2005</time></h2>
+</header>
+
+<article>
+<a id="c1134445531"></a>
+<header>
+<h3>In Order of Importance?</h3>
+</header>
+<p>The inimitable David Heinemeier Hansson points out that in a recent set of slides by Sam Ruby, Rails is the fourth item from the top on a list of things Worth Watching. What&#8217;s item number three? Continuations. Sam also brings us Continuations for...</p>
+Excerpt from <a href="http://swik.net/Seaside/HREF+Considered+Harmful/In+Order+of+Importance%3F/odk">HREF Considered Harmful</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1134445531"><time title="GMT" datetime="2005-12-13T03:45:31Z">03:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-04-04">Tue 04 Apr 2006</time></h2>
+</header>
+
+<article>
+<a id="c1144125915"></a>
+<header>
+<h3>More fun with ruby</h3>
+</header>
+<p>Jim Weirich&#8217;s presentation on Dependency Injection (in ruby).If you are a ruby newbie, read Jim&#8217;s guide for Java programmers. And the cherry on the cake: Jim&#8217;s presentation on continuations.For more continuation goodies, see Sam Ruby&#8217;s explanation,...</p>
+Excerpt from <a href="http://thought-tracker.blogspot.com/2006/03/more-fun-with-ruby.html">thought-tracker</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1144125915"><time title="GMT" datetime="2006-04-04T04:45:15Z">04:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-04-21">Fri 21 Apr 2006</time></h2>
+</header>
+
+<article>
+<a id="c1145589319"></a>
+<header>
+<h3>Web heresies and Python frameworks</h3>
+</header>
+<p>Seaside is an innovative web application framework, written in Smalltalk. You may have heard something about it recently, probably referred to as a &#8220;continuation based framework&#8221;. Avi Bryant, the mind behind Seaside, will be speaking about...</p>
+Excerpt from <a href="http://blog.delaguardia.com.mx/index.php?op=ViewArticle&amp;articleId=40&amp;blogId=1">I blog therefore I am</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1145589319"><time title="GMT" datetime="2006-04-21T03:15:19Z">03:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-04-26">Wed 26 Apr 2006</time></h2>
+</header>
+
+<article>
+<a id="c1146020256"></a>
+<p>Fibonacci via continuation in Euphoria language...or would this <b>not</b> be considered to be a continuation?&#160; You can call this multiple times without the callers interfering with each other results wise. If not, maybe this <b>simulates</b> the effect of a continuation?</p>
+<p>include get.e</p>
+<p>function fibonacci(sequence obj)<br />
+	if length(obj) = 0 then<br />
+		obj = {0, 1}<br />
+	end if<br />
+	obj = obj &amp; (obj[$-1] + obj[$])<br />
+	return obj<br />
+end function</p>
+<p>puts(1, "\n")</p>
+<p>sequence s1<br />
+s1 = &#8220;&#8221;</p>
+<p>for i = 1 to 10 do<br />
+	s1 = fibonacci(s1)<br />
+	print(1, s1)<br />
+	puts(1, "\n")<br />
+end for</p>
+<p>integer ch<br />
+ch = wait_key()</p>
+Posted by <a title="adsl-223-125-122.aep.bellsouth.net">Marc Conley</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1146020256"><time title="GMT" datetime="2006-04-26T02:57:36Z">02:57</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-04-28">Fri 28 Apr 2006</time></h2>
+</header>
+
+<article>
+<a id="c1146194504"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>Someone at Smarking has bookmarked your post....
+<a href="http://smarking.com/stats/d92a565d910244cebfcc90665a87aebd">[more]</a><br /><br />Trackback from <a title="mamba.python-hosting.com">Smarking</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1146194504"><time title="GMT" datetime="2006-04-28T03:21:44Z">03:21</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-05-02">Tue 02 May 2006</time></h2>
+</header>
+
+<article>
+<a id="c1146586527"></a>
+<header>
+<h3>JSR: Continuations</h3>
+</header>
+<p>We need a JSR for Continuations. I&#8217;ve been working with Greg Wilkins to allow Ajax in DWR to work properly with Jetty Continuations. But Jetty Continuations are just one of a number of implementations of a great idea. We need a JSR so that I don&#8217;t...</p>
+Excerpt from <a href="http://getahead.ltd.uk/blog/joe/2006/05/02/1146583328763.html">Joe Walker's Blog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1146586527"><time title="GMT" datetime="2006-05-02T16:15:27Z">16:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-05-03">Wed 03 May 2006</time></h2>
+</header>
+
+<article>
+<a id="c1146653183"></a>
+<header>
+<h3>Finite state machines vs. multithread, CPS to the rescue</h3>
+</header>
+<p>Here is a simple implementation of a finite state machine driver. The nice thing is that state transition rules are all in one place (the Session constructor) and code driving state transition is all in one place, too (the go function). The bad...</p>
+Excerpt from <a href="http://feeds.feedburner.com/hyperstruct?m=2">hyperstruct</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1146653183"><time title="GMT" datetime="2006-05-03T10:46:23Z">10:46</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1146700010"></a>
+<header>
+<h3>Microsoft, Ruby, and War</h3>
+</header>
+<p>...
+<a href="http://www.knowing.net/PermaLink,guid,785f41a5-3acf-47d5-b26a-580c46e8a117.aspx">[more]</a><br /><br />Trackback from <a rel="nofollow" href="http://Knowing.NET/" title="hyperion.gearhost.com">Knowing.NET</a></p> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1146700010"><time title="GMT" datetime="2006-05-03T23:46:50Z">23:46</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-05-21">Sun 21 May 2006</time></h2>
+</header>
+
+<article>
+<a id="c1148255110"></a>
+<header>
+<h3>No Need for First-Class Continuations in Java</h3>
+</header>
+<p>Gilad Bracha posted a longish entry about continuations: [...] I&#8217;ve thought about this a bit, and here&#8217;s my take on why we really shouldn&#8217;t add continuations to the JVM. It&#8217;s bound to stir up controversy and annoy people,...</p>
+Excerpt from <a href="http://mult.ifario.us/articles/2006/05/21/no-need-for-first-class-continuations-in-java">mult.ifario.us</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1148255110"><time title="GMT" datetime="2006-05-21T23:45:10Z">23:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-06-24">Sat 24 Jun 2006</time></h2>
+</header>
+
+<article>
+<a id="c1151138742"></a>
+<header>
+<h3>Continuatiions</h3>
+</header>
+<p>If it&#8217;s accurate, this post over at idea.log is definately the clearest explanation of continuations I&#8217;ve ever read.&#160; These two posts also look like they could be enlightening, but I haven&#8217;t finished digesting them yet....</p>
+Excerpt from <a href="http://bob.web-wide.net/blog/articles/2006/03/16/continuatiions">Negative Acknowledgment</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1151138742"><time title="GMT" datetime="2006-06-24T08:45:42Z">08:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-07-11">Tue 11 Jul 2006</time></h2>
+</header>
+
+<article>
+<a id="c1152577839"></a>
+<p>The cocoon web model is employed by Raining Data&#8217;s (formerly Pick System&#8217;s) FlashCONNECT API.&#160; We used it to web-enable a legacy application (written in PICK BASIC) that held most of its state in COMMON blocks.&#160; The company for whom we did the consulting never transitioned to the REST model (difficult, since much of the code was automatically generated by a venerable program no one understood), so it was nice to have a framework which supported both models.&#160; Continuations plus the idea of a timeout (ala Actors) and viola :-).</p>
+<p>I am also much reminded of the implementation of Knuth&#8217;s Co-routines in C using Duff&#8217;s device (Simon Tatham has done so much for the world).&#160; Heck, it&#8217;s even almost readable with some macros ;-).</p>
+<p>-Tom</p>
+Posted by <a rel="nofollow" href="mailto:tomtrias@artizan.com" title="artizan-1.uslsan.savvis.net">Thomas Trias</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1152577839"><time title="GMT" datetime="2006-07-11T00:30:39Z">00:30</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-07-31">Mon 31 Jul 2006</time></h2>
+</header>
+
+<article>
+<a id="c1154342734"></a>
+<header>
+<h3>Sam's continuations based REXML parser based on Expat</h3>
+</header>
+<p>Just came across Sam&#8217;s REXML compatible XML parser based on Expat which had my brain thinking for a bit. The interesting thing about this XML parser (other than it implements the REXML interfaces with an Expat implementation) is that it&#8217;s......</p>
+Excerpt from <a href="http://blogs.cocoondev.org/crafterm/archives/004654.html">crafterm's weblog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1154342734"><time title="GMT" datetime="2006-07-31T10:45:34Z">10:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-08-10">Thu 10 Aug 2006</time></h2>
+</header>
+
+<article>
+<a id="c1155174346"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p><a rel="nofollow" href="http://www.intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#sax">[link]</a>...</p>
+Excerpt from <a href="http://del.icio.us/url/516cf2aaddf4d7c68d2af59b845f0c42">del.icio.us/danhodos</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1155174346"><time title="GMT" datetime="2006-08-10T01:45:46Z">01:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-08-21">Mon 21 Aug 2006</time></h2>
+</header>
+
+<article>
+<a id="c1156195006"></a>
+<header>
+<h3>Closures for Java?</h3>
+</header>
+<p>Wow. Not only does Neal Gafter have a blog, he&#8217;s talking about some dramatic changes in Java for JDK 7. Update: Oh dear. There&#8217;s a lot of traffic coming here from Neal&#8217;s blog. Apparently, people who read his post and are looking...</p>
+Excerpt from <a href="http://wgrosso.wordpress.com/2006/08/21/closures-for-java/">Wander, Think, Repeat</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1156195006"><time title="GMT" datetime="2006-08-21T21:16:46Z">21:16</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-09-06">Wed 06 Sep 2006</time></h2>
+</header>
+
+<article>
+<a id="c1157579288"></a>
+<header>
+<h3>Continuations</h3>
+</header>
+<p>Everyone who understands continuations writes their own explanation of what they are and how they work. In fact, what follows is a list of those I found helpful:A page about call/ccUnderstanding Continuations, a thread on Lambda the Ultimate which...</p>
+Excerpt from <a href="http://shack-a-nerd.livejournal.com/19257.html">Learn Things</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1157579288"><time title="GMT" datetime="2006-09-06T21:48:08Z">21:48</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-09-11">Mon 11 Sep 2006</time></h2>
+</header>
+
+<article>
+<a id="c1157969852"></a>
+<header>
+<h3>Musings on Java Closures and Continuations</h3>
+</header>
+<p>I see lots of posts on closures and continuations (more, and more) lately, many relating to Java. See also lambda-the-ultimate.org. Must I re-hash what these are? No, not really. Now, I do find the evolution of Java here interesting. There is a...</p>
+Excerpt from <a href="http://blogs.sun.com/nico/entry/musings_on_java_closures_and1">Nico's blog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1157969852"><time title="GMT" datetime="2006-09-11T10:17:32Z">10:17</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-09-15">Fri 15 Sep 2006</time></h2>
+</header>
+
+<article>
+<a id="c1158331557"></a>
+<header>
+<h3>Blogosph&#228;re (aus JavaSPEKTRUM 05/06)</h3>
+</header>
+<p>Starten wir mit der Kurzzusammenfassung: Java EE 5 (Nachfolger von J2EE) ist tot, Glassfish ist legitimer JBoss-Nachfolger, JRuby ist (fast) prima, und Java verwandelt sich in Lisp. Das k&#246;nnte man zumindest glauben, wenn man die Links unseres...</p>
+Excerpt from <a href="http://www.sigs.de/blog/js/?p=22">JavaSPEKTRUM Blogosph&#228;re</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1158331557"><time title="GMT" datetime="2006-09-15T14:45:57Z">14:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-09-18">Mon 18 Sep 2006</time></h2>
+</header>
+
+<article>
+<a id="c1158563730"></a>
+<header>
+<h3>Sam's continuations based REXML parser based on Expat</h3>
+</header>
+<p>Just came across Sam&#8217;s REXML compatible XML parser based on Expat which had my brain thinking for a bit. The interesting thing about this XML parser (other than it implements the REXML interfaces with an Expat implementation) is that it&#8217;s pull based...</p>
+Excerpt from <a href="http://crafterm.net/blog/articles/2006/07/31/sams-continuations-based-rexml-parser-based-on-expat">crafterm's weblog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1158563730"><time title="GMT" datetime="2006-09-18T07:15:30Z">07:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-10-03">Tue 03 Oct 2006</time></h2>
+</header>
+
+<article>
+<a id="c1159899326"></a>
+<header>
+<h3>Collections in Base Language</h3>
+</header>
+<p>Currently, it is almost not possible to write code in Base Language and avoid using of java collections and other JDK classes like Object and String. Such a dependency on Java is not good for BL (in the end, MPS is not a java development tool) and...</p>
+Excerpt from <a href="http://www.sergeydmitriev.com/mps/blog/archives/2006/09/mpss_base_langu.html">MPS Blog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1159899326"><time title="GMT" datetime="2006-10-03T18:15:26Z">18:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-10-31">Tue 31 Oct 2006</time></h2>
+</header>
+
+<article>
+<a id="c1162318518"></a>
+<header>
+<h3>Finite state machines vs. multithread, CPS to the rescue</h3>
+</header>
+<p>Update: the driver evolved from this article is now available as part of MozLab. Here is a simple implementation of a finite state machine driver. The nice thing is that state transition rules are all in one place (the Session constructor) and code...</p>
+Excerpt from <a href="http://blog.hyperstruct.net/articles/2006/03/06/finite-state-machines-vs-multithread-cps-to-the-rescue">hyperstruct: Finite state machines vs. multithread, CPS to the rescue</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1162318518"><time title="GMT" datetime="2006-10-31T18:15:18Z">18:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2006-12-30">Sat 30 Dec 2006</time></h2>
+</header>
+
+<article>
+<a id="c1167493513"></a>
+<header>
+<h3>Finite state machines vs. multithread, CPS to the rescue</h3>
+</header>
+<p>Update: the driver evolved from this article is now available as part of MozLab. Here is a simple implementation of a finite state machine driver. The nice thing is that state transition rules are all in one place (the Session constructor) and code...</p>
+Excerpt from <a href="http://feeds.feedburner.com/~r/hyperstruct/~3/68497809/finite-state-machines-vs-multithread-cps-to-the-rescue">hyperstruct blog - Home</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1167493513"><time title="GMT" datetime="2006-12-30T15:45:13Z">15:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-01-02">Tue 02 Jan 2007</time></h2>
+</header>
+
+<article>
+<a id="c1167732920"></a>
+<p>My Experiments with continuation in C#Cross-posted from <a rel="nofollow" href="http://blogs.msdn.com/abhinaba/archive/2005/08/11/450785.aspxThe">[link]</a> blogs are buzzing with continuation support in C# 2.0 and what cool things can be done with it....</p>
+Excerpt from <a href="http://abhinaba.blogspot.com/2006/07/my-experiments-with-continuation-in.html">Don't Panic</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1167732920"><time title="GMT" datetime="2007-01-02T10:15:20Z">10:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-01-05">Fri 05 Jan 2007</time></h2>
+</header>
+
+<article>
+<a id="c1168019122"></a>
+<header>
+<h3>Finite state machines vs. multithread, CPS to the rescue</h3>
+</header>
+<p>Update: the driver evolved from this article is now available as part of MozLab. Here is a simple implementation of a finite state machine driver. The nice thing is that state transition rules are all in one place (the Session constructor) and code...</p>
+Excerpt from <a href="http://blog.hyperstruct.net/2006/3/6/finite-state-machines-vs-multithread-cps-to-the-rescue">hyperstruct blog - Main</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1168019122"><time title="GMT" datetime="2007-01-05T17:45:22Z">17:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-01-13">Sat 13 Jan 2007</time></h2>
+</header>
+
+<article>
+<a id="c1168656310"></a>
+<p>how closures relate to continuations: a good overview from Sam Ruby. Links: ps.uni-sb.de, intertwingly.net...</p>
+Excerpt from <a href="http://www.sini.net/2007/01/12/continuations-for-curmudgeons/">Jean Sini: structured communications</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1168656310"><time title="GMT" datetime="2007-01-13T02:45:10Z">02:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-01-19">Fri 19 Jan 2007</time></h2>
+</header>
+
+<article>
+<a id="c1169241317"></a>
+<header>
+<h3>Continuations for Java</h3>
+</header>
+<p>Continuation is an object that represents the execution state of a program at a certain point. We can use continuation to restart the execution from the point stored in it. How about continuations for the Java platform? There are atleast two...</p>
+Excerpt from <a href="http://blogs.sun.com/sundararajan/entry/continuations_for_java">Java Planet - Daily Blog Posts about Java</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1169241317"><time title="GMT" datetime="2007-01-19T21:15:17Z">21:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-03-15">Thu 15 Mar 2007</time></h2>
+</header>
+
+<article>
+<a id="c1173921309"></a>
+<p>After the last LRUG meeting there was much discussion of continuations, and following up from that Ross pointed the LRUG irc channel at Sam Ruby: Continuations for Curmudgeons which explains continuations pretty damn well....</p>
+Excerpt from <a href="http://codepapacy.blogspot.com/2007/03/continuations-for-curmudgeons.html">Codepapacy</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1173921309"><time title="GMT" datetime="2007-03-15T01:15:09Z">01:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-03-30">Fri 30 Mar 2007</time></h2>
+</header>
+
+<article>
+<a id="c1175272641"></a>
+<p>I do not think you understand continuations completetly. </p>
+<p>~rAGU</p>
+Posted by <a href="mailto:raguks@indiatimes.com" title="px1nr.wp.shawcable.net">Ragu</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1175272641"><time title="GMT" datetime="2007-03-30T16:37:21Z">16:37</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-04-24">Tue 24 Apr 2007</time></h2>
+</header>
+
+<article>
+<a id="c1177445708"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons by gavrie &amp; 2 other(s) dev continuations Copy | React (0) <a rel="nofollow" href="http://www.intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons">[link]</a>...</p>
+Excerpt from <a href="http://blogmarks.net/api/user/gavrie/mark/93786">Public marks with tag continuations</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1177445708"><time title="GMT" datetime="2007-04-24T20:15:08Z">20:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-04-30">Mon 30 Apr 2007</time></h2>
+</header>
+
+<article>
+<a id="c1177955114"></a>
+<header>
+<h3>Generator&#33287;&#20018;&#25509;Asynchronous calls</h3>
+</header>
+<p>&#25105;&#20497;&#26178;&#24120;&#24517;&#38920;&#20197;&#19968;&#23450;&#30340;&#38918;&#24207;&#21628;&#21483;&#24213;&#23652;module&#25152;&#25552;&#20379;&#30340;&#20989;&#24335;&#12290;&#27604;&#22914;&#35498;&#65292; def callSeq(api): api.setEnv() api.produce() api.report() &#36889;&#22312;&#20219;&#20309;procedural language&#30070;&#20013;&#37117;&#26159;&#24456;&#30452;&#35258;&#30340;&#20107;&#24773;&#12290;&#20294;&#26159;GUI app&#30340;&#38283;&#30332;&#21407;&#21063;&#26159;&#65292;UI thread&#24517;&#38920;&#33021;&#22816;&#24456;&#24555;&#30340;&#28040;&#32791;event...</p>
+Excerpt from <a href="http://voidpp.blogspot.com/2007/04/generatorasynchronous-calls.html">Simple, Complex and Complicated</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1177955114"><time title="GMT" datetime="2007-04-30T17:45:14Z">17:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-06-06">Wed 06 Jun 2007</time></h2>
+</header>
+
+<article>
+<a id="c1181089455"></a>
+<header>
+<h3>My Experiments with continuation in C#Cross-posted...</h3>
+</header>
+<p>My Experiments with continuation in C# Cross-posted from <a rel="nofollow" href="http://blogs.msdn.com/abhinaba/archive/2005/08/11/450785.aspx">[link]</a> The blogs are buzzing with continuation support in C# 2.0 and what cool things can be done with it....</p>
+Excerpt from <a href="http://www.abhinaba.com/blog/2006/07/my-experiments-with-continuation-in.html">Don't Panic</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1181089455"><time title="GMT" datetime="2007-06-06T00:24:15Z">00:24</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1181110508"></a>
+<header>
+<h3>Closing in on Closures and Jumping into Continuations</h3>
+</header>
+<p>Recently on ruby-talk someone asked if continuations and closures were the same thing. They are related in that they both are tied to a particular point in time in the execution of a program. The difference is that closures are like a souvenir of a...</p>
+Excerpt from <a href="http://talklikeaduck.denhaven2.com/articles/2007/06/05/closing-in-on-closures-and-jumping-into-continuations">Talk Like A Duck: Closing in on Closures and Jumping into Continuations</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1181110508"><time title="GMT" datetime="2007-06-06T06:15:08Z">06:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-06-25">Mon 25 Jun 2007</time></h2>
+</header>
+
+<article>
+<a id="c1182784508"></a>
+<header>
+<h3>Episodic Computation</h3>
+</header>
+<p>Or, How I Learned to Stop Returning and Embrace Yield! You really should stop reading this and go read this . To this point in my career, I&#8217;ve found that Addison Wesley can be counted upon to deliver the more academically-minded texts on the topics...</p>
+Excerpt from <a href="http://iformattable.blogspot.com/2007/06/episodic-computation.html">IFormattable</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1182784508"><time title="GMT" datetime="2007-06-25T15:15:08Z">15:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-08-10">Fri 10 Aug 2007</time></h2>
+</header>
+
+<article>
+<a id="c1186760735"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p><a rel="nofollow" href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons">[link]</a>...</p>
+Excerpt from <a href="http://del.icio.us/url/72711d77c9457a3cfb5be4c496694f69">del.icio.us/tag/javascript</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1186760735"><time title="GMT" datetime="2007-08-10T15:45:35Z">15:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-08-17">Fri 17 Aug 2007</time></h2>
+</header>
+
+<article>
+<a id="c1187324112"></a>
+<header>
+<h3>JavaScript redux: Closures and Continuations</h3>
+</header>
+<p>This is why I love being back blogging, I had three insanely smart people contact me to help me understand the problems I wrote about in my last post. First, Martin IMed and gave me yet another late night lesson in programming (I think the last...</p>
+Excerpt from <a href="http://www.russellbeattie.com/blog/javascript-redux-closures-and-continuations">Russell Beattie's Weblog</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1187324112"><time title="GMT" datetime="2007-08-17T04:15:12Z">04:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1187338577"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>[link] [more]...</p>
+Excerpt from <a href="http://programming.reddit.com/info/2fzt0/comments">reddit.com: programming - newest submissions</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1187338577"><time title="GMT" datetime="2007-08-17T08:16:17Z">08:16</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-08-19">Sun 19 Aug 2007</time></h2>
+</header>
+
+<article>
+<a id="c1187496916"></a>
+<header>
+<h3>Bookmarks: August 6th through August 18th</h3>
+</header>
+<p>Ruby on Rails Forum Vlad the Deployer Continuations Tutorial - Ruby New Foliotek Demo Making sense of monads Ubuntu + Postifix, a good tutorial Videolectures from rhe 24th Annual International Conference on Machine Learning LDAP integration in Ruby...</p>
+Excerpt from <a href="http://www.markmcgranaghan.com/2007/08/18/bookmarks-august-6th-through-august-18th/">Mark McGranaghan</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1187496916"><time title="GMT" datetime="2007-08-19T04:15:16Z">04:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1187522122"></a>
+<p>Jeremy Zawodny : Continuations for Curmudgeons - Continuations for Curmudgeons: good stuff Sam.. I never saw this until last week. I wish I had. Tags : links...</p>
+Excerpt from <a href="http://dev.upian.com/hotlinks/archives/2007/08/19/#item78329">HotLinks - Level 1</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1187522122"><time title="GMT" datetime="2007-08-19T11:15:22Z">11:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-09-04">Tue 04 Sep 2007</time></h2>
+</header>
+
+<article>
+<a id="c1188926126"></a>
+<header>
+<h3>Modal webapps, iterators and beyond</h3>
+</header>
+<p>Excellent, easy to understand for old fashioned programmers, the introductory lecture that Sam Ruby does about continuations, Continuations for Curmudgeons . Brian McCallister writes about guidelines to write webapps, including a reference to the...</p>
+Excerpt from <a href="http://memojo.com/~sgala/blog/2007/08/16/Modal-webapps-iterators-and-beyond">Boxes and Glue</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1188926126"><time title="GMT" datetime="2007-09-04T17:15:26Z">17:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-09-11">Tue 11 Sep 2007</time></h2>
+</header>
+
+<article>
+<a id="c1189518380"></a>
+<header>
+<h3>Links for 11-Sep</h3>
+</header>
+<p>Continuations made simple Rainbow tables and passwords &#8212; a resolution Styling with CSS and DOM &#8212; and a little bit of lateral thinking...</p>
+Excerpt from <a href="http://stevegilham.blogspot.com/2007/09/links-for-11-sep.html">Distributed Memory</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1189518380"><time title="GMT" datetime="2007-09-11T13:46:20Z">13:46</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-10-04">Thu 04 Oct 2007</time></h2>
+</header>
+
+<article>
+<a id="c1191537910"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons...</p>
+Excerpt from <a href="http://drawohara.tumblr.com/post/14255452">drawohara</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1191537910"><time title="GMT" datetime="2007-10-04T22:45:10Z">22:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-10-09">Tue 09 Oct 2007</time></h2>
+</header>
+
+<article>
+<a id="c1191962731"></a>
+<header>
+<h3>Sam Ruby: Continuations for Curmudgeons</h3>
+</header>
+<p>Sam Ruby: Continuations for Curmudgeons (via Erik Jones)...</p>
+Excerpt from <a href="http://ni.hili.st/post/14859375">ni.hili.st</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1191962731"><time title="GMT" datetime="2007-10-09T20:45:31Z">20:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-10-26">Fri 26 Oct 2007</time></h2>
+</header>
+
+<article>
+<a id="c1193363125"></a>
+<header>
+<h3>Instead of viewing a stack as a contiguous sequence of bytes, let&#8217;s view a stack as a linked list of frames. (continuations for curmudgeons)</h3>
+</header>
+<p>[link] [more]...</p>
+Excerpt from <a href="http://reddit.com/goto?rss=true&amp;id=t3_5z57p">
+reddit.com: what's new online
+</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1193363125"><time title="GMT" datetime="2007-10-26T01:45:25Z">01:45</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1193378751"></a>
+<p>Just for fun, here&#8217;s the D programming language version of the fibonacci example, using the stackthreads module I finally made to work a few days ago and am now showing around happily :)</p>
+<p>fib.d<br />
+module fib;<br />
+import std.stdio, tools.stackthreads;<br />
+class fib : Generator!(int) {<br />
+&#160; void generate() {<br />
+&#160; yield(0);<br />
+&#160; auto i=0, j=1;<br />
+&#160; while (true) { yield(j); auto t=i+j; i=j; j=t; }<br />
+&#160; }<br />
+}</p>
+<p>void main() {<br />
+&#160; foreach (n; new fib) {<br />
+&#160; if (n&gt;1000) break;<br />
+&#160; writefln(n);<br />
+&#160; }<br />
+}</p>
+<p>Pretty good for a C-family language, I&#8217;d say! :D<br />
+ --FeepingCreature, D fanboy</p>
+Posted by <a rel="nofollow" href="mailto:default_357-line@yahoo.de" title="vpn6.rz.tu-ilmenau.de">FeepingCreature</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1193378751"><time title="GMT" datetime="2007-10-26T06:05:51Z">06:05</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1193378832"></a>
+<p>Just for fun, here&#8217;s the <a rel="nofollow" href="http://digitalmars.com/d/">D programming language</a> version of the fibonacci example, using the stackthreads module I finally made to work a few days ago and am now showing around happily :)</p>
+<pre class="code">module fib;
+import std.stdio, tools.stackthreads;
+class fib : Generator!(int) {
+  void generate() {
+    yield(0);
+    auto i=0, j=1;
+    while (true) { yield(j); auto t=i+j; i=j; j=t; }
+  }
+}
+
+void main() {
+  foreach (n; new fib) {
+    if (n&gt;1000) break;
+    writefln(n);
+  }
+}</pre>
+<p>Pretty good for a C-family language, I&#8217;d say! :D<br />
+ --FeepingCreature, D fanboy</p>
+Posted by <a rel="nofollow" href="mailto:default_357-line@yahoo.de" title="vpn6.rz.tu-ilmenau.de">FeepingCreature</a> at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1193378832"><time title="GMT" datetime="2007-10-26T06:07:12Z">06:07</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2007-12-25">Tue 25 Dec 2007</time></h2>
+</header>
+
+<article>
+<a id="c1198611144"></a>
+<header>
+<h3>Generators are not continuations</h3>
+</header>
+<p>While I was looking around at some of the prominent examples of continuations on the internet, I saw a tendency to call a &#8220;generator&#8221; a type of continuation. Generators are great, but the only thing special about them is their ability to...</p>
+Excerpt from <a href="http://brynthomas.net/blog/?p=7">brynthomas.net</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1198611144"><time title="GMT" datetime="2007-12-25T19:32:24Z">19:32</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2008-01-14">Mon 14 Jan 2008</time></h2>
+</header>
+
+<article>
+<a id="c1200345322"></a>
+<header>
+<h3>Continuations, continued.</h3>
+</header>
+<p>Long ago, Sam Ruby wrote an introduction to continuations and their use. This is likely the simplest, clearest introduction I&#8217;ve seen. Sam Ruby: Continuations for Curmudgeons Denys Duchier also wrote a description of continuations and continuation...</p>
+Excerpt from <a href="http://maniagnosis.blogspot.com/2007/10/continuations-continued.html">Maniagnosis</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1200345322"><time title="GMT" datetime="2008-01-14T21:15:22Z">21:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2008-01-18">Fri 18 Jan 2008</time></h2>
+</header>
+
+<article>
+<a id="c1200624351"></a>
+<header>
+<h3>Continuation dan Abstraksi Yang Bocor</h3>
+</header>
+<p>Pertama tentang leaky abstraction (abstraksi yang bocor?) dulu. Law of leaky abstraction berbunyi: All non-trivial abstractions, to some degree, are leaky. TCP adalah abstraksi. TCP menjamin data yang anda kirim ke alamat tujuan pasti sampai. Tapi...</p>
+Excerpt from <a href="http://julius.sirait.net/post/24024016">I Debug Codes</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1200624351"><time title="GMT" datetime="2008-01-18T02:45:51Z">02:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2008-03-04">Tue 04 Mar 2008</time></h2>
+</header>
+
+<article>
+<a id="c1204611324"></a>
+<header>
+<h3>Starting Continuations</h3>
+</header>
+<p>This blog is titled Continuations because I did not want to call it Closures .&#160; If that makes absolutely no sense to you, then some of my geekier posts may not either.&#160; You may still want to stick around though because I plan to write about many...</p>
+Excerpt from <a href="http://continuations.wenger.us/post/27658476">Continuations</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1204611324"><time title="GMT" datetime="2008-03-04T06:15:24Z">06:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2008-07-04">Fri 04 Jul 2008</time></h2>
+</header>
+
+<article>
+<a id="c1215131853"></a>
+<header>
+<h3>Continuations explained</h3>
+</header>
+<p>Post summary...</p>
+Excerpt from <a href="http://martin-probst.com/blog/2005/04/13/continuations-explained">Martin's Notepad</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1215131853"><time title="GMT" datetime="2008-07-04T00:37:33Z">00:37</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2008-07-07">Mon 07 Jul 2008</time></h2>
+</header>
+
+<article>
+<a id="c1215436987"></a>
+<header>
+<h3>Continuations: Arc vs Java</h3>
+</header>
+<p>What&#8217;s a continuation? Despite much googling on the topic, continuations remained opaque to me until I stumbled upon Sam Ruby&#8217;s amazingly excellent Continuations for Curmudgeons . Please read that article instead of this, it will be much more...</p>
+Excerpt from <a href="http://www.fnargs.com/2008/05/continuations-arc-vs-java.html">fnargs</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1215436987"><time title="GMT" datetime="2008-07-07T13:23:07Z">13:23</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2008-09-15">Mon 15 Sep 2008</time></h2>
+</header>
+
+<article>
+<a id="c1221518716"></a>
+<header>
+<h3>Continuation diggest</h3>
+</header>
+<p>What behind this obscure title? Just a web programming paradigm which is very nice and enhances greatly the way of developping web applications. It is also another way of thinking, the consequence being maybe a difficulty for many to integrate the...</p>
+Excerpt from <a href="http://it-tonic.blogspot.com/2008/09/continuation-diggest.html">IceTea Tonic</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1221518716"><time title="GMT" datetime="2008-09-15T22:45:16Z">22:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2009-10-22">Thu 22 Oct 2009</time></h2>
+</header>
+
+<article>
+<a id="c1256201105"></a>
+<header>
+<h3>Real-world use of binding objects in ruby</h3>
+</header>
+<p>Last night, I was thinking about what i think are advanced ruby language features, namely Continuations (callcc) and Binding objects. I mean advanced because I have a statically-typed oo langages background (C#, Java, C++), I discovered ruby very...</p>
+Excerpt from <a href="http://stackoverflow.com/questions/1605774/real-world-use-of-binding-objects-in-ruby">Real-world use of binding objects in ruby - Stack Overflow </a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1256201105"><time title="GMT" datetime="2009-10-22T08:45:05Z">08:45</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2010-04-06">Tue 06 Apr 2010</time></h2>
+</header>
+
+<article>
+<a id="c1270556111"></a>
+<header>
+<h3>Re: &#1066; gui toolkit is dead?</h3>
+</header>
+<blockquote class="quote"><p>&#1057; &#1101;&#1090;&#1086;&#1075;&#1086; &#1084;&#1077;&#1089;&#1090;&#1072; &#1084;&#1086;&#1078;&#1085;&#1086; &#1087;&#1086;&#1076;&#1088;&#1086;&#1073;&#1085;&#1077;&#1077;??? &#1076;&#1072; &#1074; &#1086;&#1089;&#1085;&#1086;&#1074;&#1085;&#1086;&#1084;, &#1086;&#1073;&#1097;&#1080;&#1077; &#1089;&#1086;&#1086;&#1073;&#1088;&#1072;&#1078;&#1077;&#1085;&#1080;&#1103;. &#1074;&#1086;&#1090; &#1090;&#1091;&#1090; &#1087;&#1088;&#1086; &#1087;&#1088;&#1086;&#1076;&#1086;&#1083;&#1078;&#1077;&#1085;&#1080;&#1103; &#1085;&#1072; <a rel="nofollow" href="http://www.intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#ui">[link]</a> &#1077;&#1089;&#1090;&#1100; &#1085;&#1077;&#1088;&#1072;&#1073;&#1086;&#1090;&#1072;&#1102;&#1097;&#1072;&#1103; &#1089;&#1089;&#1099;&#1083;&#1082;&#1072; uist2003-uicont.pdf . &#1042;&#1086;&#1090; &#1090;&#1091;&#1090; &#1087;&#1088;&#1086; &#1087;&#1072;&#1090;&#1090;&#1077;&#1088;&#1085;&#1099; &#1080;
+</p></blockquote>...
+<br /><br />Excerpt from <a href="http://www.linux.org.ru/jump-message.jsp?msgid=2767782&amp;cid=2771297">Linux.org.ru: &#1066; gui toolkit is dead?</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1270556111"><time title="GMT" datetime="2010-04-06T12:15:11Z">12:15</time></a>
+</article>
+
+<hr/>
+
+<article>
+<a id="c1270556114"></a>
+<header>
+<h3>Re: &#1066; gui toolkit is dead?</h3>
+</header>
+<blockquote class="quote"><p>&#1057; &#1101;&#1090;&#1086;&#1075;&#1086; &#1084;&#1077;&#1089;&#1090;&#1072; &#1084;&#1086;&#1078;&#1085;&#1086; &#1087;&#1086;&#1076;&#1088;&#1086;&#1073;&#1085;&#1077;&#1077;??? &#1076;&#1072; &#1074; &#1086;&#1089;&#1085;&#1086;&#1074;&#1085;&#1086;&#1084;, &#1086;&#1073;&#1097;&#1080;&#1077; &#1089;&#1086;&#1086;&#1073;&#1088;&#1072;&#1078;&#1077;&#1085;&#1080;&#1103;. &#1074;&#1086;&#1090; &#1090;&#1091;&#1090; &#1087;&#1088;&#1086; &#1087;&#1088;&#1086;&#1076;&#1086;&#1083;&#1078;&#1077;&#1085;&#1080;&#1103; &#1085;&#1072; <a rel="nofollow" href="http://www.intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#ui">[link]</a> &#1077;&#1089;&#1090;&#1100; &#1085;&#1077;&#1088;&#1072;&#1073;&#1086;&#1090;&#1072;&#1102;&#1097;&#1072;&#1103; &#1089;&#1089;&#1099;&#1083;&#1082;&#1072; uist2003-uicont.pdf . &#1042;&#1086;&#1090; &#1090;&#1091;&#1090; &#1087;&#1088;&#1086; &#1087;&#1072;&#1090;&#1090;&#1077;&#1088;&#1085;&#1099; &#1080;
+</p></blockquote>...
+<br /><br />Excerpt from <a href="http://www.linux.org.ru/jump-message.jsp?msgid=2767782&amp;amp;cid=2771297">Linux.org.ru: &#1066; gui toolkit is dead?</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1270556114"><time title="GMT" datetime="2010-04-06T12:15:14Z">12:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2010-08-05">Thu 05 Aug 2010</time></h2>
+</header>
+
+<article>
+<a id="c1280967308"></a>
+<header>
+<h3>[conanite]  This Sam Ruby article helped me a lot with continuations: ...</h3>
+</header>
+<p>This Sam Ruby article helped me a lot with continuations: <a rel="nofollow" href="http://www.intertwingly.net/blog/2005/04/13/Continuations-fo">[link]</a>... A continuation behaves just like a one-arg function except it never returns to its caller. It returns to the point where it...</p>
+Excerpt from <a href="http://arclanguage.org/item?id=7506">AF.SearchYC - continuation</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1280967308"><time title="GMT" datetime="2010-08-05T00:15:08Z">00:15</time></a>
+</article>
+
+<hr/>
+<header>
+<h2><time title="GMT" datetime="2010-09-18">Sat 18 Sep 2010</time></h2>
+</header>
+
+<article>
+<a id="c1284797709"></a>
+<header>
+<h3>Closing in on Closures and Jumping into Continuations</h3>
+</header>
+<p>Recently on ruby-talk someone asked if continuations and closures were the same thing. They are related in that they both are tied to a particular point in time in the execution of a program. The difference is that closures are like a souvenir of a...</p>
+Excerpt from <a href="http://talklikeaduck.denhaven2.com/2007/06/05/closing-in-on-closures-and-jumping-into-continuations">Talk Like A Duck : Category ruby_for_nubys, everything about ruby_for_nubys</a>
+ at
+<a href="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons#c1284797709"><time title="GMT" datetime="2010-09-18T08:15:09Z">08:15</time></a>
+</article>
+
+<hr/>
+</section>
+<section>
+<h2>Add your comment</h2>
+<a id="commentForm"></a>
+<form method="post" action="http://intertwingly.net/blog/2005/04/13/Continuations-for-Curmudgeons" accept-charset="utf-8"
+  id="comments_form" onsubmit="if (this.bakecookie.checked) rememberMe(this)">
+<article>
+<input name="parent" type="hidden" value="1946"/>
+<input name="title" type="hidden" value="Continuations for Curmudgeons"/>
+<label for="name">Name:</label><br/>
+<input maxlength="50" id="name" name="name" size="75" type="text" value=""/><br/>
+<br/>
+<label for="email">E-mail:</label><br/>
+<input maxlength="75" id="email" name="email" size="75" type="email" value=""/><br/>
+<br/>
+<label for="url">URI:</label><br/>
+<input maxlength="100" id="url" name="url" size="75" type="url" value=""/><br/>
+<br/>
+<label for="comment">Comment:</label><br/>
+<textarea cols="59" id="comment" name="comment" rows="12"></textarea>
+<br/>
+<input name="preview" type="submit" value="Preview"/>
+<input type="button" onclick="forgetMe(this.form)" value="Clear Info"/>
+<input type="checkbox" name="bakecookie" id="bakecookie"/>
+<label for="bakecookie">Remember info?</label>
+</article>
+</form>
+
+</section>
+
+<aside>
+
+<h2>mingle</h2>
+
+<nav>
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Sam_Ruby">About</a></li>
+<li><a href="http://twitter.com/samruby">Twitter</a></li>
+<li><a href="/blog/comments.html">Comments</a></li>
+<li><a id="navbar_register" href="/blog/registry/">Register</a></li>
+<li><a href="/stats/">Statistics</a></li>
+<li><a href="/blog/archives/">Archives</a></li>
+<li><a href="http://planet.intertwingly.net/">Planet</a></li>
+<li><a href="http://code.intertwingly.net/public/">Code</a></li>
+<li><a href="http://www.pragprog.com/titles/rails4/agile-web-development-with-rails-4th-edition">Rails</a></li>
+<li><a href="http://www.oreilly.com/catalog/9780596529260/">RESTful</a></li>
+<li><a href="/blog/2005/05/16/Disclaim-This">Disclaimer</a></li>
+</ul>
+
+</nav>
+
+</aside>
+
+<footer>
+<ul>
+
+<li>HTTP
+<ul>
+<li><a href="http://tools.ietf.org/html/rfc2616">RFC 2616</a></li>
+<li><a href="http://www.ietf.org/html.charters/httpbis-charter.html">httpbis</a></li>
+<li>URI
+<ul>
+<li><a href="http://tools.ietf.org/html/rfc3986">RFC 3986</a></li>
+<li><a href="http://bitworking.org/projects/URI-Templates/">URI Template</a></li>
+</ul>
+</li>
+</ul>
+</li>
+
+<li>HTML
+<ul>
+<li><a href="http://www.w3.org/html/wg/">Working Group</a></li>
+<li><a href="http://www.whatwg.org/">WHATWG</a></li>
+<li>Specs
+<ul>
+<li><a href="http://www.w3.org/TR/REC-html40/">HTML 4.01</a></li>
+<li><a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a></li>
+</ul>
+</li>
+<li>Drafts
+<ul>
+
+<li><a href="http://www.w3.org/html/wg/html5/">HTML 5</a></li>
+<li><a href="http://www.w3.org/html/wg/markup-spec/">Markup Language</a></li>
+<li><a href="http://dev.w3.org/html5/offline-webapps/">Web Workers</a></li>
+<li><a href="http://dev.w3.org/html5/html-author/">HTML Author</a></li>
+<li><a href="http://dev.w3.org/html5/rdfa/Overview.html#rdfa">RDFa</a></li>
+<li><a href="http://dev.w3.org/html5/pubnotes/">Publication Notes</a></li>
+<li><a href="http://dev.w3.org/html5/html4-differences/">HTML4 Differences</a></li>
+<li><a href="http://dev.w3.org/html5/offline-webapps/">Offline Web Applications</a></li>
+<li><a href="http://dev.w3.org/html5/html-design-principles/">Design Principles</a></li>
+<li><a href="http://dev.w3.org/html5/web-forms-2/">Web Forms 2.0</a></li>
+
+</ul>
+</li>
+</ul>
+</li>
+
+<li>Atom
+<ul>
+<li><a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Format</a></li>
+<li><a href="http://www.atomenabled.org/developers/protocol/atom-protocol-spec.php">Protocol</a></li>
+<li>Extensions
+<ul>
+<li><a href="http://tools.ietf.org/html/rfc4685">Threading</a></li>
+<li><a href="http://tools.ietf.org/html/rfc5005">Paging and Archiving</a></li>
+
+<li><a href="http://tools.ietf.org/html/rfc4946">License</a></li>
+</ul>
+</li>
+</ul>
+</li>
+
+</ul>
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs xmlns:xlink="http://www.w3.org/1999/xlink">
+    <radialGradient id="i1" fx=".4" fy=".2" r=".7">
+      <stop stop-color="#FE8" offset="0"></stop>
+      <stop stop-color="#D70" offset="1"></stop>
+    </radialGradient>
+    <radialGradient id="i2" fx=".8" fy=".5" xlink:href="#i1"></radialGradient>
+    <radialGradient id="i3" fx=".5" fy=".9" xlink:href="#i1"></radialGradient>
+    <radialGradient id="i4" fx=".1" fy=".5" xlink:href="#i1"></radialGradient>
+  </defs>
+  <g stroke="#940">
+    <path d="M73,29c-37-40-62-24-52,4l6-7c-8-16,7-26,42,9z" fill="url(#i1)"></path>
+    <path d="M47,8c33-16,48,21,9,47l-6-5c38-27,20-44,5-37z" fill="url(#i2)"></path>
+    <path d="M77,32c22,30,10,57-39,51l-1-8c3,3,67,5,36-36z" fill="url(#i3)"></path>
+
+    <path d="M58,84c-4,20-38-4-8-24l-6-5c-36,43,15,56,23,27z" fill="url(#i4)"></path>
+    <path d="M40,14c-40,37-37,52-9,68l1-8c-16-13-29-21,16-56z" fill="url(#i1)"></path>
+    <path d="M31,33c19,23,20,7,35,41l-9,1.7c-4-19-8-14-31-37z" fill="url(#i2)"></path>
+  </g>
+</svg>
+</footer>
+
+</body>
+</html>
