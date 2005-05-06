@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" lang="EN">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>URIs, Addressability, and the use of HTTP GET and POST</title>
+  <style type="text/css">
+code           { font-family: monospace; }
+
+
+div.constraint,
+div.issue,
+div.note,
+div.notice     { margin-left: 2em; }
+
+li p           { margin-top: 0.3em;
+                 margin-bottom: 0.3em; }
+
+div.exampleInner pre { margin-left: 1em;
+                       margin-top: 0em; margin-bottom: 0em}
+div.exampleOuter {border: 4px double gray;
+                  margin: 0em; padding: 0em}
+div.exampleInner { background-color: #d5dee3;
+                   border-top-width: 4px;
+                   border-top-style: double;
+                   border-top-color: #d3d3d3;
+                   border-bottom-width: 4px;
+                   border-bottom-style: double;
+                   border-bottom-color: #d3d3d3;
+                   padding: 4px; margin: 0em }
+div.exampleWrapper { margin: 4px }
+div.exampleHeader { font-weight: bold;
+                    margin: 4px}</style>
+  <link rel="stylesheet" type="text/css"
+  href="http://www.w3.org/StyleSheets/TR/base.css" />
+</head>
+
+<body>
+
+<div class="head">
+<p><a href="http://www.w3.org/"><img src="http://www.w3.org/Icons/w3c_home"
+alt="W3C" height="48" width="72" /></a></p>
+
+<h1><a name="title" id="title"></a>URIs, Addressability, and the use of HTTP
+GET and POST</h1>
+
+<h2><a name="w3c-doctype" id="w3c-doctype"></a>TAG Finding 21 March 2004</h2>
+<dl>
+  <dt>This version:</dt>
+    <dd><a
+      href="http://www.w3.org/2001/tag/doc/whenToUseGet-20040321">http://www.w3.org/2001/tag/doc/whenToUseGet-20040321</a>
+    </dd>
+  <dt>Latest version:</dt>
+    <dd><a
+      href="http://www.w3.org/2001/tag/doc/whenToUseGet.html">http://www.w3.org/2001/tag/doc/whenToUseGet</a>
+      (<a href="http://www.w3.org/2001/tag/doc/get7.xml">XML</a>) </dd>
+  <dt>Previous versions:</dt>
+    <dd><a href="http://www.w3.org/2001/tag/doc/whenToUseGet-20030922">22 Sep
+      2003 Draft</a>, <a
+      href="http://www.w3.org/2001/tag/doc/whenToUseGet-20030919">19 Sep 2003
+      Draft</a> </dd>
+  <dt>Editor:</dt>
+    <dd><a href="http://www.w3.org/People/Jacobs/">Ian Jacobs</a>, W3C</dd>
+</dl>
+
+<p class="copyright"><a
+href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> ©
+2003, 2004 <a href="http://www.w3.org/">W3C</a><sup>®</sup> (<a
+href="http://www.lcs.mit.edu/">MIT</a>, <a
+href="http://www.ercim.org/">ERCIM</a>, <a
+href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. W3C <a
+href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
+<a
+href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a>,
+<a href="http://www.w3.org/Consortium/Legal/copyright-documents">document
+use</a>, and <a
+href="http://www.w3.org/Consortium/Legal/copyright-software">software
+licensing</a> rules apply. </p>
+</div>
+<hr />
+
+<div>
+<h2><a name="abstract" id="abstract"></a>Abstract</h2>
+
+<p>An important principle of Web architecture is that all important resources
+be identifiable by URI. The finding discusses the relationship between the URI
+addressability of a resource and the choice between HTTP GET and POST methods
+with HTTP URIs. HTTP GET promotes URI addressability so, designers should adopt
+it for <a href="#safe">safe operations</a> such as simple queries. POST is
+appropriate for other types of applications where a user request has the
+potential to change the state of the resource (or of related resources). The
+finding explains how to choose between HTTP GET and POST for an application
+taking into account architectural, security, and practical considerations.</p>
+
+<p>This finding does not discuss URI schemes other than "http" or protocols
+other than HTTP/1.1 <a href="#">[RFC2616]</a>.</p>
+</div>
+
+<div>
+<h2><a name="status" id="status"></a>Status of this Document</h2>
+
+<p>This document has been produced by the <a href="/2001/tag/">W3C Technical
+Architecture Group (TAG)</a>. This finding addresses TAG <a
+href="http://www.w3.org/2001/tag/ilist#whenToUseGet-7">issue
+whenToUseGet-7</a>.</p>
+
+<p>This is the 21 March 2004 revision of this finding. It has been approved by
+the TAG. At their <a href="http://www.w3.org/2004/03/02-tag-summary.html">2
+March 2004 face-to-face meeting</a>, the TAG resolved to approve this version
+of the finding with one change from the previous version, the addition of a
+link to ongoing work in the W3C <a href="http://www.w3.org/2002/ws/desc/">Web
+Services Description Working Group</a>, in <a href="#webservices">section
+6</a>. The 21 March 2004 revision supersedes the <a
+href="http://www.w3.org/2001/tag/doc/whenToUseGet-20030922">22 Sep 2003
+version</a> of this finding, which the TAG had previously approved. </p>
+
+<p><a href="/2001/tag/findings">Additional TAG findings</a>, both approved and
+in draft state, may also be available. The TAG expects to incorporate this and
+other findings into a Web Architecture Document that will be published
+according to the process of the <a
+href="/Consortium/Process-20010719/tr#Recs">W3C Recommendation Track</a>.</p>
+
+<p>The terms MUST, SHOULD, and SHOULD NOT are used in this document in
+accordance with <a href="#">[RFC2119]</a>.</p>
+
+<p>Please send comments on this finding to the publicly archived TAG mailing
+list www-tag@w3.org (<a
+href="http://lists.w3.org/Archives/Public/www-tag/">archive</a>).</p>
+</div>
+
+<div class="toc">
+<h2><a name="contents" id="contents"></a>Table of Contents</h2>
+
+<p class="toc">1 <a href="#introduction">Introduction</a><br />
+    1.1 <a href="#scenarios">Scenarios</a><br />
+    1.2 <a href="#principles-summary">Relevant Principles of Web
+Architecture</a><br />
+    1.3 <a href="#checklist">Quick Checklist for Choosing HTTP GET or
+POST</a><br />
+2 <a href="#uris">The Benefits of URI Addressability</a><br />
+3 <a href="#safe">Safe Interactions</a><br />
+    3.1 <a href="#examples">Examples of using GET and POST</a><br />
+        3.1.1 <a href="#example-lists">Mailing List Subscription</a><br
+/>
+        3.1.2 <a href="#example-obligations">Steps for Establishing an
+Obligation</a><br />
+        3.1.3 <a href="#example-counters">Side-effects do not Imply
+Unsafe Interactions</a><br />
+4 <a href="#sensitive">Considerations for Sensitive Data</a><br />
+5 <a href="#practical">Practical Considerations</a><br />
+    5.1 <a href="#i18n">Internationalization</a><br />
+    5.2 <a href="#ephemeral">Ephemeral Limitations</a><br />
+6 <a href="#webservices">Ongoing Work on GET in Web Services</a><br />
+7 <a href="#future-work">Future Work</a><br />
+8 <a href="#references">References</a><br />
+9 <a href="#acks">Acknowledgments</a><br />
+</p>
+</div>
+<hr />
+
+<div class="body">
+
+<div class="div1">
+<h2><a name="introduction" id="introduction"></a>1 Introduction</h2>
+
+<p>In this finding, we discuss when it is appropriate to use HTTP GET and when
+it is appropriate to use HTTP POST, and the architectural principles behind the
+separation of these two methods.</p>
+
+<p>In the introduction, we present <a href="#scenarios">scenarios</a> that
+illustrate some of the topics covered, summarize the <a
+href="#principles-summary">relevant principles of Web Architecture</a>, and
+provide a <a href="#checklist">quick checklist for choosing GET or POST</a>.
+Following that, we discuss the <a href="#uris">benefits of URI
+addressability</a>, which is the primary reason for distinguishing GET from
+POST. We then characterize <a href="#safe">safe interactions</a>, when the use
+of GET is encouraged. However, when considering GET or POST, designers should
+also remain aware of <a href="#sensitive">considerations for sensitive data</a>
+such as passwords or credit card information, and other <a
+href="#practical">practical considerations</a>.</p>
+
+<div class="div2">
+<h3><a name="scenarios" id="scenarios"></a>1.1 Scenarios</h3>
+
+<p id="scenario1">Scenario 1: Dan purchases a new wireless telephone and wishes
+to share information about it with his colleagues. Following the clue "CAT. NO.
+43-893" on the bottom of the phone, Dan visits the Web site of the phone
+manufacturer. Typing the catalog number in the site's search box, Dan pulls up
+the relevant information. However, since the site designers created a POST Web
+form instead of a GET Web form for this read-only operation, Dan cannot
+bookmark the query, or send the query to his colleagues (who are potential
+customers) as a URI, or gain any of the other benefits made possible by the
+proper use of HTTP GET. The Web site designer should have provided GET access
+to the catalog information; see the <a href="#uris">benefits of URI
+addressability</a>.</p>
+
+<p id="scenario2">Scenario 2: My bank allows me to read current information
+about my checking account over the Web. The URI they provide me for this access
+includes my account number. This is sensitive information I do not want to
+appear in the URI since, for example, when I follow a link from the bank Web
+site to the site of their advertiser, my account information may appear in the
+advertiser's server logs. Rather than moving my account number from the URI
+into the body of a POST request, my bank allows me to establish a secure HTTP
+connection. Not only do I feel more confident retrieving information over a
+secure connection, my browser knows not to expose sensitive information to the
+next site I visit after the secure connection. As a result, I can still
+bookmark my account page without revealing sensitive information. For more
+information, see the <a href="#sensitive">considerations for sensitive
+data</a>.</p>
+</div>
+
+<div class="div2">
+<h3><a name="principles-summary" id="principles-summary"></a>1.2 Relevant
+Principles of Web Architecture</h3>
+<ol type="1">
+  <li>All important resources SHOULD be identifiable by URI.</li>
+  <li>HTTP GET is safe; i.e., agents do not incur obligations by following
+    links.</li>
+</ol>
+</div>
+
+<div class="div2">
+<h3><a name="checklist" id="checklist"></a>1.3 Quick Checklist for Choosing
+HTTP GET or POST</h3>
+<ul>
+  <li>Use GET if: 
+    <ul>
+      <li>The interaction is more like a question (i.e., it is a safe operation
+        such as a query, read operation, or lookup).</li>
+    </ul>
+  </li>
+  <li>Use POST if: 
+    <ul>
+      <li>The interaction is more like an order, or</li>
+      <li>The interaction changes the state of the resource in a way that the
+        user would perceive (e.g., a subscription to a service), or</li>
+      <li>The user be held accountable for the results of the interaction.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>However, before the final decision to use HTTP GET or POST, please also
+consider <a href="#sensitive">considerations for sensitive data</a> and <a
+href="#practical">practical considerations</a>.</p>
+</div>
+</div>
+
+<div class="div1">
+<h2><a name="uris" id="uris"></a>2 The Benefits of URI Addressability</h2>
+
+<p>Web architecture starts with Uniform Resource Identifiers (URI), whose
+generic syntax is defined by <a href="#">[RFC2396]</a>. The Web relies on
+global agreement to follow the rules of URIs so that we can refer to things on
+the Web, access them, describe them, and share them. Providing a URI for a
+resource affords many advantages, including:</p>
+<ul>
+  <li>linking</li>
+  <li>bookmarking</li>
+  <li>caching</li>
+</ul>
+
+<p>As described in <a href="#TBL50K">[TBL50K]</a>, "Great multiplicative power
+of reuse derives from the fact that all languages use URIs as identifiers: This
+allows things written in one language to refer to things defined in another
+language. The use of URIs allows a language to leverage the many forms of
+persistence, identity, and various forms of equivalence."</p>
+
+<p>In this finding, the term "URI addressability" means that a URI alone is
+sufficient for an agent to carry out a particular type of interaction.</p>
+
+<p>In some cases, it may be desirable to interact in different ways with the
+resource identified by a URI. For example, the <a
+href="http://validator.w3.org/checklink">W3C link checking service</a>
+illustrates the usefulness of separating URIs from methods. The link checker
+works as follows (ignoring recursive link checking for this discussion): for
+each HTTP URI that is part of a link in an HTML or XHTML document, the link
+checker uses the HEAD method to gather information about the resource
+identified by the URI. As the HTTP/1.1 specification states, "The HEAD method
+is identical to GET except that the server MUST NOT return a message-body in
+the response." By using HEAD instead of GET, the link checker does not ask for
+more bits than it requires to do its job.</p>
+
+<p>The Web architecture thus allows for the separation of URIs and methods. A
+URI's scheme determines a set of interaction methods. For instance, the HTTP
+URI scheme is defined in HTTP/1.1 <a href="#">[RFC2616]</a>, which allows "an
+open-ended set of methods and headers that indicate the purpose of a request.
+It builds on the discipline of reference provided by the Uniform Resource
+Identifier (URI) ... for indicating the resource to which a method is to be
+applied."; refer to section 1.1.</p>
+
+<p>There are costs to separating URIs and methods, however. The separation
+means that some metadata required for the interaction may not be part of the
+URI, and as a result, the URI alone is no longer sufficient for an agent to
+carry out the interaction. URI addressability is lost.</p>
+
+<p>In the following section we look more closely at when to use HTTP GET (since
+it promotes URI accessibility) and when to use HTTP POST.</p>
+</div>
+
+<div class="div1">
+<h2><a name="safe" id="safe"></a>3 Safe Interactions</h2>
+
+<p>Section 9.1 of HTTP/1.1 discusses <em>safe interactions</em>. A safe
+interaction is one where the user is not to be held accountable for the result
+of the interaction. Safe interactions are important because these are
+interactions where users can browse with confidence and where software programs
+(e.g., search engines and browsers that pre-cache data for the user) can follow
+links safely. Users (or software agents acting on their behalf) do not commit
+themselves to anything by querying a resource or following a link. For example,
+Web sites that say "by following the link to ABC, you agree to the following
+terms and conditions" do not account for the fact that anyone (in particular, a
+search service) can make another link to ABC, and anyone who follows this other
+link to ABC may never have seen the terms and conditions. See the related TAG
+finding "Deep Linking in the World Wide Web" <a
+href="#DEEPLINK">[DEEPLINK]</a>.</p>
+
+<p id="unsafe">By distinguishing safe from "unsafe" interactions (i.e., those
+where the user should be accountable for a particular interaction) at the
+protocol level:</p>
+<ul>
+  <li>Clients can inform users when a particular action will have consequences
+    (e.g., subscription to a list, payment of a fee, cancellation of a
+    contract, etc.) In section 9.1.1, the HTTP/1.1 specification states,
+    "Implementors should be aware that the software represents the user in
+    their interactions over the Internet, and should be careful to allow the
+    user to be aware of any actions they might take which may have an
+    unexpected significance to themselves or others.</li>
+  <li>Intermediaries (e.g., caches) can safely process on behalf of the
+  user.</li>
+</ul>
+
+<p>In the same section, HTTP/1.1 states, the convention is that GET is used for
+safe interactions and SHOULD NOT have the significance of taking an action
+other than retrieval. Indeed, if you use GET for interactions with
+side-effects, your make your system insecure. For example, a malicious Web page
+publisher outside a firewall might put a URI in an HTML page so that, when
+someone inside the firewall unwittingly follows the link, that person activates
+a function on another system within the firewall.</p>
+
+<p>Users accept obligations through other mechanisms than requests to follow a
+link. Per the HTTP/1.1 specification, designers should use HTTP POST for those
+interactions.</p>
+
+<p>HTTP GET is designed so that all information necessary for the interaction
+is part of the URI, thus promoting URI addressability. With HTTP POST, some
+information intended to affect change to the resource state may be part of the
+protocol headers, not in the URI. With this approach, the resulting URI for
+identifying the resource may be shorter, but the advantages of URI
+addressability are lost.</p>
+
+<p>Note that it is possible to use POST even without supplying data in an HTTP
+message body. In this case, the resource is URI addressable, but the POST
+method indicates to clients that the interaction is unsafe or may have
+side-effects.</p>
+
+<p>By convention, when GET method is used, all information required to identify
+the resource is encoded in the URI. There is no convention in HTTP/1.1 for a
+safe interaction (e.g., retrieval) where the client supplies data to the server
+in an HTTP entity body rather than in the query part of a URI. This means that
+for safe operations, URIs may be long. The case of large parameters to a safe
+operation is not directly addressed by HTTP as it is presently deployed. A
+QUERY or "safe POST" or "GET with BODY" method has been discussed (e.g., at the
+<a href="http://www.ietf.org/ietf/http/http-minutes-96dec.txt">December 1996
+IETF meeting</a>) but no consensus has emerged.</p>
+
+<p>WebDAV <a href="#">[RFC2518]</a> uses a different HTTP method, PROPFIND
+(section <a href="http://asg.web.cmu.edu/rfc/rfc2518.html#sec-8.1">8.1
+PROPFIND</a>), for querying properties of resources; unfortunately, this
+provides no URI for the results of these queries.</p>
+
+<p>Other work on identification of safe interactions includes the experimental
+RFC "The Safe Response Header Field" <a href="#RFC2310">[RFC2310]</a>.</p>
+
+<div class="div2">
+<h3><a name="examples" id="examples"></a>3.1 Examples of using GET and POST</h3>
+
+<p>In section 9.5, the HTTP/1.1 specification lists some example applications
+where POST should be used due to side-effects, including annotation of existing
+resources; posting a message to a bulletin board, newsgroup, mailing list, or
+similar group of articles; and extending a database through an append
+operation.</p>
+
+<p>Whether and how one chooses between GET and POST depends on the format
+specification and the application context. When HTTP URIS are used for
+hyperlinks in HTML, SMIL, and SVG, for example, the application determines
+which method will be used (generally GET). However, for both HTML forms and
+XForms, the author can choose between GET and POST. One implication is that
+HTML application designers should implement "unsafe" operations (or others
+requiring POST) with a form, even if the application does not call for user
+input.</p>
+
+<div class="div3">
+<h4><a name="example-lists" id="example-lists"></a>3.1.1 Mailing List
+Subscription</h4>
+
+<p>Consider the following two designs for mailing list subscription
+confirmation.</p>
+
+<p>Design 1:</p>
+<ol type="1">
+  <li>The user sends a subscribe message to an administrative mailbox
+    (mylist-request@example.org).</li>
+  <li>The list processing software sends an email response to the user,
+    requesting that the user confirm the subscription request, and including a
+    link to a confirmation page.</li>
+  <li>The user follows this link to the confirmation page, and finds a form
+    with a button to "[Confirm] your subscription". The form is submitted with
+    method="POST".</li>
+  <li>The user activates the [Confirm] form control.</li>
+  <li>The list processing software confirms the subscription.</li>
+</ol>
+
+<p>Design 2 (incorrect):</p>
+<ol type="1">
+  <li>same as 1 above</li>
+  <li>same as 2 above</li>
+  <li>The user follows the link to the confirmation page and and is informed
+    "your subscription is confirmed".</li>
+</ol>
+
+<p>The latter design performed an unsafe operation (list subscription) in
+response to a request with a safe method (following the link from the mail
+message with GET). If the user's mail agent pre-fetched pages to speed up
+browsing, the subscription would be confirmed without the knowledge and consent
+of the user; the HTTP/1.1 specification makes it clear that the fault is with
+the server in this case; the user's mail agent is free to follow links without
+incurring obligations.</p>
+</div>
+
+<div class="div3">
+<h4><a name="example-obligations" id="example-obligations"></a>3.1.2 Steps for
+Establishing an Obligation</h4>
+
+<p>To establish obligations of confidentiality (or payment, or licensing terms,
+etc.), designers should follow this protocol:</p>
+<ol type="1">
+  <li>The client requests access to materials that can only be viewed by people
+    who agree to certain confidentiality terms.</li>
+  <li>The server declines, with an "authorization required" notice and a link
+    to an account application form.</li>
+  <li>The client follows the link to the form, and applies for an account,
+    agreeing to the terms and conditions in a POST request (or by fax or postal
+    mail, for that matter).</li>
+  <li>The server provides credentials in response.</li>
+  <li>The client re-requests the materials, providing credentials.</li>
+</ol>
+
+<p>Similarly, an individual might agree to terms and conditions by signing a
+contract with an employer or other organization, after which the person might
+legitimately incur an obligation through some interaction (e.g., following a
+link) covered by the terms of the agreement.</p>
+</div>
+
+<div class="div3">
+<h4><a name="example-counters" id="example-counters"></a>3.1.3 Side-effects do
+not Imply Unsafe Interactions</h4>
+
+<p>Some user interactions cause side effects (i.e., they change the state of
+the server) but are safe interactions. When a server is configured to count and
+display the number of visitors to a site, each user interaction increments a
+counter. Users do not commit themselves to anything through this sort of
+interaction, so it is safe.</p>
+</div>
+</div>
+</div>
+
+<div class="div1">
+<h2><a name="sensitive" id="sensitive"></a>4 Considerations for Sensitive
+Data</h2>
+
+<p>Some Web interactions involve sensitive data, such as passwords, credit card
+numbers, social security numbers, and bank account numbers (as in <a
+href="#scenario2">scenario 2</a>).</p>
+
+<p>To protect information carried by either GET or POST operations, it is often
+appropriate to use an underlying secure protocol such as the Secure Socket
+Layer <a href="#SSL3">[SSL3]</a>. By using GET over SSL for safe operations,
+designers retain some of the benefits of URI addressability, even if they lose
+others (e.g., caching). Designers do need to consider the costs of using SSL,
+such as:</p>
+<ul>
+  <li>Time required to establish an SSL connection.</li>
+  <li>Memory required on the server to create a novel copy of (encrypted) data
+    for each request.</li>
+</ul>
+
+<p>In situations where the use of such protocols for security is inappropriate,
+designers MAY use POST to carry credentials or other information needed to
+authenticate an otherwise safe operation. For instance, a designer may require
+security beyond the protocol layer into the application layer (e.g., because
+software or data queues within a server site are not trusted, or because the
+application requires credentials not supported at a lower layer).</p>
+
+<p>When the use of SSL is <a href="#practical">impractical</a>, it may still be
+possible to keep some sensitive data out of a URI. For instance, designers can
+communicate authentication information in HTTP headers rather than in the query
+part of a URI.</p>
+
+<p>Broad issues of data protection such as preventing unauthorized access to an
+individuals' bookmarks (or cookies, for that matter) lie beyond the scope of
+Web architecture.</p>
+</div>
+
+<div class="div1">
+<h2><a name="practical" id="practical"></a>5 Practical Considerations</h2>
+
+<p>Web application design should be informed by the above principles, but also
+by the relevant limitations. For instance, when designing a service that
+operates on a resource via URI, consider whether there are use cases where such
+operation would be inappropriate.</p>
+
+<p>For example, the <a href="http://validator.w3.org/">W3C HTML validation
+service</a> allows for two scenarios (both using HTML forms). With the "safe"
+option, validation requests are done via a URI; the form uses GET, which gives
+the results a URI for bookmarks, links, etc. The second option allows clients
+to upload a document for validation. The form uses POST for that option,
+since:</p>
+<ul>
+  <li>the document to be validated might be confidential; any link to the
+    results of validating it (at the public W3C Web site) would divulge its
+    contents.</li>
+  <li>a URI that encoded the entire document would be at least as large as the
+    document, and there's little or no use in linking to it, since the results
+    will always be the same.</li>
+</ul>
+
+<p>Whether or not GET with HTTP is used for the initial access, supplying a URI
+for subsequent access to the <em>same</em> information, e.g., using
+Content-Location, is useful.</p>
+
+<div class="div2">
+<h3><a name="i18n" id="i18n"></a>5.1 Internationalization</h3>
+
+<p>Designers of HTML forms that accept non-ASCII characters have been
+challenged by some implementation limitations and gaps in specifications.
+Implementation limitations are length-related. Section <a
+href="http://www.w3.org/TR/1999/REC-html401-19991224/interact/forms.html#h-17.13.4">section
+17.13.4</a> of HTML 4.01 <a href="#HTML401">[HTML401]</a> on
+multipart/form-data says, "The content type "application/x-www-form-urlencoded"
+is inefficient for sending large quantities of binary data or text containing
+non-ASCII characters."</p>
+
+<p>This inefficiency is due to the octet-to-<code>%hh</code> escape conversion,
+combined with the fact that many characters need more than one octet to be
+encoded. But while somewhat inefficient, this is not a real obstacle to using
+GET for non-ASCII characters.</p>
+
+<p>A more serious problem is that the mapping between characters and octets is
+not clearly specified beyond US-ASCII; refer to section 2.1 of <a
+href="#">[RFC2396]</a>. For query parts resulting from filling in an HTML form,
+the default is to use the character encoding of the form. The definition of the
+<a
+href="http://www.w3.org/TR/REC-html40/interact/forms.html#adef-accept-charset">accept-charset
+attribute</a> on the form element in HTML 4.01 says, "The default value for
+this attribute is the reserved string 'UNKNOWN'. User agents may interpret this
+value as the character encoding that was used to transmit the document
+containing this FORM element."</p>
+
+<p>The general direction to address this limitation is to converge to using
+UTF-8 for the mapping between characters and octets. The use of UTF-8 is
+already defined in various specifications, and we expect it to be adopted in
+future specifications and further deployed in due course. For instance, we
+expect XForms to specify that the encoding to be used in query parts is always
+UTF-8.</p>
+</div>
+
+<div class="div2">
+<h3><a name="ephemeral" id="ephemeral"></a>5.2 Ephemeral Limitations</h3>
+
+<p>While Web application design must take into account the limitations of
+technology that is widely deployed at present, it should not treat these as
+architectural invariants. The following is a list of limitations have already
+been largely resolved, or are likely to fade away as bugs are fixed and the
+scope of interoperable specifications expands.</p>
+<dl>
+  <dt class="label">URIs cannot be longer than 256 characters</dt>
+    <dd>This was a limitation in some server implementations, and while servers
+      continue to have limitations to prevent denial-of-service attacks, they
+      are generally at least 4000 characters, and they evolve as the legitimate
+      uses of application developers evolve.</dd>
+  <dt class="label">GET requests are re-executed when the user uses the back
+  button.</dt>
+    <dd>This is not by design. Section 13.13 of <a href="#">[RFC2616]</a>
+      states: "History mechanisms and caches are different. In particular
+      history mechanisms SHOULD NOT try to show a semantically transparent view
+      of the current state of a resource. Rather, a history mechanism is meant
+      to show exactly what the user saw at the time when the resource was
+      retrieved."</dd>
+  <dt class="label">If I visit a page via a secure protocol, and then follow a
+  link to another page, the second site may have access to sensitive data in a
+  URI.</dt>
+    <dd>This is not by design. Section 15.1.3 of <a href="#">[RFC2616]</a>
+      states: "Because the source of a link might be private information or
+      might reveal an otherwise private information source, it is strongly
+      recommended that the user be able to select whether or not the "Referer"
+      [sic] field is sent. For example, a browser client could have a toggle
+      switch for browsing openly/anonymously, which would respectively
+      enable/disable the sending of Referer and From information. Clients
+      SHOULD NOT include a Referer header field in a (non-secure) HTTP request
+      if the referring page was transferred with a secure protocol."</dd>
+  <dt class="label">Search services will not index anything with a "?" in the
+  URI. </dt>
+    <dd>This was a heuristic to avoid infinite loops in some search service
+      crawlers, but it was not an architectural constraint, and modern search
+      services use more sophisticated heuristics to avoid loops.</dd>
+</dl>
+</div>
+</div>
+
+<div class="div1">
+<h2><a name="webservices" id="webservices"></a>6 Ongoing Work on GET in Web
+Services</h2>
+
+<p>Since the first publication of this finding, W3C's XML Protocol Working
+Group has enhanced SOAP Version 1.2 to support use of GET for safe operations
+(cf. <a href="http://www.w3.org/TR/soap12-part2/#RPCResourceRetrieval">section
+4.1.2</a> of <a href="#SOAPADJUNCTS">[SOAPADJUNCTS]</a>.) Specific conventions
+are also now suggested for use of GET in conjunction with SOAP Remote Procedure
+Calls (also in section 4.1.2) The SOAP HTTP binding (cf. <a
+href="http://www.w3.org/TR/soap12-part2/#soapinhttp">section 7</a> of <a
+href="#SOAPADJUNCTS">[SOAPADJUNCTS]</a>) has been modified accordingly, and
+thus supports appropriate use of GET and POST in conjunction with the SOAP RPC
+Representation (cf. <a
+href="http://www.w3.org/TR/soap12-part2/#soapforrpc">section 4</a> of <a
+href="#SOAPADJUNCTS">[SOAPADJUNCTS]</a>), as well as for non-RPC SOAP
+Request/Response messages (cf. <a
+href="http://www.w3.org/TR/soap12-part2/#singlereqrespmep">section 6.2</a> and
+<a href="http://www.w3.org/TR/soap12-part2/#soapresmep">section 6.3</a> of <a
+href="#SOAPADJUNCTS">[SOAPADJUNCTS]</a>). Indeed, non-normative conventions are
+suggested which allow traditional Web servers (i.e., those not specifically
+enabled for SOAP support) to interoperate with SOAP clients using GET and
+resource representations in media type application/soap+xml (cf. <a
+href="http://www.w3.org/TR/soap12-part2/#http-suptransmep">section 7.1.3</a> of
+<a href="#SOAPADJUNCTS">[SOAPADJUNCTS]</a>).</p>
+
+<p><a href="http://www.w3.org/TR/wsdl12-bindings/#_http">Section 3</a> WSDL 1.2
+Bindings <a href="#WSDL">[WSDL]</a> provides a binding to HTTP GET, which makes
+it possible to respect the principle of using GET for safe operations. However,
+to represent safety in a more straightforward manner, it should be a property
+of operations themselves, not just a feature of bindings. As of publication of
+this document, the W3C Web Services Description Working Group has plans to
+specify a "safe" attribute for this purpose; see their <a
+href="http://dev.w3.org/cvsweb/~checkout~/2002/ws/desc/issues/wsd-issues.html#x117">issue
+117</a> for more information.</p>
+</div>
+
+<div class="div1">
+<h2><a name="future-work" id="future-work"></a>7 Future Work</h2>
+<ol type="1">
+  <li>Reviewers of this finding asked about its applicability to HTTP PUT.
+    Rather than address this question in this version of the finding, the TAG
+    expects to address PUT semantics as part of <a
+    href="http://www.w3.org/2001/tag/ilist#putMediaType-38">issue
+    putMediaType-38</a>: "Relation of HTTP PUT to GET, and whether client
+    headers to server are authoritative." </li>
+</ol>
+</div>
+
+<div class="div1">
+<h2><a name="references" id="references"></a>8 References</h2>
+<dl>
+  <dt class="label"><a name="rfc2119" id="rfc2119"></a>RFC2119</dt>
+    <dd><a href="http://www.ietf.org/rfc/rfc2119.txt">S. Bradner <cite>Key
+      words for use in RFCs to Indicate Requirement Levels</cite>, RFC2119,
+      March 1997.</a> (See http://www.ietf.org/rfc/rfc2119.txt.)</dd>
+  <dt class="label"><a name="rfc2396" id="rfc2396"></a>RFC2396</dt>
+    <dd><a href="http://www.ietf.org/rfc/rfc2396.txt">T. Berners-Lee, R.
+      Fielding, L. Masinter. <cite>Uniform Resource Identifiers (URI): Generic
+      Syntax</cite>, RFC2396, August 1998.</a> (See
+      http://www.ietf.org/rfc/rfc2396.txt.)</dd>
+  <dt class="label"><a name="rfc2518" id="rfc2518"></a>RFC2518</dt>
+    <dd><a href="http://www.ietf.org/rfc/rfc2518.txt">Y. Goland, E. Whitehead,
+      A. Faizi, S. Carter, D. Jensen <cite>HTTP Extensions for Distributed
+      Authoring -- WEBDAV</cite>, RFC2518, February 1999.</a> (See
+      http://www.ietf.org/rfc/rfc2518.txt.)</dd>
+  <dt class="label"><a name="rfc2616" id="rfc2616"></a>RFC2616</dt>
+    <dd><a href="http://www.ietf.org/rfc/rfc2616.txt">R. Fielding, J. Gettys,
+      J. Mogul, H. Frystyk, L. Masinter, P. Leach, T. Berners-Lee
+      <cite>Hypertext Transfer Protocol -- HTTP/1.1</cite>, RFC2616, June
+      1999.</a> (See http://www.ietf.org/rfc/rfc2616.txt.)</dd>
+  <dt class="label"><a name="SOAPADJUNCTS"
+  id="SOAPADJUNCTS"></a>SOAPADJUNCTS</dt>
+    <dd><a href="http://www.w3.org/TR/2003/PR-soap12-part2-20030507/">M.
+      Gudgin, M. Hadley, N. Mendelsohn, J. J. Moreau, H. Frystyk Nielsen
+      <cite>SOAP Version 1.2 Part 2: Adjuncts</cite>, W3C Proposed
+      Recommendation, 7 May 2003.</a> (See
+      http://www.w3.org/TR/2003/PR-soap12-part2-20030507/.)</dd>
+  <dt class="label"><a name="WSDL" id="WSDL"></a>WSDL</dt>
+    <dd><a href="http://www.w3.org/TR/2003/WD-wsdl12-bindings-20030124/">J. J.
+      Moreau, J. Schlimmer <cite>Web Services Description Language (WSDL)
+      Version 1.2: Bindings</cite>, W3C Working Draft, 24 January 2003.</a>
+      (See http://www.w3.org/TR/2003/WD-wsdl12-bindings-20030124/.)</dd>
+  <dt class="label"><a name="TBL50K" id="TBL50K"></a>TBL50K</dt>
+    <dd><a href="http://www.w3.org/DesignIssues/Architecture.html">T.
+      Berners-Lee <cite>Web Architecture from 50,000 feet</cite>.</a> (See
+      http://www.w3.org/DesignIssues/Architecture.html.)</dd>
+  <dt class="label"><a name="DEEPLINK" id="DEEPLINK"></a>DEEPLINK</dt>
+    <dd><a href="http://www.w3.org/2001/tag/doc/deeplinking-20030217">T. Bray
+      <cite>"Deep Linking" in the World Wide Web</cite>, TAG finding, 17 Feb
+      2003.</a> (See http://www.w3.org/2001/tag/doc/deeplinking-20030217.)</dd>
+  <dt class="label"><a name="HTML401" id="HTML401"></a>HTML401</dt>
+    <dd><a href="http://www.w3.org/TR/1999/REC-html401-19991224/">D. Raggett,
+      A. Le Hors, I. Jacobs <cite>HTML 4.01 Specification</cite>, W3C
+      Recommendation, 24 Dec 1999.</a> (See
+      http://www.w3.org/TR/1999/REC-html401-19991224/.)</dd>
+  <dt class="label"><a name="SSL3" id="SSL3"></a>SSL3</dt>
+    <dd><a href="http://wp.netscape.com/eng/ssl3/draft302.txt">A. Frier, P.
+      Karlton, and P. Kocher, <cite>The SSL 3.0 Protocol</cite>, Netscape
+      Communications Corp., Nov 18, 1996.</a> (See
+      http://wp.netscape.com/eng/ssl3/draft302.txt.)</dd>
+  <dt class="label"><a name="RFC2310" id="RFC2310"></a>RFC2310</dt>
+    <dd><a href="http://www.ietf.org/rfc/rfc2310.txt">K. Holtman, <cite>The
+      Safe Response Header</cite> TUE, April 1998.</a> (See
+      http://www.ietf.org/rfc/rfc2310.txt.)</dd>
+</dl>
+</div>
+
+<div class="div1">
+<h2><a name="acks" id="acks"></a>9 Acknowledgments</h2>
+
+<p>Dan Connolly edited the <a
+href="http://www.w3.org/2001/tag/doc/get7.html">10 June 2002 version</a> of
+this finding. Some of the content from that revision is reused in this version,
+and Dan has been instrumental in subsequent discussions about this version.</p>
+
+<p>Thanks to David Orchard, Larry Masinter, Paul Prescod, Roy Fielding, Martin
+Dürst, and others for their feedback in response to the <a
+href="http://lists.w3.org/Archives/Public/www-tag/2002Apr/0150.html">15 April
+2002 call for review</a>. Thanks also to Roger Cutler, Joseph Reagle, Stuart
+Williams, and Noah Mendelsohn for their suggestions. Many thanks to all
+reviewers for their contributions to this finding.</p>
+</div>
+</div>
+</body>
+</html>
