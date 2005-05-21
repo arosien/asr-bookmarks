@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>Four Days on Rails</title>
+  <link rel="sgortcut icon" href="http://rails.homelinux.org/favicon.ico" />
+  <link rel="stylesheet" href="rails4days.css" type="text/css" />
+</head>
+
+<body>
+  <div class="header" style="height: 76px;">
+    <a href="#">Four Days on Rails</a>
+  </div>
+
+  <div class="post" style="float: left;">
+    <h3 class="title">Introduction</h3>
+
+    <p>There have been many extravagant claims made about <a href=
+    "http://www.rubyonrails.org">Rails</a>. For example, Curt Hibbs' <a href=
+    "http://www.onlamp.com/pub/a/onlamp/2005/01/20/rails.html">Rolling with
+    Ruby on Rails</a> claimed that <cite>you could develop a web application
+    at least ten times faster with Rails than you could with a typical Java
+    framework...</cite> The article then goes on to show how to install Rails
+    and Ruby on a PC and build a working "scaffold" application with
+    virtually no coding.</p>
+
+    <p>While this is impressive, "real" web developers know that this is
+    smoke and mirrors. "Real" applications aren"t as simple as that. What"s
+    actually going on beneath the surface? How hard is it to go on and build
+    "real" applications?</p>
+
+    <p>This is where life gets a little tricky. Rails is well documented
+    on-line; in fact, possibly too well documented for beginners, with over
+    30,000 words of on-line documentation in the format of a reference
+    manual. What's missing is a roadmap (railmap?) pointing to the key pages
+    that you need to know to get up and running in Rails development.</p>
+
+    <p><strong><em>Four Days on Rails</em></strong> is designed to fill that
+    gap. It's about 40 pages formatted for double-sided printing on A4, and
+    by the time you've read it, you should have a useful toolbox of Rails
+    techniques and a good idea of where to look on the web for more
+    information. The current version of this document is 2.0.</p>
+
+    <h3 class="title">Downloads</h3>
+
+    <ul>
+      <li><strong><em>Four Days on Rails</em></strong>&nbsp;<a href=
+      "Rails4Days.2.3.pdf">.pdf format
+      (700k)</a></li>
+
+      <li><strong><em>Cuatro Dias con Rails</em></strong>&nbsp;<a href=
+      "Rails4Days_ES.pdf">.pdf
+      format (500k)</a> (traducci&oacute;n por Emmanuel N.
+      Mill&aacute;n)</li>
+
+      <li><strong><em>Four Days on Rails 
+(Japanese)</em></strong>&nbsp;<a href=
+      "http://rails.to/files/Rails4Days-J.pdf">.pdf
+      format (850k)</a> (Masatoshi Itagaki)</li>
+
+      <li><strong><em>Four Days on Rails (Chinese)</em></strong>&nbsp;
+      <a 
+href="Rails4Days_CN.pdf">.pdf 
+format (500k)</a>
+      (Iceskysl)</li>
+
+      <li>Download the code used in <strong><em>Four Days on
+      Rails</em></strong>&nbsp;<a href=
+      "todo_app.2.3.zip">.zip format
+      (20k)</a></li>
+    </ul>
+
+    <p>The document and the code have been tested on MS-Windows and
+    Linux.</p>
+
+    <h3 class="title">Notes</h3>
+
+    <p>01-Aug-06: Please note - this tutorial is in need of revision to bring
+    it up to date with new versions... I must find the time some day.</p>
+
+    <p>In particular, I have had reports that the data type tinyint(1) causes
+    problems in the Priority field in the Item table - if this happens to
+    you, please try increasing the size of the field.</p>
+  </div>
+
+  <div id="navcontainer">
+    <strong>Links</strong><br />
+    <br />
+
+    <ul id="navlinks">
+      <li><a href="http://www.rubyonrails.org">Rails Home</a></li>
+
+      <li><a href=
+      "http://marc.theaimsgroup.com/?l=rails&amp;r=1&amp;w=2">Rails Mailing
+      List</a></li>
+
+      <li><a href="http://www.ruby-lang.org/en/">Ruby Home</a></li>
+
+      <li><a href="http://www.rubycentral.com/">Ruby Central</a></li>
+
+      <li><a href="http://www.mealldubh.org">My blog</a></li>
+
+      <li style=
+      "list-style-type: none; list-style-image: none; list-style-position: outside;">
+      <br /></li>
+    </ul><strong>Reference</strong><br />
+
+    <ul id="navlinks">
+      <li><a href="http://api.rubyonrails.com/">Rails Manual</a></li>
+
+      <li><a href="http://manual.rubyonrails.com/">Rails Bookshelf</a></li>
+
+      <li><a href="http://www.rubycentral.com/book/">Ruby</a></li>
+    </ul><br />
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+      <input type="hidden" name="cmd" value="_s-xclick" />
+      <input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif"
+        name="submit" 
+        alt="Send me a donation via PayPal - it's fast, free and secure!" /> 
+      <img alt="" src="https://www.paypal.com/en_GB/i/scr/pixel.gif"
+         width="1" height="1" />
+      <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----" />
+    </form>
+    <br />
+    <!-- Creative Commons License --> <a rel="license" href=
+    "http://creativecommons.org/licenses/by-nc-sa/2.0/"><img alt=
+    "Creative Commons License" src=
+    "http://creativecommons.org/images/public/somerights20.gif" border=
+    "0" /></a><br />
+    This work is licensed under a <a rel="license" href=
+    "http://creativecommons.org/licenses/by-nc-sa/2.0/">Creative Commons
+    License</a>.<!-- /Creative Commons License --><!--
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="">
+<dc:type rdf:resource="http://purl.org/dc/dcmitype/Text" />
+<license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/2.0/" />
+</Work>
+<License rdf:about="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+<permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+<permits rdf:resource="http://web.resource.org/cc/Distribution" />
+<requires rdf:resource="http://web.resource.org/cc/Notice" />
+<requires rdf:resource="http://web.resource.org/cc/Attribution" />
+<prohibits rdf:resource="http://web.resource.org/cc/CommercialUse" />
+<permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+<requires rdf:resource="http://web.resource.org/cc/ShareAlike" />
+</License>
+</rdf:RDF>
+-->
+    <br />
+  </div>
+</body>
+</html>
