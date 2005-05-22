@@ -1,0 +1,1661 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:fb="http://www.facebook.com/2008/fbml" 
+xmlns:og="http://opengraphprotocol.org/schema/">
+<head>
+
+
+
+	<title>vi reference mug
+	&gt; vi stuff
+	&gt; geekcheat.com - cheat sheets for geeks!</title>
+
+	
+		<meta name="description" content="geekcheat.com - cheat sheets for geeks!: vi reference mug: The vi reference mug is a dishwasher-safe, 11 oz. coffee mug with a concise vi reference printed on it! Commands are basic to advanced. This mug makes a great gift for any geek! ">
+		<meta name="keywords" content="vi reference, vi, emacs, emacs reference, vi mug, emacs mug, vi reference mug, geek, geek cheat, cheat sheet">
+	
+	<meta name="design_id" content="10388170"/>
+    <meta property="fb:app_id" content="114957851874294" />
+    <meta property="og:title" content="vi reference mug&gt; vi stuff&gt; geekcheat.com - cheat sheets for geeks!" />
+    <meta property="og:type" content="product" />
+    <meta property="og:url" content="http://www.cafepress.com/geekcheat.11507711?utm_medium=cp_social&utm_source=facebook&utm_campaign=PremiumShopPDP" />
+    <meta property="og:image" content="http://images1.cpcache.com/nocache/product/11507711v2147483647_240x240_Back.jpg" />
+    <meta property="og:description" content="vi reference mug" />
+    <meta property="og:site_name" content="CafePress.com" />
+    
+<link rel="stylesheet" type="text/css" href="http://content5.cpcache.com/premium/css/premiumPDP.css" title="style" />
+<link type="text/css" rel="stylesheet" href="http://content5.cpcache.com/js/jquery/jcarousel/lib/jquery.jcarousel.css"></link>
+<link type="text/css" rel="stylesheet" href="http://content9.cpcache.com/js/jquery/jcarousel/lib/skinForShop.css"></link>
+
+
+
+<script language="javascript">
+
+
+var thumbnailPerspective = "default";
+
+var stockAvailabilityMap = new Array();
+var stockMsgMap = new Array();
+var colorStockAvailMap = new Array();
+var sizeArray = new populateSizeMap();
+
+
+var productSizeArrayPerColor = new Array();
+
+
+   var productSize = new Object();
+   productSize.id = 0;
+   productSize.name = 'N/A';
+   productSize.isDefault = 'True'.toLowerCase();
+   productSizeArrayPerColor[0] = productSize;
+   
+   
+   stockAvailabilityMap[0] = productSizeArrayPerColor;
+
+
+
+function populateSizeMap() {
+	var myMap = new Array();
+	
+	
+	return myMap;
+}
+
+function refreshPrice(sizeId) {
+	// blat default sellprice and if product on sale, saleprice, into priceDiv div
+	var priceStr = '<span id="sellPriceId">$13.49</span>';
+	var priceDiv = document.getElementById('priceDiv');
+	if (priceDiv != undefined) {
+		priceDiv.innerHTML = '<span class="customize_price" >' + priceStr + '</span>';
+	}
+	
+	// replace sellprice and also saleprice (if applicable)
+	var sellPriceId = document.getElementById('sellPriceId');
+	
+	if (sellPriceId != undefined) {
+		sellPriceId.innerHTML = sizeArray[sizeId].displaySellPrice;
+		var salePriceId = document.getElementById('salePriceId');
+		if (salePriceId != undefined) {
+			salePriceId.innerHTML = sizeArray[sizeId].displayDiscountPrice;
+		}
+	}
+}
+
+function selectSize(sizeId, elementId, name) {
+    var size = document.getElementById(elementId);
+    size.value = sizeId;
+    var sizelabel = document.getElementById('defaultSize');
+    if (sizelabel)
+    {
+		sizelabel.innerHTML = name;
+    }
+    
+    var sizeBoxes = document.getElementById('sizeBoxes');
+	if (sizeBoxes)
+	{
+		var liArray = sizeBoxes.childNodes;
+		for(var i=0;i<liArray.length ; i++){
+			if(liArray[i].id != undefined && liArray[i].className != null)
+			{ 
+			    if (liArray[i].id == sizeId && liArray[i].className.indexOf("selectedSize") < 0){
+					liArray[i].className += " selectedSize";
+				} else if (liArray[i].id != sizeId && liArray[i].className.indexOf("selectedSize") >= 0 ) {
+					liArray[i].className = liArray[i].className.replace(" selectedSize","");
+				}
+			}
+		}
+	}
+}
+
+function refreshSizeDropDown(sizeDropDownId, colorDropDownId) {
+	var sizeDropDown = document.getElementById(sizeDropDownId);
+	var colorDropDown = document.getElementById(colorDropDownId);
+	var colorVal = colorDropDown != null ? colorDropDown.options[colorDropDown.options.selectedIndex].value : '0';
+	var isFulfillmentElement = document.getElementById('isFulfillment');
+	var isFulfillment =false;
+	if(isFulfillmentElement != null){
+		isFulfillment=isFulfillmentElement.value;
+	}
+	var productSizeArray = stockAvailabilityMap[colorVal];
+	if (sizeDropDown != null && sizeDropDown.options!=null) {
+		if(sizeDropDown.options.length > 0)
+		{
+			var defaultValue = sizeDropDown.options[sizeDropDown.options.selectedIndex].value;
+		}else
+		{
+			var defaultValue=0;
+		}
+		sizeDropDown.options.length=0;
+		var x;
+		for (x in productSizeArray) {
+			sizeDropDown.options[x] = new Option(productSizeArray[x].name, productSizeArray[x].id, productSizeArray[x].isDefault=='true', productSizeArray[x].id==defaultValue);
+		}
+	}else if (sizeDropDown!=null)
+	{
+		var sizeBoxes = document.getElementById('sizeBoxes');
+		var previouslySelectedSize = sizeDropDown.value;
+		if (sizeBoxes)
+		{
+			var liArray = sizeBoxes.childNodes;
+			var i=0;
+			var needToUpdateSize = true;
+			var firstAvailableSize;
+			for(i=0;i<liArray.length ; i++){
+				if(liArray[i].id != undefined){
+					var x;
+					if (!isFulfillment){
+						liArray[i].style.display='none';
+						for (x in productSizeArray) {
+							if (productSizeArray[x].id== liArray[i].id)
+							{
+								liArray[i].style.display='block';
+								if (!firstAvailableSize) { firstAvailableSize = i; }
+								break;
+							}
+						}
+					} else {
+						if (!firstAvailableSize) { firstAvailableSize = i; }						
+					}
+					if (liArray[i].style.display=='block' && liArray[i].id == previouslySelectedSize)
+					{
+						needToUpdateSize = false;
+					}
+				}
+			}
+			if (needToUpdateSize && firstAvailableSize && firstAvailableSize < liArray.length)
+			{
+				selectSize(liArray[firstAvailableSize].id, sizeDropDownId, liArray[firstAvailableSize].title);
+			}
+		}
+	}
+}
+
+function createMessageMapKey(colorVal, sizeVal) {
+	return colorVal + "_" + sizeVal;
+}
+
+function refreshAvailabilityMessage() {
+	var sizeDropDown = document.getElementById('size_11507711');
+	var colorDropDown = document.getElementById('color_11507711');
+
+	var colorVal = colorDropDown != null ? colorDropDown.options[colorDropDown.options.selectedIndex].value : '0';
+	var sizeVal = 0;
+	if(sizeDropDown != null && sizeDropDown.options!= null && sizeDropDown.options.length > 0)
+	{
+		sizeVal = sizeDropDown.options[sizeDropDown.options.selectedIndex].value;
+	}
+
+
+	var key = createMessageMapKey(colorVal, sizeVal);
+	//look it up
+	if (stockMsgMap) {
+		var stockOverride = stockMsgMap[key];
+		var availabilityMsg = document.getElementById("availabilityMessage");
+		if (availabilityMsg != null) {
+			if (stockOverride != null) {
+				availabilityMsg.innerHTML = "Availability: " + stockOverride.message;
+			} else {
+				availabilityMsg.innerHTML = "Availability: " + "In Stock.";
+			}
+			if ((stockOverride != undefined && stockOverride != null && stockOverride.isAddToCartable == 'false') ||
+			(stockOverride == null && 'True' == 'False')) {
+				availabilityMsg.style.color = "red";
+				if (sizeDropDown)
+				{
+					sizeDropDown.disabled = true;
+				}
+			} else {
+				availabilityMsg.style.color = "#666666";
+				if (sizeDropDown)
+				{
+					sizeDropDown.disabled = false;
+				}
+			}
+		}
+		var addToCartSection = document.getElementById("addToCartSection");
+		if (addToCartSection != undefined) {
+			if (stockOverride != undefined && stockOverride != null && stockOverride.isAddToCartable == 'false') {
+				addToCartSection.style.visibility = "hidden";
+			} else {
+				addToCartSection.style.visibility = "visible";
+			}
+		}
+	}
+}
+
+function changeDefaultColor(newColor) {
+	var colorLabel = document.getElementById('defaultColor');
+	if (colorLabel != undefined) {
+		colorLabel.innerHTML = newColor;
+	}
+}
+
+</script>
+
+	
+
+
+<!-- Start Includes -->
+<link rel="stylesheet" type="text/css" href="http://content6.cpcache.com/premium/css/premiumShop.css" title="style">
+
+
+
+<script type="text/javascript">
+    
+
+window.cafepress = {};
+window.cafepress.signedIn = false;
+window.cafepress.countryCode = 'US';
+window.cafepress.currencyCode = 'USD';
+window.cafepress.domain = 'cafepress.com'; 
+window.cafepress.www = 'www.cafepress.com';
+window.cafepress.secureWww = 'https://www.cafepress.com';
+window.cafepress.members = 'members.cafepress.com';
+window.cafepress.secureMembers = 'https://members.cafepress.com';
+window.cafepress.cartItemCount = 0;
+window.cafepress.cartLabel = 'Cart';
+window.cafepress.userName = '';
+
+window.cafepress.domain_au = 'cafepress.com.au';
+window.cafepress.domain_ca = 'cafepress.ca';
+window.cafepress.domain_uk = 'cafepress.co.uk';
+window.cafepress.domain_gb = 'cafepress.co.uk';
+window.cafepress.domain_us = 'cafepress.com';
+
+
+window.cafepress.originCountryCode = 'US'
+
+  window.cafepress.tealeaf = {};
+window.cafepress.tealeaf.pageLandingType = 'PremiumShopPDP'
+window.cafepress.tealeaf.searchTerm = ''
+window.cafepress.tealeaf.salesChannel = 'Shop'
+window.cafepress.tealeaf.trafficMedium = 'Direct'
+window.cafepress.tealeaf.utmTracking = ''
+window.cafepress.tealeaf.abTestString = 'EXP_08_00:T,EXP_08_07:T,EXP_09_01:C,EXP_09_04:C,EXP_09_09:T,EXP_09_10:T,EXP_09_11:C,EXP_09_15:T,EXP_09_16:T,EXP_09_17:T,EXP_09_19:C,EXP_09_20:C,EXP_09_21:T,EXP_10_01:C,EXP_10_02:T,EXP_10_03:T,EXP_10_04:C,EXP_10_05:T,EXP_10_06:T,EXP_10_07:C,EXP_10_08:C,EXP_10_09:C,EXP_10_10:C,EXP_CB_05_10:T'
+	
+</script>
+
+<script type="text/javascript">
+  var host = (("https:" == document.location.protocol) ? "https://content.cafepress.com" : "http://content0.cpcache.com");
+  document.write(unescape("%3Cscript src='" + host + "/js/jquery/jquery-1.4.min.js' type='text/javascript'%3E%3C/script%3E"));
+  document.write(unescape("%3Cscript src='" + host + "/js/commonscriptsv11.js?v=20' type='text/javascript'%3E%3C/script%3E"));
+  document.write(unescape("%3Cscript src='" + host + "/js/jquery/jqueryui/1.8.5/jquery-ui.min.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+	
+
+	
+    
+<script language="javascript">
+    window.cafepress.storeID = 'geekcheat'; 
+</script>
+    
+<link rel="stylesheet" type="text/css" href="/content/premium/css/premiumShopv2.css" title="style" />
+<!--[if IE]><link rel="stylesheet" href="/content/premium/css/ieShopStyles.css" type="text/css" media="screen, projection"><![endif]-->
+
+<style type="text/css"><!--
+body,tr,td,caption {font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;color: #333333;}
+form,input,button,select,option {font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;}
+.smallprint {font-size:8pt;font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;}
+.checkoutbg {background-color: #ffffff;}
+.tableheaderbg {background-color: #000000;color: #ffffff;font-weight: bold;}
+.tablebg {background-color: #F5F5F5;color: #000000;}
+.tablebg2 {background-color: #E9E9E9;color: #000000;}
+.sidebarbg {background-color: #ffffff;}
+.smallsidebartext {font-size:8pt;color: #000000;font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;}
+.smallselectedsidebartext {font-size:8pt;color: #000000;font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;font-weight:bold;}
+.sidebartext {color: #000000;font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;}
+.head , H1 {color: #000000;font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;}
+.alertmessage {color: #ff0000;font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;}
+img.imageborder,div.imageborder {border-width:0;}
+-->
+</style>
+
+	<style type="text/css">
+	<!--
+	
+	body	{
+		margin: 0px;
+	}
+	
+	th.tableheaderbg	{
+		background-image: url(http://content.cafepress.com/si/cpClassic01_headerphoto.gif);
+	}
+	
+	.headtxt	{
+		font-family: verdana, arial, helvetica;
+		font-size: 24px;
+		color: #45588B;
+		font-weight: bold;
+	}
+	
+	.titlesub	{
+		font-family: verdana, arial, helvetica;
+		font-size: 14px;
+		color: #45588B;
+		font-weight: bold;
+	}
+	
+	.subhead	{
+		font-family: verdana, arial, helvetica;
+		font-size: 12px;
+		color: #45588B;
+		font-weight: bold;
+	}
+	
+	a	{
+		font-family: verdana, arial, helvetica;
+		font-size: 11px;
+		color: #45588B;
+		text-decoration: underline;
+	}
+	
+	a:hover	{
+		font-family: verdana, arial, helvetica;
+		font-size: 11px;
+		color: #d50000;
+		text-decoration: underline;
+	}
+	
+	.cpBodyCopy	{
+		font-family: verdana, ariall, helvetica;
+		font-size: 11px;
+		color: #555555;
+		line-height: 15px;
+	}
+	
+	.smallprint	{
+		font-family: verdana, arial, helvetica;
+		font-size: 10px;
+		color: #555555; 
+	}
+	
+	.footer	{
+		font-family: verdana, arial, helvetica;
+		font-size: 10px;
+		color: #555555;
+		line-height: 15px;
+		text-align: center;
+	}
+
+	form,input,button,select,option {
+		font-family: verdana, arial, helvetica;
+		font-size: 10px;
+	}
+	
+	-->
+	</style>
+
+
+</head>
+
+
+   
+    
+	<body  bgcolor="#ffffff" background="http://content.cafepress.com/si/cpTemp.0013_bkg.gif" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+
+
+<script type="text/javascript">
+	
+
+function intlDropdown() {
+	var t;
+	$("#intlCurrencyPrem").hover(
+		function () { t = setTimeout('showIntlDropdown();',400); }, 
+		function () { clearTimeout(t); hideIntlDropdown() }
+	);
+}
+function showIntlDropdown() { $("#intlCurrencyDropdown").fadeIn("fast"); }
+function hideIntlDropdown() { $("#intlCurrencyDropdown").fadeOut("fast"); }
+$(document).ready(function() { intlDropdown(); });
+
+	
+</script>
+<!--[if IE]><link rel="stylesheet" href="http://content9.cpcache.com/css/iestyles.css" type="text/css" media="screen, projection"><![endif]-->
+
+<a name="top"></a>
+<div id="cpPremiumHeader">
+	
+
+  <ul id="premshopNav" class="horizontal">
+    <li id="premheadCart" class="noborder"><a id="CartHeaderLink" rel="nofollow" href="http://www.cafepress.com/cp/viewcart.aspx?s=geekcheat&keepshopping=/geekcheat/366808">Cart &amp; Checkout</a></li>
+    <li id="premheadHelp"><a rel="nofollow" href="http://www.cafepress.com/cp/info/help/index.aspx?page=custserv.aspx">Help</a></li>
+    <li id="premheadStatus"><a rel="nofollow" href="https://www.cafepress.com/cp/info/help/orderstatus.aspx?s=geekcheat">Order Status</a></li>
+    
+    <li id="premheadShophome"><a href="http://www.cafepress.com/geekcheat">Shop Home</a></li>
+    
+    <li>Currency:</li>
+    <li id="intlCurrencyPrem" class="noborder">
+	  <script type="text/javascript">
+	    writePremiumShopHeader();
+	  </script>
+    </li>
+    
+  </ul>  
+  <div id="premheadCleardiv" class="clear"></div>
+</div>
+<script type="text/javascript">
+	initializePremiumShopHeader();
+</script>
+
+<div id="cpWrapper" class="geekcheat 1451422">
+
+
+<!-- custom shop header --><!-- custom shop header --><!-- custom shop header -->
+<!-- custom shop header --><!-- custom shop header --><!-- custom shop header -->
+<div align="center">&nbsp;<br />
+<table width="760" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td><img src="http://content.cafepress.com/si/cpTemp.0013_blu-topl.gif" width="9" height="9" alt="" /></td>
+		<td background="http://content.cafepress.com/si/cpTemp.0013_blu-top.gif"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="752" height="9" alt="" /></td>
+		<td><img src="http://content.cafepress.com/si/cpTemp.0013_blu-topr.gif" width="9" height="9" alt="" /></td>
+	</tr>
+	<tr>
+		<td background="http://content.cafepress.com/si/cpTemp.0013_blu-lft.gif"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="9" height="1" alt="" /></td>
+		<td bgcolor="#E1E9FF" align="middle">
+
+
+<a href="http://www.cafepress.com/geekcheat"><img border="0" src="http://logo.cafepress.com/nocache/2/832602.gif"></a>
+
+
+</td>
+		<td background="http://content.cafepress.com/si/cpTemp.0013_blu-rgt.gif"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="9" height="1" alt="" /></td>
+	</tr>
+	<tr>
+		<td><img src="http://content.cafepress.com/si/cpTemp.0013_blu-botl.gif" width="9" height="9" alt="" /></td>
+		<td background="http://content.cafepress.com/si/cpTemp.0013_blu-bot.gif"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="752" height="9" alt="" /></td>
+		<td><img src="http://content.cafepress.com/si/cpTemp.0013_blu-botr.gif" width="9" height="9" alt="" /></td>
+	</tr>
+</table>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-8498996968416830";
+google_ad_width = 728;
+google_ad_height = 15;
+google_ad_format = "728x15_0ads_al_s";
+google_ad_channel ="9173584121";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_url = "999999";
+google_color_text = "000000";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+<table width="760" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="156" height="10" alt="" /></td>
+		<td><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="8" height="1" alt="" /></td>
+		<td><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="588" height="1" alt="" /></td>
+	</tr>
+	<tr>
+<!-- LEFT NAV -->
+		<td valign="top">
+			<table width="156" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td><img src="http://content.cafepress.com/si/cpTemp.0013_blu-topl.gif" width="9" height="9" alt="" /></td>
+					<td background="http://content.cafepress.com/si/cpTemp.0013_blu-top.gif"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="138" height="9" alt="" /></td>
+					<td><img src="http://content.cafepress.com/si/cpTemp.0013_blu-topr.gif" width="9" height="9" alt="" /></td>
+				</tr>
+				<tr>
+					<td background="http://content.cafepress.com/si/cpTemp.0013_blu-lft.gif"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="9" height="1" alt="" /></td>
+					<td bgcolor="#E1E9FF"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="1" height="16" alt="" /><br />
+
+
+<br>
+
+
+
+
+
+						<b class="subhead">Browse Products</b><br />
+						<br /><br />
+						<b class="subhead">Browse Designs</b><br />
+						<table border="0" cellpadding="2" cellspacing="0" width="125"><tr valign="top"><td class="smallsidebartext">&raquo; </td><td class="smallsidebartext"><a class="sidebarlink" href="/geekcheat/633497">Good Geek Stuff</a></td><td></td></tr><tr valign="top"><td class="smallsidebartext">&raquo; </td><td class="smallsidebartext"><a class="sidebarlink" href="/geekcheat/366808">vi stuff</a></td><td></td></tr><tr valign="top"><td class="smallsidebartext">&raquo; </td><td class="smallsidebartext"><a class="sidebarlink" href="/geekcheat/366806">emacs stuff</a></td><td></td></tr></table><br />
+						<img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="1" height="36" alt="" /><br />
+						
+						<form method="post" action="/cp/members/member_subscription.aspx">
+						<b class="subhead">Store Newsletter</b><br />
+						<input name="storeid" value="geekcheat" type="hidden">
+						<input name="cbstore" type="hidden" value="on">
+						<input name="emailtype" value="1" type="hidden">
+						<input name="sendmail" value="true" type="hidden">
+						<span class="smallprint">Enter your email below to receive product features and specials in your inbox!</span><br />
+						<img src="/cp/img/spacer.gif" width="1" height="8" /><br />
+						<input name="txtEmail" type="text" size="22" maxlength="50" value="your email" onFocus="this.value='';"><br />
+						<img src="/cp/img/spacer.gif" width="1" height="8" /><br />
+						<input type="submit" name="submit" value=" join ">
+						</form>
+
+
+<p align='center'>
+
+
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-8498996968416830";
+google_ad_width = 120;
+google_ad_height = 600;
+google_ad_format = "120x600_as";
+google_ad_type = "text_image";
+google_ad_channel ="5340412484";
+google_color_border = "E1E9FF";
+google_color_bg = "E1E9FF";
+google_color_link = "45588B";
+google_color_url = "000000";
+google_color_text = "555555";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+</p>
+
+
+
+					</td>
+					<td background="http://content.cafepress.com/si/cpTemp.0013_blu-rgt.gif"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="9" height="1" alt="" /></td>
+				</tr>
+				<tr>
+					<td><img src="http://content.cafepress.com/si/cpTemp.0013_blu-botl.gif" width="9" height="9" alt="" /></td>
+					<td background="http://content.cafepress.com/si/cpTemp.0013_blu-bot.gif"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="138" height="9" alt="" /></td>
+					<td><img src="http://content.cafepress.com/si/cpTemp.0013_blu-botr.gif" width="9" height="9" alt="" /></td>
+				</tr>
+			</table></td>
+<!-- GUTTER -->
+		<td>&nbsp;</td>
+<!-- STORE DESCTIPTION PARENT TABLE -->
+		<td valign="top">
+			<table width="588" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td><img src="http://content.cafepress.com/si/cpTemp.0013_wt-topl.gif" width="9" height="9" alt="" /></td>
+					<td background="http://content.cafepress.com/si/cpTemp.0013_wt-top.gif"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="570" height="9" alt="" /></td>
+					<td><img src="http://content.cafepress.com/si/cpTemp.0013_wt-topr.gif" width="9" height="9" alt="" /></td>
+				</tr>
+				<tr>
+					<td background="http://content.cafepress.com/si/cpTemp.0013_wt-lft.gif"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="9" height="1" alt="" /></td>
+					<td bgcolor="#ffffff">
+<!-- /custom shop header --><!-- /custom shop header --><!-- /custom shop header -->
+<!-- /custom shop header --><!-- /custom shop header --><!-- /custom shop header -->
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+
+		<td id="bodyContentTD">
+            <div id="bodyContent" class="bodyText">
+        
+            <!-- CafePress content --><!-- CafePress content --><!-- CafePress content -->
+            <!-- CafePress content --><!-- CafePress content --><!-- CafePress content -->
+
+
+<!-- Start Main Content -->
+
+
+<!-- Breadcrumbs -->
+
+<p class="breadCrumb"><nobr><a href="/geekcheat">geekcheat.com - cheat sheets for geeks!</a></nobr> &gt; <nobr><a href="/geekcheat/366808">vi stuff</a></nobr> &gt; <b>vi reference mug</b></p>
+<div id="productAreaWidth"></div>
+
+<!-- /Breadcrumbs -->
+
+
+<table border="0" bordercolor="#000000" cellspacing="0" cellpadding="0" width="100%">
+	<tr valign="top">
+
+		<td align="center" width="240">
+			<table border="0" cellspacing="0" cellpadding="0" align="center" tablecontent="productimage" width="240">
+				<tr>
+					<td align="center">
+						<!-- Product Image -->
+						<img style="height: 240px" id="mainimg" class="imageborder" name="mainimg" src="http://images1.cpcache.com/nocache/product/11507711v2147483647_240x240_Back.jpg" alt="vi reference mug"><br/>
+						
+					</td>
+				</tr>
+
+			
+				<tr>
+					<td><img src="http://content8.cpcache.com/global/img/spacer.gif" width="1" height="6" alt="" border="0"></td>
+				</tr>
+				<tr>
+					<td align="left" nowrap class="xsmallText"><span class="xsmallText">
+					
+					<!--Part of Code Refresh Project - Show product details in new format.-->
+							<b><a href="javascript:getColorAndViewLarger('color_11507711','/cp/moredetails.aspx?showBleed=false&ProductNo=11507711','height=610,width=650,scrollbars=1')">View Larger</a></b><br/>
+					
+					</span></td>
+				</tr>
+			
+				<tr>
+					<td><img src="http://content0.cpcache.com/global/img/spacer.gif" width="1" height="6" alt="" border="0"></td>
+				</tr>
+				<tr>
+					<td align="center">
+						<table border="0" align="left" cellpadding="1">
+							<tr>
+								<td><a href="javascript:setProductImageUrl(11507711,'Front');setThumbnailPerspective('front');"><img class="defaultimageborder" name="img1" src="http://images1.cpcache.com/nocache/product/11507711v2147483647_240x240_Front.jpg" height="48" border="0" alt="front image"></a></td>
+							
+								<td><a href="javascript:setProductImageUrl(11507711,'Back');setThumbnailPerspective('back');"><img class="defaultimageborder" name="img2" src="http://images1.cpcache.com/nocache/product/11507711v2147483647_240x240_Back.jpg" height="48" border="0" alt="back image"></a></td>
+								
+							</tr>
+						</table>
+					</td>
+				</tr>
+			
+
+			</table>
+
+			<!-- Product Swatches -->
+			
+
+			<!-- /Product Swatches -->
+		</td>
+
+
+
+
+
+
+		<td class="smallText" style="padding-left:10px;" width="100%">
+
+        <div class="container">
+            <!-- Product Name/Caption -->
+    		<div id="productCaption" class="pageTitle head"><h1>vi reference mug</h1></div>
+    		<!-- /Product Name/Caption -->
+
+
+
+
+		<!-- Product Class -->
+		
+		<!-- /Product Class -->
+
+
+
+		
+
+			<!-- CD Info:  Genre or Category -->
+			
+			<!-- /CD info -->
+
+			<!-- Product Description Provided by Store Owner -->
+			
+				<p>The vi reference mug is a dishwasher-safe, 11 oz. coffee mug with a concise vi reference printed on it! Commands are basic to advanced. This mug makes a great gift for any geek!</p>
+			
+			<!-- /Product Description -->
+		
+
+
+<div id="ordering" class="block">
+	<!-- Ordering -->
+	<form method="post" name="prod_detail_form" action="/cp/addtocart.aspx">
+    
+    <input type=hidden name=keepshopping value="/geekcheat/366808">
+    <input type="hidden" name="storeid" value="geekcheat">
+    <input type="hidden" name="channel" value="3" />
+    
+    <input type="hidden" name="s" value="366808">
+
+	<div id="premOrdering" class="block">
+		
+		<!-- Price -->
+		<div id="priceDiv"><span id="sellPriceId">$13.49</span></div>
+		<!-- /Price -->
+        
+		<!-- Size Attribute Selector -->
+		
+		<div id="sizeContainer" class="xsmallText block">
+		    
+ 
+
+
+		</div>
+		
+
+		<!-- Color Attribute Selector -->
+		
+			<select name="color_11507711" id="color_11507711" style="display:none">
+			<option value="0"/></select>
+		
+        <div id="addToCartSection" class="block">
+            <table>
+            	<tr>
+            		<td class="xsmallText">Qty:<br/><input name="qty_11507711" value="1" onkeyup="removeNonNumbers(this);" size="5" maxlength="5">&nbsp;&nbsp;</td>
+            		<td style="padding-top:8px;">
+            		
+            			<input id="AddToCartButtonId" type="submit" Value="Add to Cart" class="largeButton addToCartBtn" />
+            			<input id="imageNo" type="hidden" value="10388170" />
+            			<input id="productTypeNo" type="hidden" value="0" />
+            			<input id="userToken" type="hidden" value="906210b5-fce0-4940-9cad-e91a9faacf37"/>
+            		
+            		</td>            		            	
+            	</tr>
+            </table>
+        </div>       
+		
+    <!-- Country Alert -->
+    
+    <!-- /Country Alert -->
+        <div class="xsmallText availMsg block" id="availabilityMessage">
+        AVAILABILITY:
+        
+        	<!-- this must be javascript!  for some reason availabiltiy messages 
+        		written directly dont display javascript:launchHelp links correctly -->
+        	<script language="javascript">
+        	document.write("In Stock.");
+        	</script>
+        	
+        </div>
+
+		
+
+
+		<span class="xsmallText prodNumber block" id="productNumber">
+		<!-- Product Number-->
+		Product Number: 030-11507711
+		<!-- /Product Number-->
+		</span>
+           
+	</div><!-- /premOrdering -->
+
+		
+		
+    <div id="shareContainer" class="block">
+		<div id="fb-root"></div>
+        <script>
+            window.fbAsyncInit = function() {
+                FB.init({ appId: 114957851874294, status: true, cookie: true,
+                    xfbml: true
+                });
+            };
+            (function() {
+                var e = document.createElement('script'); e.async = true;
+                e.src = document.location.protocol +
+                '//connect.facebook.net/en_US/all.js';
+                document.getElementById('fb-root').appendChild(e);
+            } ());
+        </script>
+         <fb:like href="http://www.cafepress.com/geekcheat.11507711" show_faces="false" width="350" font="arial"></fb:like>
+		<div class="addthis_toolbox addthis_default_style">   
+	        <a href="http://www.addthis.com/bookmark.php?v=250&amp;username=cpadmin" addthis:url="http://www.cafepress.com/geekcheat.11507711" class="addthis_button_compact" >Share</a>
+            <span class="addthis_separator">|</span>
+            <a class="addthis_button_twitter" addthis:url="http://www.cafepress.com/geekcheat.11507711?utm_medium=cp_social&utm_source=addthis&utm_campaign=PremiumShopPDP" ></a>
+            <a class="addthis_button_myspace" addthis:url="http://www.cafepress.com/geekcheat.11507711?utm_medium=cp_social&utm_source=addthis&utm_campaign=PremiumShopPDP" ></a>
+            <a class="addthis_button_kaboodle" addthis:url="http://www.cafepress.com/geekcheat.11507711?utm_medium=cp_social&utm_source=addthis&utm_campaign=PremiumShopPDP" ></a>
+            <a class="addthis_button_google" addthis:url="http://www.cafepress.com/geekcheat.11507711?utm_medium=cp_social&utm_source=addthis&utm_campaign=PremiumShopPDP" ></a>
+            <a class="addthis_button_email" addthis:url="http://www.cafepress.com/geekcheat.11507711?utm_medium=cp_social&utm_source=addthis&utm_campaign=PremiumShopPDP" ></a>
+	    </div>
+	    <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=cpadmin"></script>
+    </div>
+	</form>
+</div><!-- /Ordering -->
+
+<div id="productInfo" class="block">
+
+
+    
+    <!-- Default Product Information -->
+    <!-- Excludes Fulfillment Items -->
+    
+    
+    <a name="prodinfo"></a><b>Product Information</b><br/>
+    <!-- Misc Notes -->
+    
+    <!-- /Misc Notes -->
+    
+    <!-- CafePress Product Description -->
+    The perfect size for your favorite morning beverage or late night brew. Large, easy-grip handle. Treat yourself or give as a gift to someone special. 
+<ul><li>Measures 3.75" tall, 3" diameter</li>
+<li>Dishwasher and microwave safe</li></ul>
+
+    	<!-- /CP Product Description -->
+    	
+<!-- /Default Product Information -->
+
+	
+
+
+		<!-- Extra Fulfillment Product Info -->
+				
+		<!-- /Extra Fulfillment Product Info -->
+
+		<!-- Disinfo Newsletter-->
+		
+		<!-- End Disinfo Newsletter-->
+
+		<!-- disclaimer -->
+			<!-- snehal 4/4/07 part of release 3 changes
+		   we are choosing to denote products like maternity light as a colored garment even though
+		   there is just one color for that product. This simplifies a lot of things. And hence the following check
+		   where if the available colors are more than one and then a Shopkeeper chooses only one color for a perticular
+		   garment in his store then show the * message -->
+		
+</div>
+
+<div id="extraDetails" class="block">
+		<!-- Track Listing -->
+		
+
+	<div id="longDescription" class="block">
+		<!-- Long Description -->
+			
+		<!-- /Long Description -->
+	</div>
+</div>
+</div>
+
+		</td>
+	</tr>
+</table>
+
+<div id="carouselcontainer" style="display: none">
+	<h4 id="carouselheader">Browse more products:</h4>
+	<ul id="otherproductscarousel" class="jcarousel-skin-pdp"></ul>
+</div>
+
+<!--Begin TellApart-->
+<div id="__cmbDiv" style="display: none"></div>
+<script language="JavaScript" type="text/javascript">
+    var __cmbLoaded = false, __cmbRunnable = null;
+    (function() {
+        try {
+            var b;
+            var actionType = "pv";
+            function d() {
+                var action = TellApartCrumb.makeCrumbAction("5KYSO562qV11", actionType);
+                action.setActionAttr("ProductCategoryPath", "geekcheat.com - cheat sheets for geeks! > vi stuff > vi reference mug");
+                action.setActionAttr("SKU", "11507711");
+                action.setActionAttr("PageType", "Product");
+                action.finalize()
+            };
+
+            if ("https:" == document.location.protocol) b = "https://sslt.tellapart.com/crumb.js";
+            else { for (var g = navigator.userAgent, h = 0, e = 0, i = g.length; e < i; e++) h ^= g.charCodeAt(e); b = "http://static.tellapart.com/crumb" + h % 10 + ".js" }
+            if (actionType === "tx") { __cmbRunnable = d; document.write("\x3Cscript type='text/java" + "script' src='" + b + "'\x3E\x3C/script\x3E"); __cmbLoaded = true }
+            else {
+                var a = document.createElement("script"); a.src = b; a.onload = function() { __cmbLoaded = true; d() };
+                a.onreadystatechange = function() { if (/loaded|complete/.test(a.readyState) && !__cmbLoaded) { __cmbLoaded = true; d() } };
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(a, s)
+            } 
+        } catch (j) { } 
+    })();
+</script>
+<script language="JavaScript" type="text/javascript">
+    if (__cmbRunnable != null) { __cmbRunnable(); __cmbRunnable = null };
+</script>
+<!--End TellApart-->
+
+<script type="text/javascript" src="http://content4.cpcache.com/js/jquery/jcarousel/lib/jquery.jcarousel.js"></script>
+<script type="text/javascript">
+	var pdpOtherProducts = new Array();
+	var productImageToUrlMapping = {};
+
+	function addProductImage(product, perspective, color, size, url) {
+		var productToPerspectiveMap = productImageToUrlMapping;
+		
+		if (! productToPerspectiveMap[product]) productToPerspectiveMap[product] = {};
+		var perspectiveToSizeMap = productToPerspectiveMap[product];
+		
+		if (! perspectiveToSizeMap[perspective]) perspectiveToSizeMap[perspective] = {};
+		var sizeToColorMap = perspectiveToSizeMap[perspective];
+		
+		if (! sizeToColorMap[size]) sizeToColorMap[size] = {};
+		var colorToUrlMap = sizeToColorMap[size];
+		
+		var imageObj = {
+			url: url
+		};
+		
+		colorToUrlMap[color] = imageObj;
+	}
+	function setProductImageUrl(product, perspective)
+	{
+		var pdpAreaWidth = jQuery('#productAreaWidth').width();
+		var size = (pdpAreaWidth >= 635) ? 350 : 240;
+		var color = jQuery('#color_' + product + ' option:selected').attr("value");
+		if (!color) color = 0;
+		if (! perspective) perspective = getFirstKeyFromMap(productImageToUrlMapping[product]);
+		if (! size) size = getFirstKeyFromMap(productImageToUrlMapping[product][perspective]);
+		if (! color) color = getFirstKeyFromMap(productImageToUrlMapping[product][perspective][size]);
+		
+		jQuery('#mainimg').attr('src', productImageToUrlMapping[product][perspective][size][color].url);
+	}
+	
+	function populateOtherProducts(productId, caption, productimageurl)
+	{
+		var otherProductObj = {
+			id: productId,
+			caption: caption,
+			imageurl: productimageurl
+		};
+		pdpOtherProducts.push(otherProductObj);
+	}
+	function carouselItemLoadCallback(carousel, state)
+	{
+		var items = pdpOtherProducts;
+	    for (var i = carousel.first; i <= carousel.last; i++) {
+	        if (carousel.has(i)) {
+	            continue;
+	        }
+	
+	        if (i > items.length) {
+	            break;
+	        }
+	        
+	        carousel.add(i, carouselGetItemHTML(items[i-1]));
+	    }
+	};
+	function carouselGetItemHTML(item)
+	{
+	    return '<div class="carouselitem"><a href="' + getUrl(item.id) + '" rel="nofollow"><img src="' + item.imageurl + '" alt="' + item.caption + '" /></a><br/><a href="' + getUrl(item.id) + '" rel="nofollow">' + item.caption + '</a></div>';
+	};
+	function getUrl(productId)
+	{
+		var url = document.URL;
+		var dotIndex = url.lastIndexOf('.');
+		var url2 = url.substring(0, dotIndex+1);
+		return url2 + productId;
+	};
+	function getFirstKeyFromMap(map) {
+		for (key in map) {
+			return key;
+		}
+	}	
+	populateOtherProducts(13045099,'vi reference mug (large)', 'http://images9.cpcache.com/nocache/product/13045099v2147483647_100x100_Front.jpg')
+addProductImage(11507711,'Front',0, 350, 'http://images1.cpcache.com/product/11507711v0_350x350_Front.jpg')
+addProductImage(11507711,'Front',0, 240, 'http://images1.cpcache.com/product/11507711v0_240x240_Front.jpg')
+addProductImage(11507711,'Front',0, 48, 'http://images1.cpcache.com/product/11507711v0_48x48_Front.jpg')
+addProductImage(11507711,'Back',0, 350, 'http://images1.cpcache.com/product/11507711v0_350x350_Back.jpg')
+addProductImage(11507711,'Back',0, 240, 'http://images1.cpcache.com/product/11507711v0_240x240_Back.jpg')
+addProductImage(11507711,'Back',0, 48, 'http://images1.cpcache.com/product/11507711v0_48x48_Back.jpg')
+
+	jQuery(document).ready(function() {
+		var pdpAreaWidth = jQuery('#productAreaWidth').width();
+		if (pdpAreaWidth >= 635){
+			jQuery('#mainimg').attr('src','http://images1.cpcache.com/product/11507711v0_350x350_Back.jpg');
+			jQuery('#mainimg').css('height', 350);
+		}
+		if ("0" != "0" && "" != "")
+		{
+			jQuery('#mainimg').css("border", "0");
+			jQuery('#mainimg').css("color", "");
+		}else
+		{
+			jQuery('#mainimg').addClass("defaultimageborder");
+			jQuery('#mainimg').removeClass("imageborder");
+		}		
+
+		if (pdpOtherProducts.length > 0)
+			jQuery('#carouselcontainer').show();
+			
+		jQuery('#otherproductscarousel').jcarousel({
+			size: pdpOtherProducts.length,
+			itemLoadCallback: {
+				onBeforeAnimation: carouselItemLoadCallback
+			}
+		});
+	});
+</script>
+
+<script type="text/javascript">
+	refreshAvailabilityMessage();
+ 	var fc_prod_view="11507711";
+</script>
+
+
+
+
+
+<script language="javascript">
+	om_pagename = "ProductDetailsPage" ;
+	om_channel = "PremiumShop";
+	om_events ="prodView";
+	om_products ="11507711" ;
+	om_eVar11 = "geekcheat";
+	om_eVar34 = "geekcheat";
+	om_eVar12 = "1451422";
+	om_eVar3="PremiumShop";
+	om_eVar16="Mug       ";
+	om_eVar18="Mug";
+	om_prop8 = "geekcheat";	
+</script>
+
+
+
+<!-- End Content, Start Footer Include -->
+			<!-- /CafePress content --><!-- /CafePress content --><!-- /CafePress content -->
+            <!-- /CafePress content --><!-- /CafePress content --><!-- /CafePress content -->
+            
+            </div><!-- / bodyContent -->
+		</td>
+	</tr>
+</table>
+
+
+
+<!-- custom shop footer --><!-- custom shop footer --><!-- custom shop footer -->
+<!-- custom shop footer --><!-- custom shop footer --><!-- custom shop footer -->
+		<div align="center">
+								<img src="http://content.cafepress.com/si/cpTemp.acme03a_questions.gif" width="570" height="32" /><br />							
+								<table cellspacing="0" cellpadding="2" border="0">
+									<tr>
+										<td>
+											<span class="smallprint"><b>Where's My Stuff?</b>
+											<li>Track your <a href="http://www.cafeshops.com/cp/help/orderstatus.aspx">recent orders</a>.
+											<li>View or change <a href="http://www.cafeshops.com/cp/help/orderstatus.aspx">your order</a>.</span></td>
+										<td>
+											<span class="smallprint"><b>Shipping & Returns</b>
+											<li>See our <a href="http://www.cafeshops.com/cp/help/shipping.aspx#1">shipping rates</a>.
+											<li>Make a <a href="http://www.cafeshops.com/cp/help/shipping.aspx#5">return or exchange</a>.</span></td>
+										<td>
+											<span class="smallprint"><b>Need Help?</b>
+											<li><a href="http://www.cafeshops.com/cp/help/ordering.aspx#1">Satisfaction Guaranteed</a>.
+											<li>Visit our <a href="http://www.cafeshops.com/cp/help/custserv.aspx">Customer Service</a>.</span></td>
+									</tr>
+								</table></div>&nbsp;</td>
+					<td background="http://content.cafepress.com/si/cpTemp.0013_wt-rgt.gif"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="9" height="1" alt="" /></td>
+				</tr>
+				<tr>
+					<td><img src="http://content.cafepress.com/si/cpTemp.0013_wt-botl.gif" width="9" height="9" alt="" /></td>
+					<td background="http://content.cafepress.com/si/cpTemp.0013_wt-bot.gif"><img src="http://www.cafepress.com/cp/info/img/spacer.gif" width="570" height="9" alt="" /></td>
+					<td><img src="http://content.cafepress.com/si/cpTemp.0013_wt-botr.gif" width="9" height="9" alt="" /></td>
+				</tr>
+	</table>
+
+
+
+<p align='center'>
+<center>
+<script type="text/javascript"><!--
+google_ad_client = "pub-8498996968416830";
+google_ad_width = 468;
+google_ad_height = 60;
+google_ad_format = "468x60_as";
+google_ad_channel ="5340412484";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+<br><br>
+
+<script src="http://rcm.amazon.com/e/cm?t=thevireferemug&l=st1&search=linux%20unix&mode=books&p=13&o=1" type="text/JavaScript"></script>
+<noscript>
+<MAP NAME="boxmap"><AREA SHAPE="RECT" COORDS="379, 50, 460, 57" HREF="http://rcm.amazon.com/e/cm/privacy-policy.html?o=1" ><AREA COORDS="0,0,10000,10000" HREF="http://www.amazon.com/exec/obidos/redirect-home/thevireferemug" ></MAP><img src="http://rcm-images.amazon.com/images/G/01/rcm/468x60.gif" width="468" height="60" border="0" usemap="#boxmap" alt="Shop at Amazon.com">
+</noscript>
+
+<br><br>
+
+<a target='_blank' href='http://www.freereinvestingtips.com'>Free Real Estate Investing Tips</a> | <a target='_blank' href='http://www.billstradingtips.com'>Stock Trading Tips</a> | 
+<a target="_blank" href="http://www.futuresdoctor.com">Futures Doctor</a></center>
+</p>			
+
+
+
+
+
+</td>
+	</tr>
+</table>
+
+<!-- /custom shop footer --><!-- /custom shop footer --><!-- /custom shop footer -->
+<!-- /custom shop footer --><!-- /custom shop footer --><!-- /custom shop footer -->
+
+</div><!-- / cpWrapper -->
+
+<div id="cafepressFooter" class="footerContent smallprint">
+    <a href="http://shop.cafepress.com"><img src="http://content3.cpcache.com/shop/images/cafepress_footer.gif" alt="Powered by CafePress"/></a>
+    <p id="cafepressFooterText" class="footerText">
+		This shop is powered by <a href="/" target="_blank" >CafePress.com</a>.
+		Copyright © 1999-<script type="text/javascript">var d = new Date();document.write(d.getFullYear());</script> CafePress.com. All rights reserved.<br>
+		<a rel="nofollow" href="/cp/info/help/privacy.aspx">Privacy Policy</a> |
+		<a rel="nofollow" href="/cp/info/help/law.aspx">Trademark &amp; Copyright Information</a><br/>
+		Non-US currency rates are updated daily and may fluctuate.
+	</p>
+    <div class="clear">&nbsp;</div>
+</div>
+
+  
+
+
+
+
+<!--Cats Code Begin-->
+	
+	<div id="instrumentation" style="display:none; color:white">{"cache hit":15.625,"cache hit":0,"cache hit":0,"cache hit":0,"cache hit":0,}</div>
+<!--Cats Code End-->
+
+	<!--Omniture Code Begins -->
+	<!-- SiteCatalyst code version: H.2.
+Copyright 1997-2005 Omniture, Inc. More info available at
+http://www.omniture.com -->
+
+
+
+<script type="text/javascript">
+	var s_account="cafepresscom";
+	var om_linkfilters ="javascript:,cafepress.com";
+</script>
+
+<script type="text/javascript" src="/cp/inc/js/s_code.js"></script>
+<script type="text/javascript">
+<!--
+	function _hbLink(a,b,c)
+	{ }
+	function getMyVal(myvar,myval)
+	{
+		if (myvar != "")
+		{
+			return myvar;
+		}
+		else
+		{
+			return myval;
+		}
+	}
+	function makePageName(myvar)
+	{
+		var tmpPageName = myvar ;
+		tmpPageName = tmpPageName.replace(/<[^>]*>/g, "");			// remove HTML between < and >
+		tmpPageName = tmpPageName.replace(/\s*/g, "");				// strip spaces
+		tmpPageName = tmpPageName.replace(/\&gt\;/g, ":");			// replace > with colon
+		tmpPageName = tmpPageName.replace(/&amp;/g, "And");			// replace HTML escape code for & (&amp;) with And
+		tmpPageName = tmpPageName.replace(/^CafePress.com:/i, "");	// remove leading "Cafepress.com:"
+		tmpPageName = tmpPageName.replace(/:CafePress.com$/i, "");	// remove trailing ":Cafepress.com"
+		tmpPageName = tmpPageName.replace(/[^A-Z0-9 :]*/ig, "");	// remove non-alphanumerics
+		tmpPageName = tmpPageName.replace(/^Home:/i, "");			// remove leading "Home:"
+		return tmpPageName;
+	}
+
+
+	// TRAFFIC VARIABLES
+
+	// Page name used (in order of preference):
+	// 1. om_pagename variable set on page itself.
+	// 2. Breadcrumb on page.
+	// 3. Page title.
+	s.pageName=(window.om_pagename?getMyVal(makePageName(window.om_pagename), ""): "");
+
+	var breadcrumb = "";
+	var arr_nodes = document.getElementsByTagName('div');
+	for (i = 0; i < arr_nodes.length; i++)
+	{
+		if (arr_nodes[i].className.toLowerCase() == 'breadcrumb')
+		{
+			breadcrumb = arr_nodes[i].innerHTML;
+			break;
+		}
+	}
+
+	if (s.pageName == "")
+	{
+		if (breadcrumb != "")
+		{
+			s.pageName = makePageName(breadcrumb);
+		}
+		else
+		{
+			s.pageName = makePageName(document.title);
+		}
+	}
+
+	s.server =(window.om_server?getMyVal(window.om_server, ""): "");
+
+	if (s.pageName.match(/^CreateAndBuy/i))
+	{
+		om_channel = "CreateAndBuy";
+	}
+
+	s.channel =(window.om_channel?getMyVal(window.om_channel, "Other"): "Other");
+
+	if (s.channel.toLowerCase() == "premiumshop")
+	{
+		s.channel = "PremiumShop";
+	}
+	else if (s.channel.toLowerCase() == "basicshop")
+	{
+		s.channel = "BasicShop";
+	}
+
+	s.pageType =(window.om_pageType?getMyVal(window.om_pageType, ""): "");
+
+	s.prop1 =(window.om_prop1?getMyVal(window.om_prop1, ""): ""); //SearchTerm
+	s.prop2 =(window.om_prop2?getMyVal(window.om_prop2, ""): ""); //Premium Store Template Name
+	s.prop3 =(window.om_prop3?getMyVal(window.om_prop3, ""): ""); //Visitor or Member
+
+	if (s.prop3 == "")
+	{
+		if (("".length > 0) | ("".length > 0) | ("".length > 0)  )
+		{
+			s.prop3 = "Member";
+		}
+		else
+		{
+			s.prop3 = "Visitor";
+		}
+	}
+
+	s.prop4 =(window.om_prop4?getMyVal(window.om_prop4, ""): "");
+	s.prop5=(window.om_prop5?getMyVal(window.om_prop5, ""): "");
+	s.prop6=(window.om_prop6?getMyVal(window.om_prop6, ""): ""); //Member_no
+
+	if (s.prop6 == "")
+	{
+		if ("".length > 0)
+		{
+			s.prop6 = "" ;
+		}
+		else if (("".length > 0))
+		{
+			s.prop6 = "" ;
+		}
+	}
+
+	s.prop8=(window.om_prop8?getMyVal(window.om_prop8, ""): ""); //Associated with shopId report for unique visits and visitor hits.
+
+	// COMMERCE VARIABLES
+
+	s.campaign =(window.om_campaign?getMyVal(window.om_campaign, ""): "");
+
+	s.state =(window.om_state?getMyVal(window.om_state, ""): "");
+	s.zip =(window.om_zip?getMyVal(window.om_zip, ""): "");
+	s.events =(window.om_events?getMyVal(window.om_events, ""): "");
+	s.products =(window.om_products?getMyVal(window.om_products, ""): "");
+	s.purchaseID =(window.om_purchaseID?getMyVal(window.om_purchaseID, ""): "");
+
+	//eVar variables Begin
+
+	s.eVar1 =(window.om_eVar1?getMyVal(window.om_eVar1, ""): ""); //CJ PID
+	if (s.eVar1 == "")
+	{
+		if (("1999" == "7532081") & ("0".length > 0) &  ("0" != 0))
+		{
+			s.eVar1 = "0";
+		}
+	}
+
+	s.eVar2 =(window.om_eVar2?getMyVal(window.om_eVar2, ""): "");
+
+	s.eVar3 =(window.om_eVar3?getMyVal(window.om_eVar3, ""): ""); //Purchase channel variable
+	if (s.pageName.match(/^CreateAndBuy/i))
+	{
+		s.eVar3 = "CreateAndBuy";
+	}
+
+	s.eVar4 =(window.om_eVar4?getMyVal(window.om_eVar4, ""): ""); //Self Buy
+	s.eVar5 =(window.om_eVar5?getMyVal(window.om_eVar5, ""): ""); //Shopkeeper flag
+	s.eVar6 =(window.om_eVar6?getMyVal(window.om_eVar6, ""): ""); //ShippingType
+	s.eVar7 =(window.om_eVar7?getMyVal(window.om_eVar7, ""): ""); //Shipping Country
+	s.eVar8 =(window.om_eVar8?getMyVal(window.om_eVar8, ""): ""); //Gift Orders
+	s.eVar9 =(window.om_eVar9?getMyVal(window.om_eVar9, ""): ""); //Search
+	s.eVar10 =(window.om_eVar10?getMyVal(window.om_eVar10, ""): ""); //Member or Visitor
+	if (s.eVar10 == "")
+	{
+		if (("".length > 0) | ("".length > 0) | ("".length > 0)  )
+		{
+			s.eVar10 = "Member";
+		}
+		else
+		{
+			s.eVar10 = "Visitor";
+		}
+	}
+
+	s.eVar11 =(window.om_eVar11?getMyVal(window.om_eVar11, ""): ""); //ShopId
+	s.eVar12 =(window.om_eVar12?getMyVal(window.om_eVar12, ""): ""); //SellerId
+	s.eVar13 =(window.om_eVar13?getMyVal(window.om_eVar13, ""): ""); //Purchase Channel
+	s.eVar14 =(window.om_eVar14?getMyVal(window.om_eVar14, s.channel): s.channel); //Landing Page Group
+	s.eVar15 =(window.om_eVar15?getMyVal(window.om_eVar15, s.pageName): s.pageName); //Landing Page Detail
+	s.eVar16 =(window.om_eVar16?getMyVal(window.om_eVar16,""): ""); //Product Type
+	//s.eVar17 =(window.om_eVar17?getMyVal(window.om_eVar17,""): ""); //Type of traffic vista rule
+	s.eVar18 =(window.om_eVar18?getMyVal(window.om_eVar18,""): ""); //Category
+	s.eVar19 =(window.om_eVar19?getMyVal(window.om_eVar19,""): ""); //Size
+	s.eVar20 =(window.om_eVar20?getMyVal(window.om_eVar20,""): ""); //Color
+	s.eVar21 =(window.om_eVar21?getMyVal(window.om_eVar21,""): ""); ////purchaseID
+	s.eVar22 =(window.om_eVar22?getMyVal(window.om_eVar22,""): ""); ////couponCode
+
+	s.eVar23 =(window.om_eVar23?getMyVal(window.om_eVar23, ""): ""); //Landing Page Member No
+	if (s.eVar23 == "")
+	{
+		if (("1451422".length > 0) &  ("1451422" != 0))
+		{
+			s.eVar23 = "1451422";
+		}
+	}
+
+	
+	s.eVar24 = "EXP_08_00:T,EXP_08_07:T,EXP_09_01:C,EXP_09_04:C,EXP_09_09:T,EXP_09_10:T,EXP_09_11:C,EXP_09_15:T,EXP_09_16:T,EXP_09_17:T,EXP_09_19:C,EXP_09_20:C,EXP_09_21:T,EXP_10_01:C,EXP_10_02:T,EXP_10_03:T,EXP_10_04:C,EXP_10_05:T,EXP_10_06:T,EXP_10_07:C,EXP_10_08:C,EXP_10_09:C,EXP_10_10:C,EXP_CB_05_10:T";
+
+	
+	s.eVar30 = "35AE61F5198F0101F288ECAD4EA7068B:903DB251E2DD9B047BC33906E7B68217";
+
+	s.eVar26 =(window.om_eVar26?getMyVal(window.om_eVar26, ""): ""); //CafePress PID
+	if (s.eVar26 == "")
+	{
+		
+		if ("premium" == "affiliate")
+		{
+			s.eVar26 = "2099"; //2099 = affiliate
+		}
+		else 
+		{
+			s.eVar26 = "1999";
+		}
+		
+	}
+
+	
+	s.eVar32 = ((typeof window.om_eVar32 == 'undefined') ? "" : window.om_eVar32);
+
+	s.eVar33 =(window.om_eVar33?getMyVal(window.om_eVar33, ""): ""); //ShopIdMarketplace
+	s.eVar34 =(window.om_eVar34?getMyVal(window.om_eVar34, ""): ""); //ShopIdShops
+
+	//eVar variables End
+
+	/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+	var s_code=s.t();if(s_code)document.write(s_code)//--></script>
+	<script type="text/javascript"><!--
+	if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')
+//-->
+</script><!--/DO NOT REMOVE/-->
+<!-- End SiteCatalyst code version: H.2. -->
+
+<script language="JavaScript">
+var landingPage = '';
+var landingProduct = '';
+</script>
+
+	<!-- Omniture Code Ends -->
+<script type="text/javascript">
+  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+  var pageTracker = _gat._getTracker("UA-3370374-1");
+  pageTracker._setDomainName("cafepress.com");
+  pageTracker._setSampleRate("100"); //sets sampling rate to 100 percent
+  pageTracker._trackPageview();
+</script>
+<!-- Start Google Analytics UA-11730150-1 (GA Universal) 2009-01-11 Tracking -->
+
+
+<script type="text/javascript">
+document.write(unescape("%3Cscript src='" + document.location.protocol + "//content.cafepress.com/global/js/ga-UA-11730150-1-20090111.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript">
+try{
+var pageTracker_UA_11730150_1 = _gat_UA_11730150_1._getTracker("UA-11730150-1");
+var hostname = window.location.hostname;
+pageTracker_UA_11730150_1._setDomainName(hostname.substring(hostname.indexOf(".")+1,hostname.length));
+pageTracker_UA_11730150_1._setAllowLinker(true);
+pageTracker_UA_11730150_1._setAllowHash(false);
+pageTracker_UA_11730150_1._setSampleRate("100"); //sets sampling rate to 100 percent
+
+//get the cookie from __utmc instead of __utmb
+var utmcCookie = document.cookie.match ("(^|;) ?" + "__utmc-UA-11730150-1" + "=([^;]*)(;|$)");
+
+//product line visit segmentation - user-defined variables
+
+if (utmcCookie == null)
+{
+  if(typeof window.om_eVar11 === "undefined")
+  {
+    pageTracker_UA_11730150_1._setVar(window.cafepress.tealeaf.salesChannel + ", " + window.cafepress.tealeaf.pageLandingType);
+  }
+  else
+  {
+    pageTracker_UA_11730150_1._setVar(window.cafepress.tealeaf.salesChannel + ", " + window.cafepress.tealeaf.pageLandingType + ", " + window.om_eVar11);
+  }
+}
+
+//product line visit segmentation - custom variables
+
+//Slot 1 - Cafepress Visitor ID
+var pidGuid = document.cookie.match ("(^|;) ?" + "pid.guid" + "=([^;]*)(;|$)");
+pageTracker_UA_11730150_1._setCustomVar(1, "CP_Visitor_ID", pidGuid[2], 1);
+
+//Slot 2 - GA Visitor ID
+var utmaCookie = document.cookie.match ("(^|;) ?" + "__utma-UA-11730150-1" + "=([^;]*)(;|$)");
+var utmaUnescape = unescape (utmaCookie[2]);
+utmaSessionValue = utmaUnescape.split('.');
+pageTracker_UA_11730150_1._setCustomVar(2, "GA_Visitor_ID", utmaSessionValue[1], 1);
+
+//Slot 3 - Reference Cart Number
+var viewCart = "viewcart.aspx";
+if (window.cafepress.tealeaf.pageLandingType.indexOf(viewCart) != -1)
+{
+	var refCartNum = document.cookie.match("(^|;) ?" + "cur_cart" + "=([^;]*)(;|$)");
+	refCartNum = (refCartNum != null) ? refCartNum[2].split('-')[0] : null;
+	pageTracker_UA_11730150_1._setCustomVar(3, "Reference_Cart_Number", refCartNum, 1);
+}
+
+//Slot 4 - GWO Marker (coming soon!)
+pageTracker_UA_11730150_1._setCustomVar(4, "GWO_Marker" , "Placeholder", 1);
+
+//Slot 5 - A/B Test Marker
+var abTSTest = window.cafepress.tealeaf.abTestString;
+var newABTestMarker = "";
+for (var tsCount = 0; tsCount < 3; tsCount++)
+{
+  newABTestMarker = abTSTest.substring(abTSTest.lastIndexOf(',')).replace(':', '_').replace(',', '-') + newABTestMarker;
+  abTSTest = abTSTest.substring(0, abTSTest.lastIndexOf(','));
+}
+newABTestMarker = newABTestMarker.substring(1);
+if (newABTestMarker != null && newABTestMarker != "")
+{
+  pageTracker_UA_11730150_1._setCustomVar(5, "AB_Test_Marker", newABTestMarker, 1);
+}
+
+pageTracker_UA_11730150_1._trackPageview();
+
+//e-commerce tagging
+
+var checkOutReceiptPage = "checkout_receipt.aspx";
+if (window.cafepress.tealeaf.pageLandingType.indexOf(checkOutReceiptPage) != -1)
+{
+  pageTracker_UA_11730150_1._addTrans(
+    cjOrderNo,                 // Order ID
+    cjAffiliation,             // Affiliation
+    cjTotal,                   // Total
+    cjTax,                     // Tax
+    cjShipping,                // Shipping
+    cjBillingAddressCity,      // City
+    cjBillingAddressState,     // State
+    cjBillingAddressCountry    // Country
+  );
+
+  for (var ctr = 0; ctr < cjRefs.length; ctr++)
+  {
+    pageTracker_UA_11730150_1._addItem(
+      cjOrderNo,               // Order ID
+      cjProds[ctr],            // SKU
+      cjProdNames[ctr],        // Product Name (Use Cart's Product Name)
+      cjProdCats[ctr],         // Category (Use Product Type Caption)
+      cjPrices[ctr],           // Price
+      cjQtys[ctr]              // Quantity
+    );
+  }
+
+  pageTracker_UA_11730150_1._trackTrans();
+}
+
+} catch(err) {}
+</script>
+
+
+<!-- Start Google Analytics UA-12011589-1 (GA Universal Beta) 2010-04-13 Tracking -->
+
+<script type="text/javascript">
+document.write(unescape("%3Cscript src='" + document.location.protocol + "//content.cafepress.com/global/js/ga-UA-12011589-1-20100413.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript">
+  try{
+  var pageTracker_UA_12011589_1 = _gat_UA_12011589_1._getTracker("UA-12011589-1");
+
+  //get the cookie value we need from __utmc-UA-12011589-1 (use instead of __utmb-UA-12011589-1)
+  var utmcCookie = document.cookie.match ( '(^|;) ?' + '__utmc-UA-12011589-1' + '=([^;]*)(;|$)' );
+
+  var hostname = window.location.hostname;
+
+  pageTracker_UA_12011589_1._setDomainName(hostname.substring(hostname.indexOf(".")+1,hostname.length));
+  pageTracker_UA_12011589_1._setAllowLinker(true);
+  pageTracker_UA_12011589_1._setAllowHash(false);
+  pageTracker_UA_12011589_1._setSampleRate("100"); //sets sampling rate to 100 percent
+
+  //Product Line visit segmentation starts here
+  if (utmcCookie == null) //utmcCookie not found
+  {
+    if(typeof window.om_eVar11 === "undefined")
+    {
+      pageTracker_UA_12011589_1._setVar(window.cafepress.tealeaf.salesChannel+', '+window.cafepress.tealeaf.pageLandingType);
+    }
+    else
+    {
+      pageTracker_UA_12011589_1._setVar(window.cafepress.tealeaf.salesChannel+', '+window.cafepress.tealeaf.pageLandingType+', '+window.om_eVar11);
+    }
+  }
+
+  //Visit Segmentation using Custom Variables starts here
+  //Slot 1 - Cafepress Visitor ID
+  var pidGuid = document.cookie.match ( '(^|;) ?' + 'pid.guid' + '=([^;]*)(;|$)' );
+  pageTracker_UA_12011589_1._setCustomVar(1,"CP_Visitor_ID", pidGuid[2], 1);
+
+  //Slot 2 - GA Visitor ID
+  var utmaCookie = document.cookie.match ( '(^|;) ?' + '__utma-UA-12011589-1' + '=([^;]*)(;|$)' );
+  var utmaUnescape = unescape ( utmaCookie[2] );
+  utmaSessionValue = utmaUnescape.split(".");
+  pageTracker_UA_12011589_1._setCustomVar(2,"GA_Visitor_ID",utmaSessionValue[1],1);
+
+  //Slot 3 - Reference Cart Number
+  var viewCart = "viewcart.aspx";
+  if (window.cafepress.tealeaf.pageLandingType.indexOf(viewCart) != -1)
+  {
+  	var refCartNum = document.cookie.match("(^|;) ?" + "cur_cart" + "=([^;]*)(;|$)");
+  	refCartNum = (refCartNum != null) ? refCartNum[2].split("-")[0] : null;
+  	pageTracker_UA_12011589_1._setCustomVar(3, "Reference_Cart_Number", refCartNum, 1);
+  }
+
+  //Slot 4 - GWO Marker (coming soon!)
+  pageTracker_UA_12011589_1._setCustomVar(4,"GWO_Marker","Placeholder",1);
+
+  //Slot 5 - A/B Test Marker
+  var abTSTest = window.cafepress.tealeaf.abTestString;
+  var newABTestMarker = "";
+  for (var tsCount = 0; tsCount < 3; tsCount++)
+  {
+      newABTestMarker = abTSTest.substring(abTSTest.lastIndexOf(',')).replace(':', '_').replace(',', '-') + newABTestMarker;
+      abTSTest = abTSTest.substring(0, abTSTest.lastIndexOf(','));
+  }
+  newABTestMarker = newABTestMarker.substring(1);
+
+  if (newABTestMarker != null && newABTestMarker != "")
+  {
+      pageTracker_UA_12011589_1._setCustomVar(5,"AB_Test_Marker",newABTestMarker,1);
+  }
+
+  // internal search tracking applied here (GA universal beta)...
+  if (typeof isFromSearchQuery !== "undefined")
+  {
+      var qrStr;
+      if (window.location.search == "")
+      {
+          qrStr = window.location.href+ '?q=' + encodeURIComponent(currentSearchQuery);
+      }
+      else
+      {
+          qrStr = window.location.href.replace(window.location.search,"") + '?q=' + encodeURIComponent(currentSearchQuery);
+      }
+      pageTracker_UA_12011589_1._trackPageview(qrStr);
+  }
+  else
+  {
+      pageTracker_UA_12011589_1._trackPageview();
+  }
+
+  }
+  catch(err)
+  {
+  }
+</script>
+
+<script type="text/javascript">
+  try
+  {
+    var checkOutReceiptPage = "checkout_receipt.aspx";
+    if (window.cafepress.tealeaf.pageLandingType.indexOf(checkOutReceiptPage) != -1)
+    {
+      pageTracker_UA_12011589_1._addTrans(
+        cjOrderNo,               // Order ID
+        cjAffiliation,             // Affiliation
+        cjTotal,                 // Total
+        cjTax,                   // Tax
+        cjShipping,              // Shipping
+        cjBillingAddressCity,    // City
+        cjBillingAddressState,   // State
+        cjBillingAddressCountry  // Country
+      );
+
+      for (var ctr = 0; ctr < cjRefs.length; ctr++)
+      {
+        pageTracker_UA_12011589_1._addItem(
+          cjOrderNo,               // Order ID
+          cjProds[ctr],            // SKU
+          cjProdNames[ctr],        // Product Name (Use Cart's Product Name)
+          cjProdCats[ctr],         // Category (Use Product Type Caption)
+          cjPrices[ctr],           // Price
+          cjQtys[ctr]              // Quantity
+        );
+      }
+
+      pageTracker_UA_12011589_1._trackTrans();
+    }
+  }
+  catch (err)
+  {
+  }
+</script>
+
+
+<!-- Start Google Analytics UA-5952421-1 (Stores) 2009-01-11 Tracking -->
+
+<script type="text/javascript">
+  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+  var pageTracker_UA_5952421_1 = _gat._getTracker("UA-5952421-1");
+  pageTracker_UA_5952421_1._setDomainName(window.location.hostname.substring(window.location.hostname.indexOf(".")+1,window.location.hostname.length));
+  pageTracker_UA_5952421_1._setSampleRate("100"); //sets sampling rate to 100 percent
+  pageTracker_UA_5952421_1._trackPageview();
+</script>
+
+<!-- End Google Analytics UA-5952421-1 (Stores) Tracking -->
+
+
+
+
+
+
+<script language="JavaScript">
+	var CampaignSource = "allothers";
+	var CampaignMedium = "referral";
+	var CampaignKeyword = "";
+</script>
+
+<!-- Purposely deleting as temporary measure toward centralizing analytics.  -MC 9/15/2008-->
+
+<!-- End Footer_Prem -->
+
+
+
+</body>
+</html>
