@@ -1,0 +1,623 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Surfin' Safari</title>
+
+<link rel="alternate" type="application/rss+xml" title="RSS" 
+
+href="http://www.mozillazine.org/weblogs/hyatt/blogger_rss.xml" />
+
+<script language="javascript" type="text/javascript">
+function OpenComments (c) {
+    window.open(c,
+                    'comments',
+                    'width=480,height=480,scrollbars=yes,status=yes');
+}
+
+function OpenTrackback (c) {
+    window.open(c,
+                    'trackback',
+                    'width=480,height=480,scrollbars=yes,status=yes');
+}
+</script>
+</head>
+<body>
+<!-- Top bar and minor navigation -->
+<div id="texttitle"><h1>Surfin' Safari</h1></div>
+<div id="titlebar"></div>
+<div id="subtitlebar">
+<p><a href="../index.html">Front Page</a>
+&nbsp;-&nbsp;
+<a href="http://www.technorati.com/cosmos/links.html?rank=&url=http%3A%2F%2Fwww.mozillazine.org%2Fweblogs%2Fhyatt%2F&sub=Get+Link+Cosmos">Technorati</a>
+</p>
+</div>
+
+<!-- Left column, major content area  -->
+<div id="left">
+
+
+
+<span class="box"><h2>May  2, 2005</h2></span><span class="boxend"></span>
+
+<br class="spacer" />
+<div class="title">
+<h3><a name="007507" 
+
+href="http://weblogs.mozillazine.org/hyatt/archives/2005_05.html#007507">Implementing CSS (Part 1)</a></h3>				
+
+<h5>Posted at  2:57 PM</h5>
+</div>
+
+<p>One of the most interesting problems (to me at least) in browser layout engines is how to implement a style system that can determine the style information for elements on a page efficiently.  I worked on this extensively in the Gecko layout engine during my time at AOL and I've also done a lot of work on it for WebCore at Apple.  My ideal implementation would actually be a hybrid of the two systems, since some of the optimizations I've done exist only in one engine or the other.</p>
+
+<p>When dealing with style information like font size or text color, you have both the concept of back end information, what was specified in the style rule, and the concept of front end information, the computed result that you'll actually use when rendering.  The interesting problem is how to compute this front end information for a given element efficiently.</p>
+
+<p>Back end information can be specified in two different ways.  It can either be specified using CSS syntax, whether in a stylesheet or in an inline style attribute on the element itself, or it is implicitly present because another attribute on the element specified presentational information.  An example of such an attribute would be the <i>color</i> attribute on the <i>font</i> tag.  Both WebCore and Gecko use the term <i>mapped attribute</i> to describe an attribute whose value (or even mere presence) maps to some implicit style declaration.</p>
+
+<p>A <i>rule</i> in CSS consists of two pieces.  There is the <i>selector</i>, that bit of information that says under what conditions the rule should match a given element, and there is the <i>declaration</i>, a list of property/value pairs that should be applied to the element should the selector be matched.  </p>
+
+<p>All back end information can ultimately be thought of as supplying a declaration.  A normal rule in a stylesheet that is matched has the declaration specified as part of the rule.  An inline style attribute on an element has no selector and is simply a declaration that always applies to that element.  Similarly each individual mapped attribute (like the <i>color</i> and <i>face</i> attributes on the <i>font</i> tag) can be thought of as supplying a declaration as well.</p>
+
+<p>Therefore the process of computing the style information for an element can be broken down into two phases.  The first phase is to determine what set of declarations apply to an element.  Once that back end information has been determined, the second phase is to take that back end information and quickly determine the information that should be used when rendering.</p>
+
+<p>WebCore (in upcoming Safari releases) has a really cool optimization that I came up with to avoid even having to compute the set of declarations that apply to an element.  This optimization in practice results in not even having to match style for about 60% of the elements on your page.</p>
+
+<p>The idea behind the optimization is to recognize when two elements in a page are going to have the same style through DOM (and other state) inspection and to simply share the front end style information between those two elements whenever possible.</p>
+
+<p>There are a number of conditions that must be met in order for this sharing to be possible:<br />
+(1) The elements must be in the same mouse state (e.g., one can't be in :hover while the other isn't)<br />
+(2) Neither element should have an id<br />
+(3) The tag names should match<br />
+(4) The class attributes should match<br />
+(5) The set of mapped attributes must be identical<br />
+(6) The link states must match<br />
+(7) The focus states must match<br />
+(8) Neither element should be affected by attribute selectors, where affected is defined as having any selector match that uses an attribute selector in any position within the selector at all<br />
+(9) There must be no inline style attribute on the elements<br />
+(10) There must be no sibling selectors in use at all.  WebCore simply throws a global switch when any sibling selector is encountered and disables style sharing for the entire document when they are present.  This includes the + selector and selectors like :first-child and :last-child.</p>
+
+<p>The algorithm to locate a shared style then goes something like this.  You walk through your previous siblings and for each one see if the above 10 conditions are met.  If you find a match, then simply share your style information with the other element.  Such a system obviously assumes a reference counting model for your front end style information.</p>
+
+<p>Where this optimization kicks into high gear, however, is that it doesn't have to give up if no siblings can be located.  Because the detection of identical style contexts is essentially O(1), nothing more than a straight pointer comparison, you can easily look for <i>cousins</i> of your element and still share style with those elements.</p>
+
+<p>The way this works is that if you can't locate a sibling, you can go up to a parent element and attempt to find a sibling or cousin of the parent element that has the same style pointer.  If you find such an element, you can then drill back down into its children and attempt to find a match.</p>
+
+<p>This means that for HTML like the following:</p>
+
+<p>&lt;table&gt;<br />
+&lt;tr class='row'&gt;<br />
+&lt;td class='cell' width=300 nowrap&gt;Cell One&lt;/td&gt;<br />
+&lt;/tr&gt;<br />
+&lt;tr class='row'&gt;<br />
+&lt;td class='cell' width=300 nowrap&gt;Cell Two&lt;/td&gt;<br />
+&lt;/tr&gt;</p>
+
+<p>In the above example, not only do the two rows share the same style information, but the two cells do as well.  This optimization works extremely well for both old-school HTML (in which many deprecated presentational tags are used) and newer HTML (in which class attributes might figure more prominently).</p>
+
+<p>Once the engine determines that a style can't be shared, i.e., that no pre-existing front end style pointer is available, then it's time to figure out the set of declarations that match a given element. It is obvious that for inline style attributes and mapped attributes that you can find the corresponding declaration quickly.  The inline style declaration can be owned by the element, and the mapped attributes can be kept in a document-level hash.  WebCore has a bit of an edge over Gecko here in that it treats each individual mapped attribute on an element as a separate declaration, whereas Gecko hashes all of the mapped attributes on an element as a single "rule."  This means that Gecko will not be able to share the mapped attribute declaration for the following two elements:</p>
+
+<p>&lt;img width=300 border=0&gt;<br />
+&lt;img width=500 border=0&gt;</p>
+
+<p>WebCore creates three unique declarations and hashes them, one for a width of 300, one for a width of 500, and one for a border of 0.  Gecko creates two different "rules," one for (width=300,border=0) and another for (width=500,border=0).  As you can see in such a system, you will frequently not be able to treat the identical border attributes as the same.</p>
+
+<p>Aside from this difference in mapped attribute handling, the two engines employ a similar optimization for quickly determining matching stylesheet rules called <i>rule filtering</i>.  All rules that are potentially matchable by any element (i.e., that have the correct media type) are hashed based on the contents of the rightmost simple selector in the rule.</p>
+
+<p>A selector in CSS can be either simple (meaning that all of the contents of that selector apply only to a single element) or compound (meaning that you may examine multiple elements like parents or siblings of that element).  A compound selector is essentially a chain of simple selectors, so the following rule:</p>
+
+<p>tr > td { color: blue }</p>
+
+<p>has two simple selectors, <tt>tr</tt> and <tt>td</tt>.  The rightmost simple selector in the rule is the one that we will use for the rule filtering optimization.</p>
+
+<p>The rightmost simple selector falls into four categories.</p>
+
+<p>(1) The selector uses an ID.  (Example: #foo)<br />
+(2) The selector doesn't have an ID but uses a class.  (Example: .foo)<br />
+(3) The selector has no class or ID but specifies a tag name.  (Example: div)<br />
+(4) The selector specifies none of these things.  (Example: *[disabled])</p>
+
+<p>The rule is placed into one of four hashtables depending on which category it falls into.  The idea behind these categorizations is to always filter out more specific information first.  For example, if an element has a specific ID, then obviously any rules whose rightmost selector uses a different ID cannot match.  Technically the last category can just be a list and not a hashtable, since those rules must always be examined by all elements.</p>
+
+<p>Each hashtable, therefore, consists of a mapping from a given atomic string to a set of rules that match.  The class attribute is exceptional in that you must put the rule into the hashtable multiple times if multiple class attributes are used.</p>
+
+<p>When determining the set of rules that match a given element, you only examine rules that correspond to the correct hash entry based off your ID, classes and tag name.  This optimization basically eliminates 95+% of the rules up front so that they need not even be considered during the matching process.</p>
+
+<p>Each rule is then examined in detail, with all selectors being checked, to determine if it is a match, and the set of matches is collected.  The set of matches can then be sorted by priority and specificity such that all the declarations are in the proper application order.</p>
+
+<p>This brings us to the final phase of the style computation, which is taking the set of matches and quickly computing the appropriate front end style information.  It is here that Gecko really shines.  What I implemented in Gecko was a data structure called the <i>rule tree</i> for efficient storing of cached style information that can be shared *even when* two elements are not necessarily the same.</p>
+
+<p>The idea behind the rule tree is as follows.  You can think of the universe of possible rules in your document as an alphabet and the set of rules that are matched by an element as a given input word.  For example, imagine that you had 26 rules in a stylesheet and you labeled them A-Z.  One element might match three rules in the sheet, thus forming the input word "C-A-T" or another might form the input word "D-O-G."</p>
+
+<p>There are several important observations one can make once you formulate the problem this way.  The first is that words that are prefixes of a larger word will end up applying the same set of rules.  All additional letters in the word do is result in the application of more declarations.  Thus the rule tree is effectively a lexicographic tree of nodes, with each node in a tree being created lazily as you walk the tree spelling out a given word.</p>
+
+<p>This system allows you to cache style information at each node in the tree.  This means that once you've looked up the word "C-A-T-E-R-W-A-U-L", and cached information at all of the nodes, then looking up the word "C-A-T" becomes more efficient.</p>
+
+<p>In order to make the caching efficient, properties can be grouped into categories, with the primary criterion for categorization being whether the property inherits by default.  It's also important to group properties together that would logically be specified together, so that when a fault occurs and you have to make a copy of a given struct, you do so knowing that the other values in the struct were probably going to be different anyway.</p>
+
+<p>Once you have the properties grouped into categories like the border struct or the background struct, then you can either store these structs in the rule tree or as part of a style tree that more or less matches the structure of the document.  Inheritance has to apply down the style tree and tends to force a fault, whereas non-inherited properties can usually be cached in the rule tree for easy access.</p>
+
+<p>WebCore doesn't contain a rule tree, but it is smart enough to refcount the structs and share them as long as no properties have been set in the struct.  In practice this works pretty well but is not as ideal as the rule tree solution.</p>
+<cite>
+<a href="http://weblogs.mozillazine.org/mt/comment.cgi?entry_id=7507" 
+
+onclick="OpenComments(this.href); return false">comment (161) 
+
+</a> - 
+
+
+</cite>
+
+
+
+<!-- Footer -->
+<p><address>Copyright © Dave Hyatt 2003, Design by <a href="http://www.projetsurbain.com">St&eacute;phane Curzi/ProjetsUrbain.com</a></p>
+
+</div>
+
+<!-- Right column, box & link -->
+<div id="right">
+<img src="../images/box_calendar.gif" width="180" height="35" alt="Calendar" 
+
+title="Calendar" border="0" />
+<div class="box">
+<table style="font-size: 0.9em" border="0" cellspacing="4" cellpadding="0" summary="Monthly calendar with 
+
+links to each day's posts">
+<caption class="calendarhead">
+December 2007
+</caption>
+<tr>
+<th abbr="Sunday" align="center"><span class="calendar">Sun</span></th>
+<th abbr="Monday" align="center"><span class="calendar">Mon</span></th>
+<th abbr="Tuesday" align="center"><span class="calendar">Tue</span></th>
+<th abbr="Wednesday" align="center"><span class="calendar">Wed</span></th>
+<th abbr="Thursday" align="center"><span class="calendar">Thu</span></th>
+<th abbr="Friday" align="center"><span class="calendar">Fri</span></th>
+<th abbr="Saturday" align="center"><span class="calendar">Sat</span></th>
+</tr>
+
+<tr>
+
+<td align="center"><span class="calendar">
+
+
+
+&nbsp;</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+
+&nbsp;</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+
+&nbsp;</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+
+&nbsp;</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+
+&nbsp;</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+
+&nbsp;</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+1
+</span></td>
+</tr>
+
+<tr>
+
+<td align="center"><span class="calendar">
+
+
+2
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+3
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+4
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+5
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+6
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+7
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+8
+</span></td>
+</tr>
+
+<tr>
+
+<td align="center"><span class="calendar">
+
+
+9
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+10
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+11
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+12
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+13
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+14
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+15
+</span></td>
+</tr>
+
+<tr>
+
+<td align="center"><span class="calendar">
+
+
+16
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+17
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+18
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+19
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+20
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+21
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+22
+</span></td>
+</tr>
+
+<tr>
+
+<td align="center"><span class="calendar">
+
+
+23
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+24
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+25
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+26
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+27
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+28
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+29
+</span></td>
+</tr>
+
+<tr>
+
+<td align="center"><span class="calendar">
+
+
+30
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+31
+</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+
+&nbsp;</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+
+&nbsp;</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+
+&nbsp;</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+
+&nbsp;</span></td>
+
+
+
+<td align="center"><span class="calendar">
+
+
+
+&nbsp;</span></td>
+</tr>
+
+
+</table>
+
+</div>
+
+
+
+<img src="../images/box_bottom.gif" width="180" height="15" alt="Box bottom" title="Box 
+
+bottom" border="0" />			<br /><br />
+
+<img src="../images/box_search.gif" width="180" height="35" alt="Search" title="Search" 
+
+border="0" />
+
+<div class="box">
+<form style="margin: 0" method="get" action="http://weblogs.mozillazine.org/mt/mt-search.cgi">
+<input type="hidden" name="IncludeBlogs" value="2" />
+<label for="search" accesskey="4">Search this site:</label><br />
+<input id="search" name="search" size="20" /><br />
+<input type="submit" value="Search" />
+</form>
+</div>
+
+<img src="../images/box_bottom.gif" width="180" height="15" alt="Box bottom" title="Box 
+
+bottom" border="0" />
+<br /><br />
+	
+
+<img src="../images/box_recent.gif" width="180" height="35" alt="Recent Entries" 
+
+title="Recent Entries" border="0" />
+<div class="box">
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2005_05.html#007507">Implementing CSS (Part 1)</a><br />
+
+</div>
+<img src="../images/box_bottom.gif" width="180" height="15" alt="Box bottom" title="Box 
+
+bottom" border="0" />			<br /><br />
+
+<img src="../images/box_archives.gif" width="180" height="35" alt="Archives" 
+
+title="Archives" border="0" />
+<div class="box">
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2005_06.html">June 2005</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2005_05.html">May 2005</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2005_04.html">April 2005</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2005_01.html">January 2005</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2004_09.html">September 2004</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2004_08.html">August 2004</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2004_07.html">July 2004</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2004_06.html">June 2004</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2004_05.html">May 2004</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2004_04.html">April 2004</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2004_03.html">March 2004</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2004_02.html">February 2004</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2004_01.html">January 2004</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2003_12.html">December 2003</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2003_11.html">November 2003</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2003_10.html">October 2003</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2003_09.html">September 2003</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2003_08.html">August 2003</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2003_07.html">July 2003</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2003_06.html">June 2003</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2003_05.html">May 2003</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2003_04.html">April 2003</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2003_03.html">March 2003</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2003_02.html">February 2003</a><br />
+<a href="http://weblogs.mozillazine.org/hyatt/archives/2003_01.html">January 2003</a><br />
+
+</div>
+<img src="../images/box_bottom.gif" width="180" height="15" alt="Box bottom" 
+title="Box bottom" border="0" />
+</div>
+
+<div id="tracking" >
+<font size=1 color=white>
+<a id="tracklink" style="text-decoration: none" target="_top" href="http://w.extreme-dm.com/?login=mozdave">
+&nbsp;
+<img onload="this.style.visibility='hidden'" name=im src="http://w1.extreme-dm.com/i.gif" height=38
+border=0 width=41 alt=""></a><script language="javascript"><!--
+an=navigator.appName;d=document;function
+pr(){d.write("<img src=\"http://w0.extreme-dm.com",
+"/0.gif?tag=mozdave&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;j=y&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;srw="+srw+"&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;srb="+srb+"&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;",
+"rs="+r+"&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;l="+escape(d.referrer)+"\" height=1 ",
+"width=1>");}srb="na";srw="na";//-->
+</script><script language="javascript1.2"><!--
+s=screen;srw=s.width;an!="Netscape"?
+srb=s.colorDepth:srb=s.pixelDepth;//-->
+</script><script language="javascript"><!--
+r=41;d.images?r=d.im.width:z=0;pr();//-->
+</script><noscript><img height=1 width=1 alt="" 
+src="http://w0.extreme-dm.com/0.gif?tag=mozdave&j=n"></noscript>
+</font>
+</div>
+
+</body>
+</html>
