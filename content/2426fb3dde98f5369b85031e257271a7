@@ -1,0 +1,1197 @@
+
+
+
+
+<?xml version "1.0" encoding "UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<title>XML.com: Atom Authentication</title>
+	<meta name="keywords" content="XML.com,O'Reilly Network,oreillynet,oreillynet.com,O'Reilly,OREILLY,Security,Programming,Mark Pilgrim,wsse,nonce,atom authentication" />
+	<meta name="description" content="Mark Pilgrim explains why the Atom developers are using a new kind of authentication scheme, and he explains why it's necessary." />
+	<meta name="date" content="Dec. 17, 2003" />
+	<meta name="pagename" content="Atom Authentication" />
+	<meta name="site" content="XML.com" />
+	<meta name="author" content="Mark Pilgrim" />
+	<meta name="safariu_url" content="http://www.xml.com/pub/a/2003/12/17/dive.html" />
+
+
+
+<!-- feed autodiscovery links -->
+
+<link rel="alternate" type="application/rss+xml" title="XML.com Articles and Weblogs" href="http://feeds2.feedburner.com/oreilly/xml" />
+
+<!--
+
+<link rel="alternate" type="application/atom+xml" title="XML.com Articles and Weblogs" href="http://www.oreillynet.com/pub/feed/20" />
+<link rel="alternate" type="application/rdf+xml" title="XML.com Articles and Weblogs" href="http://www.oreillynet.com/pub/feed/20?format=rss1" />
+
+-->
+
+<!-- stylesheet -->
+<link rel="STYLESHEET" type="text/css" href="http://www.xml.com/styles/pc-px-msie.css" />
+<link rel="STYLESHEET" type="text/css" href="http://www.xml.com/styles/global.css" />
+<script language="JavaScript" type="text/javascript" src="http://www.xml.com/common.js"></script>
+<script language="JavaScript" type="text/javascript" src="http://www.xml.com/common.js"></script>
+
+<!-- urchin tag -->
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-31074-1";
+urchinTracker();
+</script>
+
+<!-- 
+<script src="http://www.xml.com/__utm.js" type="text/javascript"></script>
+
+-->
+
+<script type="text/javascript" src="http://www.xml.com/tabber.js"></script>
+
+<!-- additional css -->
+<link rel="stylesheet" type="text/css" href="http://www.oreillynet.com/styles/articles.css" />
+
+<!-- MyBuys libraries and style sheet -->
+<link href="http://t.p.mybuys.com/css/mbstyles.css" type="text/css" rel="stylesheet" id="mybuysstyles">
+<script type="text/javascript" src="http://t.p.mybuys.com/js/mybuys3.js"></script>
+<script type="text/javascript" src="http://t.p.mybuys.com/clients/OREILLY/js/setup.js"></script>
+<!-- End MyBuys libraries and style sheet -->
+
+</head>
+<body id="xml">
+<div id="page">
+<div id="header" class="noindex">
+
+
+<h1><div style="padding:5px;">
+<a href="/index.csp"><img src="/images/logo_tagline.jpg" width="135" height="74" border="0" hspace="0" vspace="0"  alt="XML.com: XML From the Inside Out" /></a>
+</div></h1>
+
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right" valign="bottom">
+<a href="/cs/user/login?x-redirect=/cs/user/home" class="tiny">Sign In/My Account</a>&nbsp;|&nbsp;<a href="http://epoch.oreilly.com/shop/cart.orm" class="tiny">View Cart</a>&nbsp;&nbsp;</td>
+</tr></table>
+
+
+
+
+
+<div id="newHead">
+
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/all.css" type="text/css" />
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/about-121707.css" />
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/store2.css" />
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreilly.com/styles/catalog.css" />
+
+<div id="nav" class="noindex">
+<ul>
+<li><a href="http://www.oreilly.com/">O'Reilly Home</a></li>
+<li><a href="http://news.oreilly.com/">Community</a></li>
+<li><a href="http://www.oreilly.com/store/">Books & Videos</a></li>
+<li><a href="http://safari.oreilly.com/?cid=orm-nav-global">Safari Books Online</a></li>
+<li><a href="http://conferences.oreillynet.com/">Conferences</a></li>
+<li><a href="http://training.oreilly.com/">Training</a></li>
+<li><a href="http://www.oreillyschool.com/">School of Technology</a></li>
+<li><a href="http://www.oreilly.com/about/">About</a></li>
+
+</ul>
+<div class="clear"></div>
+</div><!-- /#nav -->
+
+
+
+
+
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/all_new.css" />
+
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/all.css" />
+
+
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/main.css" />
+
+
+
+<div id="search-box">
+
+
+
+<b>
+We've expanded our <a href="http://xml.oreilly.com">XML news coverage</a> and improved our search! </b> Search for all things XML across O'Reilly!
+
+<br /><br />
+<div id="search-box" class="yui-skin-sam">
+
+            <form method="get" action="http://search.oreilly.com" id="search-form" name="searchfield">
+                <fieldset>
+
+
+
+                    <span id="search-title" style="color:#474747">Search</span>
+                    <span id="search-input">
+                        <span id="search-input-top">
+                            <span id="search-input-bot">
+                                <span id="search-field"><input style="//height: 25px;" id="q" name="q" type="text" maxlength="64" accesskey="s" value="" /></span>
+                                <span id="search-button"><input type="image" name="submit" src="http://www.oreilly.com/images/oreilly/search_bar_btn.gif" alt="Submit" onclick="return searchverif();" /></span>
+                                <span class="clear"></span>
+                            </span>
+    </span>
+                    </span>
+                            <div id="autocomplete"></div>
+                   
+                    <span id="search-tips"><a href="http://www.oreillynet.com/search/tips.csp" target="_blank">Search Tips</a></span>
+                </fieldset>
+            </form>
+
+<br />
+        </div><!-- /#search-box -->
+
+<br />
+        
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+<!--
+<h1><csinclude record="lc/3" field="html" /></h1>
+<br />
+-->
+
+
+<!-- tabs 
+<csinclude record="lc/15" field="html" />
+-->
+
+
+<div id="leaderboard">
+<img src="http://www.oreillynet.com/images/ads/ad-tag-vertical.gif" width="11" height="90" border="0" alt="advertisement" style="float:right;"/>
+
+<div style="width:728px;margin:0 auto;">
+<!-- ###Leaderbord here###-->
+  <!-- XML Leaderboard Ad -->
+
+<!--JavaScript Tag // Tag for network 5159: TechVertical // Website: OR - XML.com // Page: XML // Placement: ros_728x90 (425861) // created at: Oct 9, 2008 5:49:51 PM-->
+<script language="javascript"><!--
+document.write('<scr'+'ipt language="javascript1.1" src="http://adserver.adtechus.com/addyn/3.0/5159/425861/0/225/ADTECH;loc=100;target=_blank;key=key1+key2+key3+key4;grp=[group];misc='+new Date().getTime()+'"></scri'+'pt>');
+//-->
+</script><noscript><a href="http://adserver.adtechus.com/adlink/3.0/5159/425861/0/225/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" target="_blank"><img src="http://adserver.adtechus.com/adserv/3.0/5159/425861/0/225/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" border="0" width="728" height="90"></a></noscript>
+
+<!-- End of JavaScript Tag -->
+
+<!-- End ad -->
+<!-- ###END Leaderbord###-->
+</div>
+</div> <!-- end leaderboard -->
+
+<div id="colored-bar-ad" class="tinywhite" align="center" style="background-color:#cc0033;"><!-- XML Text link Ad -->
+
+<!--JavaScript Tag // Tag for network 5159: TechVertical // Website: OR - XML.com // Page: XML // Placement: text (425860) // created at: Oct 9, 2008 5:49:53 PM-->
+<script language="javascript"><!--
+document.write('<scr'+'ipt language="javascript1.1" src="http://adserver.adtechus.com/addyn/3.0/5159/425860/0/16/ADTECH;loc=100;target=_blank;key=key1+key2+key3+key4;grp=[group];misc='+new Date().getTime()+'"></scri'+'pt>');
+//-->
+</script><noscript><a href="http://adserver.adtechus.com/adlink/3.0/5159/425860/0/16/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" target="_blank"><img src="http://adserver.adtechus.com/adserv/3.0/5159/425860/0/16/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" border="0" width="1" height="1"></a></noscript>
+<!-- End of JavaScript Tag -->
+
+<!-- End ad --></div>
+
+
+<!-- </div>  end header -->
+<!--
+<div id="page-content">
+-->
+
+<div id="page-content" style="clear: left;">
+<div id="article" style="width: 650px;">
+
+
+<p>
+<!-- begin content-->
+
+
+<div align="center">
+<!-- begin ad tag -->
+<script language="JavaScript" type="text/javascript">
+//<![CDATA[
+var ord = (ord != null ? ord : Math.random()*10000000000000000 );
+document.write('<script language="JavaScript" src="http://ad.doubleclick.net/adj/ttm.xml/art;tn=3;tw=300;th=55;to=h;tcs=0;tcp=0;ta=center;tva=bottom;tc=ffffff;tnm=3;te=1;sz=100x50;ord=' + ord + '?" type="text/javascript"><\/script>');
+//]]>
+</script><noscript><a href="http://ad.doubleclick.net/adj/ttm.xml/art;tn=3;tw=300;th=55;to=h;tcs=0;tcp=0;ta=center;tva=bottom;tc=ffffff;tnm=3;te=1;sz=100x50;ord=123456789?" target="_blank"><img src="http://ad.doubleclick.net/adj/ttm.xml/art;tn=3;tw=300;th=55;to=h;tcs=0;tcp=0;ta=center;tva=bottom;tc=ffffff;tnm=3;te=1;sz=100x50;ord=123456789?" width="100" height="50" border="0" alt="" /></a></noscript>
+<!-- End ad tag -->
+</div>
+<br />
+
+<!-- begin  print-discuss-del.icio.us options -->
+<div style="margin: 0px 10px 0px 6px; float: right; width: 170px;">
+<a class="print" style="font-size:90%;" title="Go to a print-friendly version of this page." href="/lpt/a/1337">Print</a>
+
+
+<a class="subscribe" style="font-size:90%;" title="Subscribe" href="http://www.oreillynet.com/pub/feed/20">Subscribe to XML</a>
+
+
+
+</div>
+<!-- end  print-discuss-del.icio.us options -->
+
+
+
+<!-- ISI_LISTEN_START -->
+<span class=ISI_MESSAGE><!--  This article is brought to you by XML.com, your source for all XML news.  --></span>  
+<!-- content here -->
+
+<img src="http://www.xml.com/universal/images/111-dive_xml.gif" alt="Atom Authentication" width="111" height="91" align="left" hspace="10" vspace="0" border="0" /><h2>Atom Authentication</h2>
+<div style="clear: left;">by <a href="/pub/au/164">Mark Pilgrim</a></div>
+<div>December 17, 2003</div><br clear="all" />
+
+
+
+
+
+
+
+	<!-- mega preparse mp: -->
+<!--CS_PAGE_BREAK-->
+
+
+
+
+<p><!-- XML MPU Ad -->
+
+<!-- End ad -->
+<!-- me -->
+I wish I didn't need to write this article.  My life would be much simpler if Atom could just use existing HTTP authentication, as-is.  But it can't; I'm going to tell you
+why and then I'm going to tell you what we're doing instead.</p>
+
+<p>Let's back up.  Atom, in case you missed it, is a new standard that uses XML over HTTP to publish and syndicate web-based content.  It is initially targeted at weblogs, and
+most of the early adopters so far have been weblog vendors and users.  It consists of <a href="http://www.xml.com/pub/a/2003/10/15/dive.html">the Atom API</a>, which I discussed
+last month, and the Atom syndication format, which I will discuss next month.  This month I want to talk about authentication.</p>
+
+<p>As with all design decisions, it helps to list the problems you are trying to solve, and the audience you are trying to solve them for, in the form of a character sketch. 
+Let's talk about Bob.  Bob has a weblog.  Bob hosts his weblog on a low-end web hosting service, one which hosts several hundred weblogs on a single machine (a single IP
+address).  Bob can FTP files to his web directory, and he can run CGI scripts in Perl and Python.  But Bob has no remote shell access on his server (that costs extra), no
+<code>.htaccess</code> rights to change his Apache configuration (his hosting provider set <code>AllowOverride None</code>), no PHP scripts, and no database.  He can serve
+static HTML files and run CGI scripts, and that's it.</p>
+<!-- sidebar begins -->
+<!-- don't move sidebars -->
+<!-- sidebar ends -->
+
+
+<p>This is not a contrived scenario.  Many web hosting providers offer exactly this environment, and two popular weblog publishing systems, Movable Type and Blosxom, run as CGI
+scripts in this environment.  There are thousands of real people like Bob.</p>
+
+<p>Bob also travels a lot, going to various O'Reilly conferences.  He would like to be able to post to his Atom-enabled weblog from an Atom-enabled client, without anyone else
+at the conference (who might be listening in on the wireless network) being able to steal Bob's password or take over his weblog.</p>
+
+<p>As we saw last month, all previous weblog publishing APIs send passwords over the wire in clear text.  Clearly none of these APIs will work for Bob.  A number of solutions
+were proposed during the development of Atom, but none of them help Bob.</p>
+
+<ol>
+
+<li><strong>Use HTTP basic authentication</strong>.  This does not technically send passwords over the wire in
+clear text, but it encodes them in a way that is easily reversible.  So this doesn't actually help Bob since 
+it's not an improvement over clear text.</li>
+
+<li><strong>MD5-hash the password and only send the hash</strong>.  This would solve the password sniffing
+problem, since you couldn't reverse engineer the hash to recover the original password.  But it doesn't help
+Bob because it's susceptible to replay attacks.  Someone at Bob's conference could sniff Bob's transaction and
+recover the password hash, then reuse it to post to Bob's weblog themselves.  Even though the attacker never
+learns Bob's actual password, they can still learn enough to successfully pretend to be Bob and take over his
+weblog.</li>
+
+<li><strong>Use HTTP basic authentication over SSL</strong>.  This would solve the password sniffing problem,
+but it doesn't help Bob because he can't use SSL.  Due to the way SSL handshaking works, each SSL certificate
+requires its own IP address, which Bob doesn't have (remember, his weblog is one among hundreds which all share
+a single IP address).  Also, configuring the web server to listen on port 443 requires root access, which Bob
+doesn't have.</li>
+
+<li><strong>Use HTTP digest authentication</strong>.  This would also solve the password sniffing problem, and
+it would solve the replay problem, but most web hosting providers don't turn on digest authentication (it
+requires an Apache module that is not on by default).	Even if Bob's ISP had mod_digest_auth enabled, it
+wouldn't help Bob, because he has no <code>.htaccess</code> rights to configure his passwords; and, because of
+the way Apache works, CGIs can't implement digest authentication on their own.  (Scripts handled by an Apache
+module, such as mod_php or mod_perl, can implement HTTP digest authentication.  But external CGI processes
+can't because Apache does not pass the necessary headers along to the CGI script.  But that still doesn't help
+Bob because his hosting provider doesn't offer PHP; and, even if they did, his weblog software doesn't run on
+PHP anyway.)</li> </ol>
+
+<p>It looks like Bob is screwed.</p>
+
+<h3>WSSE Username Token</h3>
+
+<p>A little-known fact about <a href="http://www.ietf.org/rfc/rfc2617.txt">RFC 2617</a> is that HTTP
+authentication is extensible.  The RFC defines and Apache has modules for Basic and Digest authentication,
+but developers are free to define different algorithms for use within the HTTP authentication framework, and
+servers are free to insist that clients support those algorithms if they want access to the server's
+resources.</p>
+
+<p>After much haggling, the algorithm we chose was <a href="http://www.oasis-open.org/committees/wss/documents/WSS-Username-02-0223-merged.pdf" title="PDF link">WSSE
+Username Token</a> (PDF).  WSSE is a family of open security specifications for web services, specifically SOAP
+web services.  However, the Username Token algorithm is not SOAP-specific; it can be easily adapted to work
+within the HTTP authentication framework, and it solves all of Bob's problems.</p>
+
+<p>The algorithm itself works like this:</p>
+
+<ol>
+<li>Start with 2 pieces of information: username and password.</li>
+
+<li>Create a nonce, which is a cryptographically random string.  This is harder than it sounds; if an attacker
+can guess your next nonce, they can still attempt a replay attack.  Most cryptography libraries have routines
+to generate decent nonces, the specifics of doing which are beyond the scope of this article.</li>
+
+<li>Create a "creation timestamp" of the current time, in <a href="http://www.w3.org/TR/NOTE-datetime">W3DTF
+format</a>.</li>
+
+<li><p>Create a password digest:</p>
+
+<p><code>
+PasswordDigest = <a href="http://www.ietf.org/rfc/rfc2045.txt" title="see section 6.8">Base64</a> \
+(<a href="http://www.ietf.org/rfc/rfc3174.txt">SHA1</a> (Nonce + CreationTimestamp + Password))</code></p>
+
+</li>
+</ol>
+
+<p>An example will help make this clearer.</p>
+
+<ol>
+<li>Let's say Bob's username is <code>"bob"</code>, and his password is <code>"taadtaadpstcsm"</code>.</li>
+<li>Bob creates a nonce, <code>"d36e316282959a9ed4c89851497a717f"</code>.</li>
+<li>Bob created this nonce at <code>"2003-12-15T14:43:07Z"</code>, so that's the creation timestamp.</li>
+
+<li>Bob's password digest is <code>Base64(SHA1 ("d36e316282959a9ed4c89851497a717f" + "2003-12-15T14:43:07Z"
++ "taadtaadpstcsm"))</code>, which
+is <code>"quR/EWLAV4xLf9Zqyw4pDmfV90Y="</code>.  Most languages have built-in
+libraries to create SHA-1 hashes and to encode strings in Base64 format.</li> </ol>
+
+<p>Now let's see how this algorithm fits into the HTTP authentication framework.</p>
+
+<h3>Extending HTTP authentication</h3>
+
+<p>Bob's weblog is at <code>http://bob.example.com/</code>, and his Atom endpoint is at <code>http://bob.example.com/atom.cgi</code>.  Bob's Atom-enabled client tries to post to his weblog, by sending an HTTP POST request with his Atom entry:</p>
+
+<pre><code>POST /atom.cgi HTTP/1.1
+Host: bob.example.com
+Content-Type: application/atom+xml
+
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;entry xmlns="http://purl.org/atom/ns#">
+  &lt;title>My Entry Title&lt;/title> 
+  &lt;created>2003-12-15T14:43:07Z&lt;/created> 
+  &lt;content type="application/xhtml+xml" xml:lang="en"> 
+    &lt;div xmlns="http://www.w3.org/1999/xhtml">
+      &lt;p>Hello, &lt;em>weblog&lt;/em> world!&lt;/p>
+      &lt;p>This is my third post &lt;strong>ever&lt;/strong>!&lt;/p>
+    &lt;/div>
+  &lt;/content>  
+&lt;/entry></code></pre>
+
+<p>But this request didn't include any authentication information.  The server responds with an <code>HTTP
+401 Unauthorized</code>:</p>
+
+<pre><code>HTTP/1.1 401 Unauthorized
+WWW-Authenticate: WSSE realm="foo", profile="UsernameToken"</code></pre>
+
+<p>The profile is constant and should always be <code>"UsernameToken"</code>.
+The realm is determined by the server and can be anything.</p>
+
+<p>Bob repeats his request, this time with his authentication credentials: username, password digest, nonce, and creation date.</p>
+
+<p><code>POST /atom.cgi HTTP/1.1<br />
+Host: bob.example.com<br />
+Content-Type: application/atom+xml<br />
+<strong>Authorization: WSSE profile="UsernameToken"<br />
+X-WSSE: UsernameToken Username="bob", 
+PasswordDigest="quR/EWLAV4xLf9Zqyw4pDmfV9OY=", 
+Nonce="d36e316282959a9ed4c89851497a717f", Created="2003-12-15T14:43:07Z"</strong><br />
+<br />
+&lt;?xml version="1.0" encoding="utf-8"?><br />
+&lt;entry xmlns="http://purl.org/atom/ns#"><br />
+&nbsp;&nbsp;&lt;title>My Entry Title&lt;/title> <br />
+&nbsp;&nbsp;&lt;created>2003-12-15T14:43:07Z&lt;/created> <br />
+&nbsp;&nbsp;&lt;content type="application/xhtml+xml" xml:lang="en"> <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div xmlns="http://www.w3.org/1999/xhtml"><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p>Hello, &lt;em>weblog&lt;/em> world!&lt;/p><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p>This is my third post &lt;strong>ever&lt;/strong>!&lt;/p><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div><br />
+&nbsp;&nbsp;&lt;/content>  <br />
+&lt;/entry></code></p>
+
+<p>Bob's Atom-enabled weblogging software looks in the <code>X-WSSE:</code> header for the actual
+authentication credentials, and recreates the steps Bob took in order to verify that Bob knows his password. 
+If Bob got his password wrong, the server simply responds with an <code>HTTP 401 Unauthorized</code> with the
+<code>WWW-Authenticate:</code> header, same as before; or, optionally, with some explanatory text in the body
+of the message to tell the client what's going on.  If Bob got his password right, the server accepts the
+request, posts the new entry, responds with an <code>HTTP 201 Created</code>, and gives the location of
+the newly created entry.</p>
+
+<p>I want to briefly mention three design decisions and the problems they solve.  Remember when I said
+that CGI scripts couldn't implement HTTP authentication because Apache didn't pass along the appropriate
+headers?  The header I was talking about is the <code>Authorization:</code> header.  In this case, Apache will
+notice the <code>Authorization:</code> header and notice that the authentication algorithm is "WSSE".  Apache
+doesn't have a module to handle this, so it will strip the <code>Authorization:</code> header and pass the rest
+of the headers (including <code>X-WSSE:</code>) on to the CGI script.</p>
+
+<p>Second, if Bob has previously successfully authenticated with this same nonce, the server may recognize that
+and reject the request (with a 401).  The server may keep track of nonces for a limited amount of time (usually
+a matter of minutes) and reject duplicates.  If a client tries to reuse a nonce after that time, the server
+can simply reject it based on the creation timestamp (since the password hash is made from both the nonce and
+the timestamp).  In turn, Bob's Atom-enabled client software generates a new nonce and creation timestamp with
+each request.  This will protect against replay attacks.</p>
+
+<p>Third, this leaves the door open for future versions of Atom supporting other profiles of WSSE, such as
+Kerberos.  But let's jump off that bridge when we come to it.</p>
+
+<h3>Optimizing HTTP Authentication</h3>
+
+<p>OK, so that's how it looks when it works, and that's how it looks when it doesn't work.  But as you can see,
+this is an inefficient process.  Bob sent his entire entry to the server, then the server rejected it, then Bob
+sent his entire entry to the server <em>again</em> -- this time with his WSSE-formatted credentials.  But
+there's nothing about HTTP authentication or the WSSE Username Token algorithm that requires this extra round
+trip.  If Bob's Atom-enabled client software knows ahead of time that Bob's Atom-enabled server is going to ask
+for WSSE Username Token authentication, it can simply calculate the credentials and send them with the initial
+request.  In the best case, the server sees the credentials, verifies them, processes the request, and returns
+the appropriate success code -- all without ever generating a 401.  In the worst case, the server doesn't
+actually support WSSE Username Token, so it simply responds with a 401 and a <code>WWW-Authenticate:</code>
+header that details what algorithms it <em>does</em> support.</p>
+
+<h3>Summary</h3>
+<table width="160" border="0" cellspacing="0" cellpadding="4" align="right">
+<tr>
+<td rowspan="4" width="10"><img src="/images/trans.gif" height="1" width="10" border="0" alt=" " /></td>
+<td width="150" valign="top" height="4" bgcolor="#0099FF"></td></tr> 
+<tr>
+<td bgcolor="#efefef">
+<p class="headline" align="center">More <i>Dive Into XML</i> Columns
+</p><p class="smalltext">
+<a href="/pub/a/2004/08/18/pilgrim.html">Identifying Atom</a><p class="smalltext">
+<a href="/pub/a/2004/07/21/dive.html">XML on the Web Has Failed</a><p class="smalltext">
+<a href="/pub/a/2004/06/16/dive.html">The Atom Link Model</a><p class="smalltext">
+<a href="/pub/a/2004/04/07/dive.html">Normalizing Syndicated Feed Content</a><p class="smalltext">
+<a href="/pub/a/2003/10/15/dive.html">The Atom API</a></td></tr> <tr><td width="150" valign="top" height="4" bgcolor="#0099FF"> </td></tr></table>
+<p>Let's make sure we've found a solution that works for Bob.  Extending HTTP authentication with WSSE Username
+Token:</p>
+
+<ul>
+<li>Doesn't require root access to install Apache modules.</li>
+
+<li>Doesn't require <code>.htaccess</code> rights to set up passwords.  (The CGI application can manage
+passwords itself.)</li>
+
+<li>Doesn't require Bob to have his own web server or even his own IP address.  It works with virtual
+name-based hosting.</li>
+
+<li>Works with pure-CGI applications.  CGI scripts can read the <code>X-WSSE:</code> header to get the
+credentials, and they can generate a 401 error and a <code>WWW-Authenticate:</code> header if authentication
+fails.</li>
+
+<li>Doesn't send passwords in the clear.  Bob can blog with confidence at O'Reilly conferences.</li>
+
+<li>Protects against replay attacks.</li>
+</ul>
+
+<p>So that's what Atom authentication looks like and that's why.  Because it's the simplest thing that works
+for Bob.</p>
+
+<p>Disclaimer: the Atom API has not been finalized.  While this authentication scheme has been deployed by
+several vendors, it may still change slightly before the Atom API goes 1.0.  Feel free to implement it now, but
+be prepared to reimplement it later.</p>
+
+
+<!-- end content -->
+<!-- ISI_LISTEN_STOP -->
+
+
+<!-- talk back -->
+<a name="thread"></a>
+
+    <hr noshade size="1" />
+    <p><!-- img src="/images/talkback.gif" alt="Comment on this article" width="40" height="30" border="0" align="left">Share your views in our forum.<br />
+    <i> (* You must be a <a href="/cs/user/login?x-redirect=http://www.xml.com/pub/a/2003/12/17/dive.html">member</a> of XML.com to use this feature.)</i>
+    <br /><a class="headline" href="/cs/user/create/cs_msg?x-lr=cs_disc/479&x-lr2=a/1337&page=">Comment on this Article</a -->
+    <br />
+
+
+
+<hr noshade="1" size="1" />
+<table width="100%">
+<tr>
+
+<td>
+
+    <a class="secondary" href="/pub/a/2003/12/17/dive.html?page=last&x-showcontent=off#thread" title="View message titles only">Titles Only</a>
+
+</td>
+
+<td>
+
+    <a class="secondary" href="/pub/a/2003/12/17/dive.html?page=last&x-maxdepth=0#thread" title="View message titles only">Titles Only</a>
+
+</td>
+
+<td>
+
+    <a class="secondary" href="/pub/a/2003/12/17/dive.html?page=last&x-order=date#thread" title="View messages in descending order by date/time">Newest First</a>
+
+</td>
+</tr>
+</table>
+
+<ul>
+<li><a href="/cs/user/view/cs_msg/5814">Looks good</a><br />
+<font size="2">
+2010-06-28 19:58:44&nbsp;michaelcruz</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/5814&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+Atom authentication may just come in handy with the online service management system (http://www.sterlingsoft.com.my/)  our company is working on. We'll keep a tab on this.
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/5390">fiwedding</a><br />
+<font size="2">
+2010-06-18 20:06:30&nbsp;fiwedding</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/5390&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+good job
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/4669">Works great for RESTful services</a><br />
+<font size="2">
+2009-08-28 07:54:54&nbsp;cherevik</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/4669&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+The same approach works great for web services with a REST API that must be accessed from desktop or iphone apps. See an example here http://cherevik.com/?p=57. One would think that OAuth would do the trick, but it does not work in a non-browser environment. A WSSE-based token scheme is better approach. 
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/6493"></a><br />
+<font size="2">
+2010-07-09 20:41:36&nbsp;ulunnuha</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/6493&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+Hosting Murah Indonesia indositehost.com (http://napster.web.id/hosting-murah-indonesia-indositehost-comm/) 
+<br /><br />
+</ul>
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/3846">What is the use of CreationTimestamp in WSSE</a><br />
+<font size="2">
+2007-07-24 21:58:06&nbsp;tszm</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3846&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+I believe addng CreationTimestamp can't help to improve the security level?
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/3764">Out of date?</a><br />
+<font size="2">
+2007-04-02 05:22:18&nbsp;Singer-Scientist</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3764&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+Is this discussion relevant now that the latest versions of the Atom Publishing Protocol (e.g. http://bitworking.org/projects/atom/draft-ietf-atompub-protocol-14.html) reference TLS as the HTTP security layer?
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/3749">No secret sauce</a><br />
+<font size="2">
+2007-03-06 09:30:54&nbsp;cryptoanarchist</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3749&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+Your discussion of the need for Atom authentication is good and valid.  However, I disagree that the scheme you propose at the end of the article is necessarily secure or even adds a significant amount of security over cleartext passwords. <p><br />
+The problem is the dictionary attack of possible passwords is very easy.  A number of studies on the weakness of user chosen passwords have concluded that users are just very, very bad at choosing strong passwords.<p><br />
+As a result, the number of possible input passwords in a dictionary attack is very low, 20-25 bits of max entropy.  Since nonce and timestamp are known values, dictionary attacking the unknown value requires trivial CPU time. <p><br />
+At best, you are achieving additional layers of obfuscation and requiring the attacker to have access to an SHA-1 implementation.<p><br />
+However, don't let that distract from the very good discussion on the need for better Atom Authentication.  Better solutions in that area that folks like Bob can deploy are problems in need of solutions.
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/3358">server keeping passwords in clear</a><br />
+<font size="2">
+2006-04-04 16:03:03&nbsp;joaquinmiller</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3358&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+I'm with Jon Prettyman.  It is not best practice for a server to keep passwords in clear.  <p><br />
+But i see no reason why Bob could not know the algorithim (and any necessary data) that the server uses to encrypt the passwords, and encrypt his before sending it...<p><br />
+O!<p><br />
+Hmmm...<p><br />
+Any comments?<p><br />
+=joaquin  aka  http://mylid.net/joaquin
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/3015">about x-wsse?</a><br />
+<font size="2">
+2005-08-02 20:52:48&nbsp;ÓÞ¹«×ÓËï</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3015&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+I  hava a problem and want to ask you .Can you help me ?<br />
+The problem is :<br />
+where does the user's information save  while using x-wsse for authentication ?<br />
+ for example ,user's name,password. is it Cookie,session or any other ?<br />
+
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/1705">Unclear on #3</a><br />
+<font size="2">
+2004-01-09 11:29:08&nbsp;Rich Salz</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/1705&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+For #3, are you limiting yourself to the case where Bob has his own domain name that points to the service, or something else?  One workaround is to do the redirects at the HTTP level, not the DNS (cname) level.  I'm not arguing the overall decision, just trying to make sure I understand the requirements.<br />
+
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/1695">Setting up the server auth.</a><br />
+<font size="2">
+2004-01-06 04:18:44&nbsp;simon kittle</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/1695&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+I know I must be being incredibly stupid, but say I'm Bob.    How do I setup the server to require WSSE authentication in the first place ?<p><br />
+You state: "But this request didn't include any authentication information. The server responds with an HTTP 401 Unauthorized:"<p><br />
+How does Bob setup the server to request any authentication at all, rather than just serving files? Surely that requires an .htaccess as well?<p><br />
+<br />
+And on this point, would it not be possible to use a similar scheme to add authentication at the CGI level, without any server involvement?  <p><br />
+The credentials are passed to a CGI which is simply served in the standard way.  If the password was wrong the CGI would print a message and exit, refusing to do anything.   Obviously it doesn't protect all the other files in the directory, and it's open to attack via bugs in the CGI, but it may be useful in some circumstances.<br />
+
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/1699">Setting up the server auth.</a><br />
+<font size="2">
+2004-01-06 21:13:21&nbsp;Mark Pilgrim</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/1699&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+There is a good example of this in XML::Atom, Ben Trott's Perl implementation of the Atom API.  It includes a skeleton server that handles the API (including authentication), with hooks to build the rest of your application on top.  It can run as a CGI in a non-.htaccess environment.  Check it out.<p><br />
+http://search.cpan.org/~btrott/XML-Atom-0.05/
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/1702">Setting up the server auth.</a><br />
+<font size="2">
+2004-01-08 12:46:57&nbsp;simon kittle</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/1702&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+Thanks for that, it's interesting.<p><br />
+But it does mean the authentication happens at the CGI level, right?<p><br />
+I think I was confused because you said "the server will return 401" and I guess I assumed the web server but presumably you were meaning the CGI based Atom server right?<p><br />
+I just wanted to get this clear because obviously that would mean no other files in that specific directory are protected.<p><br />
+<br />
+
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/3768">Setting up the server auth.</a><br />
+<font size="2">
+2007-04-10 11:21:36&nbsp;Robert_Hayden</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3768&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+I don't think this tries to protect any files on the web server; I think this authentication only keeps the CGI script from doing things that someone other than Bob ask it to do.<p><br />
+I believe the CGI script actually sends the 401 header.<br />
+When the Atom client responds, the meat of its response is in the X-WSSE header which Apache passes to the CGI script.
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/3795">Setting up the server auth.</a><br />
+<font size="2">
+2007-05-24 13:27:13&nbsp;sn3kehunt</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3795&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+sn3kehunt
+<br /><br />
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/1692">This sucks.</a><br />
+<font size="2">
+2004-01-03 22:05:41&nbsp;Mark Nottingham</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/1692&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+I find it unbelievably unfortunate that the tools available are so miserable that we have to resort to this kind of hackery. <p><br />
+Not surprising, mind you, just unfortunate. <p><br />
+I understand and appreciate the security issues driving the Apache folks to do this, but it only reinforces my conviction that Web server configuration and application deployment are holding back the Web's potential, big time.<p><br />
+Let's fix it.
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/1686">Reversible passwords</a><br />
+<font size="2">
+2003-12-29 17:39:13&nbsp;Jon Prettyman</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/1686&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+I think this method requires the server to be able to produce a clear text version of the password.  That's not how basic auth implementations typically work.  You might want to factor that into your design.
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/1684">Sniffing vs Spoofing</a><br />
+<font size="2">
+2003-12-22 16:22:27&nbsp;Alex Jacobson</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/1684&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+If you are concerned about local cinference participants sniffing Bob's password, you might also be concerned that they intercept his packets and just modify the contents of his posts.  <p><br />
+The attack looks something like this: Advertise a wireless network with the same name as the conference's wireless net.  Get Bob to obtain DHCP from your fake net, but route it to the Internet.  Now you can modify the content of Bob's posts.<p><br />
+The value of content-md5 or content-sha should be part of the computed passworddigest.  
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/1676">Patent status?</a><br />
+<font size="2">
+2003-12-19 12:00:28&nbsp;Micah Dubinko</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/1676&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+What is the patent status of SHA1?
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/12974">Patent status?</a><br />
+<font size="2">
+2010-09-06 17:39:53&nbsp;peter feng</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/12974&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+silica suppliers (http://silica.be-long.com) <br />
+Mark Pilgrim explains why the Atom developers are using a new kind of authentication scheme, and he explains why it's necessary.<br />
+ Hydrated silica suppliers (http://silica.be-long.com/Silicon-dioxide.html) <br />
+Silicon dioxide nanoparticles  suppliers (http://silica.be-long.com/Silicon-dioxide.html) <br />
+Silica liquid suppliers (http://silica.be-long.com/Silicon-dioxide.html) <br />
+Silicon dioxide food additive suppliers (http://silica.be-long.com/Silicon-dioxide.html) 
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/1679">Patent status?</a><br />
+<font size="2">
+2003-12-21 22:37:47&nbsp;Mark Pilgrim</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/1679&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+SHA-1 is not patent-encumbered, according to this letter from NIST dated June 24, 1998: http://grouper.ieee.org/groups/1363/P1363/letters/NIST.txt<p><br />
+.NET, Java, Perl, Python, and PHP all come with SHA-1 implementations, and there are multiple public domain SHA-1 implementations as well.
+<br /><br />
+</ul>
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/1675">Clarification</a><br />
+<font size="2">
+2003-12-19 03:47:59&nbsp;Danny Ayers</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/1675&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+No final agreement has yet been reached on what Atom authentication will look like. Authentication was elided from the latest version of the AtomAPI spec (09) based on the belief that such mechanisms belong in their own RFC, and there is a lot to suggest Atom authentication shouldn't be tied to any single mechanism. Having said that, in cases like Bob's where techniques such as HTTP digest authentication aren't available, the method described here would certainly be a good choice.
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/1674">Base64 encoding of SHA1 digest</a><br />
+<font size="2">
+2003-12-18 07:01:13&nbsp;Piotr Lakomy</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/1674&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+The base64 encoding of the SHA1(Password + CreationTimestamp + Nonce) should be "quR/EWLAV4xLf9Zqyw4pDmfV9OY".<p><br />
+Looks like example in the article applies base64 to to the hex encoding of SHA1 value:<br />
+base64("aae47f1162c0578c4b7fd66acb0e290e67d5f4e6") = "YWFlNDdmMTE2MmMwNTc4YzRiN2ZkNjZhY2IwZTI5MGU2N2Q1ZjRlNg=="<br />
+(Note two filler "=" charactes at the end).<p><br />
+Here is perl code to verify:<p><br />
+use Digest::SHA1 qw(sha1 sha1_hex sha1_base64);;<br />
+use MIME::Base64 qw(encode_base64);<p><br />
+$password  = "taadtaadpstcsm";<br />
+$nonce     = "d36e316282959a9ed4c89851497a717f";<br />
+$timestamp = "2003-12-15T14:43:07Z";<br />
+$text = $nonce . $timestamp . $password;<p><br />
+print "text = $text\n";<br />
+print "SHA1 hex = " . sha1_hex($text) . "\n";<br />
+print "SHA1 b64 = " . sha1_base64($text) . "\n";<br />
+print "SHA1 b64(hex) = " . encode_base64(sha1_hex($text));<p><br />
+Very good article, I like it.<p><br />
+<br />
+
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/3247">Base64 encoding of SHA1 digest</a><br />
+<font size="2">
+2006-01-11 07:57:52&nbsp;JY123</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/3247&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+Hi,<br />
+I am working on a project that needs "Base64 encoding of SHA1 digest". Your article is very helpful. I have downloaded sha1 code from http://www.veign.com/vrc_codeview.asp?type=app&id=76, and wrote a Base64 code. Both are tested successfully using known examples.<p><br />
+But I failed to reproduce your results when I calculate Base64(sha1(Nonce+TimeStamp+Password).<br />
+The input string I used is: <p><br />
+d36e316282959a9ed4c89851497a717f2003-12-15T14:43:07Ztaadtaadpstcsm<p><br />
+But the result I got is:<br />
+sha1=BADE76A5F7B0AFDE6D96BDEE566AAAACECEA7B75<br />
+base64=QkFERTc2QTVGN0IwQUZERTZEOTZCREVFNTY2QUFBQUNFQ0VBN0I3NQ==<p><br />
+I could not reproduce your result. What did I miss? Please let me know.<p><br />
+Thanks<br />
+Jack Yan
+<br /><br />
+</ul>
+<ul>
+<li><a href="/cs/user/view/cs_msg/1680">Base64 encoding of SHA1 digest</a><br />
+<font size="2">
+2003-12-21 22:38:58&nbsp;Mark Pilgrim</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/1680&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+Thanks, you are absolutely correct.  We have updated the article to reflect this change.
+<br /><br />
+<ul>
+<li><a href="/cs/user/view/cs_msg/6501"></a><br />
+<font size="2">
+2010-07-10 07:50:25&nbsp;tiaraantik</font>
+
+<!--a class="smalltext" href="/cs/user/create/cs_msg?x-lr=cs_msg/6501&x-lr2=a/1337" title="Reply to this message">[Reply]</a--><br />
+<br />
+SupportHosting Murah Indonesia Indositehost.com (http://tiaraantik.com/hosting-murah-indonesia-indositehost-com.html)  with ArenaBetting.com dukung fair play FIFA world cup AFSEL 2010 (http://tiaraantik.com/arenabetting-com-dukung-fair-play-fifa-world-cup-afsel-2010-ping.html) -Video Mesum Aril-Bcl (http://tiaraantik.com/video-ariel-bcl-download.html) -Cheat Point Blank Cash (http://tiaraantik.com/cheat-point-blank-cash-pb-code.html) 
+<br /><br />
+</ul>
+</ul>
+</ul>
+
+
+
+<br /><br />
+
+
+<!-- end content -->
+
+<!-- horizontal ad -->
+
+
+</div><!-- #article -->
+
+<div class="noindex">
+<div id="related" style="font:12px verdana,arial,helvetica,sans-serif;">
+
+
+<!-- MyBuys Zone and Parameters -->
+<div class="sidebar-item">
+<h3>Recommended for You</h3>
+<div class="sidebar-item-content" style="text-align: center; padding: 0px;">
+<!-- MyBuys Web Recommendation Zone -->
+<div mybuyszone="5"></div>
+<!-- End MyBuys Web Recommendation Zone -->
+<!-- MyBuys Page Parameters -->
+<script type="text/javascript">
+mybuys.setPageType("CONTENT_ITEM");
+mybuys.set("categoryid","http://purl.oreilly.com/resource-center/xml");
+</script>
+</div>
+</div>
+
+
+<!-- HireReach Widget -->
+
+<div style="text-align:center; padding-bottom:20px;">
+
+
+<script type='text/javascript'><!--//<![CDATA[ 
+var m3_u = (location.protocol=='https:')?'https://jobs.hrkspjbs.com/js.ashx':'http://jobs.hrkspjbs.com/js.ashx'; 
+var m3_r = Math.floor(Math.random()*99999999999); 
+document.write ("<sc"+"ri"+"pt type='text/javascript' src='"+m3_u); 
+document.write ("?pid=2B9C484E4C084CE1A90E33EB9CE8FE7B"); 
+document.write ("&amp;tl=" + m3_r); 
+document.write ("&amp;did=a1337"); 
+document.write ("&amp;loc=" + escape(window.location)); 
+if (document.referrer) document.write ("&amp;referer=" +
+escape(document.referrer)); 
+if (document.context) document.write ("&context=" +
+escape(document.context)); 
+document.write ("'></sc"+"ri"+"pt>");
+//]]>--></script>
+
+
+
+</div>
+
+<!-- sponsored developer resources
+<csperl file="grab" domain="on" record="sc/1851" field="html">
+
+$self->include("csinclude", {record => "$table/$ref_id", template => "tagged_articles.view"});
+-->
+
+
+<div style="text-align:center;background-color:#eee;padding-top:10px;padding-bottom:10px;">
+<img src="/images/ads/advertisement.gif" alt="Advertisement" style="padding-bottom:5px;" />
+
+
+<div align="center">
+
+<!-- Stylus Ad and Sponsored Zones -->
+
+<!-- Progress Software -->
+
+<!--
+<csperl>
+## code to insert ad tag 
+my $pathinfo = $cfg->{PATH_INFO} || $cgi->path_info();
+my ($junk,$table,$ref_id) = split /\//, $pathinfo, 3;
+## ads, here only on article pages and not on the wixml pages
+if ($ref_id) {
+  if ($ref_id !~ /^\d+$/) {
+    $ref_id = "/$ref_id";
+  }
+}
+
+my $f = new CS::Form( cfg => $cfg, table => "$table", id => "$ref_id" );
+        unless ($f->{r}->{ARGS}->{'adcode'} eq 'wixml') {
+  	          my %ARGS = ( 'co'     => 'dc',
+                               'pos'    => 'l',
+		               'height'	=> "240",
+		               'width'	=> "120",
+                               'page'   => "home",
+);
+           $id_subject = $f->{r}->{ARGS}->{'id_subject'} ;
+              #if ($id_subject =~ /10/) {
+              #       $ARGS{'page'} = 'databases';
+              #}
+              #if ($id_subject =~ /3/) {
+              #       $ARGS{'page'} = 'mobile';
+              #}
+if ($pathinfo =~ /^\/a\/\//) {
+    $ARGS{'page'} = 'art';
+}
+#if ($pathinfo =~ /^\/databases\//) {
+#    $ARGS{'page'} = 'databases';
+#}
+#if ($pathinfo =~ /^\/mobile\//) {
+#    $ARGS{'page'} = 'mobile';
+#}
+if ($pathinfo =~ /^\/resourceguide\//) {
+    $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /^\/buyersguide\//) {
+    $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /\/pt\// ) {
+   $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /\/r\// ) {
+   $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /\/p\// ) {
+   $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /\/rg\// ) {
+   $ARGS{'co'} = 'none';
+}
+
+
+my $ad = new CS::Ad( cfg => $self->{cfg}, params => \%ARGS );
+
+	             print $ad->AdTag;
+         }
+
+</csperl>
+!-->
+
+
+
+<!-- ### textbox start ###-->
+<div class="adtag " style=""><!-- dy -->
+<!-- begin ad tag -->
+<script language="JavaScript" type="text/javascript">
+//<![CDATA[
+var ord = (ord != null ? ord : Math.random()*10000000000000000 );
+document.write('<script language="JavaScript" src="http://ad.doubleclick.net/adj/ttm.oreillynet/textbox;sz=$widthx$height;tile=1;ord=' + ord + '?" type="text/javascript"><\/script>');
+//]]>
+</script><noscript><a href="http://ad.doubleclick.net/jump/ttm.oreillynet/textbox;sz=$widthx$height;tile=1;ord=3836844852?" target="_blank"><img src="http://ad.doubleclick.net/ad/ttm.oreillynet/textbox;sz=$widthx$height;ord=123456789?" width="$width" height="$height" border="0" alt="" /></a></noscript>
+<!-- End ad tag -->
+</div>
+
+
+
+<!-- ### end textbox###-->
+
+
+<br />
+
+
+
+<!-- sponsors -->
+<!-- ### skyscraper start ###-->
+    <!-- XML Skyscraper Ad -->
+
+
+<!--JavaScript Tag // Tag for network 5159: TechVertical // Website: OR - XML.com // Page: XML // Placement: ros_160x600 (425862) // created at: Oct 9, 2008 5:49:49 PM-->
+<script language="javascript"><!--
+document.write('<scr'+'ipt language="javascript1.1" src="http://adserver.adtechus.com/addyn/3.0/5159/425862/0/154/ADTECH;loc=100;target=_blank;key=key1+key2+key3+key4;grp=[group];misc='+new Date().getTime()+'"></scri'+'pt>');
+//-->
+</script><noscript><a href="http://adserver.adtechus.com/adlink/3.0/5159/425862/0/154/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" target="_blank"><img src="http://adserver.adtechus.com/adserv/3.0/5159/425862/0/154/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" border="0" width="160" height="600"></a></noscript>
+
+<!-- End of JavaScript Tag -->
+
+<!-- end ad -->
+<!-- ### end skyscraper ###-->
+</div>
+</div>
+
+</div><!-- #related -->
+</div><!-- end noindex -->
+
+
+</div><!-- #page-content -->
+
+<!-- footer -->
+
+<div style="clear:right;"></div>
+
+
+
+
+<br clear="all">
+
+<div id="footer" class="noindex">
+
+<!-- Start Quantcast tag -->
+
+<script type="text/javascript" src="http://edge.quantserve.com/quant.js"></script>
+<script type="text/javascript">
+_qacct="p-20l78bOOCbhcg";quantserve();</script>
+<noscript>
+<img src="http://pixel.quantserve.com/pixel/p-20l78bOOCbhcg.gif" style="display: none" height="1" width="1" alt="Quantcast"/></noscript>
+
+ <!-- End Quantcast tag -->
+
+<table border="0" style="padding-top:20px; padding-bottom:20px;">
+<tr><td align="left" width="25%" valign="top" style="padding-left: 20px; padding-right: 20px;">
+<a href="http://oreilly.com/"><img height="35" border="0" width="155" src="http://cdn.oreilly.com/images/standard/oreilly-logo-footer.gif" alt="O'Reilly Media"/></a>
+<br/><br/>
+&copy;2010, O'Reilly Media, Inc.<br/>(707) 827-7000 / (800) 998-9938<br/> All trademarks and registered trademarks appearing on oreilly.com are the property of their respective owners. </td>
+
+<td valign="top" class="footercol1">
+<ul>
+<li><a href="http://oreilly.com/about/"><strong>About O'Reilly</strong></a></li>
+
+<li><a href="http://oreilly.com/academic/">Academic Solutions</a></li>
+<li><a href="http://oreilly.com/contact.html">Contacts</a></li>
+<li><a href="http://oreilly.com/oreilly/cs/">Customer Service</a></li>
+<li><a href="http://oreilly.com/jobs/">Careers</a></li>
+<li><a href="http://press.oreilly.com/">Press Room</a></li>
+<li><a href="http://oreilly.com/oreilly/privacy.csp">Privacy Policy</a></li>
+<li><a href="http://oreilly.com/terms/">Terms of Service</a></li>
+<li><a href="http://oreilly.com/oreilly/author/intro.csp">Writing for O'Reilly</a></li>
+</ul>
+
+</td>
+
+<td valign="top" class="footercol2">
+<ul>
+<li><a href="http://oreilly.com/community/"><strong>Community</strong></a></li>
+<li><a href="http://oreilly.com/authors/">Authors</a></li>
+<li><a href="http://forums.oreilly.com/">Forums</a></li>
+<li><a href="https://members.oreilly.com/">Membership</a></li>
+<li><a href="http://elists.oreilly.com/">Newsletters</a></li>
+<li><a href="http://oreilly.com/feeds/">RSS Feeds</a></li>
+<li><a href="http://ug.oreilly.com/">User Groups</a></li>
+
+</ul>
+</td>
+
+<td valign="top" class="footercol3">
+<ul>
+<li><strong>More O'Reilly Sites</strong></li>
+<li><a href="http://igniteshow.com/">igniteshow.com</a></li>
+<li><a href="http://makerfaire.com/">makerfaire.com</a></li>
+<li><a href="http://makezine.com/">makezine.com</a></li>
+<li><a href="http://craftzine.com">craftzine.com</a></li>
+<li><a href="http://labs.oreilly.com">labs.oreilly.com</a></li>
+
+</ul>
+
+<ul>
+<li><strong>Partner Sites</strong></li>
+<li><a href="https://www.x.com/community/ppx/devzone">PayPal Developer Zone</a></li>
+<li><a href="http://insideria.com">InsideRIA</a></li>
+<li><a href="http://www.forbes.com/oreillyinsights/">O'Reilly Insights on Forbes.com</a></li>
+</ul>
+</td>
+</tr>
+</table>
+
+
+<!-- For maximum performance, place these tags at the bottom of the body section of the page(s) containing this search form.  -->
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/yui/2.6.0/build/utilities/utilities.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/yui/2.6.0/build/datasource/datasource-min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/yui/2.6.0/build/autocomplete/autocomplete-min.js"></script>
+<script type="text/javascript" src="//content.atomz.com/sp1003bcf0/publish/autocomplete_data.js?sp_js_cache_ver=3"></script>
+
+</div><!-- /#footer -->
+
+<!-- MyBuys Page Initialization -->
+<script type="text/javascript">
+mybuys.initPage();
+</script>
+<!-- End MyBuys Page Initialization -->
+
+<!-- path_info: /a/2003/12/17/dive.html -->
+<!-- table: a - ref_id: /2003/12/17/dive.html -->
+<!-- table: a - ref_id: /2003/12/17/dive.html -->
+<!-- table: a - ref_id: /2003/12/17/dive.html - cs_rid: 1337 -->
+<!-- 0 domain: www.xml.com - path_info: a/2003/12/17/dive.html -->
+<!-- 1 domain: www.xml.com - path_info: a/2003/12/17/dive.html -->
+<!-- 2 domain: www.xml.com - path_info: a/2003/12/17/dive.html -->
+<!-- 3 domain: www.xml.com - path_info: a/2003/12/17/dive.html -->
+<!-- 4 domain: xml.com - path_info: a/2003/12/17/dive.html -->
+<!-- 5 domain: xml - path_info: a/2003/12/17/dive.html -->
+<!-- 6 domain: xml - path_info: a/2003/12/17/dive.html s_channel: network -->
+<!-- 7 domain: xml - path_info: a/2003/12/17/dive.html -->
+<!-- 8 domain: www.xml.com - path_info: a/2003/12/17/dive.html -->
+
+<script language="JavaScript" type="text/javascript"><!--
+var s_account="ornetwork,orglobal"
+//--></script>
+<!-- SiteCatalyst code version: H.20.2. Copyright 1997-2009 Omniture, Inc. More info available at http://www.omniture.com  -->
+<script language="JavaScript" type="text/javascript" src="http://assets.oreilly.com/js/s_code.js"></script>
+<script language="JavaScript" type="text/javascript"><!--
+s.pageName="network:xml:atom authentication"
+s.channel="network"
+s.prop1="network:xml"
+s.prop2="network:xml"
+s.prop3="network:xml"
+s.prop4="article"
+s.prop5="atom authentication"
+s.prop6="x/a/1337"
+s.prop24="12/17/2003"
+s.prop21="mark pilgrim"
+s.hier1="network,xml"
+/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+var s_code=s.t();if(s_code)document.write(s_code)//--></script>
+<!-- End SiteCatalyst code version: H.20.2. -->
+<!-- analytics.pl: 2010/12/17 9:55:41 -->
+
+
+
+
+
+</div></body> <!-- /#page -->
+
+
+</html>
+
