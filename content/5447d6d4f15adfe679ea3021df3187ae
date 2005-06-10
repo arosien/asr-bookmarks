@@ -1,0 +1,1015 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Securing Apache 2: Step-by-Step | Symantec Connect</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript">
+var cookies = document.cookie.split(';');
+for (var i=0; i < cookies.length; i++) {
+  var cookie = cookies[i].split('=');
+  var target_url = 'https://www-secure.symantec.com/connect/articles/securing-apache-2-step-step';
+  var fragment_detect = window.location.href.split('#');
+  if (fragment_detect.length == 2) { target_url += '#' + fragment_detect[1]};
+  if (cookie[0].match('lifb1d8525d94d660bc8f92b8419fd5ae1') && cookie[1] == 'T') {
+    window.location.replace(target_url);
+  }
+}
+</script>
+
+<meta name="connect_context_js" content="871851_14123_0_0_0_0_0_0_0_0" />
+<meta name="nid" content="1233761" />
+<meta name="lang" content="English" />
+<meta name="generator" content="Lithium" />
+<meta name="doctype" content="forum" />
+<meta name="PRODUCT_ENTITY" content="56176, 54626, 54619" />
+<meta name="om.environment" content="prod" />
+<meta name="om.site_country" content="us" />
+<meta name="om.site_language" content="en" />
+<meta name="om.visitor_segment" content="Business" />
+<meta name="om.site_section_us" content="Connect" />
+<meta name="om.site_section" content="Connect" />
+<meta name="om.site_sub_section_us" content="Security" />
+<meta name="om.site_sub_section" content="Security" />
+<meta name="om.content_format" content="html" />
+<meta name="om.content_title" content="Securing Apache 2: Step-by-Step" />
+<meta name="om.content_type" content="page" />
+<meta name="om.product_name" content="Endpoint Protection (AntiVirus)" />
+<meta name="om.product_id" content="workflow_sol" />
+<meta name="om.page_name" content="en/us: biz: connect: security: articles: securing apache 2: step-by-step" />
+<meta name="om.connect_community" content="Security" />
+<meta name="om.connect_utility" content="connect_utility: articles" />
+<meta name="om.connect_product" content="Endpoint Protection (AntiVirus)" />
+<meta name="om.connect_topics" content="SecurityFocus" />
+<meta name="om.author_id" content="0" />
+<meta name="om.user_id" content="0" />
+<link rel="shortcut icon" href="/connect/sites/default/themes/connect2/images/favicon.ico" type="image/x-icon" />
+  <link type="text/css" rel="stylesheet" media="all" href="http://www.symantec.com/connect/sites/default/files/css/css_2eceedc6f7a14a07964f67b8ec924147.css" />
+<link type="text/css" rel="stylesheet" media="print" href="http://www.symantec.com/connect/sites/default/files/css/css_a0d7318d458d519297a36bef03130634.css" />
+
+    <!--[if lt IE 7]>
+      <link type="text/css" rel="stylesheet" media="all" href="/connect/sites/default/themes/connect2/css/style-ie6.css" />
+    <![endif]-->
+
+ 	  <!--[if IE 7]>
+      <link type="text/css" rel="stylesheet" media="all" href="/connect/sites/default/themes/connect2/css/style-ie7.css">
+	  <![endif]-->
+
+    <!--[if gte IE 8]>
+      <link type="text/css" rel="stylesheet" media="all" href="/connect/sites/default/themes/connect2/css/style-ie8.css">
+	  <![endif]-->
+
+  <script type="text/javascript" src="http://www.symantec.com/connect/sites/default/files/js/js_3ecc440acbedc9fabe518abb4e634433.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, {"basePath":"\/connect\/","languagePrefix":"","symantec":{"context_content_type":"article","context_community_tid":"691","search_type":"general","search_data":{"profile":{"default_text":"Enter a full or partial username...","href":"\/connect\/search\/user"},"general":{"default_text":"Enter keywords to search...","href":"\/connect\/search"}}}});
+//--><!]]>
+</script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+//--><!]]>
+</script>
+  <script src="/script/omniture/om_code.js" type="text/javascript"></script>
+  <script src="/script/omniture/s_code.js" type="text/javascript"></script>
+</head>
+
+<body id="symantec" class="not-front not-logged-in page-node node-type-article no-sidebars i18n-en language-dir-ltr layout-main-last clearfix" dir="ltr">
+    <div id="preload-1"><div id="preload-2"><div id="preload-3"><div id="preload-4"><div id="preload-5"></div></div></div></div></div>
+
+  <div id="header-flex">
+    <div id="search-border"></div>
+    <div id="header" class="fixed-width">
+      <a id="logo" href="/connect/" title="Home"><span>Symantec Connect</span></a>      <div id="search-box">
+  <ul id="menu-search" class="clearfix">
+          
+      <li class="search-tab first"><a class="active" href="#1">Security › Articles</a></li>
+            
+    <li class="search-tab last"><a class="" href="#2">Entire Site</a></li>
+  </ul><!-- /#menu-search -->
+  
+  <form action="/connect/search?filters=type%3Aarticle%20tid%3A691" method="post" id="custom-search">
+    <div id="search-input">
+      <div id="search-input-corner">
+        <input id="search-header-terms" name="keys" class="form-text" value="Enter keywords to search..."/>
+      </div>
+    </div>
+    
+    <div id="search-button">
+      <input id="search-submit" type="submit" name="op" value="Search" />
+    </div>
+  
+  </form>
+</div>    </div>
+  </div><!-- /#header-flex -->  
+  
+  <div id="nav-flex">
+    <div id="nav-container" class="fixed-width">
+        <ul id="menu-global" class="clearfix">
+    <li class="top-leaf menu-top-home"><a href="/connect/"><span>Home</span></a></li>
+    
+    <li class="top-expanded menu-top-community">
+      <a href="/connect/security"><span class="menu-top-community-label">Community:</span>Security</a>      <div class="item-list"><ul class="drop-menu menu-community"><li class="drop-leaf first"><div class="menu-global-drop-item">
+  <div class="menu-drop-item-extra"></div>
+    <div class="menu-community-type">
+      <div class="menu-community-type-corner">Product Community</div>
+    </div>
+    <div class="menu-community-name">Backup and Archiving</div>
+  <div class="item-list"><ul class="sub-menu menu-utility clearfix"><li class="sub-leaf first"><a href="/connect/backup-and-archiving">Overview</a></li>
+<li class="sub-leaf"><a href="/connect/backup-and-archiving/forums">Forums</a></li>
+<li class="sub-leaf"><a href="/connect/backup-and-archiving/articles">Articles</a></li>
+<li class="sub-leaf"><a href="/connect/backup-and-archiving/blogs">Blogs</a></li>
+<li class="sub-leaf"><a href="/connect/backup-and-archiving/downloads">Downloads</a></li>
+<li class="sub-leaf"><a href="/connect/backup-and-archiving/events">Events</a></li>
+<li class="sub-leaf"><a href="/connect/backup-and-archiving/videos">Videos</a></li>
+<li class="sub-leaf"><a href="/connect/backup-and-archiving/groups">Groups</a></li>
+<li class="sub-leaf last"><a href="/connect/backup-and-archiving/ideas">Ideas</a></li>
+</ul></div></div></li>
+<li class="drop-leaf"><div class="menu-global-drop-item">
+  <div class="menu-drop-item-extra"></div>
+    <div class="menu-community-type">
+      <div class="menu-community-type-corner">Product Community</div>
+    </div>
+    <div class="menu-community-name">Endpoint Management</div>
+  <div class="item-list"><ul class="sub-menu menu-utility clearfix"><li class="sub-leaf first"><a href="/connect/endpoint-management">Overview</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-management/forums">Forums</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-management/articles">Articles</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-management/blogs">Blogs</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-management/downloads">Downloads</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-management/events">Events</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-management/videos">Videos</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-management/groups">Groups</a></li>
+<li class="sub-leaf last"><a href="/connect/endpoint-management/ideas">Ideas</a></li>
+</ul></div></div></li>
+<li class="drop-leaf"><div class="menu-global-drop-item">
+  <div class="menu-drop-item-extra"></div>
+    <div class="menu-community-type">
+      <div class="menu-community-type-corner">Product Community</div>
+    </div>
+    <div class="menu-community-name">Endpoint Virtualization</div>
+  <div class="item-list"><ul class="sub-menu menu-utility clearfix"><li class="sub-leaf first"><a href="/connect/endpoint-virtualization">Overview</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-virtualization/forums">Forums</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-virtualization/articles">Articles</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-virtualization/blogs">Blogs</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-virtualization/downloads">Downloads</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-virtualization/events">Events</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-virtualization/videos">Videos</a></li>
+<li class="sub-leaf"><a href="/connect/endpoint-virtualization/groups">Groups</a></li>
+<li class="sub-leaf last"><a href="/connect/endpoint-virtualization/ideas">Ideas</a></li>
+</ul></div></div></li>
+<li class="drop-leaf"><div class="menu-global-drop-item">
+  <div class="menu-drop-item-extra"></div>
+    <div class="menu-community-type">
+      <div class="menu-community-type-corner">Product Community</div>
+    </div>
+    <div class="menu-community-name">Storage and Clustering</div>
+  <div class="item-list"><ul class="sub-menu menu-utility clearfix"><li class="sub-leaf first"><a href="/connect/storage-management">Overview</a></li>
+<li class="sub-leaf"><a href="/connect/storage-management/forums">Forums</a></li>
+<li class="sub-leaf"><a href="/connect/storage-management/articles">Articles</a></li>
+<li class="sub-leaf"><a href="/connect/storage-management/blogs">Blogs</a></li>
+<li class="sub-leaf"><a href="/connect/storage-management/downloads">Downloads</a></li>
+<li class="sub-leaf"><a href="/connect/storage-management/events">Events</a></li>
+<li class="sub-leaf"><a href="/connect/storage-management/videos">Videos</a></li>
+<li class="sub-leaf"><a href="/connect/storage-management/groups">Groups</a></li>
+<li class="sub-leaf last"><a href="/connect/storage-management/ideas">Ideas</a></li>
+</ul></div></div></li>
+<li class="drop-leaf"><div class="menu-global-drop-item">
+  <div class="menu-drop-item-extra"></div>
+    <div class="menu-community-type">
+      <div class="menu-community-type-corner">Product Community</div>
+    </div>
+    <div class="menu-community-name">Security</div>
+  <div class="item-list"><ul class="sub-menu menu-utility clearfix"><li class="sub-leaf first"><a href="/connect/security">Overview</a></li>
+<li class="sub-leaf"><a href="/connect/security/forums">Forums</a></li>
+<li class="sub-leaf"><a href="/connect/security/articles">Articles</a></li>
+<li class="sub-leaf"><a href="/connect/security/blogs">Blogs</a></li>
+<li class="sub-leaf"><a href="/connect/security/downloads">Downloads</a></li>
+<li class="sub-leaf"><a href="/connect/security/events">Events</a></li>
+<li class="sub-leaf"><a href="/connect/security/videos">Videos</a></li>
+<li class="sub-leaf"><a href="/connect/security/groups">Groups</a></li>
+<li class="sub-leaf last"><a href="/connect/security/ideas">Ideas</a></li>
+</ul></div></div></li>
+<li class="drop-leaf"><div class="menu-global-drop-item">
+  <div class="menu-drop-item-extra"></div>
+    <div class="menu-community-name">Inside Symantec</div>
+  <div class="item-list"><ul class="sub-menu menu-utility clearfix"><li class="sub-leaf first"><a href="/connect/inside-symantec">Overview</a></li>
+<li class="sub-leaf"><a href="/connect/inside-symantec/forums">Forums</a></li>
+<li class="sub-leaf"><a href="/connect/inside-symantec/articles">Articles</a></li>
+<li class="sub-leaf"><a href="/connect/inside-symantec/blogs">Blogs</a></li>
+<li class="sub-leaf"><a href="/connect/inside-symantec/events">Events</a></li>
+<li class="sub-leaf"><a href="/connect/inside-symantec/videos">Videos</a></li>
+<li class="sub-leaf"><a href="/connect/inside-symantec/groups">Groups</a></li>
+<li class="sub-leaf last"><a href="/connect/inside-symantec/ideas">Ideas</a></li>
+</ul></div></div></li>
+<li class="drop-leaf"><div class="menu-global-drop-item">
+  <div class="menu-drop-item-extra"></div>
+    <div class="menu-community-name">Vision User Conference</div>
+  <div class="item-list"><ul class="sub-menu menu-utility clearfix"><li class="sub-leaf first"><a href="/connect/vision">Overview</a></li>
+<li class="sub-leaf"><a href="/connect/vision/forums">Forums</a></li>
+<li class="sub-leaf"><a href="/connect/vision/articles">Articles</a></li>
+<li class="sub-leaf"><a href="/connect/vision/blogs">Blogs</a></li>
+<li class="sub-leaf"><a href="/connect/vision/events">Events</a></li>
+<li class="sub-leaf"><a href="/connect/vision/videos">Videos</a></li>
+<li class="sub-leaf"><a href="/connect/vision/groups">Groups</a></li>
+<li class="sub-leaf last"><a href="/connect/vision/ideas">Ideas</a></li>
+</ul></div></div></li>
+<li class="drop-leaf"><div class="menu-global-drop-item">
+  <div class="menu-drop-item-extra"></div>
+    <div class="menu-community-name">Partners</div>
+  <div class="item-list"><ul class="sub-menu menu-utility clearfix"><li class="sub-leaf first"><a href="/connect/partners">Overview</a></li>
+<li class="sub-leaf"><a href="/connect/partners/forums">Forums</a></li>
+<li class="sub-leaf"><a href="/connect/partners/articles">Articles</a></li>
+<li class="sub-leaf"><a href="/connect/partners/blogs">Blogs</a></li>
+<li class="sub-leaf"><a href="/connect/partners/events">Events</a></li>
+<li class="sub-leaf"><a href="/connect/partners/videos">Videos</a></li>
+<li class="sub-leaf"><a href="/connect/partners/groups">Groups</a></li>
+<li class="sub-leaf last"><a href="/connect/partners/ideas">Ideas</a></li>
+</ul></div></div></li>
+<li class="drop-leaf last"><div class="menu-global-drop-item">
+  <div class="menu-drop-item-extra"></div>
+    <div class="menu-community-name">Developers</div>
+  <div class="item-list"><ul class="sub-menu menu-utility clearfix"><li class="sub-leaf first"><a href="/connect/developers">Overview</a></li>
+<li class="sub-leaf"><a href="/connect/developers/forums">Forums</a></li>
+<li class="sub-leaf"><a href="/connect/developers/articles">Articles</a></li>
+<li class="sub-leaf"><a href="/connect/developers/blogs">Blogs</a></li>
+<li class="sub-leaf"><a href="/connect/developers/downloads">Downloads</a></li>
+<li class="sub-leaf"><a href="/connect/developers/videos">Videos</a></li>
+<li class="sub-leaf"><a href="/connect/developers/groups">Groups</a></li>
+<li class="sub-leaf last"><a href="/connect/developers/ideas">Ideas</a></li>
+</ul></div></div></li>
+</ul></div>    </li>
+    
+        <li class="top-expanded menu-top-utility">
+      <a href="/connect/security/articles">Articles</a>      <div class="item-list"><ul class="drop-menu menu-utility"><li class="drop-leaf first"><a href="/connect/security">Overview</a></li>
+<li class="drop-leaf"><a href="/connect/security/forums">Forums</a></li>
+<li class="drop-leaf"><a href="/connect/security/articles">Articles</a></li>
+<li class="drop-leaf"><a href="/connect/security/blogs">Blogs</a></li>
+<li class="drop-leaf"><a href="/connect/security/downloads">Downloads</a></li>
+<li class="drop-leaf"><a href="/connect/security/events">Events</a></li>
+<li class="drop-leaf"><a href="/connect/security/videos">Videos</a></li>
+<li class="drop-leaf"><a href="/connect/security/groups">Groups</a></li>
+<li class="drop-leaf last"><a href="/connect/security/ideas">Ideas</a></li>
+</ul></div>      
+    </li>
+    
+        
+          <li class="top-leaf menu-top-rss"><a href="/connect/item-feeds/article/691/feed/all/all" class="menu-global-rss"><span>RSS</span></a></li>
+    
+      </ul><!-- /#global-menu -->
+    </div>
+  </div><!-- /#nav-flex --> 
+      
+  <div id="menu-user-flex" class="clearfix">
+    <div id="menu-user-container" class="fixed-width">
+      
+  
+<ul id="menu-user">
+  
+    <li class="menu-top-anonymous">
+    <div class="anonymous-wrapper">
+      <a href="/connect/user/login?destination=node%2F1233761">Login</a> or <a href="/connect/user/register?destination=node%2F1233761">Register</a> to participate</a>
+    </div>
+  </li>
+  
+  
+    
+  <li class="expanded top-menu-share">
+    <a href="/connect/">Share</a>    <div class="item-list"><ul class="drop-menu menu-share"><li class="first">  <a href="/connect/forward?path=node%2F1233761" class="link-type test email">
+    <span class="menu-drop-item-extra"></span>
+    <span class="link-name">Email</span>
+      </a>
+</li>
+<li>  <a href="http://twitter.com/home?status=TITLE+URL" class="link-type test twitter">
+    <span class="menu-drop-item-extra"></span>
+    <span class="link-name">Twitter</span>
+      </a>
+</li>
+<li>  <a href="http://www.facebook.com/share.php?t=TITLE&u=URL" class="link-type test facebook">
+    <span class="menu-drop-item-extra"></span>
+    <span class="link-name">Facebook</span>
+      </a>
+</li>
+<li>  <a href="http://www.google.com/reader/link?url=URL&title=TITLE" class="link-type test google-buzz">
+    <span class="menu-drop-item-extra"></span>
+    <span class="link-name">Google Buzz</span>
+      </a>
+</li>
+<li>  <a href="http://digg.com/submit?url=URL&title=TITLE" class="link-type test digg">
+    <span class="menu-drop-item-extra"></span>
+    <span class="link-name">Digg</span>
+      </a>
+</li>
+<li>  <a href="http://del.icio.us/post?url=URL&amp;title=TITLE" class="link-type test delicious">
+    <span class="menu-drop-item-extra"></span>
+    <span class="link-name">Delicious</span>
+      </a>
+</li>
+<li>  <a href="http://reddit.com/submit?url=URL&title=TITLE" class="link-type test reddit">
+    <span class="menu-drop-item-extra"></span>
+    <span class="link-name">Reddit</span>
+      </a>
+</li>
+<li>  <a href="http://www.stumbleupon.com/submit?url=URL&title=TITLE" class="link-type test stumbleupon">
+    <span class="menu-drop-item-extra"></span>
+    <span class="link-name">StumbleUpon</span>
+      </a>
+</li>
+<li class="last">  <a href="http://www.live.com/?add=URL" class="link-type test windows-live">
+    <span class="menu-drop-item-extra"></span>
+    <span class="link-name">Windows Live</span>
+      </a>
+</li>
+</ul></div>    
+  </li>
+  <li class="leaf last top-menu-help">
+    <a href="/connect/" class="js-help-link">Screencast Help</a>  </li>
+</ul>
+    </div>  
+  </div><!-- /#menu-user-flex -->
+  
+  <div id="help-region" class="fixed-width js-help-region">
+    <div id="help-region-inner">
+      <div id="help-player-toolbar" class="clearfix">
+        <div class="help-title">Video Screencast Help</div>
+                            <a href="/connect/search?filters=tid%3A12491%20type%3Avideo" class="bt-search-help bt-help">Search Video Help</a>                <a href="/connect/" class="js-video-help-close bt-close-help bt-help"><span>Close</span></a>  
+        <a href="/connect/" class="js-video-help-player-close bt-back-help bt-help"><span class="bt-help-large">Back</span><br /><span class="bt-help-small">to help</span></a>      
+      </div>
+      <div id="help-player">
+      </div>
+      <div id="help-content">
+        <div class="view view-videos view-id-videos view-display-id-block_4 view-dom-id-1">
+    
+  
+  
+      <div class="view-content">
+      <table class="views-view-grid">
+  <tbody>
+                <tr class="row-1 row-first row-last">
+                  <td class="col-1">
+            <div class="help-video-item">
+  <div class="help-video-thumb">
+    <a href="/connect/help/item/1446811" class="js-help-video-launch play-icon"><span>play</span></a>    <a href="/connect/help/item/1446811" class="js-help-video-launch"><img src="http://www.symantec.com/connect/sites/default/files/imagecache/help-video-thumb/video_thumbnails/Screen shot 2010-08-31 at 4.31.40 PM.png" alt="" title=""  class="imagecache imagecache-help-video-thumb imagecache-default imagecache-help-video-thumb_default" width="230" height="160" /></a>  </div>
+  <div class="help-video-title">
+    <a href="/connect/help/item/1446811" class="js-help-video-launch">Introduction to Connect</a>  </div>
+</div>
+          </td>
+                  <td class="col-2">
+            <div class="help-video-item">
+  <div class="help-video-thumb">
+    <a href="/connect/help/item/1578251" class="js-help-video-launch play-icon"><span>play</span></a>    <a href="/connect/help/item/1578251" class="js-help-video-launch"><img src="http://www.symantec.com/connect/sites/default/files/imagecache/help-video-thumb/video_thumbnails/vlcsnap-2010-12-03-12h45m47s87_0.png" alt="" title=""  class="imagecache imagecache-help-video-thumb imagecache-default imagecache-help-video-thumb_default" width="230" height="160" /></a>  </div>
+  <div class="help-video-title">
+    <a href="/connect/help/item/1578251" class="js-help-video-launch">Create A Poll</a>  </div>
+</div>
+          </td>
+                  <td class="col-3">
+                      </td>
+                  <td class="col-4">
+                      </td>
+              </tr>
+      </tbody>
+</table>
+    </div>
+  
+  
+  
+  
+  
+  
+</div>       </div>
+    </div>
+  </div>
+      
+      <div class="fixed-width">
+      <div id="user-message-container">
+                        
+                            <span id="announcement"> We&#39;ve just added new HTML Notifications and Polling functionality to Connect.&nbsp;<a href="/connect/node/1570331">Read more about these new features here.</a>
+</span>
+              </div><!-- /#user-message-container --> 
+    </div> 
+   
+      
+      <div class="page fixed-width clearfix">
+  
+        <div id="main" class="clearfix">
+  
+          <div id="fluid-content">
+            <div id="content-wrapper" class="clearfix">
+  
+              <div id="content-inner" class="clearfix">
+  
+                  
+                                
+                                
+                                
+                                                                
+                <div id="content-content"><!-- node-generic.tpl.php -->
+
+
+
+
+<div id="node-1233761" class="clearfix node node-container node-type-article">
+  <div class="node-inner">
+
+    <h1 class="node-title">Securing Apache 2: Step-by-Step</h1>
+
+    <div class="node-meta clearfix">
+    <div class="picture">
+  <img src="http://www.symantec.com/connect/sites/default/files/imagecache/32x32/default_user_new.png" alt="Anonymous&#039;s picture" title="Anonymous&#039;s picture"  class="imagecache imagecache-32x32" width="32" height="32" /></div>
+          <div class="submitted">
+        <a href="/connect/user/0" class="user-level user-level-1"></a>                <div class="date-posted">20 Jun 2004</div>
+      </div>
+        </div>
+
+    
+    
+    <div class="content clearfix">
+       
+      <p>by Artur Maj</p>
+<table border="0" cellspacing="0" width="100%">
+<tbody>
+<tr>
+<td class="text">
+<!-- OAS --><!-- OAS --><!-- InstanceBeginEditable name="ARTICLE" --><!-- InstanceBeginEditable name="ARTICLE" --><p>When choosing a web server, Apache <a href="http://news.netcraft.com/archives/web_server_survey.html" target="_blank">very often</a> wins against its competitors because of stability, performance, that fact that it&#39;s open source, and many other advantages. But when deciding on which version of Apache to use, the choice is not always so simple. On the one hand there is a very popular, stable version used by millions of users, version 1.3, and on the other hand, there is an enhanced and re-designed version 2.0.</p>
+<p>And even if the new version has got a lot more extensions and features, some people still decide to use version 1.3, because in their opinion this branch is more stable and secure. As a matter of fact, there is some truth in this statement. Since version 1.3 has been used by millions of users for a long time, most security holes in this version are very likely to be already discovered. At the same time version 2.0 may have many more as-yet undiscovered vulnerabilities, just sleeping and waiting to be found.</p>
+<p>Continuing the step-by-step fashion from the previous series (<a href="http://www.securityfocus.com/infocus/1694">Securing Apache</a>, <a href="http://www.securityfocus.com/infocus/1706">Securing PHP</a>, and <a href="http://www.securityfocus.com/infocus/1726">Securing MySQL</a>), this article shows how to install and configure Apache 2.0 to minimize the risk of unauthorized access or successful break-in, even if new security vulnerabilities in Apache web server are found. Thus, it will be possible to enjoy the new features of Apache 2.0 without worrying too much about its security bugs, regardless if they are only imaginary, or are in fact real and serious threats.</p>
+<h2>Functionality requirements</h2>
+<p>In the world of security, there are a few golden principles that should always be followed. One such principle is the rule which says that only absolutely required parts of the software should be used. All other components should be disabled, made inaccessible or not even be installed at all.</p>
+<p>The logic behind this rule is very simple -- if there is software with dozens of components that are enabled by default, finding only one security vulnerability in any one of these components can put the whole system at risk of a successful break-in. On the other hand, if only a few absolutely necessary components are enabled, finding a new security bug doesn&#39;t necessary mean that the software is vulnerable -- because the discovered bug may affect components that are not enabled, or are not installed. The probability of a successful break-in in this case is obviously much lower than in case of the default installation.</p>
+<p>Therefore, before starting to secure Apache 2, it is very important to know what functionality we really expect from the web server. This will allow us to prepare the list of modules that we will leave enabled, while the rest will be disabled during compilation time.</p>
+<p>According to this rule, this article assumes that very basic functionality of Apache will be used:</p>
+<p>&nbsp;</p>
+<ul>
+<li>Only static HTML pages will be served.</li>
+<li>The server must support the virtual hosting mechanism.</li>
+<li>Access to some web pages will be restricted to selected IP addresses or users (basic authentication).</li>
+<li>The server must log all web requests (including information about web browsers).</li>
+</ul>
+<p>One can note that the above functionality doesn&#39;t support CGI scripts, the SSL protocol or other useful Apache features. This is because the main purpose of the article is to present a general method of securing Apache 2.0, without focusing on a particular implementation. If there is a need for additional functionality, readers can still use the presented solution as a starting point, and enhance it by enabling additional modules, for example, <i>mod_ssl</i>, <i>mod_cgi</i> or others.</p>
+<h2>Security assumptions</h2>
+<p>To provide as many security layers as possible, and at the same time keep this solution portable among many different Linux/BSD systems, the following layers of security will be used:</p>
+<h3>the network environment</h3>
+<ul>
+<li>The web server should be protected by a firewall; the rules should accept incoming requests to port 80/tcp and allow outgoing HTTP responses. Except for certain ICMP messages (e.g. <em>source-quench</em>, <em>time-exceed</em>, <em>parameter-problem</em>, <em>destination-unreachable</em>), all other packets should be dropped or denied.</li>
+<li>An intrusion detection (or prevention) system should be used; Apache&#39;s log files should also be monitored.</li>
+</ul>
+<h3>the operating system</h3>
+<ul>
+<li>The operating system should be hardened as much as possible; all unnecessary components should be removed from the system.</li>
+<li>If supported, the operating system should not allow executing programs on the stack.</li>
+<li>All unnecessary network services should be disabled.</li>
+<li>The number of SUID/SGID files should be minimized.</li>
+</ul>
+<h3>the Apache web server</h3>
+<ul>
+<li>Only absolutely necessary Apache modules should be enabled; the rest should be disabled during compilation time.</li>
+<li>All diagnostic web pages and the automatic directory indexing service must be turned off.</li>
+<li>The server should disclose the least amount of information about itself as possible -- security through obscurity. Although this is not a real security layer, applying it will at least make the attacks a little bit more difficult to perform.</li>
+<li>The web server must run under a dedicated UID/GID, not one used by any other system process.</li>
+<li>Apache&#39;s processes must have limited access to the file systems (chrooting).</li>
+<li>In the Apache chrooted environment there cannot be any shell program present (/bin/sh, /bin/csh etc.) -- it makes the process of executing exploits much more difficult to perform.</li>
+</ul>
+<h2>Installing the operating system</h2>
+<p>First and foremost, we must choose an operating system upon which the web server will run. The rest of article presents how to secure Apache on FreeBSD (5.1), however readers are free to use their favorite Unix, BSD, Linux or Linux-like operating system.</p>
+<p>With regards to our security assumptions, after installing the operating system it must be hardened against both remote and local attacks. Regardless of the chosen UNIX/Linux/BSD distribution, it is very important to install only the core operating system, remove any redundant packages and apply up-to-date patches to the kernel and all installed software.</p>
+<p>It is also recommended to periodically synchronize the local clock against a trusted time server, using the Network Time Protocol (NTP), and to send log files to a remote, dedicated log server.</p>
+<p>After the system is prepared, we can start installing Apache 2.0. The first step is to add a new group and regular user called <em>apache</em>. An example from FreeBSD has been shown below:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>pw groupadd apache pw useradd apache -c &quot;Apache Server&quot; -d /dev/null -g apache -s /sbin/nologin</pre></td>
+</tr>
+</tbody>
+</table>
+<p>The Apache child processes will run with the privileges of the group and user <em>apache</em>. Since the above account will be dedicated to the Apache web server, this will provide separation of privileges and avoid potential security problems when several different processes are being run under the same account, e.g. user <em>nobody</em>.</p>
+<h2>Downloading the software</h2>
+<p>Next, the latest version of Apache 2.0 software should be downloaded from the <a href="http://httpd.apache.org/download.cgi" target="_blank">Apache website</a>, and then unpacked. Since we want to disable unnecessary modules during compilation time, it is very important to download the source code, not binaries. It is also important to test the downloaded software against a PGP signature, to make sure that the downloaded version is complete and unmodified.</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>lynx <a href="http://httpd.apache.org/download.cgi" title="http://httpd.apache.org/download.cgi">http://httpd.apache.org/download.cgi</a>     &lt;download: httpd-2.0.xx.tar.gz, httpd-2.0.xx.tar.gz.asc, KEYS&gt; gpg --import KEYS gpg httpd-2.0.49.tar.gz.asc     gpg: Good signature from &quot;Sander Striker &lt;striker@apache.org&gt;&quot; tar zxvf httpd-2.0.49.tar.gz cd ./httpd-2.0.49/</pre></td>
+</tr>
+</tbody>
+</table>
+<h2>Choosing Apache&#39;s modules</h2>
+<p>After the Apache source code is unpacked, we must choose which modules will remain enabled, and which will be removed. A short description of all modules available in Apache 2.0 can be found at <a href="http://httpd.apache.org/docs-2.0/mod/" target="_blank">http://httpd.apache.org/docs-2.0/mod/</a>.</p>
+<p>To fulfill the functionality and security requirements assumed at the beginning of this article, we will compile only the following modules:</p>
+<p>&nbsp;</p>
+<table border="1" bordercolor="#000000" cellpadding="3" cellspacing="0">
+<tbody>
+<tr>
+<td>
+<div align="center"><strong>Module&#39;s name </strong></div>
+</td>
+<td>
+<div align="center"><strong>Description</strong></div>
+</td>
+</tr>
+<tr>
+<td>
+<p>core</p>
+</td>
+<td>
+<p>The core Apache features, required in every Apache installation.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>http_core</p>
+</td>
+<td>
+<p>The core http support, required in every Apache 2.0 installation.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>prefork</p>
+</td>
+<td>
+<p>Multi-Processing Module (MPM) that implements a non-threaded, pre-forking web server. Can be replaced by other multiprocessing module, e.g. <em>worker </em>, <em>threadpool </em> etc. The MPM module is required in every Apache 2.0 installation.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>mod_access</p>
+</td>
+<td>
+<p>Provides access control based on client hostname, IP address, or other characteristics of the client request. Because this module is needed to use &quot;order&quot;, &quot;allow&quot; and &quot;deny&quot; directives, it should remain enabled.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>mod_auth</p>
+</td>
+<td>
+<p>Required in order to implement user authentication using text files (HTTP Basic Authentication), which was specified in functionality assumptions.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>mod_dir</p>
+</td>
+<td>
+<p>Required to search and serve directory index files: &quot;index.html&quot;, &quot;default.htm&quot;, etc.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>mod_log_config</p>
+</td>
+<td>
+<p>Required to implement logging of the requests made to the server.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>mod_mime</p>
+</td>
+<td>
+<p>Required to set the character set, content- encoding, handler, content-language, and MIME types of documents.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Since we want to enable only the minimal number of modules, we will compile all the modules statically. Thanks to that, we will eliminate possibility of occurring vulnerabilities in one more module -- <em>mod_so</em>.</p>
+<h2>Compiling and installing the software</h2>
+<p>In this step we will configure, compile, and install the Apache web server as follows:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>./configure \  --prefix=/usr/local/apache2 \  --with-mpm=prefork \  --disable-charset-lite \  --disable-include \  --disable-env \  --disable-setenvif \  --disable-status \  --disable-autoindex \  --disable-asis \  --disable-cgi \  --disable-negotiation \  --disable-imap \  --disable-actions \  --disable-userdir \  --disable-alias \  --disable-so  make  su  umask 022  make install  chown -R root:sys /usr/local/apache2 </pre></td>
+</tr>
+</tbody>
+</table>
+<p>After Apache is installed, we should make sure that only the following modules are enabled:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>/usr/local/apache2/bin/httpd -l  Compiled in modules:    core.c    mod_access.c    mod_auth.c    mod_log_config.c    prefork.c    http_core.c    mod_mime.c    mod_dir.c </pre></td>
+</tr>
+</tbody>
+</table>
+<h2>Configuring Apache</h2>
+<p>Before running Apache for the first time, we also need to modify the Apache configuration file. We need to do this because the default configuration file uses modules that we disabled, and without modifications Apache will not run.</p>
+<p>Thus, we must remove the <em>/usr/local/apache2/conf/httpd.conf</em> file and create a new httpd.conf in its place, with the following content:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre> # =================================================  # Basic settings  # =================================================  Listen 0.0.0.0:80  User apache  Group apache  ServerAdmin <a href="mailto:webmaster@www.ebank.lab">webmaster@www.ebank.lab</a>  UseCanonicalName Off  ServerSignature Off  HostnameLookups Off  ServerTokens Prod  ServerRoot &quot;/usr/local/apache2&quot;  DocumentRoot &quot;/www&quot;  PidFile /usr/local/apache2/logs/httpd.pid  ScoreBoardFile /usr/local/apache2/logs/httpd.scoreboard  &lt;IfModule mod_dir.c&gt;      DirectoryIndex index.html  &lt;/IfModule&gt;  # =================================================  # HTTP and performance settings  # =================================================  Timeout 300  KeepAlive On  MaxKeepAliveRequests 100  KeepAliveTimeout 15  &lt;IfModule prefork.c&gt;      MinSpareServers 5      MaxSpareServers 10      StartServers 5      MaxClients 150      MaxRequestsPerChild 0  &lt;/IfModule&gt;  # =================================================  # Access control  # =================================================  &lt;Directory /&gt;  Options None      AllowOverride None      Order deny,allow      Deny from all  &lt;/Directory&gt;  &lt;Directory &quot;/www/www.ebank.lab&quot;&gt;      Order allow,deny      Allow from all  &lt;/Directory&gt;  &lt;Directory &quot;/www/www.test.lab&quot;&gt;      Order allow,deny      Allow from all  &lt;/Directory&gt;  # =================================================  # MIME encoding  # =================================================  &lt;IfModule mod_mime.c&gt;      TypesConfig /usr/local/apache2/conf/mime.types  &lt;/IfModule&gt;  DefaultType text/plain  &lt;IfModule mod_mime.c&gt;      AddEncoding x-compress .Z      AddEncoding x-gzip .gz .tgz      AddType application/x-compress .Z      AddType application/x-gzip .gz .tgz      AddType application/x-tar .tgz  &lt;/IfModule&gt;  # =================================================  # Logs  # =================================================  LogLevel warn  LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%{Referer}i\&quot; \&quot;%{User-Agent}i\&quot;&quot; combined  LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b&quot; common  LogFormat &quot;%{Referer}i -&gt; %U&quot; referer  LogFormat &quot;%{User-agent}i&quot; agent  ErrorLog /usr/local/apache2/logs/error_log  CustomLog /usr/local/apache2/logs/access_log combined  # =================================================  # Virtual hosts  # =================================================  NameVirtualHost *  &lt;VirtualHost *&gt;      DocumentRoot &quot;/www/www.ebank.lab&quot;      ServerName &quot;www.ebank.lab&quot;      ServerAlias &quot;www.e-bank.lab&quot;      ErrorLog logs/www.ebank.lab/error_log      CustomLog logs/www.ebank.lab/access_log combined  &lt;/VirtualHost&gt;  &lt;VirtualHost *&gt;      DocumentRoot &quot;/www/www.test.lab&quot;      ServerName &quot;www.test.lab&quot;      ErrorLog logs/www.test.lab/error_log      CustomLog logs/www.test.lab/access_log combined  &lt;/VirtualHost&gt; </pre></td>
+</tr>
+</tbody>
+</table>
+<p>Compared to the default configuration file, the following important changes have been made:</p>
+<p>&nbsp;</p>
+<ul>
+<li>The number of enabled modules has been reduced to minimum.</li>
+<li>Apache&#39;s processes (except for the <i>root</i> process) are set to be executed with unique regular user/group privileges.</li>
+<li>Apache discloses the least information about itself as possible.</li>
+<li>Access rights to the website&#39;s content are set to be more restrictive.</li>
+</ul>
+<p>According to our functionality requirements, the above configuration assumes that there are two virtual hosts supported by Apache:</p>
+<p>&nbsp;</p>
+<ul>
+<li><em>www.ebank.lab</em> (alias: <em>www.e-bank.lab</em>)</li>
+<li><em>www.test.lab</em></li>
+</ul>
+<p>The content of the above virtual hosts will be physically kept under the <em>/www</em> directory, so before running Apache we also need to create the corresponding directories with sample web pages:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>mkdir -p /www/www.ebank.lab mkdir -p /www/www.test.lab echo &quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;eBank.lab&lt;/title&gt;&lt;/head&gt;&lt;body&gt;eBank.lab       works!&lt;/body&gt;&lt;/html&gt;&quot; &gt; /www/www.ebank.lab/index.html echo &quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;test.lab&lt;/title&gt;&lt;/head&gt;&lt;body&gt;Test.lab       works!&lt;/body&gt;&lt;/html&gt;&quot; &gt; /www/www.test.lab/index.html chmod -R 755 /www  chown -R root:sys /www </pre></td>
+</tr>
+</tbody>
+</table>
+<p>We must also prepare directories for storing our log files:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>mkdir -p /usr/local/apache2/logs/www.ebank.lab  mkdir -p /usr/local/apache2/logs/www.test.lab  chmod -R 755 /usr/local/apache2/logs  chown -R root:sys /usr/local/apache2/logs </pre></td>
+</tr>
+</tbody>
+</table>
+<p>Finally, we can try to run Apache, and test if everything works properly:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>/usr/local/apache2/bin/apachectl start</pre></td>
+</tr>
+</tbody>
+</table>
+<p>If the <em>www.ebank.lab</em> website is accessible from a web browser, we can shutdown Apache:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>/usr/local/apache2/bin/apachectl stop </pre></td>
+</tr>
+</tbody>
+</table>
+<p>and then proceed to chroot the server. If there are problems, log files should be analyzed, or the <em>truss</em> command (for BSD and Solaris users) should be used, as follows:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>truss /usr/local/apache2/bin/httpd </pre></td>
+</tr>
+</tbody>
+</table>
+<p>Note that for Linux users, the equivalent command is <em>strace</em>. Either way, analyzing the output of the <em>truss</em> (or <em>strace</em>) command should help with finding the reason of failure.</p>
+<h2>Chrooting the server</h2>
+<p>The next step is to limit the Apache processes&#39; access to the filesystems. The chrooting technique was described in detail in the <a href="http://www.securityfocus.com/infocus/1694">previous article</a>, so at this point we will simply create a directory structure for our new Apache:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>mkdir -p /chroot/httpd/dev  mkdir -p /chroot/httpd/etc  mkdir -p /chroot/httpd/var/run  mkdir -p /chroot/httpd/usr/lib  mkdir -p /chroot/httpd/usr/libexec  mkdir -p /chroot/httpd/usr/local/apache2/bin  mkdir -p /chroot/httpd/usr/local/apache2/lib  mkdir -p /chroot/httpd/usr/local/apache2/logs/www.ebank.lab  mkdir -p /chroot/httpd/usr/local/apache2/logs/www.test.lab  mkdir -p /chroot/httpd/usr/local/apache2/conf  mkdir -p /chroot/httpd/usr/local/lib  mkdir -p /chroot/httpd/www </pre></td>
+</tr>
+</tbody>
+</table>
+<p>The owner of all the above directories should be <em>root</em>, and access rights should not allow regular users to perform any changes in these directories:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>chown -R root:sys /chroot/httpd  chmod -R 0755 /chroot/httpd</pre></td>
+</tr>
+</tbody>
+</table>
+<p>Next, we will create the special device file, <em>/dev/null</em>:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>ls -al /dev/null    crw-rw-rw- 1 root wheel 2, 2 Mar 14 12:53 /dev/null  mknod /chroot/httpd/dev/null c 2 2  chown root:sys /chroot/httpd/dev/null  chmod 666 /chroot/httpd/dev/null </pre></td>
+</tr>
+</tbody>
+</table>
+<p>We also need to create a <em>/chroot/httpd/dev/log</em> device that is needed for the server to work properly. In the case of our FreeBSD system, the following line should be added to <em>/etc/rc.conf</em> :</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>syslogd_flags=&quot;-l /chroot/httpd/dev/log&quot; </pre></td>
+</tr>
+</tbody>
+</table>
+<p>In order for the changes to take effect, we also need to restart the syslogd daemon with the new parameter:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>kill `cat /var/run/syslog.pid`  /usr/sbin/syslogd -ss -l /chroot/httpd/dev/log </pre></td>
+</tr>
+</tbody>
+</table>
+<p>The next step is to copy all necessary programs, libraries and configuration files into the new directory tree. In the case of FreeBSD 5.1 the list of required files is as follows:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>cp /usr/local/apache2/bin/httpd /chroot/httpd/usr/local/apache2/bin/  cp /usr/local/apache2/lib/libaprutil-0.so.9 /chroot/httpd/usr/local/apache2/lib/  cp /usr/local/apache2/lib/libapr-0.so.9 /chroot/httpd/usr/local/apache2/lib/  cp /usr/local/apache2/conf/mime.types /chroot/httpd/usr/local/apache2/conf/  cp /usr/local/apache2/conf/httpd.conf /chroot/httpd/usr/local/apache2/conf/  cp /usr/local/lib/libexpat.so.4 /chroot/httpd/usr/local/lib/  cp /usr/lib/libc.so.5 /chroot/httpd/usr/lib/  cp /usr/lib/libcrypt.so.2 /chroot/httpd/usr/lib/  cp /usr/lib/libm.so.2 /chroot/httpd/usr/lib/  cp /usr/libexec/ld-elf.so.1 /chroot/httpd/usr/libexec/  cp /var/run/ld-elf.so.hints /chroot/httpd/var/run/  cp /etc/hosts /chroot/httpd/etc/  cp /etc/nsswitch.conf /chroot/httpd/etc/  cp /etc/resolv.conf /chroot/httpd/etc/  cp /etc/group /chroot/httpd/etc/  cp /etc/master.passwd /chroot/httpd/etc/passwords </pre></td>
+</tr>
+</tbody>
+</table>
+<p>In the case of other Unix, BSD, Linux and Linux-like systems, the list of required files can be determined by using commands like <em>ldd</em>, <em>strace</em>, <em>truss</em> or <em>strings</em>, as was described in the <a href="http://www.securityfocus.com/infocus/1694">previous article</a>.</p>
+<p>After the above steps are done, we need to prepare the password database that must be present in the chrooted filesystem. Thus, from <em>/chroot/httpd/etc/passwords</em> and <em>/chroot/httpd/etc/group</em> we have to remove all the lines except <em>apache</em>. Next, we should build the password database as follows:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>cd /chroot/httpd/etc  pwd_mkdb -d /chroot/httpd/etc passwords  rm -rf /chroot/httpd/etc/master.passwd </pre></td>
+</tr>
+</tbody>
+</table>
+<p>The above commands should be executed when using FreeBSD. In other systems it may be sufficient to edit the <em>/chroot/httpd/etc/passwd</em> and <em>/chroot/httpd/etc/shadow</em> files.</p>
+<p>Finally, we can copy the sample website content to the chrooted environment:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>cp -R /www/* /chroot/httpd/www/ </pre></td>
+</tr>
+</tbody>
+</table>
+<p>and test if the Apache web server runs correctly:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>chroot /chroot/httpd /usr/local/apache2/bin/httpd </pre></td>
+</tr>
+</tbody>
+</table>
+<h2>Final steps</h2>
+<p>If your Apache now works properly, the only thing that is left to do is to create a script that will start Apache during system boot. In order to do this, the <a href="http://www.securityfocus.com/unix/images/apache2-apache.sh">apache.sh</a> script can be used, with the following content:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>#!/bin/sh  CHROOT=/chroot/httpd  HTTPD=/usr/local/apache2/bin/httpd  PIDFILE=/usr/local/apache2/logs/httpd.pid  echo -n &quot; apache&quot;  case &quot;$1&quot; in  start)        /usr/sbin/chroot $CHROOT $HTTPD        ;;  stop)        kill `cat ${CHROOT}/${PIDFILE}`        ;;  *)        echo &quot;&quot;        echo &quot;Usage: `basename $0` {start|stop}&quot; &gt;&amp;2        exit 64        ;;  esac  exit 0 </pre></td>
+</tr>
+</tbody>
+</table>
+<p>The above script should be copied to the directory where by default startup scripts are held. In the case of FreeBSD it is the <em>/usr/local/etc/rc.d</em> directory. The access rights to that file should be set as follows:</p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td class="rightcolumn">
+<pre>chown root:sys /usr/local/etc/rc.d/apache.sh  chmod 711 /usr/local/etc/rc.d/apache.sh </pre></td>
+</tr>
+</tbody>
+</table>
+<h2>Summary</h2>
+<p>The main goal of this article was to present a method of securing Apache 2.0 that lets readers mitigate the risk of a successful break-in, even if new vulnerabilities in this software are found. It has been shown how to install Apache with a minimal number of modules, how to set up a more restrictive configuration, and how to implement protection against a large number of exploits by running the web server in a chrooted environment, without the use of any shell programs. And although no method can assure a 100% security, applying the above recommendations will at least make performing a web attack against Apache 2.0 much more difficult, as compared to the default installation.</p>
+<!-- InstanceEndEditable --><!-- InstanceEndEditable --></td>
+</tr>
+<!-- If you have relevant links, remove the comment tag below it --><!-- If you have relevant links, remove the comment tag below it --><tr>
+<td class="rightcolumn" valign="TOP"><img alt="" height="1" src="/images/pixel.gif" width="110" /></p>
+<div class="rightcolumn">
+<!-- InstanceBeginEditable name="References" --><!-- InstanceBeginEditable name="References" --><p><span class="text"><b>Relevant links</b></span><span class="text"> </span></p>
+<p><span class="text">Securing Apache: Step-by-Step: <a href="http://www.securityfocus.com/infocus/1694">http://www.securityfocus.com/infocus/1694 </a></span></p>
+<p><span class="text">Securing PHP: Step-by-Step: <a href="http://www.securityfocus.com/infocus/1706">http://www.securityfocus.com/infocus/1706 </a></span></p>
+<p><span class="text">Securing MySQL: Step-by-Step: <a href="http://www.securityfocus.com/infocus/1726">http://www.securityfocus.com/infocus/1726 </a></span></p>
+<p><span class="text">Apache HTTP Server Project: <a href="http://httpd.apache.org/">http://httpd.apache.org </a></span></p>
+<p><span class="text">Sample httpd.conf: <a href="http://www.securityfocus.com/unix/images/apache2-httpd.conf">httpd.conf</a></span></p>
+<p><span class="text">Sample apache.sh: <a href="http://www.securityfocus.com/unix/images/apache2-apache.sh">apache.sh</a></span></p>
+<p>&nbsp;</p>
+<p>
+					<span class="text"><span class="text"><b>About the author</b><br />
+					</span> <span class="text"> </span></span></p>
+<p><span class="text"><span class="text"><a href="mailto:artur.maj@seccure.net">Artur Maj</a> works as a Principal Software Engineer for Oracle Corporation, in the EMEA Mobile, Wireless &amp; Voice Center of Expertise. He is experienced in designing computer systems, performing security audits as well as providing security training. He is also author of many articles and publications devoted to securing computer systems and software against intruders.</span></span></p>
+<p class="text"><span class="text">View <a href="http://search.securityfocus.com/swsearch?query=artur+maj&amp;sbm=infocus&amp;submit=Search%21&amp;metaname=author&amp;sort=swishrank">all articles</a> by Artur Maj on SecurityFocus.<br />
+						</span></p>
+<!-- InstanceEndEditable --><!-- InstanceEndEditable --></div>
+</td>
+</tr>
+<!-- If you have relevant links, remove the comment tag above it --><!-- If you have relevant links, remove the comment tag above it --><tr>
+<td>
+				<i>Comments or reprint requests can be sent to the <a href="mailto:content-editor@securityfocus.com">editor</a>.</i></td>
+</tr>
+</tbody>
+</table>
+<!-- InstanceEnd --><!-- InstanceEnd --><p>This article originally appeared on SecurityFocus.com -- reproduction in whole or in part is not allowed without expressed written consent.</p>
+      
+    </div>
+      </div><!-- /node-inner -->
+
+      <div class="terms">
+                  <div class="filed-under">Filed under: <a href="/connect/products/endpoint-protection-antivirus" rel="tag" title="">Endpoint Protection (AntiVirus)</a>, <a href="/connect/topics/securityfocus" rel="tag" title="">SecurityFocus</a>, <a href="/connect/communities/security" rel="tag" title="">Security</a></div>
+                              </div>
+      
+       
+      
+
+    <div class="links-bar">
+      <div class="voting-box">
+        <span id="votes-node-1233761" class="total-votes-thumbs"><span class="positive total">+1 (1 Vote)</span></span>
+        <div class="vud-widget vud-widget-thumbs" id="widget-node-1233761">
+  <div class="vud-widget-disabled">
+    <span class="up-inactive" title="You must be signed in to vote."></span>
+    <span class="down-inactive" title="You must be signed in to vote."></span>      
+  </div>
+</div>
+      </div>
+      <ul class="links"><li class="comment_forbidden first"><span><a href="https://www-secure.symantec.com/connect/user/login?destination=node%2F1233761%23comment-form">Login</a> or <a href="https://www-secure.symantec.com/connect/user/register?destination=node%2F1233761%23comment-form">register</a> to post comments</span></li>
+<li class="0 last"><a href="/connect/comments-rss/1233761" class="links-rss-icon"><span>Comments RSS Feed</span></a></li>
+</ul>    </div>
+</div><!-- /node-container -->
+
+<div id="comments">
+  <a  id="comments-begin"></a>
+  <a id="comment-4546841"></a>
+<!-- comment.tpl.php -->
+
+<div class="comment-article comment comment-published comment-container clearfix ">
+  <div class="comment-inner">
+
+    <div class="comment-bubble"></div>
+
+    <div class="comment-user-picture">
+      <div class="picture">
+  <a href="/connect/user/deel" title="View user profile."><img src="http://www.symantec.com/connect/sites/default/files/imagecache/32x32/default_user_new.png" alt="deel&#039;s picture" title="View user profile."  class="imagecache imagecache-32x32" width="32" height="32" /></a></div>
+    </div>
+
+    <div class="comment-meta clearfix">
+          <div class="submitted">
+        <a href="/connect/user/deel" class="user-level user-level-1">deel</a>                        <div class="date-posted">25 Sep 2010</div>
+      </div>
+    
+    </div>
+
+    <h2 class="comment-title"><a href="/connect/articles/securing-apache-2-step-step#comment-4546841" class="active">It could have been perfect</a></h2>
+    
+    <div class="content">
+      <p>Hi guys,</p>
+<p>This howto is great but&nbsp;there&#39;s just a little&nbsp;problem with&nbsp;the end of lines...</p>
+<p>Regards,</p>
+<p>DL</p>
+          </div>
+
+  </div><!-- /comment-inner -->
+
+    <div class="links-bar">
+      <div class="voting-box clearfix">
+        <span id="votes-comment-4546841" class="total-votes-thumbs"><span class="neutral total">0 (0 Votes)</span></span>
+        <div class="vud-widget vud-widget-thumbs" id="widget-comment-4546841">
+  <div class="vud-widget-disabled">
+    <span class="up-inactive" title="You must be signed in to vote."></span>
+    <span class="down-inactive" title="You must be signed in to vote."></span>      
+  </div>
+</div>
+      </div>
+      <ul class="links"><li class="comment_forbidden first last"><span><a href="https://www-secure.symantec.com/connect/user/login?destination=node%2F1233761%23comment-form">Login</a> or <a href="https://www-secure.symantec.com/connect/user/register?destination=node%2F1233761%23comment-form">register</a> to post comments</span></li>
+</ul>      <span  class="voting-detail">
+            </span>
+          </div>
+</div>
+      <div class="comment-login">
+      <h2>Would you like to reply?</h2>
+      <a href="/connect/user/login?destination=node%2F1233761">Login</a> or <a href="/connect/user/login?destination=node%2F1233761">Register</a> to post your comment.    </div>
+  </div>
+</div>                  
+              </div><!-- /content-inner -->
+  
+  
+            </div><!-- /content-wrapper -->
+          </div><!-- fluid-content -->
+  
+  
+             <div id="sidebar">              
+                            
+                
+                            <div id="sidebar-promo" class="sidebar clearfix">
+                  <!-- start block.tpl.php -->
+
+  <div id="block-symantec_navigation-connect_promos_sidebar" class="block block-wrapper block-symantec_navigation block-order-1 odd clearfix">
+    <div class="block-inner">
+            <div class="content clearfix">
+        <!-- node-promotion_text.tpl.php -->
+
+<div class="promo-text promo-text-sidebar-yellow">
+
+  <div class="promo-title">
+  	WIN A FLIP ULTRA or 1000 SYMANTEC CONNECT POINTS!   </div>
+  <div class="promo-body ">
+  	Just answer one simple question to enter. Don’t miss out, enter today.  </div>
+  <a href="http://go.symantec.com/advocate" class="promo-more">Learn More</a></div>
+      </div>
+    </div><!-- /block-inner -->
+  </div>
+
+<!-- /end block.tpl.php -->              </div><!-- /#sidebar-promo -->
+                            
+              </div><!-- /sidebar -->  
+  
+        </div><!-- /main -->
+  
+      </div><!-- /page -->
+
+  <div class="fixed-width">
+    <div id="footer-menu" class="clearfix">
+                    <div id="footer-menu-container"><ul class="menu"><li class="leaf first"><a href="/connect/legal" title="">Symantec Corporation</a></li>
+<li class="leaf"><a href="/connect/contact" title="">Contact Us</a></li>
+<li class="leaf"><a href="/connect/pages/get-4-1-1-rss" title="">Get RSS</a></li>
+<li class="leaf"><a href="http://www.symantec.com/about/profile/policies/privacy.jsp" title="">Privacy Policy</a></li>
+<li class="leaf last"><a href="http://www.symantec.com" title="">Symantec.com</a></li>
+</ul></div>
+          </div>
+
+            <div id="footer" class="clearfix">
+        <div id="footer-wrapper" class="clearfix">
+          <div id="closure"><script type="text/javascript">
+<!--//--><![CDATA[//><!--
+try{var pageTracker = _gat._getTracker("UA-189204-1");pageTracker._trackPageview();} catch(err) {}
+//--><!]]>
+</script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, {"CToolsAJAX":{"scripts":{"\/connect\/misc\/jquery.js?1":true,"\/connect\/misc\/drupal.js?1":true,"\/connect\/sites\/default\/themes\/connect2\/js\/main.js?1":true,"\/connect\/sites\/default\/modules\/custom\/symantec_navigation\/symantec_navigation.js?1":true,"\/connect\/sites\/default\/themes\/connect2\/js\/jquery.tooltip.sticky.js?1":true,"\/connect\/sites\/default\/themes\/connect2\/js\/node-details.js?1":true,"\/connect\/sites\/default\/modules\/contrib\/ctools\/js\/ajax-responder.js?1":true,"\/connect\/sites\/default\/modules\/custom\/symantec_blogs\/symantec_blogs.js?1":true,"\/connect\/sites\/default\/modules\/custom\/symantec_help\/js\/symantec_help.js?1":true,"\/connect\/sites\/default\/modules\/custom\/symantec_help\/js\/BrightcoveExperiences.js?1":true},"css":{"\/connect\/modules\/node\/node.css?1":true,"\/connect\/modules\/poll\/poll.css?1":true,"\/connect\/modules\/system\/defaults.css?1":true,"\/connect\/modules\/system\/system.css?1":true,"\/connect\/modules\/system\/system-menus.css?1":true,"\/connect\/modules\/user\/user.css?1":true,"\/connect\/sites\/default\/modules\/contrib\/cck\/theme\/content-module.css?1":true,"\/connect\/sites\/default\/modules\/contrib\/ckeditor\/ckeditor.css?1":true,"\/connect\/sites\/default\/modules\/contrib\/ctools\/css\/ctools.css?1":true,"\/connect\/sites\/default\/modules\/contrib\/date\/date.css?1":true,"\/connect\/sites\/default\/modules\/contrib\/date\/date_popup\/themes\/datepicker.css?1":true,"\/connect\/sites\/default\/modules\/contrib\/date\/date_popup\/themes\/timeentry.css?1":true,"\/connect\/sites\/default\/modules\/contrib\/filefield\/filefield.css?1":true,"\/connect\/sites\/default\/modules\/contrib\/og\/theme\/og.css?1":true,"\/connect\/sites\/default\/modules\/contrib\/calendar\/calendar.css?1":true,"\/connect\/misc\/farbtastic\/farbtastic.css?1":true,"\/connect\/sites\/default\/modules\/contrib\/views\/css\/views.css?1":true,"\/connect\/sites\/default\/themes\/connect2\/widgets\/thumbs\/thumbs.css?1":true,"\/connect\/modules\/comment\/comment.css?1":true,"\/connect\/sites\/default\/modules\/contrib\/vote_up_down\/vud_comment\/vud_comment.css?1":true,"\/connect\/sites\/default\/modules\/custom\/symantec_blogs\/symantec_blogs.css?1":true,"\/connect\/sites\/default\/themes\/connect2\/css\/style-reset.css?1":true,"\/connect\/sites\/default\/themes\/connect2\/css\/style-menus.css?1":true,"\/connect\/sites\/default\/themes\/connect2\/css\/style-tooltip.css?1":true,"\/connect\/sites\/default\/themes\/connect2\/css\/style-profile.css?1":true,"\/connect\/sites\/default\/themes\/connect2\/css\/style-solrsearch.css?1":true,"\/connect\/sites\/default\/themes\/connect2\/css\/style.css?1":true,"\/connect\/sites\/default\/themes\/connect2\/css\/style-fonts.css?1":true,"\/connect\/sites\/default\/themes\/connect2\/css\/style-tabs.css?1":true,"\/connect\/sites\/default\/themes\/connect2\/css\/style-csharp.css?1":true,"\/connect\/sites\/default\/themes\/connect2\/css\/style-print.css?1":true}}});
+//--><!]]>
+</script>
+</div>        </div><!-- /footer-wrapper -->
+      </div><!-- /footer -->
+        </div><!-- /.fixed-width footer -->
+
+
+    <!-- SiteCatalyst code. Copyright 1997-2008 Omniture, Inc. More info available at http://www.omniture.com -->
+    <script type="text/javascript"><!--
+    /* You may give each page an identifying name, server, and channel on the next lines. */
+    if (typeof(s) != 'undefined') {
+      s.pageName=metaData['page_name'];
+      s.server="symantec"
+      s.channel=metaData['visitor_segment'] + ': ' + metaData['site_section']
+      s.pageType=metaData['page_type']
+      s.prop2=metaData['site_country']
+      s.prop3=metaData['site_language']
+      s.prop7=metaData['author_id']
+      s.prop18=metaData['connect_utility']
+      s.prop25=metaData['error_url']
+      s.prop27=metaData['visitor_segment']
+      s.prop30=metaData['user_id']
+      s.prop33=metaData['page_url']
+      s.prop41=metaData['site_section']
+      s.prop42=metaData['product_name']
+      s.prop43=metaData['product_category_name']
+      s.prop44=metaData['product_sub_category_name']
+      s.prop45=metaData['product_version_name']
+      s.prop46=metaData['content_format']
+      s.prop47=metaData['content_type'];
+      s.prop48=metaData['content_title']
+      s.prop49=metaData['site_sub_section']
+      s.prop50=metaData['connect_topic_selected']
+      /* Conversion Variables */
+      s.products=metaData['products']
+      s.eVar7=metaData['author_id']
+      s.eVar27=metaData['site_country']
+      s.eVar28=metaData['site_language']
+      s.eVar29=metaData['visitor_segment'] + ': ' + metaData['site_section']
+      s.eVar32=metaData['user_id']
+      s.eVar33=metaData['connect_utility']
+      s.eVar41=metaData['site_section']
+      s.eVar42=metaData['product_name']
+      s.eVar43=metaData['product_category_name']
+      s.eVar48=metaData['site_sub_section']
+      s.eVar49=metaData['content_title']
+      s.eVar50=metaData['visitor_segment']
+            /************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+      var s_code=s.t();if(s_code)document.write(s_code)//-->
+    }
+    </script>
+      <script type="text/javascript"><!--
+      if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')
+      //--></script>
+    <!--/DO NOT REMOVE/-->
+    <!-- End SiteCatalyst code. -->
+</body>
+</html>
