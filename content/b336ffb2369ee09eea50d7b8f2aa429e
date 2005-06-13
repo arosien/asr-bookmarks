@@ -1,0 +1,571 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Articles</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script language="JavaScript" src="/display/common/javascript/global.js" type="text/JavaScript"></script><link href="/display/common/css/print.css" rel="stylesheet" type="text/css" /></head><body><div id="content"><h1 xmlns=""><a href="/index.aspx"><img src="/display/InformIT/images/header/informit_printer.png" alt="" align="right" style="margin-left: 24px;" border="0" /></a>Setting Up a Secure Apache 2 Server</h1><p xmlns="">By <a href="/authors/bio.aspx?a=7e235bd1-4903-4c8d-91d7-43ed95456a40">Daniel Lopez</a></p><p xmlns="">Date: Nov 29, 2002</p><p xmlns="">Sample Chapter is provided courtesy of <a href="http://www.samspublishing.com">Sams</a>.</p><p xmlns=""><a href="article.aspx?p=30115">Return to the article</a></p><hr xmlns="" />This lesson covers how to configure SSL/TLS support for Apache. This enables sensitive information that flows between browsers and servers, such as credit card numbers, to travel securely and not be accessible by malicious third parties. The lesson starts with an overview of SSL and its cryptographic foundations and continues with step by step configuration of SSL certificates and the mod_ssl Apache module.<hr xmlns="" /><p>This hour explains how to set up an Apache server capable of securetransactions. In this hour, you will learn</p><ul><li><p>The installation and configuration of the <tt>mod_ssl</tt> Apachemodule</p></li><li><p>The SSL/TLS family of protocols and the underlying cryptographyconcepts</p></li><li><p>What certificates are and how to create and manage them</p></li></ul><h2>The Need for Security</h2><p>As the Internet became mainstream and the number of companies, individuals,and government agencies using it grew, so did the number and type oftransactions that needed protection. Those include financial transactions, suchas banking operations and electronic commerce, as well as exchange of sensitiveinformation, such as medical records and corporate documents. There are threerequirements to carry on secure communications on the Internet: confidentiality,integrity, and authentication.</p><h3>Confidentiality</h3><p>Confidentiality is the most obvious requirement for secure communications. Ifyou are transmitting or accessing sensitive information such as your credit cardnumber or your personal medical history, you certainly do not want a stranger toget hold of it.</p><h3>Integrity</h3><p>The information contained in the exchanged messages must be protected fromexternal manipulation. That is, if you place an order online to buy 100 sharesof stock, you do not want to allow anyone to intercept the message, change it toan order to buy 1000 shares, or replace the original message. Additionally, youwant to prevent an attacker from performing replay attacks, which, instead ofmodifying the original message, simply resend it several times to achieve acumulative effect.</p><h3>Authentication</h3><p>You need to decide whether to trust the organization or individual you arecommunicating with. To achieve this, you must authenticate the identity of theother party in the communication.</p><p>The science of cryptography studies the algorithms and methods used tosecurely transmit messages, ensuring the goals of confidentiality, integrity,and authenticity. Cryptanalysis is the science of breaking cryptographicsystems.</p>
+<h2>The SSL Protocol</h2>
+<p>SSL stands for Secure Sockets Layer and TLS stands for Transport Layer
+Security. They are a family of protocols that were originally designed to
+provide security for HTTP transactions, but that also can be used for a variety
+of other Internet protocols such as IMAP and NNTP. HTTP running over SSL is
+referred to as <i>secure HTTP</i>.</p>
+<p>Netscape released SSL version 2 in 1994 and SSL version 3 in 1995. TLS is an
+IETF standard designed to standardize SSL as an Internet protocol. It is just a
+modification of SSL version 3 with a small number of added features and minor
+cleanups. The TLS acronym is the result of arguments between Microsoft and
+Netscape over the naming of the protocol because each company proposed its own
+name. However, the name has not stuck and most people refer to these protocols
+simply as SSL. Unless otherwise specified, the rest of this hour refers to
+SSL/TLS as <i>SSL</i>.</p>
+<p>You specify that you want to connect to a server using SSL by replacing
+<tt>http</tt> with <tt>https</tt> in the protocol component of a URI. The
+default port for HTTP over SSL is 443.</p>
+<p>The following sections explain how SSL addresses the confidentiality,
+integrity, and authentication requirements outlined in the previous section. In
+doing so, it explains, in a simplified manner, the underlying mathematical and
+cryptographic principles SSL is based on.</p>
+<h3>Confidentiality</h3>
+<p>The SSL protocol protects data from eavesdropping by encrypting it.
+Encryption is the process of converting a message, the <i>plaintext</i>, into a
+new encrypted message, the <i>ciphertext</i>. Although the plaintext is readable
+by everyone, the ciphertext will be completely unintelligible to an
+eavesdropper. Decryption is the reverse process, which transforms the ciphertext
+into the original plaintext.</p>
+<p>Usually encryption and decryption processes involve an additional piece of
+information: a <i>key</i>. If both sender and receiver share the same key, the
+process is referred to as <i>symmetric</i> cryptography. If sender and receiver
+have different, complementary keys, the process is called <i>asymmetric</i> or
+<i>public key</i> cryptography.</p>
+<h4>Symmetric Cryptography</h4>
+<p>If the key used to both encrypt and decrypt the message is the same, the
+process is known as symmetric cryptography. DES, Triple-DES, RC4, and RC2 are
+algorithms used for symmetric key cryptography. Many of these algorithms can
+have different key sizes, measured in bits. In general, given an algorithm, the
+greater the number of bits in the key, the more secure the algorithm is and the
+slower it will run because of the increased computational needs of performing
+the algorithm.</p>
+<p>Symmetric cryptography is relatively fast compared to public key
+cryptography, which is explained in the next section. Symmetric cryptography has
+two main drawbacks, however. One drawback is that keys should be changed
+periodically, to avoid providing an eavesdropper with access to large amounts of
+material encrypted with the same key. The other drawback is the key distribution
+problem: How to get the keys to each one of the parties in a safe manner? This
+was one of the original limiting factors, and before the invention of public key
+cryptography, the problem was solved by periodically having people traveling
+around with suitcases full of keys.</p>
+<h4>Public Key Cryptography</h4>
+<p>Public key cryptography takes a different approach. Instead of both parties
+sharing the same key, there is a pair of keys: one public and the other private.
+The public key can be widely distributed, whereas the owner keeps the private
+key secret. These two keys are complementary; a message encrypted with one of
+the keys can be decrypted only by the other key.</p>
+<p>Anyone wanting to transmit a secure message to you can encrypt the message
+using your public key, assured that only the owner of the private
+key&#151;you&#151;can decrypt it. Even if the attacker has access to the public
+key, he cannot decrypt the communication. In fact, you want the public key to be
+as widely available as possible. Public key cryptography can also be used to
+provide message integrity and authentication. RSA is the most popular public key
+algorithm.</p>
+<p>The assertion that only the owner of the private key can decrypt it means
+that with the current knowledge of cryptography and availability of computing
+power, an attacker will not be able to break the encryption by brute force alone
+in a reasonable timeframe. If the algorithm or its implementation is flawed,
+realistic attacks are possible.</p>
+<div class="note">
+<p class="normaltitle"><b>NOTE</b></p>
+  <p>Public key cryptography is similar to giving away many identical lockpads and 
+    retaining the key that opens them all. Anybody who wants to send you a message 
+    privately can do so by putting it in a safe and locking it with one of those 
+    lockpads (public keys) before sending it to you. Only you have the appropriate 
+    key (private key) to open that lockpad (decrypt the message).</p>
+</div>
+<p>The SSL protocol uses public key cryptography in an initial handshake phase
+to securely exchange symmetric keys that can then be used to encrypt the
+communication.</p>
+<h3>Integrity</h3>
+<p>Data integrity can be preserved by performing a special calculation on the
+contents of the message and storing the result with the message itself. When the
+message arrives at its destination, the recipient can perform the same
+calculation and compare the results. If the contents of the message changed, the
+results of the calculation will be different.</p>
+<p>Digest algorithms perform just that process, creating message digests. A
+<i>message digest</i> is a method of creating a fixed-length representation of
+an arbitrary message that uniquely identifies it. You can think of it as the
+fingerprint of the message. A good message digest algorithm should be
+irreversible and collision resistant, at least for practical purposes.
+<i>Irreversible</i> means that the original message cannot be obtained from the
+digest and <i>collision resistant</i> means that no two different messages
+should have the same digest. Examples of digest algorithms are MD5 and SHA.</p>
+<p>Message digests alone, however, do not guarantee the integrity of the message
+because an attacker could change the text <i>and</i> the message digest. Message
+authentication codes, or MACs, are similar to message digests, but incorporate a
+shared secret key in the process. The result of the algorithm depends both on
+the message and the key used. Because the attacker has no access to the key, he
+cannot modify both the message and the digest. HMAC is an example of a message
+authentication code algorithm.</p>
+<p>The SSL protocol uses MAC codes to avoid replay attacks and to assure
+integrity of the transmitted information.</p>
+<h3>Authentication</h3>
+<p>SSL uses certificates to authenticate parties in a communication. Public key
+cryptography can be used to digitally sign messages. In fact, just by encrypting
+a message with your secret key, the receiver can guarantee it came from you.
+Other digital signature algorithms involve first calculating a digest of the
+message and then signing the digest.</p>
+<p>You can tell that the person who created that public and private key pair is
+the one sending the message. But how can you tie that key to a person or
+organization that you can trust in the real world? Otherwise, an attacker could
+impersonate his identity and distribute a different public key, claiming it is
+the legitimate one. Trust can be achieved by using digital certificates.
+<i>Digital certificates</i> are electronic documents that contain a public key
+and information about its owner (name, address, and so on). To be useful, the
+certificate must be signed by a trusted third party (certification authority, or
+CA) who certifies that the information is correct. There are many different
+kinds of CAs, as described later in the hour. Some of them are commercial
+entities, providing certification services to companies conducting business over
+the Internet. Other CAs are created by companies providing internal
+certification services.</p>
+<p>The CA guarantees that the information in the certificate is correct and that
+the key belongs to that individual or organization. Certificates have a period
+of validity and can expire or be revoked. Certificates can be chained so that
+the certification process can be delegated. For example, a trusted entity can
+certify companies, which in turn can take care of certifying its own
+employees.</p>
+<p>If this whole process is to be effective and trusted, the certificate
+authority must require appropriate proof of identity from individuals and
+organizations before it issues a certificate.</p>
+<p>By default, browsers include a collection of root certificates for trusted
+certificate authorities.</p>
+<h4>SSL and Certificates</h4>
+<p>The main standard defining certificates is X.509, adapted for Internet usage.
+An X.509 certificate contains the following information:</p>
+<ul>
+<li><p><b>Issuer:</b> The name of the signer of the certificate</p></li>
+<li><p><b>Subject:</b> The person holding the key being certified</p></li>
+<li><p><b>Subject public key:</b> The public key of the subject</p></li>
+<li><p><b>Control information:</b> Data such as the dates in which the
+certificate is valid</p></li>
+<li><p><b>Signature:</b> The signature that covers the previous data</p></li>
+</ul>
+<p>You can check a real-life certificate by connecting to a secure server with
+your browser. If the connection has been successful, a little padlock icon or
+another visual clue will be added to the status bar of your browser. With
+Internet Explorer, you can click the locked padlock icon to open a page
+containing information on the SSL connection and the remote server certificate.
+You can access the same information by selecting Properties, and then
+Certificates from the File menu. Other browsers, such as Netscape, Mozilla, and
+Konqueror provide a similar interface.</p>
+<p>Open the
+<a href="https://www.ibm.com" target="new">https://www.ibm.com</a>
+URL in your browser and analyze the certificate, following the steps outlined in
+the preceding paragraph. You can see how the issuer of the certificate is the
+Equifax Secure E-Business Certification Authority-2, which, in turn, has been
+certified by the Thawte CA. The page downloaded seamlessly because Thawte is a
+trusted CA that has its own certificates bundled with Internet Explorer and
+Netscape Navigator.</p>
+<p>To check which certificates are bundled with your Internet Explorer browser,
+select Tools, Internet Options, Content, Certificates, Trusted Root
+Certification Authorities.</p>
+<p>You can see that both issuer and subject are provided as distinguished names
+(DN), a structured way of providing a unique identifier for every element on the
+network. In the case of the IBM certificate, the DN is C=US, S=New York,
+L=Armonk, O=IBM,
+CN=www.ibm.com.</p>
+<p>C stands for country, S for state, L for locality, O for organization, and CN
+for common name. In the case of a Web site certificate, the common name
+identifies the fully qualified domain name of the Web site (FQDN). This is the
+server name part of the URL; in this case, www.ibm.com. If this does
+not match what you typed in the top bar, the browser will issue an error.</p>
+<p><a href="javascript:popUp('/content/images/chap17_0672323559/elementLinks/17fig01.jpg')">Figure 17.1</a> shows the certificate information 
+  described earlier.</p>
+<p><b><a href="javascript:popUp('/content/images/chap17_0672323559/elementLinks/17fig01.jpg')">Figure 17.1</a> Certificate information.</b></p>
+<h4>SSL Protocol Summary</h4>
+<p>You have seen how SSL achieves confidentiality via encryption, integrity via
+message authentication codes, and authentication via certificates and digital
+signatures.</p>
+<p>The process to establish an SSL connection is the following:</p>
+<ol>
+<li><p>The user uses his browser to connect to the remote Apache
+server.</p></li>
+<li><p>The handshake phase starts, and the browser and server exchange keys and
+certificate information.</p></li>
+<li><p>The browser checks the validity of the server certificate, including that
+it has not expired, that it has been issued by a trusted CA, and so on.</p></li>
+<li><p>Optionally, the server can require the client to present a valid
+certificate as well.</p></li>
+<li><p>Server and client use each other&#039;s public key to securely agree on a
+symmetric key.</p></li>
+<li><p>The handshake phase concludes and transmission continues using symmetric
+cryptography.</p></li>
+</ol>
+
+<h2>Installing SSL</h2>
+<p>Now that you&#039;ve learned all about SSL, you need to install SSL support
+for Apache. SSL support is provided by <tt>mod_ssl</tt>, a module that is
+included with Apache but is not enabled by default. <tt>mod_ssl</tt>, in turn,
+requires the OpenSSL library&#151;an open source implementation of the SSL/TLS
+protocols and a variety of other cryptographic algorithms. OpenSSL is based on
+the SSLeay library developed by Eric A. Young and Tim J. Hudson. You can learn
+more about <tt>mod_ssl</tt> and OpenSSL in the Web sites noted in the reference
+section at the end of the hour.</p>
+<h3>OpenSSL</h3>
+<p>This section explains how to download and install the OpenSSL toolkit for
+both Windows and Unix variants.</p>
+<h4>Windows</h4>
+<p>At the time of writing this book, the Apache Software Foundation does not
+provide an SSL-enabled binary installer for Windows due to legal restrictions.
+That situation is likely to change soon, and you will be able to access
+precompiled SSL module and libraries. Check the Apache site for up-to-date
+information. The rest of the hour assumes that you have access to the
+<tt>openssl.exe</tt> command line utility, which will be included in the
+<tt>bin/</tt> directory of the SSL-enabled Apache distribution. It is a utility
+for generating certificates, keys, signing requests, and so on.</p>
+<h4>Unix</h4>
+<p>If you are running a recent Linux or FreeBSD distribution, OpenSSL might
+already be installed in your system. Use the package management tools bundled
+with your distribution to determine whether that is the case or, otherwise, to
+install it.</p>
+<p>If you need to install OpenSSL from source, you can download OpenSSL from
+<a href="http://www.openssl.org" target="new">http://www.openssl.org</a>. After
+you have downloaded the software, you need to uncompress it and <tt>cd</tt> into
+the created directory:</p>
+<pre># gunzip &lt; openssl*.tar.gz | tar xvf -
+# cd openssl*</pre>
+<p>OpenSSL contains a config script to help you build the software. You must
+provide the path to which the software will install. The path used in this hour
+is /usr/local/ssl/install, and you probably need to have root privileges to
+install the software there. You can install the software as a regular user, but
+to do so, you will need to change the path. Then you must build and install the
+software:</p>
+<pre># ./config --prefix=/usr/local/ssl/install 
+--openssldir=/usr/local/ssl/install/openssl
+# make
+# make install</pre>
+<p>If everything went well, you have now successfully installed the OpenSSL
+toolkit. The openssl command-line tool will be located in
+/usr/local/ssl/install/bin/.</p>
+<p>This tool is used to create and manipulate certificates and keys and its
+usage is described in a later section on certificates.</p>
+<h3><tt>mod_ssl</tt></h3>
+<p>In the past, SSL extensions for Apache had to be distributed separately
+because of export restrictions. Although there are limitations in redistribution
+of binaries that need to be solved and clarified, these restrictions no longer
+exist for distribution of source code, and mod_ssl is bundled and integrated
+with Apache 2.0. This section describes the steps necessary to build and install
+this module. <tt>mod_ssl</tt> depends on the OpenSSL library, so a valid OpenSSL
+installation is required.</p>
+<h4>Unix</h4>
+<p>If you are using the Apache 2.0 server that came installed with your
+operating system, chances are that it already includes <tt>mod_ssl</tt>. Use the
+package management tools bundled with your distribution to install
+<tt>mod_ssl</tt> if it is not present in your system.</p>
+<p>When you build Apache 2.0 from source, you must pass the following options to
+enable and build <tt>mod_ssl</tt> at compile time.</p>
+<pre>--enable-ssl --with-ssl=/usr/local/ssl/install/openssl</pre>
+<p>This assumes that you installed OpenSSL in the location described in previous
+sections.</p>
+<p>If you compiled <tt>mod_ssl</tt> statically into Apache, you can check
+whether it is present by issuing the following command, which provides a list of
+compiled-in modules:</p>
+<pre># /usr/local/apache2/bin/httpd -l</pre>
+<p>The command assumes that you installed Apache in the /usr/local/apache2
+directory.</p>
+<p>If <tt>mod_ssl</tt> was compiled as a dynamic loadable module, the following
+line must be added or uncommented to the configuration file:</p>
+<pre>LoadModule ssl_module modules/libmodssl.so</pre>
+
+<h2>Managing Certificates</h2>
+<p>To have a working SSL server implementation, the first step is to create a
+server certificate. This section explains in detail how to create and manage
+certificates and keys by using the <tt>openssl</tt> command-line tool. For
+example, if you are using SSL for an e-commerce site, encryption prevents
+customer data from eavesdroppers and the certificate enables customers to verify
+that you are who you claim to be.</p>
+<div class="note">
+<p class="normaltitle"><b>NOTE</b></p>
+  <p>The examples refer to the Unix version of the command-line program <tt>openssl</tt>. 
+    If you are running under Windows, you need to use <tt>openssl.exe</tt> instead 
+    and change the paths of the examples to use backslashes instead of forward 
+    slashes. The examples also assume that OpenSSL was installed in the path described 
+    earlier in the OpenSSL installation section.</p>
+</div>
+<h3>Creating a Key Pair</h3>
+<p>You must have a public/private key pair before you can create a certificate
+request. Assume that the FQDN for the certificate you want to create is
+<tt>www.example.com</tt>. (You will need to substitute this name for the
+FQDN of the machine you have installed Apache on.) You can create the keys by
+issuing the following command:</p>
+<pre># ./usr/local/ssl/install/bin/openssl genrsa -des3 -rand <i>file1</i>:<i>file2</i>:<i>file3</i> 
+   -out <i>www.example.com</i>.key 1024</pre>
+<p>genrsa indicates to OpenSSL that you want to generate a key pair.</p>
+<p><tt>des3</tt> indicates that the private key should be encrypted and
+protected by a pass phrase.</p>
+<p>The <tt>rand</tt> switch is used to provide OpenSSL with random data to
+ensure that the generated keys are unique and unpredictable. Substitute
+<tt><i>file1</i></tt>, <tt><i>file2</i></tt><i>,</i> and so on, for the path to
+several large, relatively random files for this purpose (such as a kernel image,
+compressed log files, and so on). This switch is not necessary on Windows
+because the random data is automatically generated by other means.</p>
+<p>The <tt>out</tt> switch indicates where to store the results.</p>
+<p><tt>1024</tt> indicates the number of bits of the generated key.</p>
+<p>The result of invoking this command looks like this:</p>
+<pre>625152 semi-random bytes loaded
+Generating RSA private key, 1024 bit long modulus
+.....++++++
+.........................++++++
+e is 65537 (0x10001)
+Enter PEM pass phrase:
+Verifying password - Enter PEM pass phrase:</pre>
+<p>As you can see, you will be asked to provide a pass phrase. Choose a secure
+one. The pass phrase is necessary to protect the private key and you will be
+asked for it whenever you want to start the server. You can choose not to
+protect the key. This is convenient because you will not need to enter the pass
+phrase during reboots, but it is highly insecure and a compromise of the server
+means a compromise of the key as well. In any case, you can choose to unprotect
+the key either by leaving out the -des3 switch in the generation phase or by
+issuing the following command:</p>
+<pre># ./usr/local/ssl/i<tt>nstall/bin/openssl rsa -in www.example.com.key \</tt>
+<tt>    -out www.example.com.key.unsecure</tt></pre>
+<p>It is a good idea to back up the <tt>www.example.com.key</tt> file.
+You can learn about the contents of the key file by issuing the following
+command:</p>
+<pre># ./usr/local/ssl/bin/openssl rsa -noout -text -in www.example.com.key</pre>
+<h3>Creating a Certificate Signing Request</h3>
+<p>To get a certificate issued by a CA, you must submit what is called a
+<i>certificate signing request</i>. To create a request, issue the following
+command:</p>
+<pre># ./usr/local/ssl/install/bin/openssl req -new -key www.example.com.key
+ -out www.example.com.csr</pre>
+<p>You will be prompted for the certificate information:</p>
+<pre>Using configuration from /usr/local/ssl/install/openssl/openssl.cnf
+Enter PEM pass phrase:
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter &#039;.&#039;, the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:US
+State or Province Name (full name) [Some-State]:CA
+Locality Name (eg, city) []: San Francisco
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:.
+Organizational Unit Name (eg, section) []:.
+Common Name (eg, YOUR name) []:www.example.com
+Email Address []:administrator@example.com
+Please enter the following &#039;extra&#039; attributes
+to be sent with your certificate request
+A challenge password []:
+An optional company name []:</pre>
+<p>It is important that the Common Name field entry matches the address that
+visitors to your Web site will type in their browsers. This is one of the checks
+that the browser will perform for the remote server certificate. If the names
+differ, a warning indicating the mismatch will be issued to the user.</p>
+<p>The certificate is now stored in <tt>www.example.com.csr.</tt> You can
+learn about the contents of the certificate via the following command:</p>
+<pre># ./usr/local/ssl/install/bin/openssl req -noout -text 
+    -in www.example.com.csr</pre>
+<p>You can submit the certificate signing request file to a CA for processing.
+VeriSign and Thawte are two of those CAs. You can learn more about their
+particular submission procedures at their Web sites:</p>
+<ul>
+<li><p><b>VeriSign:</b>
+<a href="http://digitalid.verisign.com/server/apacheNotice.htm" target="new">http://digitalid.verisign.com/server/apacheNotice.htm</a></p></li>
+<li><p><b>Thawte:</b>
+<a href="http://www.thawte.com/" target="new">http://www.thawte.com</a></p></li>
+</ul>
+<h3>Creating a Self-Signed Certificate</h3>
+<p>You can also create a self-signed certificate. That is, you can be both the
+issuer and the subject of the certificate. Although this is not very useful for
+a commercial Web site, it will enable you to test your installation of
+<tt>mod_ssl</tt> or to have a secure Web server while you wait for the official
+certificate from the CA.</p>
+<pre># ./usr/local/ssl/install/bin/openssl x509 -req -days 30 
+-in www.example.com.csr -signkey www.example.com.key 
+-out www.example.com.cert</pre>
+<p>You need to copy your certificate <tt>www.example.com.cert</tt>
+(either the one returned by the CA or your self-signed one) to
+/usr/local/ssl/install/openssl/certs/ and your key to
+/usr/local/ssl/install/openssl/private/.</p>
+<p>Protect your key file by issuing the following command:</p>
+<pre># chmod 400 www.example.com.key</pre>
+
+<h2>SSL Configuration</h2>
+<p>The previous sections introduced the (not-so-basic) concepts behind SSL and
+you have learned how to generate keys and certificates. Now, finally, you can
+configure Apache to support SSL. <tt>mod_ssl</tt> must either be compiled
+statically or, if you have compiled as a loadable module, the appropriate
+<tt>LoadModule</tt> directive must be present in the file.</p>
+<p>If you compiled Apache yourself, a new Apache configuration file, named
+<tt>ssl.conf</tt>, should be present in the <tt>conf/</tt> directory. That file
+contains a sample Apache SSL configuration and is referenced from the main
+<tt>httpd.conf</tt> file via an <tt>Include</tt> directive.</p>
+<p>If you want to start your configuration from scratch, you can add the
+following configuration snippet to your Apache configuration file:</p>
+<pre>Listen 80
+Listen 443 
+&lt;VirtualHost _default_:443&gt;
+ServerName http://www.example.com
+SSLEngine on
+SSLCertificateFile \
+/usr/local/ssl/install/openssl/certs/http://www.example.com.cert
+SSLCertificateKeyFile \
+/usr/loca/ssl/install/openssl/certs/http://www.example.com.key
+&lt;/VirtualHost&gt;</pre>
+<p>With the previous configuration, you set up a new virtual host that will
+listen to port 443 (the default port for HTTPS) and you enable SSL on that
+virtual host with the SSLEngine directive.</p>
+<p>You need to indicate where to find the server&#039;s certificate and the file
+containing the associated key. You do so by using <tt>SSLCertificateFile</tt>
+and <tt>SSLCertificateKeyfile</tt> directives.</p>
+<h3>Starting the Server</h3>
+<p>Now you can stop the server if it is running, and start it again. If your key
+is protected by a pass phrase, you will be prompted for it. After this, Apache
+will start and you should be able to connect securely to it via the
+<tt>https:</tt><tt>//http://www.example.com/ </tt>URL.</p>
+<p>If you compiled and installed Apache yourself, in many of the vendor
+configuration files, you can see that the SSL directives are surrounded by an
+<tt>&lt;IfDefine SSL&gt;</tt> block. That allows for conditional starting of the
+server in SSL mode. If you start the <tt>httpd</tt> server binary directly, you
+can pass it the <tt>-DSSL</tt> flag at startup. You can also use the
+<tt>apachectl</tt> script by issuing the <tt>apachectl startssl</tt> command.
+Finally, if you always want to start Apache with SSL support, you can just
+remove the <tt>&lt;ifDefine&gt;</tt> section and start Apache in the usual
+way.</p>
+<p>If you are unable to successfully start your server, check the Apache error
+log for clues about what might have gone wrong. For example, if you cannot bind
+to the port, make sure that another Apache is not running already. You must have
+administrator privileges to bind to port 443; otherwise, you can change the port
+to 8443 and access the URL via
+<tt>https:</tt><tt>//http://www.example.com:8443</tt>.</p>
+<h3>Configuration Directives</h3>
+<p><tt>mod_ssl</tt> provides comprehensive technical reference documentation.
+This information will not be reproduced here; rather, I will explain what is
+possible and which configuration directives you need to use. You can then refer
+to the online SSL documentation bundled with Apache for the specific syntax or
+options.</p>
+<h4>Algorithms</h4>
+<p>You can control which ciphers and protocols are used via the
+<tt>SSLCipherSuite</tt> and <tt>SSLProtocol</tt> commands. For example, you can
+configure the server to use only strong encryption with the following
+configuration:</p>
+<pre>SSLProtocol all
+SSLCipherSuite HIGH:MEDIUM</pre>
+<p>See the Apache documentation for a detailed description of all available
+ciphers and protocols.</p>
+<h4>Client Certificates</h4>
+<p>Similarly to how clients can verify the identity of servers using server
+certificates, servers can verify the identity of clients by requiring a client
+certificate and making sure that it is valid.</p>
+<p><tt>SSLCACertificateFile</tt> and <tt>SSLCACertificatePath</tt> are two
+Apache directives used to specify trusted Certificate Authorities. Only clients
+presenting certificates signed by these CAs will be allowed access to the
+server.</p>
+<p>The <tt>SSLCACertificateFile</tt> directive takes a file containing a list of
+CAs as an argument. Alternatively, you could use the
+<tt>SSLCACertificatePath</tt> directive to specify a directory containing
+trusted CA files. Those files must have a specific format, described in the
+documentation. <tt>SSLVerifyClient</tt> enables or disables client certificate
+verification. <tt>SSLVerifyDepth</tt> controls the number of delegation levels
+allowed for a client certificate. The <tt>SSLCARevocationFile</tt> and
+<tt>SSLCARevocationPath</tt> directives enable you to specify certificate
+revocation lists to invalidate certificates.</p>
+<h4>Performance</h4>
+<p>SSL is a protocol that requires intensive calculations. <tt>mod_ssl</tt> and
+OpenSSL allow several ways to speed up the protocol by caching some of the
+information about the connection. You can cache certain settings using the
+<tt>SSLSessionCache</tt> and <tt>SSLSessionCacheTimeout</tt> directives. There
+is also built-in support for specialized cryptographic hardware that will
+perform the CPU-intensive computations and offload the main processor. The
+<tt>SSLMutex</tt> directive enables you to control the internal locking
+mechanism of the SSL engine. The <tt>SSLRandomSeed</tt> directive enables you to
+specify the mechanism to seed the random-number generator required for certain
+operations. The settings of both directives can have an impact on
+performance.</p>
+<h4>Logging</h4>
+<p><tt>mod_ssl</tt> hooks into Apache&#039;s logging system and provides support
+for logging any SSL-related aspect of the request, ranging from the protocol
+used to the information contained in specific elements of a client certificate.
+This information can also be passed to CGI scripts via environment variables by
+using the <tt>StdEnvVars</tt> argument to the <tt>Options</tt> directive. You can get a listing of the available SSL variables at
+<a href="http://httpd.apache.org/docs-2.0/ssl/ssl_compat.html" target="new">http://httpd.apache.org/docs-2.0/ssl/ssl_compat.html</a>.</p>
+<h3>The <tt>SSLOptions</tt> Directive</h3>
+<p>Many of these options can be applied in a per-directory or per-location
+basis. The SSL parameters might be renegotiated for those URLs. This can be
+controlled via the <tt>SSLOptions</tt> directive.</p>
+<p>The <tt>SSLPassPhraseDialog</tt> directive can be used to avoid having to enter a
+pass phrase at startup by designating an external program that will be invoked
+to provide it.</p>
+<h3>Access Control</h3>
+<p>The <tt>SSLRequireSSL</tt> directive enables you to force clients to access
+the server using SSL. The <tt>SSLRequire</tt> directive enables you to specify a
+set of rules that have to be met before the client is allowed access.
+<tt>SSLRequire</tt> syntax can be very complex, but itallows an incredible
+amount of flexibility. Listing 17.1 shows a sample configuration from the
+<tt>mod_ssl</tt> documentation that restricts access based on the client
+certificate and the network the request came from. Access will be granted if one
+of the following is met:</p>
+<ul>
+<li><p>The SSL connection does not use an export (weak) cipher or a NULL cipher,
+the certificate has been issued by a particular CA and for a particular group,
+and the access takes place during workdays (Monday to Friday) and working hours
+(8:00 a.m. to 8:00 p.m.).</p></li>
+<li><p>The client comes from an internal, trusted network.</p></li>
+</ul>
+<p>You can check the documentation for <tt>SSLRequire</tt> for a complete syntax
+reference.</p>
+<h4><b>Listing 17.1 </b><tt>SSLRequire</tt> Example</h4>
+<pre>SSLRequire (  %{SSL_CIPHER} !~ m/^(EXP|NULL)-/ \
+      and %{SSL_CLIENT_S_DN_O} eq &quot;Snake Oil, Ltd.&quot; \
+      and %{SSL_CLIENT_S_DN_OU} in {&quot;Staff&quot;, &quot;CA&quot;, &quot;Dev&quot;} \
+      and %{TIME_WDAY} &gt;= 1 and %{TIME_WDAY} &lt;= 5 \
+      and %{TIME_HOUR} &gt;= 8 and %{TIME_HOUR} &lt;= 20    ) \
+      or %{REMOTE_ADDR} =~ m/^192\.76\.162\.[0-9]+$/</pre>
+<h3>Reverse Proxy with SSL</h3>
+<p>Although at the time this book was written the SSL reverse proxy
+functionality was not included in <tt>mod_ssl</tt> for Apache 2.0, it is likely
+to be included in the future. That functionality enables you to encrypt the
+reverse proxy connection to backend servers and to perform client and server
+certificate authentication on that connection. The related directives are
+<tt>SSLProxyMachineCertificatePath</tt>,
+<tt>SSLProxyMachineCertificateFile</tt>, <tt>SSLProxyVerify</tt>,
+<tt>SSLProxyVerifyDepth</tt>, <tt>SSLProxyCACertificatePath</tt>,
+<tt>SSLProxyEngine</tt>, and <tt>SSLProxyCACertificateFile</tt>. Their syntax is
+similar to their regular counterparts. You can find more information about the
+Apache reverse proxy in Hour 15.<h2>Problems with Specific Browser Versions</h2><p>Some browsers have known problems with specific versions of the SSL protocolor certain features. Certain environment variables can be set to force specificbehaviors. The following example, included in the default configuration file, isa workaround for bugs in the SSL implementation of Internet Explorerbrowsers.</p><pre>SetEnvIf User-Agent &quot;.*MSIE.*&quot; nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0</pre>
+<h2>Summary</h2><p>This hour explained the fundamentals of the SSL protocol and<tt>mod_ssl</tt>, the Apache module that implements support for SSL. You learnedhow to install and configure <tt>mod_ssl</tt> and the OpenSSL libraries, and howto use the <tt>openssl</tt> command-line tool for certificate and key generationand management. You can access the <tt>mod_ssl</tt> reference documentation forin-depth syntax explanation and additional configuration information. Bear inmind also that SSL is just part of maintaining a secure server, which includesapplying security patches, OS configuration, access control, physical security,and so on.</p>
+<h2>Q&amp;A</h2><ol type="A">  <li value="17">     <p><b> Can I have SSL with name-based virtual hosting?</b></p>  </li>  <li value="1">     <p> A question that comes up frequently is how to make name-based virtual       hosts work with SSL. The answer is that you can&#039;t, at least currently.       Name-based virtual hosts depend on the <tt>Host</tt> header of the HTTP       request, but the certificate verification happens when the SSL connection       is being established and no HTTP request can be sent. There is a protocol       for upgrading an existing HTTP connection to TLS, but it is mostly unsupported       by current browsers (see RFC 2817).</p>  </li>  <li value="17">     <p><b> Can I use SSL with other protocols?</b></p>  </li>  <li value="1">     <p> <tt>mod_ssl</tt> implements the SSL protocol as a filter. Other protocols       using the same Apache server can easily take advantage of the SSL.</p>  </li></ol>
+<h2>Quiz</h2><ol><li><p>How can you prevent the prompting for a password at startup?</p></li><li><p>How can you use the <tt>openssl</tt> command-line tool to connect to anSSL-enabled server?</p></li><li><p>		The <tt>openssl</tt> command-line tool enables you to connect toSSL-enabled servers. Read the documentation and figure out how to do it. You canuse the Unix man page for <tt>openssl</tt> or read the documentation at<a href="http://www.openssl.org" target="new">http://www.openssl.org</a>.</p></li></ol>
+<h2>Quiz Answers</h2>
+<ol>
+<li><p>You can use the <tt>SSLPassPhraseDialog</tt> method to point to a program that
+will provide the pass phrase. The program should make the appropriate checks to
+make sure that it reveals the pass phrase only to Apache.</p></li>
+<li><p>		Additionally, you could simply remove the password protection from the
+file containing the key, as described earlier in the hour. This has severe
+security implications, but it can be very convenient.</p>
+<pre># openssl s_client -connect http://www.ibm.com:443</pre>
+<p>You will see information related to the connection, certificates,
+ciphers, and so on. Then you can type</p>
+<pre>GET / HTTP/1.0</pre>
+    <p>to get the contents of the index HTML page, similar to the way you
+learned in Hour 2, &quot;Understanding Apache Internals,&quot; with
+telnet.</p></li>
+<li><p>You can configure many aspects of the connection, as explained in the
+documentation.</p></li>
+</ol>
+<h2>Related Directives</h2><p>This section contains directives mentioned in this hour or that are relatedto topics discussed in this hour. You can consult the Apache referencedocumentation for comprehensive syntax information and usage.</p><h3>Keys and Certificates</h3><ul><li><p><tt><b>SSLPassPhraseDialog</b></tt><b>:</b> Alternative ways ofspecifying a pass phrase to decrypt key</p></li><li><p><tt><b>SSLCertificateFile</b></tt><b>:</b> File containing servercertificate</p></li><li><p><tt><b>SSLCertificateKeyFile</b></tt><b>:</b> File containing serverkey</p></li><li><p><tt><b>SSLCertificateChainFile</b></tt><b>:</b> File containing chain ofcertificates used to sign the server certificate</p></li><li><p><tt><b>SSLCACertificatePath</b></tt><b>:</b> Path to a directorycontaining CA certificates for client authentication</p></li><li><p><tt><b>SSLCACertificateFile</b></tt><b>:</b> Path to a file containing CAcertificates for client authentication</p></li><li><p><tt><b>SSLCARevocationPath</b></tt><b>:</b> Path to a directorycontaining CA for revoking client certificates</p></li><li><p><tt><b>SSLCARevocationFile</b></tt><b>:</b> Path to a file containing CAfor revoking client certificates</p></li><li><p><tt><b>SSLVerifyClient</b></tt><b>:</b> Enable client certificateverification</p></li><li><p><tt><b>SSLVerifyDepth</b></tt><b>:</b> Establish maximum depth to verifyclient certificates to</p></li></ul><h3>SSL Protocol</h3><ul><li><p><tt><b>SSLProtocol</b></tt><b>:</b> Versions of SSL supported</p></li><li><p><tt><b>SSLCipherSuite</b></tt><b>:</b> Ciphers supported</p></li><li><p><tt><b>SSLEngine</b></tt><b>:</b> Enable SSL protocol engine</p></li><li><p><tt><b>SSLRequireSSL</b></tt><b>:</b> Require client to connect to serverusing SSL</p></li><li><p><tt><b>SSLRequire</b></tt><b>:</b> Require specific rules for client toconnect</p></li></ul><h3>Performance</h3><ul><li><p><tt><b>SSLMutex</b></tt><b>:</b> Locking mechanism</p></li><li><p><tt><b>SSLRandomSeed</b></tt><b>:</b> Initialize random numbergenerator</p></li><li><p><tt><b>SSLSessionCache</b></tt><b>:</b> Specify an SSL-cachingmechanism</p></li><li><p><tt><b>SSLSessionCacheTimeout</b></tt><b>:</b> Caching sessions expirytime</p></li></ul><h3>Others</h3><li><p><tt><b>SSLOptions</b></tt><b>:</b> Control various aspects of SSLoperation</p></li><h3>Reverse Proxy</h3><li><p><tt><b>SSLProxyMachineCertificatePath</b></tt>,<b><tt>SSLProxyMachineCertificateFile</tt></b>, <tt><b>SSLProxyVerify</b></tt>,<tt><b>SSLProxyVerifyDepth</b></tt>, <tt><b>SSLProxyCACertificatePath</b></tt>,<tt><b>SSLProxyCACertificateFile</b></tt><b>:</b> Equivalent to their regularserver counterparts, but related to the reverse proxy connection</p></li>
+<h2>Further Reading</h2>
+<p>An excellent, highly readable cryptography reference book is <i>Applied
+Cryptography: Protocols, Algorithms, and Source Code in C</i>, Second Edition,
+by Bruce Schneier; ISBN 0471117099.</p>
+<p>A great book on the SSL protocol, and especially useful if you are
+programming with SSL libraries, is <a href="http://www.informit.com/content/index.asp?product_id={D4BC8D13-2C3D-48F6-811C-194410070A34}" target="new"><i>SSL and TLS: Designing and Building Secure
+Systems</i></a>, by Eric Rescorla; ISBN 0201615983.</p>
+<p>OpenSSL project:
+<a href="http://www.openssl.org" target="new">http://www.openssl.org</a></p>
+<p>ModSSL project:
+<a href="http://www.modssl.org" target="new">http://www.modssl.org</a></p>
+<p>OpenBSD, a free Unix server operating system with a focus on security:
+<a href="http://www.openbsd.com" target="new">http://www.openbsd.com</a></p>
+<p>Apache reference, by the original author of <tt>mod_ssl</tt>:
+<a href="http://www.apacheref.com" target="new">http://www.apacheref.com</a></p>
+</ul>
+<p></p>
+
+<hr /><div id="footer"><p class="copyright">&copy; 2010 Pearson Education, Inc. All rights reserved.</p><p class="address">800 East 96th Street Indianapolis, Indiana 46240</p></div></div></body></html>
