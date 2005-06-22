@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.0//EN">
+<!--Converted with LaTeX2HTML 96.1 (Feb 5, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Constructing Computer Virus Phylogenies</TITLE>
+<META NAME="description" CONTENT="Constructing Computer Virus Phylogenies">
+<META NAME="keywords" CONTENT="virall">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="virall.css">
+</HEAD>
+<body background="../../../../../background.gif" bgcolor=#FFFFFF TEXT=#000000 LINK=#2035A5 ALINK=#CEC227 VLINK=#B70328><a href="#main"><img src="images/shared/locked/clear.gif" height="1" border="0" width="1" alt="Skip to main content" /></a>
+<P>
+<BR>
+<A NAME="tex2html7" HREF="virall-node1.html">
+<IMG ALIGN=BOTTOM ALT="next" SRC="../../images/next_motif.gif" BORDER = 0></A>  
+<IMG ALIGN=BOTTOM ALT="previous" SRC="../../images/previous_motif_gr.gif" BORDER = 0>  
+<IMG ALIGN=BOTTOM ALT="up" SRC="../../images/up_motif_gr.gif" BORDER = 0>      
+<BR><HR SIZE=6 WIDTH=80%>
+<TABLE BORDER=0>
+<TR><TD>
+<B> Next </B></TD><TD>   <A NAME="tex2html8" HREF="virall-node1.html">1- Introduction</A><BR>
+</TD></TR>
+<P>
+</TABLE><HR> <P>
+
+<a name="main"></a><H1 ALIGN=CENTER>Constructing Computer Virus Phylogenies</H1>
+<P ALIGN=CENTER><STRONG>Leslie Ann Goldberg(1),
+
+                 Paul W. Goldberg(2),
+Cynthia A. Phillips(3)
+
+             and Gregory B. Sorkin(4)
+</STRONG></P><P><BR><BR>
+<P>
+(1) University of Warwick, Coventry&nbsp;CV4&nbsp;7AL, United Kingdom<A NAME="tex2html1" HREF="virall-footnode.html#436"><IMG  ALIGN=BOTTOM ALT="gif" SRC="../../images/foot_motif.gif" BORDER = 0></A>
+ - 
+(2) Aston University, Aston Triangle, Birmingham&nbsp;B4&nbsp;7ET, United Kingdom<A NAME="tex2html2" HREF="virall-footnode.html#16"><IMG  ALIGN=BOTTOM ALT="gif" SRC="../../images/foot_motif.gif" BORDER = 0></A>
+ - 
+(3) Sandia National Labs, P.O.&nbsp;Box&nbsp;5800, Albuquerque NM 87185<A NAME="tex2html3" HREF="virall-footnode.html#17"><IMG  ALIGN=BOTTOM ALT="gif" SRC="../../images/foot_motif.gif" BORDER = 0></A>
+ - 
+(4) IBM T.J.&nbsp;Watson Research Center, P.O.&nbsp;Box&nbsp;218, Yorktown Heights NY 10598
+
+<P>
+<P>
+<H3 CLASS=ABSTRACT>Abstract:</H3>
+<P CLASS=ABSTRACT>There has been much recent algorithmic work on the problem of
+reconstructing the evolutionary history of biological species. Computer
+virus specialists are interested in finding the evolutionary
+history of computer viruses -- a virus is often written using
+code fragments from one or more other viruses, which are its immediate
+ancestors. A phylogeny for a collection of computer viruses is a
+directed acyclic graph whose nodes are the viruses and whose edges map
+ancestors to descendants and satisfy the property that each code
+fragment is ``invented'' only once.
+To provide a simple explanation for the data,
+we consider the problem of
+constructing such a phylogeny with a minimum number of edges.
+This optimization problem is NP-hard,
+and we present positive and negative results for
+associated approximation problems.
+When tree solutions exist, they can be constructed and randomly
+sampled in polynomial time.
+</P><P>
+<BR> <HR>
+<UL> 
+<LI> <A NAME="tex2html9" HREF="virall-node1.html#SECTION00010000000000000000">1- Introduction</A>
+<UL> 
+<LI> <A NAME="tex2html10" HREF="virall-node2.html#SECTION00011000000000000000">1.1- Problem motivation</A>
+<LI> <A NAME="tex2html11" HREF="virall-node3.html#SECTION00012000000000000000">1.2- Biological application</A>
+<LI> <A NAME="tex2html12" HREF="virall-node4.html#SECTION00013000000000000000">1.3- Paper organization and results</A>
+<LI> <A NAME="tex2html13" HREF="virall-node5.html#SECTION00014000000000000000">1.4- Related work</A>
+</UL> 
+<LI> <A NAME="tex2html14" HREF="virall-node6.html#SECTION00020000000000000000">2- Computing a 0-1-0 phylogeny</A>
+<UL> 
+<LI> <A NAME="tex2html15" HREF="virall-node7.html#SECTION00021000000000000000">2.1- The atomic-set algorithm for computing 0-1-0 phylogenies</A>
+<LI> <A NAME="tex2html16" HREF="virall-node8.html#SECTION00022000000000000000">2.2- The Minimum Spanning Tree algorithm</A>
+</UL> 
+<LI> <A NAME="tex2html17" HREF="virall-node9.html#SECTION00030000000000000000">3- Phylographs and phyloDAGs</A>
+<UL> 
+<LI> <A NAME="tex2html18" HREF="virall-node10.html#SECTION00031000000000000000">3.1- Hardness of approximation of phylograph</A>
+<LI> <A NAME="tex2html19" HREF="virall-node11.html#SECTION00032000000000000000">3.2- Greedy algorithm for phylograph</A>
+<LI> <A NAME="tex2html20" HREF="virall-node12.html#SECTION00033000000000000000">3.3- PhyloDAGs</A>
+</UL> 
+<LI> <A NAME="tex2html21" HREF="virall-node13.html#SECTION00040000000000000000">4- Appendix</A>
+<UL> 
+<LI> <A NAME="tex2html22" HREF="virall-node14.html#SECTION00041000000000000000">4.1- An    
+<IMG ALIGN=MIDDLE ALT="tex2html_wrap_inline2042" SRC="virall-img184.gif"  >  -time algorithm to compute an atomic set</A>
+</UL> 
+<LI> <A NAME="tex2html23" HREF="virall-node15.html#SECTION00050000000000000000">References</A>
+</UL>
+<HR><A NAME="tex2html7" HREF="virall-node1.html">
+<IMG ALIGN=BOTTOM ALT="next" SRC="../../images/next_motif.gif" BORDER = 0></A>  
+<IMG ALIGN=BOTTOM ALT="previous" SRC="../../images/previous_motif_gr.gif" BORDER = 0>  
+<IMG ALIGN=BOTTOM ALT="up" SRC="../../images/up_motif_gr.gif" BORDER = 0>      <BR><HR SIZE=6 WIDTH=80%>
+<TABLE BORDER = 0>
+<TR><TD>
+<B> Next </B></TD><TD>   <A NAME="tex2html8" HREF="virall-node1.html">1- Introduction</A><BR>
+</TD></TR>
+<P>
+</TABLE>
+
+
+
+<BR><HR WIDTH=40%>
+<p>&nbsp;
+<p>&nbsp;
+<a href="../../../SciPapers.htm">back to index</a>
+</BODY>
+</HTML>
+
+
+
