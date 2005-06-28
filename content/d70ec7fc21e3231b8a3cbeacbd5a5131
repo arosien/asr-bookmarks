@@ -1,0 +1,461 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="verify-v1" content="ynzW/GE7rr+SwTxuVauAHAJHCND7JANXtoLBw5Ci6tY=" />
+	<title>MySQL ::   MySQL 5.5 Reference Manual :: 2.4 Installing MySQL on Mac OS X</title> 
+
+	 
+
+	<link rel="stylesheet" type="text/css" media="screen" href="/common/css/mysql.css" />
+	<link rel="stylesheet" type="text/css" media="projection" href="/common/css/mysql.css" />
+	<link rel="stylesheet" type="text/css" media="print" href="/common/css/print.css" />
+	
+	 
+		<link rel="stylesheet" type="text/css" href="/doc/docs.css" />
+	 
+		
+		
+		
+		
+	<link rel="contents" href="index.html" title="MySQL Manual" /><link rel="start" href="index.html" title="MySQL Manual" /><link rel="stylesheet" type="text/css" href="/doc/docs.css" /><link rel="prev" href="windows-postinstallation.html" title="2.3.8 Windows Postinstallation Procedures"/><link rel="next" href="macosx-installation-notes.html?ff=nopfpls" title="2.4.1 General Notes on Installing MySQL on Mac OS X"/><link rel="up" href="installing.html" title="2 Installing and Upgrading MySQL"/> 
+		<link rel="shortcut icon" href="/common/themes/sakila/favicon.ico" />
+	
+		<script language="javascript" type="text/javascript" src="/common/js/clear_search_text.js"></script>
+    	
+		<noscript></noscript>
+	    
+		    
+    <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js"></script>
+    
+    
+</head>
+
+<body class="doc" >
+
+<div id="container">
+
+<!--UdmComment-->
+<a class="skipToContent" href="#mainContent">Skip navigation links</a>
+
+	<div id="header" >
+	
+	<div class="left">
+
+    <div id="logo">
+		    					
+				<a href="http://dev.mysql.com/" title="MySQL">
+						    <img src="/common/logos/logo-mysql-110x57.png" alt="MySQL" width="110" height="57" /></a>
+		    </div>
+		    <div id="tagline">The world's most popular open source database</div>
+
+
+				
+
+	</div>
+	
+	<div class="right">
+				
+		<div id="search_box"> <!-- Start Search -->
+				<form id="searchform" name="searchform" method="get" action="http://search.mysql.com/search/query/search">
+			<input type="text" id="q" name="q" value="Search" class="swap_value" onfocus="clearSearchText();" />
+			<input type="hidden" id="search_dest" name="group" value="Documentation"/>
+			<input type="image" src="/common/themes/sakila/search_g.png" id="go" alt="Search" title="Search" value="Search" />
+		    </form>		</div> <!-- End Search -->
+
+				
+		  		  
+		<div id="login" >
+				
+							 <p><a href="http://dev.mysql.com/login/?dest=http%3a%2f%2fdev.mysql.com%2Fdoc%2Frefman%2F5.5%2Fen%2Fmacosx-installation.html">Login</a> | <a href="http://dev.mysql.com/register.php">Register</a></p>
+			
+		</div>
+  
+			</div>
+
+	</div> 
+
+	<!-- MySQL Navigation -->
+	<div id="nav_container">
+	
+	<div id="flags">
+            <ul>
+		<br />
+            </ul>
+    </div>
+		
+						<div id="tab_last">
+		<ul>
+			<li class="first"><a href="http://dev.mysql.com">Developer Zone</a></li>
+			<li class="second"><a href="http://dev.mysql.com/downloads/">Downloads</a></li>
+			<li class="current"><a href="http://dev.mysql.com/doc/">Documentation</a></li>
+		</ul>
+		</div>	
+				
+
+	
+	<div id="mysql_menu">
+	    <ul>
+	<li class="current"><a class="current " href="/doc/">MySQL Manual</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-gui.html">MySQL Workbench</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-expert.html">Expert Guides</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-topic.html">Topic Guides</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-cluster.html">MySQL Cluster</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-other.html">Other Docs</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-mysqlu.html">MySQL Uni</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-about.html">About</a>
+	
+		
+		
+	</li>
+	
+	<li class="link last"><a  href="/doc/index-archive.html">Archives</a>
+	
+		
+		
+	</li>
+	
+</ul>
+	</div>
+
+		<div id="og_sakila">&nbsp;</div>
+	        <div id="og_title">&nbsp;</div>
+	
+	</div>
+	<!-- End Navigation Container -->
+
+<!--/UdmComment-->
+
+<div class="page_container">
+	<div class="page_sidebar">
+	<!--UdmCommentTest-->
+
+	<div id="menu_title"></div>
+
+	<div id="menu">
+		<ul>
+			<li class="current"><a class="current subitems" href="/doc/index.html">Documentation Library</a>
+
+			<ul class="subitems1">
+				 <li><a href="index.html"><b>Table of Contents</b></a>
+
+
+				 <ul class="subitems2">
+				 
+				 					 		<li class="current">MySQL 5.5 Manual
+				 	
+				 	</li>
+
+				 
+				 					 		<li>
+					 	<a href="/doc/refman/5.1/en/macosx-installation.html" >MySQL 5.1 Manual</a>  					
+				 	</li>
+
+				 
+				 					 		<li>
+					 	<a href="/doc/refman/5.0/en/macosx-installation.html" >MySQL 5.0 Manual</a>  					
+				 	</li>
+
+				 
+				 					 		<li>
+					 	<a href="/doc/refman/4.1/en/macosx-installation.html" >MySQL 3.23/4.0/4.1 Manual</a>  					
+				 	</li>
+
+				 
+				 </ul>
+
+
+
+				 </li>
+
+
+			</ul>
+
+
+			</li>
+		</ul>
+
+	 <div class="searchmanual">
+			<form action="http://search.mysql.com/search/query/search" method="get" id="docsearch">
+		<strong><label for="searchq">Search manual:</label></strong> <br />
+			 <input id="searchq" type="text" name="q" value="" size="14" />
+			 <input id="searchsubmit" type="submit" value="Go" />
+			<input id="searchgroup" type="hidden" name="group" value="refman-55" />
+			<input id="search_p_atname" type="hidden" name="search_p_atname" value="Language" />
+			<input id="search_p_op" type="hidden" name="search_p_op" value="equals" />
+			<input id="search_p_val" type="hidden" name="search_p_val" value="en" />
+			</form>
+	 </div>
+
+
+	</div>
+
+	
+</div>  
+<!-- Main content -->
+<a name="mainContent"></a>
+
+<div id="page" class="sidebar" >
+
+	 
+	
+	
+
+
+
+
+	<!--UdmComment-->
+
+<div id="docheader"><a href="index.html"> MySQL 5.5 Reference Manual</a> :: <a href="installing.html">2 Installing and Upgrading MySQL</a> :: 2.4 Installing MySQL on Mac OS X</div>
+
+	 
+	
+
+	
+<script language="javascript">
+
+<!--
+function toggle(what){
+ if(document.getElementById(what).style.display == "none"){
+   document.getElementById(what).style.display = "block";
+ }else{
+   document.getElementById(what).style.display = "none";
+ }
+}
+//-->
+
+</script>
+<noscript></noscript>
+
+<div style="float: right; width: 250px; margin: 0px 0px 8px 8px; background: white">
+	<div style="text-align: right; font-size: 90%; margin-bottom: 4px">
+		<div style="text-align: left;"><a style="text-decoration: none" href="windows-postinstallation.html" title="Previous Section">&laquo; 2.3.8 Windows Postinstallation Procedures</a></div>
+		<hr size="1" noshade="noshade" align="center" width="40" style="margin: 0px auto 2px auto" />		<a style="text-decoration: none" href="macosx-installation-notes.html" title="Next Section">2.4.1 General Notes on Installing MySQL on Mac OS X  &raquo;</a>	</div>
+	<div style="padding: 4px 0px 0px 4px; border: 2px dotted #ccc; border-right: none;">
+		<b>Section Navigation</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>[<a href="#" onclick="toggle('sectionnav');"  onkeypress="if (event.keyCode == 13) { toggle('sectionnav'); }">Toggle</a>]</small>
+			<ul id="sectionnav">
+				<li class="p"><a href="installing.html">2 Installing and Upgrading MySQL</a></li><li><a href="general-installation-issues.html">2.1 General Installation Guidance</a></li>
+<li><a href="binary-installation.html">2.2 Installing MySQL from Generic Binaries on Unix/Linux</a></li>
+<li><a href="windows-installation.html">2.3 Installing MySQL on Microsoft Windows</a></li>
+<li class="self">2.4 Installing MySQL on Mac OS X
+<ul class="children">
+<li><a href="macosx-installation-notes.html">2.4.1 General Notes on Installing MySQL on Mac OS X</a></li>
+<li><a href="macosx-installation-pkg.html">2.4.2 Installing MySQL on Mac OS X Using Native Packages</a></li>
+<li><a href="macosx-installation-startupitem.html">2.4.3 Installing the MySQL Startup Item</a></li>
+<li><a href="macosx-installation-prefpane.html">2.4.4 Installing and Using the MySQL Preference Pane</a></li>
+<li><a href="macosx-installation-server.html">2.4.5 Using the Bundled MySQL on Mac OS X Server</a></li>
+</ul>
+</li>
+<li><a href="linux-installation.html">2.5 Installing MySQL on Linux</a></li>
+<li><a href="solaris-installation.html">2.6 Installing MySQL on Solaris and OpenSolaris</a></li>
+<li><a href="aix-installation.html">2.7 Installing MySQL on IBM AIX</a></li>
+<li><a href="hpux-installation.html">2.8 Installing MySQL on HP-UX</a></li>
+<li><a href="freebsd-installation.html">2.9 Installing MySQL on FreeBSD</a></li>
+<li><a href="i5os-installation.html">2.10 Installing MySQL on i5/OS</a></li>
+<li><a href="source-installation.html">2.11 Installing MySQL from Source</a></li>
+<li><a href="postinstallation.html">2.12 Postinstallation Setup and Testing</a></li>
+<li><a href="upgrading-downgrading.html">2.13 Upgrading or Downgrading MySQL</a></li>
+<li><a href="environment-variables.html">2.14 Environment Variables</a></li>
+<li><a href="perl-support.html">2.15 Perl Installation Notes</a></li>
+</ul>
+
+			</ul>		
+	</div>
+
+</div>
+<!--/UdmComment-->
+
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="macosx-installation"></a>2.4. Installing MySQL on Mac OS X</h2></div></div></div>
+<div class="toc"><p><small>[<a href="#nolinkhere" class="tocdetail" onclick="toggle('tocdetail-0');" onkeypress="if (event.keyCode == 13) { toggle('tocdetail-0');}">+/-</a>]</small></p><dl id="tocdetail-0">
+<dt><span class="section"><a href="macosx-installation-notes.html">2.4.1. General Notes on Installing MySQL on Mac OS X</a></span></dt>
+<dt><span class="section"><a href="macosx-installation-pkg.html">2.4.2. Installing MySQL on Mac OS X Using Native Packages</a></span></dt>
+<dt><span class="section"><a href="macosx-installation-startupitem.html">2.4.3. Installing the MySQL Startup Item</a></span></dt>
+<dt><span class="section"><a href="macosx-installation-prefpane.html">2.4.4. Installing and Using the MySQL Preference Pane</a></span></dt>
+<dt><span class="section"><a href="macosx-installation-server.html">2.4.5. Using the Bundled MySQL on Mac OS X Server</a></span></dt>
+</dl></div>
+<a class="indexterm" name="id2486606"></a><a class="indexterm" name="id2486618"></a><p>
+    MySQL for Mac OS X is available in a number of different forms:
+  </p>
+<div class="itemizedlist"><ul>
+<li><p>
+        Native Package Installer format, which uses the native Mac OS X
+        installer to walk you through the installation of MySQL. For
+        more information, see <a href="macosx-installation-pkg.html" title="2.4.2. Installing MySQL on Mac OS X Using Native Packages">Section 2.4.2, “Installing MySQL on Mac OS X Using Native Packages”</a>.
+        You can use the package installer with Mac OS X 10.3 and later,
+        and the package is available for both PowerPC and Intel
+        architectures, and 32-bit and 64-bit architectures. There is no
+        Universal Binary available using the package installation
+        method. The user you use to perform the installation must have
+        administrator privileges.
+      </p></li>
+<li>
+<p>
+        Tar package format, which uses a file packaged using the Unix
+        <span><strong class="command">tar</strong></span> and <span><strong class="command">gzip</strong></span> commands. To
+        use this method, you will need to open a
+        <span><strong class="command">Terminal</strong></span> window. You do not need
+        administrator privileges using this method, as you can install
+        the MySQL server anywhere using this method. For more
+        information on using this method, you can use the generic
+        instructions for using a tarball,
+        <a href="binary-installation.html" title="2.2. Installing MySQL from Generic Binaries on Unix/Linux">Section 2.2, “Installing MySQL from Generic Binaries on Unix/Linux”</a>.You can use the package
+        installer with Mac OS X 10.3 and later, and available for both
+        PowerPC and Intel architectures, and both 32-bit and 64-bit
+        architectures. A Universal Binary, incorporating both Power PC
+        and Intel architectures and 32-bit and 64-bit binaries is
+        available.
+      </p>
+<p>
+        In addition to the core installation, the Package Installer also
+        includes <a href="macosx-installation-startupitem.html" title="2.4.3. Installing the MySQL Startup Item">Section 2.4.3, “Installing the MySQL Startup Item”</a> and
+        <a href="macosx-installation-prefpane.html" title="2.4.4. Installing and Using the MySQL Preference Pane">Section 2.4.4, “Installing and Using the MySQL Preference Pane”</a>, both of which
+        simplify the management of your installation.
+      </p>
+</li>
+<li><p>
+        Mac OS X server includes a version of MySQL as standard. If you
+        want to use a more recent version than that supplied with the
+        Mac OS X server release, you can make use of the package or tar
+        formats. For more information on using the MySQL bundled with
+        Mac OS X, see <a href="macosx-installation-server.html" title="2.4.5. Using the Bundled MySQL on Mac OS X Server">Section 2.4.5, “Using the Bundled MySQL on Mac OS X Server”</a>.
+      </p></li>
+</ul></div>
+<p>
+    For additional information on using MySQL on Mac OS X, see
+    <a href="macosx-installation-notes.html" title="2.4.1. General Notes on Installing MySQL on Mac OS X">Section 2.4.1, “General Notes on Installing MySQL on Mac OS X”</a>.
+  </p>
+</div><div class="copyright-footer">
+    Copyright © 1997, 2010, Oracle and/or its affiliates. All
+    rights reserved.
+  <a href="index.html#legalnotice">Legal Notices</a>
+</div>
+<!--UdmComment--><div id="docnav"><a rel="prev" href="windows-postinstallation.html" title="2.3.8 Windows Postinstallation Procedures">Previous</a> / <a rel="next" href="macosx-installation-notes.html" title="2.4.1 General Notes on Installing MySQL on Mac OS X">Next</a> / <a rel="up" href="installing.html" title="2 Installing and Upgrading MySQL">Up</a> / <a rel="contents" href="index.html">Table of Contents</a></div><!--/UdmComment--><br class="clear" /><!--UdmComment--><div id="comments"><h1>User Comments</h1><p><a href="/doc/mysql/comment.php?sect=macosx-installation">Add your own comment.</a></p></div><!--UdmComment--><div id="docnav"><a href="#">Top</a> / <a rel="prev" href="windows-postinstallation.html" title="2.3.8 Windows Postinstallation Procedures">Previous</a> / <a rel="next" href="macosx-installation-notes.html" title="2.4.1 General Notes on Installing MySQL on Mac OS X">Next</a> / <a rel="up" href="installing.html" title="2 Installing and Upgrading MySQL">Up</a> / <a rel="contents" href="index.html">Table of Contents</a></div><!--/UdmComment--></div></div>
+
+
+
+
+
+
+
+
+
+ </div> 
+</div> 
+<div id="footer">
+
+    <div class="links">
+        <ul>
+            <li class="top"><a href="http://dev.mysql.com">Developer Zone</a></li>
+	    <li><a href="http://dev.mysql.com/doc/">Documentation</a></li>
+            <li><a href="http://dev.mysql.com/librarian/">Librarian</a></li>
+            <li><a href="http://dev.mysql.com/articles/">Developer Articles</a></li>
+			<li><a href="http://dev.mysql.com/news-and-events/">News &amp; Events</a></li>
+            <li><a href="http://forums.mysql.com/">Forums</a></li>
+            <li><a href="http://bugs.mysql.com/">Bugs</a></li>
+            <li><a href="http://forge.mysql.com/">Forge</a></li>
+			            <li><a href="http://planet.mysql.com/">Planet MySQL</a></li>
+			            <li><a href="http://labs.mysql.com/">Labs</a></li>
+        </ul>
+    </div>
+    
+    <div class="links">
+        <ul>
+            <li class="top"><a href="http://dev.mysql.com/downloads/">Downloads</a></li>
+            <li><a href="http://dev.mysql.com/downloads/mysql/">MySQL Community Server</a></li>
+            <li><a href="http://dev.mysql.com/downloads/mysql-proxy/">MySQL Proxy</a></li>
+            <li><a href="http://dev.mysql.com/downloads/cluster/">MySQL Cluster</a></li>
+            <li><a href="http://dev.mysql.com/downloads/workbench/">MySQL Workbench</a></li>
+            <li><a href="http://dev.mysql.com/downloads/connector/">MySQL Connectors</a></li>
+            <li><a href="http://downloads.mysql.com/archives.php">Archives</a></li>
+            <li><a href="http://downloads.mysql.com/snapshots.php">Snapshots</a></li>
+            <li><a href="http://dev.mysql.com/downloads/mirrors.html">Mirrors</a></li>
+        </ul>
+    </div>
+    
+    <div class="links">
+        <ul>
+            <li class="top"><a href="http://dev.mysql.com/doc/">Documentation</a></li>
+            <li><a href="http://dev.mysql.com/doc/">MySQL Reference Manuals</a></li>
+            <li><a href="http://dev.mysql.com/doc/index-gui.html">MySQL Workbench</a></li>
+            <li><a href="http://dev.mysql.com/doc/index-expert.html">Expert Guides</a></li>
+            <li><a href="http://dev.mysql.com/doc/index-topic.html">Topic Guides</a></li>
+            <li><a href="http://dev.mysql.com/doc/index-cluster.html">MySQL Cluster</a></li>
+            <li><a href="http://dev.mysql.com/doc/index-other.html">Other Documents</a></li>
+            <li><a href="http://dev.mysql.com/doc/index-mysqlu.html">MySQL University</a></li> 
+            <li><a href="http://dev.mysql.com/doc/index-about.html">About</a></li>     
+            <li><a href="http://dev.mysql.com/doc/index-archive.html">Archives</a></li>   
+        </ul>
+    </div>
+
+    <div class="links">
+        <ul>
+            <li class="top"><a href="http://dev.mysql.com/support/">Support</a></li>
+            <li><a href="http://forge.mysql.com/wiki/Category:MySQLUserGroups">MySQL Meetups</a></li>
+            <li><a href="http://dev.mysql.com/guilds/">Guilds</a></li>
+            <li><a href="http://lists.mysql.com/">Lists</a></li>
+            <li><a href="http://forums.mysql.com/">Forums</a></li>            
+		</ul>
+			
+		<ul>
+            <li class="top">Other</li>     
+            <li><a href="http://dev.mysql.com/legal/">Legal</a></li>            
+            <li><a href="http://dev.mysql.com/legal/mysql_web_privacy_policy.html">Privacy Policy</a></li>
+			<li><a href="http://dev.mysql.com/contact/">Contact Us</a></li>
+            <li><a href="http://dev.mysql.com/sitemap.html">Site Map</a></li>
+        </ul>
+    </div>
+    
+
+        
+    <div id="search" class="en">
+	        <form id="footer_search" action="http://search.mysql.com/search/query/search" method="get">
+            <input type="text" id="f_q" name="q" value="" class="swap_value" onfocus="clearSearchText();" />
+	    <input type="hidden" id="search_dest" name="group" value="Documentation"/>
+	    <input type="image" src="/common/themes/sakila/footer_search_g.png" id="f_go" alt="Search" title="Search" value="Search" />
+        </form>    </div>
+
+</div><!-- End Footer -->
+		<div id="copyright-oracle"><a href="http://www.oracle.com/"><img src="/common/logos/logo-oracle-red-91x22.gif" alt="Oracle" width="91" height="22" border="0" /></a>&nbsp;&nbsp;<span>&copy; 2010, Oracle Corporation and/or its affiliates</span></div>
+
+
+<script type="text/javascript" src="/common/js/s_code_remote.js?ver=20091011"></script>
+
+</body>
+</html>
