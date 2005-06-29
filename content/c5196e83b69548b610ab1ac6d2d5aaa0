@@ -1,0 +1,847 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<title>  Page not found</title>
+
+<meta name="description" content="" />
+
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="stylesheet" href="http://www.ysearchblog.com/blog/wp-content/themes/New Search Blog theme/style.css" type="text/css" media="all" />
+
+<link rel="alternate" type="application/rss+xml" title="Yahoo! Search Blog RSS Feed" href="http://www.ysearchblog.com/feed/" />
+
+<link rel="pingback" href="http://www.ysearchblog.com/blog/xmlrpc.php" />
+
+
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.ysearchblog.com/blog/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.ysearchblog.com/blog/wp-includes/wlwmanifest.xml" /> 
+<link rel='index' title='Yahoo! Search Blog' href='http://www.ysearchblog.com' />
+<meta name="generator" content="WordPress 2.8.4" />
+<script language="javascript" type="text/javascript">
+<!--
+		function collapseThread( theId ) {
+			var comment = document.getElementById(theId);
+			if(!comment)
+			{
+				alert("ERROR:\nThe document structure is different\nfrom what Threaded Comments expects.\nYou are missing the element '"+theId+"'");
+				return;
+			}
+			var theBody = findBody(comment);
+			if(comment.className.indexOf("collapsed") > -1) {
+				comment.className = comment.className.replace(" collapsed", "");;
+			} else {
+				comment.className += " collapsed";
+			}
+		}
+
+		function expandThread( theId ) {
+			var comment = document.getElementById(theId);
+			if(!comment)
+			{
+				alert("ERROR:\nThe document structure is different\nfrom what Threaded Comments expects.\nYou are missing the element '"+theId+"'");
+				return;
+			}
+			var theBody = findBody(comment);
+			if(comment.className.indexOf("collapsed") > -1) {
+				comment.className = comment.className.replace(" collapsed", "");;
+			} 
+		}
+		
+		function findBody(el)
+		{
+			var divs = el.getElementsByTagName("div");
+			var ret;
+			for(var i = 0; i < divs.length; ++i) {
+				if(divs.item(i).className.indexOf("body") > -1)
+					return divs.item(i);
+			}
+			return false;
+		}
+	
+		function onAddComment() {
+			//checkDocumentIntegrity();
+			var el = document.getElementById("commentform");
+			// Future release: Check if form is filled correctly and mark the form fields.
+			el.submit();
+		}
+		
+		function moveAddCommentBelow(theId, threadId, collapse)
+		{
+			expandThread( theId );
+			var addComment = document.getElementById("addcomment");
+			if(!addComment)
+			{
+			  	alert("ERROR:\nThreaded Comments can't find the 'addcomment' div.\nThis is probably because you have changed\nthe comments.php file.\nMake sure there is a tag around the form\nthat has the id 'addcomment'"); 
+				return
+			}
+			var comment = document.getElementById(theId);
+			if(collapse)
+			{
+				for(var i = 0; i < comment.childNodes.length; ++i) {
+					var c = comment.childNodes.item(i);
+					if(typeof(c.className) == "string" && c.className.indexOf("collapsed")<0) {
+						c.className += " collapsed";
+					}
+				}
+			}
+			addComment.parentNode.removeChild(addComment);
+
+			comment.appendChild(addComment);
+			if(comment.className.indexOf("alt")>-1) {
+				addComment.className = addComment.className.replace(" alt", "");					
+			} else {
+				addComment.className += " alt";
+			}
+		        var replyId = document.getElementById("comment_reply_ID");
+			if(replyId == null)
+			{
+				alert("Brians Threaded Comments Error:\nThere is no hidden form field called\n'comment_reply_ID'. This is probably because you\nchanged the comments.php file and forgot\nto include the field. Please take a look\nat the original comments.php and copy the\nform field over.");
+			}
+			replyId.value = threadId;
+			var reRootElement = document.getElementById("reroot");
+			if(reRootElement == null)
+			{
+				alert("Brians Threaded Comments Error:\nThere is no anchor tag called 'reroot' where\nthe comment form starts.\nPlease compare your comments.php to the original\ncomments.php and copy the reroot anchor tag over.");
+			}
+			reRootElement.style.display = "block";
+			var aTags = comment.getElementsByTagName("A");
+			var anc = aTags.item(0).id;
+			//document.location.href = "#"+anc;
+			document.getElementById("comment").focus();
+		}
+
+		function checkDocumentIntegrity()
+		{
+			str = "";
+			
+			str += checkElement("reroot","div tag");
+			str += checkElement("addcomment", "div tag");
+			str += checkElement("comment_reply_ID", "hidden form field");
+			str += checkElement("content", "div tag");
+			str += checkElement("comment", "textfield");
+			str += checkElement("addcommentanchor", "anchor tag");
+			
+			if(str != "")
+			{
+				str = "Brian's Threaded Comments are missing some of the elements that are required for it to function correctly.\nThis is probably the because you have changed the original comments.php that was included with the plugin.\n\nThese are the errors:\n" + str;
+				str += "\nYou should compare your comments.php with the original comments.php and make sure the required elements have not been removed.";
+
+				alert(str);
+			}
+		}
+               
+		function checkElement(theId, elDesc)
+		{
+			var el = document.getElementById(theId);
+			if(!el)
+			{
+				if(elDesc == null)
+					elDesc = "element";
+				return "- The "+elDesc+" with the ID '" +theId + "' is missing\n"; 
+			}
+			else 
+				return "";
+		}
+		
+		function reRoot()
+		{
+			var addComment = document.getElementById("addcomment");			
+			var reRootElement = document.getElementById("reroot");
+			reRootElement.style.display = "none";
+			var content = document.getElementById("content-main");
+			if( !content )
+				content = document.getElementById("content");
+			if( content )
+			{
+				addComment.parentNode.removeChild(addComment);
+				content.appendChild(addComment);
+			}
+			addComment.className = addComment.className.replace(" alt", "");
+			document.location.href = "#addcommentanchor";
+			document.getElementById("comment").focus();				
+			document.getElementById("comment_reply_ID").value = "0";
+		}			
+		
+		function changeCommentSize(d)
+		{
+			var el = document.getElementById("comment");
+			var height = parseInt(el.style.height);
+			if(!height && el.offsetHeight)
+				height = el.offsetHeight;
+			height += d;
+			if(height < 20) 
+				height = 20;
+			el.style.height = height+"px";
+		}		
+-->
+</script>
+<style type="text/css">
+.comment 
+{
+	position: 				relative;
+	margin:					3px;
+	margin-top:				6px;
+/*	border: 				1px solid #666; */
+	padding:				4px 4px 4px 8px;
+	background-color:		#fff;
+}
+
+.odd
+{
+	background-color: #f8f8f8;
+}
+
+.comment div {
+	position: 				relative;
+}
+
+.comment .comment img
+{
+	margin: 				0px;
+}
+
+.comment .collapseicon 
+{
+	width: 					13px;
+	height: 				13px;
+	overflow:				hidden;
+	background-image: 		url(http://www.ysearchblog.com/blog/wp-content/plugins/briansthreadedcomments.php?image=subthread-open.png);
+}
+
+.collapsed .collapseicon 
+{
+	background-image: 		url(http://www.ysearchblog.com/blog/wp-content/plugins/briansthreadedcomments.php?image=subthread.png);
+}
+
+
+.comment .reply {
+	text-align: 			right;
+	font-size: 				80%;
+	padding: 				0px 6px 6px 0px;
+}
+
+.comment
+{
+	border: 	1px solid #ddd;
+	margin-top: 			10px;
+}
+
+input#subscribe
+{
+	width: auto;
+}
+
+.comment .body .content
+{
+	padding:				0px 3px 0px 3px;
+	/*width: 					100%;	*/
+	overflow: 				auto; 
+}
+
+.comment .title abbr
+{
+	border: none;
+}
+
+.collapsed .body, .collapsed .comment
+{
+	display:				none;
+}
+ 
+#commentform textarea {
+	width: 97%;
+}
+
+.btc_gravatar {
+	float: right;
+	margin: 3px 3px 4px 4px;
+}
+</style>
+<script type="text/javascript" src="http://www.ysearchblog.com/blog/wp-content/plugins/flash-video-player/swfobject.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://w.sharethis.com/widget/?wp=2.8.4&amp;publisher=0b0519c0-b4fd-41ef-9d9a-86d890a7340f"></script>
+<script type="text/javascript"><!--//--><![CDATA[//><!--
+
+sfHover = function() {
+
+	var sfEls = document.getElementById("menu").getElementsByTagName("LI");
+
+	for (var i=0; i<sfEls.length; i++) {
+
+		sfEls[i].onmouseover=function() {
+
+			this.className+=" sfhover";
+
+		}
+
+		sfEls[i].onmouseout=function() {
+
+			this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+
+		}
+
+	}
+
+}
+
+if (window.attachEvent) window.attachEvent("onload", sfHover);
+
+try{document.execCommand("BackgroundImageCache",false,true);}catch(err){}
+
+//--><!]]></script>
+
+</head>
+
+<body>
+
+<div id="page">
+
+	<ul class="skipLinks">
+
+		<li><a href="#content" title="Skip to content">Skip to content</a></li>
+
+		<li><a href="#menu" title="Skip to navigation">Skip to navigation</a></li>
+
+		<li><a href="#footer" title="Skip to footer">Skip to footer</a></li>
+
+	</ul>
+
+	<div id="header">
+
+		<h1 id="logo">
+
+			<a href="http://www.ysearchblog.com/">Yahoo! Search Blog</a><br />
+
+			<em></em>
+
+		</h1>
+
+		<div class="inner">
+
+			<ul id="menu">
+
+				
+
+				<li class="first">
+
+                    <a href="http://www.ysearchblog.com/">Home</a></li>
+               
+				<li><a href="http://www.ysearchblog.com/feed">Subscribe</a></li>
+
+				
+				<li><a href="http://help.yahoo.com/l/us/yahoo/search/">Help</a></li>
+
+                
+
+			</ul>
+
+		<form method="get" id="searchform" action="http://www.ysearchblog.com/">
+			<fieldset>
+				<legend>Search Form</legend>
+				<input type="text" value="Search our blog..." name="s" id="s" onblur="if (this.value == '') {this.value = 'Search our blog...';}"  onfocus="if (this.value == 'Search our blog...') {this.value = '';}" />
+				<input type="submit" id="searchsubmit" value="" />
+			</fieldset>
+		</form>
+		</div>
+
+	</div>
+
+	<div id="wrap">
+
+		<div id="main">
+
+			<div id="content">
+
+				<div class="apost">
+					<h2>Oops!</h2>
+					<p>404 File Not Found.</p>
+				</div>
+			</div>
+
+		</div>
+
+		<div id="sidebarOne">
+
+
+			<a href="http://search.yahoo.com/" class="backToYH">back to yahoo! search</a>
+
+			<div class="sbColumns emailSubscribe">
+
+				<h2>subscription options</h2>
+
+				<div class="rss"></div>
+
+				<div class="inner">
+
+				<table cellspacing="10" align="center" style="text-align: center;">
+				<tbody><tr>
+				<td width="60px" style="text-align: center;">
+				<a href="http://alerts.yahoo.com/edit_feedalert.php?url=http://ysearchblog.com/blog/feed/">
+				<img src="/blog/wp-content/themes/New Search Blog theme/images/sub_alerts.png"/>
+				
+				</a>
+				</td>
+				<td width="60px" style="text-align: center;">
+				<a href="http://www.twitter.com/YahooSearch">
+			<img src="/blog/wp-content/themes/New Search Blog theme/images/sub_twitter.png"/>
+			
+				</a>
+				</td>
+				<td width="60px" style="text-align: center;">
+				<a href="http://www.ysearchblog.com/feed">
+<img src="/blog/wp-content/themes/New Search Blog theme/images/sub_rss.png"/>
+
+				</a>
+				</td>
+				</tr>
+				<tr>
+				<td style="text-align: center;">
+				<a href="http://alerts.yahoo.com/edit_feedalert.php?url=http://ysearchblog.com/blog/feed/">Y! Alerts</a>
+				</td>
+				<td style="text-align: center;">
+				<a href="http://www.twitter.com/YahooSearch">Twitter</a>
+				</td>
+				<td style="text-align: center;">
+				<a href="http://ysearchblog.com/blog/feed/">RSS</a>
+				</td>
+				</tr>
+				</tbody></table>
+
+								</div>
+
+			</div>
+			
+						<div class="sbColumns">
+
+							<h2>Facebook Fans</h2>
+
+							<div class="inner">
+<iframe scrolling="no" frameborder="0" src="http://www.facebook.com/connect/connect.php?id=149234485102697&connections=8&stream=0" allowtransparency="true" style="border: none; width: 269px; height: 250px;"></iframe>
+							</div>
+
+						</div> 
+
+			<div class="sbColumns latestPosts">
+
+				<h2>latest posts</h2>
+
+				<div class="inner">
+
+					<ul>
+
+
+
+						<li>
+
+							<h3><a href="http://www.ysearchblog.com/2010/12/16/yahoo-showcases-powered-up-movie-searches-in-new-ad/">Yahoo! Showcases Powered-Up Movie Searches in New Ad</a></h3>
+
+							<ul>
+
+								<li>Comments: <a href="http://www.ysearchblog.com/2010/12/16/yahoo-showcases-powered-up-movie-searches-in-new-ad/#respond" title="Comment on Yahoo! Showcases Powered-Up Movie Searches in New Ad">0</a></li>
+
+								<li>Posted on: December 16th, 2010</li>
+
+							</ul>
+
+						</li>
+
+
+						<li>
+
+							<h3><a href="http://www.ysearchblog.com/2010/12/09/dine-out-with-restaurant-comparison-quick-app/">Dine Out with Restaurant Comparison Quick App</a></h3>
+
+							<ul>
+
+								<li>Comments: <a href="http://www.ysearchblog.com/2010/12/09/dine-out-with-restaurant-comparison-quick-app/#comments" title="Comment on Dine Out with Restaurant Comparison Quick App">1</a></li>
+
+								<li>Posted on: December 9th, 2010</li>
+
+							</ul>
+
+						</li>
+
+
+						<li>
+
+							<h3><a href="http://www.ysearchblog.com/2010/12/02/amuse-or-awe-academic-multimedia-grand-challenge-for-classifying-images/">Amuse or Awe? Academic Multimedia Grand Challenge for Classifying Images</a></h3>
+
+							<ul>
+
+								<li>Comments: <a href="http://www.ysearchblog.com/2010/12/02/amuse-or-awe-academic-multimedia-grand-challenge-for-classifying-images/#comments" title="Comment on Amuse or Awe? Academic Multimedia Grand Challenge for Classifying Images">1</a></li>
+
+								<li>Posted on: December 2nd, 2010</li>
+
+							</ul>
+
+						</li>
+
+
+						<li>
+
+							<h3><a href="http://www.ysearchblog.com/2010/11/30/year-in-review-2010/">Count Down 2010 with Yahoo! Year In Review</a></h3>
+
+							<ul>
+
+								<li>Comments: <a href="http://www.ysearchblog.com/2010/11/30/year-in-review-2010/#comments" title="Comment on Count Down 2010 with Yahoo! Year In Review">1</a></li>
+
+								<li>Posted on: November 30th, 2010</li>
+
+							</ul>
+
+						</li>
+
+
+						<li>
+
+							<h3><a href="http://www.ysearchblog.com/2010/11/30/winners-and-losers-of-november/">Winners and Losers of November</a></h3>
+
+							<ul>
+
+								<li>Comments: <a href="http://www.ysearchblog.com/2010/11/30/winners-and-losers-of-november/#respond" title="Comment on Winners and Losers of November">0</a></li>
+
+								<li>Posted on: November 30th, 2010</li>
+
+							</ul>
+
+						</li>
+
+
+						<li>
+
+							<h3><a href="http://www.ysearchblog.com/2010/11/30/introducing-yahoo-kpost-in-korea-and-hong-kong/">Introducing Yahoo! KPost in Korea and Hong Kong</a></h3>
+
+							<ul>
+
+								<li>Comments: <a href="http://www.ysearchblog.com/2010/11/30/introducing-yahoo-kpost-in-korea-and-hong-kong/#respond" title="Comment on Introducing Yahoo! KPost in Korea and Hong Kong">0</a></li>
+
+								<li>Posted on: November 30th, 2010</li>
+
+							</ul>
+
+						</li>
+
+
+						<li>
+
+							<h3><a href="http://www.ysearchblog.com/2010/11/24/get-ready-for-your-holiday-shopping/">Get Ready For Your Holiday Shopping</a></h3>
+
+							<ul>
+
+								<li>Comments: <a href="http://www.ysearchblog.com/2010/11/24/get-ready-for-your-holiday-shopping/#respond" title="Comment on Get Ready For Your Holiday Shopping">0</a></li>
+
+								<li>Posted on: November 24th, 2010</li>
+
+							</ul>
+
+						</li>
+
+
+						<li>
+
+							<h3><a href="http://www.ysearchblog.com/2010/11/18/chow-down-with-yahoo-search-quick-apps-with-added-flavor/">Chow Down with Yahoo! Search: Quick Apps with Added Flavor</a></h3>
+
+							<ul>
+
+								<li>Comments: <a href="http://www.ysearchblog.com/2010/11/18/chow-down-with-yahoo-search-quick-apps-with-added-flavor/#comments" title="Comment on Chow Down with Yahoo! Search: Quick Apps with Added Flavor">2</a></li>
+
+								<li>Posted on: November 18th, 2010</li>
+
+							</ul>
+
+						</li>
+
+
+						<li>
+
+							<h3><a href="http://www.ysearchblog.com/2010/11/17/testing-a-richer-yahoo-search-assist/">Testing a Richer Yahoo! Search Assist</a></h3>
+
+							<ul>
+
+								<li>Comments: <a href="http://www.ysearchblog.com/2010/11/17/testing-a-richer-yahoo-search-assist/#comments" title="Comment on Testing a Richer Yahoo! Search Assist">2</a></li>
+
+								<li>Posted on: November 17th, 2010</li>
+
+							</ul>
+
+						</li>
+
+
+						<li>
+
+							<h3><a href="http://www.ysearchblog.com/2010/11/16/new-local-search-features/">Sneak Peek: New Local Search Features Coming Soon</a></h3>
+
+							<ul>
+
+								<li>Comments: <a href="http://www.ysearchblog.com/2010/11/16/new-local-search-features/#comments" title="Comment on Sneak Peek: New Local Search Features Coming Soon">2</a></li>
+
+								<li>Posted on: November 16th, 2010</li>
+
+							</ul>
+
+						</li>
+
+
+					</ul>
+
+				</div>
+
+			</div>
+
+			<div class="sbColumns">
+
+				<h2>recent visitors</h2>
+
+				<div class="inner">
+
+				<script type="text/javascript" src="http://pub.mybloglog.com/comm2.php?mblID=2010012514413320&c_width=274&c_sn_opt=n&c_rows=&c_img_size=f&c_heading_text=&c_color_heading_bg=FFFFFF&c_color_heading=666666&c_color_link_bg=FFFFFF&c_color_link=666666&c_color_bottom_bg=FFFFFF"></script>
+
+					<a href="http://www.mybloglog.com/buzz/yjoin/?ref_id=2010012514413320&ref=w" class="join">JOIN OUR COMMUNITY</a>
+
+				</div>
+
+			</div>
+			
+
+
+			<div class="sbColumns">
+
+				<h2>categories</h2>
+
+				<div class="inner">
+
+					<ul>
+
+							<li class="cat-item cat-item-11"><a href="http://www.ysearchblog.com/category/advertisingsponsored-search/" title="View all posts filed under Advertising/Sponsored Search">Advertising/Sponsored Search</a>
+</li>
+	<li class="cat-item cat-item-15"><a href="http://www.ysearchblog.com/category/answers/" title="View all posts filed under Answers">Answers</a>
+</li>
+	<li class="cat-item cat-item-31"><a href="http://www.ysearchblog.com/category/audio/" title="View all posts filed under Audio">Audio</a>
+</li>
+	<li class="cat-item cat-item-23"><a href="http://www.ysearchblog.com/category/bookmarks/" title="View all posts filed under Bookmarks">Bookmarks</a>
+</li>
+	<li class="cat-item cat-item-35"><a href="http://www.ysearchblog.com/category/boss/" title="View all posts filed under BOSS">BOSS</a>
+</li>
+	<li class="cat-item cat-item-25"><a href="http://www.ysearchblog.com/category/developer/" title="View all posts filed under Developer">Developer</a>
+</li>
+	<li class="cat-item cat-item-24"><a href="http://www.ysearchblog.com/category/flickr/" title="View all posts filed under Flickr">Flickr</a>
+</li>
+	<li class="cat-item cat-item-13"><a href="http://www.ysearchblog.com/category/fun/" title="View all posts filed under Fun">Fun</a>
+</li>
+	<li class="cat-item cat-item-8"><a href="http://www.ysearchblog.com/category/guest-bloggers/" title="View all posts filed under Guest Bloggers">Guest Bloggers</a>
+</li>
+	<li class="cat-item cat-item-32"><a href="http://www.ysearchblog.com/category/industry/" title="View all posts filed under Industry">Industry</a>
+</li>
+	<li class="cat-item cat-item-16"><a href="http://www.ysearchblog.com/category/interviews/" title="View all posts filed under Interviews">Interviews</a>
+</li>
+	<li class="cat-item cat-item-34"><a href="http://www.ysearchblog.com/category/jobs/" title="View all posts filed under Jobs">Jobs</a>
+</li>
+	<li class="cat-item cat-item-5"><a href="http://www.ysearchblog.com/category/local/" title="View all posts filed under Local">Local</a>
+</li>
+	<li class="cat-item cat-item-27"><a href="http://www.ysearchblog.com/category/mash-ups/" title="View all posts filed under Mash-ups">Mash-ups</a>
+</li>
+	<li class="cat-item cat-item-6"><a href="http://www.ysearchblog.com/category/meta/" title="View all posts filed under Meta">Meta</a>
+</li>
+	<li class="cat-item cat-item-9"><a href="http://www.ysearchblog.com/category/misc/" title="View all posts filed under Misc">Misc</a>
+</li>
+	<li class="cat-item cat-item-26"><a href="http://www.ysearchblog.com/category/mobile/" title="View all posts filed under Mobile">Mobile</a>
+</li>
+	<li class="cat-item cat-item-12"><a href="http://www.ysearchblog.com/category/multimedia-search/" title="View all posts filed under Multimedia Search">Multimedia Search</a>
+</li>
+	<li class="cat-item cat-item-30"><a href="http://www.ysearchblog.com/category/music/" title="View all posts filed under Music">Music</a>
+</li>
+	<li class="cat-item cat-item-3"><a href="http://www.ysearchblog.com/category/newsannouncements/" title="View all posts filed under News/Announcements">News/Announcements</a>
+</li>
+	<li class="cat-item cat-item-7"><a href="http://www.ysearchblog.com/category/people/" title="View all posts filed under People">People</a>
+</li>
+	<li class="cat-item cat-item-21"><a href="http://www.ysearchblog.com/category/search/" title="View all posts filed under Search">Search</a>
+</li>
+	<li class="cat-item cat-item-4"><a href="http://www.ysearchblog.com/category/search-tips/" title="View all posts filed under Search Tips">Search Tips</a>
+</li>
+	<li class="cat-item cat-item-36"><a href="http://www.ysearchblog.com/category/search-trends/" title="View all posts filed under Search Trends">Search Trends</a>
+</li>
+	<li class="cat-item cat-item-33"><a href="http://www.ysearchblog.com/category/searchmonkey/" title="View all posts filed under SearchMonkey">SearchMonkey</a>
+</li>
+	<li class="cat-item cat-item-17"><a href="http://www.ysearchblog.com/category/shopping-search/" title="View all posts filed under Shopping Search">Shopping Search</a>
+</li>
+	<li class="cat-item cat-item-10"><a href="http://www.ysearchblog.com/category/site-explorer/" title="View all posts filed under Site Explorer">Site Explorer</a>
+</li>
+	<li class="cat-item cat-item-14"><a href="http://www.ysearchblog.com/category/social-search/" title="View all posts filed under Social Search">Social Search</a>
+</li>
+	<li class="cat-item cat-item-22"><a href="http://www.ysearchblog.com/category/toolbar/" title="View all posts filed under Toolbar">Toolbar</a>
+</li>
+	<li class="cat-item cat-item-20"><a href="http://www.ysearchblog.com/category/travel/" title="View all posts filed under Travel">Travel</a>
+</li>
+	<li class="cat-item cat-item-1"><a href="http://www.ysearchblog.com/category/uncategorized/" title="View all posts filed under Uncategorized">Uncategorized</a>
+</li>
+	<li class="cat-item cat-item-19"><a href="http://www.ysearchblog.com/category/video/" title="View all posts filed under Video">Video</a>
+</li>
+	<li class="cat-item cat-item-18"><a href="http://www.ysearchblog.com/category/weather-report/" title="View all posts filed under Weather Report">Weather Report</a>
+</li>
+
+					</ul>
+
+				</div>
+
+			</div>
+
+			<div class="sbColumns">
+
+				<div class="sbColumns sbColumns-21">
+
+					<h2>archives</h2>
+
+					<div class="inner">
+
+						<ul>
+
+								<li><a href='http://www.ysearchblog.com/2010/12/' title='December 2010'>December 2010</a>&nbsp;(3)</li>
+	<li><a href='http://www.ysearchblog.com/2010/11/' title='November 2010'>November 2010</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2010/10/' title='October 2010'>October 2010</a>&nbsp;(11)</li>
+	<li><a href='http://www.ysearchblog.com/2010/09/' title='September 2010'>September 2010</a>&nbsp;(7)</li>
+	<li><a href='http://www.ysearchblog.com/2010/08/' title='August 2010'>August 2010</a>&nbsp;(14)</li>
+	<li><a href='http://www.ysearchblog.com/2010/07/' title='July 2010'>July 2010</a>&nbsp;(4)</li>
+	<li><a href='http://www.ysearchblog.com/2010/06/' title='June 2010'>June 2010</a>&nbsp;(5)</li>
+	<li><a href='http://www.ysearchblog.com/2010/05/' title='May 2010'>May 2010</a>&nbsp;(4)</li>
+	<li><a href='http://www.ysearchblog.com/2010/04/' title='April 2010'>April 2010</a>&nbsp;(7)</li>
+	<li><a href='http://www.ysearchblog.com/2010/03/' title='March 2010'>March 2010</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2010/02/' title='February 2010'>February 2010</a>&nbsp;(12)</li>
+	<li><a href='http://www.ysearchblog.com/2010/01/' title='January 2010'>January 2010</a>&nbsp;(3)</li>
+	<li><a href='http://www.ysearchblog.com/2009/12/' title='December 2009'>December 2009</a>&nbsp;(5)</li>
+	<li><a href='http://www.ysearchblog.com/2009/11/' title='November 2009'>November 2009</a>&nbsp;(3)</li>
+	<li><a href='http://www.ysearchblog.com/2009/10/' title='October 2009'>October 2009</a>&nbsp;(5)</li>
+	<li><a href='http://www.ysearchblog.com/2009/09/' title='September 2009'>September 2009</a>&nbsp;(2)</li>
+	<li><a href='http://www.ysearchblog.com/2009/08/' title='August 2009'>August 2009</a>&nbsp;(5)</li>
+	<li><a href='http://www.ysearchblog.com/2009/07/' title='July 2009'>July 2009</a>&nbsp;(4)</li>
+	<li><a href='http://www.ysearchblog.com/2009/06/' title='June 2009'>June 2009</a>&nbsp;(8)</li>
+	<li><a href='http://www.ysearchblog.com/2009/05/' title='May 2009'>May 2009</a>&nbsp;(6)</li>
+	<li><a href='http://www.ysearchblog.com/2009/04/' title='April 2009'>April 2009</a>&nbsp;(10)</li>
+	<li><a href='http://www.ysearchblog.com/2009/03/' title='March 2009'>March 2009</a>&nbsp;(8)</li>
+	<li><a href='http://www.ysearchblog.com/2009/02/' title='February 2009'>February 2009</a>&nbsp;(12)</li>
+	<li><a href='http://www.ysearchblog.com/2009/01/' title='January 2009'>January 2009</a>&nbsp;(3)</li>
+	<li><a href='http://www.ysearchblog.com/2008/12/' title='December 2008'>December 2008</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2008/11/' title='November 2008'>November 2008</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2008/10/' title='October 2008'>October 2008</a>&nbsp;(17)</li>
+	<li><a href='http://www.ysearchblog.com/2008/09/' title='September 2008'>September 2008</a>&nbsp;(10)</li>
+	<li><a href='http://www.ysearchblog.com/2008/08/' title='August 2008'>August 2008</a>&nbsp;(11)</li>
+	<li><a href='http://www.ysearchblog.com/2008/07/' title='July 2008'>July 2008</a>&nbsp;(10)</li>
+	<li><a href='http://www.ysearchblog.com/2008/06/' title='June 2008'>June 2008</a>&nbsp;(10)</li>
+	<li><a href='http://www.ysearchblog.com/2008/05/' title='May 2008'>May 2008</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2008/04/' title='April 2008'>April 2008</a>&nbsp;(7)</li>
+	<li><a href='http://www.ysearchblog.com/2008/03/' title='March 2008'>March 2008</a>&nbsp;(7)</li>
+	<li><a href='http://www.ysearchblog.com/2008/02/' title='February 2008'>February 2008</a>&nbsp;(6)</li>
+	<li><a href='http://www.ysearchblog.com/2008/01/' title='January 2008'>January 2008</a>&nbsp;(2)</li>
+	<li><a href='http://www.ysearchblog.com/2007/12/' title='December 2007'>December 2007</a>&nbsp;(11)</li>
+	<li><a href='http://www.ysearchblog.com/2007/11/' title='November 2007'>November 2007</a>&nbsp;(7)</li>
+	<li><a href='http://www.ysearchblog.com/2007/10/' title='October 2007'>October 2007</a>&nbsp;(11)</li>
+	<li><a href='http://www.ysearchblog.com/2007/09/' title='September 2007'>September 2007</a>&nbsp;(6)</li>
+	<li><a href='http://www.ysearchblog.com/2007/08/' title='August 2007'>August 2007</a>&nbsp;(13)</li>
+	<li><a href='http://www.ysearchblog.com/2007/07/' title='July 2007'>July 2007</a>&nbsp;(5)</li>
+	<li><a href='http://www.ysearchblog.com/2007/06/' title='June 2007'>June 2007</a>&nbsp;(11)</li>
+	<li><a href='http://www.ysearchblog.com/2007/05/' title='May 2007'>May 2007</a>&nbsp;(16)</li>
+	<li><a href='http://www.ysearchblog.com/2007/04/' title='April 2007'>April 2007</a>&nbsp;(15)</li>
+	<li><a href='http://www.ysearchblog.com/2007/03/' title='March 2007'>March 2007</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2007/02/' title='February 2007'>February 2007</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2007/01/' title='January 2007'>January 2007</a>&nbsp;(8)</li>
+	<li><a href='http://www.ysearchblog.com/2006/12/' title='December 2006'>December 2006</a>&nbsp;(8)</li>
+	<li><a href='http://www.ysearchblog.com/2006/11/' title='November 2006'>November 2006</a>&nbsp;(12)</li>
+	<li><a href='http://www.ysearchblog.com/2006/10/' title='October 2006'>October 2006</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2006/09/' title='September 2006'>September 2006</a>&nbsp;(7)</li>
+	<li><a href='http://www.ysearchblog.com/2006/08/' title='August 2006'>August 2006</a>&nbsp;(20)</li>
+	<li><a href='http://www.ysearchblog.com/2006/07/' title='July 2006'>July 2006</a>&nbsp;(15)</li>
+	<li><a href='http://www.ysearchblog.com/2006/06/' title='June 2006'>June 2006</a>&nbsp;(12)</li>
+	<li><a href='http://www.ysearchblog.com/2006/05/' title='May 2006'>May 2006</a>&nbsp;(8)</li>
+	<li><a href='http://www.ysearchblog.com/2006/04/' title='April 2006'>April 2006</a>&nbsp;(12)</li>
+	<li><a href='http://www.ysearchblog.com/2006/03/' title='March 2006'>March 2006</a>&nbsp;(10)</li>
+	<li><a href='http://www.ysearchblog.com/2006/02/' title='February 2006'>February 2006</a>&nbsp;(7)</li>
+	<li><a href='http://www.ysearchblog.com/2006/01/' title='January 2006'>January 2006</a>&nbsp;(5)</li>
+	<li><a href='http://www.ysearchblog.com/2005/12/' title='December 2005'>December 2005</a>&nbsp;(10)</li>
+	<li><a href='http://www.ysearchblog.com/2005/11/' title='November 2005'>November 2005</a>&nbsp;(7)</li>
+	<li><a href='http://www.ysearchblog.com/2005/10/' title='October 2005'>October 2005</a>&nbsp;(13)</li>
+	<li><a href='http://www.ysearchblog.com/2005/09/' title='September 2005'>September 2005</a>&nbsp;(7)</li>
+	<li><a href='http://www.ysearchblog.com/2005/08/' title='August 2005'>August 2005</a>&nbsp;(11)</li>
+	<li><a href='http://www.ysearchblog.com/2005/07/' title='July 2005'>July 2005</a>&nbsp;(11)</li>
+	<li><a href='http://www.ysearchblog.com/2005/06/' title='June 2005'>June 2005</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2005/05/' title='May 2005'>May 2005</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2005/04/' title='April 2005'>April 2005</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2005/03/' title='March 2005'>March 2005</a>&nbsp;(11)</li>
+	<li><a href='http://www.ysearchblog.com/2005/02/' title='February 2005'>February 2005</a>&nbsp;(11)</li>
+	<li><a href='http://www.ysearchblog.com/2005/01/' title='January 2005'>January 2005</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2004/12/' title='December 2004'>December 2004</a>&nbsp;(14)</li>
+	<li><a href='http://www.ysearchblog.com/2004/11/' title='November 2004'>November 2004</a>&nbsp;(9)</li>
+	<li><a href='http://www.ysearchblog.com/2004/10/' title='October 2004'>October 2004</a>&nbsp;(12)</li>
+	<li><a href='http://www.ysearchblog.com/2004/09/' title='September 2004'>September 2004</a>&nbsp;(14)</li>
+	<li><a href='http://www.ysearchblog.com/2004/08/' title='August 2004'>August 2004</a>&nbsp;(4)</li>
+
+						</ul>
+
+					</div>
+
+				</div>
+
+				<div class="sbColumns sbColumns-22">
+
+					<h2>Yahoo! blogs</h2>
+
+					<div class="inner">
+
+						<ul>
+
+							<li><a href="http://developer.yahoo.com/search/boss/">BOSS on YDN</a></li>
+<li><a href="http://ysmblog.com/">Yahoo! Search Marketing</a></li>
+<li><a href="http://www.ypnblog.com/">Yahoo! Publisher Network Blog</a></li>
+<li><a href="http://ycorpblog.com/">Yodel Anecdotal</a></li>
+<li><a href="http://blog.flickr.com/">FlickrBlog</a></li>
+<li><a href="http://developer.yahoo.com/searchmonkey">SearchMonkey on YDN</a></li>
+<li><a href="http://www.yanswersblog.com/">Yahoo! Answers Blog</a></li>
+<li><a href="http://buzz.yahoo.com/buzz_log/">Yahoo! Buzz Log</a></li>
+<li><a href="http://developer.yahoo.net/blog/">Yahoo! Developer Network Blog</a></li>
+<li><a href="http://www.yadvertisingblog.com/" target="_blank">Yahoo! Advertising Blog</a></li>
+<li><a href="http://dir.yahoo.com/thespark" target="_blank">Yahoo! Spark</a></li>
+<li><a href="http://www.rightmediablog.com/blog/" target="_blank">Right Media Blog</a></li>
+<li><a href="http://www.yctvblog.com/">Yahoo! Connected TV</a></li>
+<li><a href="http://www.yfinanceblog.com/" target="_blank">Yahoo! Finance Blog</a></li>
+<li><a href="http://www.ygroupsblog.com/blog/" target="_blank">Yahoo! Groups Blog</a></li>
+<li><a href="http://www.ymailblog.com/" target="_blank">Yahoo! Mail Blog</a></li>
+<li><a href="http://www.yhumanrightsblog.com/blog/rights-blog/" target="_blank">Yahoo! Human Rights Blog</a></li>
+<li><a href="http://www.ymessengerblog.com/" target="_blank">Yahoo! Messenger Blog</a></li>
+<li><a href="http://www.ypolicyblog.com/" target="_blank">Yahoo! Policy Blog</a></li>
+
+						</ul>
+
+					</div>
+
+				</div>
+
+			</div>
+
+
+
+		</div>
+
+		<div class="extra"></div> <!-- jump on :hover -->
+
+	</div>
+
+		<div id="footer">
+	<!--
+	<p>&copy; 2010 Yahoo! Search Blog. Powered by <a href="http://www.wordpress.org">Wordpress</a> and <a href="http://www.uniqueblogdesigns.com">Blog Design</a>.</p>
+	-->
+
+	<p>Copyright &copy; 2010 Yahoo! Inc. All rights reserved. <a href="http://info.yahoo.com/privacy/us/yahoo/details.html">Privacy Policy</a> - <a href="http://info.yahoo.com/legal/us/yahoo/utos/utos-173.html">Terms of Service</a>
+		
+		Powered by <a href="http://wordpress.org">WordPress</a> on <a href="http://smallbusiness.yahoo.com/webhosting/">Yahoo! Web Hosting</a>.</p>
+
+	</div>
+
+
+
+</div>
+
+</body>
+
+</html>
