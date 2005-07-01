@@ -1,0 +1,1657 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Domain-Specific Languages: An Annotated Bibliography1
+</TITLE>
+<META NAME="description" CONTENT="Domain-Specific Languages: An Annotated Bibliography1
+">
+<META NAME="keywords" CONTENT="dslbib">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="dslbib.css">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cwi.nl/latex2html-icons.gif/next_motif_gr.gif"> 
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cwi.nl/latex2html-icons.gif/up_motif_gr.gif"> 
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cwi.nl/latex2html-icons.gif/previous_motif_gr.gif">   
+<BR>
+<BR><BR>
+<!--End of Navigation Panel-->
+<H1 ALIGN="CENTER">Domain-Specific Languages:<BR>
+       An Annotated Bibliography<A NAME="tex2html1"
+ HREF="#foot85"><SUP>1</SUP></A>
+</H1>
+<P ALIGN="CENTER"><STRONG>Arie van Deursen  - 
+        Paul Klint  - 
+        Joost Visser
+</STRONG></P>
+<P ALIGN="CENTER"><STRONG>
+<I>CWI, P.O. Box 94079, 1090 GB Amsterdam, The Netherlands</I><BR>
+<FONT SIZE="-1">http://www.cwi.nl/&nbsp;arie,paulk,jvisser/</FONT>
+</STRONG></P>
+<P ALIGN="LEFT"></P>
+
+<P>
+
+<H4><A NAME="SECTION00000010000000000000">
+0.0.0.1 Abstract</A>
+</H4>
+We survey the literature available on the topic of
+domain-specific languages as used for the construction and maintenance
+of software systems.
+We list a selection of 75 key publications in the area,
+and provide a summary for each of the papers.
+Moreover, we discuss terminology, risks and benefits, example domain-specific
+languages, design methodologies, and implementation techniques.
+
+<P>
+
+<H1><A NAME="SECTION00010000000000000000">
+1. Introduction</A>
+</H1>
+
+<P>
+In all branches of science and engineering one can distinguish between
+approaches that are <EM>generic</EM> and those that are <EM>specific</EM>.
+A generic approach provides a general solution for many problems in a
+certain area, but such a solution may be suboptimal.  
+A specific
+approach provides a much better solution for a smaller set of
+problems. One of the incarnations of this dichotomy in computer
+science is the topic of this annotated bibliography:
+<EM>domain-specific languages</EM> versus generic programming languages.
+
+<P>
+Of course, this is not a new topic. The older programming languages
+(Cobol, Fortran, Lisp) all came into existence as dedicated languages
+for solving problems in a certain area (respectively business
+processing, numeric computation and symbolic processing).  Gradually
+they have evolved into general purpose languages and over and over
+again the need for more specialized language support to solve problems
+in well-defined application <EM>domains</EM> has resurfaced.
+Over time, the following solutions have been tried:
+
+<P>
+<DL COMPACT>
+<DT>1#1<DD><EM>Subroutine libraries</EM> contain subroutines that perform related
+  tasks in well-defined domains like, for instance, differential equations,
+  graphics, user-interfaces and databases. The subroutine library is
+  <EM>the</EM> classical method for packaging reusable domain-knowledge.
+<DT>1#1<DD><EM>Object-oriented frameworks</EM> and <EM>component frameworks</EM>
+  continue the idea of subroutine libraries.
+  Classical libraries have a flat structure, 
+  and the application invokes the library.
+  In object-oriented frameworks it is often the case that the
+  framework is in control, and invokes methods provided by the 
+  application-specific code [<A
+ HREF="dslbib.html#JF88">42</A>,<A
+ HREF="dslbib.html#FS97">32</A>].
+<DT>1#1<DD>A <EM>domain-specific language</EM> (DSL) is a small, usually
+  declarative, language that offers expressive power focused on 
+  a particular problem domain.
+  In many cases, DSL programs are translated to calls to
+  a common subroutine library and the DSL can be viewed as a
+  means to hide the details of that library.
+
+<P>
+</DL>
+<P>
+Although many domain-specific languages have been designed and used
+over the years, the systematic study of domain-specific languages has
+only started more recently.  
+This bibliography has grown out of our
+own research needs to make an inventory of the field and provides
+references to research that deals with the following topics:
+terminology (Section&nbsp;<A HREF="dslbib.html#terminology">2</A>),
+risks and opportunities (Section&nbsp;<A HREF="dslbib.html#risks">3</A>),
+example DSLs (Section&nbsp;<A HREF="dslbib.html#examples">4</A>),
+DSL design methodology (Section&nbsp;<A HREF="dslbib.html#methodology">5</A>),
+and DSL implementation strategies (Section&nbsp;<A HREF="dslbib.html#implementation">6</A>).
+The papers listed are annotated with summaries, which in turn are
+cross-referenced to related papers.
+
+<P>
+Although these topics are the subject of current research and progress is
+being made in addressing them, we expect that they will remain important for
+several years to come.
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">&#160;</A> <A NAME="terminology">&#160;</A><BR>
+2. Terminology
+</H1>
+
+<P>
+The question what exactly is a domain-specific language is 
+subject to debate. We propose the following definition:
+<BLOCKQUOTE>
+
+  A <EM>domain-specific language</EM> (DSL) is a programming language or
+executable specification language that offers, through appropriate
+notations and abstractions, expressive power focused on, and usually
+restricted to, a particular problem domain.  
+</BLOCKQUOTE>The key characteristic of DSLs according to this definition is their 
+<EM>focussed</EM> expressive power.
+
+<P>
+Our definition inherits the vagueness of one of its defining terms:
+<EM>problem domain</EM>. Rather than attempting to define this volatile
+notion as well, we list and categorize a number of domains for which
+DSLs have actually been built in Section&nbsp;<A HREF="dslbib.html#examples">4</A>.
+Moreover, we refer to [<A
+ HREF="dslbib.html#Sim96">70</A>], which contains an interesting
+discussion contrasting a ``domain as the real world'' point of view
+as adopted in the artificial intelligence community,
+with a ``domain as a set of systems'' approach,
+as used in the systematic software reuse research community.
+
+<P>
+DSLs are usually <EM>small</EM>, offering only a restricted suite of
+notations and abstractions. In the literature they are also called
+<EM>micro-languages</EM> and <EM>little
+languages</EM>&nbsp;[<A
+ HREF="dslbib.html#Bentley86h">7</A>]. Sometimes, however, they contain an
+entire general-purpose language (GPL) as a sublanguage, thus offering
+domain-specific expressive power <EM>in addition to</EM> the expressive
+power of the GPL. This situation occurs when DSLs are implemented as
+<EM>embedded languages</EM> (see Section&nbsp;<A HREF="dslbib.html#implementation">6</A>). Languages
+such as Cobol or Fortran, which could be viewed as languages tailored
+towards the domain of business and scientific programming,
+respectively, are generally not regarded as DSLs, because they are not
+small and because their expressive power is not restricted to these
+domains.
+
+<P>
+Domain-specific languages are usually
+<EM>declarative</EM>. Consequently, they can be viewed as specification
+languages, as well as programming languages.  
+Many DSLs are supported by
+a DSL compiler which generates applications from DSL programs. In this
+case, the DSL compiler is referred to as <EM>application generator</EM>
+in the literature&nbsp;[<A
+ HREF="dslbib.html#Cle88">17</A>], and the DSL as
+<EM>application-specific language</EM>. Other DSLs, such as
+YACC&nbsp;[<A
+ HREF="dslbib.html#Bentley86h">7</A>] or ASDL&nbsp;[<A
+ HREF="dslbib.html#WAKS97">77</A>], are not aimed at
+programming (specifying) complete applications, but rather at
+generating libraries or components. Also, DSLs exist for which
+execution consists in generating documents (T<SMALL>E</SMALL>X), or pictures
+(PIC&nbsp;[<A
+ HREF="dslbib.html#Bentley86h">7</A>]). A common term for DSLs geared towards
+building business data processing systems is 4th Generation Language
+(4GL).
+
+<P>
+Related to domain-specific programming is <EM>end-user programming</EM>,
+which happens when end-users perform simple programming tasks using a
+macro or scripting language.  A typical example is spreadsheet
+programming using the Excel macro-language.
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">&#160;</A>
+<A NAME="risks">&#160;</A><BR>
+3. Risks and Opportunities
+</H1>
+
+<P>
+Adopting a DSL approach to software engineering involves both
+risks and opportunities. The well-designed DSL manages to find the
+proper balance between these two.
+The <EM>benefits</EM> of DSLs include:
+
+<P>
+<DL COMPACT>
+<DT>1#1<DD>DSLs allow solutions to be expressed in the idiom and at the level of
+ abstraction of the problem domain. Consequently, domain experts themselves
+ can understand, validate, modify, and often even develop DSL programs.
+<DT>1#1<DD>DSL programs are concise, self-documenting to a large extent, and can
+  be reused for different purposes&nbsp;[<A
+ HREF="dslbib.html#LR94">50</A>].
+<DT>1#1<DD>DSLs enhance productivity, reliability, maintainability
+  [<A
+ HREF="dslbib.html#DK98">24</A>,<A
+ HREF="dslbib.html#SDRR96">47</A>], and portability [<A
+ HREF="dslbib.html#HB88">38</A>].
+<DT>1#1<DD>DSLs embody domain knowledge, and thus enable the conservation and reuse
+  of this knowledge.
+<DT>1#1<DD>DSLs allow validation and optimization at the domain 
+  level&nbsp;[<A
+ HREF="dslbib.html#BHMvE97">6</A>,<A
+ HREF="dslbib.html#Bru97">13</A>,<A
+ HREF="dslbib.html#MP99">55</A>].
+<DT>1#1<DD>DSLs improve testability following approaches such 
+  as&nbsp;[<A
+ HREF="dslbib.html#SirerBershad99">71</A>].</DL>The <EM>disadvantages</EM> of the use of a DSL are:
+
+<P>
+<DL COMPACT>
+<DT>1#1<DD>The costs of designing, implementing and maintaining a DSL.
+<DT>1#1<DD>The costs of education for DSL users.
+<DT>1#1<DD>The limited availability of DSLs&nbsp;[<A
+ HREF="dslbib.html#krueger92">49</A>].
+<DT>1#1<DD>The difficulty of finding the proper scope for a DSL.
+<DT>1#1<DD>The difficulty of balancing
+  between domain-specificity and general-purpose programming
+ language constructs.
+<DT>1#1<DD>The potential loss of efficiency when compared with hand-coded software.</DL>
+<P>
+Comparisons of the DSL approach to other approaches to software
+generation are made in [<A
+ HREF="dslbib.html#CE99">20</A>,<A
+ HREF="dslbib.html#Deu97">22</A>,<A
+ HREF="dslbib.html#SDRR96">47</A>].
+In [<A
+ HREF="dslbib.html#DK98">24</A>] the costs and benefits of DSLs are analyzed from the
+perspective of software maintenance. 
+In&nbsp;[<A
+ HREF="dslbib.html#krueger92">49</A>], DSLs are categorized as one of the main approaches to
+software reuse, and a detailed comparison is made to other reuse techniques.
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">&#160;</A>
+<A NAME="examples">&#160;</A><BR>
+4. Example DSLs
+</H1>
+
+<P>
+Literally hundreds of DSLs are in existence today.
+Of these, only a subset is actually described in the 
+software engineering or programming language literature.
+Best-known are classical examples
+like PIC, SCATTER, CHEM, LEX, YACC, and Make, which are described in
+[<A
+ HREF="dslbib.html#Bentley86h">7</A>]. Other well-known examples are SQL, BNF, and HTML.
+We have included references to various example domain-specific languages.
+Their domains can be grouped into the following areas:
+
+<P>
+@ -
+
+[Software Engineering]
+  Financial products&nbsp;[<A
+ HREF="dslbib.html#BDKKM96">12</A>,<A
+ HREF="dslbib.html#Deu97">22</A>,<A
+ HREF="dslbib.html#DK98">24</A>],
+  behavior control and coordination&nbsp;[<A
+ HREF="dslbib.html#TB-SOCP98">9</A>,<A
+ HREF="dslbib.html#BertrandAugeraud97">10</A>],
+  software architectures&nbsp;[<A
+ HREF="dslbib.html#MedvidovicRosenblum97">54</A>],
+  and databases&nbsp;[<A
+ HREF="dslbib.html#HKN85">39</A>].
+[Systems Software]
+  Description and analysis of abstract syntax trees [<A
+ HREF="dslbib.html#WAKS97">77</A>,<A
+ HREF="dslbib.html#Crew97">19</A>,<A
+ HREF="dslbib.html#LeijenMeijer99">51</A>],
+  video device driver specifications [<A
+ HREF="dslbib.html#ThibaultMarletConsel97">76</A>],
+  cache coherence protocols&nbsp;[<A
+ HREF="dslbib.html#ChandraEtAl97">15</A>],
+  data structures in C&nbsp;[<A
+ HREF="dslbib.html#SmaragdakisBatory97">72</A>],
+  and operating system specialization&nbsp;[<A
+ HREF="dslbib.html#PBCWC97">63</A>].
+[Multi-Media]
+  Web computing [<A
+ HREF="dslbib.html#CardelliDavies97">14</A>,<A
+ HREF="dslbib.html#Fuchs97">35</A>,<A
+ HREF="dslbib.html#AtkinsEtAl97">4</A>,<A
+ HREF="dslbib.html#FST99">33</A>],
+  image manipulation&nbsp;[<A
+ HREF="dslbib.html#StevensonFleck97">73</A>],
+  3D animation [<A
+ HREF="dslbib.html#Elliott97">29</A>],
+  and drawing&nbsp;[<A
+ HREF="dslbib.html#KaminHyatt97">44</A>].
+[Telecommunications]
+  String and tree languages for model checking [<A
+ HREF="dslbib.html#KlarlundSchwartzbach97">48</A>],
+  communication protocols&nbsp;[<A
+ HREF="dslbib.html#BHMvE97">6</A>],
+  telecommunication switches [<A
+ HREF="dslbib.html#LR94">50</A>], and
+  signature computing&nbsp;[<A
+ HREF="dslbib.html#BFRS99">11</A>].
+[Miscellaneous]
+  Simulation [<A
+ HREF="dslbib.html#AntoniottiGollu97">2</A>,<A
+ HREF="dslbib.html#Bru97">13</A>],
+  mobile agents&nbsp;[<A
+ HREF="dslbib.html#Gray95">36</A>],
+  robot control&nbsp;[<A
+ HREF="dslbib.html#PetersonHudakElliott97">61</A>],
+  solving partial differential equations&nbsp;[<A
+ HREF="dslbib.html#DHH98">26</A>],
+  and digital hardware design&nbsp;[<A
+ HREF="dslbib.html#JenningsBeuscher99">41</A>].
+<P>
+A collection of several papers on DSLs can be found in&nbsp;[<A
+ HREF="dslbib.html#Salus98">67</A>].
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">&#160;</A>
+<A NAME="methodology">&#160;</A><BR>
+5. DSL Design Methodology
+</H1>
+
+<P>
+The development of a domain-specific language typically involves the
+following steps (see [<A
+ HREF="dslbib.html#Cle88">17</A>,<A
+ HREF="dslbib.html#DK98">24</A>]):@ -
+
+[Analysis]
+  (1) Identify the problem domain.
+  (2) Gather all relevant knowledge in this domain.
+  (3) Cluster this knowledge in a handful of semantic notions and
+          operations on them.
+  (4) Design a DSL that concisely describes applications in the domain.
+[Implementation]
+  (5) Construct a library that implements the semantic notions.
+  (6) Design and implement a compiler that translates DSL programs to
+          a sequence of library calls.
+[Use]
+  (7) Write DSL programs for all desired applications and compile them.
+<P>
+The aim of the analysis steps (1) through (4) is to build up 
+a thorough understanding of the underlying
+application domain. 
+Guidelines for acquiring such an understanding are provided by 
+the research area of <EM>domain analysis</EM> which investigates ways of
+modeling domains.
+Following [<A
+ HREF="dslbib.html#Nei84">58</A>], a <EM>domain analyst</EM> is
+a person who examines the needs and requirements of a collection of
+systems which seem ``similar''. Neighbors emphasizes
+that this is work that only can be done by 
+a person who has built many systems for different customers in the
+same problem area. The domain analyst is like a systems analyst,
+except that the goal is to support the development of families
+of related systems, not just one-of-a-kind productions [<A
+ HREF="dslbib.html#TTC95">75</A>].
+
+<P>
+<EM>Domain engineering</EM> [<A
+ HREF="dslbib.html#Ara89">3</A>]
+refers to the activity of systematically modeling domains.
+Domain engineering originates from research in the area of 
+<EM>software reuse</EM>, and can be used when constructing
+domain-specific reusable libraries, frameworks or languages.
+A recent domain engineering survey is provided by [<A
+ HREF="dslbib.html#CE99">20</A>, Chapter&nbsp;3].
+Several domain engineering methodologies exists,
+of which ODM (Organizational Domain Modeling [<A
+ HREF="dslbib.html#Sim95">69</A>,<A
+ HREF="dslbib.html#Sim96">70</A>]),
+FODA (Feature-Oriented Domain Analysis [<A
+ HREF="dslbib.html#FODA90">45</A>]), and
+DSSA (Domain-Specific Software Architectures [<A
+ HREF="dslbib.html#TTC95">75</A>])
+are best known.
+
+<P>
+Strongly related to domain engineering is the notion of 
+<EM>program families</EM>
+which are sets of similar programs [<A
+ HREF="dslbib.html#Lin98">52</A>,<A
+ HREF="dslbib.html#CHW98">18</A>].
+At Lucent, a systematic approach to the development of families is in use,
+the Family-Oriented Abstraction, Specification and
+Translation (FAST) approach, which has been successfully applied to
+over 25 different domains [<A
+ HREF="dslbib.html#CHW98">18</A>].
+Program families are in turn related to <EM>software product lines</EM>.
+These emphasize features shared by all products, and are focused on
+the needs of a selected <EM>market</EM> [<A
+ HREF="dslbib.html#DS99">21</A>,<A
+ HREF="dslbib.html#MSG96">53</A>,<A
+ HREF="dslbib.html#Wit96">78</A>].
+
+<P>
+A prerequisite to developing a DSL is mature domain knowledge.
+For that reason, a DSL is viewed as the final and most mature phase
+of the evolution of an object-oriented application framework [<A
+ HREF="dslbib.html#RJ96">66</A>,<A
+ HREF="dslbib.html#Deu97">22</A>].
+For the same reason, the existence of <EM>legacy systems</EM> 
+implementing domain concepts will be of use when developing
+a DSL for that domain [<A
+ HREF="dslbib.html#Sim96">70</A>].
+Reverse engineering techniques may be used to distill  domain
+knowledge from such legacy systems -- an overview of such 
+techniques is provided by [<A
+ HREF="dslbib.html#CC90">16</A>,<A
+ HREF="dslbib.html#DKV99">25</A>].
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">&#160;</A>
+<A NAME="implementation">&#160;</A><BR>
+6. DSL Implementation
+</H1>
+
+<P>
+The implementation steps (5) and (6) of the previous section
+can be carried out using several approaches:
+
+<P>
+
+<H4><A NAME="SECTION00060010000000000000">
+6.0.0.1 Interpretation or compilation</A>
+</H4>  
+This is the classical approach to 
+implementing a new language.  Standard compiler
+tools&nbsp;[<A
+ HREF="dslbib.html#AhoSethiUllman86">1</A>,<A
+ HREF="dslbib.html#Bentley86h">7</A>] can be used, or tools
+dedicated to the implementation of DSLs like Draco&nbsp;[<A
+ HREF="dslbib.html#Nei84">58</A>],
+ASF+SDF&nbsp;[<A
+ HREF="dslbib.html#DHK96">23</A>], Kephera&nbsp;[<A
+ HREF="dslbib.html#FNP97">31</A>], Kodiyak&nbsp;[<A
+ HREF="dslbib.html#HB88">38</A>],
+design by selection&nbsp;[<A
+ HREF="dslbib.html#PK97">62</A>], or InfoWiz&nbsp;[<A
+ HREF="dslbib.html#NJ97">56</A>].
+
+<P>
+The main advantage of building a compiler or interpreter is that the
+implementation is completely tailored towards the DSL and no
+concessions are necessary regarding notation, primitives and the
+like. 
+Also, error detection, static analysis, and optimizations can be done at the
+domain level, for example using an <EM>effect system</EM> as in
+[<A
+ HREF="dslbib.html#Bru97">13</A>].
+
+<P>
+Clearly, an important problem is the cost of building such a 
+compiler or interpreter from scratch, and the lack of reuse from
+other (DSL) implementations, although some DSL tool sets
+(for example InfoWiz&nbsp;[<A
+ HREF="dslbib.html#NJ97">56</A>]) are particularly designed to
+overcome such problems.
+
+<P>
+
+<P><P><BR>
+As an alternative to implementing a DSL from scratch, 
+a DSL can be implemented by extending a given base language. 
+For instance, [<A
+ HREF="dslbib.html#BHMvE97">6</A>] describes an extension of
+(a restricted version of) a general-purpose 
+language with domain-specific constructs.
+The main advantage of this approach is that all 
+features of the base language remain
+available and need not be re-implemented.
+
+<P>
+When implementing domain-specific extensions of a base language, the
+implementation of the base language can be reused in three different ways:
+
+<P>
+
+<H4><A NAME="SECTION00060020000000000000">
+6.0.0.2 Embedded languages / domain-specific libraries</A>
+</H4> 
+  In this approach, existing mechanisms
+  such as definitions for functions or operators with user-defined syntax
+  are used to build a library of
+  domain-specific operations. The syntactic mechanisms of the base language 
+  are used to express the idiom of the domain.
+
+<P>
+An advantage of this approach is that the compiler or interpreter 
+  of the base language is reused <EM>as is</EM> for the DSL. 
+  The main limitation is in the expressiveness of the
+  syntactic
+  mechanisms in the base language.  In many cases, the optimal domain-specific
+  notation has to be compromised to fit the limitations of the base language.
+  Typical examples of this approach are&nbsp;[<A
+ HREF="dslbib.html#PetersonHudakElliott97">61</A>] (a robot
+  control language embedded in Haskell) and&nbsp;[<A
+ HREF="dslbib.html#KaminHyatt97">44</A>] (a PIC-like
+  drawing language embedded in ML). The concept
+  of <EM>domain-specific embedded language</EM>
+  was coined by Hudak [<A
+ HREF="dslbib.html#Hud96">40</A>].
+
+<H4><A NAME="SECTION00060030000000000000">
+6.0.0.3 Preprocessing or macro processing</A>
+</H4> In this approach the new
+  constructs are translated to statements in the base language by a
+  preprocessor. The main advantage of this approach is simplicity.
+  Its main disadvantage is that static checking and optimization are
+  not done at the domain level. Consequently, generated code is error
+  prone, and the user is provided with feedback on these errors at the
+  level of the base language, or only at run-time.
+
+<H4><A NAME="SECTION00060040000000000000">
+6.0.0.4 Extensible compiler or interpreter</A>
+</H4> This
+  approach is similar to the previous one, but the preprocessing phase
+  is now integrated in the compiler.  The advantage is that more type
+  checking and better optimization is possible. This approach is taken
+  by [<A
+ HREF="dslbib.html#Engler97">30</A>,<A
+ HREF="dslbib.html#StichnothGross97">74</A>]. The
+  Tcl&nbsp;[<A
+ HREF="dslbib.html#Ous98">59</A>] interpreter is also a prime example: it has been
+  extended for dozens of domains.
+
+<P>
+
+<P><P><BR>
+Apart from building a dedicated DSL compiler or interpreter, or reusing the 
+implementation of an underlying base language, other implementation techniques
+may be used. For instance, in <EM>aspect-oriented programming</EM> [<A
+ HREF="dslbib.html#KILLLMM97">46</A>] 
+a DSL is used to describe an aspect of a system's behavior that is orthogonal to its
+main functionality. An <EM>aspect weaver</EM> is then used to generate
+domain-specific code and merge it with the main code.
+
+<P>
+
+<H1><A NAME="SECTION00070000000000000000">
+7. Concluding Remarks</A>
+</H1>
+
+<P>
+In this paper, we have given a survey of the literature on 
+domain-specific languages. 
+We covered terminology, risks and opportunities, example DSLs,
+and design and implementation issues, listing relevant references
+for each of these topics.
+The references themselves are annotated with a summary of the
+most important results discussed in each paper.
+
+<P>
+For up to date information on the topic of domain-specific languages,
+we refer to the series of DSL conferences organized by USENIX
+[<A
+ HREF="dslbib.html#dsl97.usenix">64</A>,<A
+ HREF="dslbib.html#dsl99.usenix">27</A>], which most likely will have
+successors in the years to come.
+
+<P>
+Another valuable source of up to date information may be the web.
+A searchable domain engineering bibliography, with abstracts,
+is available at
+<FONT SIZE="-1"><A NAME="tex2html2"
+ HREF="http://www.iese.fhg.de/pubs_and_links/spl/bibliography/">http://www.iese.fhg.de/pubs_and_links/spl/bibliography/</A></FONT>.
+An online bibliography on the topic of generative programming can be found at
+<FONT SIZE="-1"><A NAME="tex2html3"
+ HREF="http://home.t-online.de/home/Ulrich.Eisenecker/gpref.htm">http://home.t-online.de/home/Ulrich.Eisenecker/gpref.htm</A></FONT>. Finally, 
+<FONT SIZE="-1"><A NAME="tex2html4"
+ HREF="http://www.irisa.fr/compose/dsl/">http://www.irisa.fr/compose/dsl/</A></FONT>
+provides a survey of domain-specific languages in general.
+
+<P>
+
+<H4><A NAME="SECTION00070010000000000000">
+7.0.0.1 Acknowledgments</A>
+</H4>
+We would like to thank Jan Heering from CWI for many
+useful remarks.
+
+<P>
+
+<H2><A NAME="SECTIONREF">Bibliography</A>
+</H2>
+<DL COMPACT><DD><P></P><DT><A NAME="AhoSethiUllman86"><STRONG>1</STRONG></A>
+<DD>
+A.V. Aho, R. Sethi, and J.D. Ullman.
+<BR><EM>Compiler: Principles, Techniques and Tools</EM>.
+<BR>Addison-Wesley, 1986.
+<P>
+<BR> <EM>Standard text on compiler construction.</EM>
+<P></P><DT><A NAME="AntoniottiGollu97"><STRONG>2</STRONG></A>
+<DD>
+M. Antoniotti and A. G&#246;ll&#252;.
+<BR>SHIFT and SMART-AHS: A language for hybrid system engineering
+  modeling and simulation.
+<BR>In Ramming [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>], pages 171-182.
+<P>
+<BR> <EM>Describes the language SHIFT for hybrid system simulation.
+  Main application area is traffic simulation. Implemented by translation to C
+  and a run-time library with solvers for various kinds of differential
+  equations.</EM>
+<P></P><DT><A NAME="Ara89"><STRONG>3</STRONG></A>
+<DD>
+G. Arango.
+<BR>Domain analysis: From art form to engineering discipline.
+<BR>In <EM>Fifth International Workshop on Software Specification and
+  Design</EM>, pages 152-159, May 1989.
+<BR>Appeared as ACM SIGSOFT Engineering Notes 14(3).
+<P>
+<BR> <EM>Outlines a framework to synthesize domain analysis methods,
+  and to compare between different methods. The paper advocates an incremental,
+  evolving approach towards developing domain models.</EM>
+<P></P><DT><A NAME="AtkinsEtAl97"><STRONG>4</STRONG></A>
+<DD>
+D. Atkins, T. Ball, G. Bruns, and K. Cox.
+<BR>Mawl: A domain-specific language for form-based services.
+<BR>In DSL-IEEE [<A
+ HREF="dslbib.html#tse1999">28</A>], pages 334-346.
+<BR>An earlier version appeared in [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>].
+<P>
+<BR> <EM>Describes the language Mawl that is intended for implementing
+  form-based information services for different devices (web browser,
+  interactive voice response service). The main contributions of this language
+  are: (1) separation of user-interface code and service logic, (2) static type
+  checking, (3) device-independence, (4) automatic generation of low-level CGI
+  code, (5) automatic generation of HTML templates, and (6) automatic
+  generation of usage statistics.</EM>
+<P></P><DT><A NAME="Bar85"><STRONG>5</STRONG></A>
+<DD>
+D. R. Barstow.
+<BR>Domain-specific automatic programming.
+<BR><EM>IEEE Transactions on Software Engineering</EM>, SE-11(11):1321-36,
+  November 1985.
+<P>
+<BR> <EM>Envisions a framework for stepwise synthesis of
+  domain-specific applications from informal specifications. The framework
+  applies search techniques to explore possible refinements of an initial
+  specification, given a base of domain and programming knowledge (facts and
+  heuristics).</EM>
+<P></P><DT><A NAME="BHMvE97"><STRONG>6</STRONG></A>
+<DD>
+A. Basu, M. Hayden, G. Morrisett, and T. von Eicken.
+<BR>A language-based approach to protocol construction.
+<BR>In Kamin [<A
+ HREF="dslbib.html#dsl97.acm">43</A>], pages 1-15.
+<P>
+<BR> <EM>Reports on the design and implementation of Promela++, a DSL
+  for protocol construction and validation. Promela++ adds domain-specific
+  constructs to restricted C, and supports validation and optimization on the
+  domain-level.</EM>
+<P></P><DT><A NAME="Bentley86h"><STRONG>7</STRONG></A>
+<DD>
+J. L. Bentley.
+<BR>Programming pearls: Little languages.
+<BR><EM>Communications of the ACM</EM>, 29(8):711-721, August 1986.
+<P>
+<BR> <EM>Demonstrates and advocates the use of ``little languages''.
+  Takes PIC as an example, as well as a number of little languages from which
+  PIC input is generated (SCATTER, CHEM), and little languages that were used
+  to implement PIC (LEX, YACC, Make). Contrasts three approaches: interactive
+  systems, subroutine libraries, and little languages. Discusses DSL design
+  principles.</EM>
+<P></P><DT><A NAME="BHK89"><STRONG>8</STRONG></A>
+<DD>
+J. A. Bergstra, J. Heering, and P. Klint, editors.
+<BR><EM>Algebraic Specification</EM>.
+<BR>ACM Press/Addison-Wesley, 1989.
+<P>
+<BR> <EM>Introduces the Syntax Definition Formalism SDF, the Algebraic
+  Specification Formalism ASF, and their combination, ASF+SDF, which can be
+  used to describe the syntax and semantics of (domain-specific) languages.
+  Contains several language definition case studies. See
+  also [<A
+ HREF="dslbib.html#BDKKM96">12</A>,<A
+ HREF="dslbib.html#DHK96">23</A>].</EM>
+<P></P><DT><A NAME="TB-SOCP98"><STRONG>9</STRONG></A>
+<DD>
+J.A. Bergstra and P. Klint.
+<BR>The discrete time T<SMALL>OOL</SMALL>B<SMALL>US</SMALL>--a software coordination architecture.
+<BR><EM>Science of Computer Programming</EM>, 31:205-229, 1998.
+<P>
+<BR> <EM>Describes how a language based on process algebra is used in
+  the T<SMALL>OOL</SMALL>B<SMALL>US</SMALL> coordination architecture for building heterogeneous, distributed
+  software systems. See also [<A
+ HREF="dslbib.html#BertrandAugeraud97">10</A>].</EM>
+<P></P><DT><A NAME="BertrandAugeraud97"><STRONG>10</STRONG></A>
+<DD>
+F. Bertrand and M. Augeraud.
+<BR>BDL: A specialized language for per-object reactive control.
+<BR>In DSL-IEEE [<A
+ HREF="dslbib.html#tse1999">28</A>], pages 347-362.
+<BR>An earlier version appeared in [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>].
+<P>
+<BR> <EM>Many object-oriented languages contain only implicit
+  constraints on the order of application of the methods in a class. This paper
+  introduces the Behaviour Description Language (BDL) which uses a
+  process-oriented notation to describe this ordering. BDL is translated to C,
+  with ESTEREL as intermediary. The resulting C code is linked with a C++
+  program and acts as controller for the execution of C++ classes. See
+  also [<A
+ HREF="dslbib.html#TB-SOCP98">9</A>].</EM>
+<P></P><DT><A NAME="BFRS99"><STRONG>11</STRONG></A>
+<DD>
+D. Bonachea, K. Fisher, A. Rogers, and F. Smith.
+<BR>Hancock: A language for processing very large-scale data.
+<BR>In DSL-99 [<A
+ HREF="dslbib.html#dsl99.usenix">27</A>], pages 163-176.
+<P>
+<BR> <EM>Describes the language Hancock that is intended for
+  <EM>signature computations</EM> on the data collected from telephone calls. A
+  signature is a user profile with applications ranging from fraude detection
+  to marketing. Typical issues are the large volume of data, the complex
+  traversal patterns of these data and the different levels of precision for
+  signatures. Hancock is translated to C combined with several run-time
+  libraries. The major benefit of this DSL is a separation of concerns
+  (traversal patterns, efficiency, signature computations). As a result
+  programmers can concentrate on the signature computation, since the other
+  concerns are taken care of by the DSL compiler. The major reason to design a
+  DSL (as opposed to using a library) were the traversal patterns that cannot
+  be captured in a library. The paper concludes with a description of the
+  design process used.</EM>
+<P></P><DT><A NAME="BDKKM96"><STRONG>12</STRONG></A>
+<DD>
+M. van den Brand, A. van Deursen, P. Klint, S. Klusener, and E. van der Meulen.
+<BR>Industrial applications of ASF+SDF.
+<BR>In M. Wirsing and M. Nivat, editors, <EM>Algebraic Methodology and
+  Software Technology (AMAST '96)</EM>, volume 1101 of <EM>Lecture Notes in
+  Computer Science</EM>, pages 9-18. Springer-Verlag, 1996.
+<P>
+<BR> <EM>Provides an overview of some industrial applications of the
+  language prototyping environment ASF+SDF. The RISLA case study, involving a
+  language for describing financial products, is discussed in considerable
+  detail, covering pure RISLA, modular RISLA, and RISQUEST, a language for
+  generating questionnaires used when composing new products. From a modular
+  RISLA product description, COBOL code is generated for accessing a library of
+  COBOL functions providing operations on cash flows, balances, intervals, and
+  the like. See also [<A
+ HREF="dslbib.html#Deu97">22</A>,<A
+ HREF="dslbib.html#DK98">24</A>].</EM>
+<P></P><DT><A NAME="Bru97"><STRONG>13</STRONG></A>
+<DD>
+D. Bruce.
+<BR>What makes a good domain-specific language? APOSTLE, and its
+  approach to parallel discrete event simulation.
+<BR>In Kamin [<A
+ HREF="dslbib.html#dsl97.acm">43</A>], pages 17-35.
+<P>
+<BR> <EM>Discusses the design of a DSL for parallel discrete event
+  simulation. On the basis of this experience a number of observations are made
+  regarding DSL design principles. Most notably, the use of a strong
+  <EM>effect system</EM> is advocated to do static checking on the domain level,
+  and to determine applicability of optimizations.</EM>
+<P></P><DT><A NAME="CardelliDavies97"><STRONG>14</STRONG></A>
+<DD>
+L. Cardelli and R. Davies.
+<BR>Service combinators for web computing.
+<BR>In DSL-IEEE [<A
+ HREF="dslbib.html#tse1999">28</A>], pages 309-316.
+<BR>An earlier version appeared in [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>].
+<P>
+<BR> <EM>Access to the resources of the World-Wide Web is usually
+  obtained though manual browsers. Service combinators are intended for writing
+  programs that reproduce human browsing behaviour, including reactions to slow
+  transmission rates and various kinds of failure. Based on a concurrent
+  programming model, the paper gives both an informal and formal treatment of a
+  DSL for Web computing.</EM>
+<P></P><DT><A NAME="ChandraEtAl97"><STRONG>15</STRONG></A>
+<DD>
+S. Chandra, , B. Richards, and J. R. Larus.
+<BR>Teapot: A domain-specific language for writing cache coherence
+  protocols.
+<BR>In DSL-IEEE [<A
+ HREF="dslbib.html#tse1999">28</A>], pages 317-333.
+<BR>An earlier version appeared in [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>].
+<P>
+<BR> <EM>The problem of cache coherence occurs when local replica of
+  shared data are made in a distributed system in order to improve its
+  scalability and performance. Writing the code to support coherence protocols
+  is error-prone. This paper describes experience with the language Teapot for
+  describing these protocols. Teapot programs can be translated to (1) C code
+  that implements the protocol, or (2) input for an automatic verifier. Two
+  case studies and overall experience with this approach are
+  discussed.</EM>
+<P></P><DT><A NAME="CC90"><STRONG>16</STRONG></A>
+<DD>
+E.J. Chikofsky and J.H. Cross.
+<BR>Reverse engineering and design recovery: A taxonomy.
+<BR><EM>IEEE Software</EM>, 7(1):13-17, 1990.
+<P>
+<BR> <EM>Overview of reverse engineering techniques, which also can be
+  used to distill domain knowledge from legacy system. See
+  also [<A
+ HREF="dslbib.html#DKV99">25</A>,<A
+ HREF="dslbib.html#Sim96">70</A>].</EM>
+<P></P><DT><A NAME="Cle88"><STRONG>17</STRONG></A>
+<DD>
+J. C. Cleaveland.
+<BR>Building application generators.
+<BR><EM>IEEE Software</EM>, pages 25-33, July 1988.
+<P>
+<BR> <EM>Uses the term ``application generators'' to refer to DSL
+  compilers. Gives a compiler generator architecture diagram. Describes
+  relationships between roles of customers, domain engineers and system
+  engineers. Lists pros and cons of application generators. Describes
+  ``Stage'', an application-generator development tool. Describes a methodology
+  for building an application generator.</EM>
+<P></P><DT><A NAME="CHW98"><STRONG>18</STRONG></A>
+<DD>
+J. Coplien, D. Hoffman, and D. Weiss.
+<BR>Commonality and variability in software engineering.
+<BR><EM>IEEE Software</EM>, pages 37-45, November/December 1998.
+<P>
+<BR> <EM>A <EM>software family</EM> is a set of similar systems with
+  possibly many different variations. Scope, commonality, and variability (SCV)
+  analysis gives software engineers a systematic way of thinking about and
+  identifying the product family they are creating. The paper describes the
+  Family-Oriented Abstraction, Specification, and Translation (FAST) approach,
+  which has been used with immediate payoff in over 25 domains at Lucent
+  Technologies.</EM>
+<P></P><DT><A NAME="Crew97"><STRONG>19</STRONG></A>
+<DD>
+R. F. Crew.
+<BR>ASTLOG: A language for examining abstract syntax trees.
+<BR>In Ramming [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>], pages 229-242.
+<P>
+<BR> <EM>Introduces a Prolog-based query language for analyzing
+  abstract syntax trees of C/C++ programs.</EM>
+<P></P><DT><A NAME="CE99"><STRONG>20</STRONG></A>
+<DD>
+K. Czarnecki and U. Eisenecker.
+<BR><EM>Generative Programming: Methods, Techniques and Applications</EM>.
+<BR>Addison-Wesley, 1999.
+<BR>To appear.
+<P>
+<BR> <EM>Gives a comprehensive discussion of a range of programming
+  techniques that involve some sort of code generation step, such as
+  aspect-oriented, subject-oriented, and adaptive programming, composition
+  filters, and domain-specific languages. Chapter 3 of this book provides a
+  survey of domain-engineering methods.</EM>
+<P></P><DT><A NAME="DS99"><STRONG>21</STRONG></A>
+<DD>
+J.-M. DeBaud and K. Schmid.
+<BR>A systematic approach to derive the scope of software product lines.
+<BR>In <EM>21st International Conference on Software Engineering,
+  ICSE-99</EM>, pages 34-43. ACM, 1999.
+<P>
+<BR> <EM>Argues that economic motives should be used for scoping
+  software product lines, rather than more traditional domain engineering
+  methods. The paper proposes PuLSE, which iteratively refines business
+  objectives towards more operational evaluation criteria.</EM>
+<P></P><DT><A NAME="Deu97"><STRONG>22</STRONG></A>
+<DD>
+A. van Deursen.
+<BR>Domain-specific languages versus object-oriented frameworks: A
+  financial engineering case study.
+<BR>In <EM>Smalltalk and Java in Industry and Academia, STJA'97</EM>, pages
+  35-39. Ilmenau Technical University, 1997.
+<P>
+<BR> <EM>Contrasts domain-specific languages with object-oriented
+  frameworks by comparing two projects in the financial engineering domain:
+  RISLA (DSL) and the ET++SwapsManager (OO framework). See
+  also [<A
+ HREF="dslbib.html#BDKKM96">12</A>].</EM>
+<P></P><DT><A NAME="DHK96"><STRONG>23</STRONG></A>
+<DD>
+A. van Deursen, J. Heering, and P. Klint, editors.
+<BR><EM>Language Prototyping: An Algebraic Specification Approach</EM>,
+  volume 5 of <EM>AMAST Series in Computing</EM>.
+<BR>World Scientific Publishing Co., 1996.
+<P>
+<BR> <EM>Describes the use of ASF+SDF as a meta-language for the
+  specification of syntax and semantics. After introducing ASF+SDF, a number of
+  language specification case studies are presented, and various styles for
+  writing language specifications are illustrated. Moreover, different
+  techniques for generating tools from these are presented. See
+  also [<A
+ HREF="dslbib.html#BHK89">8</A>].</EM>
+<P></P><DT><A NAME="DK98"><STRONG>24</STRONG></A>
+<DD>
+A. van Deursen and P. Klint.
+<BR>Little languages: Little maintenance?
+<BR><EM>Journal of Software Maintenance</EM>, 10:75-92, 1998.
+<P>
+<BR> <EM>Domain-specific languages (DSLs) have the potential to make
+  software maintenance simpler: domain-experts can directly use the DSL to make
+  required routine modifications. At the negative side, however, more
+  substantial changes may become more difficult: such changes may involve
+  altering the domain-specific language. This will require compiler technology
+  knowledge, which not every commercial enterprise has easily available. The
+  paper describes and uses the experience of the RISLA language for interest
+  rate products to discuss the role of DSLs in software maintenance, the
+  opportunities introduced by using them, and techniques for controlling the
+  risks involved. See also [<A
+ HREF="dslbib.html#BDKKM96">12</A>].</EM>
+<P></P><DT><A NAME="DKV99"><STRONG>25</STRONG></A>
+<DD>
+A. van Deursen, P. Klint, and C. Verhoef.
+<BR>Research issues in software renovation.
+<BR>In J.-P. Finance, editor, <EM>Fundamental Approaches to Software
+  Engineering, FASE99</EM>, volume 1577 of <EM>Lecture Notes in Computer Science</EM>,
+  pages 1-23. Springer-Verlag, 1999.
+<P>
+<BR> <EM>Overview of parsing, transformation, and program
+  understanding techniques that can be used when searching for domain knowledge
+  in legacy systems. See also [<A
+ HREF="dslbib.html#CC90">16</A>,<A
+ HREF="dslbib.html#Sim96">70</A>].</EM>
+<P></P><DT><A NAME="DHH98"><STRONG>26</STRONG></A>
+<DD>
+T. B. Dinesh, M. Haveraaen, and J. Heering.
+<BR>An algebraic programming style for numerical software and its
+  optimization.
+<BR>Technical Report SEN-R9844, CWI, 1998.
+<BR>ACM CoRR Preprint Server cs.SE/9903002 (March 1999). Submitted to
+  <EM>Scientific Programming</EM>.
+<P>
+<BR> <EM>Discusses a domain-specific programming style for the domain
+  of partial differential equations, using an expression style directly
+  obtained from the underlying algebraic theory. The use of this style permits
+  optimizations beyond the scope of current compiler
+  optimizations.</EM>
+<P></P><DT><A NAME="dsl99.usenix"><STRONG>27</STRONG></A>
+<DD>
+<EM>Proceedings of the second USENIX Conference on Domain-Specific Languages</EM>.
+  USENIX Association, October 3-5 1999.
+
+<P></P><DT><A NAME="tse1999"><STRONG>28</STRONG></A>
+<DD>
+Special issue on domain-specific languages.
+<BR><EM>IEEE Transactions on Software Engineering</EM>, 25(3), May/June
+  1999.
+
+<P></P><DT><A NAME="Elliott97"><STRONG>29</STRONG></A>
+<DD>
+C. Elliott.
+<BR>An embedded modeling language approach to interactive 3D and
+  multimedia animation.
+<BR>In DSL-IEEE [<A
+ HREF="dslbib.html#tse1999">28</A>], pages 291-308.
+<BR>An earlier version appeared in [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>].
+<P>
+<BR> <EM>Describes a multi-media extension for Haskell and discusses
+  the merits of Haskell as basis for domain-specific
+  extensions.</EM>
+<P></P><DT><A NAME="Engler97"><STRONG>30</STRONG></A>
+<DD>
+D. R. Engler.
+<BR>Interface compilation: Steps toward compiling program interfaces as
+  languages.
+<BR>In DSL-IEEE [<A
+ HREF="dslbib.html#tse1999">28</A>], pages 387-400.
+<BR>An earlier version appeared in [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>].
+<P>
+<BR> <EM>Describes the extensible ANSI C compiler framework MAGIK,
+  which allows the dynamic incorporation of user-defined compiler extensions.
+  The extensions can transform, optimize or inspect the generated intermediate
+  representation. The approach gives safe access to compiler internals and
+  supports full optimization of application-specific language extensions.
+  Implemented on top of lcc. See also [<A
+ HREF="dslbib.html#StichnothGross97">74</A>].</EM>
+<P></P><DT><A NAME="FNP97"><STRONG>31</STRONG></A>
+<DD>
+R. E. Faith, L. S. Nyland, and J. F. Prins.
+<BR>Khepera: A system for rapid implementation of domain specific
+  languages.
+<BR>In Ramming [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>], pages 243-55.
+<P>
+<BR> <EM>Presents Khepera, a tool kit for rapid implementation and
+  long-term maintenance of DSLs via source-to-source transformation separated
+  into three phases: parsing, AST transformation, and
+  pretty-printing.</EM>
+<P></P><DT><A NAME="FS97"><STRONG>32</STRONG></A>
+<DD>
+M. E. Fayad and D. C. Schmidt.
+<BR>Object-oriented application frameworks.
+<BR><EM>Communications of the ACM</EM>, 40(10):32-38, 1997.
+<P>
+<BR> <EM>Introduction to a special issue on (domain-specific)
+  object-oriented frameworks, which are defined as reusable, semi-complete
+  applications that can be specialized to produce custom applications. Covers
+  classification, strengths and weaknesses, and future trends. See also
+  [<A
+ HREF="dslbib.html#RJ96">66</A>].</EM>
+<P></P><DT><A NAME="FST99"><STRONG>33</STRONG></A>
+<DD>
+M. Fern&#225;ndez, D. Suciu, and I. Tatarinov.
+<BR>Declarative specification of data-intensive web sites.
+<BR>In DSL-99 [<A
+ HREF="dslbib.html#dsl99.usenix">27</A>], pages 135-148.
+<P>
+<BR> <EM>Covers a query language to describe data-intensive web sites.
+  Three programming tasks are distinguished to build such sites: accessing and
+  integrating the data available in the site, building the site's structure,
+  and generating the HTML representation of the site. The solution proposed is
+  a declarative query language (StruQL) to define the site's content and
+  structure, a template language to define the HTML representation and an
+  extension of the query language with functions to describe dynamic behaviour
+  and to promote reusability of queries. Reengineering an existing AT&amp;T web
+  site using this approach has resulted in less, more maintainable, code with
+  more functionality. The initial learning curve of the new language is more
+  than compensated for by the advantages gained.</EM>
+<P></P><DT><A NAME="FGS97"><STRONG>34</STRONG></A>
+<DD>
+M. Fromherz, V. Gupta, and V. Saraswat.
+<BR>cc -- A generic framework for domain-specific languages.
+<BR>In Kamin [<A
+ HREF="dslbib.html#dsl97.acm">43</A>], pages 89-96.
+<P>
+<BR> <EM>Proposes <EM>cc</EM>, a family of languages for concurrent
+  constraint programming, as a framework for DSL construction. Two approaches
+  are explained by example: building a DSL on top of <EM>cc</EM>, and extending
+  <EM>cc</EM> with domain-specific constructs.</EM>
+<P></P><DT><A NAME="Fuchs97"><STRONG>35</STRONG></A>
+<DD>
+M. Fuchs.
+<BR>Domain specific languages for ad hoc distributed applications.
+<BR>In Ramming [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>], pages 27-36.
+<P>
+<BR> <EM>The current architecture of the Web is based on a
+  client/server model in which most of the computation is done at the server
+  side, while the client side is a browser that only displays the results of
+  server computations. SGML/XML is used as meta-language for describing the
+  interactions between heterogeneous agents on the Web. Essentially, a grammar
+  is defined of all possible interactions and this grammar steers the behaviour
+  of each agent. See [<A
+ HREF="dslbib.html#TB-SOCP98">9</A>] for a fully process-based approach to
+  this problem.</EM>
+<P></P><DT><A NAME="Gray95"><STRONG>36</STRONG></A>
+<DD>
+R. Gray.
+<BR>Agent Tcl: A transportable agent system.
+<BR>In J. Mayfield and T. Finnin, editors, <EM>Proceedings of the CIKM
+  Workshop on Intelligent Information Agents, Fourth International Conference
+  on Information and Knowledge Management (CIKM'95)</EM>, December 1995.
+<P>
+<BR> <EM>Describes an extension of Tcl [<A
+ HREF="dslbib.html#Ous98">59</A>] for mobile
+  agents.</EM>
+<P></P><DT><A NAME="GuyerLin99"><STRONG>37</STRONG></A>
+<DD>
+S. Z. Guyer and C. Lin.
+<BR>An annotation language for optimizing software libraries.
+<BR>In DSL-99 [<A
+ HREF="dslbib.html#dsl99.usenix">27</A>], pages 39-52.
+<P>
+<BR> <EM>A language is presented for annotating C libraries with
+  information that is exploited by an optimizing compiler. Domain-specific
+  information is conveyed by annotations that in effect define (i) a dataflow
+  analysis problem on the various library procedures, and (ii) procedure
+  specializations that are to be triggered by the outcome of the analysis. The
+  approach aims at giving libraries some of the compiler support enjoyed by
+  DSLs.</EM>
+<P></P><DT><A NAME="HB88"><STRONG>38</STRONG></A>
+<DD>
+R. M. Herndon and V. A. Berzins.
+<BR>The realizable benefits of a language prototyping language.
+<BR><EM>IEEE Transactions on Software Engineering</EM>, SE-14:803-809,
+  1988.
+<P>
+<BR> <EM>Discusses language prototyping tools (LPT) in general, as
+  well as the specific LPT Kodiyak. Lists application areas of LPTs and
+  benefits of applying them. Gives a brief description of Kodiyak and reports
+  on experience with it.</EM>
+<P></P><DT><A NAME="HKN85"><STRONG>39</STRONG></A>
+<DD>
+E. Horowitz, A. Kemper, and B. Narasimhan.
+<BR>A survey of application generators.
+<BR><EM>IEEE Software</EM>, pages 40-54, January 1985.
+<P>
+<BR> <EM>Surveys a number of database query and update languages, as
+  prime examples of application generators (DSL compilers), and hypothesizes a
+  `generic' database language. Discusses the possibilities of combining such a
+  language with a general purpose language. Outlines AdaRel, an extension of
+  Ada with relational database programming constructs.</EM>
+<P></P><DT><A NAME="Hud96"><STRONG>40</STRONG></A>
+<DD>
+P. Hudak.
+<BR>Building domain-specific embedded languages.
+<BR><EM>ACM Computing Surveys</EM>, 28(4es), December 1996.
+<P>
+<BR> <EM>Argues that a DSL is the ``ultimate abstraction'', capturing
+  precisely the semantics of the application domain, but also that designing
+  and implementing languages is difficult and resists evolution. Proposes the
+  notion of <EM>embedded</EM> DSLs, which inherit the infrastructructure from
+  some other language, and discusses the importance of modular monadic
+  interpreters, instrumentation, and partial evaluation.</EM>
+<P></P><DT><A NAME="JenningsBeuscher99"><STRONG>41</STRONG></A>
+<DD>
+J. Jennings and E. Beuscher.
+<BR>Verischemelog: Verilog embedded in Scheme.
+<BR>In DSL-99 [<A
+ HREF="dslbib.html#dsl99.usenix">27</A>], pages 123-134.
+<P>
+<BR> <EM>Verilog, a digital hardware design language, is extended with
+  facilities for generating and manipulating hardware descriptions by embedding
+  it into the general purpose language Scheme. The extended language features
+  early error detection and high customizability.</EM>
+<P></P><DT><A NAME="JF88"><STRONG>42</STRONG></A>
+<DD>
+R. E. Johnson and B. Foote.
+<BR>Designing reusable classes.
+<BR><EM>Journal of Object-Oriented Programming</EM>, 1(2):22-35, 1988.
+<P>
+<BR> <EM>Introduced the notion of object-oriented frameworks. A
+  framework is defined as a set of classes that embodies an abstract design for
+  solutions to a family of related problems, and supports reuse at a larger
+  granularity than classes. In a <EM>white-box</EM> framework,
+  application-specific behavior is obtained via method overriding or by adding
+  new methods to the framework's classes. In a <EM>black-box</EM>, support for
+  extensibility is provided by defining interfaces for components that can be
+  plugged into the framework via object composition, thus better hiding the
+  implementation details of the framework. See also
+  [<A
+ HREF="dslbib.html#FS97">32</A>,<A
+ HREF="dslbib.html#RJ96">66</A>]</EM>
+<P></P><DT><A NAME="dsl97.acm"><STRONG>43</STRONG></A>
+<DD>
+S. Kamin, editor.
+<BR><EM>DSL '97 - First ACM SIGPLAN Workshop on Domain-Specific
+  Languages, in Association with POPL '97</EM>, Paris, France, January 1997.
+  University of Illinois Computer Science Report.
+
+<P></P><DT><A NAME="KaminHyatt97"><STRONG>44</STRONG></A>
+<DD>
+S. Kamin and D. Hyatt.
+<BR>A special-purpose language for picture-drawing.
+<BR>In Ramming [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>], pages 297-310.
+<P>
+<BR> <EM>Describes FPIC, a reconstruction of the original PIC embedded
+  in ML.</EM>
+<P></P><DT><A NAME="FODA90"><STRONG>45</STRONG></A>
+<DD>
+K. C. Kang, S. G. Cohen, J. A. Hess, W. E. Novak, and A. S. Peterson.
+<BR>Feature-oriented domain analysis (FODA) feasibility study.
+<BR>Technical Report CMU/SEI-90-TR-21, Software Engineering Institute,
+  Carnegie Mellon University, 1990.
+<P>
+<BR> <EM>FODA is a domain engineering approach emphasizing feature
+  analysis. A feature is defined as a prominent, user-visible characteristic of
+  a software system. FODA aims at building up a <EM>feature model</EM>,
+  consisting of a features diagram (hierarchical decomposition of mandatory,
+  alternative, or optional features), feature definitions, composition rules
+  for features, and a rationale for features indicating the trade-offs. See
+  also [<A
+ HREF="dslbib.html#CE99">20</A>,<A
+ HREF="dslbib.html#Sim96">70</A>]</EM>
+<P></P><DT><A NAME="KILLLMM97"><STRONG>46</STRONG></A>
+<DD>
+G. Kiczales, J. Irwin, J. Lamping, J.-M. Loingtier, C. Lopes, C. Maeda, and
+  A. Mendhekar.
+<BR>Aspect oriented programming.
+<BR>In Kamin [<A
+ HREF="dslbib.html#dsl97.acm">43</A>], pages 75-88.
+<P>
+<BR> <EM>Presents a novel programming technique, called
+  aspect-oriented programming (AOP). This technique consists in describing each
+  aspect (e.g. basic functionality, communication, coordination) of a system's
+  behaviour in a (little) language that allows it to be expressed in its most
+  natural form. An aspect weaver merges these separate aspect descriptions into
+  a single, efficient program. An important benefit of AOP is that it allows
+  high-level domain-specific programming for performance-critical domains. See
+  also [<A
+ HREF="dslbib.html#CE99">20</A>]</EM>
+<P></P><DT><A NAME="SDRR96"><STRONG>47</STRONG></A>
+<DD>
+R. B. Kieburtz, L. McKinney, J. M. Bell, J. Hook, A. Kotov, J. Lewis, D. P.
+  Oliva, T. Sheard, I. Smith, and L. Walton.
+<BR>A software engineering experiment in software component generation.
+<BR>In <EM>Proceedings of the 18th International Conference on Software
+  Engineering ICSE-18</EM>, pages 542-553. IEEE, 1996.
+<P>
+<BR> <EM>Reports the results of an experiment in which a
+  template-based approach and a DSL approach to software generation were
+  compared. Several subjects were monitored while performing a number of
+  development and maintenance tasks using alternatively template technology and
+  DSL technology. Flexibility, productivity, reliability, and usability were
+  measured. The DSL approach scored better on all counts.</EM>
+<P></P><DT><A NAME="KlarlundSchwartzbach97"><STRONG>48</STRONG></A>
+<DD>
+N. Klarlund and M. I. Schwartzbach.
+<BR>A domain-specific language for regular sets of strings and trees.
+<BR>In DSL-IEEE [<A
+ HREF="dslbib.html#tse1999">28</A>], pages 378-386.
+<BR>An earlier version appeared in [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>].
+<P>
+<BR> <EM>Describes design and implementation of FIDO, a language to
+  express large finite-state automata on large alphabets. Typical application
+  is in verification and model checking.</EM>
+<P></P><DT><A NAME="krueger92"><STRONG>49</STRONG></A>
+<DD>
+C. W. Krueger.
+<BR>Software reuse.
+<BR><EM>ACM Computing Surveys</EM>, 24(2):131-183, June 1992.
+<P>
+<BR> <EM>Categorizes, describes and compares existing approaches to
+  software reuse, among which DSLs (or application generators). Compared to the
+  other approaches DSLs reduce the intellectual effort required to obtain an
+  executable system from its specification. Limited availability and difficulty
+  of building DSLs of optimal specificity/generality are listed as
+  disadvantages of DSLs.</EM>
+<P></P><DT><A NAME="LR94"><STRONG>50</STRONG></A>
+<DD>
+D. A. Ladd and J. C. Ramming.
+<BR>Two application languages in software production.
+<BR>In <EM>USENIX Very High Level Languages Symposium Proceedings</EM>,
+  pages 169-178, October 1994.
+<P>
+<BR> <EM>Describes how PRL5, an application-oriented, declarative
+  language used to maintain the integrity of databases in the AT&amp;T 5ESS
+  telecommunications switch, evolved from an earlier, imperative
+  domain-specific language, PRL, which in turn replaced a combination of
+  English and C. The constraint descriptions expressed in PRL5 can be used in
+  more than one way, whereas a program to check constraints is useful only for
+  performing that particular computation. A key lesson is that domain-specific
+  languages should not be designed to describe computation, but to express
+  useful facts from which one or more computations can be
+  derived.</EM>
+<P></P><DT><A NAME="LeijenMeijer99"><STRONG>51</STRONG></A>
+<DD>
+D. Leijen and E. Meijer.
+<BR>Domain specific embedded compilers.
+<BR>In DSL-99 [<A
+ HREF="dslbib.html#dsl99.usenix">27</A>], pages 109-122.
+<P>
+<BR> <EM>Explains how a DSL (SQL is taken as example) can be embedded
+  in Haskell by (i) coding an abstract syntax of the DSL as a Haskell datatype
+  (ii) writing a code generator in Haskell that maps the abstract syntax to the
+  concrete syntax, and (iii) making Haskell call an external server which
+  compiles and executes the generated DSL code.</EM>
+<P></P><DT><A NAME="Lin98"><STRONG>52</STRONG></A>
+<DD>
+F. van der Linden, editor.
+<BR><EM>Development and Evolution of Software Architectures for Product
+  Families</EM>, volume 1429 of <EM>Lecture Notes in Computer Science</EM>.
+  Springer-Verlag, 1998.
+<P>
+<BR> <EM>Proceedings of a workshop originating from the ESPRIT ARES
+  project, which investigates software architectures for families of embedded
+  systems.</EM>
+<P></P><DT><A NAME="MSG96"><STRONG>53</STRONG></A>
+<DD>
+R. R. Macala, L. D. Sutckey, and D. C. Gross.
+<BR>Managing domain-specific product-line development.
+<BR><EM>IEEE Software</EM>, 13, May 1996.
+<P>
+<BR> <EM>Describes recommendations and lessons learned from managing a
+  reusability project at Boeing in the area of real-time training systems for
+  flight crews. Product-line development separates the software-development
+  process into two separate life cycles: <EM>domain engineering</EM>, which aims
+  to create reusable assets, and <EM>application engineering</EM>, which fields
+  systems using those assets. Lessons learned include that product-line
+  development demands careful strategic planning, a mature development process,
+  and the ability to overcome organizational resistance.</EM>
+<P></P><DT><A NAME="MedvidovicRosenblum97"><STRONG>54</STRONG></A>
+<DD>
+N. Medvidovic and D. S. Rosenblum.
+<BR>Domains of concern in software architectures and architecture
+  description languages.
+<BR>In Ramming [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>], pages 199-212.
+<P>
+<BR> <EM>Gives a categorization of DSLs for describing software
+  architectures.</EM>
+<P></P><DT><A NAME="MP99"><STRONG>55</STRONG></A>
+<DD>
+V. Menon and K. Pingali.
+<BR>A case for source-level transformations in MATLAB.
+<BR>In DSL-99 [<A
+ HREF="dslbib.html#dsl99.usenix">27</A>], pages 53-66.
+<P>
+<BR> <EM>Three kinds of source-to-source transformations for
+  optimizing MATLAB programs are proposed and shown to be effective. The
+  transformations yield performance benefits additional to those obtained by
+  (optimizing) compilation, and may be useful for other DSLs that are
+  high-level, untyped, and interpreted.</EM>
+<P></P><DT><A NAME="NJ97"><STRONG>56</STRONG></A>
+<DD>
+L. Nakatani and M. Jones.
+<BR>Jargons and infocentrism.
+<BR>In Kamin [<A
+ HREF="dslbib.html#dsl97.acm">43</A>], pages 59-74.
+<P>
+<BR> <EM>Describes and advocates the development of DSLs as
+  <EM>jargons</EM>: domain-specific extensions of a tiny common base language.
+  According to a new programming paradigm (<EM>infocentrism</EM>) the application
+  semantics for these jargons can be programmed by providing actions for the
+  constructs specific to the jargon only; the traversal semantics is inherited
+  from the base language. Because all jargons share the base syntax and
+  semantics, it is easy to combine and reuse their definitions as well as their
+  tools. The <EM>InfoWiz</EM> technology which supports the development of
+  jargons is discussed.</EM>
+<P></P><DT><A NAME="Nakatani99"><STRONG>57</STRONG></A>
+<DD>
+L. H. Nakatani, M. A. Ardis, R. G. Olsen, and P. M. Pontrelli.
+<BR>Jargons for domain engineering.
+<BR>In DSL-99 [<A
+ HREF="dslbib.html#dsl99.usenix">27</A>], pages 15-24.
+<P>
+<BR> <EM>Discusses the use of <EM>jargons</EM> (see [<A
+ HREF="dslbib.html#NJ97">56</A>]) in the
+  domain of configuration control.</EM>
+<P></P><DT><A NAME="Nei84"><STRONG>58</STRONG></A>
+<DD>
+J. M. Neighbors.
+<BR>The Draco approach to constructing software from reusable
+  components.
+<BR><EM>IEEE Transactions on Software Engineering</EM>, SE-10(5):564-74,
+  September 1984.
+<P>
+<BR> <EM>The Draco approach starts by capturing domain analysis
+  information in a DSL. The objects and operations of this DSL are refined into
+  various DSLs of lower levels of abstraction, and finally into executable
+  languages. These refinements capture design information (implementation
+  decisions). The Draco system supports the development and reuse of
+  constellations of DSLs and refinements. It offers tactics for refinement
+  selection as well as automatic consistency checking of the resulting system
+  specification.</EM>
+<P></P><DT><A NAME="Ous98"><STRONG>59</STRONG></A>
+<DD>
+J. K. Ousterhout.
+<BR>Scripting: Higher level programming for the 21st century.
+<BR><EM>IEEE Computer</EM>, March 1998.
+<P>
+<BR> <EM>Discusses <EM>scripting</EM> languages, such as Perl, Tcl, and
+  Visual Basic, which are designed for gluing applications, assuming the
+  existence of a set of components that just need to be connected together.
+  Emphasizes that scripting languages should be typeless and
+  interpreted.</EM>
+<P></P><DT><A NAME="PH99"><STRONG>60</STRONG></A>
+<DD>
+J. Peterson and G. Hager.
+<BR>Monadic robotics.
+<BR>In DSL-99 [<A
+ HREF="dslbib.html#dsl99.usenix">27</A>], pages 95-108.
+<P>
+<BR> <EM>Discusses the importance of <EM>monads</EM> in the
+  implementation of tasks in Frob (see [<A
+ HREF="dslbib.html#PetersonHudakElliott97">61</A>]), which
+  help to achieve modularity and reusability.</EM>
+<P></P><DT><A NAME="PetersonHudakElliott97"><STRONG>61</STRONG></A>
+<DD>
+J. Peterson, P. Hudak, and C. Elliott.
+<BR>Lambda in motion: Controlling robots with Haskell.
+<BR>In <EM>PADL'99</EM>, volume 1551 of <EM>LNCS</EM>, pages 91-105, 1999.
+<P>
+<BR> <EM>Describes two domain-specific extensions of Haskell:
+  <EM>Frob</EM> a language for robot control and <EM>Fran</EM> a language for
+  reactive animations.</EM>
+<P></P><DT><A NAME="PK97"><STRONG>62</STRONG></A>
+<DD>
+P. Pfahler and U. Kastens.
+<BR>Language design and implementation by selection.
+<BR>In Kamin [<A
+ HREF="dslbib.html#dsl97.acm">43</A>], pages 97-108.
+<P>
+<BR> <EM>A language design system is presented which allows a user to
+  design a DSL by selecting language features from menus. After selection, an
+  implementation of the DSL can be generated. The system relies on domain
+  designers to provide a definition of the design space, as well as
+  specification components for all possible language features.</EM>
+<P></P><DT><A NAME="PBCWC97"><STRONG>63</STRONG></A>
+<DD>
+C. Pu, A. Black, C. Cowan, J. Walpole, and C. Consel.
+<BR>Microlanguages for operating system specialization.
+<BR>In Kamin [<A
+ HREF="dslbib.html#dsl97.acm">43</A>], pages 49-57.
+<P>
+<BR> <EM>Discusses the use of DSLs in the domain of operating system
+  specialization. A high-level DSL is envisioned to describe application
+  behavior, which will be compiled into a low-level DSL describing customized
+  operating system behavior.</EM>
+<P></P><DT><A NAME="dsl97.usenix"><STRONG>64</STRONG></A>
+<DD>
+J. C. Ramming, editor.
+<BR><EM>Proceedings of the USENIX Conference on Domain-Specific
+  Languages</EM>, Berkeley, CA, October 15-17 1997. USENIX Association.
+
+<P></P><DT><A NAME="RRB99"><STRONG>65</STRONG></A>
+<DD>
+J. Reichwein, G. Rothermel, and M. Burnett.
+<BR>Slicing spreadsheets: An integrated methodology for spreadsheet
+  testing and debugging.
+<BR>In DSL-99 [<A
+ HREF="dslbib.html#dsl99.usenix">27</A>], pages 25-38.
+<P>
+<BR> <EM>Building on techniques for dynamic program slicing and
+  program dicing, a fault localization technique for incremental spreadsheet
+  debugging is developed. Using various kinds of visual clues, the technique is
+  integrated into a spreadsheet environment.</EM>
+<P></P><DT><A NAME="RJ96"><STRONG>66</STRONG></A>
+<DD>
+D. Roberts and R. Johnson.
+<BR>Evolve frameworks into domain-specific languages.
+<BR>In <EM>3rd International Conference on Pattern Languages</EM>, Allerton
+  Park, Ill., September 1996.
+<P>
+<BR> <EM>Discusses 9 stages of framework development. An
+  object-oriented framework evolves gradually, starting from three examples,
+  moving via a white-box framework, component library, pluggable objects, to a
+  black-box framework. The final, and most mature, stage is when the domain
+  knowledge is sufficiently stable to merit the development of a
+  domain-specific language or visual builder to access the
+  framework.</EM>
+<P></P><DT><A NAME="Salus98"><STRONG>67</STRONG></A>
+<DD>
+P.H. Salus, editor.
+<BR><EM>Little Languages</EM>, volume III of <EM>Handbook of Programming
+  Languages</EM>.
+<BR>MacMillan, 1998.
+<P>
+<BR> <EM>This book contains a collection of mostly reprints and only a
+  few original papers describing DSLs. It contains, for instance, papers like
+  <EM>Little Languages</EM> (Bentley [<A
+ HREF="dslbib.html#Bentley86h">7</A>]), <EM>A system for
+  typesettting mathematics: EQN</EM> (Kernighan and Cherry), and an overview of the
+  Documenter's Workbench (Akkerhuis) covering TROFF and several DSLs for
+  describing graphics, chemical formulae, and the like. Other chapters cover
+  AWK, SED, SQL, TCL/TK, PERL and PYTHON. The most original papers are a survey
+  of DSLs and domain-specific extension languages by Hudak and an elaborate
+  description of <EM>Little Music Languages</EM> by Langston.</EM>
+<P></P><DT><A NAME="SBP99"><STRONG>68</STRONG></A>
+<DD>
+T. Sheard, Z. Benaissa, and E. Pasalic.
+<BR>DSL implementation using staging and monads.
+<BR>In DSL-99 [<A
+ HREF="dslbib.html#dsl99.usenix">27</A>], pages 81-94.
+<P>
+<BR> <EM>Discusses how the use of <EM>staging</EM> (separating
+  compile-time computations from run time ones) and <EM>monads</EM> (for
+  capturing effects and actions of the target code) lead to a simple, reusable,
+  controlable, and correct DSL methodology.</EM>
+<P></P><DT><A NAME="Sim95"><STRONG>69</STRONG></A>
+<DD>
+M. Simos.
+<BR>Organization domain modeling (ODM): Formalizing the core domain
+  modeling life cycle.
+<BR>In M. Samadzeh and M. Zand, editors, <EM>Proceedings of the
+  Symposium on Software Reusability SSR'95</EM>, pages 196-205, August 1995.
+<BR>ACM Software Engineering Notes.
+<P>
+<BR> <EM>Summarizes the key elements of the ODM domain engineering
+  methodology. The full description is given in [<A
+ HREF="dslbib.html#Sim96">70</A>].</EM>
+<P></P><DT><A NAME="Sim96"><STRONG>70</STRONG></A>
+<DD>
+M. Simos, D. Creps, C. Klinger, L. Levine, and D. Allemang.
+<BR>Organization domain modelling (ODM) guidebook version 2.0.
+<BR>Technical Report STARS-VC-A025/001/00, Synquiry Technologies, Inc,
+  1996.
+<P>
+<BR> <EM>A comprehensive description of the ODM approach to domain
+  engineering. The three main ODM steps are: (1) <EM>plan</EM> the domain,
+  selecting objectives, stakeholders, and a set of <EM>boundary decisions</EM> to
+  scope the domain. (2) <EM>model</EM> the domain, building a domain lexicon, and
+  describing the concepts and features, as well as their commonalities and
+  variabilities. (3) (optional) <EM>engineer</EM> an asset base of components by
+  combining features and customers in novel ways. ODM emphasizes existing
+  (legacy) software systems as valuable sources of domain knowledge. It takes
+  the ``domain as a set of systems'' point of view, rather than the ``domain as
+  the real world'' viewpoint.</EM>
+<P></P><DT><A NAME="SirerBershad99"><STRONG>71</STRONG></A>
+<DD>
+E. G. Sirer and B. N. Bershad.
+<BR>Using production grammars in software testing.
+<BR>In DSL-99 [<A
+ HREF="dslbib.html#dsl99.usenix">27</A>], pages 1-14.
+<P>
+<BR> <EM>Describes <EM>lava</EM>, a DSL for specifying <EM>production
+  grammars</EM>. These are used to <EM>generate</EM> sentences over a language, for
+  the purpose of testing tools implementing that language. Experience with
+  <EM>lava</EM> demonstrates that a special purpose language for production
+  grammars can bring high coverage, simplicity, manageability, and structure to
+  the testing effort. Observe that the production grammar approach can also be
+  used to for testing DSL-tools.</EM>
+<P></P><DT><A NAME="SmaragdakisBatory97"><STRONG>72</STRONG></A>
+<DD>
+Y. Smaragdakis and D. Batory.
+<BR>DiSTiL: A transformation library for data structures.
+<BR>In Ramming [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>], pages 257-270.
+<P>
+<BR> <EM>Describes DiSTiL, a DSL for describing container data
+  structures in C, implemented on top of MicroSoft's Intentional Programming
+  (IP) system.</EM>
+<P></P><DT><A NAME="StevensonFleck97"><STRONG>73</STRONG></A>
+<DD>
+D. E. Stevenson and M. M. Fleck.
+<BR>Programming language support for digitized images or, the monsters in
+  the closet.
+<BR>In Ramming [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>], pages 271-284.
+<P>
+<BR> <EM>Describes the image manipulation language Envision,
+  implemented as an extension of Scheme.</EM>
+<P></P><DT><A NAME="StichnothGross97"><STRONG>74</STRONG></A>
+<DD>
+J. M. Stichnoth and T. Gross.
+<BR>Code composition as an implementation language for compilers.
+<BR>In Ramming [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>], pages 119-132.
+<P>
+<BR> <EM>Describes the ANSI C compiler framework Catacomb that
+  supports code composition. By providing user-defined code templates
+  (describing new language constructs such as parallel array assignment) and a
+  fixed code composition mechanism inside the compiler, new constructs can be
+  implemented in the same way as standard ones. See
+  also [<A
+ HREF="dslbib.html#Engler97">30</A>].</EM>
+<P></P><DT><A NAME="TTC95"><STRONG>75</STRONG></A>
+<DD>
+R. N. Taylor, W. Tracz, and L. Coglianese.
+<BR>Software development using domain-specific software architectures.
+<BR><EM>ACM SIGSOFT Software Engineering Notes</EM>, 20(5):27-37, 1995.
+<P>
+<BR> <EM>Provides the material used for a course on DSSA,
+  Domain-Specific Software Architectures, which aims at the reduction in time
+  and cost of producing specific application systems within a supported domain.
+  The paper covers key examples, architecture representation formalisms, domain
+  engineering, and the DSSA process. See also [<A
+ HREF="dslbib.html#CE99">20</A>,<A
+ HREF="dslbib.html#Sim96">70</A>]</EM>
+<P></P><DT><A NAME="ThibaultMarletConsel97"><STRONG>76</STRONG></A>
+<DD>
+S. A. Thibault, R. Marlet, and C. Consel.
+<BR>Domain-specific languages: From design to implementation application
+  to video device drivers generation.
+<BR>In DSL-IEEE [<A
+ HREF="dslbib.html#tse1999">28</A>], pages 363-377.
+<BR>An earlier version appeared in [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>].
+<P>
+<BR> <EM>A video card stores and displays images on a computer
+  display. Each card is programmed by similar, but highly vendor-specific,
+  instructions. The authors exploit this similarity by designing a DSL for
+  specifying drivers for video cards in the context of the XFree86
+  implementation of X windows. This Graphic Adaptor Language is implemented in
+  two stages: a C library provides a low level abstract machine that is used by
+  an interpreter for the DSL. The Tempo partial evaluator for C is used to
+  eliminate the overhead of interpretation and of the generality of the
+  abstract machine. Includes a discussion of the merits of the DSL approach in
+  this domain.</EM>
+<P></P><DT><A NAME="WAKS97"><STRONG>77</STRONG></A>
+<DD>
+D. C. Wang, A. W. Appel, J. L. Korn, and C. S. Serra.
+<BR>The Zephyr abstract syntax description language.
+<BR>In Ramming [<A
+ HREF="dslbib.html#dsl97.usenix">64</A>], pages 213-28.
+<P>
+<BR> <EM>Presents the Abstract Syntax Description Language (ASDL).
+  Reports the implementation of a tool that converts ASDL descriptions into C,
+  C++, Java, or ML code. The generated code defines data-structures
+  corresponding to this abstract syntax as well as functions for reading and
+  writing abstract terms to a standard flattened representation. ASDL has been
+  used to respecify the compiler intermediate format SUIF.</EM>
+<P></P><DT><A NAME="Wit96"><STRONG>78</STRONG></A>
+<DD>
+J. Withey.
+<BR>Investment analysis of software assets for product lines.
+<BR>Technical Report CMU/SEI-96-TR-010, Software Engineering Institute,
+  1996.
+<P>
+<BR> <EM>Presents a model for analyzing the expected benefits from
+  investing in domain-specific software product lines. One of the key concepts
+  is <EM>economy of scope</EM>, which is a condition where fewer inputs (such as
+  effort and time) are needed to produce a greater <EM>variety</EM> of outputs.
+  By contrast, economy of <EM>scale</EM> is achieved where fewer inputs are
+  needed to produce greater <EM>quantities</EM> of a single
+  output.</EM></DL>
+
+<P>
+
+<H1><A NAME="SECTION00090000000000000000">
+  About this document ... </A>
+</H1> 
+ <STRONG>Domain-Specific Languages:<BR>
+       An Annotated Bibliography<A NAME="tex2html1"
+ HREF="#foot85"><SUP>1</SUP></A>
+</STRONG><P>
+This document was generated using the
+<A HREF="http://www-dsed.llnl.gov/files/programs/unix/latex2html/manual/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 98.1p1 release (March 2nd, 1998)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996, 1997,
+<A HREF="http://cbl.leeds.ac.uk/nikos/personal.html">Nikos Drakos</A>, 
+Computer Based Learning Unit, University of Leeds.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <tt>-split 0 -show_section_numbers dslbib</tt>.
+<P>
+The translation was initiated by Arie van Deursen on 2000-02-09<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot85">... Bibliography</A><A NAME="foot85"
+ HREF="dslbib.html#tex2html1"><SUP>1</SUP></A>
+<DD>
+This research was sponsored by the 
+Dutch <EM>Telematica Instituut</EM>, project DSL 
+(see also <FONT SIZE="-2">).</FONT>
+
+</DL><HR>
+<!--Navigation Panel-->
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cwi.nl/latex2html-icons.gif/next_motif_gr.gif"> 
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cwi.nl/latex2html-icons.gif/up_motif_gr.gif"> 
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cwi.nl/latex2html-icons.gif/previous_motif_gr.gif">   
+<BR>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Arie van Deursen</I>
+<BR><I>2000-02-09</I>
+</ADDRESS>
+</BODY>
+</HTML>
