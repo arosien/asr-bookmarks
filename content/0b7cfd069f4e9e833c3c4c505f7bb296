@@ -1,0 +1,107 @@
+
+<html>
+  <head>
+    <title>MogileFS</title>
+    <link type="text/css" href="/danga.css" rel="stylesheet" />
+<!--[if lt IE 7]>
+<script defer type="text/javascript" src="pngfix.js"></script>
+<![endif]-->
+
+    
+  </head>
+  <body>
+
+<div id='behindlogo'>
+<center>
+<a href='/'><img id='logoimg' src='/img/logo.png' width='328' height='60' border='0' alt='Danga' /></a>
+<div class='logolinks'>
+[
+<a href="http://lists.danga.com/">mailing lists</a> |
+<a href="/faq.bml">Danga FAQ</a>
+]
+</div>
+</center>
+</div>
+
+<div id='crumbs'>
+<a href='http://danga.com/'>Danga</a>  &gt; MogileFS
+</div>
+
+<div id='body'>
+
+<h2>About MogileFS</h2>
+
+<p>MogileFS is our open source distributed filesystem.  Its properties and features include:
+<ul>
+<li><b>Application level</b> -- no special kernel modules required.</li>
+
+<li><b>No single point of failure</b> -- all three components of a MogileFS setup (storage nodes, trackers, and the tracker's database(s)) can be run on multiple machines, so there's no single point of failure.  (you can run trackers on the same machines as storage nodes, too, so you don't need 4 machines...)  A minimum of 2 machines is recommended.</li>
+
+<li><b>Automatic file replication</b> -- files, based on their "class", are automatically replicated between enough different storage nodes as to satisfy the minimum replica count as requested by their class.  For instance, for a photo hosting site you can make original JPEGs have a minimum replica count of 3, but thumbnails and scaled versions only have a replica count of 1 or 2.  If you lose the only copy of a thumbnail, the application can just rebuild it.  In this way, MogileFS (without RAID) can save money on disks that would otherwise be storing multiple copies of data unnecessarily.</li>
+
+<li><b>"Better than RAID"</b> -- in a non-SAN RAID setup, the disks are redundant, but the host isn't.  If you lose the entire machine, the files are inaccessible.  MogileFS replicates the files between devices which are on different hosts, so files are always available.</li>
+
+<li><b>Flat Namespace</b> -- Files are identified by named keys in a flat, global namespace.  You can create as many namespaces as you'd like, so multiple applications with potentially conflicting keys can run on the same MogileFS installation. </li>
+
+<li><b>Shared-Nothing</b> -- MogileFS doesn't depend on a pricey SAN with shared disks.  Every machine maintains its own local disks.</li>
+
+<li><b>No RAID required</b> -- Local disks on MogileFS storage nodes can be in a RAID, or not.  It's cheaper not to, as RAID doesn't buy you any safety that MogileFS doesn't already provide.</li>
+
+<li><b>Local filesystem agnostic</b> -- Local disks on MogileFS storage nodes can be formatted with your filesystem of choice (ext3, XFS, etc..).  MogileFS does its own internal directory hashing so it doesn't hit filesystem limits such as "max files per directory" or "max directories per directory".  Use what you're comfortable with.</li>
+
+</ul>
+
+<p>MogileFS is not:</p>
+
+<ul>
+<li><b>POSIX Compliant</b> -- you don't run regular Unix applications or databases against MogileFS.  It's meant for archiving write-once files and doing only sequential reads.  (though you can modify a file by way of overwriting it with a new version)  Notes:
+<ul>
+<li>Yes, this means your application has to specifically use a MogileFS client
+library to store and retrieve files.  The <a href="http://code.google.com/p/mogilefs/wiki/HighLevelOverview">steps in general</a> are 1) talk to a tracker about what you want to put or get, 2) read/write to one of the places it told you you could (it'll pick storage node(s) for you as part of its load balancing), using HTTP GET/PUT</li>
+<li>We've prototyped a FUSE binding, so you could use MogileFS without application support, but it's not production-ready.</li>
+</ul>
+
+</li>
+
+<li><b>Completely portable ... yet</b> -- we have some Linux-isms in our code, at least in the HTTP transport code.  Our plan is to scrap that and make it portable, though.</li>
+
+</ul>
+
+<p>Please see one of these Wiki pages for more information:</p>
+
+<ul>
+<li><a href="http://code.google.com/p/mogilefs/wiki/HighLevelOverview">High-level overview of MogileFS</a></li>
+<li><a href="http://code.google.com/p/mogilefs/wiki/InstallHowTo">Obtaining MogileFS</a></li>
+<li><a href="http://code.google.com/p/mogilefs/wiki/Maintenance">Setup and Configuration</a></li>
+<li><a href="usage.bml">Using MogileFS from Perl</a></li>
+</ul>
+
+<h3>Need help?  Have Questions?</h3>
+<ul>
+<li>Join <a href="http://groups.google.com/group/mogile">the mailing list</a>!  We'd love to help you out.</li>
+<li><a href="http://lists.danga.com/pipermail/mogilefs/">MogileFS List Archives</a> - For postings until June 2008</li>
+<li>Check out <a href="http://code.google.com/p/mogilefs/wiki/Start">the MogileFS Wiki</a>.</li>
+</ul>
+
+
+
+</div>
+
+<hr width='75%'>
+<center>
+
+</center>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-4841723-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+
+</body>
+</html>
+
