@@ -1,0 +1,3105 @@
+<html  >
+
+
+<style><!--
+h1,h2,h3,h4 { font-family : verdana,helvetica,sans-serif }
+pre,code    { color       : #202050       }
+code a      { color       : #202050       }
+body	    { padding     : 2%            }
+-->
+</style>
+
+
+<!--
+background-color="#fffacd"
+-->
+<head  ><title  >Parsec, a fast combinator parser</title></head>
+<body  title="Parsec, a fast combinator parser" ><h1 align="center" ><em  >Parsec, a fast combinator parser</em></h1>
+
+
+<center  >Daan Leijen
+
+<font size="-1" ><em  ><br><br>
+
+University of Utrecht<br> 
+Dept. of Computer Science<br>
+PO.Box 80.089, 3508 TB Utrecht<br> 
+The Netherlands<br>
+<a href="mailto:daan@cs.uu.nl">daan@cs.uu.nl</a>, 
+<a href="http://www.cs.uu.nl/~daan">http://www.cs.uu.nl/~daan</a><br><br>
+4 Oct 2001
+</em></font></center>
+
+
+<h2>Introduction</h2>
+
+<em>Parsec</em> is an industrial strength, <a href="#bind" >monadic</a> 
+parser combinator library for Haskell.
+It can parse <em><a href="#bind" >context-sensitive</a>,
+<a href="#try" >infinite look-ahead</a></em> grammars but it performs best on <a href="#or" >predictive</a>
+(LL[1]) grammars.
+Combinator parsing is well known in the literature and offers several advantages
+to YACC or event-based parsing. 
+<ul>
+<li>Combinator parsers are written and used within the same programming language
+as the rest of the program. There is no gap between the grammar formalism (Yacc)
+and the actual programming language used (C). Users learn just one language!
+We can also enjoy all the benefits that exist in the host language:
+type checking, module system, development environment, etc.
+</li><li>Parsers are first-class values within the language. They can be put into lists,
+passed as parameters and returned as values.
+It is easy extend the available set of parsers with custom made parsers specific
+for a certain problem, see for example <code  ><a href="#many" >many</a></code> or <code  ><a href="#buildExpressionParser" >buildExpressionParser</a></code>.
+</li></ul>
+
+Most 
+&lsquo;real&rsquo; parsers are built using bottom-up parser generators
+like <a href="http://www.haskell.org/happy">happy</a>. This is mostly for reasons
+of speed but also because most parser libraries are written for research and inadequate
+for practical applications. 
+<em>Parsec</em> is designed as a &lsquo;real world&rsquo; library from scratch:
+
+<ul>
+<li><em>Speed</em>. Most combinator libraries lack the speed necessary to be competetive with
+bottom-up parser generators.
+<em>Parsec</em> uses some novel techniques to improve its performance. The library is fast, parsing
+thousands of lines a second on today's machines (see the <a href="http://www.cs.uu.nl/people/daan/pbench.html">benchmark</a>
+for test results).
+
+</li><li><em>Error reporting</em>. 
+<em>Parsec</em> has extensive error messages; giving position, unexpected input, expected productions
+and general user messages. The error messages are given in terms of high-level grammar productions
+and can be localized for different (natural) languages.
+
+</li><li><em>Libraries</em>. 
+<em>Parsec</em> provides a set of basic parsers and provides three
+extension libraries, a lexical analysis library, a generalized 
+expression parser and a library for parsing permutation phrases.
+
+</li><li><em>Documentation</em>. <em>Parsec</em> is documented with a
+reference- and user-guide and example grammar implementations.
+
+</li><li><em>Simplicity</em>. <em>Parsec</em> is designed to be as simple as possible, making it accessable
+to both novice and expert users. <em>Parsec</em> is predictive by default, only backtracking
+where an explicit <code  ><a href="#try" >try</a></code> is inserted. This makes the operational behaviour
+easier to understand than the `normal' approach where backtracking is the default behaviour.
+</li></ul>
+
+<h3>About this document</h3>
+
+This document ships in the following formats:
+<ul>
+<li><em>Postscript (PS)</em>. High quality output, best for printing.
+</li><li><em>Acrobat (PDF)</em>. High quality output and hyperlinked. Preferred for online browsing.
+</li><li><em>HTML</em>. Poor man's PDF &ndash; hyperlinked but it lacks an index.
+</li></ul>
+
+After the introduction, this document contains a simple <a href="#UserGuide" >user guide</a> and a 
+than a full <a href="#ReferenceGuide" >reference guide</a> for the library.
+
+
+<h3>Compatibility</h3>
+
+The core library is written in Haskell98. The extension library <code  ><a href="#ParsecToken" >ParsecToken</a></code> 
+uses the <code>forall</code> keyword (to emulate a first-class module) but, to my best knowledge,
+this extension is supported by every Haskell98 system. The library is successfully compiled
+with GHC 4.x, GHC 5.x, Hugs98 and nhc98, 
+but probably works with any Haskell98 compliant compiler or interpreter.
+
+<h4>Compiling with GHC</h4>
+
+
+<p><em>Parsec</em> is distributed as a package with GHC. This means that you can simply
+use the <code>-package text</code> switch to use the <em>Parsec</em> library. Unfortunately, 
+Ghc versions up to 5.02 include an old version of <em>Parsec</em>. In this case, you might
+want to link with the newest <em>Parsec</em> library. <em>Parsec</em> ships with a makefile that 
+creates a Haskell library &ndash; just type <code>make</code> at the command prompt.
+</p>
+<p>Suppose that the library is compiled in the directory <code>c:\parsec</code>. 
+When you compile a Haskell source that uses <em>Parsec</em>, you should tell GHC where
+it can find the interface files (<code>*.hi</code>).</p>
+<pre  >
+ghc -c myfile -ic:\parsec
+</pre>
+<p>When your linking the files together, you need to tell GHC where it can
+find libraries (<code>-L</code>) and to link with the <em>Parsec</em> library too (<code>-l</code>):</p>
+<pre  >
+ghc -o myprogram myfile1.o myfile2.o -Lc:\parsec -lparsec
+</pre>
+
+<h4>Compiling with Hugs</h4>
+
+
+<p>If you use the <code  ><a href="#ParsecToken" >ParsecToken</a></code> or <code  ><a href="#ParsecPerm" >ParsecPerm</a></code> modules, you need to 
+enable the <code>forall</code> extension. Hugs should be started with the <code>-98</code>
+option to enable Haskell98 extensions.</p>
+
+
+<h3>Reporting bugs</h3>
+
+Any bugs (or fixes!) can be reported to the author, Daan Leijen (<a href="mailto:daan@cs.uu.nl">daan@cs.uu.nl</a>).
+Any feedback on:
+<ul>
+ <li>Which parsers are lacking;
+ </li><li>Naming of the parsers;
+ </li><li>Performance, both time and space.
+</li></ul>
+is greatly appreciated too.
+Besides that, I am also quite interested in any applications, 
+especially in a commercial setting, that are created using this library.
+
+<p>The <em>Parsec</em> homepage can be found at: <a href="http://www.cs.uu.nl/~daan/parsec.html">http://www.cs.uu.nl/~daan/parsec.html</a>.
+Any useful additions to the library or example grammars will be put
+on this www-page. 
+If you have written a parser for some language, don't hesitate and
+send it to author so it can be put on the www-page too.
+</p>
+<p>
+The library has been tested using the <em>Pbench</em> benchmark. It can
+be found at <a href="http://www.cs.uu.nl/people/daan/pbench.html">http://www.cs.uu.nl/people/daan/pbench.html</a>.
+</p>
+
+<h3>History</h3>
+
+<ul>
+<li>4 Oct 2001: Parsec can now work on any input stream which allows 
+one to write a seperate lexer. There is also a user definable state --
+for example for creating identifiers from strings. Non-compatible changes:
+<ul>
+<li><code>brackets</code> is now called <code  ><a href="#angles" >angles</a></code>, while <code>squares</code>
+is now called <code  ><a href="#brackets" >brackets</a></code>.
+</li><li>The type of many parsers is now more general, ie. <code  ><a href="#GenParser" >GenParser tok st a</a></code>
+instead of <code  ><a href="#Parser a" >Parser a</a></code>.
+</li><li>The types of <code  ><a href="#type_operator" >Operator</a></code> and <code  ><a href="#OperatorTable" >OperatorTable</a></code> have changed into
+a more general type.
+</li><li>The <code  ><a href="#ParsecToken" >ParsecToken</a></code> module is now parameterized with a record instead of
+an imported module.
+</li><li>The <code  ><a href="#token" >token</a></code> parser now parses single tokens.
+</li><li>Added new functionality, like <code  ><a href="#sepEndBy" >sepEndBy</a></code>.
+</li><li>Added an experimental module for parsing permutations (<code  ><a href="#ParsecPerm" >ParsecPerm</a></code>).
+</li></ul>
+</li></ul>
+
+<!--
+>
+<h3>Todo-list</>
+
+The following list of items would be nice to have. Anyone interested in contributing should
+send a message to the author. 
+<ul>
+<li>General symbol parsing. Right now, parser always work on character input. It would be nicer
+to generalise this to arbitrary symbols (without sacrificing speed or simplicity!):
+<source>
+data SymbolParser s a  = ...
+type Parser a          = SymbolParser Char a
+</source>
+</li>
+<li>More `real-world' example parsers</>
+<li>Error recovery. How this should be done is not exactly clear but it would be nice to add
+a combinator that is able to recover from parse errors.
+</ul>
+
+
+<
+-->
+<h3>License</h3>
+
+I would like to see this library as widely used as possible.
+It is therefore distributed with an unrestrictive 
+BSD style license. If there is any
+problem using this software with this license, I would
+like to hear about it and see if we can work out a solution.
+
+<blockquote><em>
+    Copyright 1999-2000, Daan Leijen. All rights reserved.
+
+    <p>Redistribution and use in source and binary forms, with
+    or without modification, are permitted provided that the
+    following conditions are met: 
+    </p>
+
+    <ul>
+	  <li>
+	    Redistributions of source code must retain the above
+        copyright notice, this list of conditions and the
+        following disclaimer.
+	  </li>
+ 
+	  <li>
+	    Redistributions in binary form must reproduce the
+        above copyright notice, this list of conditions and the
+        following disclaimer in the documentation and/or other
+        materials provided with the distribution.
+	  </li>
+	</ul>
+
+	This software is provided by the copyright holders &ldquo;as
+    is&rdquo; and any express or implied warranties, including, but not
+    limited to, the implied warranties of merchantability and
+    fitness for a particular purpose are disclaimed. In no event
+    shall the copyright holders be liable for any direct,
+    indirect, incidental, special, exemplary, or consequential
+    damages (including, but not limited to, procurement of
+    substitute goods or services; loss of use, data, or profits;
+    or business interruption) however caused and on any theory of
+    liability, whether in contract, strict liability, or tort
+    (including negligence or otherwise) arising in any way out of
+    the use of this software, even if advised of the possibility
+    of such damage.
+</em>
+</blockquote>
+
+
+<h2 id="UserGuide">Users guide</h2>
+
+All the examples given in this user guide can be found in the
+<code>parsec/examples/userguide</code> directory of the parser library. 
+
+<h3>Running a parser</h3>
+First of all, import the library into your Haskell module:
+<pre  >
+module Main where
+
+import Parsec
+</pre>
+
+Let's start with a very simple parser. The parser that recognizes
+a single letter (a character between <code>'a'</code> and <code>'z'</code>)
+is written as:
+<pre  >
+simple :: <a href="#Parser" >Parser</a> Char
+simple  = <a href="#letter" >letter</a>
+</pre>
+
+The type of <code>simple</code> shows that <code>simple</code> is a parser that
+will return a <code>Char</code> (the parsed letter) whenever it succeeds.
+A parser can be executed using
+the <code  ><a href="#parse" >parse</a></code>
+function. This function takes three arguments:
+the parser (<code>simple</code>), the name of the input (<code>&quot;&quot;</code>)
+and the input itself. The name of input is only used for error messages
+and can be empty in our case. The result of <code  ><a href="#parse" >parse</a></code> is either an 
+error (<code>Left</code>) or a succesful result (<code>Right</code>).
+We define a simple <code>run</code> function that 
+simply prints either the error value or the result value for a specific parser:
+<pre  >
+run :: Show a =&gt; Parser a -&gt; String -&gt; IO ()
+run p input
+        = case (<a href="#parse" >parse</a> p &quot;&quot; input) of
+            Left err -&gt; do{ putStr &quot;parse error at &quot;
+                          ; print err
+                          }
+            Right x  -&gt; print x
+</pre>
+
+<p>(The <code>run</code> function is actually defined in
+the <code  ><a href="#Parsec" >Parsec</a></code> module as <code  ><a href="#parseTest" >parseTest</a></code>).
+When we load this module into hugs, we can directly and interactively test 
+our parsers on different inputs:
+<pre  >
+Reading file &quot;d:\cvs\parsec\examples\userguide\main.hs&quot;:
+
+Hugs session for:
+d:\programs\hugs98\lib\Prelude.hs
+d:\programs\hugs98\lib\Maybe.hs
+d:\programs\hugs98\lib\List.hs
+d:\cvs\parsec\ParsecError.hs
+d:\programs\hugs98\lib\Monad.hs
+d:\programs\hugs98\lib\Char.hs
+d:\cvs\parsec\Parsec.hs
+d:\cvs\parsec\examples\userguide\Main.hs
+Main&gt; run simple &quot;a&quot;
+'a'
+
+Main&gt; run simple &quot;&quot;
+parse error at (line 1, column 1):
+unexpected end of input
+expecting letter
+
+Main&gt; run simple &quot;123&quot;
+parse error at (line 1, column 1):
+unexpected &quot;1&quot;
+expecting letter
+</pre>
+
+</p><h3>Sequence and choice</h3>
+
+Two important operations for specifying grammars (and parsers) are sequence and choice.
+In our case, parsers can be sequenced using the monadic 
+<code>do</code>-notation. For example, the 
+following parser parses an open parenthesis followed by a closing parenthesis (<code>&quot;()&quot;</code>):
+<pre  >
+openClose :: Parser Char
+openClose = do{ <a href="#char" >char</a> '('
+              ; <a href="#char" >char</a> ')'
+              }
+</pre>
+
+
+Two simple parenthesis are not too interesting but in combination with the choice operator
+<code>(&lt;|&gt;)</code> we can specify a parser that recognizes matching pairs of
+parenthesis. 
+Matching parenthesis consist of either an open parenthesis followed by a matching pair
+of parenthesis, a closing parenthesis and another matching pair of parenthesis, 
+or it is empty; The empty alternative is implemented using the <code>(<a href="#return" >return</a> x)</code>
+parser which always succeeds with value <code>x</code> without consuming any input.
+<pre  >
+parens  :: Parser ()
+parens  = do{ <a href="#char" >char</a> '('
+            ; parens
+            ; <a href="#char" >char</a> ')'
+            ; parens
+            }
+        &lt;|&gt; <a href="#return" >return</a> ()
+</pre>
+
+
+<p>Let's run the <code>parens</code> parser on some input to test its behaviour:
+<pre  >
+Main&gt; run parens &quot;(())()&quot;
+()
+
+Main&gt; run parens &quot;(()()&quot;
+parse error at (line 1, column 6):
+unexpected end of input
+expecting &quot;(&quot; or &quot;)&quot;
+</pre>
+
+
+<a name="Predictive parsers"><h3  >Predictive parsers</h3></a>
+
+
+</p><p>For reasons of speed,
+the <code>(&lt;|&gt;)</code> combinator is <em>predictive</em>; it will only try its second
+alternative if the first parser hasn't consumed any input. Consider the following
+example parser:
+<pre  >
+testOr  =   <a href="#string" >string</a> &quot;(a)&quot;
+        &lt;|&gt; string &quot;(b)&quot;
+</pre>
+
+</p><p>The <code>(<a href="#string" >string</a> s)</code> parser accepts input that equals the
+string <code>s</code>. Since both strings in the example start with the same initial
+character, the behaviour is probably
+not what the user expected:
+<pre  >
+Main&gt; run testOr &quot;(b)&quot;      
+parse error at (line 1, column 2):
+unexpected 'b'
+expecting 'a'
+</pre>
+
+</p><p>Since the first parser has already consumed some input (the <code>'('</code>), the second alternative
+is never tried allthough it would succeed! The preferred solution to this problem is to 
+<em>left-factor</em>
+the grammar by merging common prefixes. The following parser works as expected:
+<pre  >
+testOr1 = do{ char '('
+            ; char 'a' &lt;|&gt; char 'b'
+            ; char ')'
+            }
+</pre>
+
+</p><p>Unfortunately, it is not always possible to left-factor the grammar and in many other cases 
+the grammar becomes more complex to understand. 
+There is a primitive combinator called <code  ><a href="#try" >try</a></code> that handles these cases in an elegant manner.
+The parser <code>(<a href="#try" >try</a> p)</code> behaves just like <code>p</code> except that it pretends that it
+hasn't consumed any input whenever <code>p</code> fails. In combination with <code>(&lt;|&gt;)</code> this 
+allows for infinite look-ahead in the grammar. Here is the above parser written using <code  ><a href="#try" >try</a></code>:
+<pre  >
+testOr2 =   try (string &quot;(a)&quot;)
+        &lt;|&gt; string &quot;(b)&quot;
+</pre>
+
+</p><p>or an even better version:
+<pre  >
+testOr3 =   do{ try (string &quot;(a&quot;); char ')'; return &quot;(a)&quot; }
+        &lt;|&gt; string &quot;(b)&quot;
+</pre>
+
+</p><p>Allthough the implementation of <code  ><a href="#try" >try</a></code> is quite efficient there is a penalty when it
+fails, ie. it shouldn't be used as an alternative to careful grammar design!
+</p>
+
+<a name="Adding semantics"><h3  >Adding semantics</h3></a>
+
+<p>Right now, the <code>parens</code> parser simply recognizes matching pairs of parenthesis
+but doesn't return a useful value. We will now extend the <code>parens</code> parser
+with `semantic' actions which compute the maximal nesting level of the parenthesis.
+The <code>(&lt;-)</code> operator will be used to bind the intermediate values returned
+by the parsers. 
+
+</p><p>The <code>nesting</code> parser returns the nesting level of the parenthesis.
+The empty alternative returns zero. The other alternative returns the maximal
+nesting level of both other parsers:
+
+<pre  >
+nesting :: Parser Int
+nesting = do{ char '('
+            ; n &lt;- nesting
+            ; char ')'
+            ; m &lt;- nesting
+            ; return (max (n+1) m)
+            }
+        &lt;|&gt; return 0        
+</pre>
+
+</p><p>Here is an example session with <code>nesting</code>:
+
+<pre  >
+Main&gt; run nesting &quot;(())()&quot;
+2
+
+Main&gt; run nesting &quot;(()(()))&quot;
+3
+
+Main&gt; run nesting &quot;(()(())&quot;
+parse error at (line 1, column 8):
+unexpected end of input
+expecting &quot;(&quot; or &quot;)&quot;
+</pre>
+
+<a name="Sequences and seperators"><h3  >Sequences and seperators</h3></a>
+
+Consider the <code>word</code> parser that parses words: 
+a sequence of one or more letters:
+<pre  >
+word    :: Parser String
+word    = do{ c  &lt;- letter
+            ; do{ cs &lt;- word
+                ; return (c:cs)
+                }
+              &lt;|&gt; return [c]
+            }  
+</pre>
+
+</p><p>After parsing at a letter, it is either followed by a word itself or
+it returns the single character as a string. Allthough it is not too hard to learn
+to recognize these patterns, it is not immediately obvious that a sequence of one or more
+letters is parsed by this grammar. Even widely used parser generators like YACC and JavaCC do
+not provide any abstraction from these commonly occurring patterns. 
+Luckily, we
+have the full power of functional programming at our finger tips, it is easy
+to provide a custom parser combinator that parses a sequence of one or more
+parsers; it is called <code  ><a href="#many1" >many1</a></code>:
+
+<pre  >
+word    :: Parser String
+word    = many1 letter
+</pre>
+
+</p><p>Now it is obvious from the code what <code>word</code> is supposed to do and
+it is much easier to specifiy; no strange recursive patterns! 
+Beside <code  ><a href="#many1" >many1</a></code>, the library provides the <code  ><a href="#many" >many</a></code> parser
+which parses <em>zero</em>
+or more occurrences of its argument. The combinators <code  ><a href="#skipMany" >skipMany</a></code> and 
+<code  ><a href="#skipMany1" >skipMany1</a></code>
+behave like <code  ><a href="#many" >many</a></code> and <code  ><a href="#many1" >many1</a></code> but do not return the values of their argument parser.
+
+</p><p>Another useful pair of combinators are <code  ><a href="#sepBy" >sepBy</a></code> and 
+<code  ><a href="#sepBy1" >sepBy1</a></code> which
+parse a sequence of parsers separated by some separator. The combinators
+<code  ><a href="#sepEndBy" >sepEndBy</a></code> and <code  ><a href="#sepEndBy1" >sepEndBy1</a></code>
+parse a sequence of parsers that are either all seperated or terminated by some
+seperator (ie. Haskell declarations).
+
+For example, sentences are
+a sequence of one or more words separated by one or more spaces or commas and ended 
+by a dot, question mark or exclamation mark:
+<pre  >
+sentence    :: Parser [String]
+sentence    = do{ words &lt;- <a href="#sepBy1" >sepBy1</a> word separator
+                ; <a href="#oneOf" >oneOf</a> &quot;.?!&quot;
+                ; return words
+                }
+                
+separator   :: Parser ()
+separator   = <a href="#skipMany1" >skipMany1</a> (<a href="#space" >space</a> &lt;|&gt; char ',')
+</pre>
+
+Let's parse some example sentences:
+<pre  >
+Main&gt; run sentence &quot;hi,di,hi.&quot;
+[&quot;hi&quot;,&quot;di&quot;,&quot;hi&quot;]
+
+Main&gt; run sentence &quot;hi,di hi!&quot;
+[&quot;hi&quot;,&quot;di&quot;,&quot;hi&quot;]
+
+Main&gt; run sentence &quot;hi,123&quot;
+parse error at (line 1, column 4):
+unexpected &quot;1&quot;
+expecting &quot;,&quot;, space or letter
+</pre>
+
+<a name="Improving error messages"><h3  >Improving error messages</h3></a>
+
+
+</p><p>Allthough the last error message of the previous hugs session is correct, it is not very
+user friendly. A better message would simply be <code>&quot;expecting word&quot;</code>.
+The error combinator <code  ><a href="#err" >(&lt;?&gt;)</a></code> attaches a high-level error description to 
+parsers. Errors can now be given in terms of high-level grammar productions instead of
+at the level of characters. We will first attach a description to the <code>word</code> parser:
+<pre  >
+word    :: Parser String
+word    = many1 letter &lt;?&gt; &quot;word&quot;
+</pre>
+
+</p><p>Whenever the <code>word</code> parser fails without consuming input, it will now issue an error message
+<code>&quot;expecting word&quot;</code>:
+<pre  >
+Main&gt; run sentence &quot;hi,123&quot;
+parse error at (line 1, column 4):
+unexpected &quot;1&quot;
+expecting &quot;,&quot;, space or word
+</pre>
+
+</p><p>It is easy to get rid of the comma and space messages; just use an empty description:
+<pre  >
+separator   :: Parser ()
+separator   = skipMany1 (space &lt;|&gt; char ',' &lt;?&gt; &quot;&quot;)
+</pre>
+
+</p><p>Note that the <code  ><a href="#or" >(&lt;|&gt;)</a></code> combinator binds stronger
+than the <code  ><a href="#err" >(&lt;?&gt;)</a></code> operator. The error message only reports the expected word now:
+<pre  >
+Main&gt; run sentence &quot;hi,123&quot;
+parse error at (line 1, column 4):
+unexpected &quot;1&quot;
+expecting word
+</pre>
+
+
+</p><p>Another improvement can be made to the `end of sentence' parser:
+<pre  >
+sentence    :: Parser [String]
+sentence    = do{ words &lt;- sepBy1 word separator
+                ; oneOf &quot;.?!&quot; &lt;?&gt; &quot;end of sentence&quot;
+                ; return words
+                }
+</pre>                
+
+</p><p>Let's test the new parser on an uncompleted sentence:
+<pre  >
+Main&gt; run sentence &quot;hi,di&quot;
+parse error at (line 1, column 6):
+unexpected end of input
+expecting letter or end of sentence
+</pre>
+
+</p><p>Allthough the message is again correct, one further improvement can be made. 
+The expected letter is a bit confusing; indeed a letter can be added to the last word but
+it is probably not what the user intended. Note that the message reports that a letter
+can be expected and not a word. This is because a message that is attached to a parser using
+<code>(&lt;?&gt;)</code> will only be issued if the parser can not even be started, i.e. when it 
+hasn't consumed any input. Since the word parser has already consumed two letters (<code>di</code>)
+the expect message for letter is issued.
+
+</p><p>What we want to do is to attach an empty message to the <code>letter</code> parser in <code>word</code>
+but maintain the <code>&quot;word&quot;</code> message on the parser as a whole.
+<pre  >
+word    :: Parser String
+word    = many1 (letter &lt;?&gt; &quot;&quot;) &lt;?&gt; &quot;word&quot;
+</pre>
+
+</p><p>Finally we have a highly customised error messages which behave quite nicely:
+<pre  >
+Main&gt; run sentence &quot;hi di&quot;
+parse error at (line 1, column 6):
+unexpected end of input
+expecting end of sentence
+
+Main&gt; run sentence &quot;hi di,&quot;
+parse error at (line 1, column 7):
+unexpected end of input
+expecting word
+</pre>
+
+</p><p>After this section, it might seem that error handling is quite involved, but don't be discouraged;
+This example grammar was chosen to be tricky and experience shows that for most grammars
+just a few error descriptions are necessary.
+
+<a name="Expressions"><h3  >Expressions</h3></a>
+
+</p><p>Expressions are probably one of the most common constructs for which a parser is needed.
+Consider the following standard EBNF grammar for expressions:
+<pre  >
+expr   ::= expr '+' term | term
+term   ::= term '*' factor | factor
+factor ::= '(' expr ')' | digit+
+
+digit  ::= '0' | '1' | ... | '9'
+</pre>
+
+</p><p>The grammar uses different productions to specify
+priorities (<code>'*'</code> has higher priority than <code>'+'</code>)
+and uses left-recursion to make both star and plus left-associative.
+
+</p><p>Unfortunately, left-recursive grammars can not be specified 
+directly in a combinator library. If you accidently write a left
+recursive program, the parser will go into an infinite loop!
+However, every left-recursive grammar can be rewritten to a non-left-recursive grammar. The library provides combinators
+which do this automatically for you (<code  ><a href="#chainl" >chainl</a></code> and <code  ><a href="#chainl1" >chainl1</a></code>).
+
+</p><p>Even when using these combinators to deal with the left-recursion,
+it is still a nuisance to code the associativity and priorities of
+the operators in such a primitive way. The parser library provides
+a standard module <code  ><a href="#ParsecExpr" >ParsecExpr</a></code> to deal more elegantly with 
+expression style grammars. Using this library, the above
+expression grammar, extended with minus and divide, is specified using
+the <code  ><a href="#buildExpressionParser" >buildExpressionParser</a></code> function:
+
+<pre  >
+import ParsecExpr
+
+expr    :: Parser Integer
+expr    = <a href="#buildExpressionParser" >buildExpressionParser</a> table factor
+        &lt;?&gt; &quot;expression&quot;
+
+table   = [[op &quot;*&quot; (*) <a href="#Assoc" >AssocLeft</a>, op &quot;/&quot; div AssocLeft]
+          ,[op &quot;+&quot; (+) AssocLeft, op &quot;-&quot; (-) AssocLeft]
+          ]          
+        where
+          op s f assoc
+             = <a href="#operator" >Infix</a> (do{ <a href="#string" >string</a> s; return f}) assoc
+
+factor  = do{ char '('
+            ; x &lt;- expr
+            ; char ')'
+            ; return x 
+            }
+        &lt;|&gt; number
+        &lt;?&gt; &quot;simple expression&quot;
+
+number  :: Parser Integer
+number  = do{ ds &lt;- many1 <a href="#digit" >digit</a>
+            ; return (read ds)
+            }
+        &lt;?&gt; &quot;number&quot;
+</pre>
+
+</p><p>The function <code  ><a href="#buildExpressionParser" >buildExpressionParser</a></code> takes two arguments.
+The second argument is the basic expression term and the first a
+table of operators of decreasing priority (the higher in the list,
+the higher the priority). Operators can be <code  ><a href="#operator" >Infix</a></code>,
+<code  ><a href="#operator" >Prefix</a></code> or <code  ><a href="#operator" >Postfix</a></code>.
+<code  ><a href="#operator" >Infix</a></code> operators also have an associativity:
+<code  ><a href="#Assoc" >AssocLeft</a></code>, <code  ><a href="#Assoc" >AssocRight</a></code> or <code  ><a href="#Assoc" >AssocNone</a></code>.
+
+</p><p>Here is an example session with the <code>expr</code> parser:
+<pre  >
+Main&gt; run expr &quot;1+2*3&quot;   -- '*' has higher priority
+7
+
+Main&gt; run expr &quot;(1+2)*3&quot;
+9
+
+Main&gt; run expr &quot;8/4/2&quot;   -- '/' is left associative
+1
+
+Main&gt; run expr &quot;8/(4/2)&quot;
+4
+
+Main&gt; run expr &quot;1 + 2&quot;  -- wrong! 
+1                       
+
+Main&gt; run expr &quot;1+ 2&quot;   -- wrong!
+parse error at (line 1, column 3):
+unexpected &quot; &quot;
+expecting simple expression
+</pre>
+
+<a name="Lexical analysis"><h3  >Lexical analysis</h3></a>
+
+</p><p>The previous hugs session with expressions shows that the 
+expression parser can not yet
+deal with whitespace. Most parsers take their input from a 
+lexical analyzer or scanner which filters white space and comments
+and returns a list tokens for the parser. How <em>Parsec</em> can work
+on such token streams is described in a later <a href="#SeperateScanners" >section</a>. <em>Parsec</em> can also
+merge both passes into one parser specification which allows us to
+use all the normal parser combinators to deal with lexical analysis too. 
+The standard module <code  ><a href="#ParsecToken" >ParsecToken</a></code> deals with issues normally
+delegated to a seperate scanner: white space, comments, identifiers,
+reserved words, numbers, strings and other tokens. 
+
+</p><p>Unfortunately, most languages disagree on the syntax of comments,
+the form of identifiers and for example case sensitivity. The <code  ><a href="#ParsecToken" >ParsecToken</a></code>
+module should be parameterized with those differences, but unfortunately, Haskell
+doesn't support parameterized modules. The module therefore exports a single
+function <code  ><a href="#makeTokenParser" >makeTokenParser</a></code> 
+that takes paremeterizable language features as an argument (<code  ><a href="#LanguageDef" >LanguageDef</a></code>)
+and returns a (rather large) record that contains a set of lexical parsers.
+For your convenience, the module <code  ><a href="#ParsecLanguage" >ParsecLanguage</a></code> contains a set of
+common language definitions. For the expression parser, we will use 
+haskell-style comments and identifiers</p>
+
+<pre  >
+module Main where
+import Parsec
+import qualified <a href="#ParsecToken" >ParsecToken</a> as P
+import ParsecLanguage( haskellStyle )
+
+lexer :: <a href="#TokenParser" >TokenParser</a> ()
+lexer  = <a href="#makeTokenParser" >makeTokenParser</a> 
+         (<a href="#haskellDef" >haskellDef</a>
+         { reservedOpNames = [&quot;*&quot;,&quot;/&quot;,&quot;+&quot;,&quot;-&quot;]
+         }
+</pre>
+
+<p>For efficiency, we will bind all the used lexical parsers at toplevel.</p>
+<pre  >
+whiteSpace= P.<a href="#whiteSpace" >whiteSpace</a> lexer
+lexeme    = P.lexeme lexer
+symbol    = P.<a href="#symbol" >symbol</a> lexer
+natural   = P.<a href="#natural" >natural</a> lexer
+parens    = P.<a href="#parens" >parens</a> lexer
+semi      = P.<a href="#semi" >semi</a> lexer
+identifier= P.<a href="#identifier" >identifier</a> lexer
+reserved  = P.<a href="#reserved" >reserved</a> lexer
+reservedOp= P.<a href="#reservedOp" >reservedOp</a> lexer
+</pre>
+
+<p>Every lexical parser from the <code  ><a href="#ParsecToken" >ParsecToken</a></code> module will skip whitespace after
+each symbol parsed; parsers which skip trailing whitespace are called <em>lexeme</em> parsers
+(the <code  ><a href="#lexeme" >lexeme</a></code> combinator can be used to define them). By skipping trailing whitespace,
+it is garanteed that every parser starts at valid input.
+For the expression
+parser, the lexeme parser <code  ><a href="#reservedOp" >reservedOp</a></code> is used instead of the <code  ><a href="#char" >char</a></code>
+and <code  ><a href="#string" >string</a></code> parsers:
+
+<pre  >
+import ParsecToken
+
+...
+
+expr    :: Parser Integer
+expr    = buildExpressionParser table factor
+        &lt;?&gt; &quot;expression&quot;
+
+table   = [[op &quot;*&quot; (*) AssocLeft, op &quot;/&quot; div AssocLeft]
+          ,[op &quot;+&quot; (+) AssocLeft, op &quot;-&quot; (-) AssocLeft]
+          ]          
+        where
+          op s f assoc
+             = Infix (do{ <a href="#reservedOp" >reservedOp</a> s; return f} &lt;?&gt; &quot;operator&quot;) assoc
+</pre>
+
+</p><p>The <code>ParsecToken</code> module also defines a set of high-level combinators like
+<code  ><a href="#parens" >parens</a></code> to parse something enclosed in parenthesis 
+and <code  ><a href="#natural" >natural</a></code> to 
+parse natural numbers in decimal, octal or hexadecimal notation:
+
+<pre  >
+factor  =   <a href="#parens" >parens</a> expr
+        &lt;|&gt; <a href="#natural" >natural</a>
+        &lt;?&gt; &quot;simple expression&quot;
+</pre>
+
+</p><p>Finally the <code>run</code> function will be adapted to deal with whitespace. The
+main parser needs to skip any whitespace at the start of the input (since all other
+parsers only skip trailing whitespace) and needs to end with the 
+<code  ><a href="#eof" >eof</a></code>
+parser which only succeeds at the end of the input. This parser garantees that all
+input will be parsed; if it is left out, a parser is allowed to parse only part of the input.
+
+<pre  >
+runLex :: Show a =&gt; Parser a -&gt; String -&gt; IO ()
+runLex p input
+        = run (do{ <a href="#whiteSpace" >whiteSpace</a>
+                 ; x &lt;- p
+                 ; <a href="#eof" >eof</a>
+                 ; return x
+                 }) input
+</pre>
+
+</p><p>And that's it. In about 30 lines of code we have a fully functional, extensible expression parser
+with comments, priority and associativity rules
+and infinite precision numbers in hexadecimal, octal and decimal representation.
+<pre  >
+Main&gt; runLex expr &quot;1 + 2&quot;
+3
+
+Main&gt; runLex expr &quot;1 + {- comment -} 2 * 3 --multiply has higher priority&quot;
+7
+
+Main&gt; runLex expr &quot;  0xAA / 0o37 / 2&quot;
+2
+
+Main&gt; runLex expr &quot;0xAA / 0o37 2 &quot;
+parse error at (line 1, column 13):
+unexpected &quot;2&quot;
+expecting operator or end of input
+</pre>
+
+<a name="Receipts: Lexeme parsers and Reserved words"><h3  >Receipts: Lexeme parsers and Reserved words</h3></a>
+
+<!--
+>
+<p>In this section, we will look at the primitive <cref>try</> parser which
+is used to parse LL(k) production, i.e. whenever arbitrary look-ahead is needed.
+The need for <cref>try</> is illustrated with a simple language for describing
+receipts:
+
+--> 
+
+Consider the following EBNF grammar for receipts:
+
+<pre  >
+receipt     ::= product* total
+
+produkt     ::= &quot;return&quot; price &quot;;&quot;
+              | identifier price &quot;;&quot;          
+total       ::= price &quot;total&quot;
+
+price       ::= digit+ &quot;.&quot; digit digit
+</pre>
+
+</p><p>A receipt is a sequence of semicolon terminated produkts and ends with the total price of
+all products. A produkt is either a name of a produkt with its price or a return produkt in
+which case the client receives the specified price. We will construct a parser for receipts
+which checks if the total amount is actually correct. 
+
+<a name="Lexeme parsers"><h4  >Lexeme parsers</h4></a>
+</p><p>The <code>price</code> parser is a nice exercise in specifying lexeme parsers. The price parser
+doesn't allow whitespace inside; For example, we can't use
+the <code  ><a href="#decimal" >decimal</a></code> parser to parse the digits in front of the dot since the <code  ><a href="#decimal" >decimal</a></code>
+parser would allow whitespace between those digits and the dot. The appropiate solution is
+to create a lexeme parser ourselves. 
+<pre  >
+price   :: Parser Int   -- price in cents         
+price   = <a href="#lexeme" >lexeme</a> (do{ ds1 &lt;- many1 digit
+                    ; char '.'
+                    ; ds2 &lt;- <a href="#count" >count</a> 2 digit
+                    ; return (convert 0 (ds1 ++ ds2))            
+                    })
+          &lt;?&gt; &quot;price&quot;
+          where
+            convert n []     = n
+            convert n (d:ds) = convert (10*n + digitToInt d) ds
+</pre>
+
+</p><p>The implementation of the other productions is almost a literal translation of the grammar rules:
+<pre  >
+receipt :: Parser Bool
+receipt = do{ ps &lt;- many produkt
+            ; p  &lt;- total
+            ; return (sum ps == p)
+            }
+            
+produkt = do{ symbol &quot;return&quot;
+            ; p &lt;- price
+            ; <a href="#semi" >semi</a>
+            ; return (-p)
+            }
+      &lt;|&gt; do{ identifier
+            ; p  &lt;- price
+            ; <a href="#semi" >semi</a>
+            ; return p
+            }
+      &lt;?&gt; &quot;produkt&quot;
+
+total   = do{ p &lt;- price
+            ; symbol &quot;total&quot;
+            ; return p
+            }
+</pre>
+
+</p><p>Let's try the parser on a few receipts:
+<pre  >
+Main&gt; runLex receipt &quot;book 12.00; plant 2.55; 14.55 total&quot;
+True
+
+Main&gt; runLex receipt &quot;book 12.00; plant 2.55; 12.55 total&quot;
+False
+
+Main&gt; runLex receipt &quot;book 12.00; plant 2; 12.55 total&quot;
+parse error at (line 1, column 20):
+unexpected &quot;;&quot;
+expecting digit or &quot;.&quot;
+
+Main&gt; runLex receipt &quot;book 12.00; return 2.00; plant 2.55; 12.55 total&quot;
+True
+</pre>
+
+<a name="Reserved words"><h4  >Reserved words</h4></a>
+
+</p><p>Unfortunately, the parser will incorrectly return an error on the following
+input:
+<pre  >
+Main&gt; runLex receipt &quot;book 12.00; reader 2.00; plant 1.00; 15.00 total&quot;
+parse error at (line 1, column 13):
+unexpected &quot;a&quot;
+expecting &quot;return&quot;
+</pre>
+
+</p><p>What happens here? The <code>produkt</code> parser will try to recognize the keyword <code>return</code>
+when it starts scanning <code>&quot;reader&quot;</code>. When the <code>&quot;a&quot;</code> is encountered an
+error is returned. The parser will not try the second alternative which starts with an
+identifier since the it has already consumed input (i.e. <code>&quot;re&quot;</code>). 
+
+</p><p>This is a good example of a grammar which is hard to left-factor. The use of
+the <code  ><a href="#try" >try</a></code> combinator is the appropiate way of solving this problem:
+<pre  >
+produkt = do{ <a href="#try" >try</a> (symbol &quot;return&quot;)
+            ; p &lt;- price
+            ; semi
+            ; return (-p)
+            }
+        &lt;|&gt; do{ identifier
+            ; p  &lt;- price
+            ; semi
+            ; return p
+            }
+        &lt;?&gt; &quot;produkt&quot;
+</pre>
+
+</p><p>The test run now gives the expected result:
+<pre  >
+Main&gt; runLex receipt &quot;book 12.00; reader 2.00; plant 1.00; 15.00 total&quot;
+True
+</pre>
+
+</p><p>However, we are still not done as the following example shows:
+<pre  >
+Main&gt; runLex receipt &quot;book 12.00; returns 2.00; plant 1.00; 15.00 total&quot;
+parse error at (line 1, column 19):
+unexpected &quot;s&quot;
+expecting price
+</pre>
+
+</p><p>The current parser recognises the keyword <code>return</code> now and it complains
+about the letter <code>'s'</code> following it. A keyword however shouldn't be recognised as a keyword
+when it is only a prefix of an identifier. The parser <code  ><a href="#notFollowedBy" >notFollowedBy</a></code>
+can be used to
+make sure that a keyword is not followed by a legal identifier character. Just like checking
+that a keyword is not a prefix of an identifier, we should also check that an identifier doesn't
+make up a keyword, in order to make the parser independent of the order of choices. 
+
+</p><p>Since adding the <code  ><a href="#try" >try</a></code> combinator in the right places, using <code  ><a href="#notFollowedBy" >notFollowedBy</a></code> and
+checking for reserved words is quite subtle, the <code  ><a href="#ParsecToken" >ParsecToken</a></code> module implements all of this
+complexity for you; simply add the reserved words to your token definition:
+<pre  >
+lexer :: <a href="#TokenParser" >TokenParser</a> ()
+lexer  = <a href="#makeTokenParser" >makeTokenParser</a> 
+         (<a href="#haskellDef" >haskellDef</a>
+         { reservedNames   = [&quot;return&quot;,&quot;total&quot;]
+         , reservedOpNames = [&quot;*&quot;,&quot;/&quot;,&quot;+&quot;,&quot;-&quot;]
+         }
+</pre>			
+
+</p><p>Instead of <code>symbol</code>, the combinator <code  ><a href="#reserved" >reserved</a></code> is used to scan reserved words. The <code  ><a href="#try" >try</a></code> combinator is not necessary anymore since the <code  ><a href="#reserved" >reserved</a></code> combinator 
+already takes care of it.
+<pre  >
+receipt :: Parser Bool
+receipt = do{ ps &lt;- many produkt
+            ; p  &lt;- total
+            ; return (sum ps == p)
+            }
+            
+produkt = do{ <a href="#reserved" >reserved</a> &quot;return&quot;
+            ; p &lt;- price
+            ; semi
+            ; return (-p)
+            }
+      &lt;|&gt; do{ identifier
+            ; p  &lt;- price
+            ; semi
+            ; return p
+            }
+      &lt;?&gt; &quot;produkt&quot;
+
+total   = do{ p &lt;- price
+            ; <a href="#reserved" >reserved</a> &quot;total&quot;
+            ; return p
+            }
+</pre>
+
+
+</p><p>Finally, everything works as expected:
+<pre  >
+Main&gt; runLex receipt &quot;book 12.00; returns 2.00; plant 1.00; 15.00 total&quot;
+True
+
+Main&gt; runLex receipt &quot;book 12.00; total 2.00; plant 1.00; 15.00 total&quot;
+parse error at (line 1, column 13):
+unexpected reserved word &quot;total&quot;
+expecting produkt or price
+
+Main&gt; runLex receipt &quot;book 12.00; totals 2.00; return 1.00; 13.00 total&quot;
+True
+</pre>
+
+<a name="Examples"><h3  >Examples</h3></a>
+
+
+The following example parsers are shipped with <em>Parsec</em>:
+<ul>
+<li><strong>Tiger</strong> and <strong>While</strong>. Both parsers are written by 
+<a href="http://www.cs.uu.nl/people/jur">Jurriaan Hage</a>, who used the languages during
+CS cources at Utrecht University. The <em>Tiger</em> language is the example language
+in the compiler book by Andrew Appel (<a href="#AppelCompiler">1997</a>). 
+The <em>While</em> language is the example language
+in the semantics book by Nielson, Nielson and Hankin (<a href="#NielsonNielson">1999</a>).
+</li><li><strong>Henk 2000</strong>, based on Pure Type Systems. Written by 
+<a href="http://www.jwr.f2s.com">Jan-Willem Roorda</a> and Daan Leijen. 
+A parser for the Henk language as descibed by Peyton Jones and Meijer (<a href="#Henk">1997</a>).
+The master thesis of Jan-Willem is <a href="http://www.cs.uu.nl/~johanj/MSc/jwroorda">online</a> available
+together with a full interpreter for pure-type-systems.
+<!--
+
+<li><index>Featherweight Java</>. Written by <a href="http://www.cs.ruu.nl/staff/arthurb.html">Arthur Baars</>.
+A parser for a minimal subset of Java as described in <cite>FJava</>.
+<li><index>Webber</>. An HTML parser which also parses XML documents. A nice example of
+context sensitive parsing: a specific close tag parser is constructed as soon as an open tag
+is parsed;
+
+-->
+</li><li><strong>Mondrian</strong>, the internet programming language (<a href="#Mondrian">Mondrian, 2000</a>). An example of a
+Java-style language.
+</li></ul>
+
+<a name="SeperateScanners"><h3  >Advanced: Seperate scanners</h3></a>
+
+
+
+
+
+</p><p>
+In the previous examples we used an integrated approach &ndash; the lexer was specified
+using normal parser combinators. This is not always desirable, sometimes there is
+already a scanner available or sometimes the input needs pre-processing. Another advantage
+of writing a scanner by hand is that the performance of the parser generally improves
+about 30% (see the <a href="http://www.cs.uu.nl/people/daan/pbench.html">benchmark</a>
+for test results).
+</p>
+
+<p>Suppose that we have written a seperate scanner for receipts. The <code>scanner</code>
+function returns a list of tokens and a list of error messages.</p>
+<pre  >
+type Token  = (SourcePos,Tok)
+data Tok    = Identifier String
+            | Reserved   String
+            | Symbol     String
+            | Price      Int
+            deriving Show
+
+scanner :: [Char] -&gt; ([Token],[String])
+</pre>
+
+<p>The parsers should now work on these token streams instead of the normal chararacter
+streams. This is reflected in the type. The type of <em>general</em> parsers is
+<code><a href="#GenParser" >GenParser</a> tok st a</code>, where <code>tok</code> is the type of the tokens,
+<code>st</code> the type of the local user state and <code>a</code> is the type of the result.
+Indeed, <code  ><a href="#Parser" >Parser</a></code> is just a type synonym for parsers that work on characters and
+have no state:</p>
+<pre  >
+type Parser a   = GenParser Char () a
+</pre>
+
+<p>The <code  ><a href="#token" >token</a></code> parser is used to define a parser that scans a single token. 
+The function takes three arguments: a function to show tokens, a function to extract
+the source position of a token and finally a test function that determines if the
+token is accepted or not. The first two arguments are the same for all our tokens so
+we define a little abstraction:
+</p>
+<pre  >
+type MyParser a   = <a href="#GenParser" >GenParser</a> Token () a
+
+mytoken :: (Tok -&gt; Maybe a) -&gt; MyParser a
+mytoken test
+  = <a href="#token" >token</a> showToken posToken testToken
+  where
+    showToken (pos,tok)   = show tok
+    posToken  (pos,tok)   = pos
+    testToken (pos,tok)   = test tok
+</pre>
+
+<p>Now, it is easy to define the basic parser that work on tokens.</p>
+<pre  >
+identifier :: MyParser String
+identifier 
+  = mytoken (\tok -&gt; case tok of 
+                       Identifier name -&gt; Just name
+                       other           -&gt; Nothing)
+
+reserved :: String -&gt; MyParser ()
+reserved name
+  = mytoken (\tok -&gt; case tok of
+                       Reserved s   | s == name  -&gt; Just ()
+                       other        -&gt; Nothing)
+
+...
+</pre>
+
+<p>For an extended example, you might want to look at the implementation
+of the <code  ><a href="#ParsecChar" >ParsecChar</a></code> module.</p>
+
+<a name="Advanced: User state"><h3  >Advanced: User state</h3></a>
+
+
+
+<p>Since <em>Parsec</em> is already a <a href="#bind" >state monad</a>, it is easy to 
+include a user definable state. This state is very useful when building a
+symbol table &ndash; strings can immediately be converted to identifiers 
+<strong>[footnote: </strong><em>I have to warn the reader though that experience with the HaskellLight compiler
+has shown that it hardly pays off in practice to use special identifier
+representations instead of normal strings</em><strong>]</strong>. </p>
+
+<p><em>Parsec</em> provides three combinators to handle state. The function
+<code  ><a href="#getState" >getState</a></code> gets the state, <code><a href="#setState" >setState</a> st</code>  sets the state to <code>st</code>,
+and <code><a href="#updateState" >updateState</a> f</code> updates the state by applying function <code>f</code> to it.
+As an example, we show how we 
+can count the number of identifiers in a parser.
+</p>
+<pre  >
+run input 
+  = case <a href="#runParser" >runParser</a> parser 0 &quot;&quot; input of
+      Right n  -&gt; putStrLn (&quot;counted &quot; ++ show n ++ &quot; identifiers!&quot;)
+      Left err -&gt; do{ putStr &quot;parse error at &quot;
+                    ; print err
+                    }
+
+parser :: <a href="#CharParser" >CharParser</a> Int Int
+parser 
+  = do{ ...
+      ; n &lt;- <a href="#getState" >getState</a>
+      ; return n
+      }
+
+...
+
+myIdentifier :: <a href="#CharParser" >CharParser</a> Int String
+myIdentifier
+  = do{ x &lt;- identifier
+      ; <a href="#updateState" >updateState</a> (+1)
+      ; return x
+      }
+</pre>
+
+<a name="Advanced: Permutation phrases"><h3  >Advanced: Permutation phrases</h3></a>
+
+A permutation phrase is sequence of elements of possibly different types
+in which each element occurs at most once and the order is irrelevant. <em>Parsec</em>
+provides the module <code  ><a href="#ParsecPerm" >ParsecPerm</a></code> to parse such free-order constructs.
+Possible applications include parsers for XML attributes and Haskell style 
+records.
+<p>Since each element can be of a different type, it is hard to find a typable
+approach and we have to resort to judicious use of permutation parser combinators.
+Parsers are combined into a permutation parser with the
+<a href="#permor" ><code>(&lt;||&gt;)</code></a> operator. At the end, all the elements are
+combined using a combination function <code>f</code> that is applied 
+using the <a href="#permap" ><code>(&lt;$$&gt;)</code></a> combinator. The whole
+permutation parser is than converted into a normal parser using the <code  ><a href="#permute" >permute</a></code>
+function. Suppose we want to parse a permutation of
+the characters <code>a</code>, <code>b</code>, and <code>c</code>. We can write this
+as:</p>
+<pre  >
+perm0 = <a href="#permute" >permute</a> (f <a href="#permap" ><code>(&lt;$$&gt;)</code></a> char 'a'
+                   <a href="#permor" ><code>(&lt;||&gt;)</code></a> char 'b'
+                   <a href="#permor" ><code>(&lt;||&gt;)</code></a> char 'c')
+      where
+        f a b c  = [a,b,c]
+</pre>
+
+<p>Let's try the parser against some real input!</p>
+
+<pre  >
+Main&gt; run perm0 &quot;abc&quot;
+&quot;abc&quot;
+
+Main&gt; run perm0 &quot;cba&quot;
+&quot;abc&quot;
+
+Main&gt; run perm0 &quot;b&quot;
+parse error at (line 1, column 2):
+unexpected end of input
+expecting &quot;c&quot; or &quot;a&quot;
+</pre>
+
+<p>There is an implicit restriction that the parsers in a permutation should
+never succeed on empty input &ndash; ie. you can't use <code>(<a href="#many" >many</a> (char 'a'))</code>
+to parse an optional string of <code>'a'</code> characters. If there are optional
+elements in the permutation, you need to use the special <a href="#permoropt" ><code>(&lt;|?&gt;)</code></a>
+operator that takes both a parser and a default value. If the first parser can
+be optional, you can use the <a href="#permapopt" ><code>(&lt;$?&gt;)</code></a> operator.
+For example, suppose we parse a permutation of: an optional string of <code>a</code>'s, the character <code>b</code> and an optional <code>c</code>.
+This can be described by:
+<pre  >
+perm1 :: <a href="#Parser" >Parser</a> (String,Char,Char)
+perm1 = <a href="#permute" >permute</a> (tuple <a href="#permapopt" >&lt;$?&gt;</a> (&quot;&quot;,many1 (char 'a'))
+                       <a href="#permor" >&lt;||&gt;</a> char 'b' 
+                       <a href="#permoropt" >&lt;|?&gt;</a> ('_',char 'c'))
+      where
+        tuple a b c  = (a,b,c)
+</pre>
+
+</p><p>At the command prompt we can see how
+error correction works with permutations.</p>
+
+<pre  >
+Main&gt; run perm1 &quot;caaaaab&quot;
+(&quot;aaaaa&quot;,'b','c')
+
+Main&gt; run perm1 &quot;cb&quot;
+(&quot;&quot;,'b','c')
+
+Main&gt; run perm1 &quot;b&quot;
+(&quot;&quot;,'b','_')
+
+Main&gt; run perm1 &quot;&quot;
+parse error at (line 1, column 1):
+unexpected end of input
+expecting &quot;c&quot;, &quot;b&quot; or &quot;a&quot;
+
+Main&gt; run perm1 &quot;c&quot;
+parse error at (line 1, column 2):
+unexpected end of input
+expecting &quot;b&quot; or &quot;a&quot;
+
+Main&gt; run perm1 &quot;ca&quot;
+parse error at (line 1, column 3):
+unexpected end of input
+expecting &quot;a&quot; or &quot;b&quot;
+</pre>
+
+
+
+<h2 id="ReferenceGuide">Reference guide</h2>
+
+<em>Parsec</em> consists of the following main modules:
+<ul>
+<li><code  ><a href="#Parsec" >Parsec</a></code> implements the core parser library.
+</li><li><code  ><a href="#ParsecExpr" >ParsecExpr</a></code> is an extension library for parsing expression grammars.
+</li><li><code  ><a href="#ParsecToken" >ParsecToken</a></code> and <code  ><a href="#ParsecLanguage" >ParsecLanguage</a></code> are extension libraries for parsing lexical tokens.
+</li><li><code  ><a href="#ParsecPerm" >ParsecPerm</a></code> is an extension library for parsing permutation phrases.
+</li></ul>
+
+<a name="Parsec" ><h3  >Module Parsec</h3></a>
+
+This module is the core parser library. It exports functions from following primitive modules:
+<ul>
+<li><code  ><a href="#ParsecPos" >ParsecPos</a></code>. Source positions.
+</li><li><code  ><a href="#ParsecError" >ParsecError</a></code>. Error messages.
+</li><li><code  ><a href="#ParsecPrim" >ParsecPrim</a></code>. The main parser type and primitive parser combinators,
+  for example <code  ><a href="#parse" >parse</a></code>.
+</li><li><code  ><a href="#ParsecCombinator" >ParsecCombinator</a></code>. General polymorphic parser combinators, for 
+  example <code  ><a href="#many" >many</a></code>.
+</li><li><code  ><a href="#ParsecChar" >ParsecChar</a></code>. A range of parsers for characters, for example <code  ><a href="#digit" >digit</a></code>.
+</li></ul>
+
+<p>
+<a name="ParsecPrim" ><h3  >Module ParsecPrim</h3></a>
+
+<a name="Parser a" ><code  ><strong  >Parser a</strong></code></a>
+<blockquote  >A type synonym for <code><a href="#GenParser" >GenParser</a> Char () a</code>, i.e. a parser
+for character streams without a user state. 
+</blockquote>
+
+<a name="GenParser" ><code  ><strong  >GenParser tok st a</strong></code></a>
+<blockquote  >
+The General Parser <code>GenParser tok st a</code> data type represents a parser 
+that parses tokens of type <code>tok</code> with a user supplied state <code>st</code> and
+returns a value of type <code>a</code> on success. <code>GenParser</code> is an instance of
+the <code>Functor</code>, <code>Monad</code> and <code>MonadPlus</code> classes.
+</blockquote>
+
+<a name="runParser" ><code  ><strong  >runParser</strong></code></a>
+<code  > :: GenParser tok st a -&gt; st -&gt; FilePath -&gt; [tok] -&gt; Either <a href="#ParseError" >ParseError</a> a</code>
+<blockquote  >The most general way to run a parser. <code>(runParser p state filePath input)</code> runs parser <code>p</code> on
+the input list of tokens <code>input</code>, obtained from source <code>filePath</code> with 
+the initial user state <code>st</code>.
+The <code>filePath</code> is only used in error messages and may be the empty string.
+Returns either a <code><a href="#ParseError" >ParseError</a></code> (<code>Left</code>) or a 
+value of type <code>a</code> (<code>Right</code>).
+<p><code  ><a href="#parseFromFile" >parseFromFile</a>&nbsp;p&nbsp;fname<br>
+&nbsp;&nbsp;=&nbsp;do{&nbsp;input&nbsp;&lt;-&nbsp;readFile&nbsp;fname<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;return&nbsp;(runParser&nbsp;p&nbsp;()&nbsp;fname&nbsp;input)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+</code>
+</blockquote>
+
+<a name="parse" ><code  ><strong  >parse</strong></code></a>
+<code  > :: Parser a -&gt; FilePath -&gt; String -&gt; Either <a href="#ParseError" >ParseError</a> a</code>
+<blockquote  ><code>(parse p filePath input)</code> runs a character parser <code>p</code> without user
+state. The <code>filePath</code> is only used in error messages and may be the empty string.
+Returns either a <code><a href="#ParseError" >ParseError</a></code> (<code>Left</code>) or a 
+value of type <code>a</code> (<code>Right</code>).
+<p><code  >main&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;case&nbsp;(parse&nbsp;numbers&nbsp;&quot;&quot;&nbsp;&quot;11,&nbsp;2,&nbsp;43&quot;)&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left&nbsp;err&nbsp;&nbsp;-&gt;&nbsp;print&nbsp;err<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right&nbsp;xs&nbsp;&nbsp;-&gt;&nbsp;print&nbsp;(sum&nbsp;xs)<br>
+<br>
+numbers&nbsp;=&nbsp;<a href="#commaSep" >commaSep</a>&nbsp;<a href="#integer" >integer</a>&nbsp;<br>
+</code>
+</blockquote>
+
+<a name="parseFromFile" ><code  ><strong  >parseFromFile</strong></code></a>
+<code  > :: Parser a -&gt; FilePath -&gt; IO (Either <a href="#ParseError" >ParseError</a> a)</code>
+<blockquote  ><code>(parseFromFile p filePath)</code> runs a character parser <code>p</code> 
+on the input read from <code>filePath</code>. Returns either a <code><a href="#ParseError" >ParseError</a></code> (<code>Left</code>) or a 
+value of type <code>a</code> (<code>Right</code>).
+<p><code  >main&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;do{&nbsp;result&nbsp;&lt;-&nbsp;parseFromFile&nbsp;numbers&nbsp;&quot;digits.txt&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;case&nbsp;(result)&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left&nbsp;err&nbsp;&nbsp;-&gt;&nbsp;print&nbsp;err<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right&nbsp;xs&nbsp;&nbsp;-&gt;&nbsp;print&nbsp;(sum&nbsp;xs)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+</code>
+</blockquote>
+
+<a name="parseTest" ><code  ><strong  >parseTest</strong></code></a>
+<code  > :: Show a =&gt; GenParser tok () a -&gt; [tok] -&gt; IO ()</code>
+<blockquote  >The expression <code>parseTest p input</code> applies a parser
+<code>p</code> against input <code>input</code> and prints the result to stdout.
+Used for testing parsers.
+<p><code  >parseTest&nbsp;p&nbsp;input<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;case&nbsp;(<a href="#runParser" >runParser</a>&nbsp;p&nbsp;()&nbsp;&quot;&quot;&nbsp;input)&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left&nbsp;err&nbsp;-&gt;&nbsp;do{&nbsp;putStr&nbsp;&quot;parse&nbsp;error&nbsp;at&nbsp;&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;print&nbsp;err<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right&nbsp;x&nbsp;&nbsp;-&gt;&nbsp;print&nbsp;x<br>
+</code>
+</blockquote>
+
+<a name="return" ><code  ><strong  >return</strong></code></a>
+<code  > :: a -&gt; GenParser tok st a</code>
+<blockquote  >The parser <code>(return x)</code> always succeeds with value <code>x</code> without
+consuming any input. 
+</blockquote>
+
+<a name="bind" ><code  ><strong  >(&gt;&gt;=)</strong></code></a>
+<code  > :: GenParser tok st  a -&gt; (a -&gt; GenParser tok st b) -&gt; GenParser tok st b<br>infixl 1</code>
+<blockquote  >This parser is called <em>bind</em> and implements sequencing. 
+The parser <code>(p &gt;&gt;= f)</code> first applies parser
+<code>p</code>. It than applies <code>f</code> to the returned value of <code>p</code> and 
+applies the resulting parser. 
+<p>The <code>do</code>-notation of Haskell is syntactic sugar that automatically uses this combinator. 
+Using this notation, we can write <code>do{ x &lt;- p; q }</code> instead of the more cumbersome
+<code>(p &gt;&gt;= (\x -&gt; q))</code>. The <code>do</code>-notation has a natural operational reading:
+first apply parser <code>p</code>, binding its result to value <code>x</code>, and than apply the parser
+<code>q</code>.
+</p><p>Since the second parser can depend on the result of the first parser, we are able to parse
+<em>context sensitive</em> grammars. 
+
+Examples of context sensitive 
+parsing are XML tags, variable definition before use
+and environments in TEX. A simple example of parsing
+TEX environments is:
+</p>
+<p><code  >environment&nbsp;&nbsp;=&nbsp;do{&nbsp;name&nbsp;&lt;-&nbsp;envBegin<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;environment<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;envEnd&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;|&gt;&nbsp;return&nbsp;()<br>
+<br>
+envBegin&nbsp;::&nbsp;Parser&nbsp;String<br>
+envBegin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;do{&nbsp;<a href="#reserved" >reserved</a>&nbsp;&quot;\\begin&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<a href="#braces" >braces</a>&nbsp;(<a href="#many1" >many1</a>&nbsp;<a href="#letter" >letter</a>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+envEnd&nbsp;::&nbsp;String&nbsp;-&gt;&nbsp;Parser&nbsp;()<br>
+envEnd&nbsp;name&nbsp;&nbsp;=&nbsp;do{&nbsp;<a href="#reserved" >reserved</a>&nbsp;&quot;\\end&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<a href="#braces" >braces</a>&nbsp;(<a href="#string" >string</a>&nbsp;name)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+</code>
+</blockquote>
+
+<a name="or" ><code  ><strong  >(&lt;|&gt;)</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st a -&gt; GenParser tok st a<br>infixr 1</code>
+<blockquote  >This combinator implements choice. The parser <code>(p &lt;|&gt; q)</code> first applies <code>p</code>. If it succeeds, the value of <code>p</code> is returned. If <code>p</code> fails <em>without
+consuming any input</em>, parser <code>q</code> is tried. This combinator is defined 
+equal to the <code>mplus</code> member of the <code>MonadPlus</code> class.
+<p>The parser is called <em>predictive</em> since <code>q</code> is only tried when parser <code>p</code> didn't consume any input (i.e.. the look ahead is 1). This non-backtracking behaviour allows for both an
+efficient implementation of the parser combinators and the generation of good error messages.
+</p>
+</blockquote>
+
+<a name="fail" ><code  ><strong  >fail</strong></code></a>
+<code  > :: String -&gt; GenParser tok st a</code>
+<blockquote  >The parser <code>(fail msg)</code> always fails with <a href="#Message" >message-error</a> <code>msg</code>
+without consuming any input.
+<p>The <code>return</code>, <code>(&gt;&gt;=)</code> and <code>fail</code> combinators are the members of the
+<code>Monad</code> class. The <code>Parser</code> is called <em>monadic</em> since it both provides an implementation for these three combinators, making it an instance of the <code>Monad</code> class,
+and it satisfies the monad-laws.
+</p>
+</blockquote>
+
+<a name="pzero" ><code  ><strong  >pzero</strong></code></a>
+<code  > :: GenParser tok st a</code>
+<blockquote  ><code>pzero</code> always fails without consuming 
+any input.
+<code>pzero</code> is defined equal to the <code>mzero</code>
+member of the <code>MonadPlus</code> class.
+</blockquote>
+
+
+<a name="try" ><code  ><strong  >try</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st a</code>
+<blockquote  >The parser <code>(try p)</code> behaves like parser <code>p</code>, except that it pretends that
+it hasn't consumed any input when an error occurs.
+<p>This combinator is used whenever arbitrary look ahead is needed. Since it pretends
+that it hasn't consumed any input when <code>p</code> fails, the <code>(&lt;|&gt;)</code> combinator will
+try its second alternative even when the first parser failed while consuming input.
+
+<!--
+>
+<p>Most programming language grammars need arbitrary look ahead in certain cases.
+Since there is no distinction between a lexical and parser phase,
+this problem occurs even more often with our parsing combinators.
+Whenever such case arises, the <code>try</> combinator is used.
+Fortunately, those cases do not arise very often and are most of the time easy to spot.
+They occur at parsers that would normally constitute lexical tokens in a traditional parser, 
+and are sometimes seen at certain language constructs (like the type contexts in haskell or declarations in C).
+
+-->
+</p><p>
+The <code>try</code> combinator can for example be used to distinguish
+identifiers and reserved words. Both reserved words and identifiers are a sequence
+of letters. Whenever we expect a certain reserved word where we can also expect an identifier
+we have to use the <code>try</code> combinator. Suppose we write:
+</p>
+<p><code  >expr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;letExpr&nbsp;&lt;|&gt;&nbsp;identifier&nbsp;&lt;?&gt;&nbsp;&quot;expression&quot;<br>
+<br>
+letExpr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;do{&nbsp;<a href="#string" >string</a>&nbsp;&quot;let&quot;;&nbsp;...&nbsp;}<br>
+identifier&nbsp;&nbsp;=&nbsp;<a href="#many1" >many1</a>&nbsp;<a href="#letter" >letter</a><br>
+</code>
+<p>
+If the user writes <code>&quot;lexical&quot;</code>, the parser fails with: 
+<code>unexpected 'x', expecting 't' in &quot;let&quot;</code>. 
+Indeed, since the <code>(&lt;|&gt;)</code>
+combinator only tries alternatives when the first alternative hasn't consumed input,
+the <code>identifier</code> parser is never tried (because the prefix <code>&quot;le&quot;</code> of the
+<code>(string &quot;let&quot;)</code> parser is already consumed). The right behaviour can be obtained
+by adding the <code>try</code> combinator:
+</p>
+<p><code  >expr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;letExpr&nbsp;&lt;|&gt;&nbsp;identifier&nbsp;&lt;?&gt;&nbsp;&quot;expression&quot;<br>
+<br>
+letExpr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;do{&nbsp;try&nbsp;(<a href="#string" >string</a>&nbsp;&quot;let&quot;);&nbsp;...&nbsp;}<br>
+identifier&nbsp;&nbsp;=&nbsp;<a href="#many1" >many1</a>&nbsp;<a href="#letter" >letter</a><br>
+</code>
+
+<p>Since the use of the <code>try</code> combinator with lexical tokens is quite tricky, the 
+<a href="#ParsecToken" >ParsecToken</a> module can be used to parse lexical tokens. This module automatically uses
+the try combinator in the appropiate places. 
+</p></blockquote>
+
+<a name="token" ><code  ><strong  >token</strong></code></a>
+<code  > :: (tok -&gt; String) -&gt; (tok -&gt; SourcePos) -&gt; (tok -&gt; Maybe a) -&gt; GenParser tok st a</code>
+<blockquote  >The parser <code>token showTok posFromTok testTok</code> accepts a token <code>t</code> with
+result <code>x</code> when the function <code>testTok t</code> returns <code>Just x</code>. The source
+position of the <code>t</code> should be returned by <code>posFromTok t</code> and the token can be 
+shown using <code>showTok t</code>. 
+<p>This combinator is expressed in terms of <code  ><a href="#tokenPrim" >tokenPrim</a></code>. It is used to accept user defined
+token streams. For example, suppose that we have a stream of basic tokens tupled with source positions.
+We can than define a parser that accepts single tokens as:</p>
+<p><code  >mytoken&nbsp;::&nbsp;Show&nbsp;t&nbsp;=&gt;&nbsp;t&nbsp;-&gt;&nbsp;GenParser&nbsp;((Int,Int),t)&nbsp;()&nbsp;t<br>
+mytoken&nbsp;x<br>
+&nbsp;&nbsp;=&nbsp;token&nbsp;showTok&nbsp;posFromTok&nbsp;testTok<br>
+&nbsp;&nbsp;where<br>
+&nbsp;&nbsp;&nbsp;&nbsp;showTok&nbsp;(pos,t)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;show&nbsp;t<br>
+&nbsp;&nbsp;&nbsp;&nbsp;posFromTok&nbsp;(pos,t)&nbsp;&nbsp;=&nbsp;pos<br>
+&nbsp;&nbsp;&nbsp;&nbsp;testTok&nbsp;(pos,t)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;if&nbsp;(x&nbsp;==&nbsp;t)&nbsp;then&nbsp;Just&nbsp;t&nbsp;else&nbsp;Nothing<br>
+</code>
+</blockquote>
+
+<a name="tokenPrim" ><code  ><strong  >tokenPrim</strong></code></a>
+<code  > :: (tok -&gt; String) -&gt; (SourcePos -&gt; tok -&gt; [tok] -&gt; SourcePos) -&gt; (tok -&gt; Maybe a) -&gt; GenParser tok st a</code>
+<blockquote  >The parser <code>(token showTok nextPos testTok)</code> accepts a token <code>t</code> with
+result <code>x</code> when the function <code>testTok t</code> returns <code>Just x</code>. 
+The token can be shown using <code>showTok t</code>. The position of the <em>next</em> token 
+should be returned when <code>nextPos</code> is called with the current source position <code>pos</code>,
+the current token <code>t</code> and the rest of the tokens <code>toks</code>, <code>(nextPos pos t toks)</code>.
+<p>This is the most primitive combinator for accepting tokens.
+For example, the <code  ><a href="#char" >char</a></code> parser could be implemented as:
+<p><code  >char&nbsp;::&nbsp;Char&nbsp;-&gt;&nbsp;GenParser&nbsp;Char&nbsp;st&nbsp;Char<br>
+char&nbsp;c<br>
+&nbsp;&nbsp;=&nbsp;tokenPrim&nbsp;showChar&nbsp;nextPos&nbsp;testChar<br>
+&nbsp;&nbsp;where<br>
+&nbsp;&nbsp;&nbsp;&nbsp;showChar&nbsp;x	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&quot;'&quot;&nbsp;++&nbsp;x&nbsp;++&nbsp;&quot;'&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;testChar&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;if&nbsp;(x&nbsp;==&nbsp;c)&nbsp;then&nbsp;Just&nbsp;x&nbsp;else&nbsp;Nothing<br>
+&nbsp;&nbsp;&nbsp;&nbsp;nextPos&nbsp;pos&nbsp;x&nbsp;xs&nbsp;&nbsp;=&nbsp;<code  ><a href="#updatePosChar" >updatePosChar</a></code>&nbsp;pos&nbsp;x<br>
+</code>
+</p></blockquote>
+
+<a name="err" ><code  ><strong  >(&lt;?&gt;)</strong></code></a>
+<code  > :: GenParser tok st a -&gt; String -&gt; GenParser tok st a<br>infix 0</code>
+<blockquote  >The parser <code>p &lt;?&gt; msg</code> behaves as parser <code>p</code>, but whenever
+the parser <code>p</code> fails <em>without consuming any input</em>, 
+it replaces expect error messages
+with the  <a href="#Message" >expect error</a> message <code>msg</code>. 
+
+<p>This is normally used at the end of a set
+alternatives where we want to return an error message in terms of a higher level construct
+rather than returning all possible characters. For example, if the <code>expr</code> parser 
+from the <code  ><a href="#try" >try</a></code> example would fail, the error message is: 
+<code>...: expecting expression</code>. Without the <code>(&lt;?&gt;)</code> combinator, the message
+would be like <code>...: expecting &quot;let&quot; or letter</code>, which is less friendly.
+</p>
+</blockquote>
+
+<a name="unexpected" ><code  ><strong  >unexpected</strong></code></a>
+<code  > :: String -&gt; GenParser tok st a</code>
+<blockquote  >The parser <code>(unexpected msg)</code> always fails with an  <a href="#Message">unexpected error</a>
+message <code>msg</code>
+without consuming any input. 
+
+<p>The parsers <code>fail</code>, <code>(&lt;?&gt;)</code> and <code>unexpected</code>
+are the three parsers used to generate error messages. Of these, only <code>(&lt;?&gt;)</code>
+is commonly used. For an example of the use of <code>unexpected</code>, see the definition
+of <code><a href="#notFollowedBy" >notFollowedBy</a></code>.
+</p>
+</blockquote>
+
+<a name="getState" ><code  ><strong  >getState</strong></code></a>
+<code  > :: GenParser tok st st</code>
+<blockquote  >Returns the current user state.
+</blockquote>
+
+<a name="setState" ><code  ><strong  >setState</strong></code></a>
+<code  > :: st -&gt; GenParser tok st ()</code>
+<blockquote  ><code>(setState st)</code> set the user state to <code>st</code>.
+</blockquote>
+
+<a name="updateState" ><code  ><strong  >updateState</strong></code></a>
+<code  > :: (st -&gt; st) -&gt; GenParser tok st ()</code>
+<blockquote  ><code>(updateState f)</code> applies function <code>f</code> to 
+the user state. Suppose that we want to count identifiers in
+a source, we could use the user state as:
+<p><code  >expr&nbsp;::&nbsp;GenParser&nbsp;Char&nbsp;Int&nbsp;Expr<br>
+expr&nbsp;&nbsp;=&nbsp;do{&nbsp;x&nbsp;&lt;-&nbsp;identifier<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;updateState&nbsp;(+1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;return&nbsp;(Id&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+</code>
+</blockquote>
+
+<a name="getPosition" ><code  ><strong  >getPosition</strong></code></a>
+<code  > :: GenParser tok st <a href="#SourcePos" >SourcePos</a></code>
+<blockquote  >Returns the current source position. See also <code><a href="#SourcePos" >SourcePos</a></code>
+</blockquote>
+
+<a name="setPosition" ><code  ><strong  >setPosition</strong></code></a>
+<code  > :: <a href="#SourcePos" >SourcePos</a> -&gt; GenParser tok st ()</code>
+<blockquote  ><code>setPosition pos</code> sets the current source position
+to <code>pos</code>. 
+</blockquote>
+
+<a name="getInput" ><code  ><strong  >getInput</strong></code></a>
+<code  > :: GenParser tok st [tok]</code>
+<blockquote  >Returns the current input
+</blockquote>
+
+<a name="setInput" ><code  ><strong  >setInput</strong></code></a>
+<code  > :: [tok] -&gt; GenParser tok st ()</code>
+<blockquote  ><code>setInput input</code> continues parsing with <code>input</code>.
+The <code>getInput</code> and <code>setInput</code> functions can for example
+be used to deal with <code>#include</code> files.
+</blockquote>
+
+
+
+
+<a name="ParsecCombinator" ><h3  >Module ParsecCombinator</h3></a>
+
+<a name="many" ><code  ><strong  >many</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st [a]</code>
+<blockquote  ><code>(many p)</code> applies the parser <code>p</code> <em>zero</em> or more times.
+Returns a list of the returned values of <code>p</code>.
+<p><code  >identifier&nbsp;&nbsp;=&nbsp;do{&nbsp;c&nbsp;&nbsp;&lt;-&nbsp;<a href="#letter" >letter</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;cs&nbsp;&lt;-&nbsp;many&nbsp;(<a href="#alphaNum" >alphaNum</a>&nbsp;&lt;|&gt;&nbsp;char&nbsp;'_')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;return&nbsp;(c:cs)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+</code>
+</blockquote>
+
+<a name="many1" ><code  ><strong  >many1</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st [a]</code>
+<blockquote  ><code>(many p)</code> applies the parser <code>p</code> <em>one</em> or more times.
+Returns a list of the returned values of <code>p</code>.
+<p><code  >word&nbsp;&nbsp;=&nbsp;many1&nbsp;(<a href="#letter" >letter</a>)<br>
+</code>
+</blockquote>
+
+
+<a name="skipMany" ><code  ><strong  >skipMany</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st ()</code>
+<blockquote  ><code>(skipMany p)</code> applies the parser <code>p</code> <em>zero</em> or more times,
+skipping its result.
+<p><code  >spaces&nbsp;&nbsp;=&nbsp;skipMany&nbsp;<a href="#space" >space</a><br>
+</code>
+</blockquote>
+
+<a name="skipMany1" ><code  ><strong  >skipMany1</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st ()</code>
+<blockquote  ><code>(skipMany1 p)</code> applies the parser <code>p</code> <em>one</em> or more times,
+skipping its result.
+</blockquote>
+
+<a name="sepBy" ><code  ><strong  >sepBy</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st sep -&gt; GenParser tok st [a]</code>
+<blockquote  ><code>(sepBy p sep)</code> parses <em>zero</em> or more occurrences of <code>p</code>,
+separated by <code>sep</code>.
+Returns a list of values returned by <code>p</code>.
+<p><code  >commaSep&nbsp;p&nbsp;&nbsp;=&nbsp;p&nbsp;`sepBy`&nbsp;(<a href="#symbol" >symbol</a>&nbsp;&quot;,&quot;)<br>
+</code>
+</blockquote>
+
+<a name="sepBy1" ><code  ><strong  >sepBy1</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st sep -&gt; GenParser tok st [a]</code>
+<blockquote  ><code>(sepBy1 p sep)</code> parses <em>one</em> or more occurrences of <code>p</code>,
+separated by <code>sep</code>.
+Returns a list of values returned by <code>p</code>.
+</blockquote>
+
+<a name="endBy" ><code  ><strong  >endBy</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st end -&gt; GenParser tok st [a]</code>
+<blockquote  ><code>(endBy p sep)</code> parses <em>zero</em> or more occurrences of <code>p</code>,
+seperated and ended by <code>sep</code>.
+Returns a list of values returned by <code>p</code>.
+<p><code  >cStatements&nbsp;&nbsp;=&nbsp;cStatement&nbsp;`endBy`&nbsp;<a href="#semi" >semi</a><br>
+</code>
+</blockquote>
+
+<a name="endBy1" ><code  ><strong  >endBy1</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st end -&gt; GenParser tok st [a]</code>
+<blockquote  ><code>(endBy1 p sep)</code> parses <em>one</em> or more occurrences of <code>p</code>,
+seperated and ended by <code>sep</code>.
+Returns a list of values returned by <code>p</code>.
+</blockquote>
+
+
+<a name="sepEndBy" ><code  ><strong  >sepEndBy</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st sep -&gt; GenParser tok st [a]</code>
+<blockquote  ><code>(sepEndBy p sep)</code> parses <em>zero</em> or more occurrences of <code>p</code>,
+separated and optionally ended by <code>sep</code>, ie. haskell style statements.
+Returns a list of values returned by <code>p</code>.
+<p><code  >haskellStatements&nbsp;&nbsp;=&nbsp;haskellStatement&nbsp;`sepEndBy`&nbsp;<a href="#semi" >semi</a><br>
+</code>
+</blockquote>
+
+<a name="sepEndBy1" ><code  ><strong  >sepEndBy1</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st sep -&gt; GenParser tok st [a]</code>
+<blockquote  ><code>(sepEndBy1 p sep)</code> parses <em>one</em> or more occurrences of <code>p</code>,
+separated and optionally ended by <code>sep</code>.
+Returns a list of values returned by <code>p</code>.
+</blockquote>
+
+<a name="count" ><code  ><strong  >count</strong></code></a>
+<code  > :: Int -&gt; GenParser tok st a -&gt; GenParser tok st [a]</code>
+<blockquote  ><code>(count n p)</code> parses <code>n</code> occurrences of <code>p</code>. If <code>n</code>
+is smaller or equal to zero, the parser equals to <code>(return [])</code>.
+Returns a list of <code>n</code> values returned by <code>p</code>.
+</blockquote>
+
+<a name="between" ><code  ><strong  >between</strong></code></a>
+<code  > :: GenParser tok st open -&gt; GenParser tok st close -&gt; GenParser tok st a -&gt; GenParser tok st a</code>
+<blockquote  ><code>(between open close p)</code> parses <code>open</code>, followed by <code>p</code>
+and <code>close</code>.
+Returns the value returned by <code>p</code>.
+<p><code  >braces&nbsp;&nbsp;=&nbsp;between&nbsp;(<a href="#symbol" >symbol</a>&nbsp;&quot;{&quot;)&nbsp;(<a href="#symbol" >symbol</a>&nbsp;&quot;}&quot;)<br>
+</code>
+</blockquote>
+
+<a name="option" ><code  ><strong  >option</strong></code></a>
+<code  > :: a -&gt; GenParser tok st a -&gt; GenParser tok st a</code>
+<blockquote  ><code>(option x p)</code> tries to apply parser <code>p</code>. If <code>p</code> fails 
+without consuming input, it returns
+the value <code>x</code>, otherwise the value returned by <code>p</code>.
+<p><code  >priority&nbsp;::&nbsp;Parser&nbsp;Int<br>
+priority&nbsp;&nbsp;=&nbsp;option&nbsp;0&nbsp;(do{&nbsp;d&nbsp;&lt;-&nbsp;<a href="#digit" >digit</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;return&nbsp;(digitToInt&nbsp;d)&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;})<br>
+</code>
+</blockquote>
+
+<a name="choice" ><code  ><strong  >choice</strong></code></a>
+<code  > :: [GenParser tok st a] -&gt; GenParser tok st a</code>
+<blockquote  ><code>(choice ps)</code> tries to apply the parsers in the list <code>ps</code> in order,
+until one of them succeeds.
+Returns the value of the succeeding parser.
+<code>choice</code> can be defined as:
+<p><code  >choice&nbsp;ps&nbsp;&nbsp;=&nbsp;foldl&nbsp;(&lt;|&gt;)&nbsp;<a href="#pzero" >pzero</a>&nbsp;ps<br>
+</code>
+</blockquote>
+
+<a name="manyTill" ><code  ><strong  >manyTill</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st end -&gt; GenParser tok st [a] </code>
+<blockquote  ><code>(manyTill p end)</code> applies parser <code>p</code> <em>zero</em> or more times
+until parser <code>end</code> succeeds. 
+Returns the list of values returned by <code>p</code> .
+This parser can be used to scan comments:
+<p><code  >simpleComment&nbsp;&nbsp;&nbsp;=&nbsp;do{&nbsp;string&nbsp;&quot;&lt;!--&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;manyTill&nbsp;anyChar&nbsp;(try&nbsp;(string&nbsp;&quot;--&gt;&quot;))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+</code>
+<p>Note the overlapping parsers <code>anyChar</code> and <code>string &quot;&lt;!--&quot;</code>, and therefore the use
+of the <code  ><a href="#try" >try</a></code> combinator.
+</p>
+</blockquote>
+
+<a name="chainl" ><code  ><strong  >chainl</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st (a-&gt;a-&gt;a) -&gt; a -&gt; GenParser tok st a</code>
+<blockquote  ><code>(chainl p op x)</code> parser <em>zero</em> or more occurrences of <code>p</code>,
+separated by <code>op</code>.
+Returns a value obtained by a <em>left</em> associative application of all functions returned
+by <code>op</code> to the values returned by <code>p</code>. If there are zero occurrences of
+<code>p</code>, the value <code>x</code> is returned.
+.
+</blockquote>
+
+<a name="chainl1" ><code  ><strong  >chainl1</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st (a-&gt;a-&gt;a) -&gt; GenParser tok st a</code>
+<blockquote  ><code>(chainl1 p op x)</code> parser <em>one</em> or more occurrences of <code>p</code>,
+separated by <code>op</code>
+Returns a value obtained by a <em>left</em> associative application of all functions returned
+by <code>op</code> to the values returned by <code>p</code>.
+.
+This parser can for example be used to eliminate left recursion 
+which typically occurs in expression grammars.
+<p><code  >expr&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;term&nbsp;&nbsp;&nbsp;`chainl1`&nbsp;mulop<br>
+term&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;factor&nbsp;`chainl1`&nbsp;addop<br>
+factor&nbsp;&nbsp;=&nbsp;<a href="#parens" >parens</a>&nbsp;expr&nbsp;&lt;|&gt;&nbsp;<a href="#integer" >integer</a><br>
+<br>
+mulop&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;do{&nbsp;<a href="#symbol" >symbol</a>&nbsp;&quot;*&quot;;&nbsp;return&nbsp;(*)&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;|&gt;&nbsp;do{&nbsp;<a href="#symbol" >symbol</a>&nbsp;&quot;/&quot;;&nbsp;return&nbsp;(div)&nbsp;}<br>
+<br>
+addop&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;do{&nbsp;<a href="#symbol" >symbol</a>&nbsp;&quot;+&quot;;&nbsp;return&nbsp;(+)&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;|&gt;&nbsp;do{&nbsp;<a href="#symbol" >symbol</a>&nbsp;&quot;-&quot;;&nbsp;return&nbsp;(-)&nbsp;}<br>
+</code>
+</blockquote>
+
+
+<a name="chainr" ><code  ><strong  >chainr</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st (a-&gt;a-&gt;a) -&gt; a -&gt; GenParser tok st a</code>
+<blockquote  ><code>(chainr p op x)</code> parser <em>zero</em> or more occurrences of <code>p</code>,
+separated by <code>op</code>
+Returns a value obtained by a <em>right</em> associative application of all functions returned
+by <code>op</code> to the values returned by <code>p</code>. If there are no occurrences of
+<code>p</code>, the value <code>x</code> is returned.
+.
+</blockquote>
+
+<a name="chainr1" ><code  ><strong  >chainr1</strong></code></a>
+<code  > :: GenParser tok st a -&gt; GenParser tok st (a-&gt;a-&gt;a) -&gt; GenParser tok st a</code>
+<blockquote  ><code>(chainr1 p op x)</code> parser <em>one</em> or more occurrences of <code>p</code>,
+separated by <code>op</code>
+Returns a value obtained by a <em>right</em> associative application of all functions returned
+by <code>op</code> to the values returned by <code>p</code>.
+.
+</blockquote>
+
+
+<a name="eof" ><code  ><strong  >eof</strong></code></a>
+<code  > :: Show tok =&gt; GenParser tok st ()</code>
+
+<blockquote  >
+This parser only succeeds at the end of the input.
+This is not a primitive parser but it is defined using
+<code><a href="#notFollowedBy" >notFollowedBy</a></code>. 
+<p><code  >eof&nbsp;&nbsp;=&nbsp;notFollowedBy&nbsp;<a href="#anyToken" >anyToken</a>&nbsp;&lt;?&gt;&nbsp;&quot;end&nbsp;of&nbsp;input&quot;<br>
+</code>
+<p>Wow, I really like this definition!</p>
+</blockquote>
+
+<a name="notFollowedBy" ><code  ><strong  >notFollowedBy</strong></code></a>
+<code  > :: Show tok =&gt; GenParser tok st tok -&gt; GenParser tok st ()</code>
+
+<blockquote  >
+<code>(notFollowedBy p)</code> only succeeds when parser <code>p</code>
+fails. This parser does not consume any input. This parser can be used
+to implement the 'longest match' rule. For example, when recognizing 
+keywords (for example <code>let</code>), 
+we want to make sure that a keyword is not followed by a legal
+identifier character, in which case the keyword is actually an identifier (for example <code>lets</code>).
+We can program this behaviour as follows:
+<p><code  >keywordLet&nbsp;&nbsp;=&nbsp;<a href="#try" >try</a>&nbsp;(do{&nbsp;<a href="#string" >string</a>&nbsp;&quot;let&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;notFollowedBy&nbsp;<a href="#alphaNum" >alphaNum</a>&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br>
+</code>
+
+<p>Surprisingly, this parser is not primitive and can be defined as:
+</p>
+<p><code  >notFollowedBy&nbsp;p&nbsp;&nbsp;=&nbsp;try&nbsp;(do{&nbsp;c&nbsp;&lt;-&nbsp;p;&nbsp;<a href="#unexpected" >unexpected</a>&nbsp;(show&nbsp;[c])&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;|&gt;&nbsp;return&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br>
+</code>
+</blockquote>
+
+<a name="anyToken" ><code  ><strong  >anyToken</strong></code></a>
+<code  > :: Show tok =&gt; GenParser tok st tok</code>
+<blockquote  >The parser <code>anyToken</code> accepts any kind of token. It is
+for example used to implement <code  ><a href="#eof" >eof</a></code>.
+Returns the accepted token.
+</blockquote>
+
+
+<a name="ParsecChar" ><h3  >Module ParsecChar</h3></a>
+
+
+<a name="CharParser" ><code  ><strong  >CharParser st a</strong></code></a>
+<blockquote  >A type synonym for <code><a href="#GenParser" >GenParser</a> Char st a</code>, i.e. a parser
+for character streams with user state <code>st</code>.
+</blockquote>
+
+<a name="oneOf" ><code  ><strong  >oneOf</strong></code></a>
+<code  > :: [Char] -&gt; <a href="#CharParser" >CharParser</a> st Char</code>
+<blockquote  ><code>(oneOf cs)</code> succeeds if the current character is
+in the supplied list of characters <code>cs</code>.
+Returns the parsed character. See also <code><a href="#satisfy" >satisfy</a></code>.
+<p><code  >vowel&nbsp;&nbsp;=&nbsp;oneOf&nbsp;&quot;aeiou&quot;<br>
+</code>
+</blockquote>
+
+<a name="noneOf" ><code  ><strong  >noneOf</strong></code></a>
+<code  > :: [Char] -&gt; CharParser st Char</code>
+<blockquote  >As the dual of <code>oneOf</code>, <code>(noneOf cs)</code> succeeds if the current character 
+<em>not</em> in the supplied list of characters <code>cs</code>.
+Returns the parsed character.
+<p><code  >consonant&nbsp;=&nbsp;noneOf&nbsp;&quot;aeiou&quot;<br>
+</code>
+</blockquote>
+
+
+<a name="char" ><code  ><strong  >char</strong></code></a>
+<code  > :: Char -&gt; CharParser st Char</code>
+
+<blockquote  ><code>(char c)</code> parses a single character <code>c</code>.
+Returns the parsed character (i.e. <code>c</code>).
+<p><code  >semiColon&nbsp;&nbsp;=&nbsp;char&nbsp;';'<br>
+</code>
+</blockquote>
+
+<a name="string" ><code  ><strong  >string</strong></code></a>
+<code  > :: String -&gt; CharParser st String</code>
+<blockquote  >
+<code>(string s)</code> parses a sequence of characters given by <code>s</code>.
+Returns the parsed string (i.e. <code>s</code>).
+<p><code  >divOrMod&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;string&nbsp;&quot;div&quot;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;|&gt;&nbsp;string&nbsp;&quot;mod&quot;<br>
+</code>
+</blockquote>		  
+
+<a name="anyChar" ><code  ><strong  >anyChar</strong></code></a>
+<code  > :: <a href="#CharParser" >CharParser</a> st Char</code>
+
+<blockquote  >This parser succeeds for any character.
+Returns the parsed character.
+</blockquote>
+
+<a name="upper" ><code  ><strong  >upper</strong></code></a>
+<code  > :: CharParser st Char</code>
+
+<blockquote  >Parses an upper case letter (a character between <code>'A'</code> and <code>'Z'</code>).
+Returns the parsed character.
+</blockquote>
+
+<a name="lower" ><code  ><strong  >lower</strong></code></a>
+<code  > :: CharParser st Char</code>
+
+<blockquote  >
+Parses a lower case character (a character between <code>'a'</code> and <code>'z'</code>).
+Returns the parsed character.
+</blockquote>
+
+<a name="letter" ><code  ><strong  >letter</strong></code></a>
+<code  > :: CharParser st Char</code>
+
+<blockquote  >
+Parses a letter (an upper case or lower case character).
+Returns the parsed character.
+</blockquote>
+
+<a name="alphaNum" ><code  ><strong  >alphaNum</strong></code></a>
+<code  > :: CharParser st Char</code>
+
+<blockquote  >
+Parses a letter or digit (a character between <code>'0'</code> and <code>'9'</code>).
+Returns the parsed character.
+</blockquote>
+
+<a name="digit" ><code  ><strong  >digit</strong></code></a>
+<code  > :: CharParser st Char</code>
+<blockquote  >
+Parses a digit.
+Returns the parsed character.
+</blockquote>
+
+<a name="hexDigit" ><code  ><strong  >hexDigit</strong></code></a>
+<code  > :: CharParser st Char</code>
+<blockquote  >
+Parses a hexadecimal digit (a digit or a letter between <code>'a'</code> and <code>'f'</code>
+or <code>'A'</code> and <code>'F'</code>).
+Returns the parsed character.
+</blockquote>
+
+<a name="octDigit" ><code  ><strong  >octDigit</strong></code></a>
+<code  > :: CharParser st Char</code>
+
+<blockquote  >
+Parses an octal digit (a character between <code>'0'</code> and <code>'7'</code>).
+Returns the parsed character.
+</blockquote>
+
+<a name="newline" ><code  ><strong  >newline</strong></code></a>
+<code  > :: CharParser st Char</code>
+
+<blockquote  >
+Parses a newline character (<code>'\n'</code>).
+Returns a newline character.
+</blockquote>
+
+<a name="tab" ><code  ><strong  >tab</strong></code></a>
+<code  > :: CharParser st Char</code>
+
+<blockquote  >
+Parses a tab character (<code>'\t'</code>).
+Returns a tab character.
+</blockquote>
+
+<a name="space" ><code  ><strong  >space</strong></code></a>
+<code  > :: <a href="#CharParser" >CharParser</a> st Char</code>
+
+<blockquote  >
+Parses a white space character (any character in <code>&quot; \v\f\t\r\n&quot;</code>).
+Returns the parsed character.
+</blockquote>
+
+<a name="spaces" ><code  ><strong  >spaces</strong></code></a>
+<code  > :: CharParser st ()</code>
+
+<blockquote  >
+Skips <em>zero</em> or more white space characters. 
+See also <code><a href="#skipMany" >skipMany</a></code>.
+</blockquote>
+
+
+<a name="satisfy" ><code  ><strong  >satisfy</strong></code></a>
+<code  > :: (Char -&gt; Bool) -&gt; CharParser st Char</code>
+<blockquote  >
+The parser <code>(satisfy f)</code> succeeds
+for any character for which the supplied function <code>f</code> returns <code>True</code>.
+Returns the character that is actually parsed.
+<p><code  >digit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;satisfy&nbsp;isDigit<br>
+oneOf&nbsp;cs&nbsp;&nbsp;=&nbsp;satisfy&nbsp;(\c&nbsp;-&gt;&nbsp;c&nbsp;`elem`&nbsp;cs)<br>
+</code>
+</blockquote>
+
+
+<p>
+</p>
+
+<a name="ParsecPos" ><h3  >Module ParsecPos</h3></a>
+
+
+
+<a name="SourcePos" ><code  ><strong  >SourcePos</strong></code></a>
+<blockquote  >The abstract data type <code>SourcePos</code> represents source positions.
+It contains the name of the source (i.e. file name), a line number and a column number.
+<code>SourcePos</code> is an instance of the <code>Show</code>, <code>Eq</code> and <code>Ord</code> class.
+</blockquote>
+
+<a name="Line" ><code  ><strong  >Line</strong></code></a>
+<blockquote  >A type synonym for <code>Int</code></blockquote>
+
+<a name="Column" ><code  ><strong  >Column</strong></code></a>
+<blockquote  >A type synonym for <code>Int</code></blockquote>
+
+<a name="sourceName" ><code  ><strong  >sourceName</strong></code></a>
+<code  > :: <a href="#SourcePos" >SourcePos</a> -&gt; FilePath</code>
+<blockquote  >Extracts the name of the source from a source position.
+</blockquote>
+
+<a name="sourceLine" ><code  ><strong  >sourceLine</strong></code></a>
+<code  > :: <a href="#SourcePos" >SourcePos</a> -&gt; <a href="#Line" >Line</a></code>
+<blockquote  >Extracts the line number from a source position.
+</blockquote>
+
+<a name="sourceColumn" ><code  ><strong  >sourceColumn</strong></code></a>
+<code  > :: <a href="#SourceColumn" >SourceColumn</a> -&gt; <a href="#Column" >Column</a></code>
+<blockquote  >Extracts the column number from a source position.
+</blockquote>
+
+<a name="incSourceLine" ><code  ><strong  >incSourceLine</strong></code></a>
+<code  > :: SourcePos -&gt; Int -&gt; SourcePos</code>
+<blockquote  >Increments the line number of a source position.
+</blockquote>
+
+<a name="incSourceColumn" ><code  ><strong  >incSourceColumn</strong></code></a>
+<code  > :: SourcePos -&gt; Int -&gt; SourcePos</code>
+<blockquote  >Increments the column number of a source position.
+</blockquote>
+
+<a name="setSourceLine" ><code  ><strong  >setSourceLine</strong></code></a>
+<code  > :: SourcePos -&gt; <a href="#SourceLine" >SourceLine</a> -&gt; SourcePos</code>
+<blockquote  >Set the line number of a source position.
+</blockquote>
+
+<a name="setSourceColumn" ><code  ><strong  >setSourceColumn</strong></code></a>
+<code  > :: SourcePos -&gt; <a href="#SourceColumn" >SourceColumn</a> -&gt; SourcePos</code>
+<blockquote  >Set the column number of a source position.
+</blockquote>
+
+<a name="setSourceName" ><code  ><strong  >setSourceName</strong></code></a>
+<code  > :: SourcePos -&gt; <a href="#SourceName" >SourceName</a> -&gt; SourcePos</code>
+<blockquote  >Increments the line number of a source position.
+</blockquote>
+
+<a name="updatePosChar" ><code  ><strong  >updatePosChar</strong></code></a>
+<code  > :: SourcePos -&gt; Char -&gt; SourcePos</code>
+<blockquote  >Update a source position given a character. If the character
+is a newline (<code>'\n'</code>) or carriage return (<code>'\r'</code>) the
+line number is incremented by 1. If the character is a tab (<code>'\t'</code>)
+the column number is incremented to the nearest 8'th column, ie. 
+<code>(column + 8 - ((column-1) `mod` 8))</code>. In all other cases, the column is
+incremented by 1.
+</blockquote>
+
+<a name="updatePosString" ><code  ><strong  >updatePosString</strong></code></a>
+<code  > :: SourcePos -&gt; String -&gt; SourcePos</code>
+<blockquote  >The expression <code>(updatePosString pos s)</code> updates
+the source position <code>pos</code> by calling <code>updatePosChar</code> on
+every character in <code>s</code>, ie. <code>(foldl updatePosChar pos string)</code>.
+</blockquote>
+
+
+
+<a name="ParsecError" ><h3  >Module ParsecError</h3></a>
+
+<a name="ParseError" ><code  ><strong  >ParseError</strong></code></a>
+<blockquote  >The abstract data type <code>ParseError</code> represents parse errors. It
+provides the source position (<code><a href="#SourcePos" >SourcePos</a></code>) of the error and
+a list of error messages (<code><a href="#Message" >Message</a></code>). A <code>ParseError</code> can 
+be returned by the function <code><a href="#parse" >parse</a></code>. <code>ParseError</code> is an instance of the
+<code>Show</code> class.
+</blockquote>
+
+<a name="errorPos" ><code  ><strong  >errorPos</strong></code></a>
+<code  > :: ParseError -&gt; <a href="#SourcePos" >SourcePos</a></code>
+<blockquote  >Extracts the source position from the parse error</blockquote>
+
+<a name="errorMessages" ><code  ><strong  >errorMessages</strong></code></a>
+<code  > :: ParseError -&gt; [<a href="#Message" >Message</a>]</code>
+<blockquote  >Extracts the list of error messages from the parse error</blockquote>
+
+<a name="Message" ><code  ><strong  >Message</strong></code></a>
+<blockquote  >This abstract data type represents parse error messages. There are four kinds of
+messages:
+<p><code  >data&nbsp;Message&nbsp;=&nbsp;SysUnExpect&nbsp;String<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;UnExpect&nbsp;String<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Expect&nbsp;String<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Message&nbsp;String<br>
+</code>
+<p>The fine distinction between different kinds of parse errors allows the system to
+generate quite good error messages for the user. It also allows
+error messages that are formatted in different languages.
+Each kind of message is generated by different combinators:
+<ul>
+<li>A <code>SysUnExpect</code> message is automatically generated by the
+<code><a href="#satisfy" >satisfy</a></code> combinator.
+The argument is the unexpected input.
+</li><li>A <code>UnExpect</code> message is generated by the <code><a href="#unexpected" >unexpected</a></code> combinator.
+The argument describes the unexpected item.
+</li><li>A <code>Expect</code> message is generated by the <code  ><a href="#err" >&lt;?&gt;</a></code> combinator. The
+argument describes the expected item.
+</li><li>A <code>Message</code> message is generated by the <code><a href="#fail" >fail</a></code> combinator. The
+argument is some general parser message.
+</li></ul>
+</p>
+</blockquote>
+
+<a name="messageString" ><code  ><strong  >messageString</strong></code></a>
+<code  > :: Message -&gt; String</code>
+<blockquote  >Extract the message string from an error message
+</blockquote>
+
+<a name="messageCompare" ><code  ><strong  >messageCompare</strong></code></a>
+<code  > :: Message -&gt; Message -&gt; Ordering</code>
+<blockquote  >Compares two error messages without looking at their content. Only the
+constructors are compared where:
+<p><code  >SysUnExpect&nbsp;&lt;&nbsp;UnExpect&nbsp;&lt;&nbsp;Expect&nbsp;&lt;&nbsp;Message<br>
+</code>
+</blockquote>
+
+<a name="messageEq" ><code  ><strong  >messageEq</strong></code></a>
+<code  > :: Message -&gt; Message -&gt; Bool</code>
+<blockquote  ><code>(messageEq m1 m2)</code> equals <code>True</code> if <code>(messageCompare m1 m2)</code>
+equals <code>EQ</code>, in all other cases it equals <code>False</code>
+</blockquote>
+
+<a name="showErrorMessages" ><code  ><strong  >showErrorMessages</strong></code></a>
+<code  > :: [Message] -&gt; String</code>
+<blockquote  >The standard function for showing error messages.
+Formats a list of error messages in English. This function is used in the <code>Show</code>
+instance of <code><a href="#ParseError" >ParseError</a></code>. The resulting string will be formatted like:
+<p><code  >unexpected&nbsp;<em>{The&nbsp;first&nbsp;UnExpect&nbsp;or&nbsp;a&nbsp;SysUnExpect&nbsp;message}</em>;<br>
+expecting&nbsp;<em>{comma&nbsp;separated&nbsp;list&nbsp;of&nbsp;Expect&nbsp;messages}</em>;<br>
+<em>{comma&nbsp;separated&nbsp;list&nbsp;of&nbsp;Message&nbsp;messages}</em><br>
+</code>
+</blockquote>
+
+
+</p><p>
+
+
+<a name="ParsecToken" ><h3  >Module ParsecToken</h3></a>
+
+
+
+The extension module <code>ParsecToken</code> is used to parse lexical
+tokens (for example: identifiers, comments and numbers). Since
+programming languages all have slightly different grammar rules for
+lexical tokens, the module should be parameterized with the most
+common differences between languages (for example: valid
+identifier characters, reserved words etc). 
+Since Haskell doesn't have parametrized modules, we resort to a 
+trick. The module exports a single function (<code  ><a href="#makeTokenParser" >makeTokenParser</a></code>)
+that returns a rather large record that contains all the lexical parse
+functions. 
+
+</p><p>Unfortunately, some of those functions (like <code  ><a href="#parens" >parens</a></code>) are polymorphic
+which implies that we need to use the <code>forall</code> keyword to give their
+type signature inside the record. This keyword is <em>not</em> part of the Haskell98
+standard but almost all Haskell systems support it nowadays. You might need to add
+some flags to your compiler options to make this work, for example, GHC needs
+<code>-fglasgow-exts</code> and Hugs the <code>-98</code> option.
+</p>
+
+<p>All lexical features that are not parameterizable are implemented 
+according to the Haskell lexical rules
+(for example: escape codes and floating point numbers).
+Luckily most language grammars match the Haskell grammar on these
+tokens quite closely (if not completely).
+</p>
+
+
+<a name="TokenParser" ><code  ><strong  >TokenParser st</strong></code></a>
+<blockquote  >The type of the record that holds lexical parsers that work
+on character streams with state <code>st</code>. Each function of this
+record is seperately described as if it was a toplevel function in
+a later <a href="#TokenParserMembers" >section</a>.
+
+<p><code  >data&nbsp;TokenParser&nbsp;st<br>
+&nbsp;=&nbsp;TokenParser{&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#identifier" >identifier</a>&nbsp;&nbsp;::&nbsp;<a href="#CharParser" >CharParser</a>&nbsp;st&nbsp;String<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#reserved" >reserved</a>&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;String&nbsp;-&gt;&nbsp;CharParser&nbsp;st&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#operator" >operator</a>&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;String<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#reservedOp" >reservedOp</a>&nbsp;&nbsp;::&nbsp;String&nbsp;-&gt;&nbsp;CharParser&nbsp;st&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#charLiteral" >charLiteral</a>&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;Char<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#stringLiteral" >stringLiteral</a>&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;String<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#natural" >natural</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;Integer<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#integer" >integer</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;Integer<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#float" >float</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;Double<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#naturalOrFloat" >naturalOrFloat</a>::&nbsp;CharParser&nbsp;st&nbsp;(Either&nbsp;Integer&nbsp;Double)<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#decimal" >decimal</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;Integer<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#hexadecimal" >hexadecimal</a>&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;Integer<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#octal" >octal</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;Integer<br>
+<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#symbol" >symbol</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;String&nbsp;-&gt;&nbsp;CharParser&nbsp;st&nbsp;String<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#lexeme" >lexeme</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;forall&nbsp;a.&nbsp;CharParser&nbsp;st&nbsp;a&nbsp;-&gt;&nbsp;CharParser&nbsp;st&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#whiteSpace" >whiteSpace</a>&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#parens" >parens</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;forall&nbsp;a.&nbsp;CharParser&nbsp;st&nbsp;a&nbsp;-&gt;&nbsp;CharParser&nbsp;st&nbsp;a&nbsp;<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#braces" >braces</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;forall&nbsp;a.&nbsp;CharParser&nbsp;st&nbsp;a&nbsp;-&gt;&nbsp;CharParser&nbsp;st&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#brackets" >brackets</a>&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;forall&nbsp;a.&nbsp;CharParser&nbsp;st&nbsp;a&nbsp;-&gt;&nbsp;CharParser&nbsp;st&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#squares" >squares</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;forall&nbsp;a.&nbsp;CharParser&nbsp;st&nbsp;a&nbsp;-&gt;&nbsp;CharParser&nbsp;st&nbsp;a<br>
+<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#semi" >semi</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;String<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#comma" >comma</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;String<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#colon" >colon</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;String<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#dot" >dot</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;String<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#semiSep" >semiSep</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;forall&nbsp;a&nbsp;.&nbsp;CharParser&nbsp;st&nbsp;a&nbsp;-&gt;&nbsp;CharParser&nbsp;st&nbsp;[a]<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#semiSep1" >semiSep1</a>&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;forall&nbsp;a&nbsp;.&nbsp;CharParser&nbsp;st&nbsp;a&nbsp;-&gt;&nbsp;CharParser&nbsp;st&nbsp;[a]<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#commaSep" >commaSep</a>&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;forall&nbsp;a&nbsp;.&nbsp;CharParser&nbsp;st&nbsp;a&nbsp;-&gt;&nbsp;CharParser&nbsp;st&nbsp;[a]<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;<a href="#commaSep1" >commaSep1</a>&nbsp;&nbsp;&nbsp;::&nbsp;forall&nbsp;a&nbsp;.&nbsp;CharParser&nbsp;st&nbsp;a&nbsp;-&gt;&nbsp;CharParser&nbsp;st&nbsp;[a]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;}<br>
+</code>
+</blockquote>
+
+<a name="LanguageDef" ><code  ><strong  >LanguageDef st</strong></code></a>
+<blockquote  >The <code>LanguageDef</code> type is a record that contains
+all parameterizable features of the <code>ParsecToken</code> module.
+The module <code>ParsecLanguage</code> contains some default definitions.
+The members of <code>LanguageDef</code> are described in a later <a href="#LanguageDefMembers" >section</a>.
+<p><code  >data&nbsp;LanguageDef&nbsp;st&nbsp;&nbsp;<br>
+&nbsp;&nbsp;=&nbsp;LanguageDef&nbsp;<br>
+&nbsp;&nbsp;{&nbsp;<a href="#commentStart" >commentStart</a>&nbsp;&nbsp;&nbsp;::&nbsp;String<br>
+&nbsp;&nbsp;,&nbsp;<a href="#commentEnd" >commentEnd</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;String<br>
+&nbsp;&nbsp;,&nbsp;<a href="#commentLine" >commentLine</a>&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;String<br>
+&nbsp;&nbsp;,&nbsp;<a href="#nestedComments" >nestedComments</a>&nbsp;::&nbsp;Bool&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;,&nbsp;<a href="#identStart" >identStart</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;Char<br>
+&nbsp;&nbsp;,&nbsp;<a href="#identLetter" >identLetter</a>&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;Char<br>
+&nbsp;&nbsp;,&nbsp;<a href="#opStart" >opStart</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;Char<br>
+&nbsp;&nbsp;,&nbsp;<a href="#opLetter" >opLetter</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;CharParser&nbsp;st&nbsp;Char<br>
+&nbsp;&nbsp;,&nbsp;<a href="#reservedNames" >reservedNames</a>&nbsp;&nbsp;::&nbsp;[String]<br>
+&nbsp;&nbsp;,&nbsp;<a href="#reservedOpNames" >reservedOpNames</a>::&nbsp;[String]<br>
+&nbsp;&nbsp;,&nbsp;<a href="#caseSensitive" >caseSensitive</a>&nbsp;&nbsp;::&nbsp;Bool<br>
+&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</code>
+</blockquote>
+
+
+<a name="makeTokenParser" ><code  ><strong  >makeTokenParser</strong></code></a>
+<code  > :: LanguageDef st -&gt; TokenParser st</code>
+<blockquote  >The expression <code>(makeTokenParser language)</code> creates
+a <code  ><a href="#TokenParser" >TokenParser</a></code> record that contains lexical parsers that are
+defined using the definitions in the <code>language</code> record.
+
+<p>The use of this function is quite stylized &ndash; one imports the
+appropiate language definition and selects the lexical parsers that
+are needed from the resulting <code  ><a href="#TokenParser" >TokenParser</a></code>.
+</p>
+
+<p><code  >module&nbsp;Main&nbsp;where<br>
+<br>
+import&nbsp;Parsec<br>
+import&nbsp;qualified&nbsp;ParsecToken&nbsp;as&nbsp;P<br>
+import&nbsp;ParsecLanguage&nbsp;(haskellDef)<br>
+<br>
+--&nbsp;The&nbsp;parser<br>
+...<br>
+<br>
+expr&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;parens&nbsp;expr<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;|&gt;&nbsp;identifier<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;|&gt;&nbsp;...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<br>
+--&nbsp;The&nbsp;lexer<br>
+lexer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;P.makeTokenParser&nbsp;haskellDef&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+parens&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;P.parens&nbsp;lexer<br>
+braces&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;P.braces&nbsp;lexer<br>
+identifier&nbsp;&nbsp;=&nbsp;P.identifier&nbsp;lexer<br>
+reserved&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;P.reserved&nbsp;lexer<br>
+...<br>
+</code>
+</blockquote>
+
+
+
+<h3 id="TokenParserMembers" idx="TokenParser">The members of <code>TokenParser</code></h3>
+<p>
+The following functions are all members of the <code  ><a href="#TokenParser" >TokenParser</a></code> record but
+they are described as if they are top-level functions since this how they are
+normally used (as shown in the example of <code  ><a href="#makeTokenParser" >makeTokenParser</a></code>).
+</p>
+
+
+<a name="whiteSpace" ><code  ><strong  >whiteSpace</strong></code></a>
+<code  > :: CharParser st ()</code>
+<blockquote  >Parses any white space. White space consists of <em>zero</em> or
+more occurrences of a <code><a href="#space" >space</a></code>, a line comment or a block (multi line)
+comment. Block comments may be nested. How comments are started and ended is
+defined in the <code><a href="#LanguageDef" >LanguageDef</a></code> that is passed to <code  ><a href="#makeTokenParser" >makeTokenParser</a></code>. 
+</blockquote>
+
+
+<a name="lexeme" ><code  ><strong  >lexeme</strong></code></a>
+<code  > :: CharParser st a -&gt; CharParser st p</code>
+<blockquote  ><code>(lexeme p)</code> first applies parser <code>p</code> and than 
+the <code><a href="#whiteSpace" >whiteSpace</a></code> parser, returning the value of <code>p</code>.
+Every lexical token (lexeme) is defined using <code>lexeme</code>, this way
+every parse starts at a point without white space. Parsers that use 
+<code>lexeme</code> are called <em>lexeme</em> parsers in this document. 
+
+<p>The only point
+where the <code><a href="#whiteSpace" >whiteSpace</a></code> parser should be called explicitly is the
+start of the main parser in order to skip any leading white space.
+</p>
+<p><code  >mainParser&nbsp;&nbsp;=&nbsp;do{&nbsp;<a href="#whiteSpace" >whiteSpace</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;ds&nbsp;&lt;-&nbsp;<a href="#many" >many</a>&nbsp;(lexeme&nbsp;<a href="#digit" >digit</a>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<a href="#eof" >eof</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;return&nbsp;(sum&nbsp;ds)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+</code>
+</blockquote>
+
+
+<a name="symbol" ><code  ><strong  >symbol</strong></code></a>
+<code  > :: String -&gt; CharParser st String</code>
+<blockquote  >Lexeme parser <code>(symbol s)</code> parses <code  ><a href="#string" >string</a></code> <code>s</code>
+and skips trailing white space.
+</blockquote>
+
+<a name="parens" ><code  ><strong  >parens</strong></code></a>
+<code  > :: CharParser st a -&gt; CharParser st a</code>
+<blockquote  >Lexeme parser <code>(parens p)</code> parses <code>p</code> enclosed in parenthesis,
+returning the value of <code>p</code>. It can be defined as:
+<p><code  >parens&nbsp;p&nbsp;&nbsp;=&nbsp;between&nbsp;(symbol&nbsp;&quot;(&quot;)&nbsp;(symbol&nbsp;&quot;)&quot;)&nbsp;p<br>
+</code>
+</blockquote>
+
+<a name="braces" ><code  ><strong  >braces</strong></code></a>
+<code  > :: CharParser st a -&gt; CharParser st a</code>
+<blockquote  >Lexeme parser <code>(braces p)</code> parses <code>p</code> enclosed in braces 
+(<code>'{'</code> and <code>'}'</code>),
+returning the value of <code>p</code>.
+</blockquote>
+
+<a name="brackets" ><code  ><strong  >brackets</strong></code></a>
+<code  > :: CharParser st a -&gt; CharParser st a</code>
+<blockquote  >Lexeme parser <code>(brackets p)</code> parses <code>p</code> enclosed in brackets
+(<code>'&lt;'</code> and <code>'&gt;'</code>),
+returning the value of <code>p</code>.
+</blockquote>
+
+<a name="squares" ><code  ><strong  >squares</strong></code></a>
+<code  > :: CharParser st a -&gt; CharParser st a</code>
+<blockquote  >Lexeme parser <code>(squares p)</code> parses <code>p</code> enclosed in square brackets
+(<code>'['</code> and <code>']'</code>),
+returning the value of <code>p</code>.
+</blockquote>
+
+<a name="semi" ><code  ><strong  >semi</strong></code></a>
+<code  > :: CharParser st String</code>
+<blockquote  >Lexeme parser <code>semi</code> parses the character <code>';'</code> and skips any trailing
+white space. Returns the string <code>&quot;;&quot;</code>.
+</blockquote>
+
+<a name="comma" ><code  ><strong  >comma</strong></code></a>
+<code  > :: CharParser st String</code>
+<blockquote  >Lexeme parser <code>comma</code> parses the character <code>','</code> and skips any trailing
+white space. Returns the string <code>&quot;,&quot;</code>.
+</blockquote>
+
+<a name="colon" ><code  ><strong  >colon</strong></code></a>
+<code  > :: CharParser st String</code>
+<blockquote  >Lexeme parser <code>colon</code> parses the character <code>':'</code> and skips any trailing
+white space. Returns the string <code>&quot;:&quot;</code>.
+</blockquote>
+
+<a name="dot" ><code  ><strong  >dot</strong></code></a>
+<code  > :: CharParser st String</code>
+<blockquote  >Lexeme parser <code>dot</code> parses the character <code>'.'</code> and skips any trailing
+white space. Returns the string <code>&quot;.&quot;</code>.
+</blockquote>
+
+<a name="semiSep" ><code  ><strong  >semiSep</strong></code></a>
+<code  > :: CharParser st a -&gt; CharParser st [a]</code>
+<blockquote  >Lexeme parser <code>(semiSep p)</code> parses <em>zero</em> or more 
+occurrences of <code>p</code> separated by <code><a href="#semi" >semi</a></code>. 
+Returns a list of values returned by <code>p</code>.
+This combinator can be defined as:
+<p><code  >semiSep&nbsp;p&nbsp;&nbsp;=&nbsp;<a href="#sepBy" >sepBy</a>&nbsp;p&nbsp;<a href="#semi" >semi</a><br>
+</code>
+</blockquote>
+
+<a name="semiSep1" ><code  ><strong  >semiSep1</strong></code></a>
+<code  > :: CharParser st a -&gt; CharParser st [a]</code>
+<blockquote  >Lexeme parser <code>(semiSep1 p)</code> parses <em>one</em> or more 
+occurrences of <code>p</code> separated by <code><a href="#semi" >semi</a></code>. 
+Returns a list of values returned by <code>p</code>.
+</blockquote>
+
+<a name="commaSep" ><code  ><strong  >commaSep</strong></code></a>
+<code  > :: CharParser st a -&gt; CharParser st [a]</code>
+<blockquote  >Lexeme parser <code>(commaSep p)</code> parses <em>zero</em> or more 
+occurrences of <code>p</code> separated by <code><a href="#comma" >comma</a></code>. 
+Returns a list of values returned by <code>p</code>.
+</blockquote>
+
+<a name="commaSep1" ><code  ><strong  >commaSep1</strong></code></a>
+<code  > :: CharParser st a -&gt; CharParser st [a]</code>
+<blockquote  >Lexeme parser <code>(commaSep1 p)</code> parses <em>one</em> or more 
+occurrences of <code>p</code> separated by <code><a href="#comma" >comma</a></code>. 
+Returns a list of values returned by <code>p</code>.
+</blockquote>
+
+<a name="charLiteral" ><code  ><strong  >charLiteral</strong></code></a>
+<code  > :: CharParser st Char</code>
+<blockquote  >This lexeme parser parses a single literal character. Returns the literal character value.
+This parsers deals correctly with escape sequences. The literal character is parsed
+according to the grammar rules defined in the Haskell report (which matches most
+programming languages quite closely).
+</blockquote>
+
+<a name="stringLiteral" ><code  ><strong  >stringLiteral</strong></code></a>
+<code  > :: CharParser st String</code>
+<blockquote  >This lexeme parser parses a literal string. Returns the literal string value.
+This parsers deals correctly with escape sequences and gaps. The literal string is parsed
+according to the grammar rules defined in the Haskell report (which matches most
+programming languages quite closely).
+</blockquote>
+
+<a name="decimal" ><code  ><strong  >decimal</strong></code></a>
+<code  > :: CharParser st Integer</code>
+<blockquote  >Parses a positive whole number in the decimal system.
+Returns the value of the number.
+</blockquote>
+
+<a name="hexadecimal" ><code  ><strong  >hexadecimal</strong></code></a>
+<code  > :: CharParser st Integer</code>
+<blockquote  >Parses a positive whole number in the hexadecimal system. The number should
+be prefixed with <code>&quot;0x&quot;</code> or <code>&quot;0X&quot;</code>.
+Returns the value of the number.
+</blockquote>
+
+<a name="octal" ><code  ><strong  >octal</strong></code></a>
+<code  > :: CharParser st Integer</code>
+<blockquote  >Parses a positive whole number in the octal system. The number should
+be prefixed with <code>&quot;0o&quot;</code> or <code>&quot;0O&quot;</code>.
+Returns the value of the number.
+</blockquote>
+
+<a name="natural" ><code  ><strong  >natural</strong></code></a>
+<code  > :: CharParser st Integer</code>
+<blockquote  >This lexeme parser parses a natural number (a positive whole number). 
+Returns the value of the number.
+The number
+can be specified in <code><a href="#decimal" >decimal</a></code>, <code><a href="#hexadecimal" >hexadecimal</a></code> or <code><a href="#octal" >octal</a></code>. 
+The number is parsed according to the
+grammar rules in the Haskell report.
+</blockquote>
+
+<a name="integer" ><code  ><strong  >integer</strong></code></a>
+<code  > :: CharParser st Integer</code>
+<blockquote  >This lexeme parser parses an integer (a whole number). This parser is like <code><a href="#natural" >natural</a></code>
+except that it can be prefixed with sign (i.e. <code>'-'</code> or <code>'+'</code>).
+Returns the value of the number.
+The number
+can be specified in <code><a href="#decimal" >decimal</a></code>, <code><a href="#hexadecimal" >hexadecimal</a></code> or <code><a href="#octal" >octal</a></code>. 
+The number is parsed according to the
+grammar rules in the Haskell report.
+</blockquote>
+
+<a name="float" ><code  ><strong  >float</strong></code></a>
+<code  > :: CharParser st Double</code>
+<blockquote  >This lexeme parser parses a floating point value. Returns the value of the number.
+The number is parsed according to the grammar rules defined in the Haskell report.
+</blockquote>
+
+<a name="naturalOrFloat" ><code  ><strong  >naturalOrFloat</strong></code></a>
+<code  > :: CharParser st (Either Integer Double)</code>
+<blockquote  >This lexeme parser parses either <code><a href="#natural" >natural</a></code> or a <code><a href="#float" >float</a></code>.
+Returns the value of the number.
+This parsers deals with any overlap in the grammar rules for naturals and floats.
+The number is parsed according to the grammar rules defined in the Haskell report.
+</blockquote>
+
+<a name="identifier" ><code  ><strong  >identifier</strong></code></a>
+<code  > :: CharParser st String</code>
+<blockquote  >This lexeme parser parses a legal identifier. Returns the identifier string.
+This parser will fail on identifiers that are reserved words. Legal identifier (start)
+characters and reserved words are defined in the <code><a href="#LanguageDef" >LanguageDef</a></code> that is passed to <code  ><a href="#makeTokenParser" >makeTokenParser</a></code>.
+An <code>identifier</code> is treated as a single token using <code  ><a href="#try" >try</a></code>.
+</blockquote>
+
+<a name="reserved" ><code  ><strong  >reserved</strong></code></a>
+<code  > :: String -&gt; CharParser st String</code>
+<blockquote  >The lexeme parser <code>(reserved name)</code> parses <code>(<a href="#symbol" >symbol</a> name)</code>, but
+it also checks that the <code>name</code> is not a prefix of a valid identifier.
+A <code>reserved</code> word is treated as a single token using <code  ><a href="#try" >try</a></code>.
+</blockquote>
+
+<a name="operator" ><code  ><strong  >operator</strong></code></a>
+<code  > :: CharParser st String</code>
+<blockquote  >This lexeme parser parses a legal operator. Returns the name of the operator.
+This parser will fail on any operators that are reserved operators. Legal operator (start)
+characters and reserved operators are defined in the <code><a href="#LanguageDef" >LanguageDef</a></code> that is passed to <code  ><a href="#makeTokenParser" >makeTokenParser</a></code>.
+An <code>operator</code> is treated as a single token using <code  ><a href="#try" >try</a></code>.
+</blockquote>
+
+<a name="reservedOp" ><code  ><strong  >reservedOp</strong></code></a>
+<code  > :: String -&gt; CharParser st String</code>
+<blockquote  >The lexeme parser <code>(reservedOp name)</code> parses <code>(<a href="#symbol" >symbol</a> name)</code>, but
+it also checks that the <code>name</code> is not a prefix of a valid operator.
+A <code>reservedOp</code> is treated as a single token using <code  ><a href="#try" >try</a></code>.
+</blockquote>
+
+
+<h3 id="LanguageDefMembers" idx="LanguageDef">The members of <code>LanguageDef</code></h3>
+<p>
+The following functions are all members of the <code  ><a href="#LanguageDef" >LanguageDef</a></code> record but
+they are described as if they are top-level values. These values determine how
+lexers that are constructed using <code  ><a href="#makeTokenParser" >makeTokenParser</a></code> will behave.
+</p>
+
+
+<a name="commentStart" ><code  ><strong  >commentStart</strong></code></a>
+<code  > :: String</code>
+<blockquote  >
+Describes the start of a block comment. Use the
+empty string if the language doesn't support block comments.
+For example <code>&quot;/*&quot;</code>.
+</blockquote>
+
+
+<a name="commentEnd" ><code  ><strong  >commentEnd</strong></code></a>
+<code  > :: String</code>
+<blockquote  >
+Describes the end of a block comment. Use the
+empty string if the language doesn't support block comments.
+For example <code>&quot;*/&quot;</code>.
+</blockquote>
+
+
+<a name="commentLine" ><code  ><strong  >commentLine</strong></code></a>
+<code  > :: String</code>
+<blockquote  >
+Describes the start of a line comment. Use the
+empty string if the language doesn't support line comments.
+For example <code>&quot;//&quot;</code>.
+</blockquote>
+
+
+<a name="nestedComments" ><code  ><strong  >nestedComments</strong></code></a>
+<code  > :: Bool</code>
+<blockquote  >
+Set to <code>True</code> if the language supports nested block
+comments.
+</blockquote>
+
+
+<a name="identStart" ><code  ><strong  >identStart</strong></code></a>
+<code  > :: CharParser st Char</code>
+<blockquote  >
+This parser should accept any start characters of identifiers.
+For example <code>(letter &lt;|&gt; char &quot;_&quot;)</code>.
+</blockquote>
+
+
+<a name="identLetter" ><code  ><strong  >identLetter</strong></code></a>
+<code  > :: CharParser st Char</code>
+<blockquote  >
+This parser should accept any legal tail characters of identifiers.
+For example <code>(<a href="#alphaNum" >alphaNum</a> &lt;|&gt; char &quot;_&quot;)</code>.
+</blockquote>
+
+
+<a name="opStart" ><code  ><strong  >opStart</strong></code></a>
+<code  > :: CharParser st Char</code>
+<blockquote  >
+This parser should accept any start characters of operators.
+For example <code>(oneOf &quot;:!#$%&amp;*+./&lt;=&gt;?@\\^|-~&quot;)</code>
+</blockquote>
+
+
+<a name="opLetter" ><code  ><strong  >opLetter</strong></code></a>
+<code  > :: CharParser st Char</code>
+<blockquote  >
+This parser should accept any legal tail characters of operators.
+Note that this parser should even be defined if the language doesn't
+support user-defined operators, or otherwise the <code  ><a href="#reservedOp" >reservedOp</a></code>
+parser won't work correctly.
+</blockquote>
+
+
+<a name="reservedNames" ><code  ><strong  >reservedNames</strong></code></a>
+<code  > :: [String]</code>
+<blockquote  >
+The list of reserved identifiers.
+</blockquote>
+
+
+<a name="reservedOpNames" ><code  ><strong  >reservedOpNames</strong></code></a>
+<code  > :: [String]</code>
+<blockquote  >
+The list of reserved operators.
+</blockquote>
+
+
+<a name="caseSensitive" ><code  ><strong  >caseSensitive</strong></code></a>
+<code  > :: Bool</code>
+<blockquote  >
+Set to <code>True</code> if the language is case sensitive.
+</blockquote>
+
+
+
+<a name="ParsecLanguage" ><h3  >Module ParsecLanguage</h3></a>
+<p>
+This module defines some default <code  ><a href="#LanguageDef" >LanguageDef</a></code> definitions. These
+definitions provide easy starting points for defining your own <code  ><a href="#LanguageDef" >LanguageDef</a></code>
+definitions.
+</p>
+
+
+<a name="emptyDef" ><code  ><strong  >emptyDef</strong></code></a>
+<code  > :: <a href="#LanguageDef" >LanguageDef</a> st</code>
+<blockquote  >This is the most minimal token definition. It is recommended to use this definition
+as the basis for other definitions.
+<code>emptyDef</code> has no reserved names or operators, is
+case sensitive and doesn't accept comments, identifiers or operators.
+<p><code  >emptyDef&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;=&nbsp;LanguageDef&nbsp;<br>
+&nbsp;&nbsp;&nbsp;{&nbsp;commentStart&nbsp;&nbsp;&nbsp;=&nbsp;&quot;&quot;<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;commentEnd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&quot;&quot;<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;commentLine&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&quot;&quot;<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;nestedComments&nbsp;=&nbsp;True<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;identStart&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;letter&nbsp;&lt;|&gt;&nbsp;char&nbsp;'_'<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;identLetter&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;alphaNum&nbsp;&lt;|&gt;&nbsp;oneOf&nbsp;&quot;_'&quot;<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;opStart&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;opLetter&nbsp;emptyDef<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;opLetter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;oneOf&nbsp;&quot;:!#$%&amp;*+./&lt;=&gt;?@\\^|-~&quot;<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;reservedOpNames=&nbsp;[]<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;reservedNames&nbsp;&nbsp;=&nbsp;[]<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;caseSensitive&nbsp;&nbsp;=&nbsp;True<br>
+&nbsp;&nbsp;&nbsp;}<br>
+</code>
+</blockquote>
+
+<a name="javaStyle" ><code  ><strong  >javaStyle</strong></code></a>
+<code  > :: <a href="#LanguageDef" >LanguageDef</a> st</code>
+<blockquote  >This is a minimal token definition for Java style languages. It defines the style
+of comments, valid identifiers and case sensitivity. It does not define any reserved words or
+operators.
+<p><code  >javaStyle&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;emptyDef<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;commentStart&nbsp;&nbsp;&nbsp;=&nbsp;&quot;/*&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;commentEnd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&quot;*/&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;commentLine&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&quot;//&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;nestedComments&nbsp;=&nbsp;True<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;identStart&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;letter<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;identLetter&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;alphaNum&nbsp;&lt;|&gt;&nbsp;oneOf&nbsp;&quot;_'&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;reservedNames&nbsp;&nbsp;=&nbsp;[]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;reservedOpNames=&nbsp;[]	<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;caseSensitive&nbsp;&nbsp;=&nbsp;False				&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+</code>
+</blockquote>
+
+<a name="haskellStyle" ><code  ><strong  >haskellStyle</strong></code></a>
+<code  > :: <a href="#LanguageDef" >LanguageDef</a> st</code>
+<blockquote  >This is a minimal token definition for Haskell style languages. It defines the style
+of comments, valid identifiers and case sensitivity. It does not define any reserved words or
+operators.
+<p><code  >haskellStyle<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;emptyDef<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;commentStart&nbsp;&nbsp;&nbsp;=&nbsp;&quot;{-&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;commentEnd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&quot;-}&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;commentLine&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&quot;--&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;nestedComments&nbsp;=&nbsp;True<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;identStart&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;letter<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;identLetter&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;alphaNum&nbsp;&lt;|&gt;&nbsp;oneOf&nbsp;&quot;_'&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;opStart&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;opLetter&nbsp;haskell<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;opLetter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;oneOf&nbsp;&quot;:!#$%&amp;*+./&lt;=&gt;?@\\^|-~&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;reservedOpNames=&nbsp;[]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;reservedNames&nbsp;&nbsp;=&nbsp;[]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;caseSensitive&nbsp;&nbsp;=&nbsp;True&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</code>
+</blockquote>
+
+<a name="mondrianDef" ><code  ><strong  >mondrianDef</strong></code></a>
+<code  > :: <a href="#LanguageDef" >LanguageDef</a> st</code>
+<blockquote  >The language definition for the language Mondrian. 
+<p><code  >mondrian&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;javaStyle<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;reservedNames&nbsp;&nbsp;=&nbsp;[&nbsp;&quot;case&quot;,&nbsp;&quot;class&quot;,&nbsp;&quot;default&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;&quot;extends&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;&quot;import&quot;,&nbsp;&quot;in&quot;,&nbsp;&quot;let&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;&quot;new&quot;,&nbsp;&quot;of&quot;,&nbsp;&quot;package&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]	<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;caseSensitive&nbsp;&nbsp;=&nbsp;True<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+</code>
+</blockquote>
+
+
+<a name="haskell98Def" ><code  ><strong  >haskell98Def</strong></code></a>
+<code  > :: <a href="#LanguageDef" >LanguageDef</a> st</code>
+<blockquote  >The language definition for the language Haskell98.
+<p><code  >haskell98Def&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;haskellStyle<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;reservedOpNames=&nbsp;[&quot;::&quot;,&quot;..&quot;,&quot;=&quot;,&quot;\\&quot;,&quot;|&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&quot;&lt;-&quot;,&quot;-&gt;&quot;,&quot;@&quot;,&quot;~&quot;,&quot;=&gt;&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;reservedNames&nbsp;&nbsp;=&nbsp;[&quot;let&quot;,&quot;in&quot;,&quot;case&quot;,&quot;of&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&quot;if&quot;,&quot;then&quot;,&quot;else&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&quot;data&quot;,&quot;type&quot;,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&quot;class&quot;,&quot;default&quot;,&quot;deriving&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&quot;do&quot;,&quot;import&quot;,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&quot;infix&quot;,&quot;infixl&quot;,&quot;infixr&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&quot;instance&quot;,&quot;module&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&quot;newtype&quot;,&quot;where&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&quot;primitive&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&quot;as&quot;,&quot;qualified&quot;,&quot;hiding&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</code>
+</blockquote>
+
+<a name="haskellDef" ><code  ><strong  >haskellDef</strong></code></a>
+<code  > :: <a href="#LanguageDef" >LanguageDef</a> st</code>
+<blockquote  >The language definition for the Haskell language.
+<p><code  >haskellDef&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;=&nbsp;haskell98Def<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;identLetter&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;identLetter&nbsp;haskell98Def&nbsp;&lt;|&gt;&nbsp;char&nbsp;'#'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;reservedNames&nbsp;&nbsp;=&nbsp;reservedNames&nbsp;haskell98Def&nbsp;++&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&quot;foreign&quot;,&quot;import&quot;,&quot;export&quot;,&quot;primitive&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&quot;_ccall_&quot;,&quot;_casm_&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&quot;forall&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+</code>
+</blockquote>
+
+<a name="mondrian" ><code  ><strong  >mondrian</strong></code></a>
+<code  > :: <a href="#TokenParser" >TokenParser</a> st</code>
+<blockquote  >A lexer for the mondrian language.
+<p><code  >mondrian&nbsp;&nbsp;=&nbsp;<a href="#makeTokenParser" >makeTokenParser</a>&nbsp;<a href="#mondrianDef" >mondrianDef</a><br>
+</code>
+</blockquote>
+
+<a name="haskell" ><code  ><strong  >haskell</strong></code></a>
+<code  > :: <a href="#TokenParser" >TokenParser</a> st</code>
+<blockquote  >A lexer for the haskell language.
+<p><code  >mondrian&nbsp;&nbsp;=&nbsp;<a href="#makeTokenParser" >makeTokenParser</a>&nbsp;<a href="#haskellDef" >haskellDef</a><br>
+</code>
+</blockquote>
+
+
+
+
+
+
+
+<p>
+
+<a name="ParsecExpr" ><h3  >Module ParsecExpr</h3></a>
+
+
+<code>ParsecExpr</code> is a small extension module for parsing 
+expression grammars. It imports the <code  ><a href="#Parsec" >Parsec</a></code> module.
+
+
+<p>
+<a name="Assoc" ><code  ><strong  >Assoc</strong></code></a>
+<blockquote  >This data type specifies the associativity of operators: left, right or none.
+<p><code  >data&nbsp;Assoc&nbsp;&nbsp;=&nbsp;AssocNone&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;AssocLeft<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;AssocRight<br>
+</code>
+</blockquote>
+
+<a name="type_operator" ><code  ><strong  >Operator tok st a</strong></code></a>
+<blockquote  >This data type specifies operators that work on values of type <code>a</code>. An
+operator is either binary infix or unary prefix or postfix. 
+A binary operator has also an associated associativity.
+<p><code  >data&nbsp;Operator&nbsp;tok&nbsp;st&nbsp;a&nbsp;&nbsp;<br>
+&nbsp;&nbsp;=&nbsp;Infix&nbsp;(GenParser&nbsp;tok&nbsp;st&nbsp;(a&nbsp;-&gt;&nbsp;a&nbsp;-&gt;&nbsp;a))&nbsp;<a href="#Assoc" >Assoc</a><br>
+&nbsp;&nbsp;|&nbsp;Prefix&nbsp;(GenParser&nbsp;tok&nbsp;st&nbsp;(a&nbsp;-&gt;&nbsp;a))<br>
+&nbsp;&nbsp;|&nbsp;Postfix&nbsp;(GenParser&nbsp;tok&nbsp;st&nbsp;(a&nbsp;-&gt;&nbsp;a))<br>
+</code>
+</blockquote>
+<a name="OperatorTable" ><code  ><strong  >OperatorTable tok st a</strong></code></a>
+<blockquote  >An <code>(OperatorTable tok st a)</code> is a list of 
+<code  ><a href="#type_operator" >(Operator tok st a)</a></code> lists. The list is ordered
+in descending precedence. All operators in one list have the same precedence (but may have a
+different associativity).
+<p><code  >type&nbsp;OperatorTable&nbsp;tok&nbsp;st&nbsp;a&nbsp;&nbsp;=&nbsp;[[Operator&nbsp;tok&nbsp;st&nbsp;a]]<br>
+</code>
+</blockquote>
+
+<a name="buildExpressionParser" ><code  ><strong  >buildExpressionParser</strong></code></a>
+<code  > :: <a href="#OperatorTable" >OperatorTable</a> tok st a -&gt; GenParser tok st a -&gt; GenParser tok st a</code>
+<blockquote  ><code>(buildExpressionParser table term)</code> builds an expression parser for terms <code>term</code>
+with operators from <code>table</code>, taking the associativity and precedence specified in <code>table</code>
+into account. Prefix and postfix operators of the same precedence can only occur once (i.e. <code>--2</code>
+is not allowed if <code>-</code> is prefix negate). Prefix and
+postfix operators of the same precedence associate to the left (i.e. 
+if <code>++</code> is postfix increment, than <code>-2++</code> equals <code>-1</code>, not <code>-3</code>).
+
+<p>The <code>buildExpressionParser</code> takes care of all the complexity involved in building expression
+parser. Here is an example of an expression  parser that handles prefix signs, postfix increment and
+basic arithmetic.
+</p>
+<p><code  >expr&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;buildExpressionParser&nbsp;table&nbsp;term<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?&gt;&nbsp;&quot;expression&quot;<br>
+<br>
+term&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;<a href="#parens" >parens</a>&nbsp;expr&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;|&gt;&nbsp;<a href="#natural" >natural</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?&gt;&nbsp;&quot;simple&nbsp;expression&quot;<br>
+<br>
+table&nbsp;::&nbsp;OperatorTable&nbsp;Char&nbsp;()&nbsp;Integer<br>
+table&nbsp;&nbsp;&nbsp;=&nbsp;[&nbsp;[prefix&nbsp;&quot;-&quot;&nbsp;negate,&nbsp;prefix&nbsp;&quot;+&quot;&nbsp;id&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;[postfix&nbsp;&quot;++&quot;&nbsp;(+1)]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;[binary&nbsp;&quot;*&quot;&nbsp;(*)&nbsp;AssocLeft,&nbsp;binary&nbsp;&quot;/&quot;&nbsp;(div)&nbsp;AssocLeft&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;[binary&nbsp;&quot;+&quot;&nbsp;(+)&nbsp;AssocLeft,&nbsp;binary&nbsp;&quot;-&quot;&nbsp;(-)&nbsp;&nbsp;&nbsp;AssocLeft&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+binary&nbsp;&nbsp;name&nbsp;fun&nbsp;assoc&nbsp;=&nbsp;Infix&nbsp;(do{&nbsp;<a href="#reservedOp" >reservedOp</a>&nbsp;name;&nbsp;return&nbsp;fun&nbsp;})&nbsp;assoc<br>
+prefix&nbsp;&nbsp;name&nbsp;fun&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;Prefix&nbsp;(do{&nbsp;<a href="#reservedOp" >reservedOp</a>&nbsp;name;&nbsp;return&nbsp;fun&nbsp;})<br>
+postfix&nbsp;name&nbsp;fun&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;Postfix&nbsp;(do{&nbsp;<a href="#reservedOp" >reservedOp</a>&nbsp;name;&nbsp;return&nbsp;fun&nbsp;})<br>
+</code>
+</blockquote>
+
+</p>
+</p><p>
+
+<a name="ParsecPerm" ><h3  >Module ParsecPerm</h3></a>
+
+
+</p><p>This module contains combinators for building parsers that parse permutation
+phrases. It uses a typed approach that is descibed in (<a href="#BaarsPermutation">Baars <em>et al.</em>, 2001</a>).
+This library is still experimental and might change.
+</p>
+
+
+<a name="PermParser" ><code  ><strong  >PermParser tok st a</strong></code></a>
+<blockquote  >The type <code>(PermParser tok st a)</code> denotes a permutation parser that,
+when converted by the <code  ><a href="#permute" >permute</a></code> function, parses token streams of type <code>tok</code>
+with user state <code>st</code> and returns a value of type <code>a</code> on success.
+<p>Normally, a permutation parser is first build with special operators like
+<a href="#permor" ><code>(&lt;||&gt;)</code></a> and than transformed into a 
+normal parser using <code  ><a href="#permute" >permute</a></code>.
+</p>
+</blockquote>
+
+<a name="permute" ><code  ><strong  >permute</strong></code></a>
+<code  > :: <a href="#PermParser" >PermParser</a> tok st a -&gt; <a href="#GenParser" >GenParser</a> tok st a</code>
+<blockquote  >The parser <code>(permute perm)</code> parses a permutation of parser described
+by <code>perm</code>. For example, suppose we want to parse a permutation of:
+an optional string of <code>a</code>'s, the character <code>b</code> and an optional <code>c</code>.
+This can be described by:
+<p><code  >test&nbsp;::&nbsp;<a href="#Parser" >Parser</a>&nbsp;(String,Char,Char)<br>
+test&nbsp;&nbsp;=&nbsp;permute&nbsp;(tuple&nbsp;<a href="#permapopt" >&lt;$?&gt;</a>&nbsp;(&quot;&quot;,many1&nbsp;(char&nbsp;'a'))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#permor" >&lt;||&gt;</a>&nbsp;char&nbsp;'b'&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#permoropt" >&lt;|?&gt;</a>&nbsp;('_',char&nbsp;'c'))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;where<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tuple&nbsp;a&nbsp;b&nbsp;c&nbsp;&nbsp;=&nbsp;(a,b,c)<br>
+</code>
+</blockquote>
+
+
+
+<a name="permap" ><code  ><strong  ><code>(&lt;$$&gt;)</code></strong></code></a>
+<code  > :: (a -&gt; b) -&gt; GenParser tok st a -&gt; PermParser tok st b<br>infixl 2</code>
+<blockquote  >The expression <code>(f &lt;$$&gt; p)</code> creates a fresh permutation parser
+consisting of parser <code>p</code>. The the final result of the permutation parser is
+the function <code>f</code> applied to the return value of <code>p</code>. The parser <code>p</code>
+is not allowed to accept empty input &ndash; use the optional combinator
+<a href="#permapopt" ><code>(&lt;$?&gt;)</code></a> instead.
+<p>
+If the function <code>f</code>
+takes more than one parameter, the type variable <code>b</code> is instantiated to a functional
+type which combines nicely with the adds parser <code>p</code> to the 
+<a href="#permor" ><code>(&lt;||&gt;)</code></a> combinator. This results in stylized code where
+a permutation parser starts with a combining function <code>f</code> followed by
+the parsers. The function <code>f</code> gets its parameters in the order in which the
+parsers are specified, but actual input can be in any order.
+</p>
+<p><code  >permute&nbsp;$<br>
+f&nbsp;<a href="#permap" >&lt;$$&gt;</a>&nbsp;<em>parse&nbsp;field&nbsp;x</em><br>
+&nbsp;&nbsp;<a href="#permor" >&lt;||&gt;</a>&nbsp;<em>parse&nbsp;field&nbsp;y</em><br>
+where<br>
+&nbsp;&nbsp;f&nbsp;x&nbsp;y&nbsp;=&nbsp;...<br>
+</code>
+</blockquote>
+
+<a name="permor" ><code  ><strong  ><code>(&lt;||&gt;)</code></strong></code></a>
+<code  > :: PermParser tok st (a -&gt; b) -&gt; GenParser tok st a -&gt; PermParser tok st b<br>infixl 1</code>
+<blockquote  >The expression <code>(perm &lt;||&gt; p)</code> adds parser <code>p</code> to the 
+permutation parser <code>perm</code>. The parser <code>p</code>
+is not allowed to accept empty input &ndash; use the optional combinator
+<a href="#permoropt" ><code>(&lt;|?&gt;)</code></a> instead.
+Returns a new permutation parser that includes <code>p</code>.
+</blockquote>
+
+<a name="permapopt" ><code  ><strong  ><code>(&lt;$?&gt;)</code></strong></code></a>
+<code  > :: PermParser tok st (a -&gt; b) -&gt; (a,GenParser tok st a) -&gt; PermParser tok st b<br>infixl 1</code>
+<blockquote  >The expression <code>(f &lt;$?&gt; (x,p))</code> creates a fresh permutation parser
+consisting of parser <code>p</code>. The the final result of the permutation parser is
+the function <code>f</code> applied to the return value of <code>p</code>. The parser <code>p</code> is
+optional &ndash; if it can not be applied, the default value <code>x</code> will be used instead.
+</blockquote>
+
+
+<a name="permoropt" ><code  ><strong  ><code>(&lt;|?&gt;)</code></strong></code></a>
+<code  > :: PermParser tok st (a -&gt; b) -&gt; (a,GenParser tok st a) -&gt; PermParser tok st b<br>infixl 1</code>
+<blockquote  >The expression <code>(perm &lt;||&gt; (x,p))</code> adds parser <code>p</code> to the 
+permutation parser <code>perm</code>. The parser <code>p</code> is
+optional &ndash; if it can not be applied, the default value <code>x</code> will be used instead.
+Returns a new permutation parser that includes the optional parser <code>p</code>.
+</blockquote>
+
+
+
+<h2  >References</h2><ol  >
+
+
+<p><a  citename="Aho <em>et al.</em>" year="1986" name="AhoSethiUllman" ><li  >
+A.&nbsp;Aho, R.&nbsp;Sethi, J.&nbsp;Ullman.
+ (1986)<br>
+<em  >Compilers: principles, techniques and tools</em>.<br>
+Addison-Wesley.
+</li></a>
+
+<p><a  citename="Appel" year="1997" name="AppelCompiler" ><li  >
+Andrew Appel.
+ (1997)<br>
+<em  >Mondern compiler implementation in Java/ML/C</em>.<br>
+Cambridge University Press, ISDN 0-521-58654-2.
+</li></a>
+
+<p><a  citename="Atsushi <em>et al.</em>" year="1999" name="FJava" ><li  >
+Atsushi Igarishi, Benjamin Pierce, and Philip Wadler.
+ (November 1999)<br>
+<em  >Featherweight Java: A minimal core calculus for Java and GJ</em>.<br>
+OOPSLA, Denver.
+<br><a href="http://cm.bell-labs.com/cm/cs/who/wadler/papers/featherweight/featherweight.ps">http://cm.bell-labs.com/cm/cs/who/wadler/papers/featherweight/featherweight.ps</a>.
+</li></a>
+
+<p><a  citename="Baars <em>et al.</em>" year="2001" name="BaarsPermutation" ><li  >
+Arthur Baars, Andres Loh, and Doaitse Swierstra.
+ (2001)<br>
+<em  >Parsing Permutation Phrases</em>.<br>
+Proceedings of the ACM SIGPLAN Haskell Workshop, 171&ndash;183.
+</li></a>
+
+<p><a  citename="Burge" year="1975" name="Burge" ><li  >
+W.H. Burge.
+ (1975)<br>
+<em  >Recursive programming techniques</em>.<br>
+Addison-Wesley.
+</li></a>
+
+<p><a  citename="Fokker" year="1995" name="Fokker" ><li  >
+Jeroen Fokker.
+ (May 1995)<br>
+<em  >Functional Parsers</em>.<br>
+Lecture Notes of the Baastad Spring school on Functional Programming.
+<br><a href="http://www.cs.uu.nl/~jeroen/article/parsers/parsers.ps">http://www.cs.uu.nl/~jeroen/article/parsers/parsers.ps</a>.
+</li></a>
+
+<p><a  citename="Gill and Marlow" year="1995" name="GillMarlow" ><li  >
+Andy Gill and Simon Marlow.
+ (1995)<br>
+<em  >Happy: the parser generator for Haskell</em>.<br>
+University of Glasgow.
+<br><a href="http://www.haskell.org/happy">http://www.haskell.org/happy</a>.
+</li></a>
+
+<p><a  citename="Hill" year="1996" name="Hill" ><li  >
+Steve Hill.
+ (May 1996)<br>
+<em  >Combinators for parsing expressions</em>.<br>
+Journal of Functional Programming&nbsp;<strong>6</strong>(3):&nbsp;445-463.
+</li></a>
+
+<p><a  citename="Hutton" year="1992" name="Hutton" ><li  >
+Graham Hutton.
+ (1992)<br>
+<em  >Higher-order functions for parsing</em>.<br>
+Journal of Functional Programming&nbsp;<strong>2</strong>:&nbsp;232-343.
+<br><a href="http://www.cs.nott.ac.uk/Department/Staff/gmh/parsing.ps">http://www.cs.nott.ac.uk/Department/Staff/gmh/parsing.ps</a>.
+</li></a>
+
+
+<p><a  citename="Hutton and Meijer" year="1996" name="HuttonMeijer" ><li  >
+Graham Hutton and Erik Meijer.
+ (1996)<br>
+<em  >Monadic Parser Combinators</em>.<br>
+Technical report NOTTCS-TR-96-4.
+Department of Computer Science, University of Nottingham.
+<br><a href="http://www.cs.nott.ac.uk/Department/Staff/gmh/monparsing.ps">http://www.cs.nott.ac.uk/Department/Staff/gmh/monparsing.ps</a>.
+</li></a>
+
+<p><a  citename="Koopman and Plasmeijer" year="1999" name="KoopmanPlasmeijer" ><li  >
+Pieter Koopman and Rinus Plasmeijer.
+ (1999)<br>
+<em  >Efficient Combinator Parsers</em>.<br>
+Implementation of Functional Languages.
+Springer Verlag, 
+LNCS&nbsp;<strong>1595</strong>:&nbsp;122-138.
+<br><a href="ftp://
+ftp.cs.kun.nl/pub/CSI/SoftwEng.FunctLang/papers">ftp://
+ftp.cs.kun.nl/pub/CSI/SoftwEng.FunctLang/papers</a>. <!--
+ /koop98-EffCombParsIFL98.ps.gz 
+-->
+</li></a>
+
+<p><a  citename="Mogensen" year="1993" name="Mogensen" ><li  >
+Torben Mogensen.
+ (1993)<br>
+<em  >Ratatosk: a parser generator and scanner generator for Gofer</em>.<br>
+University of Copenhagen (DIKU).
+</li></a>
+
+<p><a  citename="Mondrian" year="2000" name="Mondrian" ><li  >
+Nigel Perry, Arjan van IJzendoor, and Erik Meijer.
+ (2000)<br>
+<em  >Mondrian, the internet scripting language</em>.<br>
+<br><a href="http://www.mondrian-script.org/">http://www.mondrian-script.org/</a>.
+</li></a>
+
+<p><a  citename="Nielson <em>et al.</>" year="1999" name="NielsonNielson" ><li  >
+Flemming&nbsp;Nielson, Hanne Riis Nielson and Chris&nbsp;Hankin.
+ (1999)<br>
+<em  >Principles of program analysis</em>.<br>
+Springer Verlag, ISBN 3-540-65410-0.
+</li></a>
+
+<p><a  citename="Partridge and Wright" year="1996" name="PartridgeWright" ><li  >
+Andrew Partridge and David Wright.
+ (1996)<br>
+<em  >Predictive parser combinators need four values to report errors</em>.<br>
+Journal of Functional Programming&nbsp;<strong>6</strong>(2):&nbsp;355-364.
+</li></a>
+
+<p><a  citename="Peyton Jones and Meijer" year="1997" name="Henk" ><li  >
+Simon Peyton Jones and Erik Meijer.
+ (June 1997)<br>
+<em  >Henk: a typed intermediate language</em>.<br>
+Proceedings of the Types in Compilation Workshop, Amsterdam.
+<br><a href="http://www.research.microsoft.com/~simonpj/Papers/henk.ps.gz">http://www.research.microsoft.com/~simonpj/Papers/henk.ps.gz</a>.
+</li></a>
+
+<p><a  citename="R&ouml;jemo" year="1995" name="Rojemo" ><li  >
+Niklas R&ouml;jemo.
+ (1995)<br>
+<em  >Garbage collection and memory efficiency in lazy functional languages</em>.<br>
+Ph.D. thesis, Chalmers University of Technology.
+<br><a href="http://www.cs.chalmers.se/~rojemo/thesis.html">http://www.cs.chalmers.se/~rojemo/thesis.html</a>.
+</li></a>
+
+<p><a  citename="Swierstra and Azero" year="1999" name="SwierstraAzero" ><li  >
+Doaitse Swierstra and Pablo Azero.
+ (November 1999)<br>
+<em  >Fast, Error Correcting Parser Combinators: A Short Tutorial</em>.<br>
+SOFSEM'99 Theory and Practice of Informatics. 
+LNCS&nbsp;<strong>1725</strong>:&nbsp;111-129.
+<br><a href="http://www.cs.uu.nl/groups/ST/Software">http://www.cs.uu.nl/groups/ST/Software</a>. <!--
+ /UU_Parsing/SofSem99.pdf 
+-->
+</li></a> 
+
+<p><a  citename="Swierstra and Duponcheel" year="1996" name="SwierstraDuponcheel" ><li  >
+Doaitse Swierstra and Luc Duponcheel.
+ (1996)<br>
+<em  >Deterministic, Error-Correcting Combinator Parsers</em>.<br>
+Advanced Functional Programming. LNCS&nbsp;<strong>1129</strong>:&nbsp;185-207.
+<br><a href="http://www.cs.uu.nl/groups/ST/Software">http://www.cs.uu.nl/groups/ST/Software</a>. <!--
+ /UU_Parsing/AFP2.ps 
+-->
+</li></a>
+
+<p><a  citename="Wadler" year="1985" name="Wadler85" ><li  >
+Philip Wadler.
+ (1985)<br>
+<em  >How to replace failure with a list of successes</em>.<br>
+Functional Programming Languages and 
+Computer Architecture, LNCS&nbsp;<strong>201</strong>:&nbsp;113-128.
+</li></a>
+
+<p><a  citename="Wadler" year="1990" name="Wadler90" ><li  >
+Philip Wadler.
+ (1990)<br>
+<em  >Comprehending Monads</em>.<br>
+ACM Conference on Lisp and Functional Programming, pages&nbsp;61-77.
+<br><a href="http://cm.bell-labs.com/cm/cs/who/wadler/topics/monads.html">http://cm.bell-labs.com/cm/cs/who/wadler/topics/monads.html</a>.
+</li></a>
+
+<p><a  citename="Wadler" year="1992" name="Wadler92" ><li  >
+Philip Wadler.
+ (1992)<br>
+<em  >The essence of functional programming</em>.<br>
+Symposium on principles of programming languages, pages&nbsp;1-14.
+<br><a href="http://cm.bell-labs.com/cm/cs/who/wadler/topics/monads.html">http://cm.bell-labs.com/cm/cs/who/wadler/topics/monads.html</a>.
+</li></a>
+
+</ol>
+
+
+<p>
+
+
+</p></body></html>
