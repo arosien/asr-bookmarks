@@ -1,0 +1,322 @@
+<HTML>
+    <HEAD>
+        <center>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#0033CC" bordercolor="#FFFFFF">
+  <tr> 
+    <td width="100%" height="89"> 
+      <div align="right"><font face="Verdana">
+        <img src="images/banner_text.gif" width="475" height="100"><img src="images/banner_bouncing_globe.gif" width="300" height="100"><br>
+        </font><i><b><font color="#FFFFFF" face="Verdana" size="4">an XML 
+        Collection...</font></b></i></div>
+    </td>
+  </tr>
+  <tr bordercolor="#CCCCCC"> 
+    <td width="100%" height="2" valign="bottom"><font face="Verdana">
+    <img src="images/banner_compilation.gif" width="800" height="12"></font></td>
+  </tr>
+</table>
+<blockquote>
+  <div align="right"> 
+    <map name="Map"> 
+      <font face="Verdana"> 
+      <area shape="rect" coords="5, 0, 63, 24" href="index.html">
+    </map>
+    <img src="images/button_home.gif" width="70" height="30" usemap="#Map" border="0"></font></div>
+</blockquote>
+            <H1><font face="Verdana" size="4">Building Web Services the REST Way</font></H1>
+            <font face="Verdana" size="2">
+            <b>Roger L. Costello</b></center>
+    </HEAD>
+        </font>
+    <BODY link="#336699" vlink="#336699" alink="#AF3033" topmargin="0" leftmargin="0">
+        <blockquote>
+          <p><font face="Verdana" size="2">I will first provide a brief introduction to REST and then describe how
+        to build Web services in the REST style. </font></p>
+ 
+        <H2><font face="Verdana" size="2">What is REST?</font></H2>
+          <font face="Verdana" size="2">REST is a term coined by Roy Fielding in his Ph.D. dissertation [1] to 
+        describe an <b>architecture style</b> of networked systems.  REST is
+        an acronym standing for Representational State Transfer. </font>
+
+        <H2><font face="Verdana" size="2">Why is it called Representational State Transfer?</font></H2>
+          <font face="Verdana" size="2">The Web is comprised of resources.  A resource is any item of interest.
+        For example, the Boeing Aircraft Corp may define a 747 resource.
+        Clients may access that resource with this URL:</font><p></p>
+
+<form action="">
+<blockquote>
+<pre>http://www.boeing.com/aircraft/747
+</pre>
+</blockquote>
+</form>
+
+          <font face="Verdana" size="2">A <b>representation</b> of the resource is returned 
+        (e.g., Boeing747.html). The representation places the client application in a <b>state</b>.  The 
+        result of the client traversing a hyperlink in Boeing747.html is another 
+        resource is accessed.  The new representation places the client application 
+        into yet another state.  Thus, the client application changes (<b>transfer</b>s)
+        state with each resource representation --> Representational State Transfer!</font><p></p>
+
+          <font face="Verdana" size="2">Here is Roy Fielding's explanation of the meaning of Representational State Transfer:</font><p></p>
+
+          <font face="Verdana" size="2">"Representational State Transfer is intended to evoke an image of how a well-designed
+         Web application behaves: a network of web pages (a virtual state-machine), where
+         the user progresses through an application by selecting links (state transitions), resulting
+         in the next page (representing the next state of the application) being transferred to the
+         user and rendered for their use." </font>
+
+        <H2><font face="Verdana" size="2">Motivation for REST</font></H2>
+          <font face="Verdana" size="2">The motivation for REST was to capture the characteristics of the Web which
+        made the Web successful.  Subsequently these characteristics are being used to
+        guide the evolution of the Web. </font> 
+
+        <H2><font face="Verdana" size="2">REST - An Architectural Style, Not a Standard</font></H2>
+          <font face="Verdana" size="2">REST is not a standard.  You will not see the W3C putting out a REST specification.  
+        You will not see IBM or Microsoft or Sun selling a REST developer's toolkit.  Why?  
+        Because REST is just an architectural style. You can't bottle up that style.  You 
+        can only understand it, and design your Web services in that style. (Analogous to 
+        the client-server architectural style.  There is no client-server standard.)</font><p></p>
+
+          <font face="Verdana" size="2">While REST is not a standard, it does use standards:
+          </font>
+        <ul>
+            <li><font face="Verdana" size="2">HTTP</font></li>
+            <li><font face="Verdana" size="2">URL</font></li>
+            <li><font face="Verdana" size="2">XML/HTML/GIF/JPEG/etc (Resource Representations)</font></li>
+            <li><font face="Verdana" size="2">text/xml, text/html, image/gif, image/jpeg, etc  (MIME Types)</font></li>
+        </ul>
+
+        <H2><font face="Verdana" size="2">The Classic REST System</font></H2>
+          <font face="Verdana" size="2">The Web is a REST system!  Many of those Web services that you have been
+        using these many years - book-ordering services, search services,
+        online dictionary services, etc - are REST-based Web services.  Alas,
+        you have been using REST, building REST services and you didn't even know it.</font><p></p>
+
+          <font face="Verdana" size="2">REST is concerned with the "big picture" of the Web.  It does not deal with
+        implementation details (e.g., using Java servlets or CGI to implement a Web service).
+        So let's look at an example of creating a Web service from the REST "big picture" perspective.
+          </font>
+
+        <H2><font face="Verdana" size="2">Parts Depot Web Services</font></H2>
+          <font face="Verdana" size="2">Parts Depot, Inc (<b>fictitious company</b>) has deployed some web services to enable its 
+        customers to: </font>
+        <ul>
+            <li><font face="Verdana" size="2">get a list of parts</font></li>
+            <li><font face="Verdana" size="2">get detailed information about a particular part</font></li>
+            <li><font face="Verdana" size="2">submit a Purchase Order (PO)</font></li>
+        </ul>
+
+          <font face="Verdana" size="2">Let's consider how each of these services are implemented in a RESTful fashion.
+          </font>
+
+        <H3><font face="Verdana" size="2">Get Parts List</font></H3>
+          <font face="Verdana" size="2">The web service makes available a URL to a parts list resource.  For example, a client 
+        would use this URL to get the parts list:</font><p></p>
+ 
+<form action="">
+<blockquote>
+<pre>http://www.parts-depot.com/parts
+</pre>
+</blockquote>
+</form>
+
+          <font face="Verdana" size="2">Note that "how" the web service generates the parts list is completely transparent 
+        to the client.  All the client knows is that if he/she submits the above URL then
+        a document containing the list of parts is returned. 
+        Since the implementation is transparent to clients, 
+        Parts Depot is free to modify the underlying implementation of this
+        resource without impacting clients. This is <b>loose coupling</b>.</font><p>
+          <font face="Verdana" size="2">Here's the document that the client receives:</font></p>
+          <p></p>
+
+<form action="">
+<blockquote>
+<pre>&lt;?xml version="1.0"?>
+&lt;p:Parts xmlns:p="http://www.parts-depot.com" 
+         xmlns:xlink="http://www.w3.org/1999/xlink">
+      &lt;Part id="00345" xlink:href="http://www.parts-depot.com/parts/00345"/>
+      &lt;Part id="00346" xlink:href="http://www.parts-depot.com/parts/00346"/>
+      &lt;Part id="00347" xlink:href="http://www.parts-depot.com/parts/00347"/>
+      &lt;Part id="00348" xlink:href="http://www.parts-depot.com/parts/00348"/>
+&lt;/p:Parts>
+</pre>
+</blockquote>
+</form>
+
+          <font face="Verdana" size="2">[Assume that through content negotiation the service determined that 
+        the client wants the representation as XML (for machine-to-machine processing).]
+        Note that the parts list has links to get detailed info about each part. 
+        This is a key feature of REST.  The client transfers from one state to 
+        the next by examining and choosing from among the alternative URLs 
+        in the response document. </font>
+
+        <H3><font face="Verdana" size="2">Get Detailed Part Data</font></H3>
+          <font face="Verdana" size="2">The web service makes available a URL to each part resource.  Example, here's 
+        how a client requests part 00345:</font><p></p>
+
+<form action="">
+<blockquote>
+<pre>http://www.parts-depot.com/parts/00345
+</pre>
+</blockquote>
+</form>
+
+          <font face="Verdana" size="2">Here's the document that the client receives:</font><p></p>
+
+<form action="">
+<blockquote>
+<pre>&lt;?xml version="1.0"?>
+&lt;p:Part xmlns:p="http://www.parts-depot.com"   
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+      &lt;Part-ID>00345&lt;/Part-ID>
+      &lt;Name>Widget-A&lt;/Name>
+      &lt;Description>This part is used within the frap assembly&lt;/Description>
+      &lt;Specification xlink:href="http://www.parts-depot.com/parts/00345/specification"/>
+      &lt;UnitCost currency="USD">0.10&lt;/UnitCost>
+      &lt;Quantity>10&lt;/Quantity>
+&lt;/p:Part>
+</pre>
+</blockquote>
+</form>
+    
+          <font face="Verdana" size="2">Again observe how this data is linked to still more data - the specification
+        for this part may be found by traversing the hyperlink. Each response 
+        document allows the client to drill down to get more detailed information.
+          </font>
+
+        <H3><font face="Verdana" size="2">Submit PO</font></H3>
+          <font face="Verdana" size="2">The web service makes available a URL to submit a PO.  The client creates a PO 
+        instance document which conforms to the PO schema that Parts Depot has designed 
+        (and publicized in a WSDL document).  The client submits PO.xml as the payload of 
+        an HTTP POST.</font></blockquote>
+        <p></p>
+
+        <blockquote>
+          <font face="Verdana" size="2">The PO service responds to the HTTP POST with a URL to the submitted PO.  Thus, 
+        the client can retrieve the PO any time thereafter (to update/edit it).
+        The PO has become a piece of information which is shared between the client and 
+        the server.  The shared information (PO) is given an address (URL) by the server 
+        and is exposed as a Web service. </font>
+
+        <H2><font face="Verdana" size="2">Logical URLs versus Physical URLs</font></H2>
+          <font face="Verdana" size="2">A resource is a conceptual entity.  A representation is a concrete manifestation
+        of the resource.  This URL: </font>
+
+<form action="">
+<blockquote>
+<pre>http://www.parts-depot.com/parts/00345
+</pre>
+</blockquote>
+</form>
+       
+          <font face="Verdana" size="2">is a logical URL, not a physical URL.  Thus, there doesn't need to be, for example,
+        a static HTML page for each part. In fact, if there were a million parts then a 
+        million static HTML pages would not be a very attractive design.</font><p></p>
+
+          <font face="Verdana" size="2">[Implementation detail: Parts Depot could implement the service that gets detailed
+        data about a particular part by employing a Java Servlet which parses the string
+        after the host name, uses the part number to query the parts database, formulate
+        the query results as XML, and then return the XML as the payload of the HTTP response.]</font><p></p>
+
+          <font face="Verdana" size="2">As a matter of style URLs should not reveal the implementation technique used.
+        You need to be free to change your implementation without impacting clients or having
+        misleading URLs. </font>
+      
+        <H2><font face="Verdana" size="2">REST Web Services Characteristics</font></H2>
+          <font face="Verdana" size="2">Here are the characteristics of REST:
+          </font>
+        <ul>
+            <li><font face="Verdana" size="2">Client-Server: a pull-based interaction style: consuming components pull 
+               representations.</font></li>
+            <li><font face="Verdana" size="2">Stateless: each request from client to server must contain all the 
+               information necessary to understand the request, and cannot take advantage 
+               of any stored context on the server.</font></li>
+            <li><font face="Verdana" size="2">Cache: to improve network efficiency responses must be capable of being 
+               labeled as cacheable or non-cacheable.</font></li>
+            <li><font face="Verdana" size="2">Uniform interface: all resources are accessed with a generic interface 
+                (e.g., HTTP GET, POST, PUT, DELETE).</font></li>
+            <li><font face="Verdana" size="2">Named resources - the system is comprised of resources which are named 
+               using a URL.</font></li>
+            <li><font face="Verdana" size="2">Interconnected resource representations - the representations of the 
+                resources are interconnected using URLs, thereby enabling a client to 
+                progress from one state to another.</font></li>
+            <li><font face="Verdana" size="2">Layered components - intermediaries, such as proxy servers, cache servers,
+                gateways, etc, can be inserted between clients and resources to support
+                performance, security, etc.</font></li>
+        </ul>
+
+        <H2><font face="Verdana" size="2">Principles of REST Web Service Design</font></H2>
+          <font face="Verdana" size="2">1. The key to creating Web Services in a REST network (i.e., the Web) is to
+        identify all of the conceptual entities that you wish to expose as services. 
+        Above we saw some examples of resources: parts list,
+        detailed part data, purchase order.</font><p>
+          <font face="Verdana" size="2">2. Create a URL to each resource.
+        The resources should be nouns, not verbs.  For example, do not use this:</font></p>
+          <p></p>
+
+          <blockquote>
+
+<form action="">
+<blockquote>
+<pre>http://www.parts-depot.com/parts/getPart?id=00345
+</pre>
+</blockquote>
+</form>
+
+            <font face="Verdana" size="2">Note the verb, getPart.  Instead, use a noun:</font><p></p>
+
+<form action="">
+<blockquote>
+<pre>http://www.parts-depot.com/parts/00345
+</pre>
+</blockquote>
+</form>
+
+          </blockquote>
+          <font face="Verdana" size="2">3. Categorize your resources according to whether clients can just receive a
+        representation of the resource, or whether clients can modify (add to) the
+        resource.  For the former, make those resources accessible using an HTTP GET.
+        For the later, make those resources accessible using HTTP POST, PUT, and/or DELETE.</font><p></p>
+        
+          <font face="Verdana" size="2">4. All resources accessible via HTTP GET should be side-effect free.  That is, the
+        resource should just return a representation of the resource.  Invoking the
+        resource should not result in modifying the resource.</font><p></p>
+
+          <font face="Verdana" size="2">5. No man/woman is an island.  Likewise, no representation should be an island.  In other
+        words, put hyperlinks within resource representations to enable clients to
+        drill down for more information, and/or to obtain related information.</font><p></p>
+  
+          <font face="Verdana" size="2">6. Design to reveal data gradually.  Don't reveal everything in a single response document.
+        Provide hyperlinks to obtain more details.</font><p></p>
+
+          <font face="Verdana" size="2">7. Specify the format of response data using a schema (DTD, W3C Schema, RelaxNG, or Schematron).
+        For those services that require a POST or PUT to it, also provide a schema to 
+        specify the format of the response.</font><p></p>
+
+          <font face="Verdana" size="2">8. Describe how your services are to be invoked using either a WSDL document, or simply
+        an HTML document. </font>
+
+        <H2><font face="Verdana" size="2">Summary</font></H2>
+          <font face="Verdana" size="2">This article described REST as an architectural style.  In fact, it's
+        the architectural style of the Web.  REST describes what makes the Web
+        work well. Adhering to the REST principles will make your services
+        work well in the context of the Web.</font><p></p>
+
+          <font face="Verdana" size="2">In a future article I will write about the evolution of the Web using
+        the REST principles. </font>
+
+        <H2><font face="Verdana" size="2">Acknowledgement</font></H2>
+          <font face="Verdana" size="2">Thanks to Robert Leftwich and Philip Eskelin for their very helpful comments in creating this document.
+          </font>
+
+        <H2><font face="Verdana" size="2">Translations of this Article</font></H2>
+          <font face="Verdana" size="2">Jason Fragoso translated this article into Belorussian: <A href="http://www.movavi.com/opensource/REST-web-services-be">http://www.movavi.com/opensource/REST-web-services-be</A>
+          </font>
+
+        <H2><font face="Verdana" size="2">References</font></H2>
+          <blockquote>
+            <font face="Verdana" size="2">[1] <A href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm">http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm</A></font><p></p>
+          </blockquote>
+        </blockquote>
+    </BODY>
+</HTML>
