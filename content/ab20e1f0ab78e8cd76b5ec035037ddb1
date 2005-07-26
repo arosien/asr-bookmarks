@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Representational State Transfer (REST)</title>
+		<meta name="description" content="REST (REpresentational State Transfer) is a phrase coined by ">
+        <meta name="author" content="Paul James">
+        <meta name="viewport" content="width=480">
+		<link type="text/css" rel="stylesheet" href="/default.css">
+		<link type="image/x-icon" rel="shortcut icon" href="/favicon.ico">
+		        
+		<script type="text/javascript">
+            if (!document.createElementNS) {
+                document.createElement("article");
+                document.createElement("aside");
+                document.createElement("footer");
+                document.createElement("section");
+            }
+            
+            var _gaq = _gaq || [];
+            _gaq.push(["_setAccount", "UA-89558-1"]);
+            _gaq.push(["_trackPageview"]);
+            
+            (function() {
+                var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true;
+                ga.src = "http://www.google-analytics.com/ga.js";
+                var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+	</head>
+	<body>
+	    <div id="container" class="article">
+            <h1>Representational State Transfer (REST)</h1>
+
+<p>REST (REpresentational State Transfer) is a phrase coined by <a href="http://www.ics.uci.edu/~fielding/">Roy Fielding</a> in his dissertation <a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm">Architectural Styles and the Design of Network-based Software Architectures</a>. It is an attempt to describe the undocumented architectural design principles behind the Web. In fact you are using the World's largest and most popular REST system right now, yes, the World Wide Web.</p>
+<blockquote>
+    <p>"The World Wide Web architecture has evolved into a novel architectural style that I call 'representational state transfer.' Using elements of the client/server, pipe-and-filter, and distributed objects paradigms, this style optimises the network transfer of representations of a resource. A Web-based application can be viewed as a dynamic graph of state representations (pages) and the potential transitions (links) between states. The result is an architecture that separates server implementation from the client's perception of resources, scales well with large numbers of clients, enables transfer of data in streams of unlimited size and type, supports intermediaries (proxies and gateways) as data transformation and caching components, and concentrates the application state within the user agent components." - Roy Fielding</p>
+</blockquote>
+<p>With all the talk of Web Services by the big software companies of this World, REST has (or will, maybe) come back into the limelight as an HTTP RPC protocol (like SOAP and XML-RPC).</p>
+
+<h2>The Web As We Know It</h2>
+
+<p>What REST basically says is "the Web is cool, HTTP is cool, and it already does everything we want and it works! Why do we need anything more?"</p>
+<p>The Web as defined by Tim Berners-Lee consists of three elements:</p>
+<ul>
+<li>URI (Uniform Resource Identifier) - The way of uniquely identifying resources on the network.</li>
+<li>HTTP (HyperText Transfer Protocol) - The protocol used to request a resource from a URI and respond to requests.</li>
+<li>HTML (HyperText Markup Language) - The content format of resources to be returned.</li>
+</ul>
+<p>The interesting aspect of this mixture is the HTTP.</p>
+<p>We all use it everyday, but why is it so interesting. Well HTTP is a very cleverly designed protocol, it defines a small global set of verbs (the HTTP Methods: GET, POST, PUT, DELETE, etc) and applies them to a potentially infinite set of nouns (URIs). Most of the time when using the Web, you use the HTTP GET method to retrieve documents, if you're submitting some form data you may use the POST method, there are however a whole handful of other useful methods defined but rarely used on the Web but perfect for REST based Web Services.</p>
+<p>HTTPs power comes from its simplicity and extensibility. The ability to distribute any payload with headers, using predefined methods and its built-in support for URIs and resources, makes it really special. URIs are the defining characteristic of the Web, the mojo that makes it work and scale. HTTP as a protocol keeps them front and center by defining all methods as operations on URI-addressed resources.</p>
+
+<h2>Tell Me The REST</h2>
+
+<p>Stupid acronym puns aside, the idea of REST is to take what we all take for granted in the Web (ie. HTTP and URIs) and use it with other payloads (other than HTML, images, etc.) and other HTTP Methods than the usual GET and POST. REST defines identifiable resources (URIs), and methods for accessing and manipulating the state of those resources (HTTP Methods).</p>
+<p>HTTP messaging formats like SOAP and XML-RPC are supposedly the next big thing in the ever-developing world of the Web and the Internet. The idea of being able to link applications together using a standard open RPC format over HTTP connections shows great promise for distributed computing and interoperability, but the major problem with them is they purposefully break the HTTP spec by adding another layer of abstraction onto HTTP rather than using the protocol as it was designed. REST says this extra layer is an unnecessary layer of complexity.</p>
+<p>SOAP and XML-RPC are both designed to operate from a single URI with methods being invoked from within the request payload. This fails to use URIs as they were designed to be used. A URI is a unique resource on the network and as such, each method in your RPC call should use a unique URI.</p>
+<p>Using REST this is the case, and depending on your request method, different actions can be invoked. REST uses HTTP as it was designed, if you want to get some data you use a HTTP GET request, if you want to delete a record from a database you use a HTTP DELETE request, etc.</p>
+
+<h2>Advantages of REST</h2>
+
+<ul>
+<li>It uses well documented, well established, well used technology and methodology.</li>
+<li>It's already here today; in fact it's been here for the last 12 years!</li>
+<li>Resource centric rather than method centric.</li>
+<li>Given a URI anyone already knows how to access it.</li>
+<li>It's not another protocol on top of another protocol on top of another protocol on top of...</li>
+<li>The response payload can be of any format (some may call this a disadvantage, however the Web copes with it, it's just a case of defining the application grammar).</li>
+<li>Uses the inherent HTTP security model, certain methods to certain URIs can easily be restricted by firewall configuration, unlike other XML over HTTP messaging formats.</li>
+<li>REST makes sense, use what we already have; it is the next logical extension of the web.</li>
+</ul>
+
+<h2>Differences Between REST and RPC</h2>
+
+<p>REST is not RPC, RPC says, "define some methods that do something" whereas REST says, "define some resources and they will have these methods".</p>
+<p>It is a subtle but vital difference, when given a URI anyone knows they can interact with it via the predefined set of methods and receive standard HTTP responses in return. So given http://www.peej.co.uk/ I know I can issue a GET on it and receive something meaningful back. I may then try a PUT on it to change it and receive a meaningful HTTP error code since I'm not authorised to meddle with it.</p>
+
+<h2>Conclusion</h2>
+
+<p>The Web of yesterday was all about transferring documents over the network to a users eyes, the Web of today adds the delivering of Web based services (ala e-mail, recruitment, etc.) to the mix, the Web of tomorrow will extend this information and service source from just being a user experience to being a generic client system.</p>
+<p>SOAP, XML-RPC, and other XML messaging over HTTP protocols may be the way this new era of the Web is created, the big (and not so big) corporates certainly think so, but REST shows that the infrastructure to do these types of machine to machine communications is already in place and has been since HTTP, the URI, and the Web was invented.</p>
+
+<h3>References</h3>
+
+<ul>
+<li><a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm">Architectural Styles and the Design of Network-based Software Architectures</a></li>
+<li><a href="http://internet.conveyor.com/RESTwiki/">RESTWiki</a></li>
+</ul>            <footer>
+                                    <p>This article was written by Paul James. If you'd like to
+                    read more, <a href="/">head over to the site homepage</a>.</p>
+                                <p>This page was last modified on Tue 7th Dec 2010</p>
+            </footer>
+        </div>
+    </body>
+</html>
