@@ -1,0 +1,81 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html><head>
+   <title>Some Motley Bloom Tricks</title>
+</head><body bgcolor=#ffe0ff>
+<h3>A Little Bloom Filter Theory (and a Bag of Filter Tricks)</h3>
+There is remarkably little information on the web about Bloom Filters (2003 Jan) and I have largely given up going to libraries.
+I will record some information here some of which I have seen neither in print nor on the web.
+There is a bag of tricks that can easily overcome many of the more obvious shortcomings of Bloom filters.
+<p>(P.S. Since I wrote this note in about 2003, several good sources have appeared on the web, or at least I have found them.
+See <a href=http://www.eecs.harvard.edu/~michaelm/NEWWORK/papers.html> Compressed Bloom Filters</a> for new Bloom filter tricks.)
+<p>The basic service of a Bloom filter is to recognize data globs that it has seen before.
+The state of a filter is a long bit string which might normally be abstracted but we want to talk about how it works in this note.
+<p>To present a glob to the filter you hash the glob to produce many bits of hash, perhaps a few hundred.
+See <a href=BloomDES.html>this</a> for a source of sufficient quality hash bits.
+You then divide these bits into k (about 10) equal size pieces of n (about 20) bits each.
+The length of the filter’s bit string is 2<sup>n</sup>.
+The filter regards each piece as an index into its bit string and examines those k bits.
+If they are all on then the filter claims that the glob has been seen before.
+If the filter is to recall the glob in the future then it turns those k bits on in its string.
+A new filter begins with a zero string and thus recognizes nothing.
+<p>The reader will note that this filter will begin to make false hits (recognitions) as it sees many distinct globs.
+This is the false positive problem that we will quantify and ameliorate.
+We must also ameliorate the fact that the filter cannot forget a glob.
+<h4>TradeOffs</h4>
+We have introduced the creation parameters n and k above.
+Another number we must reason about is C, the count of distinct globs that have been introduced to the filter.
+Ck bits will have been turned on.
+Some of those bits will already have been on however.
+Assuming quality hash functions we will have a Poisson distribution of bit multiplicities.
+If z = Ck/2<sup>n</sup> then we will have about 2<sup>n</sup>e<sup>–z</sup> zero bits, z2<sup>n</sup>e<sup>–z</sup> bits turned on just once, z<sup>2</sup>2<sup>n</sup>e<sup>–z</sup>/2 bits turned on just twice, z<sup>3</sup>2<sup>n</sup>e<sup>–z</sup>/6 three times, etc.
+In particular the density of the filter will be d = 1–e<sup>–z</sup>.
+<p>A false hit occurs when each of the indexed bits of a new glob are already on.
+The probability of this is d<sup>k</sup>.
+If we know beforehand the number of globs that the filter must recognize then it turns out that the most space efficient way to choose the creation parameters, n and k, is to make the density, d = 1/2.
+This is true regardless of the false hit frequency that you aim for.
+<p>Here is a recipe for the creation parameters of a filter that must recognize C objects with a false hit frequency less than f:
+<br>k = ceil(–log<sub>2</sub>(f))
+<br>n = ceil(log<sub>2</sub>(Ck))
+<h4>Tricks</h4><dl>
+<dt>tolerating false hits
+<dd>Some of the following tricks assume that some higher level mechanism,
+perhaps a person, is the ultimate judge, probably slower, of duplication.
+This is the typical reason why false positives may be tolerated.
+<dt>Bad Spots<dd>If the underlying memory hardware detects errors and reports an error in some block of storage holding part of the filter’s bit stream, that data block can be replaced with ones, only slightly increasing the false hit frequency.
+No false negatives will be added.
+What other data structures do you know of with this property?
+<dt>Non Power of Two
+<dd>If you need a bit string whose length is not a power of two, then produce a virtual bit string that is the next larger power of two but whose additional bits are all one, but not actually stored.
+I.e. whenever a bit index falls outside the string length, act as if you had seen a one, and ignore writes to those locations.
+<dt>Multi Filters (bit offset discrimination)
+<dd>If you need to recollect which of 15 files you saw the glob in,
+then fetch 15 consecutive bits at each bit offset as you consult the bit string.
+‘And’ these k 15 bit strings together bitwise.
+If you saw the new glob in file 4 then bit 4 of the result will be on.
+To cause future recognition of this glob by this filter, add the current file number (where you found this glob) to each bit string offset as you turn on bits.
+Remarkably this adds no extra density to the underlying filter bit string in so far as globs are not duplicated in different files!
+<dt>Oring together of filters
+  <dd>Different filters built at different places or different times can be ‘ored’ together to produce a filter that will recognize any globs recognized by any of its ancestors.
+Oring filters together results in higher densities but this may be ameliorated by reducing the density of contributing filters.
+<dt>Filter shrinking
+  <dd>If a filter has received fewer globs than originally planned, then its size may be halved by oring together the left and right halves.
+The creation parameter n for the new filter is one less.
+Subsequent filter probes merely mask off the high bit of the bit offset.
+This may be iterated.
+<dt>Anti filters to undo known false hits
+  <dd>Sometimes a few known globs cause false hits which cause problems.
+An anti Bloom filter can be built to cancel the false hits.
+An example of this is a spell checker that pesters the user about any word not recognized by the filter.
+A common misspelling such as “taht” may produce an objectionable false positive.
+Such known false positives can be canceled by searching a list upon each positive result from the filter.
+Better a separate small Bloom filter that recognizes just these discovered false positives, and thus overrides known false positives from the main filter.
+By this plan the user is warned just in case the main filter does not recognize the word or the anti filter does.
+Anti filter indexes may be truncated versions of the respective main filter indexes.
+In some applications this leads to infinite regress.
+It is likely, however, that in such case each anti-anti... filter is an order of magnitude or more, smaller than the previous one.
+The anti filter is generally much smaller than the filter.
+</dl>
+<HR>See <a href=BloomAnno.html>an application of Bloom filters to finding annotations</a>.
+<br>Pentti Kanerva’s <a href=../Kanerva.html>ideas about biological memory</a> are curiously related to Bloom filters, yet fundamentally different.
+<br>More tricks <a href=http://theory.stanford.edu/~rajeev/CS361/lecture20.ppt>here</a>.
+</body></html>
