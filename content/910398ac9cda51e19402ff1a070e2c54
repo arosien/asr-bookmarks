@@ -1,0 +1,621 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>
+	PERVASIVE HEALTH 2011
+</title><link rel="stylesheet" href="assets/css/style.css" type="text/css" media="all" /><meta http-equiv="content-type" content="text/html; charset=utf-8" /><meta http-equiv="content-style-type" content="text/css" /><meta http-equiv="content-language" content="en" /><link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" /><link rel="shortcut icon" href="assets/images/favicon.ico" type="image/xicon" />
+<script type="text/javascript" language="javascript">
+    /*function printMail(publicname, user, domain, extension) {
+        var at = '@';
+        var dot = '.';
+        var camou1 = 'ma';
+        var camou2 = 'il';
+        var camou3 = 'to:';
+        document.write('<a href="http://bis344.ucc.ie/ph_website/'&#32;+&#32;camou1&#32;+&#32;camou2&#32;+&#32;camou3&#32;+&#32;user&#32;+&#32;at&#32;+&#32;domain&#32;+&#32;dot&#32;+&#32;extension&#32;+&#32;'">' + publicname + '</a>');
+    }*/
+</script>
+<script language="JavaScript" type="text/javascript">
+<!--
+    //v1.7
+    // Flash Player Version Detection
+    // Detect Client Browser type
+    // Copyright 2005-2008 Adobe Systems Incorporated.  All rights reserved.
+    var isIE = (navigator.appVersion.indexOf("MSIE") != -1) ? true : false;
+    var isWin = (navigator.appVersion.toLowerCase().indexOf("win") != -1) ? true : false;
+    var isOpera = (navigator.userAgent.indexOf("Opera") != -1) ? true : false;
+    function ControlVersion() {
+        var version;
+        var axo;
+        var e;
+        // NOTE : new ActiveXObject(strFoo) throws an exception if strFoo isn't in the registry
+        try {
+            // version will be set for 7.X or greater players
+            axo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash.7");
+            version = axo.GetVariable("$version");
+        } catch (e) {
+        }
+        if (!version) {
+            try {
+                // version will be set for 6.X players only
+                axo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash.6");
+
+                // installed player is some revision of 6.0
+                // GetVariable("$version") crashes for versions 6.0.22 through 6.0.29,
+                // so we have to be careful. 
+
+                // default to the first public version
+                version = "WIN 6,0,21,0";
+                // throws if AllowScripAccess does not exist (introduced in 6.0r47)		
+                axo.AllowScriptAccess = "always";
+                // safe to call for 6.0r47 or greater
+                version = axo.GetVariable("$version");
+            } catch (e) {
+            }
+        }
+        if (!version) {
+            try {
+                // version will be set for 4.X or 5.X player
+                axo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash.3");
+                version = axo.GetVariable("$version");
+            } catch (e) {
+            }
+        }
+        if (!version) {
+            try {
+                // version will be set for 3.X player
+                axo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash.3");
+                version = "WIN 3,0,18,0";
+            } catch (e) {
+            }
+        }
+        if (!version) {
+            try {
+                // version will be set for 2.X player
+                axo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash");
+                version = "WIN 2,0,0,11";
+            } catch (e) {
+                version = -1;
+            }
+        }
+
+        return version;
+    }
+    // JavaScript helper required to detect Flash Player PlugIn version information
+    function GetSwfVer() {
+        // NS/Opera version >= 3 check for Flash plugin in plugin array
+        var flashVer = -1;
+
+        if (navigator.plugins != null && navigator.plugins.length > 0) {
+            if (navigator.plugins["Shockwave Flash 2.0"] || navigator.plugins["Shockwave Flash"]) {
+                var swVer2 = navigator.plugins["Shockwave Flash 2.0"] ? " 2.0" : "";
+                var flashDescription = navigator.plugins["Shockwave Flash" + swVer2].description;
+                var descArray = flashDescription.split(" ");
+                var tempArrayMajor = descArray[2].split(".");
+                var versionMajor = tempArrayMajor[0];
+                var versionMinor = tempArrayMajor[1];
+                var versionRevision = descArray[3];
+                if (versionRevision == "") {
+                    versionRevision = descArray[4];
+                }
+                if (versionRevision[0] == "d") {
+                    versionRevision = versionRevision.substring(1);
+                } else if (versionRevision[0] == "r") {
+                    versionRevision = versionRevision.substring(1);
+                    if (versionRevision.indexOf("d") > 0) {
+                        versionRevision = versionRevision.substring(0, versionRevision.indexOf("d"));
+                    }
+                }
+                var flashVer = versionMajor + "." + versionMinor + "." + versionRevision;
+            }
+        }
+        // MSN/WebTV 2.6 supports Flash 4
+        else if (navigator.userAgent.toLowerCase().indexOf("webtv/2.6") != -1) flashVer = 4;
+        // WebTV 2.5 supports Flash 3
+        else if (navigator.userAgent.toLowerCase().indexOf("webtv/2.5") != -1) flashVer = 3;
+        // older WebTV supports Flash 2
+        else if (navigator.userAgent.toLowerCase().indexOf("webtv") != -1) flashVer = 2;
+        else if (isIE && isWin && !isOpera) {
+            flashVer = ControlVersion();
+        }
+        return flashVer;
+    }
+    // When called with reqMajorVer, reqMinorVer, reqRevision returns true if that version or greater is available
+    function DetectFlashVer(reqMajorVer, reqMinorVer, reqRevision) {
+        versionStr = GetSwfVer();
+        if (versionStr == -1) {
+            return false;
+        } else if (versionStr != 0) {
+            if (isIE && isWin && !isOpera) {
+                // Given "WIN 2,0,0,11"
+                tempArray = versionStr.split(" "); 	// ["WIN", "2,0,0,11"]
+                tempString = tempArray[1]; 		// "2,0,0,11"
+                versionArray = tempString.split(","); // ['2', '0', '0', '11']
+            } else {
+                versionArray = versionStr.split(".");
+            }
+            var versionMajor = versionArray[0];
+            var versionMinor = versionArray[1];
+            var versionRevision = versionArray[2];
+            // is the major.revision >= requested major.revision AND the minor version >= requested minor
+            if (versionMajor > parseFloat(reqMajorVer)) {
+                return true;
+            } else if (versionMajor == parseFloat(reqMajorVer)) {
+                if (versionMinor > parseFloat(reqMinorVer))
+                    return true;
+                else if (versionMinor == parseFloat(reqMinorVer)) {
+                    if (versionRevision >= parseFloat(reqRevision))
+                        return true;
+                }
+            }
+            return false;
+        }
+    }
+    function AC_AddExtension(src, ext) {
+        if (src.indexOf('?') != -1)
+            return src.replace(/\?/, ext + '?');
+        else
+            return src + ext;
+    }
+    function AC_Generateobj(objAttrs, params, embedAttrs) {
+        var str = '';
+        if (isIE && isWin && !isOpera) {
+            str += '<object ';
+            for (var i in objAttrs) {
+                str += i + '="' + objAttrs[i] + '" ';
+            }
+            str += '>';
+            for (var i in params) {
+                str += '<param name="' + i + '" value="' + params[i] + '" /> ';
+            }
+            str += '</object>';
+        }
+        else {
+            str += '<embed ';
+            for (var i in embedAttrs) {
+                str += i + '="' + embedAttrs[i] + '" ';
+            }
+            str += '> </embed>';
+        }
+        document.write(str);
+    }
+    function AC_FL_RunContent() {
+        var ret =
+    AC_GetArgs
+    (arguments, ".swf", "movie", "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+     , "application/x-shockwave-flash"
+    );
+        AC_Generateobj(ret.objAttrs, ret.params, ret.embedAttrs);
+    }
+    function AC_SW_RunContent() {
+        var ret =
+    AC_GetArgs
+    (arguments, ".dcr", "src", "clsid:166B1BCA-3F9C-11CF-8075-444553540000"
+     , null
+    );
+        AC_Generateobj(ret.objAttrs, ret.params, ret.embedAttrs);
+    }
+    function AC_GetArgs(args, ext, srcParamName, classid, mimeType) {
+        var ret = new Object();
+        ret.embedAttrs = new Object();
+        ret.params = new Object();
+        ret.objAttrs = new Object();
+        for (var i = 0; i < args.length; i = i + 2) {
+            var currArg = args[i].toLowerCase();
+            switch (currArg) {
+                case "classid":
+                    break;
+                case "pluginspage":
+                    ret.embedAttrs[args[i]] = args[i + 1];
+                    break;
+                case "src":
+                case "movie":
+                    args[i + 1] = AC_AddExtension(args[i + 1], ext);
+                    ret.embedAttrs["src"] = args[i + 1];
+                    ret.params[srcParamName] = args[i + 1];
+                    break;
+                case "onafterupdate":
+                case "onbeforeupdate":
+                case "onblur":
+                case "oncellchange":
+                case "onclick":
+                case "ondblclick":
+                case "ondrag":
+                case "ondragend":
+                case "ondragenter":
+                case "ondragleave":
+                case "ondragover":
+                case "ondrop":
+                case "onfinish":
+                case "onfocus":
+                case "onhelp":
+                case "onmousedown":
+                case "onmouseup":
+                case "onmouseover":
+                case "onmousemove":
+                case "onmouseout":
+                case "onkeypress":
+                case "onkeydown":
+                case "onkeyup":
+                case "onload":
+                case "onlosecapture":
+                case "onpropertychange":
+                case "onreadystatechange":
+                case "onrowsdelete":
+                case "onrowenter":
+                case "onrowexit":
+                case "onrowsinserted":
+                case "onstart":
+                case "onscroll":
+                case "onbeforeeditfocus":
+                case "onactivate":
+                case "onbeforedeactivate":
+                case "ondeactivate":
+                case "type":
+                case "codebase":
+                case "id":
+                    ret.objAttrs[args[i]] = args[i + 1];
+                    break;
+                case "width":
+                case "height":
+                case "align":
+                case "vspace":
+                case "hspace":
+                case "class":
+                case "title":
+                case "accesskey":
+                case "name":
+                case "tabindex":
+                    ret.embedAttrs[args[i]] = ret.objAttrs[args[i]] = args[i + 1];
+                    break;
+                default:
+                    ret.embedAttrs[args[i]] = ret.params[args[i]] = args[i + 1];
+            }
+        }
+        ret.objAttrs["classid"] = classid;
+        if (mimeType) ret.embedAttrs["type"] = mimeType;
+        return ret;
+    }
+	function redirect(pg_name){ 
+		window.location = "?page_name="+pg_name;
+	}
+// -->
+</script>
+
+</head>
+<body>
+    
+<div id="Table_01" >
+	<!-- ST Top Banner -->
+    <div id="Top">
+	    <div id="Logo-Top-Left">
+		    <img id="PH_01" src="assets/images/LogoMAIN_01.jpg" width="216" height="168" alt="" />
+	    </div>
+	    <div id="TopBanner">
+		    <img id="PH_02" src="assets/images/BannerTop_02.jpg" width="784" height="168" alt="" />
+	    </div>
+    </div>
+	<!-- ED Top Banner -->	
+	<!-- ST Left Banner -->
+
+    <div class="LeftLinks">
+		    <img id="PH_04" src="assets/images/GenHEAD_03.jpg" alt="" />
+		<div id="gen-homeBtn">
+		
+				<input type="image" name="ctl00$importantdatesBtn" disabled="disabled" id="ctl00_importantdatesBtn" onmouseover="this.src='assets/images/Gen-Hover_07.gif'" onmousedown="this.src='assets/images/Gen-Hover_07.gif'" onmouseout="this.src='assets/images/Gen-Normal_07.gif'" src="assets/images/Gen-Hover_07.gif" border="0" onclick="redirect('')"/>		</div>
+	    <div id="gen-importantdatesBtn">
+		
+				<input type="image" name="ctl00$importantdatesBtn" id="ctl00_importantdatesBtn" onmouseover="this.src='assets/images/Gen-Hover_09.gif'" onmousedown="this.src='assets/images/Gen-Hover_09.gif'" onmouseout="this.src='assets/images/Gen-Normal_09.gif'" src="assets/images/Gen-Normal_09.gif" border="0" onclick="redirect('important_dates')"/>		</div>
+	    <div id="gen-organisingcommitteeBtn">
+		<input type="image" name="ctl00$organisingcommitteeBtn" id="ctl00_organisingcommitteeBtn" onmouseover="this.src='assets/images/Gen-Hover_10.gif'" onmousedown="this.src='assets/images/Gen-Hover_10.gif'" onmouseout="this.src='assets/images/Gen-Normal_10.gif'" src="assets/images/Gen-Normal_10.gif" border="0" onclick="redirect('organising_committee')"/>	    </div>
+	    <div id="gen-programcommitteeBtn">
+		<input type="image" name="ctl00$programcommitteeBtn" id="ctl00_programcommitteeBtn" onmouseover="this.src='assets/images/Gen-Hover_11.gif'" onmousedown="this.src='assets/images/Gen-Hover_11.gif'" onmouseout="this.src='assets/images/Gen-Normal_11.gif'" src="assets/images/Gen-Normal_11.gif" border="0" onclick="redirect('program_committee')"/>	    </div>
+		
+		
+	    <div id="gen-sponsorshippackagesBtn">
+		<input type="image" name="ctl00$sponsorshippackagesBtn" id="ctl00_sponsorshippackagesBtn" onmouseover="this.src='assets/images/Gen-Hover_12.gif'" onmousedown="this.src='assets/images/Gen-Hover_12.gif'" onmouseout="this.src='assets/images/Gen-Normal_12.gif'" src="assets/images/Gen-Normal_12.gif" border="0" onclick="redirect('sponsorship_packages')"/>	    </div>
+		
+	    <div id="gen-workshops">
+		<input type="image" name="ctl00$workshopsBtn" id="ctl00_workshopsBtn" onmouseover="this.src='assets/images/Gen-Hover_15.gif'" onmousedown="this.src='assets/images/Gen-Hover_15.gif'" onmouseout="this.src='assets/images/Gen-Normal_15.gif'" src="assets/images/Gen-Normal_15.gif" border="0" onclick="redirect('workshops')"/>	    </div>
+		
+	    <div id="gen-demos">
+		<input type="image" name="ctl00$demosBtn" id="ctl00_demosBtn" onmouseover="this.src='assets/images/Gen-Hover_16.gif'" onmousedown="this.src='assets/images/Gen-Hover_16.gif'" onmouseout="this.src='assets/images/Gen-Normal_16.gif'" src="assets/images/Gen-Normal_16.gif" border="0" onclick="redirect('demos')"/>	    </div>
+		
+	    <div id="gen-signup">
+		<input type="image" name="ctl00$signupBtn" id="ctl00_signupBtn" onmouseover="this.src='assets/images/Gen-Hover_08.gif'" onmousedown="this.src='assets/images/Gen-Hover_08.gif'" onmouseout="this.src='assets/images/Gen-Normal_08.gif'" src="assets/images/Gen-Normal_08.gif" border="0" onclick="redirect('signup')"/>	    </div>
+		
+	    <div id="gen-venue">
+		<input type="image" name="ctl00$venueBtn" id="ctl00_venueBtn" onmouseover="this.src='assets/images/Gen-Hover_14.gif'" onmousedown="this.src='assets/images/Gen-Hover_14.gif'" onmouseout="this.src='assets/images/Gen-Normal_14.gif'" src="assets/images/Gen-Normal_14.gif" border="0" onclick="redirect('venue')"/>	    </div>
+		
+	    <div id="gen-contactBtn">
+		<input type="image" name="ctl00$contactBtn" id="ctl00_contactBtn" onmouseover="this.src='assets/images/Gen-Hover_13.gif'" onmousedown="this.src='assets/images/Gen-Hover_13.gif'" onmouseout="this.src='assets/images/Gen-Normal_13.gif'" src="assets/images/Gen-Normal_13.gif" border="0" onclick="redirect('contact')"/>	    </div>
+		
+		<img id="PH_05" src="assets/images/CallsHEAD_14.jpg" alt="" />
+
+	    <div id="calls-callforpapersBtn">
+		<input type="image" name="ctl00$callforpapersBtn" id="ctl00_callforpapersBtn" onmouseover="this.src='assets/images/Calls-Hover_15.gif'" onmousedown="this.src='assets/images/Calls-Hover_15.gif'" onmouseout="this.src='assets/images/Calls-Normal_15.gif'" src="assets/images/Calls-Normal_15.gif" border="0" onclick="redirect('callfor_papers')"/>	    </div>
+	    
+		<div id="calls-callforworkshopsBtn">
+		<input type="image" name="ctl00$callforworkshopsBtn" id="ctl00_callforworkshopsBtn" onmouseover="this.src='assets/images/Calls-Hover_16.gif'" onmousedown="this.src='assets/images/Calls-Hover_16.gif'" onmouseout="this.src='assets/images/Calls-Normal_16.gif'" src="assets/images/Calls-Normal_16.gif" border="0" onclick="redirect('callfor_workshops')"/>	    </div>
+		
+		<div id="calls-callfordemosBtn">
+		<input type="image" name="ctl00$callfordemosBtn" id="ctl00_callfordemosBtn" onmouseover="this.src='assets/images/Calls-Hover_17.gif'" onmousedown="this.src='assets/images/Calls-Hover_17.gif'" onmouseout="this.src='assets/images/Calls-Normal_17.gif'" src="assets/images/Calls-Normal_17.gif" border="0" onclick="redirect('callfor_demos')"/>	    </div>
+		
+		<img id="PH_06" src="assets/images/AuthHEAD_17.jpg" alt="" />
+		
+	    <div id="authors-authorskitBtn">
+		<input type="image" name="ctl00$authorskitBtn" id="ctl00_authorskitBtn" onmouseover="this.src='assets/images/Auth-Hover_18.gif'" onmousedown="this.src='assets/images/Auth-Hover_18.gif'" onmouseout="this.src='assets/images/Auth-Normal_18.gif'" src="assets/images/Auth-Normal_18.gif" border="0" onclick="redirect('author_skit')"/>	    </div>
+		
+		<img id="PH_07" src="assets/images/PastHEAD_20.jpg" alt="" />
+		
+	    <div id="past-2010Btn">
+        <a href="http://pervasivehealth.org/2010/index.shtml"><img onmouseover="this.src='assets/images/Past-Hover_27.gif'" onmousedown="this.src='assets/images/Past-Hover_27.gif'" onmouseout="this.src='assets/images/Past-Normal_27.gif'" src="assets/images/Past-Normal_27.gif" border="0" /></a>
+	    </div>
+	    <div id="past-2009Btn">
+        <a href="http://pervasivehealth.org/2009/index.shtml"><img onmouseover="this.src='assets/images/Past-Hover_28.gif'" onmousedown="this.src='assets/images/Past-Hover_28.gif'" onmouseout="this.src='assets/images/Past-Normal_28.gif'" src="assets/images/Past-Normal_28.gif" border="0" /></a>
+	    </div>
+	    <div id="past-2008Btn">
+        <a href="http://pervasivehealth.org/2008/index.shtml"><img onmouseover="this.src='assets/images/Past-Hover_29.gif'" onmousedown="this.src='assets/images/Past-Hover_29.gif'" onmouseout="this.src='assets/images/Past-Normal_29.gif'" src="assets/images/Past-Normal_29.gif" border="0" /></a>
+	    </div>
+	    <div id="past-2006Btn">
+        <a href="http://pervasivehealth.org/2006/index.html"><img onmouseover="this.src='assets/images/Past-Hover_30.gif'" onmousedown="this.src='assets/images/Past-Hover_30.gif'" onmouseout="this.src='assets/images/Past-Normal_30.gif'" src="assets/images/Past-Normal_30.gif" border="0" /></a>
+	    </div>
+		<div id = "spacerLeft">
+		<center>
+		<br />
+		<br />
+		<br />
+		<br />
+			        <a id="ctl00_LinkButton2" href="javascript:__doPostBack('ctl00$LinkButton2','')"><u><font color="Gray">Disclaimer</font></u></a><br />
+            <span id="ctl00_Label2"><font color="#666666">&copy; Copyright ICST - All rights reserved.</font></span>
+        </center>
+		</div>
+		
+		<img id="PH_09" src="assets/images/bottomLeft_35.jpg" alt="" />
+
+    </div>
+	
+	
+    
+
+    <!-- ED Left Banner -->
+    <!-- ST MS Content Banner -->
+    <div class="Main-Content" >
+			
+			<div id = "index_bg" >
+
+        <div id="index-12_">
+            <img id="index_12" alt="" height="306" src="assets/images/centrepiece_06.jpg" width="569" />
+        </div>
+
+        <div id="b1">
+            <input type="image" name="ctl00$ContentPlaceHolder1$ImageButton1" id="ctl00_ContentPlaceHolder1_ImageButton1" src="assets/images/index_24.jpg" border="0" onclick="redirect('important_dates')"/>
+        </div>
+        <div id="b2">
+            <input type="image" name="ctl00$ContentPlaceHolder1$ImageButton2" id="ctl00_ContentPlaceHolder1_ImageButton2" src="assets/images/index_25.jpg" border="0" onclick="redirect('callfor_papers')"/>
+        </div>
+        <div id="b3">
+            <input type="image" name="ctl00$ContentPlaceHolder1$ImageButton3" id="ctl00_ContentPlaceHolder1_ImageButton3" src="assets/images/index_26.jpg" border="0" onclick="window.open('docs/Ph2011-CFPs-Flyer.pdf');" />
+        </div>
+        <div id="b4">
+            <input type="image" name="ctl00$ContentPlaceHolder1$ImageButton4" id="ctl00_ContentPlaceHolder1_ImageButton4" src="assets/images/index_27.jpg" border="0" onclick="redirect('contact')"/>
+        </div>
+
+<div id = "indexTxt">
+<center> 
+<p>In association with ICST, Pervasive Health 2011 is organised by: University College Cork (UCC), University College Dublin (UCD), University of Ulster (UU), the National Research Council of Canada (NRCC) and the Clarity-Centre Dublin.</p> 
+ 
+<p>The theme of this years conference is: Coping with the Challenges and Opportunities within Pervasive E-Healthcare (COPE), with a special focus on pervasive healthcare management and its ability to deliver timely, quality based information to medical practitioners in providing higher levels of patient care.</p> 
+
+<p>Papers of special merit will be invited to submit an extended version to one of a small selection of high ranking Journals, more information to follow shortly.<p> 
+
+</center>
+</div>
+</div>
+
+
+			
+    </div>
+    <!-- ST MS Content Banner -->
+	
+
+	<!-- ST RT Panel Banner -->
+    <div id = "SponsorsBit">    
+	        <div class="HEAD2">
+		        <img id="corporate_header_22" src="assets/images/HEAD4.jpg" width="215" height="33" alt="" />
+	        </div>
+            <div id="area4">
+                <div class="leftDivider">
+                </div>
+                <div class="rightDivider">
+                </div>
+                <div class="flashBit">
+                <script language="JavaScript" type="text/javascript">
+                    AC_FL_RunContent(
+		        'codebase', 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0',
+		        'width', '175',
+		        'height', '133',
+		        'src', 'banner2',
+		        'quality', 'high',
+		        'pluginspage', 'http://www.adobe.com/go/getflashplayer',
+		        'align', 'middle',
+		        'play', 'true',
+		        'loop', 'true',
+		        'scale', 'showall',
+		        'wmode', 'window',
+		        'devicefont', 'false',
+		        'id', 'banner',
+		        'bgcolor', '#ffffff',
+		        'name', 'banner2',
+		        'menu', 'true',
+		        'allowFullScreen', 'false',
+		        'allowScriptAccess', 'sameDomain',
+		        'movie', 'banner2',
+		        'salign', ''
+		        ); //end AC code
+        </script>
+        <noscript>
+	        <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="175" height="133" id="banner2" align="middle">
+	        <param name="allowScriptAccess" value="sameDomain" />
+	        <param name="allowFullScreen" value="false" />
+	        <param name="movie" value="banner2.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" />	<embed src="banner2.swf" quality="high" bgcolor="#ffffff" width="175" height="133" name="banner2" align="middle" allowScriptAccess="sameDomain" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" />
+	        </object>
+        </noscript>
+        
+<!--        <object width="175" height="133">
+<param name="movie" value="banner2.swf">
+<embed src="banner2.swf" width="175" height="133">
+</embed>
+</object>
+
+        <object width="175" height="133">
+<param name="movie" value="banner2.swf">
+<embed src="banner2.swf" width="175" height="133">
+</embed>
+</object> -->
+	        </div>
+            </div>
+            
+	        <div class="HEAD2">
+		        <img id="partners_header_17" src="assets/images/HEAD3.jpg" width="215" height="33" alt="" />
+	        </div>
+            <div id="area3">
+                <div class="leftDivider">
+                </div>
+                <div class="rightDivider">
+                </div>
+				<div class="flashBit">
+                <script language="JavaScript" type="text/javascript">
+                    AC_FL_RunContent(
+		        'codebase', 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0',
+		        'width', '175',
+		        'height', '133',
+		        'src', 'banner',
+		        'quality', 'high',
+		        'pluginspage', 'http://www.adobe.com/go/getflashplayer',
+		        'align', 'middle',
+		        'play', 'true',
+		        'loop', 'true',
+		        'scale', 'showall',
+		        'wmode', 'window',
+		        'devicefont', 'false',
+		        'id', 'banner',
+		        'bgcolor', '#ffffff',
+		        'name', 'banner',
+		        'menu', 'true',
+		        'allowFullScreen', 'false',
+		        'allowScriptAccess', 'sameDomain',
+		        'movie', 'banner',
+		        'salign', ''
+		        ); //end AC code
+        </script>
+        <noscript>
+	        <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="175" height="133" id="banner" align="middle">
+	        <param name="allowScriptAccess" value="sameDomain" />
+	        <param name="allowFullScreen" value="false" />
+	        <param name="movie" value="banner.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" />	<embed src="banner.swf" quality="high" bgcolor="#ffffff" width="175" height="133" name="banner" align="middle" allowScriptAccess="sameDomain" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" />
+	        </object>
+        </noscript>
+	        </div>
+            </div>
+            
+	        <div class="HEAD2">
+		        <img id="technical_header_12" src="assets/images/HEAD2.jpg" width="215" height="33" alt="" />
+	        </div>
+            <div id="area2">
+				<div class="leftDivider">
+                </div>
+                <div class="rightDivider">
+                </div>
+				<div class="flashBit">
+                <script language="JavaScript" type="text/javascript">
+                    AC_FL_RunContent(
+		        'codebase', 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0',
+		        'width', '175',
+		        'height', '133',
+		        'src', 'banner3',
+		        'quality', 'high',
+		        'pluginspage', 'http://www.adobe.com/go/getflashplayer',
+		        'align', 'middle',
+		        'play', 'true',
+		        'loop', 'true',
+		        'scale', 'showall',
+		        'wmode', 'window',
+		        'devicefont', 'false',
+		        'id', 'banner3',
+		        'bgcolor', '#ffffff',
+		        'name', 'banner3',
+		        'menu', 'true',
+		        'allowFullScreen', 'false',
+		        'allowScriptAccess', 'sameDomain',
+		        'movie', 'banner3',
+		        'salign', ''
+		        ); //end AC code
+        </script>
+        <noscript>
+	        <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="175" height="133" id="banner3" align="middle">
+	        <param name="allowScriptAccess" value="sameDomain" />
+	        <param name="allowFullScreen" value="false" />
+	        <param name="movie" value="banner3.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" />	<embed src="banner3.swf" quality="high" bgcolor="#ffffff" width="175" height="133" name="banner3" align="middle" allowScriptAccess="sameDomain" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" />
+	        </object>
+        </noscript>
+	        </div>
+			
+			
+            </div>
+
+	        <div class="HEAD2">
+		        <img id="sponsors_header_06" src="assets/images/HEAD1.gif" width="215" height="33" alt="" />
+	        </div>
+            <div id="area1">
+                <div class="leftDivider">
+                </div>
+                <div class="topsponsors">
+                    <div class="sponsLogo1">
+                        <input type="image" name="ctl00$Img1" id="ctl00_Img1" src="assets/images/ICST.gif" border="0" />
+                    </div>
+                </div>
+                <div class="rightDivider">
+                </div>
+            </div>
+	        
+            <div id="area5">
+                <div class="leftDivider">
+                </div>
+                <div class ="blankBit">
+                <div class="blankBitInside">
+
+
+</div>
+            </div>
+                <div class="rightDivider">
+                </div>
+            </div>
+			
+			
+		<img id="PH_10" src="assets/images/bottomRight_35.jpg" alt="" />
+
+    </div>
+
+		<img id="PH_10" src="assets/images/bottomMiddle_36.jpg" alt="" />
+	
+    <!-- ED RT Panel Banner -->
+	
+	
+ </div>
+
+        
+        
+
+    
+
+<script type="text/javascript">
+//<![CDATA[
+/*Sys.Application.initialize();
+Sys.Application.add_init(function() {
+    $create(AjaxControlToolkit.ModalPopupBehavior, {"BackgroundCssClass":"modalBackground","Drag":true,"OkControlID":"ctl00_BtnCancel1","PopupControlID":"ctl00_PanelSignUp","PopupDragHandleControlID":"PanelDragMe1","dynamicServicePath":"/ph_website/INDEX.ASPX","id":"ctl00_ModalSignUp"}, null, null, $get("ctl00_signupBtn"));
+});*/
+//]]>
+</script>
+</form>
+</body>
+</html>
