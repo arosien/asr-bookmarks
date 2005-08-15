@@ -1,0 +1,3750 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <head>
+    <meta name="description" content="Tips for a Debian GNU/Linux System Administrator.">
+<meta name="keywords"  content="Debian System Administration News, Debian Sysadmin, Linux Administration, Linux Sysadmin, Sysadmin">
+<meta name="copyright" content="(c) 2004-2009 Debian Administration">
+<meta name="author"  content="Debian Administration">
+<meta name="robots" content="index,follow">
+<meta name="resource-type" content="document">
+<meta name="classification" content="Personal">
+<meta name="language" content="en">
+<link rel="icon" href="/favicon.ico" >
+<link rel="shortcut icon" href="/favicon.ico" >
+<link rel="top"    title="home"    href="/" >
+<link rel="stylesheet" type="text/css" media="print, handheld" href="/css/print.css">
+<link rel="search" title="Search" href="/about/search">
+<link rel="alternate" title="Debian Administration RSS" href="/articles.rdf" type="application/rdf+xml">
+<link rel="alternate" title="Atom" href="/atom.xml" type="application/atom+xml">
+<link rel="search" href="/opensearchdescription.xml" type="application/opensearchdescription+xml"  title="Debian Administration" >
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+
+    <link rel="stylesheet" type="text/css" href="/css/style.css" media="screen" title="Default Layout">
+
+    <title>Unattended, Encrypted, Incremental Network Backups: Part 1</title>
+
+    <link rel="stylesheet" type="text/css" media="" href="/css/jquery.autocomplete.css">
+    <script src="/js/jquery.js" type="text/javascript"></script>
+    <script src="/js/jquery.autocomplete.min.js" type="text/javascript"></script>
+    <script src="/js/jquery.autogrow.js" type="text/javascript"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+    (function() {
+        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+        
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'http://api.flattr.com/js/0.5.0/load.js?mode=auto';
+        
+        t.parentNode.insertBefore(s, t);
+    })();
+/* ]]> */
+</script>
+  </head>
+  <body id="yawns">
+    <div id="no-rightBar">
+
+<div id="sidebar">
+  
+<!--[if gte IE 5.5000]>
+   <script language="JavaScript" type="text/javascript"> var ie55up = true </script>
+<![endif]-->
+<script language="JavaScript" type="text/javascript">
+function fixPNG(myImage) // correctly handle PNG transparency in Win IE 5.5 or higher.
+   {
+    if (window.ie55up)
+	 {
+	 var imgID = (myImage.id) ? "id='" + myImage.id + "' " : ""
+	 var imgClass = (myImage.className) ? "class='" + myImage.className + "' " : ""
+	 var imgTitle = (myImage.title) ? "title='" + myImage.title + "' " : "title='" + myImage.alt + "' "
+	 var imgStyle = "display:inline-block;" + myImage.style.cssText
+	 var strNewHTML = "<span " + imgID + imgClass + imgTitle
+	 strNewHTML += " style=\"" + "width:" + myImage.width + "px; height:" + myImage.height + "px;" + imgStyle + ";"
+	 strNewHTML += "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'" + myImage.src + "\', sizingMethod='scale');\"></" + "span>"
+	 myImage.outerHTML = strNewHTML
+	 }
+   }
+</script>
+
+<div id="logo">
+ <p><a href="/" title="Go back to homepage">
+
+  <!-- Internet Explorer; needs fixPNG -->
+<!--[if IE]>
+    <img src="/images/logo.png" alt="Logo" width="104" height="115"  onload="fixPNG(this)" />
+<![endif]-->
+
+  <!-- Sane browser.  No need for PNG fixups -->
+<!--[if !IE]><!-->
+    <img src="/images/logo.png" alt="Logo" width="104" height="115"  />
+<!--<![endif]-->
+
+  </a></p>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+        <h3 class="sideBarTitle">Contribute</h3>
+	<ul>
+	<li><a href="/create/article">Submit an Article</a></li>
+	<li><a href="/create/poll">Submit a Poll</a></li>
+	</ul>
+ 
+
+
+
+ 
+        <h3 class="sideBarTitle">Current Poll</h3>
+	
+	<form method="post" action="/polls/150">
+	<p><input type="hidden" name="poll_id" value="150" /><b>Will you test a Debian CUT?</b></p><p>
+	
+	<label><input type="radio" name="pollanswer" value="1" />I haven&#39;t heard of CUT and don&#39;t know what it is.</label><br />
+	
+	<label><input type="radio" name="pollanswer" value="2" />Nope. I know what it is, but I won&#39;t use it.</label><br />
+	
+	<label><input type="radio" name="pollanswer" value="3" />Yes, I will run a CUT.</label><br />
+	
+	<input type="submit" name="pollvote" value="Vote" /><br />
+        <span class="votescast">
+	( <a href="/polls/150">1362 votes ~ 12 comments</a> )</span></p>
+	</form>
+	
+ 
+
+
+
+	<h3 class="sideBarTitle">Recent Weblogs</h3>
+	    
+	<div class="weblogs">
+              
+	<div class="body">
+	<div class="title"><a href="/users/ajt/weblog/189">EXIM 4.69 Bug</a></div>
+        <div class="tagline">by <a href="/users/ajt">ajt</a></div>
+	<div class="comments">  <a href="/users/ajt/weblog/189#comments">3 comments</a></div>
+	</div>
+              
+	<div class="body">
+	<div class="title"><a href="/users/dkg/weblog/69">converting eviews models to gretl?</a></div>
+        <div class="tagline">by <a href="/users/dkg">dkg</a></div>
+	<div class="comments"> </div>
+	</div>
+              
+	<div class="body">
+	<div class="title"><a href="/users/kumanna/weblog/13">Further update on DuckDuckGo Debian goodies</a></div>
+        <div class="tagline">by <a href="/users/kumanna">kumanna</a></div>
+	<div class="comments">  <a href="/users/kumanna/weblog/13#comments">4 comments</a></div>
+	</div>
+              
+	<div class="body">
+	<div class="title"><a href="/users/Steve/weblog/215">I&#39;m still not dead.</a></div>
+        <div class="tagline">by <a href="/users/Steve">Steve</a></div>
+	<div class="comments">  <a href="/users/Steve/weblog/215#comments">1 comment</a></div>
+	</div>
+              
+	<div class="body">
+	<div class="title"><a href="/users/simonw/weblog/400">BT Argh</a></div>
+        <div class="tagline">by <a href="/users/simonw">simonw</a></div>
+	<div class="comments">  <a href="/users/simonw/weblog/400#comments">1 comment</a></div>
+	</div>
+              
+	<div class="body">
+	<div class="title"><a href="/users/lee/weblog/40">Allowing uploads via rsync+ssh with a public key</a></div>
+        <div class="tagline">by <a href="/users/lee">lee</a></div>
+	<div class="comments"> </div>
+	</div>
+              
+	<div class="body">
+	<div class="title"><a href="/users/rkd/weblog/12">Debian-NYC Novice Night was a great success</a></div>
+        <div class="tagline">by <a href="/users/rkd">rkd</a></div>
+	<div class="comments">  <a href="/users/rkd/weblog/12#comments">1 comment</a></div>
+	</div>
+              
+	<div class="body">
+	<div class="title"><a href="/users/eric/weblog/23">syslog server to centralise remote logs</a></div>
+        <div class="tagline">by <a href="/users/eric">eric</a></div>
+	<div class="comments">  <a href="/users/eric/weblog/23#comments">4 comments</a></div>
+	</div>
+              
+	<div class="body">
+	<div class="title"><a href="/users/blackm/weblog/15">I have a Linux box again</a></div>
+        <div class="tagline">by <a href="/users/blackm">blackm</a></div>
+	<div class="comments">  <a href="/users/blackm/weblog/15#comments">1 comment</a></div>
+	</div>
+              
+	<div class="body">
+	<div class="title"><a href="/users/trakic/weblog/6">Keep openssh-server  version number silent </a></div>
+        <div class="tagline">by <a href="/users/trakic">trakic</a></div>
+	<div class="comments">  <a href="/users/trakic/weblog/6#comments">7 comments</a></div>
+	</div>
+              
+	</div>
+
+
+	    <h3 class="sideBarTitle">More Weblogs</h3>
+	    <ul>
+	    <li><a href="http://planet.debian-administration.org" title="Planet Debian Administration">Archived Weblogs</a></li>
+            </ul>
+
+
+	    
+
+
+
+
+</div>
+
+<!-- Main body -->
+<div id="mainContent">
+   <!-- ./templates/pages/view_article.inc## Header ./templates/pages/view_article.inc## -->
+   <div id="header">
+    <div class="midHeader">
+    <h1 class="headerTitle"><a href="/">Debian Administration</a></h1>
+
+    <h2 id="headerSubTitle">System Administration Tips and Resources</h2>
+
+    </div>
+    <div class="subHeader">
+    [
+ <a href="/about/Debian%20Administration" title="About this site">About</a> |
+ <a href="/adverts/all" title="See our community adverts">Adverts</a> |
+ <a href="/archive" title="Archived Articles, by Month">Archive</a> |
+ <a href="/about/FAQ" title="Frequently asked questions with answers">FAQ</a> |
+ <a href="/hof" title="Article statistics">Hall of Fame</a> |
+ <a href="/about/Search" title="Search the articles which have been posted previously">Search</a> |
+ <a href="/tag" title="See tagged content">Tag Cloud</a> |
+
+      </div>
+    </div>
+
+<!-- Main body -->
+<div id="content">
+
+
+       <div class="article">
+       <!-- headline + section name -->
+       <h2 class="title">Unattended, Encrypted, Incremental Network Backups: Part 1</h2>
+
+       <div class="tagline"><p>Posted by  <a href="/users/Kellen">Kellen</a> on Wed 10 Aug 2005  at 11:46 </p></div>
+
+
+<!-- tag start -->
+  <script>
+function addTag(url)
+{
+    $("#current_tags").load( url,
+                             function() {
+                                 $("#new_tag").val( "" )
+                                 $("#add_tag").hide()
+                             })
+
+}
+
+ $(document).ready(function(){
+    $("#new_tag").autocomplete("/ajax.cgi?tag_complete=1;");
+    $('a#toggle').click(function() {
+       $('#add_tag').toggle(400);
+     })
+
+} )
+</script>
+<div class="tags">
+  <span id="current_tags">Tags: 
+
+<a href="/tag/backups" title="Find more content with this tag" rel="tag">backups</a>, 
+
+<a href="/tag/encryption" title="Find more content with this tag" rel="tag">encryption</a>, 
+
+<a href="/tag/gnupg" title="Find more content with this tag" rel="tag">gnupg</a>, 
+
+<a href="/tag/gpg" title="Find more content with this tag" rel="tag">gpg</a>
+
+</span>
+  
+</div>
+
+<!-- tag end -->
+
+       <p>This article describes a complete system for creating a centralised backup system, complete with strong encryption.  Incremental backups are used to minimize the bandwidth, and time, used.</p>
+<ul>
+<li><a href="#d0e11">1. Introduction</a></li>
+<li><a href="#d0e27">2. Backup Client Requirements</a></li>
+<li><a href="#d0e50">3. Backup Client Software</a></li>
+<li><a href="#d0e109">4. Encryption Matters</a>
+<ul>
+<li><a href="#d0e133">4.1. Keys Need Homes</a></li>
+<li><a href="#generatingkeys">4.2. Generating GPG Keys</a></li>
+</ul></li>
+<li><a href="#d0e265">5. A Network Home</a></li>
+<li><a href="#d0e293">6. Backup Script</a>
+<ul>
+<li><a href="#d0e389">6.1. Running the Backup Script</a></li>
+</ul></li>
+<li><a href="#d0e427">7. Making it Unattended</a>
+<ul>
+<li><a href="#d0e435">7.1. Generating a SSH Key</a></li>
+<li><a href="#d0e474">7.2. SSH Key Caching</a></li>
+<li><a href="#d0e507">7.3. Running the Backup via cron</a></li>
+</ul></li>
+<li><a href="#d0e525">8. Verify Script</a></li>
+<li><a href="#d0e561">9. Restore Script</a>
+<ul>
+<li><a href="#d0e584">9.1. Running the Restore Script</a></li>
+</ul></li>
+<li><a href="#summary">10. Summary</a></li>
+<li><a href="#d0e700">11. Conclusion</a></li>
+<li><a href="#d0e707">12. Next Time</a></li>
+</ul>
+
+
+<h2><a id="d0e11"></a>1. Introduction</h2>
+<p>This method for backups has progressed out of my desire to create a centralized backup system for users who do not necessarily trust me and whom I (as a sysadmin) may not completely trust. This system is just as easily used between a group of peers, each backing up to each other, but requires each peer to do some systems maintenance which can be problematic in the real world.</p>
+<p>In this part, we'll cover the client needs, software and configuration. In part 2, we'll cover the server software and configuration.</p>
+<p>For those too impatient to read the entire document, there is a <a href="#summary">quick summary</a> at the end.</p>
+<p>This document is available in docbook format at <a href="http://projects.cretin.net/backup/duplicity-backups-part1.xml">http://projects.cretin.net/backup/duplicity-backups-part1.xml</a></p>
+
+<h2><a id="d0e27"></a>2. Backup Client Requirements</h2>
+        
+        <p>The backup client wants to be able to backup a local machine over the network
+        to a potentially untrusted server (both in terms of its sysadmins and its
+        users).</p>
+        <p>Since the backups are over the network, communications with the backup server
+        should be encrypted, also since network transmission is expensive it is desirable
+        to send as little data across the wire as possible and thus incremental backups
+        should be used. Since the backup server is untrusted, all backups should be
+        encrypted to prevent against spying by sysadmins and users alike. Finally,
+        backups should be able to be scripted and should be able to occur unattended.</p>
+          <ul>
+            <li>Backups should occur over a network</li>
+            <li>Communications with the backup server should be encrypted</li>
+            <li>Data should be backed up incrementally</li>
+            <li>Backed up data should be encrypted</li>
+            <li>Backups should be unattended</li>
+          </ul>
+        
+      
+      
+<h2><a id="d0e50"></a>3. Backup Client Software</h2>
+        <p><a href="http://www.nongnu.org/duplicity/" >Duplicity</a> is a
+        backup utility which provides incremental encrypted network backups using the
+        rsync algorithm, scp/ftp/rsync as a transfer mechanism, and support for gpg.</p>
+        <div style="background-color: #FFFFBB; border: 1px solid gray; padding: 5px; margin: 20px; ">
+          <p>Incremental backups can be achieved in several ways, the most
+          straightforward is to use <strong>find</strong> to
+          locate files changed since the last backup. Just looking for updated files has
+          the disadvantage of retransmitting the entire (possibly large) file when there
+          is only a slight change.</p>
+          <p>Another approach is to use <strong>rsync</strong> or another utility which uses the rsync (or similar) algorithm. Since rsync only sends the differences in files, this will greatly reduce the size of the incremental backup files; this cuts down on disk and network usage for both the client and server. Duplicity uses rsync.</p>
+	  </div>
+        
+        <p>We'll use <code>duplicity</code> with <code>gpg</code> and <code>scp</code>. Duplicity natively supports four of our five requirements:</p>
+        
+          <ul>
+	  <li>Backups should occur over a network (via <code>scp</code>)</li>
+          <li>Communications with the backup server should be encrypted (also via <code>scp</code></li>
+          <li>Data should be backed up incrementally (via the <code>rsync</code> algorithm)</li>
+	  <li>Backed up data should be encrypted (via <code>gpg</code>)</li>
+          </ul>
+        
+          <a id="d0e83"></a> 
+          <p><b>Figure 1. Overview of a duplicity backup</b></p>
+            <img src="http://www.debian-administration.org/articles/209/backup.png" alt="Overview of a duplicity backup" />
+          
+        
+        <p>To get duplicity, run:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code>~# <strong style="background-color: #E9E9F0;"><code>apt-get install duplicity</code></strong></code>
+</pre>
+        <p>The OpenSSH package (ssh) provides scp and the GNU privacy guard package
+        (gnupg) provides gpg. These are installed by default on most Debian systems, but
+        if you need them, run:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code>~# <strong style="background-color: #E9E9F0;"><code>apt-get install ssh gnupg</code></strong></code>
+</pre>
+        <h3>Note</h3>
+          <p>Duplicity is not under active development. The most recent version at the
+          time of writing is 0.4.1, released August 9, 2003. The author of duplicity
+          states that "duplicity is not stable yet," but he has turned his efforts to the
+          similar, but unencrypted, <a href="http://www.nongnu.org/rdiff-backup/"
+          >rdiff-backup</a>. I have personally contacted the Debian package
+          maintainer for duplicity, who said that he and others were using it in a
+          production environment.</p>
+        
+      
+      
+<h2><a id="d0e109"></a>4. Encryption
+              Matters</h2>
+            
+          
+        
+        <p>One of the advantages of duplicity is that it provides for integrated
+        encryption of backup files. We'll need two <code>gpg</code> keys for our backups; an
+        "encryption key" and a "signature key." Our encryption key is used to protect the
+        data in the backup files from snooping on the backup server, while the signature
+        key is used to ensure the integrity of the backup files.</p>
+        <p>Duplicity's <code>--encrypt-key</code> option allows a user to
+        specify either a symmetric or public key with which to encrypt the backup
+        archives. Duplicity's <code>--sign-key</code> option specifies
+        either a symmetric or public key with which to sign the backup archives. If
+        encryption is turned on, and the <code>--sign-key</code> option is
+        omitted, the <code>--encrypt-key</code> key is also used to sign
+        the archives.</p>
+        <p>Note that the private key for the signature key (or the encryption key if
+        <code>--sign-key</code> is omitted) must be available to duplicity
+        when it runs. Duplicity also requires the passphrase for the signing key be
+        either entered manually or stored in an environment variable. If our encryption
+        key and signature key are the same, then a compromise of the server means a
+        compromise of the backed up data as well. We'll therefore use separate encryption
+        and signature keys.</p>
+        
+          
+            
+              
+              <h3><a id="d0e133"></a>4.1. Keys Need Homes</h3>
+              
+            
+          
+          <p>Since the encryption key we're about to generate is going to be used to
+          protect important data (passwords, email, documents) the private key should
+          itself be well protected. Ideally, the keys should be stored on a secure drive
+          that you keep on your person at all times, or failing that, a laptop that is
+          well protected and not usually connected to a network.</p>
+        
+        
+          
+            
+              
+              <h3><a id="generatingkeys"></a>4.2. Generating GPG
+                Keys</h3>
+              
+            
+          
+          <p>First, we'll generate the signature key, owned by root, with the passphrase
+          "signtest".</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code>~# <strong style="background-color: #E9E9F0;"><code>gpg --gen-key</code></strong>
+gpg (GnuPG) 1.2.5; Copyright (C) 2004 Free Software Foundation, Inc.
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions. See the file COPYING for details.
+Please select what kind of key you want:
+   (1) DSA and ElGamal (default)
+   (2) DSA (sign only)
+   (4) RSA (sign only)
+Your selection? <strong style="background-color: #E9E9F0;"><code>1</code></strong>
+DSA keypair will have 1024 bits.
+About to generate a new ELG-E keypair.
+              minimum keysize is  768 bits
+              default keysize is 1024 bits
+    highest suggested keysize is 2048 bits
+What keysize do you want? (1024) <strong style="background-color: #E9E9F0;"><code>1024</code></strong>
+Requested keysize is 1024 bits       
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0) <strong style="background-color: #E9E9F0;"><code>1y</code></strong>
+Key expires at Tue Mar  7 16:45:18 2006 PST
+Is this correct (y/n)? <strong style="background-color: #E9E9F0;"><code>y</code></strong>
+                        
+You need a User-ID to identify your key; the software constructs the user id
+from Real Name, Comment and Email Address in this form:
+    "Heinrich Heine (Der Dichter) &lt;heinrichh@duesseldorf.de&gt;"
+Real name: <strong style="background-color: #E9E9F0;"><code>signtest</code></strong>
+Email address: <strong style="background-color: #E9E9F0;"><code>signtest@example.com</code></strong>
+Comment: <strong style="background-color: #E9E9F0;"><code>signtest</code></strong>                 
+You selected this USER-ID:
+    "signtest (signtest) &lt;signtest@example.com&gt;"
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? <strong
+style="background-color: #E9E9F0;"><code>O</code></strong>
+You need a Passphrase to protect your secret key.    
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+++++++++++++++++++++++++++++++.+++++++++++++++++++++++++++++++++++++++++++++++++
++.++++++++++..+++++.+++++.++++++++++.++++++++++++++++++++&gt;++++++++++.......&gt;..++
++++..+++++
++++++++++++++++++++++++++++++++++++.++++++++++.+++++.+++++++++++d+++++++++++++++
++++++++++++++++++++.+++++++++++++++.++++++++++++++++++++f.....&gt;+++++.d....f.....
+..&gt;+++++.....+++++^^^
+public and secret key created and signed.
+key marked as ultimately trusted.
+pub  1024D/B036117C 2005-03-08 signtest (signtest) &lt;signtest@example.com&gt;
+     Key fingerprint = F278 70A7 656A 7692 4453  6F3D 7A5C 98A1 B036 117C
+sub  1024g/5D2059A1 2005-03-08 [expires: 2006-03-08]</code>
+</pre>
+          <p>For convenience, we'll create a local user to own the encryption key. <span
+          class="emphasis"><em>Do not do this for a production
+          environment.</em></span></p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+~# <strong style="background-color: #E9E9F0;"><code>adduser</code></strong>
+Enter a username to add: <strong style="background-color: #E9E9F0;"><code>backuptest</code></strong>
+Adding user `backuptest'...
+Adding new group `backuptest' (1001).
+Adding new user `backuptest' (1001) with group `backuptest'.
+Creating home directory `/home/backuptest'.
+Copying files from `/etc/skel'
+Enter new UNIX password: 
+Retype new UNIX password: 
+passwd: password updated successfully
+Changing the user information for backuptest
+Enter the new value, or press ENTER for the default
+        Full Name []: 
+        Room Number []: 
+        Work Phone []: 
+        Home Phone []: 
+        Other []: 
+Is the information correct? [y/N] <strong style="background-color: #E9E9F0;"><code>y</code></strong>
+</pre>
+          <p>Next, we'll generate the encryption key, owned by our backuptest user, with
+          the passphrase "backuptest".</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+~# <strong style="background-color: #E9E9F0;"><code>su - backuptest</code></strong>
+backuptest@debian:~$ <strong style="background-color: #E9E9F0;"><code>gpg --gen-key</code></strong>
+gpg (GnuPG) 1.2.5; Copyright (C) 2004 Free Software Foundation, Inc.
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions. See the file COPYING for details.
+gpg: /home/backuptest/.gnupg: directory created
+gpg: new configuration file `/home/backuptest/.gnupg/gpg.conf' created
+gpg: WARNING: options in `/home/backuptest/.gnupg/gpg.conf' are not yet active d
+uring this run
+gpg: keyring `/home/backuptest/.gnupg/secring.gpg' created
+gpg: keyring `/home/backuptest/.gnupg/pubring.gpg' created
+Please select what kind of key you want:
+   (1) DSA and ElGamal (default)
+   (2) DSA (sign only)
+   (4) RSA (sign only)
+Your selection? <strong style="background-color: #E9E9F0;"><code>1</code></strong>
+DSA keypair will have 1024 bits.
+About to generate a new ELG-E keypair.
+              minimum keysize is  768 bits
+              default keysize is 1024 bits
+    highest suggested keysize is 2048 bits
+What keysize do you want? (1024) <strong style="background-color: #E9E9F0;"><code>1024</code></strong>
+Requested keysize is 1024 bits       
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0) <strong style="background-color: #E9E9F0;"><code>1y</code></strong>
+Key expires at Tue Mar  7 16:46:18 2006 PST
+Is this correct (y/n)? <strong style="background-color: #E9E9F0;"><code>y</code></strong>
+                        
+You need a User-ID to identify your key; the software constructs the user id
+from Real Name, Comment and Email Address in this form:
+    "Heinrich Heine (Der Dichter) &lt;heinrichh@duesseldorf.de&gt;"
+Real name: <strong style="background-color: #E9E9F0;"><code>backuptest</code></strong>
+Email address: <strong style="background-color: #E9E9F0;"><code>backuptest@example.com</code></strong>
+Comment: <strong style="background-color: #E9E9F0;"><code>backuptest</code></strong>                 
+You selected this USER-ID:
+    "backuptest (backuptest) &lt;backuptest@example.com&gt;"
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? <strong
+style="background-color: #E9E9F0;"><code>O</code></strong>
+You need a Passphrase to protect your secret key.    
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
++++++.+++++++++++++++++++++++++++++++++++++++++++++.+++++..++++++++++++++++++++.
+++++++++++++++++++++.+++++.++++++++++++++++++++.++++++++++&gt;+++++.+++++&gt;+++++....
+.................................................+++++
++++++++++++++++.+++++.+++++.+++++++++++++++++++++++++.....++++++++++...+++++++++
+++++++.+++++++++++++++.++++++++++++++++++++++++++++++.++++++++++&gt;.+++++.........
+......+++++^^^^^^^^^^^^^^^^^
+gpg: /home/backuptest/.gnupg/trustdb.gpg: trustdb created
+public and secret key created and signed.
+key marked as ultimately trusted.
+pub  1024D/AFC6DCD1 2005-03-08 backuptest (backuptest) &lt;backuptest@example.com&gt;
+     Key fingerprint = D025 7E7A 1BF2 5CA9 82DD  EC54 2555 D7B6 AFC6 DCD1
+sub  1024g/FEB03CBA 2005-03-08 [expires: 2006-03-08]
+</pre>
+          <p>We'll export the public key for backuptest to a file:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">backuptest:~$ <strong
+style="background-color: #E9E9F0;"><code>gpg --armor --export backuptest &gt; key.out</code></strong></code>
+</pre>
+          <p>Alternatively, we could mail this key to a user on another domain:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">backuptest:~$ <strong
+style="background-color: #E9E9F0;"><code>gpg --armor --export backuptest | mail root@example.com</code></strong></code>
+</pre>
+          <p>As root, we import the key sent to us by backuptest:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# <strong
+style="background-color: #E9E9F0;"><code>gpg --import /home/backuptest/key.out</code></strong> 
+gpg: key AFC6DCD1: public key "backuptest (backuptest) &lt;backuptest@example.com&gt;" 
+imported
+gpg: Total number processed: 1
+gpg:               imported: 1</code>
+</pre>
+          <p>And list our available keys:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# <strong
+style="background-color: #E9E9F0;"><code>gpg --list-keys</code></strong>
+/root/.gnupg/pubring.gpg
+------------------------
+pub  1024D/B036117C 2005-03-08 signtest (signtest) &lt;signtest@example.com&gt;
+sub  1024g/5D2059A1 2005-03-08 [expires: 2006-03-08]
+pub  1024D/AFC6DCD1 2005-03-08 backuptest (backuptest) &lt;backuptest@example.com&gt;
+sub  1024g/FEB03CBA 2005-03-08 [expires: 2006-03-08]</code>
+</pre>
+          <p>Finally, we must sign the key sent to us by backuptest (after checking the
+          fingerprint, if backuptest is another human being):</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# <strong
+style="background-color: #E9E9F0;"><code>gpg --sign-key backuptest</code></strong>
+pub  1024D/AFC6DCD1  created: 2005-03-08 expires: 2006-03-08 trust: -/-
+sub  1024g/FEB03CBA  created: 2005-03-08 expires: 2006-03-08
+(1). backuptest (backuptest) &lt;backuptest@example.com&gt;
+pub  1024D/AFC6DCD1  created: 2005-03-08 expires: 2006-03-08 trust: -/-
+ Primary key fingerprint: D025 7E7A 1BF2 5CA9 82DD  EC54 2555 D7B6 AFC6 DCD1
+     backuptest (backuptest) &lt;backuptest@example.com&gt;
+This key is due to expire on 2006-03-08.
+Do you want your signature to expire at the same time? (Y/n) y
+How carefully have you verified the key you are about to sign actually belongs
+to the person named above?  If you don't know what to answer, enter "0".
+   (0) I will not answer. (default)
+   (1) I have not checked at all.
+   (2) I have done casual checking.
+   (3) I have done very careful checking.
+Your selection? (enter '?' for more information): <strong
+style="background-color: #E9E9F0;"><code>3</code></strong>
+Are you really sure that you want to sign this key
+with your key: "signtest (signtest) &lt;signtest@example.com&gt;" (B036117C)
+I have checked this key very carefully.
+Really sign? <strong style="background-color: #E9E9F0;"><code>yes</code></strong>
+                
+You need a passphrase to unlock the secret key for
+user: "signtest (signtest) &lt;signtest@example.com&gt;"
+1024-bit DSA key, ID B036117C, created 2005-03-08</code>
+</pre>
+        
+      
+      
+<h2><a id="d0e265"></a>5. A Network
+              Home</h2>
+            
+          
+        
+        <p>Our backup system needs a place on the network to which to backup. The
+        configuration for the backup server will be covered more in part 2, but here is
+        the minimal server configuration needed (which could be used by a lazy and
+        trusting friend).</p>
+        <p>First create a user account for the backup client:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">remote:~# <strong
+style="background-color: #E9E9F0;"><code>adduser</code></strong>
+Enter a username to add: <strong style="background-color: #E9E9F0;"><code>abackupuser</code></strong>
+Adding user `abackupuser'...
+Adding new group `abackupuser' (1001).
+Adding new user `abackupuser' (1001) with group `abackupuser'.
+Creating home directory `/home/abackupuser'.
+Copying files from `/etc/skel'
+Enter new UNIX password: 
+Retype new UNIX password: 
+passwd: password updated successfully
+Changing the user information for abackupuser
+Enter the new value, or press ENTER for the default
+        Full Name []: 
+        Room Number []: 
+        Work Phone []: 
+        Home Phone []: 
+        Other []: 
+Is the information correct? [y/N] <strong
+style="background-color: #E9E9F0;"><code>y</code></strong></code>
+</pre>
+        <p>Next, create a location for the backup files to live:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">remote:~# <strong
+style="background-color: #E9E9F0;"><code>su - abackupuser</code></strong>
+abackupuser@remote:~$ <strong style="background-color: #E9E9F0;"><code>mkdir backup</code></strong></code>
+</pre>
+      
+      
+<h2><a id="d0e293"></a>6. Backup
+              Script</h2>
+            
+          
+        
+        <p>Now that our prerequisites are in place, we need a backup script.</p>
+        <div class="figure">
+          <a id="d0e298"></a> 
+          <p class="title"><b>Figure 2. The backup script</b></p>
+<pre style="background: #F0F0F0; border: 1px solid gray; padding: 2px; font-size: 10pt; white-space: pre;">
+#!/bin/bash
+export PASSPHRASE=signtest
+duplicity --encrypt-key "AFC6DCD1" --sign-key "B036117C" \
+--exclude /proc --exclude /mnt --exclude /tmp \
+/ scp://abackupuser@remote/backup
+</pre>
+        
+        <p>The duplicity command in the script breaks down as follows:</p>
+        <div class="variablelist">
+          <dl>
+            <dt><span class="term" style="font-weight: bold; ">export PASSPHRASE=signtest</span></dt>
+            <dd>
+              <p>Set the PASSPHRASE environment variable to the passphrase for the
+              signature key.</p>
+            </dd>
+            <dt style="background-color: #FFFFBB;"><span class="term" style="font-weight: bold; ">--encrypt-key "AFC6DCD1"</span></dt>
+            <dd>
+              <p>Set the id of the encryption key to which backup archives should be
+              encrypted.</p>
+            </dd>
+            <dt style="background-color: #FFFFBB;"><span class="term" style="font-weight: bold; ">-sign-key "B036117C"</span></dt>
+            <dd>
+              <p>Set the id of the signature key with which backup archives should be
+              signed.</p>
+            </dd>
+            <dt style="background-color: #FFFFBB;"><span class="term" style="font-weight: bold; ">--exclude /proc --exclude /mnt --exclude
+            /tmp</span></dt>
+            <dd>
+              <p>Don't backup the virtual /proc filesystem, any temporarily mounted
+              drives, or temporary files.</p>
+            </dd>
+            <dt style="background-color: #FFFFBB;"><span class="term" style="font-weight: bold; ">/</span></dt>
+            <dd>
+              <p>Backup starting at the root directory. Basically, back up everything.
+              You could use the path of any directory you'd like to back up here.</p>
+            </dd>
+            <dt style="background-color: #FFFFBB;"><span class="term" style="font-weight: bold; ">scp://abackupuser@remote/backup</span></dt>
+            <dd>
+              <p>The location to which backup files should be sent, as follows:</p>
+              <div class="variablelist">
+                <dl>
+                  <dt style="background-color: #FFFFBB;"><span class="term" style="font-weight: bold; ">scp</span></dt>
+                  <dd>
+                    <p>Specify that duplicity should use scp to transfer files.</p>
+                  </dd>
+                  <dt style="background-color: #FFFFBB;"><span class="term" style="font-weight: bold; ">abackupuser</span></dt>
+                  <dd>
+                    <p>The username with which to connect to the remote system.</p>
+                  </dd>
+                  <dt style="background-color: #FFFFBB;"><span class="term" style="font-weight: bold; ">remote</span></dt>
+                  <dd>
+                    <p>The remote system to which to send backup files.</p>
+                  </dd>
+                  <dt style="background-color: #FFFFBB;"><span class="term" style="font-weight: bold; ">/backup</span></dt>
+                  <dd>
+                    <p>The relative path (from the user's home) to which to save backup
+                    files.</p>
+                  </dd>
+                </dl>
+              
+            </dd>
+          </dl>
+        
+        <p>Note that the ids for <code>--encrypt-key</code> and <code>--sign-key</code> can be obtained from <span><strong>gpg --list-keys</strong></span> (see <a href="#generatingkeys" title="4.2. Generating GPG Keys">Generating Keys</a>).</p>
+        <p>Also note that the <strong style="background-color: #E9E9F0;"><code>user@host/relativepath</code></strong> format is different than the normal scp format of <strong style="background-color: #E9E9F0;"><code>user@host:/path</code></strong>.</p>
+              <h3><a id="d0e389"></a>6.1. Running the Backup Script</h3>
+              
+            
+          
+          <p>Since this is the first time we've backed anything up, this will be a full
+          backup; duplicity automatically detects this.</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# <strong
+style="background-color: #E9E9F0;"><code>./backup.sh</code></strong> 
+Password: 
+No signatures found, switching to full backup.
+Password: 
+tmpkHY9NY                                                               100% 1509KB   1.5MB/s   00:00    
+Password: 
+tmpfcOHU-                                                               100%  528     0.5KB/s   00:00    
+Password: 
+tmpKSC17j                                                               100%   78KB  78.3KB/s   00:00    
+Password: 
+--------------[ Backup Statistics ]--------------
+StartTime 1110490849.31 (Thu Mar 10 13:40:49 2005)
+EndTime 1110490851.11 (Thu Mar 10 13:40:51 2005)
+ElapsedTime 1.80 (1.80 seconds)
+SourceFiles 90
+SourceFileSize 3364455 (3.21 MB)
+NewFiles 90
+NewFileSize 3364455 (3.21 MB)
+DeletedFiles 0
+ChangedFiles 0
+ChangedFileSize 0 (0 bytes)
+ChangedDeltaSize 0 (0 bytes)
+DeltaEntries 90
+RawDeltaSize 3360224 (3.20 MB)
+TotalDestinationSizeChange 1546182 (1.47 MB)
+Errors 0
+-------------------------------------------------</code>
+</pre>
+          <p>This is backing up a very small directory, for example purposes. The user is
+          prompted for the password for abackuptest@remote five separate times! This is
+          unacceptable for an unattended backup, so we'll have to resolve this later.</p>
+          <p>We can see the files generated on remote:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">abackupuser@remote:~/backup$ <strong
+style="background-color: #E9E9F0;"><code>ls -1</code></strong>
+duplicity-full-signatures.2005-03-10T13:40:45-07:00.sigtar.gpg
+duplicity-full.2005-03-10T13:40:45-07:00.manifest.gpg
+duplicity-full.2005-03-10T13:40:45-07:00.vol1.difftar.gpg</code>
+</pre>
+          <div  style="background-color: #FFFFBB; border: 1px solid gray; padding: 5px; margin: 20px; ">
+            <p>A duplicity backup has 3 types of files:</p>
+            
+              <ul type="disc">
+                <li>
+                  <p>"difftar" files; tar and gz compressed files which contain the
+                  actual backed up data.</p>
+                </li>
+                <li>
+                  <p>a "sigtar" file; a tar and gz compressed file containing the
+                  signatures for each file backed up.</p>
+                </li>
+                <li>
+                  <p>a "manifest" file which essentially contains a listing of the
+                  starting and ending files for each difftar archive, plus SHA-1 hashes
+                  of each difftar archive.</p>
+                </li>
+              </ul>
+            
+            <p>With full backups, there will be a good number of difftar files.</p>
+	    </div>
+          <p>So, we've got a working remote backup, but we'll have to fix it so that the
+          user doesn't have to enter a password each time to upload a file.</p>
+        
+      
+      
+<h2><a id="d0e427"></a>7. Making it
+              Unattended</h2>
+            
+          
+        
+        <p>To make our backup work unattended (i.e. via cron), we'll need to set up a
+        method to automatically log in to our remote host. The standard method to do this
+        is to use ssh keys. There is an excellent discussion of <a
+        href="http://www-106.ibm.com/developerworks/linux/library/l-keyc.html">key management</a> on the IBM website.</p>
+        
+          
+            
+              
+              <h3><a id="d0e435"></a>7.1. Generating a SSH Key</h3>
+              
+            
+          
+          <p>For now, we'll create a key normal with a passphrase. This kind of setup
+          will still require us to enter a passphrase (for the key, not the ssh
+          connection), but it'll simplify our next steps towards an unattended
+          backup.</p>
+          <p>As root on our backup client, run ssh-keygen to create our ssh key:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# <strong
+style="background-color: #E9E9F0;"><code>ssh-keygen -t dsa</code></strong>
+Generating public/private dsa key pair.
+Enter file in which to save the key (/root/.ssh/id_dsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_dsa.
+Your public key has been saved in /root/.ssh/id_dsa.pub.
+The key fingerprint is:
+65:73:77:bd:83:5c:4a:6c:17:88:e0:43:1b:0c:ab:d4 root@local</code>
+</pre>
+          <p>Your key fingerprint will be different.</p>
+          <p>Next we need to send our public key to our backup server:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# <strong
+style="background-color: #E9E9F0;"><code>scp ~/.ssh/id_dsa.pub abackupuser@remote:/home/abackupuser</code></strong></code>
+</pre>
+          <p>On remote we add this key to the authorized keys of abackupuser:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">abackupuser@remote:~$ <strong
+style="background-color: #E9E9F0;"><code>cat id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys</code></strong></code>
+</pre>
+          <p>Now if we try to log in as abackupuser@remote, we get a prompt for our
+          passphrase instead of for our password:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# <strong
+style="background-color: #E9E9F0;"><code>ssh abackupuser@192.168.0.17</code></strong>
+Enter passphrase for key '/root/.ssh/id_dsa':</code>
+</pre>
+          <p>This is fine, but we still have a passphrase that will have to be entered at
+          backup time.</p>
+        
+        
+          
+            
+              
+              <h3><a id="d0e474"></a>7.2. SSH Key Caching</h3>
+              
+            
+          
+          <p>In order to script our backups while using a ssh key with a passphrase, we
+          need an application which will retain use of the key over a long term. We'll
+          use keychain, a tool which itself uses ssh-agent, which does the actual
+          caching.</p>
+          <p>Install keychain:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# <strong
+style="background-color: #E9E9F0;"><code>apt-get install keychain</code></strong></code>
+</pre>
+          <p>To set up local root's bash profile to run keychain on login, add these
+          lines to ~/.bash_profile:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+keychain --clear id_dsa
+. ~/.keychain/$HOSTNAME-sh
+</pre>
+          <p>This will have keychain first clear the existing keys (in the case of a
+          normal root compromise, the attacker can't access the remote systems), then
+          attempt to load the id_dsa key and finally source the appropriate output from
+          ssh-agent.</p>
+          <p>The next time root logs in, she will be prompted to enter the passphrase for
+          the ssh key, and any subsequent process running as root will not need to use a
+          password to log into remote, as when backup.sh is run:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+user@local:~$ <strong style="background-color: #E9E9F0;"><code>su -</code></strong>
+Password:
+KeyChain 2.5.1; <a href="http://www.gentoo.org/proj/en/keychain/" rel="nofollow">http://www.gentoo.org/proj/en/keychain/</a>
+Copyright 2002-2004 Gentoo Foundation; Distributed under the GPL
+ * Found existing ssh-agent (11726)
+ * ssh-agent: All identities removed.
+ * Adding 1 ssh key(s)...
+Enter passphrase for /root/.ssh/id_dsa:
+Identity added: /root/.ssh/id_dsa (/root/.ssh/id_dsa)
+~# <strong style="background-color: #E9E9F0;"><code>./backup.sh</code></strong>
+No signatures found, switching to full backup.
+tmpyGNA5U                                     100% 5110KB   2.5MB/s   00:02
+tmp5MPT6X                                     100% 5123KB   1.3MB/s   00:04
+tmpQli3JE                                     100% 5121KB   5.0MB/s   00:01
+tmp2T9fis                                     100% 5120KB   5.0MB/s   00:01
+tmpiYM1J7                                     100% 5126KB   2.5MB/s   00:02
+tmpMiQ4Lh                                     100% 1330KB   1.3MB/s   00:00
+tmpGsz2q4                                     100%  879     0.9KB/s   00:00
+tmp_VvUet                                     100%  129KB 129.5KB/s   00:00
+--------------[ Backup Statistics ]--------------
+StartTime 1116749899.09 (Sun May 22 01:18:19 2005)
+EndTime 1116749925.78 (Sun May 22 01:18:45 2005)
+ElapsedTime 26.68 (26.68 seconds)
+SourceFiles 6
+SourceFileSize 27933523 (26.6 MB)
+NewFiles 6
+NewFileSize 27933523 (26.6 MB)
+DeletedFiles 0
+ChangedFiles 0
+ChangedFileSize 0 (0 bytes)
+ChangedDeltaSize 0 (0 bytes)
+DeltaEntries 6
+RawDeltaSize 10670280 (10.2 MB)
+TotalDestinationSizeChange 27576857 (26.3 MB)
+Errors 0
+-------------------------------------------------
+</pre>
+          <p>The backup script would now be able to be run from cron since there is no
+          requirement for passwords to be entered during the backup process.</p>
+          <p>Please note that using keychain is not a silver bullet to prevent an
+          attacker from using your ssh keys. It may be possible for a determined attacker
+          to compromise keys from system memory; security thus must also be added on the
+          backup server side to prevent tampering, especially to the authorized_keys
+          file.</p>
+        
+        
+          
+            
+              
+              <h3><a id="d0e507"></a>7.3. Running the Backup via
+                cron</h3>
+              
+            
+          
+          <p>Our client setup is now ready for the backup script to be run via cron. If
+          our script is in <code class="computeroutput">/root/backup.sh</code>, and we
+          wanted to run the backup every night at 10:00pm, we'd edit the crontab:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# <strong
+style="background-color: #E9E9F0;"><code>crontab -e</code></strong></code>
+</pre>
+          <p>and add:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">0 22 * * * /root/backup.sh</code>
+</pre>
+        
+      
+      
+<h2><a id="d0e525"></a>8. Verify
+              Script</h2>
+            
+          
+        
+        <p>The first thing to do after running a backup is of course to verify that it
+        worked and for that we need a verify script.</p>
+        <div class="figure">
+          <a id="d0e530"></a> 
+          <p class="title"><b>Figure 3. The verify script</b></p>
+<pre style="background: #F0F0F0; border: 1px solid gray; padding: 2px; font-size: 10pt; white-space: pre;">
+#!/bin/bash
+export PASSPHRASE=signtest
+duplicity --encrypt-key "AFC6DCD1" --sign-key "B036117C" \
+--verbosity 4 --verify \
+--exclude /proc --exclude /mnt --exclude /tmp \
+scp://abackupuser@remote/backup /
+</pre>
+        
+        <p>The verify script is very similar to the backup script, but we've reversed the
+        order of the source and the destination (the <strong
+        style="background-color: #E9E9F0;"><code>/</code></strong> and <strong
+        style="background-color: #E9E9F0;"><code>scp://</code></strong> sections), and added two
+        options:</p>
+        <div class="variablelist">
+          <dl>
+            <dt style="background-color: #FFFFBB;"><span class="term" style="font-weight: bold; ">--verbosity 4</span></dt>
+            <dd>
+              <p>When verbosity for duplicity is 4 or higher, we'll see a message for
+              each file that's changed since the backup.</p>
+            </dd>
+            <dt style="background-color: #FFFFBB;"><span class="term" style="font-weight: bold; ">--verify</span></dt>
+            <dd>
+              <p>Verifies the backup rather than restoring or backing up.</p>
+            </dd>
+          </dl>
+        
+        <p>If this verification script is run immediately after a full backup, very few
+        files will have changed, perhaps only a few log files.</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# ./verify.sh
+Error initializing file /dev/log
+Error initializing file /dev/printer
+Difference found: File dev/ptmx has mtime Sat Mar  5 20:09:11 2005, expected Sat Mar  5 19:40:43 2005
+Difference found: File dev/pts/0 has mtime Sat Mar  5 20:09:18 2005, expected Sat Mar  5 19:41:01 2005
+Difference found: File var/log/auth.log has mtime Sat Mar  5 20:09:01 2005, expected Sat Mar  5 19:39:01 2005
+Difference found: File var/log/exim/mainlog has mtime Sat Mar  5 20:08:01 2005, expected Sat Mar  5 19:38:01 2005
+Difference found: File var/log/messages has mtime Sat Mar  5 20:10:58 2005, expected Sat Mar  5 19:39:52 2005
+Difference found: File var/log/syslog has mtime Sat Mar  5 20:09:01 2005, expected Sat Mar  5 19:39:52 2005
+Verify complete: 31097 files compared, 6 differences found.</code>
+</pre>
+      
+      
+<h2><a id="d0e561"></a>9. Restore
+              Script</h2>
+            
+          
+        
+        <p>Restoring traditional incremental backups can be painful if one has to apply
+        each incremental backup by hand. Duplicity automatically applies the incrementals
+        to the full backup without any extra intervention.</p>
+        <p>If we are on a system and we have a disk we would like to restore to mounted
+        on <code class="computeroutput">/mnt</code>, a restore script for a full backup
+        might look like this:</p>
+        <div class="figure">
+          <a id="d0e571"></a> 
+          <p class="title"><b>Figure 4. The restore script</b></p>
+<pre style="background: #F0F0F0; border: 1px solid gray; padding: 2px; font-size: 10pt; white-space: pre;">
+#!/bin/bash
+export PASSPHRASE=signtest
+duplicity --encrypt-key "AFC6DCD1" --sign-key "B036117C" \
+scp://abackupuser@remote/backup /mnt/restore
+cd /mnt
+mv restore/* .
+rmdir restore
+mkdir mnt
+mkdir proc
+mkdir tmp
+</pre>
+        
+        <p>Duplicity will not allow restoration to an existing directory (e.g. <code
+        class="computeroutput">/mnt</code>), so pointing it to <code
+        class="computeroutput">/mnt/restore</code> makes us do a little extra work in
+        moving the restored data around, but it's relatively simple. We also must
+        recreate our excluded system directories.</p>
+        
+          
+            
+              
+              <h3><a id="d0e584"></a>9.1. Running the Restore Script</h3>
+              
+            
+          
+          <p>Next, we run the restore script, which gives no feedback at the default
+          verbosity.</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# <strong
+style="background-color: #E9E9F0;"><code>mount /dev/hdc1 /mnt</code></strong>
+~# <strong style="background-color: #E9E9F0;"><code>./restore.sh</code></strong></code>
+</pre>
+          <p>We can check to see what the restore produced:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+~# <strong style="background-color: #E9E9F0;"><code>ls -al /mnt/restore</code></strong>
+total 92
+drwxr-xr-x  18 root root   4096 Mar  5 20:24 .
+drwxr-xr-x   3 root root   4096 Mar  5 20:15 ..
+drwxr-xr-x   2 root root   4096 Feb 20 07:42 bin
+drwxr-xr-x   3 root root   4096 Feb 20 07:46 boot
+drwxr-xr-x   2 root root   4096 Jan 17 07:30 cdrom
+drwxr-xr-x  11 root root  24576 Mar  5 05:50 dev
+drwxr-xr-x  48 root root   4096 Mar  5 19:39 etc
+drwxr-xr-x   2 root root   4096 Jan 17 07:30 floppy
+drwxrwsr-x   3 root staff  4096 Jan 17 07:41 home
+drwxr-xr-x   2 root root   4096 Jan 17 07:30 initrd
+lrwxrwxrwx   1 root root     28 Mar  5 20:16 initrd.img -&gt; boot/initrd.img-2.4.27-1-386
+lrwxrwxrwx   1 root root     27 Mar  5 20:16 initrd.img.old -&gt; /boot/initrd.img-2.4.18-386
+drwxr-xr-x   8 root root   4096 Feb 20 07:42 lib
+drwx------   2 root root   4096 Jan 17 07:25 lost+found
+drwxr-xr-x   2 root root   4096 Jan 17 07:30 opt
+drwxr-xr-x   3 root root   4096 Jan 17 15:10 root
+drwxr-xr-x   2 root root   4096 Feb 20 07:42 sbin
+drwxr-xr-x   2 root root   4096 Dec 26 18:40 sys
+drwxr-xr-x  11 root root   4096 Jan 17 09:25 usr
+drwxr-xr-x  14 root root   4096 Feb 20 17:48 var
+lrwxrwxrwx   1 root root     25 Mar  5 20:19 vmlinuz -&gt; boot/vmlinuz-2.4.27-1-386
+lrwxrwxrwx   1 root root     23 Mar  5 20:19 vmlinuz.old -&gt; boot/vmlinuz-2.4.18-386
+</pre>
+          <p>As a final step to a restore, we also have to make the system bootable.
+          Assuming we're using grub, and assuming we've restored to hdc1:</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# <strong
+style="background-color: #E9E9F0;"><code>/sbin/grub-install /dev/hdc1</code></strong></code>
+</pre>
+          <p>Next, test our new system.</p>
+<pre style="background: #E9E9F0; border: 1px solid #AAAAFF; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">~# <strong
+style="background-color: #E9E9F0;"><code>shutdown -h now</code></strong></code>
+</pre>
+          <p>Once the machine is off, switch out hda for hdc (put the disk we've just
+          restored onto ide0), and turn the power back on. If all went well, you should
+          have a fully working system from your backup.</p>
+        
+      
+      
+<h2><a id="summary"></a>10. Summary</h2>
+            
+          
+        
+        <p>This is a quick summary for the forgetful or the impatient.</p>
+        
+          <ul>
+            <li>"client" is the backup client, i.e. the computer whose data we are backing up.</li>
+            <li>"server" is the backup server, i.e. the computer to which we are backing up.</li>
+            <li>"laptop" is the client administrator's secured location for their GPG keys.</li>
+          </ul>
+        
+        <div>
+          <ol type="1">
+            <li>
+              <p>on client, install duplicity: <strong style="background-color: #E9E9F0;"><code>apt-get
+              install duplicity</code></strong></p>
+            </li>
+            <li>
+              <p>on client, generate signature key: <strong style="background-color: #E9E9F0;"><code>gpg
+              --gen-key</code></strong></p>
+            </li>
+            <li>
+              <p>on laptop, generate encryption key: <strong style="background-color: #E9E9F0;"><code>gpg
+              --gen-key</code></strong></p>
+            </li>
+            <li>
+              <p>on laptop, send public encryption key to root on client</p>
+            </li>
+            <li>
+              <p>on client, import encryption key: <strong style="background-color: #E9E9F0;"><code>gpg
+              --import-key backuptest.asc</code></strong></p>
+            </li>
+            <li>
+              <p>on client, sign encryption public key: <strong
+              style="background-color: #E9E9F0;"><code>gpg --sign-key backuptest</code></strong></p>
+            </li>
+            <li>
+              <p>on client, generate ssh key: <strong style="background-color: #E9E9F0;"><code>ssh-keygen
+              -t dsa</code></strong></p>
+            </li>
+            <li>
+              <p>on client, send public ssh key to backup user on server (or to server
+              administrator)</p>
+            </li>
+            <li>
+              <p>on server, add ssh key to authorized_keys: <strong
+              style="background-color: #E9E9F0;"><code>cat id_dsa.pub &gt;&gt;
+              ~/.ssh/authorized_keys</code></strong></p>
+            </li>
+            <li>
+              <p>on client, install keychain: <strong style="background-color: #E9E9F0;"><code>apt-get
+              install keychain</code></strong></p>
+            </li>
+            <li>
+              <p>on client, add to <code class="computeroutput">.bash_profile</code>:</p>
+<pre style="background: #F0F0F0; border: 1px solid gray; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">keychain --clear id_dsa
+. ~/.keychain/$HOSTNAME-sh</code>
+</pre>
+            </li>
+            <li>
+              <p>on client, set up cron to regularly run the backup script: <strong style="background-color: #E9E9F0;"><code>crontab -e</code></strong> and add:</p>
+<pre style="background: #F0F0F0; border: 1px solid gray; padding: 2px; font-size: 10pt; white-space: pre;">
+<code class="computeroutput">0 22 * * * /root/backup.sh</code>
+</pre>
+            </li>
+          </ol>
+        
+      
+      
+<h2><a id="d0e700"></a>11.
+              Conclusion</h2>
+            
+          
+        
+        <p>We've created a nice system for clients; unattended backups that occur over
+        the network, provide incremental granularity with only differential changes sent,
+        and are encrypted to prevent against snooping.</p>
+        <p>There are still some areas of concern, specifically that if a client machine
+        is compromised an attacker could gain access to the backup server and destroy
+        existing backups, or that another backup server user might destroy existing
+        backups. The defenses against these potential problems are server-side, so we'll
+        take a look at these next time.</p>
+      
+      
+<h2><a id="d0e707"></a>12. Next Time</h2>
+            
+          
+        
+        <p>In Part 2, we'll discuss the issues in running a multiuser backup system for
+        untrusted users, the software we can use to protect our server from our users,
+        our users from each other, and our users' backups against successful client
+        machine compromises.</p>
+      
+    
+
+
+
+<div style="text-align: right;">
+<a name="a2a_dd" onmouseover="a2a_show_dropdown(this)" onmouseout="a2a_onMouseOut_delay()" href="http://www.addtoany.com/bookmark?linkname=Unattended, Encrypted, Incremental Network Backups: Part 1&amp;linkurl=http%3A//www.debian-administration.org/article/Unattended_Encrypted_Incremental_Network_Backups_Part_1"><img src="http://static.addtoany.com/buttons/share_save_171_16.gif" width="171" height="16" border="0" alt="Share/Save/Bookmark"/></a><script type="text/javascript">a2a_linkname="Unattended, Encrypted, Incremental Network Backups: Part 1";a2a_linkurl="http://www.debian-administration.org/article/Unattended_Encrypted_Incremental_Network_Backups_Part_1";</script><script type="text/javascript" src="http://www.addtoany.com/menu/page.js"></script>
+</div>
+
+
+<div class="navigation">
+	<div class="row">
+        <span class="left">
+	<a href="/comment/onarticle/209">Add Comment</a>
+ <a href="/comment/feed/onarticle/209"><img src="/images/xml.gif" title="Subscribe to comments on this article." alt="XML logo" width="36" height="14"></a></span>
+         <span class="right">
+         <a href="/article/Unattended_Encrypted_Incremental_Network_Backups_Part_1/print">Printable version</a>
+         </span>
+	<div class="spacer"> </div>
+	</div>
+
+
+	<p>&nbsp;</p>
+         <div class="row">
+	  <span class="left">
+           
+            <a href="/article/208/Setting_up_multiple_Subversion_repositories">&lt;&lt;&lt; Setting up multiple Subversion repositories</a>
+           
+          </span>
+          <span class="right">
+           
+            <a href="/article/210/Question_How_to_move_Debian_network_from_static_IP_to_DHCP">Question: How to move Debian network from static IP to DHCP &gt;&gt;&gt;</a>
+           
+          </span>
+	<div class="spacer"> </div>
+        </div>
+
+	</div>
+</div>
+
+
+
+
+	
+	<p></p>
+	<div class="advert">
+	<center>
+	<script type="text/javascript"><!--
+	google_ad_client = "pub-1910202134166551";
+	google_ad_width = 728;
+	google_ad_height = 90;
+	google_ad_format = "728x90_as";
+	google_ad_type = "text_image";
+	google_ad_channel ="4454478967";
+	//--></script>
+	<script type="text/javascript"
+	  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+	</script>
+	</center>
+
+        
+	  <p  style="text-align: right;"><a href="/about/FAQ%20:%20Site%20Adverts">Why are these adverts here?</a></p>
+        
+	</div>
+	
+
+
+
+ <hr />
+ 
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_1">#1</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_1">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (203.122.xx.xx) on Wed 10 Aug 2005  at 12:50 <br />
+</div>
+
+ <div class="body">
+  Excellent article. I have been planning on doing an automated incremental encrypted backup for a while. It is good to see somebody shed some light on how they do it.<p><br /><br /> One common thing to watch out for during back up is copying the database across cleanly. There&#39;s an <a href="http://www.onlamp.com/pub/a/onlamp/2005/06/16/MySQLian.html" rel="nofollow">article on O&#39;Reilly</a> about a way to do it without downtime for mysql. (essentially: turning off replication on a database box that is replicating the database from the main box, backing up the no-longer-replicating database from that box onto a backup (third) box, and then restarting the database replication again).<p><br /><br /> PJ
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/1">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_2">#2</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_2">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (80.177.xx.xx) on Wed 10 Aug 2005  at 13:40 <br />
+</div>
+
+ <div class="body">
+  <i>&quot;Restoring traditional incremental backups can be painful if one has to apply each incremental backup by hand. Duplicity automatically applies the incrementals to the full backup without any extra intervention.&quot;</i><br /><br /> Restoring incrementals can be painful, but useful if you want to restore back to a specific date, rather than the latest backup. Backups are about recovering from user screwups which may go unnoticed for days, as much as recovering from a fried hard drive. So I&#39;d be interested to know: do you just end up with a single snapshot style backup, or can you restore to any one of the incrementals? <br /><br /> -- <br /> mark<br />
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/2">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_4">#4</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_4">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Kellen">Kellen</a>  (132.239.xx.xx) on Wed 10 Aug 2005  at 18:08 <br />
+[ <a href="/create/message/Kellen">Send Message</a> | <a href="/users/Kellen/weblog">View Weblogs</a> ]</div>
+
+ <div class="body">
+  You end up with sets of date-specific duplicity archives. You can restore to a particular date by invoking <tt>--restore-time</tt>.
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_2">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/4">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_3">#3</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_3">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (66.179.xx.xx) on Wed 10 Aug 2005  at 14:37 <br />
+</div>
+
+ <div class="body">
+  Does duplicity come standard on Knoppix? or some other LiveCD? I think that&#39;d be the best way to restore: boot up a LiveCD, plug in the USB stick with the keys on it, format the new drive, and do the restore.
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/3">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_5">#5</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_5">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Kellen">Kellen</a>  (132.239.xx.xx) on Wed 10 Aug 2005  at 18:24 <br />
+[ <a href="/create/message/Kellen">Send Message</a> | <a href="/users/Kellen/weblog">View Weblogs</a> ]</div>
+
+ <div class="body">
+  No, it&#39;s not in Knoppix, nor do I know of any other liveCD it is on, but it&#39;s rather small and you could fit it on your USB stick.
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_3">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/5">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_6">#6</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_6">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Piem">Piem</a>  (81.178.xx.xx) on Thu 11 Aug 2005  at 03:52 <br />
+[ <a href="/create/message/Piem">Send Message</a> | <a href="/users/Piem/scratchpad">View Piem's Scratchpad</a> ]</div>
+
+ <div class="body">
+  Thanks for the nice article. <br /><br /> There is something i don&#39;t get though: you make sure to explain the difference between signing and encryption keys, but it seems the encryption private key is required to increment, verify and restore backups. According to <a href="http://wiki.boum.org/TechStdOut/EncryptedBackupsForParanoiacs#Confidentiality_tamper_proof_pro" rel="nofollow">this article</a>, it is safe to store the encryption private key on the client, since however has access to it would have access to the files we want to backup. <br /><br /> But above it reads: <br /><i>4. on laptop, send public encryption key to root on client</i><br /><br /> Have I missed something?
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/6">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_18">#18</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_18">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Kellen">Kellen</a>  (132.239.xx.xx) on Tue 16 Aug 2005  at 18:53 <br />
+[ <a href="/create/message/Kellen">Send Message</a> | <a href="/users/Kellen/weblog">View Weblogs</a> ]</div>
+
+ <div class="body">
+  You are completely correct and I must sheepishly admit that I did not test a verify or more than a single backup with both keys (the hazard of writing a forward-looking doc). In fact, duplicity will not even work in this scenario for an unattended incremental backup (due to a bug) since it expects a single passphrase to be passed via the PASSPHRASE environment variable but must use two distinct passphrases to do the backup. Thus, as you suggest, you must use a single key and this single key and its passphrase must be available on the client at backup-time. I will be making changes to the doc to make sure this is all corrected. sigh =( <br /><br /> You also are correct that it is not that much of a security problem. My intention in using different keys was to avoid a situation where you could have data that is only kept on the server for a small amount of time, then deleted, from being compromised via backups. For most people this isn&#39;t such a big deal.
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_6">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/18">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_19">#19</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_19">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Kellen">Kellen</a>  (132.239.xx.xx) on Tue 16 Aug 2005  at 18:57 <br />
+[ <a href="/create/message/Kellen">Send Message</a> | <a href="/users/Kellen/weblog">View Weblogs</a> ]</div>
+
+ <div class="body">
+  Also, if it wasn&#39;t also clear: you want the secret key on your laptop so that if the client HDD crashes, you still have a copy of the key you need to decrypt the backed up data.
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_18">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/19">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_7">#7</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_7">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/pgquiles">pgquiles</a>  (81.202.xx.xx) on Thu 11 Aug 2005  at 20:57 <br />
+[ <a href="/create/message/pgquiles">Send Message</a> ]</div>
+
+ <div class="body">
+  Why don&#39;t simply use <a href="http://backuppc.sourceforge.net" rel="nofollow">BackupPC</a>? It&#39;s easy to setup &amp; manage, actively developed and is able to backup Windows machines (even Mac OS X machines if you enable Samba).
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/7">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_9">#9</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_9">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (203.122.xx.xx) on Fri 12 Aug 2005  at 05:52 <br />
+</div>
+
+ <div class="body">
+  One of the requirements was that the backup be encrypted too (not just transmitted securely). <br /><br /> I think this is an important feature missing in most backup solutions. It could no doubt be patched into backuppc and similar pretty easily, but it is not there yet AFAIK. <br /><br /> The store-encrypted feature means that you can have the data backed up in many separate places with relatively low security, because seized data cannot be read by someone evil. <br /> If you are worried about black helicopters and such, this is a good solution. <br /><br /> PJ <br />
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_7">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/9">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_8">#8</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_8">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Arthur">Arthur</a>  (194.109.xx.xx) on Fri 12 Aug 2005  at 02:54 <br />
+[ <a href="/create/message/Arthur">Send Message</a> | <a href="/users/Arthur/weblog">View Weblogs</a> ]</div>
+
+ <div class="body">
+  hdup is pretty slick, too.
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/8">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_10">#10</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_10">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/rajiv">rajiv</a>  (66.92.xx.xx) on Fri 12 Aug 2005  at 22:13 <br />
+[ <a href="/create/message/rajiv">Send Message</a> ]</div>
+
+ <div class="body">
+  take a look at <a href="http://www.fluffy.co.uk/boxbackup/" rel="nofollow"><a href="http://www.fluffy.co.uk/boxbackup/" rel="nofollow">http://www.fluffy.co.uk/boxbackup/</a></a> and also the comparison between boxbackup and duplicity: <a href="http://www.fluffy.co.uk/boxbackup/comparison.html" rel="nofollow"><a href="http://www.fluffy.co.uk/boxbackup/comparison.html" rel="nofollow">http://www.fluffy.co.uk/boxbackup/comparison.html</a></a>.
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/10">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_11">#11</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_11">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (203.122.xx.xx) on Sat 13 Aug 2005  at 05:57 <br />
+</div>
+
+ <div class="body">
+  I was unaware of boxbackup.<p> Yup, boxbackup seems to have all the features in place already. The only thing I am unsure about is the licence - it seems to be a BSD old-style licence, where the credit notice is mandatory (not discretionary) during use.<p> I am unsure of its GPL-compatibility, which is important for many debian users.<p><br /> PJ <br />
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_10">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/11">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_12">#12</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_12">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (151.202.xx.xx) on Sat 13 Aug 2005  at 15:13 <br />
+</div>
+
+ <div class="body">
+  A couple useful links, these folks have been thinking on similar lines: <a href="https://wiki.boum.org/TechStdOut/EncryptedBackupsForParanoiacs" rel="nofollow"><a href="https://wiki.boum.org/TechStdOut/EncryptedBackupsForParanoiacs" rel="nofollow">https://wiki.boum.org/TechStdOut/EncryptedBackupsForParanoiacs</a></a><br /><br /> Also, a really easy backup solution that you can use for this setup is backupninja (packaged in debian), it has duplicity capability and is really easy to use, the home page is <a href="http://dev.riseup.net/" rel="nofollow">here</a>
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/12">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_17">#17</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_17">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Eirik">Eirik</a>  (129.177.xx.xx) on Tue 16 Aug 2005  at 16:20 <br />
+[ <a href="/create/message/Eirik">Send Message</a> ]</div>
+
+ <div class="body">
+  I&#39;m at a loss to explain why so many of the various programs uses asymetric cryptography, rather than symetric keys. Just about all these systems stores the passphrase along with the secret keys used for signing; The odds that someone is able to steal only the secret key is therfore rather slim. Trust in the archive signatures aren&#39;t increased significantly by using asymetric keys. <br /><br /> Using asymetric keys for encrypting the data *may* make sense; the actual encryption key is only available at the time of encryption (random symetric session key, subsequently encrypted with asymetric cipher). However, as stated earlier, if the source system is compromised, data is already available to the attacker. The only gain here is that if the system (say a laptop) is stolen, access to previous backups isn&#39;t also given to the attacker (but a better protection would probably be to increase physical security of the system, as well as encrypting the filesystem). <br /><br /> When one keeps in mind that the security of asymetric ciphers is significantly less certain than that of symetric cipher, as well as the fact that symestric ciphers are signficantly faster; it would appear to make more sense to chose a strong, long easily remembered passphrase, and use that for encryption. <br /><br /> While the weak &quot;two-factor&quot; security inherent in the other secret-key;secret-passphrase system disappears, the backups would be signficantly easier to recover -- loss of the secret key no longer means unreadable backups -- only remembering the passphrase is needed. And a passphrase is very easy to backup in hard-copy and put in a safety deposit box, etc -- this is possible with a gpg-key, but not very practical (even if you have a scanner and ocr software you&#39;d be forced to upload the secret key to the system with the scanner; making sure it&#39;s not written to disk would be a pain). <br /><br /> It would appear a lot of people fail to realize that the only problem asymetric ciphers solve is that of key distribution; in this case that isn&#39;t a problem (only the owner needs to be able to decrypt the files). <br /><br /> But the article is interesting non the less.
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_12">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/17">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_34">#34</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_34">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (193.28.xx.xx) on Mon 29 Nov 2010  at 11:58 <br />
+</div>
+
+ <div class="body">
+  I second your opinion about the unnecessary and even harmful use of asymmetric crypto for backup storage. <b>ALL</b> of the current asymmetric ciphers are vulnerable to quantum cryptoanalysis, i.e. all your data from encrypted backups could be easily recovered by interested third-party with quantum computer.<br /><br /> Appropriate quantum computers are still not available, but they can appear in the nearest future. And if you store some long-term sensitive data in your backups then sooner or later it will be deciphered by the interested party who once had access to it.<br /><br /> Traditional symmetric ciphers are much more robust against quantum cryptoanalysis, so you can feel safe for your backups even when quantum computers become available. Symmetric crypto gives you a larger security margin.<br /><br /> -- <br /> Alexey
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_17">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/34">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_13">#13</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_13">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (62.245.xx.xx) on Mon 15 Aug 2005  at 13:08 <br />
+</div>
+
+ <div class="body">
+  I preffer Dar archiver instead of find, tar and gzip. Try it: <a href="http://dar.sourceforge.net/" rel="nofollow"><a href="http://dar.sourceforge.net/" rel="nofollow">http://dar.sourceforge.net/</a></a><br /><br /> Georgik
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/13">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_14">#14</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_14">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (66.159.xx.xx) on Mon 15 Aug 2005  at 19:39 <br />
+</div>
+
+ <div class="body">
+  Encrypted backups are dangerous and should be used sparingly. The problem with compressed or encrypted files is that a single bit error can corrupt all the data. By contrast a single bit error in a tar or cpio archive will typically corrupt a single file, and can be corrected. Encrypted backups also depend entirely on the decryption key. Not only must the key be secure from theft, but the key must also be secure from deletion, fire, and similar disasters. <br /><br /> Encrypted backups could be usefull if the target system is untrusted. However in that case there is always the risk that the backups could be deleted rendering the backups useless. <br /><br /> Making data backups is a precaution against disaster. Encrypting backups increases the risk of a major disaster. A failed harddrive switches from a minor inconvinience to a major disaster when the decryption key can&#39;t be found or is corrupt. Using encryption should be considered carefully. In most cases it will make the backups less secure due to loss of availability.
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/14">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_26">#26</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_26">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (139.11.xx.xx) on Thu  8 Jun 2006  at 10:10 <br />
+</div>
+
+ <div class="body">
+  <div class="hft-lines">IMHO this is not such a big problem. <br /><br /> Nowadays, &quot;single bit errors&quot; don&#39;t happen on harddisks. If your harddisk breaks, everything will be unreadable. If you have a RAID system that uses SMART capable harddisks, a 16-bit CRC is applied on the wire and the chance of a bit error slipping by is almost zero - at least compared to the chance of a harddisk breaking, SMART failing, and the RAID system disabling the disk before corrupted data gets into userspace. <br /><br /> Non-encrypted backups require that the backup server is at least(!) as secure as the main server. It must not be at the same location or the redundability would not be great enough, but it must be cared for just as much, meaning duplicate work (two servers, two datacenters, twice the amount of maintenance and monthly datacenter payments). <br /><br /> Encrypted backups can be stored in multiple locations where the only requirement is that the data can be stored reliably. You do not have to care about the server yourself, it can be done by somebody whom you trust to maintain the machine, but would not otherwise trust your data. This saves a whole lot of work if you consider &quot;backup-sharing&quot; configurations where e.g. three admins each provide backup space for the other two. <br /><br /> Of course, this is not ideal for high profile professional systems where a minute of downtime translates into a thousand (or a hundred thousand) Euros. However, in these scenarios people will employ &quot;hot spares&quot; everywhere anyway and have enough redundant systems available so that one more backup server to maintain will not make much of a difference.<br /></div>
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_14">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/26">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_15">#15</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_15">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (83.208.xx.xx) on Mon 15 Aug 2005  at 23:14 <br />
+</div>
+
+ <div class="body">
+  I use this script for backup with duplicity and it works very good for me. <pre>
+#!/bin/bash
+
+export PASSPHRASE=&quot;secretpass&quot;
+
+USER=&quot;backup_server1&quot;
+GLOB=&quot;--no-print-statistics --full&quot;
+PROT=&quot;scp&quot;
+TIME=&quot;--remove-older-than 1M&quot;
+HOME=&quot;/home/backup&quot;
+
+mysqldump --password=secretpass db_name1 &gt; ${HOME}/tmp/mysql/db_name1/db_name1-mysql.sql
+mysqldump --password=secretpass db_name2 &gt; ${HOME}/tmp/mysql/db_name1/db_name2-mysql.sql
+
+for SERV in &quot;server1&quot; &quot;server2&quot; &quot;server3&quot;
+do
+        echo &quot;### Backup to &#39;${SERV}&#39;...&quot;
+
+        echo &quot;*** cgi:&quot;
+        duplicity ${GLOB} /var/www/localhost/cgi-bin ${PROT}://${USER}@${SERV}/data/cgi
+
+        echo &quot;*** email:&quot;
+        duplicity ${GLOB} /var/vpopmail/domains ${PROT}://${USER}@${SERV}/data/email
+
+        echo &quot;*** etc:&quot;
+        duplicity ${GLOB} /etc ${PROT}://${USER}@${SERV}/data/etc
+
+        echo &quot;*** home:&quot;
+        duplicity ${GLOB} --exclude ${HOME} --exclude /home/p2p --exclude /home/ftp /home ${PROT}://${USER}@${SERV}/data/home
+
+        echo &quot;*** htdocs:&quot;
+        duplicity ${GLOB} /var/www/localhost/htdocs ${PROT}://${USER}@${SERV}/data/htdocs
+
+        echo &quot;*** mysql:&quot;
+        duplicity ${GLOB} ${HOME}/tmp/mysql ${PROT}://${USER}@${SERV}/data/mysql
+
+        echo &quot;*** root:&quot;
+        duplicity ${GLOB} --include /root/bin --exclude &#39;**&#39; /root ${PROT}://${USER}@${SERV}/data/root
+
+
+        echo &quot;### Clean backup on &#39;${SERV}&#39;...&quot;
+
+        for ADDR in &quot;cgi&quot; &quot;email&quot; &quot;etc&quot; &quot;home&quot; &quot;htdocs&quot; &quot;mysql&quot; &quot;root&quot;
+        do
+                echo &quot;*** ${ADDR}:&quot;
+                duplicity ${TIME} ${PROT}://${USER}@${SERV}/data/${ADDR}
+        done
+done
+
+rm -f ${HOME}/tmp/mysql/db_name1/*
+rm -f ${HOME}/tmp/mysql/db_name2/*
+
+unset $PASSPHRASE
+</pre>
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/15">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_16">#16</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_16">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (24.16.xx.xx) on Tue 16 Aug 2005  at 06:22 <br />
+</div>
+
+ <div class="body">
+  Thanks for the great article - but ...<p> My big question is - what restore choices do you get with this system? I took positive notice of the earlier comment noting that point-in-time restores are possible. But if you&#39;re backing up an entire filesystem, will you have the ability to restore a single file - or must you restore the entire filesystem, <i>then</i> retreive your single file?
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/16">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_20">#20</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_20">hard links?</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (83.99.xx.xx) on Sun 30 Oct 2005  at 21:31 <br />
+</div>
+
+ <div class="body">
+  Have you tried to restore a whole system? <br /><br /> What&#39;s happening with the hard links? <br /> If they are not preserved, the result will use more disk space than the original, and probably havfe some other issues too. <br /><br /> George <br />
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/20">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_21">#21</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_21">Re: hard links?</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (62.165.xx.xx) on Wed  2 Nov 2005  at 09:15 <br />
+</div>
+
+ <div class="body">
+  From the man page of duplicity: <br /> &quot;Currently duplicity supports deleted files, full unix permissions, directories, symbolic links, fifos, etc., but not hard links.&quot; <br /><br /> btw: what about part2 ? <br /><br /> Thanks for this article ...
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_20">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/21">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_22">#22</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_22">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (64.108.xx.xx) on Sun  6 Nov 2005  at 23:27 <br />
+</div>
+
+ <div class="body">
+  Bravo! One of the best tutorials I&#39;ve seen in a long time. <br /><br /> But duplicity hasn&#39;t released a stable version and seems to have stalled since August 2003. <br /><br /> I&#39;d love to see a similarly well-written tutorial for secure remote backups using one of these: <br /><br /> 1. dervish - selected by OSL in October 2005 to backup mozilla, linux kernel, etc. <br /><br /> 2. rlbackup - used by phy.bnl.gov on Debian Sarge but there&#39;s no debian package yet! See <a href="http://www.phy.bnl.gov/computing/rlbackup/" rel="nofollow">http://www.phy.bnl.gov/computing/rlbackup/</a><br /><br /> 3. rsnapshot - sadly, maintainer looking for someone to take over as of Oct 2005 <br /><br /> 4. dar - popular for backing up to cd or dvd so a tutorial using remote incremental backups would be great. There are wrapper projects such as kdar that provides a nice GUI. 
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/22">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_23">#23</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_23">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (66.73.xx.xx) on Wed  9 Nov 2005  at 07:09 <br />
+</div>
+
+ <div class="body">
+  A new maintainer took over rsnapshot in November 2005 with help from the original maintainer. <p> Based on my limited testing, it looks like rsnapshot 1.2.1 is rock-solid. Highly recommended if you are looking for a decent backup solution based on rsync and do not need built-in support for encryption. <p> I really like the security feature of duplicity but it doesn&#39;t look like any work has been done in duplicity in over 2 years--is the project abandoned? If the project is bug-free, then they should release it as 1.0 instead of keeping it version 0.4.1. 
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_22">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/23">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_24">#24</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_24">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (24.52.xx.xx) on Sun 11 Dec 2005  at 10:16 <br />
+</div>
+
+ <div class="body">
+  <div class="hft-lines">Duplicity is still the best option for those of us who have to do remote backups to a system we don&#39;t have root on. It retains the most file parameters because of the fact the snapshots are tared and does not require the remote server to have any extra software installed like rdiff. I have yet to find any other solutions that operate in this method. <br /><br /> Really wishing duplicity was still supported.... but I do use it with some success as is.<br /></div>
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_22">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/24">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_25">#25</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_25">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (82.85.xx.xx) on Tue 23 May 2006  at 08:25 <br />
+</div>
+
+ <div class="body">
+  <div class="hft-lines">I&#39;m using debian stable, duplicity 0.4.1 and gnupg 1.4.1. <br /> When I run backup script for the first time it&#39;s all ok. <br /> But when I run backup script for a second time duplicity crashes whith IOError: GnuPG exited non-zero, with code 2. <br /> It&#39;s a duplicity bug?<br /></div>
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/25">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_27">#27</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_27">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (139.11.xx.xx) on Tue 13 Jun 2006  at 08:31 <br />
+</div>
+
+ <div class="body">
+  <div class="hft-lines">Hi, <br /><br /> I really like your article. I implemented duplicity on my servers and it works fine so far. However, I&#39;m somewhat at a loss as to how to delete old backups. With rdiff-backup it&#39;s easy to remove old increments. With duplicity the only thing I can seemingly do is to start over every couple weeks (or so) with a full backup, otherwise the backup server&#39;s harddisk(s) will overflow at some point. <br /><br /> I noticed backupninja has a capability to remove old backups. Do you know how this is implemented? <br /><br /> Thanks! <br /><br /> Jens<br /></div>
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/27">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_28">#28</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_28">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (76.0.xx.xx) on Wed 25 Apr 2007  at 20:28 <br />
+</div>
+
+ <div class="body">
+  This is a very good How-To Article for Duplicity. <br />There are also so good examples in the comments too!! <br />Has this article been updated recently? <br />Has Part 2 of this article come out yet?
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/28">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_29">#29</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_29">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (82.43.xx.xx) on Wed 16 May 2007  at 08:23 <br />
+</div>
+
+ <div class="body">
+  Hi, <br /><br />I have been using this setup for a while now and it works great, thanks! but since I upgraded to etch it is taking alomst 3 times as long to complete the backup. The number ans size if files backed up hasnt changed very much. Does any one know what could be causing the slowdown and how i can aviod it? <br /><br />Thanks
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/29">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_30">#30</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_30">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (146.232.xx.xx) on Mon 15 Oct 2007  at 09:45 <br />
+</div>
+
+ <div class="body">
+  As a result of this article I have used duplicity now for several months to do automated backups of my work-pc to a server. Since a few days ago the backup keeps failing with the error message: &quot;Running &#39;sftp &lt;user&gt;@server failed&#39; ...&quot; <br /><br />I can do a scp-transfer so the ssh-key-authentication is working. <br /><br />At the moment I can not backup do anything with the backups. <br /><br />There is no indication of what can cause the problem. <br /><br />Maybe it is time to look for something else to do the job without these kind of problems. <br /><br />Johann Spies
+ </div>
+
+<p class="foot">
+ [
+ 
+  Parent
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/30">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_31">#31</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_31">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (216.211.xx.xx) on Tue 27 Nov 2007  at 00:32 <br />
+</div>
+
+ <div class="body">
+  i had the same issue. in global.py i changed: <br /># network timeout value <br />timeout = 30 <br /><br />to: <br /># network timeout value <br />timeout = 90 <br /><br /><br />and all is well again
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_30">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/31">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_32">#32</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_32">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (61.246.xx.xx) on Sat 24 May 2008  at 10:48 <br />
+</div>
+
+ <div class="body">
+  global.py is inside /usr/lib/python(ver)/site-packages/ <br /><br />For me also this thing worked .
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_31">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/32">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+ </div>
+  
+
+
+<p></p>
+
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+
+ <div class="indent">
+  
+
+ <div class="indent">
+  
+
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   
+   
+    <a href="/articles/209#comment_33">#33</a>
+   
+   
+  </div>
+
+ <div class="title"><a name="comment_33">Re: Unattended, Encrypted, Incremental Network Backups: Part 1</a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <a href="/users/Anonymous">Anonymous</a>  (72.160.xx.xx) on Wed 25 Jun 2008  at 17:08 <br />
+</div>
+
+ <div class="body">
+  if the above doesn&#39;t work add --ssh-options=&quot;-C&quot; and or enable short filenames
+ </div>
+
+<p class="foot">
+ [
+ 
+  <a href="#comment_31">Parent</a>
+ 
+
+ 
+
+ 
+  
+  | <a href="/comment/onarticle/209/33">Reply to this comment</a>
+  
+ 
+
+ 
+
+ 
+
+ 
+  
+  
+ 
+
+ 
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+
+ </div>
+  
+
+ </div>
+  
+
+
+<p></p>
+
+
+
+
+  <!-- Closing tag for if_error -->
+
+</div>
+
+  <div id="footer">
+	<div>
+<p>Articles and comments are the property of their respective posters.</p>
+<p>Trademarks are the property of their respective owners.<br />  Debian is <a
+href="http://tarr.uspto.gov/servlet/tarr?regser=serial&amp;entry=75386376&amp;action=Request+Status">a registered trademark</a> of <a href="http://www.spi-inc.org">Software in the Public Interest, Inc</a>.</p>
+<p>This site is copyright &copy; 2004-2010 <a href="http://www.steve.org.uk/">Steve Kemp</a>.<br />Site hosting provided by <a href="http://www.bytemark.co.uk/">Bytemark Hosting</a>.</p>
+<p>Email: <a class="footer" href="mailto:webmaster@debian-administration.org">webmaster@debian-administration.org</a></p>
+<p><a href="/about/Syndication">Article Feeds in Atom, RSS, &amp; RDF formats</a></p>
+</div></div>
+
+<!-- Right Sidebar -->
+<div id="rightbar">
+  
+
+      <h3 class="sideBarTitle">User Login</h3>
+            <form id="user-login" action="/" method="post">
+	    <input type="hidden" name="target" value="/articles/209" />
+                
+	<p><b>Username</b>:<br />
+        <input id="name" name="lname" type="text" size="14" maxlength="25" /></p>
+	<p><b>Password</b>:<br />
+	<input id="pass" name="lpass" type="password" size="15" maxlength="25" /></p>
+	<p>[ <a href="/login">Advanced Login</a> ]</p>
+        <p><input type="submit" name="login" value="Login" /></p>
+    
+        <p><a href="/create/user">Register Account</a></p>
+            </form>
+
+
+
+
+
+   <h3 class="sideBarTitle">Flattr</h3>
+ <div style="text-align:center;"><a class="FlattrButton" style="display:none;" href="http://debian-administration.org"></a></div>
+
+
+   
+
+        
+
+        
+           <div class="advert">
+<h3 class="sideBarTitle">Sponsored Links</h3>
+<p></p>
+<div align="center">
+<script type="text/javascript"><!--
+google_ad_client = "pub-1910202134166551";
+//200x90, created 08/12/07
+google_ad_slot = "2315151555";
+google_ad_width = 200;
+google_ad_height = 90;
+//--></script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+            
+	       <p><a href="/about/FAQ%20:%20Site%20Adverts">Why are these adverts here?</a></p>
+            
+	    </div>
+	
+
+   
+
+
+
+
+
+   
+
+
+  
+   <h3 class="sideBarTitle">Related Links</h3>
+   <ul>
+   
+    <li><a href="http://www.debian-administration.org/articles/217">Simple backups with rsnapshot</a> </li>
+  
+   </ul>
+  
+
+<h3 class="sideBarTitle">Quick Site Search</h3>
+ <form id="quickSearch" action="/search/" method="get">
+  <p><input size="10" id="search"  name="q">
+  <input type="hidden" name="cmd" value="Search!">
+  <input type="submit" name="go" value="Go"></p>
+ </form>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+</div></div>
+  </body>
+</html>
+
