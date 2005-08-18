@@ -1,0 +1,171 @@
+<html><head><meta http-equiv="Content-Language" content="en-gb"><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 6.0"><meta name="ProgId" content="FrontPage.Editor.Document"><title>
+        Pastry - A scalable, decentralized, self-organizing and fault-tolerant substrate 
+        for peer-to-peer applications</title>
+    <style type="text/css">
+        .style1
+        {
+            font-family: Verdana;
+        }
+    </style>
+</head>
+<body bgcolor="#FFFFFF">
+    <p>
+        <span class="style1">This page is currently not being updated. [<a 
+            href="http://research.microsoft.com/en-us/um/people/antr/default.htm" onClick="stc(this, 1)">Ant 
+        Rowstron's home page</a></span>]<br />
+    </p>
+<table border="0" width="100%" cellpadding="4" style="border-collapse: collapse" bordercolor="#111111" cellspacing="0">  <tr>    
+  <td width="50%" bgcolor="#FFFFCC" align="center" bordercolor="#CCCC99" valign="top"><hr noshade size="4" color="#808000"><table border="0" width="100%">  <tr>    
+    <td width="100%" align="center" bgcolor="#FFFFCC"><p align="center"><b>
+    <font face="Verdana" size="6" color="#800000">Pastry </font></b></p>      <p align="center">
+    <b><font face="Verdana" color="#800000">A substrate for peer-to-peer applications</font></b></p>      </td>  </tr></table><hr noshade size="4" color="#808000">   <p>   <b><font face="Verdana">    <a href="pubs.htm" onClick="stc(this, 2)">
+          Publications related to Pastry</a> </font></b></p><hr noshade size="4" color="#808000">    
+  <p><b><font face="Verdana" color="#800000">Short overview of Pastry (please don't 
+      cite)</font></b>
+  <br><b><font face="Verdana" size="2">[ <i> <a href="../PAST/overview.pdf" onClick="stc(this, 3)">pdf</a> |
+  <a href="../PAST/overview.ps" onClick="stc(this, 4)">ps</a> </i>]</font></b></p>
+  </td>    
+  <td width="53%" bgcolor="#FFFFFF" align="center" valign="top">
+  <table border="0" cellpadding="0" cellspacing="3" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber4">
+    <tr>
+      <td width="7" valign="top" bgcolor="#808000">&nbsp;</td>
+      <td width="50%" valign="top" align="center"><b>
+      <font face="Verdana" size="4" color="#800000">Applications:</font></b><p>
+      <font face="Verdana" size="4"> <b> <a href="../SCRIBE/default.htm" onClick="stc(this, 5)">SCRIBE</a></b></font>
+      <br><font face="Verdana" size="2"> group communication/event notification. </font></p>
+      <p><b><font face="Verdana" size="4"> <a href="../PAST/default.htm" onClick="stc(this, 6)">PAST</a></font></b>
+      <br><font face="Verdana" size="2"> archival storage.  </font></p>
+      <p><font face="Verdana" size="4"><b><a href="../SQUIRREL/default.htm" onClick="stc(this, 7)">SQUIRREL</a></b></font><br>
+      <font face="Verdana" size="2">co-operative web caching.  </font></p>
+      <p><font face="Verdana" size="4"><b>
+      <a href="../SplitStream/default.htm" onClick="stc(this, 8)">SplitStream</a></b></font><br>
+      <font face="Verdana" size="2">high-bandwidth content distribution.</font></p>
+        <p>&nbsp;</p>
+      <p>&nbsp;</p>
+		<p><a href="http://www.research.microsoft.com/~antr/MS" onClick="stc(this, 9)"><b>
+		    <font face="Verdana" size="4">** OLD** related</font></b></a><b><font face="Verdana" size="4"><a href="http://www.research.microsoft.com/~antr/MS" onClick="stc(this, 10)"> 
+            projects at<br>
+		    Microsoft Research</a></font></b></p>
+      <p>&nbsp;</td>
+      <td width="50%" align="center">
+      <p align="center"><b><font face="Verdana" size="4"><a href="pubs.htm" onClick="stc(this, 11)">Pastry and 
+          related publications</a>.
+    </font></b></p>
+          <p align="center" class="style1">[<a 
+                  href="http://research.microsoft.com/en-us/um/people/antr/default.htm" onClick="stc(this, 12)">Ant 
+              Rowstron home page</a> (inc. newer related publications]] </p>
+      <p><b><font face="Verdana" size="4" color="#800000">Software downloads:</font></b></p>
+      <p align="center"><b><font face="Verdana"><a href="http://www.freepastry.org/FreePastry/" onClick="stc(this, 13)">
+          FreePastry</a></font></b></p>
+      </td>
+      </tr>
+    </table>
+  </td>  </tr>  <tr>    
+    <td width="100%" bgcolor="#FFFFFF" colspan="2">   <hr noshade size="4" color="#808000">   <p><font face="Verdana" size="2"><b><i>
+        Pastry</i></b> is a generic, scalable and efficient substrate for peer-to-peer 
+        applications. Pastry nodes form a decentralized, self-organizing and 
+        fault-tolerant overlay network within the Internet. Pastry provides efficient 
+        request routing, deterministic object location, and load balancing in an 
+        application-independent manner. Furthermore, Pastry provides mechanisms that 
+        support and facilitate application-specific object replication, caching, and 
+        fault recovery.</font><hr noshade size="4" color="#808000">   
+    <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber5">
+      <tr>
+        <td width="80%">
+            &nbsp;</td>
+        <td width="20%">&nbsp;</td>
+        </tr>
+      </table>
+      <hr noshade size="4" color="#808000"><p>
+    <font face="Verdana" size="4" color="#800000"><b><a name="overview">Pastry overview</a></b></font></p><p><font face="Verdana" size="2">
+            Pastry provides the following capabilities. First, each node in the Pastry 
+            network has a unique, uniform random identifier (nodeId) in a circular 128-bit 
+            identifier space. When presented with a message and a numeric 128-bit key, a 
+            Pastry node efficiently routes the message to the node with a nodeId that is 
+            numerically closest to the key, among all currently live Pastry nodes. The 
+            expected number of forwarding steps in the Pastry overlay network is<i> O(log N)</i>, 
+            while the size of the routing table maintained in each Pastry node is only<i> 
+            O(log N)</i> in size (where <i>N</i> is the number of live Pastry nodes in the 
+            overlay network). At each Pastry node along the route that a message takes, the 
+            application is notified and may perform application-specific computations 
+            related to the message.<br><br>Second, each Pastry node keeps track of its <i>L</i> 
+            immediate neighbors in the nodeId space (called the<i> leaf set</i>), and 
+            notifies applications of new node arrivals, node failures and node recoveries 
+            within the leaf set. Third, Pastry takes into account locality (proximity) in 
+            the underlying Internet; it seeks to minimize the distance messages travel, 
+            according to a scalar proximity metric like the ping delay. Pastry is completely 
+            decentralized, scalable, and self-organizing; it automatically adapts to the 
+            arrival, departure and failure of nodes. P2p applications built upon Pastry can 
+            utilize its capabilities in many ways, including:</font></p><ul>  <li><font face="Verdana" size="2"><b>
+            Mapping application objects to Pastry nodes:</b> Application-specific objects 
+            are assigned unique, uniform random identifiers (objIds) and mapped to the <i>k, 
+            (k &gt;= 1) </i>nodes with nodeIds numerically closest to the objId. The number <i>
+            k</i> reflects the application's desired degree of replication for the object.</font></li>  <li><font face="Verdana" size="2"><b>
+                Inserting objects:</b> Application-specific objects can be inserted by routing a 
+                Pastry message, using the objId as the key. When the message reaches a node with 
+                one of the    <i>k</i> closest nodeIds to the objId, that node replicates the 
+                object among the other<i>    k-1</i> nodes with closest nodeIds (which are, by 
+                definition, in the same leaf set for    <i>k &lt;= L/2</i>).</font></li>  <li><font face="Verdana" size="2"><b>
+                Accessing objects:</b> Application-specific objects can be looked up, contacted, 
+                or retrieved by routing a Pastry message, using the objId as the key. By 
+                definition, the message is guaranteed to reach a node that maintains a replica 
+                of the requested object unless all <i>k</i> nodes with nodeIds closest to the 
+                objId have failed.</font></li>  <li><font face="Verdana" size="2"><b>
+                Availability and persistence:</b> Applications interested in availability and 
+                persistence of application-specific objects maintain the following invariant as 
+                nodes join, fail and recover: object replicas are maintained on the    <i>k</i> 
+                nodes with numerically closest nodeIds to the objId, for <i>k &gt; 1</i>. The fact 
+                that Pastry maintains leaf sets and notifies applications of changes in the 
+                set's membership simplifies the task of maintaining this invariant.</font></li>  <li><font face="Verdana" size="2"><b>
+                Diversity:</b> The assignment of nodeIds is uniform random, and cannot be 
+                corrupted by an attacker. Thus, with high probability, nodes with adjacent 
+                nodeIds are diverse in geographic location, ownership, jurisdiction, network 
+                attachment, etc. Therefore, the probability that such a set of nodes is 
+                conspiring or suffers from correlated failures is low even for modest set sizes. 
+                This minimizes the probability of a simultaneous failure of all <i>k</i> nodes 
+                that maintain an object replica. Likewise, quorum-based protocols can be used to 
+                securely update and query the state of replicated objects, despite the presence 
+                of a limited number of malicious nodes in the system.</font></li>  <li><font face="Verdana" size="2"><b>
+                Load balancing: </b> Both nodeIds and objIds are randomly assigned and uniformly 
+                distributed in the 128-bit Pastry identifier space. Without requiring any global 
+                coordination, this results in a good first-order balance of storage requirements 
+                and query load among the Pastry nodes, as well as network load in the underlying 
+                Internet.</font></li>  <li><font face="Verdana" size="2"><b>Object caching:</b> 
+                Applications can cache objects on the Pastry nodes encountered along the paths 
+                taken by insert and lookup messages. Subsequent lookup requests whose paths 
+                intersect are served the cached copy. (Pastry's network locality properties make 
+                it likely that messages routed with the same key from nearby nodes converge 
+                early, thus lookups are likely to intercept nearby cached objects.) This 
+                distributed caching offloads the    <i>k </i>nodes that hold the primary</font> 
+                r<font face="Verdana" size="2">eplicas of an object, and it minimizes client 
+                delays and network traffic by dynamically caching copies near interested 
+                clients.</font></li>  <li><font face="Verdana" size="2"><b>Efficient, scalable 
+                information dissemination:</b> Applications can perform efficient multicast 
+                using reverse path forwarding along the tree formed by the routes from clients 
+                to the node with nodeId numerically closest to a given objId. Pastry's network 
+                locality properties ensure that the resulting multicast trees are efficient; 
+                i.e., they result in efficient data delivery and resource usage in the 
+                underlying Internet.</font><br>  </li></ul><p><i><!-- Begin ListBot Code --><!-- End ListBot Code --></i>
+    <font face="Verdana" size="4" color="#800000"><b>Links to related projects</b></font></p><ul>  <li><font face="Verdana" size="2"><a href="http://www.icir.org/sylvia/" onClick="stc(this, 14)">
+            CAN</a></font></li>  <li><a href="http://www.pdos.lcs.mit.edu/chord/" onClick="stc(this, 15)"><font face="Verdana" size="2">
+                Chord</font></a></li>  <li><a href="http://www.research.microsoft.com/sn/Farsite/" onClick="stc(this, 16)"><font face="Verdana" size="2">
+                Farsite</font></a></li>  <li><a href="http://freenet.sourceforge.net/" onClick="stc(this, 17)"><font face="Verdana" size="2">
+                Freenet</font></a></li>  <li><a href="http://www.gnutella.wego.com/" onClick="stc(this, 18)"><font face="Verdana" size="2">
+                Gnutella</font></a></li>  <li><a href="http://oceanstore.cs.berkeley.edu/" onClick="stc(this, 19)"><font face="Verdana" size="2">
+                OceanStore/Tapestry</font></a></li></ul><p>
+    <font face="Verdana" size="4" color="#800000"><a name="Downloads"><b>Pastry software 
+            distribution</b></a></font><p><font size="2" face="Verdana"><b><i> Use the 
+            FreePastry distribution (found <a href="http://www.freepastry.org/FreePastry/" onClick="stc(this, 20)">
+            here</a>).</i></b> </font></p>  </td>  </tr>  <tr>    
+  <td width="100%" bgcolor="#FFFFFF" colspan="2"><hr noshade size="4" color="#808000">    </td>  </tr>  </table><p align="center"><b><font face="Verdana" size="1">
+    [Page created 15th February 2001, last updated 14th Jan 2010- maintained by <a href="mailto:antr@microsoft.com" onClick="stc(this, 21)">
+    mailto:antr@microsoft.com</a>]</font></b><a href="http://www.research.microsoft.com/~antr/PAST/pastry.pdf.zip" onClick="stc(this, 22)"></a> <a href="http://www.research.microsoft.com/~antr/PAST/pastry.ps.zip" onClick="stc(this, 23)"></a> <a href="http://www.research.microsoft.com/~antr/PAST/pastry.pdf" onClick="stc(this, 24)"></a> <a href="http://www.research.microsoft.com/~antr/PAST/pastry.ps" onClick="stc(this, 25)"></a><a href="http://www.research.microsoft.com/~antr/PAST/jsac.pdf.zip" onClick="stc(this, 26)"></a> <a href="http://www.research.microsoft.com/~antr/PAST/jsac.ps.zip" onClick="stc(this, 27)"></a> <a href="http://www.research.microsoft.com/~antr/PAST/jsac.pdf" onClick="stc(this, 28)"></a><a href="http://www.research.microsoft.com/~antr/PAST/jsac.ps" onClick="stc(this, 29)"></a><a href="http://www.research.microsoft.com/~antr/PAST/scribe.pdf.zip" onClick="stc(this, 30)"></a> <a href="http://www.research.microsoft.com/~antr/PAST/scribe.ps.zip" onClick="stc(this, 31)"></a> <a href="http://www.research.microsoft.com/~antr/PAST/scribe.pdf" onClick="stc(this, 32)"></a> <a href="http://www.research.microsoft.com/~antr/PAST/scribe.ps" onClick="stc(this, 33)"></a><a href="http://www.research.microsoft.com/~antr/PAST/hotos.pdf.zip" onClick="stc(this, 34)"></a> <a href="http://www.research.microsoft.com/~antr/PAST/hotos.ps.zip" onClick="stc(this, 35)"></a> <a href="http://www.research.microsoft.com/~antr/PAST/hotos.pdf" onClick="stc(this, 36)"></a><a href="http://www.research.microsoft.com/~antr/PAST/hotos.ps" onClick="stc(this, 37)"></a><a href="http://www.research.microsoft.com/~antr/PAST/past-sosp.pdf.zip" onClick="stc(this, 38)"></a> <a href="http://www.research.microsoft.com/~antr/PAST/past-sosp.ps.zip" onClick="stc(this, 39)"></a> <a href="http://www.research.microsoft.com/~antr/PAST/past-sosp.pdf" onClick="stc(this, 40)"></a><a href="http://www.research.microsoft.com/~antr/PAST/past-sosp.ps" onClick="stc(this, 41)"></a> <br><br>
+    &nbsp;<script type="text/javascript">
+   function stc(e, linkIndex) {
+      if (document.images) {
+         (new Image()).src="/a/i/stg.gif?f=" + escape(document.location.href) + "&t=" + escape(e.href) + "&i=" + linkIndex;
+      }
+   }
+</script>
+</body></html>
