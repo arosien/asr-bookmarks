@@ -1,0 +1,104 @@
+<!--#set var="title" value="Ruby"-->
+<!--#include file="base.html"-->
+
+<h2>Ruby Module for SWIG</h2>
+
+<p><a href="http://swig.sourceforge.net/">SWIG (Simplified Wrapper and Interface
+Generator)</a> is an interface compiler that connects programs written
+in C and C++ with scripting languages.  This module extends SWIG to
+produce wrapper code for Ruby.
+
+<p>This module generates extension library for Ruby from interface
+files.  This includes following features:
+
+<ul>
+  <li>Eliminates routine coding:
+      <ul>
+	<li>Method arguments checking.
+	<li>Default value for omitted arguments.
+	<li>Basic type conversion between Ruby and C.
+      </ul>
+  <li>Provides mechanism to insert customized code when automatic
+      conversion is not sufficient.
+  <li>C structs and C++ classes are automagically wrapped in Ruby
+      classes.  </ul>
+
+<h3>Documentation</h3>
+
+<p>
+<ul>
+  <li><a href="swig-examples/index.html">Ruby Examples</a>
+  <li><a href="http://swig.sourceforge.net/doc.html">SWIG Documentation</a>
+</ul>
+      
+<h3>Download</h3>
+<ul>
+  <li>Ruby module is now a part of the official SWIG release.
+	SWIG1.3a5 includes Ruby module.  Get it from <a
+	  href="http://swig.sourceforge.net/">swig.sourceforge.net</a>.
+
+  <li><a href="swigruby-0.4.4.tar.gz">swigruby-0.4.4.tar.gz</a><br>
+	<em>This is preliminary release.</em><br>
+	This version is no more actively maintained.
+  <li>Binary Package:
+    <ul>
+      <li><a href="ftp://ftp.arika.org/pub/debian/ruby/dists/unstable/main/binary-i386/interpreters/">deb package</a> (thanks to akira yamada)
+      <li><a href="http://www.freebsd.org/cgi/ports.cgi?query=swig&stype=all">FreeBSD ports</a> (thanks to knu)
+    </ul>
+  <li>Changes:
+      <ul>
+	<li>Changes from 0.4.3 to 0.4.4:
+	    <ul>
+	      <li>Clarify the license.
+	    </ul>
+	<li>Changes from 0.4.2 to 0.4.3:
+	    <ul>
+	      <li>C global variables are wrapped in Ruby module attributes.
+	    </ul>
+	<li>Changes from 0.4.1 to 0.4.2:
+	    <ul>
+	      <li><code>pred</code> pragma is added.
+	    </ul>
+	<li>Changes from 0.4 to 0.4.1:
+	    <ul>
+	      <li><code>FILE *</code> typemap is added.
+	      <li><code>include</code> pragma is added.
+	      <li>C++ class inheritance bug fixed.
+	    </ul>
+	<li>Changes from 0.3 to 0.4:
+	    <ul>
+	      <li><code>pointer.i</code> is available to Ruby module.
+	      <li><code>typemaps.i</code> bug fixed.
+	    </ul>
+	<li>Changes from 0.2 to 0.3:
+	    <ul>
+	      <li>Classes and functions can be defined in toplevel.
+	      <li>Python style special method names supported.  (SWIG
+		  cannot handle operator method names.)
+	    </ul>
+	<li>Changes from 0.1 to 0.2:
+	    <ul>
+	      <li><code>typemaps.i</code> refined.
+	      <li>some bug fix.
+	    </ul>
+      </ul>
+</ul>
+
+<h3>Projects powered by SWIG/Ruby</h3>
+
+<ul>
+  <li><a href="http://www.ruby-lang.org/en/raa-list.rhtml?name=Ruby%2Flibgraph">Ruby/libgraph</a> (by Noritsugu Nakamura)
+  <li><a href="http://www.ruby-lang.org/en/raa-list.rhtml?name=Ruby%2FQt">Ruby/Qt</a> (by Nobuyuki Horie)
+</ul>
+
+<h3>Copyright</h3>
+
+Copyright (C) 1999  Network Applied Communication Laboratory, Inc.
+
+<h3>Related Links</h3>
+<ul>
+  <li><a href="http://swig.sourceforge.net/">SWIG</a>
+  <li><a href="http://www.river-bank.demon.co.uk/software/">SIP</a>
+</ul>
+
+<!--#include virtual="$incdir/tail.html"-->
