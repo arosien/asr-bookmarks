@@ -1,0 +1,804 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The Scala Programming Language</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="alternate" type="application/rss+xml" title="Front page feed" href="/rss.xml" />
+
+<link rel="shortcut icon" href="/sites/default/files/favicon.gif" type="image/x-icon" />
+<link rel="alternate" type="application/rss+xml" title="The Scala Language (Featured News Only)" href="/featured/rss.xml" />
+
+  <link type="text/css" rel="stylesheet" media="all" href="/sites/all/modules/views/css/views.css?H" />
+<link type="text/css" rel="stylesheet" media="all" href="/sites/all/themes/newsflash/custom/modules/ddblock/upright50/ddblock-cycle-upright50.css?H" />
+<link type="text/css" rel="stylesheet" media="all" href="/sites/default/files/css/a1cb2bc4bb537e89258dede7bed4127a.css" />
+  <script type="text/javascript" src="/sites/default/files/js/61bc5accb0bdd5516bb3b86b03fc89c9.js"></script>
+<script type="text/javascript">jQuery.extend(Drupal.settings, { "basePath": "/", "extlink": { "extTarget": 0, "extClass": "ext", "extSubdomains": 1, "mailtoClass": "mailto" }, "fivestar": { "titleUser": "Your rating: ", "titleAverage": "Average: ", "feedbackSavingVote": "Saving your vote...", "feedbackVoteSaved": "Your vote has been saved.", "feedbackDeletingVote": "Deleting your vote...", "feedbackVoteDeleted": "Your vote has been deleted." }, "spamspan": { "m": "spamspan", "u": "u", "d": "d", "t": "t" }, "views": { "ajax_path": "/views/ajax", "ajaxViews": [ { "view_name": "frontpagescala", "view_display_id": "page", "view_args": "", "view_path": "frontpage", "view_base_path": "frontpage", "view_dom_id": 1, "pager_element": 0 } ] }, "ddblockContent": { "6": { "block": "6", "contentContainer": "div.slide", "custom": "", "fx": "fade", "height": 195, "next": 0, "overflow": "hidden", "pager": "custom-pager", "pagerEvent": "click", "pagerContainer": ".custom-pager-item", "pause": 1, "setDimensions": "upright50", "slideTextPosition": "left", "slideTextContainer": "div.slide-text", "slideTextEffectBefore": "fadeOut", "slideTextEffectBeforeSpeed": 250, "slideTextEffectAfter": "fadeIn", "slideTextEffectAfterSpeed": 1000, "speed": 1000, "timeOut": 10000, "width": 195 } } });</script>
+<script type="text/javascript">var BASE_URL = "/";</script>
+  <script type="text/javascript"> </script>
+      <style type="text/css">
+    #page {
+      width : 950px;
+    }
+    </style>
+        <style type="text/css">
+    body.sidebar-left #main {
+      margin-left: -200px;
+    }
+    body.sidebars #main {
+      margin-left: -200px;
+    }
+    body.sidebar-left #squeeze {
+      margin-left: 200px;
+    }
+    body.sidebars #squeeze {
+      margin-left: 200px;
+    }
+    #sidebar-left {
+      width: 200px;
+    }
+    </style>
+        <style type="text/css">
+    body.sidebar-right #main {
+      margin-right: -200px;
+    }
+    body.sidebars #main {
+      margin-right: -200px;
+    }
+    body.sidebar-right #squeeze {
+      margin-right: 200px;
+    }
+    body.sidebars #squeeze {
+      margin-right: 200px;
+    }
+    #sidebar-right {
+      width: 200px;
+    }
+    </style>
+        <style type="text/css">
+    body {
+      font-family : Custom;
+    }
+    </style>
+              <style type="text/css">
+      body {
+        font-family : "Helvetica neue", Arial, Verdana, sans-serif;
+      }
+      </style>
+        <!--[if lte IE 6]>
+<script type="text/javascript"> 
+    $(document).ready(function(){ 
+        $(document).pngFix(); 
+    }); 
+</script> 
+<![endif]-->
+    <!--[if IE]>
+<style type="text/css" media="all">@import "/sites/all/themes/newsflash/css/ie.css";</style>
+<![endif]-->
+  <script type="text/javascript" src="http://www.scala-lang.org/sites/all/themes/newsflash/js/pickstyle.js"></script>
+</head>
+<body class="sidebar-right">
+  <div id="page">
+    <div id="header" class="clear-block">
+      <div id="logo-title">
+                              <a href="/" title="Home"> <img src="/sites/default/files/newsflash_logo.png" alt="Home" id="logo" /> </a>
+                        </div><!-- /logo-title -->
+      <div id="name-and-slogan">
+                      </div><!-- /name-and-slogan -->
+            <form action="/"  accept-charset="UTF-8" method="post" id="search-theme-form">
+<div><div id="search" class="container-inline">
+  <div class="form-item" id="edit-search-theme-form-1-wrapper">
+ <label for="edit-search-theme-form-1">Search this site: </label>
+ <input type="text" maxlength="128" name="search_theme_form" id="edit-search-theme-form-1" size="15" value="" title="Enter the terms you wish to search for." class="form-text" />
+</div>
+<input type="submit" name="op" id="edit-submit" value="Search"  class="form-submit" />
+<input type="hidden" name="form_build_id" id="form-2ef8ee1bb1f1e47fd59104d14100d6df" value="form-2ef8ee1bb1f1e47fd59104d14100d6df"  />
+<input type="hidden" name="form_id" id="edit-search-theme-form" value="search_theme_form"  />
+</div>
+
+</div></form>
+              <div id="primarymenu">
+                                             
+                </div>
+                    <div style="clear:both"></div>
+        <div id="suckerfishmenu" class="clear-block"> <div class="block block-menu" id="block-menu-primary-links">
+  <h2 class="title">Scala Main Menu</h2>  <div class="content"><ul class="menu"><li class="expanded first"><a href="/node/273" title="">About Scala</a><ul class="menu"><li class="leaf first"><a href="/node/25" title="">Introduction</a></li>
+<li class="leaf"><a href="/node/1658" title="Scala in the Enterprise">In the Enterprise</a></li>
+<li class="expanded"><a href="/node/1707" title="">Scala Community</a><ul class="menu"><li class="expanded first"><a href="/node/199" title="">Mailing Lists</a><ul class="menu"><li class="leaf first"><a href="/node/199#scala" title="">scala</a></li>
+<li class="leaf"><a href="/node/199#scala-announce" title="">scala-announce</a></li>
+<li class="leaf"><a href="/node/199#scala-user" title="">scala-user</a></li>
+<li class="leaf"><a href="/node/199#scala-debate" title="">scala-debate</a></li>
+<li class="leaf"><a href="/node/199#scala-tools" title="">scala-tools</a></li>
+<li class="leaf"><a href="/node/199#scala-internals" title="">scala-internals</a></li>
+<li class="leaf last"><a href="/node/199#scala-xml" title="">scala-xml</a></li>
+</ul></li>
+<li class="leaf"><a href="/node/813" title="The Scala IRC Channel">IRC Channel</a></li>
+<li class="leaf"><a href="/node/1707#blogs" title="">Blogs &amp; News</a></li>
+<li class="leaf"><a href="http://scala.sygneca.com/" title="">Sygneca Wiki</a></li>
+<li class="leaf last"><a href="http://lampsvn.epfl.ch/trac/scala" title="">Scala Trac</a></li>
+</ul></li>
+<li class="expanded"><a href="/node/143" title="">Language Research</a><ul class="menu"><li class="leaf first"><a href="/node/143#papers" title="">Papers</a></li>
+<li class="leaf"><a href="/node/143#talks" title="">Talks</a></li>
+<li class="leaf"><a href="/node/143#theses" title="">Theses</a></li>
+<li class="leaf"><a href="/node/203" title="">Courses</a></li>
+<li class="leaf last"><a href="/node/207" title="">Presentations</a></li>
+</ul></li>
+<li class="expanded"><a href="/node/202" title="">In the Press</a><ul class="menu"><li class="leaf first"><a href="/node/205" title="">Articles</a></li>
+<li class="leaf"><a href="/node/206" title="">Interviews and Panel Talks</a></li>
+<li class="leaf last"><a href="/archive" title="">News Archive</a></li>
+</ul></li>
+<li class="leaf"><a href="/node/89" title="">The Scala Team</a></li>
+<li class="leaf"><a href="/node/239" title="">Scala&#039;s Prehistory</a></li>
+<li class="leaf last"><a href="/node/188" title="">Contact Us</a></li>
+</ul></li>
+<li class="expanded"><a href="/node/197" title="">Documentation</a><ul class="menu"><li class="leaf first"><a href="/node/1305" title="">Learning Scala</a></li>
+<li class="leaf"><a href="/node/104" title="">Tour of Scala</a></li>
+<li class="expanded"><a href="/node/198" title="">Manuals</a><ul class="menu"><li class="leaf first"><a href="http://www.scala-lang.org/sites/default/files/linuxsoft_archives/docu/files/ScalaTutorial.pdf" title="">A Brief Scala Tutorial</a></li>
+<li class="leaf"><a href="http://www.scala-lang.org/sites/default/files/linuxsoft_archives/docu/files/ScalaByExample.pdf" title="">Scala by Example</a></li>
+<li class="leaf"><a href="http://www.scala-lang.org/sites/default/files/linuxsoft_archives/docu/files/ScalaOverview.pdf" title="">Scala Overview</a></li>
+<li class="leaf"><a href="http://www.scala-lang.org/sites/default/files/linuxsoft_archives/docu/files/ScalaReference.pdf" title="">Scala Language Specification</a></li>
+<li class="leaf"><a href="/sids" title="">The SID Library</a></li>
+<li class="leaf last"><a href="/node/274" title="">Translations</a></li>
+</ul></li>
+<li class="leaf"><a href="/node/959" title="Books on Scala">Books</a></li>
+<li class="expanded"><a href="/node/216" title="">Scala API</a><ul class="menu"><li class="leaf first"><a href="http://www.scala-lang.org/api" title="">scaladoc (stable)</a></li>
+<li class="leaf"><a href="http://www.scala-lang.org/archives/downloads/distrib/files/nightly/docs/library/index.html" title="">scaladoc (nightly)</a></li>
+<li class="leaf last"><a href="/downloads#api" title="">Download locally</a></li>
+</ul></li>
+<li class="expanded"><a href="/node/201" title="">Setup &amp; Getting Started</a><ul class="menu"><li class="leaf first"><a href="/node/166" title="">Getting Started with Scala</a></li>
+<li class="leaf"><a href="/node/960" title="Java to Scala with the Help of Experts">Java to Scala</a></li>
+<li class="leaf"><a href="/node/310" title="">Windows Mini-Guide</a></li>
+<li class="leaf"><a href="/node/330" title="">Setting PATH on Windows</a></li>
+<li class="leaf last"><a href="/node/294" title="">fsc and the OSX firewall</a></li>
+</ul></li>
+<li class="expanded"><a href="/node/1908#programming" title="">Programming Guides</a><ul class="menu"><li class="leaf first"><a href="/node/242" title="">Scala Actors</a></li>
+<li class="leaf"><a href="/node/160" title="">Scala on Android</a></li>
+<li class="leaf"><a href="/node/168" title="">Scala on Microsoft .NET</a></li>
+<li class="leaf last"><a href="/node/1826" title="Scala on Google App Engine">Scala on Google App Engine</a></li>
+</ul></li>
+<li class="expanded"><a href="/node/1909#other" title="">Other Guides</a><ul class="menu"><li class="leaf first"><a href="/node/345" title="">Maven for Beginners</a></li>
+<li class="leaf"><a href="/node/363" title="">Scala and JUnit on Eclipse</a></li>
+<li class="leaf last"><a href="/node/354" title="">Scala, Emacs and Yasnippet</a></li>
+</ul></li>
+<li class="leaf last"><a href="/faq" title="">FAQs</a></li>
+</ul></li>
+<li class="expanded"><a href="/node/219" title="">Code Examples</a><ul class="menu"><li class="leaf first"><a href="/node/166" title="">Hello world!</a></li>
+<li class="leaf"><a href="/node/220" title="">Simple Snippets</a></li>
+<li class="leaf last"><a href="/node/44" title="">Advanced Examples</a></li>
+</ul></li>
+<li class="expanded"><a href="/node/210" title="">Software</a><ul class="menu"><li class="expanded first"><a href="/downloads" title="">Download Scala</a><ul class="menu"><li class="leaf first"><a href="/downloads" title="">Latest Stable Release</a></li>
+<li class="leaf"><a href="/node/165" title="">Previous Releases</a></li>
+<li class="leaf"><a href="/node/212" title="">Nightly Builds</a></li>
+<li class="leaf"><a href="/node/213" title="">Live SVN Repository</a></li>
+<li class="leaf last"><a href="/node/36" title="">Distribution Content</a></li>
+</ul></li>
+<li class="leaf"><a href="/node/93" title="">Sbaz</a></li>
+<li class="expanded"><a href="/node/91" title="">IDE and Editor plugins</a><ul class="menu"><li class="leaf first"><a href="/node/91#ide_plugins" title="">IDE Plugins</a></li>
+<li class="leaf last"><a href="/node/91#tool_support" title="">Tool Support</a></li>
+</ul></li>
+<li class="expanded"><a href="/node/1209" title="">Libraries and Tools</a><ul class="menu"><li class="leaf first"><a href="/node/1209#libraries" title="">Libraries</a></li>
+<li class="leaf"><a href="/node/1209#development_tools" title="">Development Tools</a></li>
+<li class="leaf"><a href="/node/1209#program_testing" title="">Program Testing</a></li>
+<li class="leaf last"><a href="/node/1209#other_scala_related" title="">Other Scala-Related</a></li>
+</ul></li>
+<li class="leaf last"><a href="/node/146" title="">Scala License</a></li>
+</ul></li>
+<li class="expanded last"><a href="/node/214" title="">Scala Developers</a><ul class="menu"><li class="expanded first"><a href="/node/215" title="">Developer&#039;s Guides</a><ul class="menu"><li class="leaf first"><a href="/node/217" title="">Build Scala from the Source</a></li>
+<li class="leaf"><a href="/node/140" title="">Writing Compiler Plugins</a></li>
+<li class="leaf"><a href="/node/98" title="">Scala Ant Tasks</a></li>
+<li class="leaf"><a href="/node/598" title="">Compiler Internals</a></li>
+<li class="leaf last"><a href="/node/233" title="Scala Improvement Documents">Improvement Documents</a></li>
+</ul></li>
+<li class="expanded"><a href="/node/218" title="">Bug Tracking &amp; Testing</a><ul class="menu"><li class="leaf first"><a href="https://lampsvn.epfl.ch/trac/scala" title="">Scala Trac</a></li>
+<li class="leaf"><a href="http://scala-webapps.epfl.ch/hudson/" title="">Scala Hudson</a></li>
+<li class="leaf"><a href="/node/360" title="Benchmarking">Benchmarks</a></li>
+<li class="leaf last"><a href="/node/218" title="">Review Board</a></li>
+</ul></li>
+<li class="expanded"><a href="/node/237" title="">Codebase Progress</a><ul class="menu"><li class="leaf first"><a href="/node/299" title="">Version History</a></li>
+<li class="leaf"><a href="/node/43" title="">Language Changes</a></li>
+<li class="leaf last"><a href="/node/309" title="">Download Stats</a></li>
+</ul></li>
+<li class="leaf"><a href="/node/292" title="">Maintainers</a></li>
+<li class="leaf last"><a href="http://www.scala-lang.org/sites/default/files/contributor_agreement.pdf" title="">Contributor Agreement</a></li>
+</ul></li>
+</ul></div></div>
+ </div>
+          </div><!-- /header -->
+            <div id="middlecontainer">
+            <div id="main">
+        <div id="squeeze">
+                                                    <div id="squeeze-content">
+            <div id="inner-content">
+                             <div id="content-top"><div class="block block-block" id="block-block-12">
+    <div class="content"><script type="text/javascript">
+  $(document).ready(function(){
+    /* keep slideshop hidden until the last minute,
+       so that no garbage is shown if javascript is disabled */
+    $("#complexheader div.container").css("display","inline");
+    $idout=0;
+    $idin=0;
+
+// fix the "read more" png on IE6 only.
+if ($.browser.msie && /* IE6 */ ((window.XMLHttpRequest == undefined) && (ActiveXObject != undefined))) {
+$("#complexheader div.ddblock-cycle-upright50 div.slide-read-more a").each(function(){
+			var bgIMG = jQuery(this).css('background-image');
+			if(bgIMG.indexOf(".png")!=-1){
+				var iebg = bgIMG.split('url("')[1].split('")')[0];
+				jQuery(this).css('background-image', 'none');
+				jQuery(this).get(0).runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + iebg + "',sizingMethod='crop') progid:DXImageTransform.Microsoft.Alpha(opacity=100)";
+// add Alpha(opacity=100) to get the white text
+			}
+		});
+}
+
+    $("div #suckerfishmenu div.content").hoverIntent(function(){
+      $idin=setTimeout('if ($.browser.msie) {$("#complexheader div.container-inner, #complexheader div.slide").fadeTo("fast",0.23);} else if (jQuery.support.opacity && !(navigator.platform.indexOf("Linux")!=-1 && $.browser.mozilla)) {$("#complexheader div.container-inner").fadeTo("fast",0.23);} /*else if (jQuery.support.opacity) {$("#complexheader div.container-inner").css("opacity",0.23);} else {$("#ddblock-6").hide();}*/',30);
+      clearTimeout($idout);
+      $('#ddblock-6 div.slide').parent().cycle('pause');
+    },function(){
+      clearTimeout($idin);
+      $idout=setTimeout('if ($.browser.msie) {$("#complexheader div.container-inner, #complexheader div.slide").fadeTo("fast",1,function(){this.style.removeAttribute("filter");});} else if (jQuery.support.opacity && !(navigator.platform.indexOf("Linux")!=-1 && $.browser.mozilla)) {$("#complexheader div.container-inner").fadeTo("fast",1);} /*else if (jQuery.support.opacity) {$("#complexheader div.container-inner").css("opacity",1);} else {$("#ddblock-6").show();}*/',730);
+      $('#ddblock-6 div.slide').parent().cycle('resume');
+    });
+
+    $(document).click(function(){
+      clearTimeout($idin);
+      if ($.browser.msie) {$("#complexheader div.container-inner, #complexheader div.slide").fadeTo(1,1,function(){this.style.removeAttribute("filter");});} else if (jQuery.support.opacity && !(navigator.platform.indexOf("Linux")!=-1 && $.browser.mozilla)) {$("#complexheader div.container-inner").fadeTo(1,1);} /*else if (jQuery.support.opacity) {$("#complexheader div.container-inner").css("opacity",1);} else {$("#ddblock-6").show();}*/ ;
+      $('#ddblock-6 div.slide').parent().cycle('resume');
+    });
+
+  });
+</script>
+<div id="complexheader"><!-- dynamic display block slideshow -->
+<div id="ddblock-6" class="ddblock-cycle-upright50 clear-block">
+ <div class="container clear-block border">
+  <div class="container-inner clear-block border">
+       <!-- custom pager image - text--> 
+    <!-- custom pager with images and text. -->
+<div id="ddblock-custom-pager-6" class="custom-pager clear-block border">
+ <div  class="custom-pager-inner clear-block border">
+            <div class="custom-pager-item custom-pager-item-0">
+     <div class="custom-pager-item-inner"> 
+      <a href="#" class="pager-link"><img src="/sites/default/files/slideshow/1158741_87567140_t.jpg" alt="Introduction"/>Introduction</a>
+     </div>
+    </div> <!-- /custom-pager-item -->
+                <div class="spacer-horizontal"><b></b></div>
+       
+           <div class="custom-pager-item custom-pager-item-1">
+     <div class="custom-pager-item-inner"> 
+      <a href="#" class="pager-link"><img src="/sites/default/files/slideshow/1067227_35220207_t.jpg" alt="Learn Scala"/>Learn Scala</a>
+     </div>
+    </div> <!-- /custom-pager-item -->
+                <div class="spacer-horizontal"><b></b></div>
+       
+           <div class="custom-pager-item custom-pager-item-2">
+     <div class="custom-pager-item-inner"> 
+      <a href="#" class="pager-link"><img src="/sites/default/files/slideshow/2_1174712.jpg" alt="In the Enterprise"/>In the Enterprise</a>
+     </div>
+    </div> <!-- /custom-pager-item -->
+                <div class="spacer-horizontal"><b></b></div>
+       
+           <div class="custom-pager-item custom-pager-item-3">
+     <div class="custom-pager-item-inner"> 
+      <a href="#" class="pager-link"><img src="/sites/default/files/slideshow/4_yellow_sands.jpg" alt="Research"/>Research</a>
+     </div>
+    </div> <!-- /custom-pager-item -->
+                <div class="spacer-horizontal"><b></b></div>
+       
+           <div class="custom-pager-item custom-pager-item-4">
+     <div class="custom-pager-item-inner"> 
+      <a href="#" class="pager-link"><img src="/sites/default/files/slideshow/5_praga.jpg" alt="Community"/>Community</a>
+     </div>
+    </div> <!-- /custom-pager-item -->
+                <div class="spacer-horizontal"><b></b></div>
+       
+           <div class="custom-pager-item custom-pager-item-5 custom-pager-item-last">
+     <div class="custom-pager-item-inner"> 
+      <a href="#" class="pager-link"><img src="/sites/default/files/slideshow/6_roger.jpg" alt="Compiler"/>Compiler</a>
+     </div>
+    </div> <!-- /custom-pager-item -->
+           
+          </div> <!-- /pager-inner-->
+</div>  <!-- /pager-->
+ <div class="spacer-horizontal"><b></b></div>
+      <!-- slider content -->
+   <div class="slider clear-block border">
+    <div class="slider-inner clear-block border">
+                  <div class="slide clear-block border">
+        <div class="slide-inner clear-block border">
+
+         <a href="http://www.scala-lang.org/node/25"><img src="/sites/default/files/slideshow/1158741_87567140_t.jpg" alt="Introducing Scala"/></a>         <div class="slide-text slide-text-vertical slide-text-left clear-block border">
+
+         <div class="superformaggio">
+         </div>
+         <div class="formaggio">
+
+          <div class="slide-text-inner clear-block border">
+           <div class="slide-title slide-title-vertical clear-block border">
+            <div class="slide-title-inner clear-block border">
+             <h2>Introducing Scala</h2>
+            </div> <!-- slide-title-inner-->
+           </div>  <!-- slide-title-->
+                <div class="slide-body-vertical clear-block border">
+                 <div class="slide-body-inner clear-block border">
+                  <p><p>Scala is a concise, elegant, type-safe programming language that&nbsp;integrates object-oriented and functional features.<br /> &nbsp;</p> <p>Scala is fully interoperable with Java.</p></p>
+                 </div> <!-- slide-body-inner-->
+                </div>  <!-- slide-body-->
+                <div class="slide-read-more slide-read-more-vertical clear-block border">
+				         <p><a href="http://www.scala-lang.org/node/25">Read more...</a></p>
+				        </div><!-- slide-read-more-->
+          </div> <!-- slide-text-inner-->
+         </div> <!-- formaggio -->
+         </div>  <!-- slide-text-->
+        </div> <!-- slide-inner-->
+       </div>  <!-- slide-->
+             <div class="slide clear-block border">
+        <div class="slide-inner clear-block border">
+
+         <a href="http://www.scala-lang.org/node/1305"><img src="/sites/default/files/slideshow/1067227_35220207_t.jpg" alt="Learn Scala"/></a>         <div class="slide-text slide-text-vertical slide-text-left clear-block border">
+
+         <div class="superformaggio">
+         </div>
+         <div class="formaggio">
+
+          <div class="slide-text-inner clear-block border">
+           <div class="slide-title slide-title-vertical clear-block border">
+            <div class="slide-title-inner clear-block border">
+             <h2>Learn Scala</h2>
+            </div> <!-- slide-title-inner-->
+           </div>  <!-- slide-title-->
+                <div class="slide-body-vertical clear-block border">
+                 <div class="slide-body-inner clear-block border">
+                  <p><p>Scala is easy to learn!</p><p>&nbsp;</p><p>Explore the many available Scala books, manuals, guides, and all the other resources at your disposal.</p></p>
+                 </div> <!-- slide-body-inner-->
+                </div>  <!-- slide-body-->
+                <div class="slide-read-more slide-read-more-vertical clear-block border">
+				         <p><a href="http://www.scala-lang.org/node/1305">Read more...</a></p>
+				        </div><!-- slide-read-more-->
+          </div> <!-- slide-text-inner-->
+         </div> <!-- formaggio -->
+         </div>  <!-- slide-text-->
+        </div> <!-- slide-inner-->
+       </div>  <!-- slide-->
+             <div class="slide clear-block border">
+        <div class="slide-inner clear-block border">
+
+         <a href="http://www.scala-lang.org/node/1658"><img src="/sites/default/files/slideshow/2_1174712.jpg" alt="In the Enterprise"/></a>         <div class="slide-text slide-text-vertical slide-text-left clear-block border">
+
+         <div class="superformaggio">
+         </div>
+         <div class="formaggio">
+
+          <div class="slide-text-inner clear-block border">
+           <div class="slide-title slide-title-vertical clear-block border">
+            <div class="slide-title-inner clear-block border">
+             <h2>In the Enterprise</h2>
+            </div> <!-- slide-title-inner-->
+           </div>  <!-- slide-title-->
+                <div class="slide-body-vertical clear-block border">
+                 <div class="slide-body-inner clear-block border">
+                  <p><p>Discover how Scala is used to create commercial systems by companies such as Twitter, Siemens, and others.</p></p>
+                 </div> <!-- slide-body-inner-->
+                </div>  <!-- slide-body-->
+                <div class="slide-read-more slide-read-more-vertical clear-block border">
+				         <p><a href="http://www.scala-lang.org/node/1658">Read more...</a></p>
+				        </div><!-- slide-read-more-->
+          </div> <!-- slide-text-inner-->
+         </div> <!-- formaggio -->
+         </div>  <!-- slide-text-->
+        </div> <!-- slide-inner-->
+       </div>  <!-- slide-->
+             <div class="slide clear-block border">
+        <div class="slide-inner clear-block border">
+
+         <a href="http://www.scala-lang.org/node/143"><img src="/sites/default/files/slideshow/4_yellow_sands.jpg" alt="Research"/></a>         <div class="slide-text slide-text-vertical slide-text-left clear-block border">
+
+         <div class="superformaggio">
+         </div>
+         <div class="formaggio">
+
+          <div class="slide-text-inner clear-block border">
+           <div class="slide-title slide-title-vertical clear-block border">
+            <div class="slide-title-inner clear-block border">
+             <h2>Research</h2>
+            </div> <!-- slide-title-inner-->
+           </div>  <!-- slide-title-->
+                <div class="slide-body-vertical clear-block border">
+                 <div class="slide-body-inner clear-block border">
+                  <p><p>Scala opens new frontiers in programming language research. Find out about the theory and the practice behind the Scala language.</p></p>
+                 </div> <!-- slide-body-inner-->
+                </div>  <!-- slide-body-->
+                <div class="slide-read-more slide-read-more-vertical clear-block border">
+				         <p><a href="http://www.scala-lang.org/node/143">Read more...</a></p>
+				        </div><!-- slide-read-more-->
+          </div> <!-- slide-text-inner-->
+         </div> <!-- formaggio -->
+         </div>  <!-- slide-text-->
+        </div> <!-- slide-inner-->
+       </div>  <!-- slide-->
+             <div class="slide clear-block border">
+        <div class="slide-inner clear-block border">
+
+         <a href="http://www.scala-lang.org/node/1707"><img src="/sites/default/files/slideshow/5_praga.jpg" alt="The Community"/></a>         <div class="slide-text slide-text-vertical slide-text-left clear-block border">
+
+         <div class="superformaggio">
+         </div>
+         <div class="formaggio">
+
+          <div class="slide-text-inner clear-block border">
+           <div class="slide-title slide-title-vertical clear-block border">
+            <div class="slide-title-inner clear-block border">
+             <h2>The Community</h2>
+            </div> <!-- slide-title-inner-->
+           </div>  <!-- slide-title-->
+                <div class="slide-body-vertical clear-block border">
+                 <div class="slide-body-inner clear-block border">
+                  <p><p>Discover the thriving Scala user community, and how to get in touch! Read all about the websites, the blogs, the mailing lists, the IRC channel, etc.</p></p>
+                 </div> <!-- slide-body-inner-->
+                </div>  <!-- slide-body-->
+                <div class="slide-read-more slide-read-more-vertical clear-block border">
+				         <p><a href="http://www.scala-lang.org/node/1707">Read more...</a></p>
+				        </div><!-- slide-read-more-->
+          </div> <!-- slide-text-inner-->
+         </div> <!-- formaggio -->
+         </div>  <!-- slide-text-->
+        </div> <!-- slide-inner-->
+       </div>  <!-- slide-->
+             <div class="slide clear-block border">
+        <div class="slide-inner clear-block border">
+
+         <a href="http://www.scala-lang.org/node/214"><img src="/sites/default/files/slideshow/6_roger.jpg" alt="The Scala Compiler"/></a>         <div class="slide-text slide-text-vertical slide-text-left clear-block border">
+
+         <div class="superformaggio">
+         </div>
+         <div class="formaggio">
+
+          <div class="slide-text-inner clear-block border">
+           <div class="slide-title slide-title-vertical clear-block border">
+            <div class="slide-title-inner clear-block border">
+             <h2>The Scala Compiler</h2>
+            </div> <!-- slide-title-inner-->
+           </div>  <!-- slide-title-->
+                <div class="slide-body-vertical clear-block border">
+                 <div class="slide-body-inner clear-block border">
+                  <p><p>Scala is open software, and countless developers actively participate in its development. You can take part too!</p></p>
+                 </div> <!-- slide-body-inner-->
+                </div>  <!-- slide-body-->
+                <div class="slide-read-more slide-read-more-vertical clear-block border">
+				         <p><a href="http://www.scala-lang.org/node/214">Read more...</a></p>
+				        </div><!-- slide-read-more-->
+          </div> <!-- slide-text-inner-->
+         </div> <!-- formaggio -->
+         </div>  <!-- slide-text-->
+        </div> <!-- slide-inner-->
+       </div>  <!-- slide-->
+               </div> <!-- slider-inner-->
+   </div>  <!-- slider-->
+     </div> <!-- container-inner-->
+ </div> <!--container-->
+</div> <!--  template -->
+<div id="complexheadercontent">
+<h1><a href="/node/25">Introducing Scala</a></h1>
+<p>Scala is a general purpose programming language designed to express common programming patterns in a concise, elegant, and type-safe way. It smoothly integrates features of object-oriented and functional languages, enabling Java and other programmers to be more productive. Code sizes are typically reduced by a factor of two to three when compared to an equivalent Java application.&nbsp;&nbsp; <a href="/node/25"><strong>Read&nbsp;more</strong></a></p>
+</div>
+</div></div></div>
+</div>
+                            <h1 class="title"></h1>
+              <div class="tabs"></div>
+                                          <div class="view view-frontpagescala view-id-frontpagescala view-display-id-page view-dom-id-1">
+        <div class="view-header">
+      <style type="text/css">
+#breadcrumb {
+display : none;
+}
+.node .links {
+  margin-top: 0.25em;   
+  margin-bottom: 2.25em;
+} 
+.node h2.title {
+  margin-top: 1em;
+}
+#main .title + div.tabs {
+  border-bottom: none;
+}
+.sticky {
+  padding-top: .75em;
+  background-color: #eee;
+  border: solid 1px #ddd;
+}
+.sticky h2.title {
+  margin-top: 0em;
+}
+.sticky.node .links {
+  margin-bottom: 1.5em;
+} 
+.node {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 1em; 
+  border-bottom: solid 1px #aaaaaa;        
+}
+#inner-content {
+  padding: 4px 16px;
+}
+</style><p><META NAME="Description" CONTENT="Scala is a modern multi-paradigm programming language designed to express common programming patterns in a concise, elegant, and type-safe way." /></p>
+    </div>
+  
+  
+  
+      <div class="view-content">
+        <div class="views-row views-row-1 views-row-odd views-row-first">
+    <div class="node">
+  
+            <h2 class="title"><a href="/node/8413">What&#039;s new in Scala 2.8 - The Architecture of Scala Collections</a></h2>
+      
+      <span class="submitted">
+    Created by odersky on 2010-12-15.
+    Updated: 2010-12-15, 13:07    </span>
+  
+  
+  <div class="content"><p>The Scala 2.8 Collections API contains a large number of collection operations, which exist uniformly on many different collection implementations.</p><p><a href="http://www.scala-lang.org/docu/files/collections-api/collections-impl.html#">These pages </a>describe the architecture of the Scala collections framework in detail. Compared to the the description of the <a href="http://www.scala-lang.org/docu/files/collections-api/collections.html#">Scala 2.8 Collections API</a><em> </em>you will find out more about the internal workings of the framework. You will also learn how this architecture helps you define your own collections in a few lines of code, while reusing the overwhelming part of collection functionality from the framework.</p></div>
+  <div class="clear-block clear"></div>
+
+      <div class="links"><ul class="links inline"><li class="comment_comments first last"><a href="/node/8413#comments" title="Jump to the first comment of this posting.">2 comments</a></li>
+</ul></div>
+    <div class="clear-block clear"></div>
+
+</div>
+  </div>
+  <div class="views-row views-row-2 views-row-even">
+    <div class="node">
+  
+            <h2 class="title"><a href="/node/8359">STM Comes to Scala</a></h2>
+      
+      <span class="submitted">
+    Created by bagwell on 2010-12-09.
+    Updated: 2010-12-09, 16:57    </span>
+  
+  
+  <div class="content"><p>The <a href="http://nbronson.github.com/scala-stm/expert_group.html">Scala STM Expert group</a> has announced that the first version of support for STM in Scala will be available with Scala 2.9 or shortly after. The team has provided a fast, lightweight and self contained STM library for Scala. For those of you interested in using the pre-release version, finding out more about the project or giving feedback should visit their very informative <a href="http://nbronson.github.com/scala-stm/index.html">Scala-stm site</a>.The effort was inspired by the STMs in Haskell and Clojure and provides a reference implementation based on CCSTM.</p>
+</div>
+  <div class="clear-block clear"></div>
+
+      <div class="links"><ul class="links inline"><li class="comment_forbidden first"><span><a href="/user/login?destination=comment/reply/8359%2523comment-form">Login</a> or <a href="/user/register?destination=comment/reply/8359%2523comment-form">register</a> to post comments</span></li>
+<li class="node_read_more last"><a href="/node/8359" title="Read the rest of STM Comes to Scala.">Read more</a></li>
+</ul></div>
+    <div class="clear-block clear"></div>
+
+</div>
+  </div>
+  <div class="views-row views-row-3 views-row-odd">
+    <div class="node">
+  
+            <h2 class="title"><a href="/node/8284">What&#039;s new in Scala 2.8: Actors API</a></h2>
+      
+      <span class="submitted">
+    Created by phaller on 2010-11-30.
+    Updated: 2010-11-30, 17:27    </span>
+  
+  
+  <div class="content"><p>In Scala 2.8, the actors package has been revised and extended. The new <a href="http://www.scala-lang.org/docu/files/actors-api/actors_api_guide.html#">Scala Actors API overview</a> introduces the types and members that have been added. At the same time, it provides in-depth documentation (from a user's perspective) for large parts of the package that already existed in previous releases.</p></div>
+  <div class="clear-block clear"></div>
+
+      <div class="links"><ul class="links inline"><li class="comment_comments first last"><a href="/node/8284#comments" title="Jump to the first comment of this posting.">2 comments</a></li>
+</ul></div>
+    <div class="clear-block clear"></div>
+
+</div>
+  </div>
+  <div class="views-row views-row-4 views-row-even">
+    <div class="node">
+  
+            <h2 class="title"><a href="/node/8239">Scala Days 2011 — Call for Papers</a></h2>
+      
+      <span class="submitted">
+    Created by bagwell on 2010-11-26.
+    Updated: 2010-11-26, 11:17    </span>
+  
+  
+  <div class="content"><p><a href="http://days2011.scala-lang.org">Scala Days 2011</a> is coming, June 2-3 at Stanford University in California. Now is the time to <a href="http://days2011.scala-lang.org/node/91">submit research papers</a> and reserve the date in your calendar.</p> <p><a href="http://days2010.scala-lang.org/">Scala Days 2010</a> was a throughly enjoyable and successful event. Over 150 academic researchers and professional developers got together to share advanced research results, new ideas and explore some heavy duty commercial Scala applications. Scala Days provides a unique opportunity for researchers and commercial Scala users to transfer leading edge research into production systems or share practical know-how on how to get things done more effectively. A place to meet the leading experts from both communities.</p>
+</div>
+  <div class="clear-block clear"></div>
+
+      <div class="links"><ul class="links inline"><li class="comment_comments first"><a href="/node/8239#comments" title="Jump to the first comment of this posting.">2 comments</a></li>
+<li class="node_read_more last"><a href="/node/8239" title="Read the rest of Scala Days 2011 — Call for Papers.">Read more</a></li>
+</ul></div>
+    <div class="clear-block clear"></div>
+
+</div>
+  </div>
+  <div class="views-row views-row-5 views-row-odd">
+    <div class="node">
+  
+            <h2 class="title"><a href="/node/8236">Scala Training</a></h2>
+      
+      <span class="submitted">
+    Created by bagwell on 2010-11-24.
+    Updated: 2010-11-24, 23:31    </span>
+  
+  
+  <div class="content"><p>More Scala training in Europe and Mountain View, California, USA. The courses are designed to be a fast way for an experienced Java programmer to start coding in Scala. These courses are excellent for developers or systems architects wanting to learn about Scala and need to understand how it can fit into their development tool-bag</p> <p>The European courses have been designed by Martin Odersky and will be delivered by him and Iulian Dragos, while the course in the USA is given and designed by Bill Venners and Dick Wall.</p> <p>You can find more about the courses and how to register on the <a href="http://www.scalasolutions.com/">Scala Solutions site</a>.</p>
+</div>
+  <div class="clear-block clear"></div>
+
+      <div class="links"><ul class="links inline"><li class="comment_forbidden first"><span><a href="/user/login?destination=comment/reply/8236%2523comment-form">Login</a> or <a href="/user/register?destination=comment/reply/8236%2523comment-form">register</a> to post comments</span></li>
+<li class="node_read_more last"><a href="/node/8236" title="Read the rest of Scala Training.">Read more</a></li>
+</ul></div>
+    <div class="clear-block clear"></div>
+
+</div>
+  </div>
+  <div class="views-row views-row-6 views-row-even views-row-last">
+    <div class="node">
+  
+            <h2 class="title"><a href="/node/8235">Scala in the Press</a></h2>
+      
+      <span class="submitted">
+    Created by bagwell on 2010-11-24.
+    Updated: 2010-11-24, 16:28    </span>
+  
+  
+  <div class="content"><p>There are some excellent articles about Scala appearing in the press and they are often just what is needed to give a new developer or a busy manager a rapid introduction to Scala. Here are two that may help you satisfy a collegues curiosity quickly.</p>
+<p>The first, <a href="http://jaxenter.com/the-joy-of-scala-32434.html">&quot;The Joy of Scala&quot; appeared in JAXenter</a>, was written by Jon Perry, Vince Kenealy and Peter O'Sullivan have, for several years, been providing Scala based Web solutions to enable UK government organisations communicate more effectively with the public.</p>
+<p>The second, &quot;An Introduction to Scala&quot; appeared in the recent edition of<a href="http://www.stickyminds.com/bettersoftware/magazine.asp?fn=citoc&amp;mid=128"> &quot;Better Software Magazine&quot;</a>, written by Daniel Wellman an Agile leader at CyrusInnovation. You can find <a href="http://blog.danielwellman.com/2010/11/an-introduction-to-scala-article-in-novemberdecember-2010-better-software-magazine.html">a PDF of the article on his blog</a>.</p>
+</div>
+  <div class="clear-block clear"></div>
+
+      <div class="links"><ul class="links inline"><li class="comment_forbidden first"><span><a href="/user/login?destination=comment/reply/8235%2523comment-form">Login</a> or <a href="/user/register?destination=comment/reply/8235%2523comment-form">register</a> to post comments</span></li>
+<li class="node_read_more last"><a href="/node/8235" title="Read the rest of Scala in the Press.">Read more</a></li>
+</ul></div>
+    <div class="clear-block clear"></div>
+
+</div>
+  </div>
+    </div>
+  
+  
+  
+  
+      <div class="view-footer">
+      <div style="float: right; font-weight: normal"><a href="/archive"><strong>News Archive...</strong></a></div>
+    </div>
+  
+  
+</div>  
+              <a href="/rss.xml" class="feed-icon"><img src="/misc/feed.png" alt="Syndicate content" title="Front page feed" width="16" height="16" /></a>                          </div><!-- /inner-content -->
+          </div><!-- /squeeze-content -->
+        </div><!-- /squeeze -->
+      </div><!-- /main -->
+              <div id="sidebar-right"><div class="block block-menu" id="block-menu-secondary-links">
+  <h2 class="title">Scala Quick Links</h2>  <div class="content"><ul class="menu"><li class="leaf first"><a href="/downloads" title="Download the Scala compiler and Tools">Download Scala</a></li>
+<li class="leaf"><a href="/node/198" title="">Reference Manuals</a></li>
+<li class="leaf"><a href="/node/216" title="">Scala API</a></li>
+<li class="leaf"><a href="/node/218" title="Report a Bug">Report a Bug</a></li>
+<li class="leaf"><a href="/node/308" title="Submitting a Story">Submit a Story</a></li>
+<li class="leaf"><a href="/archive" title="Archive of scala-lang.org front page news stories">News Archive</a></li>
+<li class="leaf"><a href="/faq" title="">FAQs</a></li>
+<li class="leaf"><a href="/menutree" title="Map of the site content">Site map</a></li>
+<li class="leaf"><a href="/node/188" title="Contact Us">Contact Us</a></li>
+<li class="leaf"><a href="http://www.scala-lang.org/shop" title="">The Scala Shop</a></li>
+<li class="leaf"><a href="/gsoc2010" title="">Summer of Code 2010</a></li>
+<li class="leaf last"><a href="http://days2011.scala-lang.org/" title="">Scala Days 2011</a></li>
+</ul></div></div>
+<div class="block block-views" id="block-views-featuredNews-block_1">
+  <h2 class="title">Featured News</h2>  <div class="content"><div class="view view-featuredNews view-id-featuredNews view-display-id-block_1 view-dom-id-2">
+        <div class="view-header">
+      <style type="text/css">
+.view-id-featuredNews.view-display-id-block_1 ul {
+position:relative;
+  left:.75em;
+}
+.view-id-featuredNews.view-display-id-block_1 ul li {
+  list-style-type: circle;
+}
+#block-views-featuredNews-block_1 {
+position: relative;
+}
+#block-views-featuredNews-block_1  .feed-icon {
+position:absolute;
+bottom:2px;
+right:2px;
+}
+</style>    </div>
+  
+  
+  
+      <div class="view-content">
+      <div class="item-list">
+    <ul>
+          <li class="views-row views-row-1 views-row-odd views-row-first">  
+  <div class="views-field-title">
+                <span class="field-content"><a href="/node/8102">Scala 2.8.1 final</a></span>
+  </div>
+</li>
+          <li class="views-row views-row-2 views-row-even views-row-last">  
+  <div class="views-field-title">
+                <span class="field-content"><a href="/node/7729">Lift 2.1 Released</a></span>
+  </div>
+</li>
+      </ul>
+</div>    </div>
+  
+  
+  
+  
+  
+      <div class="feed-icon">
+      <a href="/featured/rss.xml" class="feed-icon"><img src="/misc/feed.png" alt="Syndicate content" title="The Scala Language (Featured News Only)" width="16" height="16" /></a>    </div>
+  
+</div> </div></div>
+<div class="block block-block" id="block-block-5">
+  <h2 class="title">User login</h2>  <div class="content"> <form action="https://www.scala-lang.org/user?destination=frontpage    " method="post" id="user-login-form">
+    <div class="form-item" id="edit-name-wrapper"><label for="edit-name">Username: <span class="form-required" title="This field is required.">*</span></label>  <input type="text" maxlength="60" name="name" id="edit-name" size="15" value="" class="form-text required" /></div>
+    <div class="form-item" id="edit-pass-wrapper"><label for="edit-pass">Password: <span class="form-required" title="This field is required.">*</span></label>   <input type="password" name="pass" id="edit-pass" maxlength="60" size="15" class="form-text required" /><br />
+    <span style="font-size: smaller;">will be sent securely</span></div>
+    <input type="submit" name="op" id="edit-submit-custom" value="Log in" tabindex="3" class="form-submit" /> <br />
+    <p><a title="Create new account" href="/user/register">Create new account</a></p>
+    <p><a title="Retrieve lost password" href="/user/password">Retrieve lost password</a></p>
+    <input type="hidden" name="form_id" id="edit-user-login" value="user_login" />
+</form>
+</div></div>
+<div class="block block-block" id="block-block-3">
+    <div class="content"><ul>
+<li><a href="http://www.scala-lang.org/node/959"><img width="95" height="353" alt="" src="/sites/default/files/books1.png" /></a></li>
+<li><a href="http://www.scala-lang.org/node/959"><img width="95" height="353" alt="" src="/sites/default/files/books2.png" /></a></li>
+<li><a href="http://www.scala-lang.org/node/959"><img width="95" height="353" alt="" src="/sites/default/files/books3.png" /></a></li>
+<li><a href="http://www.scala-lang.org/node/959"><img width="95" height="353" alt="" src="/sites/default/files/books4.png" /></a></li>
+<li><a href="http://www.scala-lang.org/node/959"><img width="95" height="353" alt="" src="/sites/default/files/books5.png" /></a></li>
+<li><a href="http://www.scala-lang.org/node/959"><img width="95" height="353" alt="" src="/sites/default/files/books6.png" /></a></li>
+<li><a href="http://www.scala-lang.org/node/959"><img width="95" height="353" alt="" src="/sites/default/files/books1.png" /></a></li>
+</ul>
+</div></div>
+<div class="block block-poll" id="block-poll-0">
+  <h2 class="title">Poll</h2>  <div class="content"><form action="/"  accept-charset="UTF-8" method="post" id="poll-view-voting">
+<div><div class="poll">
+  <div class="vote-form">
+    <div class="choices">
+              <div class="title">My migration to Scala 2.8.0:</div>
+            <div class="form-radios"><div class="form-item" id="edit-choice-0-wrapper">
+ <label class="option"><input type="radio" id="edit-choice-0" name="choice" value="0"   class="form-radio" /> Already completed!!</label>
+</div>
+<div class="form-item" id="edit-choice-1-wrapper">
+ <label class="option"><input type="radio" id="edit-choice-1" name="choice" value="1"   class="form-radio" /> Soon or very soon</label>
+</div>
+<div class="form-item" id="edit-choice-2-wrapper">
+ <label class="option"><input type="radio" id="edit-choice-2" name="choice" value="2"   class="form-radio" /> That may take a while</label>
+</div>
+<div class="form-item" id="edit-choice-3-wrapper">
+ <label class="option"><input type="radio" id="edit-choice-3" name="choice" value="3"   class="form-radio" /> After 2.8.1 is out</label>
+</div>
+<div class="form-item" id="edit-choice-4-wrapper">
+ <label class="option"><input type="radio" id="edit-choice-4" name="choice" value="4"   class="form-radio" /> I&#039;m stuck with 2.7.x</label>
+</div>
+<div class="form-item" id="edit-choice-5-wrapper">
+ <label class="option"><input type="radio" id="edit-choice-5" name="choice" value="5"   class="form-radio" /> I still use COBOL or equivalent</label>
+</div>
+</div>    </div>
+    <input type="submit" name="op" id="edit-vote" value="Vote"  class="form-submit" />
+  </div>
+    <input type="hidden" name="form_build_id" id="form-c1bde327c1666cc24d4434a4a0108137" value="form-c1bde327c1666cc24d4434a4a0108137"  />
+<input type="hidden" name="form_id" id="edit-poll-view-voting" value="poll_view_voting"  />
+</div>
+
+</div></form>
+</div></div>
+ </div>
+          </div><!-- /middle-container -->
+    <div style="clear:both"></div>
+                    <div class="clear-block clr" id="section2">
+        <div class="sections">
+                      <div class="section width99"><div class="block block-block" id="block-block-2">
+    <div class="content"><p style="text-align: center;">Copyright &copy; 2010 &Eacute;cole Polytechnique F&eacute;d&eacute;rale de Lausanne (EPFL), Lausanne, Switzerland</p></div></div>
+</div>
+                                      </div>
+        <div style="clear:both"></div>
+      </div><!-- /section2 -->
+        <div id="footer">
+
+
+            
+          </div><!-- /footer -->
+  <div style="clear:both"></div>
+    </div> <!-- /page -->
+</body>
+</html>
