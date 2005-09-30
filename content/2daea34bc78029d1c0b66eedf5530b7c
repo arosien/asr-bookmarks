@@ -1,0 +1,50 @@
+<html>
+<title>Brush Painting Circle</title>
+<head>
+<link rel="Stylesheet" href="shared/css/main.css" />
+
+
+<script language="JavaScript1.2">
+var gBlackHex			= 255; // Initial color value.
+var gWait				= 5000;
+var gTimeBetweenCalls 	= 33;
+var gDeltaPerCall	 	= 2;
+
+function waittofade()
+{ 
+	setTimeout("fadetext()", gWait);
+}
+
+function fadetext()
+{ 
+	//if( color is not black yet )
+	if(gBlackHex>0) 
+	{ 
+		gBlackHex-=gDeltaPerCall; // increase color darkness
+		document.getElementById("clicklogo").style.color="rgb("+gBlackHex+","+gBlackHex+","+gBlackHex+")";
+		setTimeout("fadetext()", gTimeBetweenCalls);
+	}
+	else
+	{
+			gBlackHex=255 //reset hex value
+	}
+		
+}
+
+
+</script>
+
+
+
+</head>
+<body onLoad="waittofade()">
+<table class="page_wrapper"><tr>
+<td class="page_wrapper_left"></td>
+<td class="main_front_page">
+<a href="information/index.php"><img src="shared/img/logo_large.jpg" border=0></a>
+<br><br><div id="clicklogo" style="width:100%; color:white;"><h3>Click Logo To Enter</h3></div>
+</td>
+<td class="page_wrapper_right"></td>
+</tr></table>
+</body>
+</html>
