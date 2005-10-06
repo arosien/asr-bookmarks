@@ -1,0 +1,259 @@
+<HTML>
+<HEAD>
+  <TITLE>mod_backhand: use your resources</TITLE>
+</HEAD>
+<BODY bgcolor=#ffffff text=#000000>
+<CENTER>
+<TABLE cellpadding=4 cellspacing=0 border=0 width=100%>
+<TR><TD width=25% align=right><A HREF=download/download.cgi><IMG WIDTH=48 HEIGHT=60 BORDER=0 ALT=Download SRC=images/download.jpg></A><BR><A HREF=http://lists.backhand.org/mailman/listinfo/><IMG WIDTH=48 HEIGHT=60 BORDER=0 ALT="Mailing lists" SRC=images/mailing.jpg></A></TD><TD width=25% align=left><A HREF=FAQ.shtml><IMG BORDER=0 WIDTH=48 HEIGHT=60 ALT=FAQ SRC=images/FAQ.jpg></A><BR><IMG WIDTH=48 HEIGHT=60 BORDER=0 SRC=images/trans-1x1.gif></A></TD><TD width=50% align=right><IMG SRC="images/mod_backhand.jpg" WIDTH=640 HEIGHT=144></TD></TR>
+</TABLE>
+</CENTER>
+<TABLE cellpadding=4 border=0 cellspacing=0 width="100%">
+<TR><TD valign=top width="60%">
+<TABLE cellpadding=0 border=0 cellspacing=0 width="100%">
+<TR><TD><TABLE cellpadding=2 border=0 cellspacing=0 width="98%" bgcolor=#000066>
+<TR><TD><TABLE cellpadding=3 border=0 cellspacing=0 width="100%" bgcolor=#ffffff>
+<TR bgcolor=#ccccff><TD><FONT FACE="Lucida,Verdana,Helvetica,Arial"><B><FONT SIZE="+1">What is mod_backhand?</FONT></B></FONT></TD></TR>
+<TR><TD>
+mod_backhand is project that allows seamless redirection of HTTP requests from
+one web server to another.  This redirection can be used to target machines
+with under-utilized resources, thus providing fine-grained, per-request load
+balancing of web requests.
+<P>Backhand is a project that was initiated in class at The Johns Hopkins
+University in The Department of Computer Science.  After a simple proof of
+concept, written in C++, the project was pursued as a graduate qualifier
+project.
+<P>A proof of concept was realized, but a deployable product was needed.  In
+order for public use, testing and, ultimately, acceptance, we wished to
+provide drop-in functionality in the most popular web server on the net.<BR>
+<P><FONT FACE="courier" SIZE="+1"><B>mod_backhand</B></FONT> was born.  This
+drop-in module for the <A HREF="http://www.apache.org/">Apache Web Server</A>
+provides a turnkey solution for intra-cluster redirection of HTTP on a
+per-request basis.  The redirection is based on various system resources
+available within the cluster.  This service is provided seamlessly, preserving
+remote host information for access/authentication purposes.  As with the
+methodology of Apache, the redirection mechanism can be enabled or disable for
+individual directories.
+<P>System resources are announced by the module to the cluster via ethernet
+broadcasts and/or IP multicasts.  These resources are made available to the
+decision making algorithms that drive mod_backhand.
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+<TR><TD><HR width="0" height="0"></TD></TR>
+<TR><TD><TABLE cellpadding=2 border=0 cellspacing=0 width="98%" bgcolor=#000066>
+<TR><TD><TABLE cellpadding=3 border=0 cellspacing=0 width="100%" bgcolor=#ffffff>
+<TR bgcolor=#ccccff><TD><FONT FACE="Lucida,Verdana,Helvetica,Arial"><B><FONT SIZE="+1">What
+problems will mod_backhand solve, and how is different from other
+tools?</FONT></B></FONT></TD></TR>
+<TR><TD>
+First, we must clear a common misconception.  mod_backhand may allow you to
+better utilize your resources, but if your bottleneck lies in your bandwidth,
+you will not be able to push more information.  mod_backhand cannot use more
+than 100% of your egress point(s) bandwidth.
+<P>However, if you have intensive CGI scripts or your machines are too weak to
+individually process the incoming requests, then mod_backhand is a solution.
+<P>There are other tools commercially and freely available to attempt to load
+balance incoming requests within a cluster of web servers.  All of these tools
+come at a price, except mod_backhand.  If mod_backhand is not enabled for a
+certain directory or if it decides <B>not</B> to redirect a request, there is
+no overhead, as it is a "part" of Apache (thanks to the module API and
+dynamically loadable shared objects).
+<P>Simply put, mod_backhand, can attempt to remedy the incorrect assignment of
+requests.  In a grossly oversimplified scenario of two machines: if an
+incoming request is directed at machine B, and mod_backhand
+finds the available resources for machine A greater than the cost of
+forwarding from B-&gt;A plus the available resources on machine B, then it
+will be redirected to A.
+<P>This redirect comes at a small cost, but a calculated and understood cost
+that better utilizes available resources.
+<P>mod_backhand can be used by itself or in conjunction with most load
+balancing tools: Cisco's LocalDirector, LinuxDirector, naive DNS tricks (round
+robin of multiple IPs).  The advantage of mod_backhand over these lower-level
+(OSI) tools, is that it works on a <B>per-request</B> basis.  All of the
+previously mentioned tools work on the TCP/IP level, handling
+<I>connections</I> not requests.  This is a concern when using the pipelined
+(multiple requests per connection) HTTP 1.0 (and 1.1) protocols.
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+<TR><TD><HR width="0" height="0"></TD></TR>
+<TR><TD><TABLE cellpadding=2 border=0 cellspacing=0 width="98%" bgcolor=#000066>
+<TR><TD><TABLE cellpadding=3 border=0 cellspacing=0 width="100%" bgcolor=#ffffff>
+<TR bgcolor=#ccccff><TD><FONT FACE="Lucida,Verdana,Helvetica,Arial"><B><FONT
+SIZE="+1">How it works:</FONT></B></FONT></TD></TR>
+<TR><TD>
+Backhand is built on top of the standard module API provided by Apache.  The
+guts of this are available via source code, but you can also look at <A
+HREF="implementation_overview.shtml">an implementation overview of
+mod_backhand</A>.
+<P>Some interesting implementation designs in this project are that of
+<I>candidacy functions</I> rather than strict determination functions.  This
+combined with the ability to cascade functions, provides extremely
+configurable run-time configuration alternatives while maintaining speed in
+the decision making process.
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+<TR><TD><HR width="0" height="0"></TD></TR>
+<TR><TD><TABLE cellpadding=2 border=0 cellspacing=0 width="98%" bgcolor=#000066>
+<TR><TD><TABLE cellpadding=3 border=0 cellspacing=0 width="100%" bgcolor=#ffffff>
+<TR bgcolor=#ccccff><TD><FONT FACE="Lucida,Verdana,Helvetica,Arial"><B><FONT SIZE="+1">Under what license(s) is mod_backhand available?</FONT></B></FONT></TD></TR>
+<TR><TD>
+<FONT FACE="courier" SIZE="+1">mod_backhand</FONT> is released under a
+Apache-Style license and can be considered Open Source software. Please remember
+that the author of this software maintains intellectual property rights and
+under his sole discretion can release this revision and any later revision
+under alternative licenses as he sees fit.  You can also visit the <A
+HREF="LICENSE.shtml">legal license for mod_backhand</A>.
+<P>This license is modeled after the license presented for the <A
+HREF="http://www.apache.org/">Apache Project by the Apache Group</A>.
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+
+<TR><TD><HR width=0 height=0></TD></TR>
+<TR><TD><TABLE cellpadding=2 border=0 cellspacing=0 width="98%" bgcolor=#000066>
+<TR><TD><TABLE cellpadding=3 border=0 cellspacing=0 width="100%" bgcolor=#ffffff>
+<TR bgcolor=#ccccff><TD><FONT FACE="Lucida,Verdana,Helvetica,Arial"><B><FONT SIZE="+1">Where
+can I get help setting up mod_backhand on my cluster of web
+servers?</FONT></B></FONT></TD></TR>
+<TR><TD>
+Well, as it is open source, you can partially help yourself.  But, if you
+require something more, help is available.  After designing and testing this
+software, our group has learned to tackle certain obstacles.  If you need to
+fine tune a cluster or make use of some of the features in Backhand for
+motives other than load balancing, we can help.
+<P>This project was developed at <A HREF="http://www.cnds.jhu.edu/">The Center
+for Networks and Distributed Systems</A> at <A HREF="http://www.jhu.edu">The
+Johns Hopkins University</A>, contact us and we will work something out.
+<P>Here is a <A HREF="3rd-party.shtml">list of 3rd party companies</A> that may
+assist in the installation and configuration of mod_backhand.
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+</TABLE>
+</TD>
+
+
+<TD valign=top width="40%">
+<TABLE cellpadding=0 border=0 cellspacing=0 width="100%">
+
+<TR><TD><TABLE cellpadding=2 border=0 cellspacing=0 width="98%" bgcolor=#000066>
+<TR><TD><TABLE cellpadding=3 border=0 cellspacing=0 width="100%" bgcolor=#ffffff>
+<TR bgcolor=#ccccff><TD><FONT FACE="Lucida,Verdana,Helvetica,Arial"><B><FONT SIZE="+1">Important People</FONT></B></FONT></TD></TR>
+<TR><TD>
+<B>Creators:</B><BR>
+ <DD><A HREF="http://www.cnds.jhu.edu/~yairamir/">Yair Amir</A><BR>
+ <DD><A HREF="http://www.cnds.jhu.edu/~jesus/">Theo Schlossnagle</A></DD><BR>
+<B>Major Contributors:</B><BR>
+ <DD><A HREF="http://www.cs.jhu.edu/~baruch/">Baruch Awerbuch</A><BR>
+ <DD><A HREF="http://www.cs.jhu.edu/~rsean/">Ryan Borgstrom</A><BR>
+ <DD>Rob Butler (<A HREF=ntbhb.shtml>NT Backhand Broadcaster</A>)</DD><BR>
+
+<B>For a complete list:</B>
+See the <A HREF="NOTICE.shtml">NOTICE file that accompanies this distribution</A>.
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+<TR><TD><HR width="0" height="0"></TD></TR>
+<TR><TD><TABLE cellpadding=2 border=0 cellspacing=0 width="98%" bgcolor=#000066>
+<TR><TD><TABLE cellpadding=3 border=0 cellspacing=0 width="100%" bgcolor=#ffffff>
+<TR bgcolor=#ccccff><TD><FONT FACE="Lucida,Verdana,Helvetica,Arial"><B><FONT SIZE="+1">mod_backhand: latest release</FONT></B></FONT></TD></TR>
+<TR><TD>
+<FONT FACE="courier" SIZE="+1"><B>mod_backhand</B></FONT> version <B>development</B> was released on Jan 10th, 2003 (01.10.2003).<BR><BR>
+Supporting the following platforms:
+<UL>
+<LI> Linux (since release 0.5)
+<LI> Solaris (since release 1.0)
+<LI> BSDI (since release 1.0.5)
+<LI> (Net|Free|Open)BSD (since release 1.0.5)
+<LI> Linux (alpha fix) (since release 1.0.7)
+<LI> FreeBSD (since release 1.0.8)
+<LI> FreeBSD-4.x (since release 1.2.0)
+<LI> Windows NT through ntbhb (see related links) (since release 1.2.1)
+</UL>
+
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+<TR><TD><HR width="0" height="0"></TD></TR>
+<TR><TD><TABLE cellpadding=2 border=0 cellspacing=0 width="98%" bgcolor=#000066>
+<TR><TD><TABLE cellpadding=3 border=0 cellspacing=0 width="100%" bgcolor=#ffffff>
+<TR bgcolor=#ccccff><TD><FONT FACE="Lucida,Verdana,Helvetica,Arial"><B><FONT SIZE="+1">Where can I get mod_backhand?</FONT></B></FONT></TD></TR>
+<TR><TD>
+mod_backhand is publicly available, and is
+<A HREF="download/mod_backhand.tar.gz">available here</A> or from
+the following sites:
+<UL>
+<LI><A HREF="http://www.backhand.org/mod_backhand/download/mod_backhand.tar.gz">www.backhand.org</A>
+<LI><A HREF="http://www.cnds.jhu.edu/mod_backhand/download/mod_backhand.tar.gz">The Center for Networks and Distributed Systems</A>
+<LI><A HREF="http://www.lethargy.org/mod_backhand/download/mod_backhand.tar.gz">www.lethargy.org</A>
+</UL>
+</TD></TR>
+<TR><TD>
+If you are interested in the development tree, a publicly available, read-only, anonymous CVS tree exists:
+<UL>
+ <LI><B>CVSROOT</B> :pserver:anonymous@commedia.cnds.jhu.edu:/storage/cvs
+ <LI><B>MODULE NAME</B> mod_backhand
+ <LI>Browsable via web <A HREF="http://commedia.cnds.jhu.edu/cgi-bin/viewcvs/jesus/mod_backhand/">through viewcvs here</A>.
+</UL>
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+<TR><TD><HR width=0 height=0></TD></TR>
+<TR><TD><TABLE cellpadding=2 border=0 cellspacing=0 width="98%" bgcolor=#000066>
+<TR><TD><TABLE cellpadding=3 border=0 cellspacing=0 width="100%" bgcolor=#ffffff>
+<TR bgcolor=#ccccff><TD><FONT FACE="Lucida,Verdana,Helvetica,Arial"><B><FONT SIZE="+1">ChangeLog</FONT> (<A HREF="ChangeLog.shtml">full version</A>)</B></FONT></TD></TR>
+<TR><TD>
+<FONT FACE="courier" SIZE="+1"><B>mod_backhand</B></FONT> changes from <B>1.2.2</B> to <B>development</B>
+<UL>
+<LI> Update the hostname redirection to allow redirects all the time.
+</UL>
+
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+<TR><TD><HR width=0 height=0></TD></TR>
+<TR><TD><TABLE cellpadding=2 border=0 cellspacing=0 width="98%" bgcolor=#000066>
+<TR><TD><TABLE cellpadding=3 border=0 cellspacing=0 width="100%" bgcolor=#ffffff>
+<TR bgcolor=#ccccff><TD><FONT FACE="Lucida,Verdana,Helvetica,Arial"><B><FONT SIZE="+1">Assorted Documentation and Related Links</FONT></B></TD></TR>
+<TR><TD>
+<UL><LI><A HREF="FAQ.shtml">The FAQ for mod_backhand</A>
+<LI><A HREF="compiling.shtml">Compilation Help</A>
+<LI><A HREF="installing.shtml">Installation Help</A>
+<LI><A HREF="configuring.shtml">Configuration Help</A>
+<LI><A HREF="performance.shtml">Performance Tuning Tips</A>
+<LI><A HREF="http://pootpoot.com/~dlowe/Apache-Backhand/">Writing candidacy functions in perl</A>
+<LI><A HREF="ntbhb.shtml">NT Backhand Broadcaster</A>
+<LI><A HREF="http://www.backhand.org/ApacheCon2000/US/">ApacheCon March 2000 (Presentation)</A>
+<LI><A HREF="http://www.backhand.org/ApacheCon2000/US/mod_backhand_coursenotes.pdf">ApacheCon March 2000 (Course Notes)</A>
+<LI><A HREF="http://www.backhand.org/ApacheCon2000/EU/">ApacheCon October 2000 (Presentation)</A>
+<LI><A HREF="http://www.backhand.org/ApacheCon2000/EU/backhand_project_coursenotes.pdf">ApacheCon October 2000 (Course Notes)</A>
+<LI><A HREF="http://www.backhand.org/ApacheCon2001/US/backhand_presentation.pdf">ApacheCon April 2001 (Presentation)</A>
+<LI><A HREF="http://www.backhand.org/ApacheCon2001/US/backhand_course_notes.pdf">ApacheCon April 2001 (Course Notes)</A>
+</UL>
+
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+<TR><TD><HR width="0" height="0"></TD></TR>
+<TR><TD><TABLE cellpadding=2 border=0 cellspacing=0 width="98%" bgcolor=#000066>
+<TR><TD><TABLE cellpadding=3 border=0 cellspacing=0 width="100%" bgcolor=#ffffff>
+<TR bgcolor=#ccccff><TD><FONT FACE="Lucida,Verdana,Helvetica,Arial"><B><FONT SIZE="+1">Where was mod_backhand created?</FONT></B></FONT></TD></TR>
+<TR><TD align=center width=60%><A HREF="http://www.cnds.jhu.edu/"><IMG SRC="images/cndsbar_mini.jpg" WIDTH=263 HEIGHT=45 BORDER=0></A></TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+
+
+</TABLE>
+
+</TD></TR>
+</TABLE>
+<HR>
+<CENTER>
+<FONT SIZE="-2">Copyright &#169; 1999 Theo Schlossnagle. All rights reserved.</FONT>
+</CENTER>
+
+</FONT>
+</BODY>
