@@ -1,0 +1,428 @@
+<html>
+<head>
+  <title>Num Sum - web spreadsheet</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<META NAME="ROBOTS" CONTENT="NOARCHIVE"/> 
+
+
+  <script language="javascript" src="/javascripts/prototype/prototype-1.4.0.js?vers=n.146"></script>
+  <script language="javascript" src="/javascripts/trimpath-a/spreadsheet_engine.js?vers=n.146"></script>
+  <script language="javascript" src="/javascripts/trimpath-a/spreadsheet_ui.js?vers=n.146"></script>
+  <link rel="stylesheet" type="text/css" href="/javascripts/trimpath-a/spreadsheet.css?vers=n.146"/>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/numsum_spreadsheet.css?vers=n.146"/>
+
+
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/numsum.css?vers=n.146"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/numsum_print.css?vers=n.146" media="print"/>
+<script language="javascript" src="/javascripts/numsum.js?vers=n.146"></script>
+
+</head>
+<body>
+
+
+<style>
+div.contentCenter {
+  text-align: center;
+}
+div.contentMain a, div.contentMain a:visited {
+  color: black;
+}
+div.contentMain a:hover {
+  background-color: #FFFF88;
+}
+div.memberLogin {
+  float: right; 
+  text-align: right;
+}
+div.topBanner {
+  padding-top: .5em;
+  padding-bottom: 1em;
+  color: #668833;
+}
+div.topBanner h1 {
+  font-size: 16pt;
+}
+div.topBanner h2 {
+  font-size: 14pt;
+}
+div.topBanner h3 {
+  font-size: 12pt;
+}
+div.tagline {
+  line-height: 1.25em;
+  font-size: 12pt;
+}
+div.tagline TD {
+  line-height: 1.25em;
+  vertical-align: top;
+  background-repeat: no-repeat;
+  background-position: top center;
+}
+div.area {
+  padding: 1em 2em 0 .5em;
+}
+div.area h3 {
+  font-size: 8pt;
+}
+.signup td {
+  text-align: center;
+}
+.signupSteps {
+  margin-left: 1em;
+  margin-right: 1em;
+  text-align: left;
+}
+.signupHilite {
+  border: 1px solid #888; 
+  padding: .5em .5em;
+  background-color: #FFFFCC; 
+}
+.signupHilite a {
+  color: red;
+}
+.searchHome {
+  font-size: 16px;
+  font-weight: normal;
+}
+.big {
+  font-size: 18px;
+  font-weight: normal;
+  padding: 2px;
+}
+</style>
+
+<div class="contentCenter">
+<center>
+<table width="650"><tr><td>
+<div class="contentMain">
+
+<div class="topBanner">
+  <div class="memberLogin">
+    
+      Already a member? 
+      <a href="/account/login">Login</a>
+    
+  </div>
+  <br/>
+    
+  <center>
+    <h1>Num Sum</h1>
+    <h2>Easy, Sharable Web Spreadsheets</h2>
+    <div class="tagline">
+       <table cellpadding="10" cellspacing="10">
+         <tr>
+           <td width="180" style="background-image: url(/images/med_1.gif); height: 53px;">Track your records, lists and data online</td>
+           <td width="180" style="background-image: url(/images/med_2.gif); height: 53px;">Share with everybody or with just your close friends</td>
+           <td width="180" style="background-image: url(/images/med_3.gif); height: 53px;">Connect with folks who have similar interests</td>
+         </tr>
+       </table>
+    </div>
+  </center>
+</div>
+<br/>
+
+<table class="signup">
+  <tr>
+    <td colspan="3">
+    <form method="post" action="/spreadsheet/search">
+    <strong>Search for spreadsheets:</strong>
+        <input class="big" type="text" name="q" size="25" maxlength="255" autocomplete="off" id="search_q"/>
+        <input type="submit" value="Search">
+      </form>
+    </td>
+  </tr>
+  
+  <tr>
+    <td valign="top" width="50%">
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>
+            <a href="/spreadsheet/show/35"><img border="0" src="/images/numsum_thumbshot1.gif"/></a>
+            <br/>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <br/>
+            
+              Already got an account? &nbsp; Please <a href="/account/login">Login</a>
+            
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td>&nbsp;&nbsp;</td>
+    <td valign="top" width="50%">
+      <div class="signupHilite">
+        <h3><a href="/account/signup">Sign up for free</a></h3>
+        Get your own account in 10 seconds<br/>
+        It's all online &mdash; nothing to install
+        <br/>
+        <br/>
+      </div>
+    
+      <br/>
+    
+      <div class="signupSteps">
+        <ul>
+          <li>Great for teams, clubs &amp; your crew&nbsp;</li>
+          <li>Track all your group data together&nbsp;</li>
+          <li>Easy and super simple to use&nbsp;</li>
+        </ul>
+        <img src="/images/pcw.gif" style="vertical-align:middle;" alt="PC World"> 
+        says Num Sum is a 
+        <font color="red">Best&nbsp;Bet</font><br/>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<hr/>
+
+<div class="area">
+<center>
+<table>
+<tr>
+  <td valign="top" width="50%">
+    <div class="areaLinks">
+     
+      Please feel free to look around the place...
+      
+   
+   
+        <h3><a href="/home/favorites">Some neat spreadsheets...</a></h3>
+   
+<div>
+  <div class="recent_list tagTitle">
+    
+      
+        
+        <a href="/spreadsheet/show_raw/12633">World Cup 2006</a>&nbsp;&nbsp;
+      
+        &bull;
+        <a href="/spreadsheet/show_raw/8863">Team Schedule</a>&nbsp;&nbsp;
+      
+        &bull;
+        <a href="/spreadsheet/show/16166">wedding</a>&nbsp;&nbsp;
+      
+        &bull;
+        <a href="/spreadsheet/show/13356">wedding 2</a>&nbsp;&nbsp;
+      
+        &bull;
+        <a href="/spreadsheet/show/17636">Team Lotto Pool Tracking</a>&nbsp;&nbsp;
+      
+        &bull;
+        <a href="/spreadsheet/show/16496">WoW looting</a>&nbsp;&nbsp;
+      
+    
+  </div>
+</div>
+<br>
+    
+      <h3><a href="/spreadsheet">Recent online spreadsheets...</a></h3>
+      <div class="recent_list tagTitle">
+        
+        
+          
+          <a href="/spreadsheet/show/114771">cristhmas </a>&nbsp;&nbsp;
+        
+          &bull;
+          <a href="/spreadsheet/show/114973">Copy of Copy of College Bowl Games 2009-2010</a>&nbsp;&nbsp;
+        
+          &bull;
+          <a href="/spreadsheet/show/114972">Copy of 2010 Bowl Games Picks</a>&nbsp;&nbsp;
+        
+          &bull;
+          <a href="/spreadsheet/show/114971">Copy of Copy of Cleaning the church schedule</a>&nbsp;&nbsp;
+        
+          &bull;
+          <a href="/spreadsheet/show/114522">Reservatie bedrijfsbezoeken 2PR</a>&nbsp;&nbsp;
+        
+          &bull;
+          <a href="/spreadsheet/show/114970">Copy of Copy of Copy of commercial cleaning Check List</a>&nbsp;&nbsp;
+        
+          &bull;
+          <a href="/spreadsheet/show/114967">CUANTO NECESITAS PARA PASAR</a>&nbsp;&nbsp;
+        
+          &bull;
+          <a href="/spreadsheet/show/114966">JOSIAS</a>&nbsp;&nbsp;
+        
+          &bull;
+          <a href="/spreadsheet/show/99383">BCHS Volunteer Opportunites</a>&nbsp;&nbsp;
+        
+          &bull;
+          <a href="/spreadsheet/show/114965">Copy of Wedding guest list template</a>&nbsp;&nbsp;
+        
+      </div>
+     
+    </div>
+    </td>
+
+  <td>&nbsp;&nbsp;</td>
+  <td valign="top">
+     <br/><br/>
+     
+       
+
+
+  
+  <a href="/people/view/nguyen" class="small_person">
+    <img class="small_person" 
+         title="Visit nguyen at Num Sum"
+         alt="Visit nguyen at Num Sum"
+         src="http://static.flickr.com/51/132069459_0fc7f7f5d2_t.jpg" 
+    width="20" height="20" alt="nguyen"/></a>
+  <br/>
+  <br/>
+  
+
+  
+  <a href="/people/view/wenzee" class="small_person">
+    <img class="small_person" 
+         title="Visit wenzee at Num Sum"
+         alt="Visit wenzee at Num Sum"
+         src="http://static.flickr.com/52/148011962_6e3f3414c7.jpg?v=0" 
+    width="20" height="20" alt="wenzee"/></a>
+  <br/>
+  <br/>
+  
+
+  
+  <a href="/people/view/faelmachado" class="small_person">
+    <img class="small_person" 
+         title="Visit faelmachado at Num Sum"
+         alt="Visit faelmachado at Num Sum"
+         src="http://images3.orkut.com/images/medium/710/257710.jpg" 
+    width="20" height="20" alt="faelmachado"/></a>
+  <br/>
+  <br/>
+  
+
+  
+  <a href="/people/view/ryancastle" class="small_person">
+    <img class="small_person" 
+         title="Visit ryancastle at Num Sum"
+         alt="Visit ryancastle at Num Sum"
+         src="http://static.flickr.com/47/137058056_fafd55b89e.jpg" 
+    width="20" height="20" alt="ryancastle"/></a>
+  <br/>
+  <br/>
+  
+
+  
+  <a href="/people/view/noceur" class="small_person">
+    <img class="small_person" 
+         title="Visit noceur at Num Sum"
+         alt="Visit noceur at Num Sum"
+         src="http://img331.imageshack.us/img331/8154/clivesm2503jc.jpg" 
+    width="20" height="20" alt="noceur"/></a>
+  <br/>
+  <br/>
+  
+
+  
+  <a href="/people/view/proll" class="small_person">
+    <img class="small_person" 
+         title="Visit proll at Num Sum"
+         alt="Visit proll at Num Sum"
+         src="http://static.flickr.com/88/275459948_f0773cbc75_s.jpg" 
+    width="20" height="20" alt="proll"/></a>
+  <br/>
+  <br/>
+  
+
+  
+  <a href="/people/view/blswarehouse" class="small_person">
+    <img class="small_person" 
+         title="Visit blswarehouse at Num Sum"
+         alt="Visit blswarehouse at Num Sum"
+         src="http://farm1.static.flickr.com/142/378422040_9e19e213ed.jpg?v=0" 
+    width="20" height="20" alt="blswarehouse"/></a>
+  <br/>
+  <br/>
+  
+
+<br>
+     
+  </td>
+
+  <td>&nbsp;&nbsp;</td>
+  <td valign="top" width="40%">
+        <h3><a href="/tag">Popular tags...</a></h3>
+<div class="home_popularity">
+
+      <a href="/tag/show/2007" style="font-size:17px">2007</a>&nbsp;
+ 
+      <a href="/tag/show/2008" style="font-size:18px">2008</a>&nbsp;
+ 
+      <a href="/tag/show/BOWL" style="font-size:19px">BOWL</a>&nbsp;
+ 
+      <a href="/tag/show/Bowl" style="font-size:14px">Bowl</a>&nbsp;
+ 
+      <a href="/tag/show/boxes" style="font-size:22px">boxes</a>&nbsp;
+ 
+      <a href="/tag/show/budget" style="font-size:21px">budget</a>&nbsp;
+ 
+      <a href="/tag/show/calculator" style="font-size:10px">calculator</a>&nbsp;
+ 
+      <a href="/tag/show/checklist" style="font-size:27px">checklist</a>&nbsp;
+ 
+      <a href="/tag/show/cleaning" style="font-size:28px">cleaning</a>&nbsp;
+ 
+      <a href="/tag/show/cost" style="font-size:11px">cost</a>&nbsp;
+ 
+      <a href="/tag/show/game" style="font-size:22px">game</a>&nbsp;
+ 
+      <a href="/tag/show/guest" style="font-size:12px">guest</a>&nbsp;
+ 
+      <a href="/tag/show/house" style="font-size:26px">house</a>&nbsp;
+ 
+      <a href="/tag/show/list" style="font-size:23px">list</a>&nbsp;
+ 
+      <a href="/tag/show/Office" style="font-size:16px">Office</a>&nbsp;
+ 
+      <a href="/tag/show/schedule" style="font-size:20px">schedule</a>&nbsp;
+ 
+      <a href="/tag/show/SQUARES" style="font-size:13px">SQUARES</a>&nbsp;
+ 
+      <a href="/tag/show/squres" style="font-size:14px">squres</a>&nbsp;
+ 
+      <a href="/tag/show/Super" style="font-size:15px">Super</a>&nbsp;
+ 
+      <a href="/tag/show/SUPER" style="font-size:18px">SUPER</a>&nbsp;
+ 
+      <a href="/tag/show/superbowl" style="font-size:25px">superbowl</a>&nbsp;
+ 
+      <a href="/tag/show/template" style="font-size:29px">template</a>&nbsp;
+ 
+      <a href="/tag/show/templates" style="font-size:26px">templates</a>&nbsp;
+ 
+      <a href="/tag/show/wedding" style="font-size:24px">wedding</a>&nbsp;
+ 
+      <a href="/tag/show/Wedding" style="font-size:10px">Wedding</a>&nbsp;
+ 
+</div>
+
+  </td>
+</tr>
+</table>
+</center>
+</div>
+
+</div>
+
+<div class="footer">
+    <a href="/about/news">News</a>&nbsp;|&nbsp;
+    <a href="/help/faq">FAQ</a>&nbsp;|&nbsp;
+    <a href="/legal/termsofuse.html">Terms of Use</a>&nbsp;|&nbsp;
+    <a href="/legal/privacypolicy.html">Privacy Policy</a>&nbsp;|&nbsp;
+    Brought to you by <a href="http://trimpath.com">TrimPath</a>
+</div>
+
+</td></tr></table>
+</center>
+</div>
+</body>
+</html>
