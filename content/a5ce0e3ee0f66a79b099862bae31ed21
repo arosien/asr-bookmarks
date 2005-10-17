@@ -1,0 +1,976 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+<title>Chandler Wiki : Ajax Libraries</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="icon" href="/pub/Main/OsafSkin/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="/pub/Main/OsafSkin/favicon.ico" type="image/x-icon" />
+<link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/Projects/WebRss" />
+<base href="http://chandlerproject.org/Projects/AjaxLibraries"></base><!--/closing tag 'solves' IE selection bug-->
+<script type="text/javascript" src="/pub/TWiki/TWikiJavascripts/twiki.js"></script>
+<script type="text/javascript" src="/pub/TWiki/PatternSkin/pattern.js"></script>
+<script type="text/javascript">
+//<![CDATA[
+	function launchWindow(inWeb, inTopic) {
+		return launchTheWindow("/", inWeb, inTopic, "", "viewplain" );
+	}
+//]]>
+</script>
+<script type='text/javascript' src='/pub/TWiki/TwistyContrib/twist.js'></script>
+
+
+
+<style type="text/css" media="all">
+	@import url('/pub/TWiki/TwistyContrib/twist.css');
+</style>
+<style type="text/css" media="all">
+	#patternTopBar,
+#patternClearHeaderCenter,
+#patternClearHeaderLeft,
+#patternClearHeaderRight,
+#patternTopBarContentsOuter {
+	height:38px; /* top bar height; make room for header columns */
+	overflow:hidden;
+}
+	#patternOuter {
+	margin-left:12em;
+}
+#patternLeftBar {
+	width:12em;
+	margin-left:-12em;
+}
+</style>
+<style type="text/css" media="all">
+	@import url('/pub/TWiki/PatternSkin/layout.css');
+	@import url('/pub/TWiki/PatternSkin/style.css');
+	@import url('/pub/TWiki/PatternSkin/colors.css');
+</style>
+<!--[if IE]>
+<style type="text/css">
+pre {
+	overflow-x:auto;
+	 overflow-y:hidden;
+	padding-bottom:expression(this.scrollWidth > this.offsetWidth ? 16 : 0);
+}
+#patternLeftBarContents li {
+	text-overflow:ellipsis;
+}
+</style>
+<![endif]-->
+<!--[if lte IE 6]> 
+<style type="text/css">
+#patternLeftBar {
+	position:relative; /* IE 5.5 needs this or the contents won't show outside the parent container on print. IE 6.0 needs it only during printable copy! */
+}
+</style>
+<![endif]-->
+
+<style type="text/css" media="all">
+	/* Styles that are set using variables */
+	.twikiInputField {
+		background-image:url("/pub/TWiki/PatternSkin/background_input.gif");
+		background-repeat:repeat-x;
+	}
+	.twikiInputFieldDisabled {
+		background-image:none;
+		border:none;
+	}
+	.twikiButton {
+		background-image:url("/pub/TWiki/PatternSkin/background_button.gif");
+		background-repeat:repeat-x;
+	}
+	.patternToolBarButtons .patternButton a {
+		/*
+		background-image:url("/pub/TWiki/PatternSkin/background_button.gif");
+		background-repeat:repeat-x;
+		*/
+	}
+	.twikiSubmit {
+		background-image:url("/pub/TWiki/PatternSkin/background_submit.gif");
+		background-repeat:repeat-x;
+	}
+	.twikiSubmitDisabled {
+		background-image:none;
+	}
+	.twikiToc li {
+		background-image:url("/pub/TWiki/PatternSkin/bullet-down.gif");
+		background-repeat:no-repeat;
+	}
+	#patternLeftBar .patternWebIndicator,
+	.patternBookView .twikiTopRow {
+		background-color:#DDDDDD;
+	}
+	#patternTopBar { background-image:url("/pub/Main/OsafSkin/no-image.gif"); background-repeat:no-repeat;}
+	#patternTopBar { background-color:#ffffff;}
+	/*
+	.twikiHelp,
+	.patternAccessKeyInfo {
+		background:url("/pub/TWiki/PatternSkin/striped_blue.gif");
+	}
+	*/
+	.patternBookView {
+		border-color:#DDDDDD;
+	}
+	#twikiLogin,
+	#patternLeftBarContents .tipsOfTheDayContents {
+		background-image:url("/pub/TWiki/PatternSkin/gradient_blue.gif");
+		background-repeat:repeat-x;
+	}
+	#patternOuter {
+		/* gradient yellow of left bar and main */
+		background-image:url("/pub/TWiki/PatternSkin/gradient_yellow.gif");
+		background-repeat:repeat-x;
+	}
+	.patternPrintPage #patternOuter {
+		background:#fff;
+	}
+	.twikiPageForm table {
+		background-image:url("/pub/TWiki/PatternSkin/form_gradient.gif");
+		background-repeat:repeat-x;
+	}
+	#patternLeftBarContents .patternLeftBarPersonal li {
+		background-image:url("/pub/TWiki/PatternSkin/bullet-blue.gif");
+		background-repeat:no-repeat;
+		background-position:0 .5em;
+	}
+	.patternPreviewPage #patternMain {
+		background-image:url(/pub/TWiki/PreviewBackground/preview2bg.gif);
+	}
+	
+</style>
+<style type="text/css" media="all">
+	@import url('/pub/Main/OsafSkin/layout.css');
+	@import url('/pub/Main/OsafSkin/style.css');
+	@import url('/pub/Main/OsafSkin/colors.css');
+</style>
+
+<style type="text/css" media="all">
+	@import url("/pub/TWiki/PatternSkin/print.css");
+</style>
+
+
+<!--GOOGLEANALYTICSPLUGIN--><!-- Google Analytics script -->
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+<script type="text/javascript">
+// <![CDATA[
+function sendStats(inPageId) {
+	var pageId = (inPageId != undefined) ? inPageId : "";
+	urchinTracker(pageId);
+}
+_uacct = "UA-1913470-1";
+sendStats();
+// ]]>
+</script>
+</head>
+<body class="patternViewPage"><a name="PageTop"></a>
+<div id="patternScreen">
+<div id="patternPageShadow">
+<div id="patternPage">
+<div id="patternWrapper"><div id="patternOuter">
+<div id="patternFloatWrap">
+<div id="patternMain"><div id="patternClearHeaderCenter"></div>
+<div id="patternMainContents"><div class="patternTop">
+<div class="patternToolBar">
+  <div>
+	 <div style="float:left;">
+	 <a href="http://chandlerproject.org/wikihome"><img border="0" src="/pub/Main/OsafSkin/chandler-project-logo-wiki.png"></a>
+	 </div>
+	 <div style="width:20">
+	 &nbsp;
+	 </div>
+	 <div style="float:left; margin-left: 20px">
+	 <a href="/Product/WebHome" class="twikiLink"><span class='osafOtherWebNav'>Product</span></a>
+	 |
+	 <a href="/Planning/WebHome" class="twikiLink"><span class='osafOtherWebNav'>Planning</span></a>
+	 |
+	 <a href="/Teams/WebHome" class="twikiLink"><span class='osafOtherWebNav'>Teams</span></a>
+	 |
+	 <a href="/Developers/WebHome" class="twikiLink"><span class='osafOtherWebNav'>Developers</span></a>
+	 |
+	 <a href="/Notes/WebHome" class="twikiLink"><span class='osafOtherWebNav'>Notes</span></a>
+	 </div>
+  </div>
+<div class="patternToolBarButtons">
+<span class="patternButton"><a href="http://chandlerproject.org/bin/edit/Projects/AjaxLibraries?t=1292621419" rel="nofollow" title='Edit this topic text' accesskey="E"><span class='twikiAccessKey'>E</span>dit</a></span><span class="patternButton"><a href="/bin/attach/Projects/AjaxLibraries" accesskey="A" title="Attach an image or document to this topic" rel="nofollow"><span class='twikiAccessKey'>A</span>ttach</a></span><span class="patternButton"><a href="/Projects/WikiSurvivalGuide" class="twikiLink">Wiki Help</a></span>
+</div>
+</div><!-- /patternToolBar-->
+<div class="patternToolBarBottom"></div>
+</div><!-- /patternTop-->
+<div class="patternHomePath"><span class="twikiRight"> <span class="patternRevInfo">r50 - 14 Apr 2010 - 12:33:18 - <a href="/Main/JashuaNet" class="twikiLink">JashuaNet</a></span></span><span class="patternHomePathTitle">You are here: </span> <a href="/Main/WebHome" class="twikiLink">OSAF</a><span class='twikiSeparator'>&nbsp;&gt;&nbsp;</span><a href="/Projects/WebHome"> Projects Web</a> <span class='twikiSeparator'>&nbsp;&gt;&nbsp;</span> <a href="/Projects/CosmoHome" class="twikiLink">CosmoHome</a> &gt; <a href="/Projects/CosmoDevelopmentHome" class="twikiLink">CosmoDevelopmentHome</a><span class='twikiSeparator'>&nbsp;&gt;&nbsp;</span><span title="Projects.AjaxLibraries">AjaxLibraries</span><br class="twikiClear" /></div><!-- /patternHomePath--><div class="twikiBeforeText"></div><div class="patternContent"><div class="patternTopic"> <h1><a name="Survey of AJAX/JavaScript Librar"></a> Survey of AJAX/JavaScript Libraries </h1>
+<p />
+Please note these libraries appear in alphabetical order. If you're adding one to this list, please add it in alphabetical order rather than sticking it at the top.
+<p />
+<h2><a name="AjaxAnywhere"></a><a name="_AjaxAnywhere"></a> AjaxAnywhere </h2>
+<a href="http://ajaxanywhere.sourceforge.net/" target="_top">http://ajaxanywhere.sourceforge.net/</a>
+<p />
+<strong>License:</strong> Apache 2
+<p />
+<strong>Description:</strong>
+AjaxAnywhere is a simple way to enhance an existing JSP/Struts/Spring/JSF application with AJAX. It uses AJAX to refresh "zones" on a web page, therefore AjaxAnywhere doesn't require changes to the underlying code, so while it's more coarse than finely-tuned AJAX, it's also easier to implement, and doesn't bind your application to AJAX (i.e., browsers that don't support AJAX can still work.). In contrast to other solutions, AjaxAnywhere is not component-oriented. You will not find here yet another <a href="/Projects/AutoComplete" class="twikiLink">AutoComplete</a> component. Simply separate your web page into multiple zones, and use AjaxAnywhere to   refresh only those zones that needs to be updated.
+<p />
+<strong>Pros:</strong> <ul>
+<li> Less JavaScript to develop and to maintain. Absence of commonly accepted naming convention, formatting rules, patterns makes JavaScript code messier then Java/JSP. It is extremely difficult to debug and unit-test it in multi-browser environment. Get rid of all those complexities by using AjaxAnywhere.
+</li> <li> Easy to integrate. AjaxAnywhere does not require changing the underlying application code.
+</li> <li> Graceful degradation and lower technical risk. Switch whenever you need between AJAX and traditional (refresh-all-page) behaviour of your web application. Your application can also support both behaviors.
+</li> <li> Free open source license.
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> <span class="twikiNewLink">AjaxAnywhere<a rel="nofollow" href="/bin/edit/Projects/AjaxAnywhere?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> is not as dynamic as pure-JavaScript AJAX solutions. Despite that AjaxAnywhere will probably cover your basic needs, to achieve certain functionality you might need to code some JavaScript.
+</li> <li> Today, you can only update a set of complete DHTML objects without breaking then apart. For example, you can update a content of a table cell or the whole table, but not the last row, for example. In later versions, we plan to implement partial DHTML update, as well.
+</li></ul> 
+<p />
+<h2><a name="ajaxCFC"></a> ajaxCFC </h2>
+<a href="http://www.robgonda.com/blog/projects/ajaxcfc/" target="_top">http://www.robgonda.com/blog/projects/ajaxcfc/</a>
+<p />
+<strong>License:</strong> Apache 2.0 
+<p />
+<strong>Description:</strong>
+ajaxCFC is a <span class="twikiNewLink">ColdFusion<a rel="nofollow" href="/bin/edit/Projects/ColdFusion?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> framework meant to speed up ajax application development and deployment by providing developers seamless integration between JavaScript and <span class="twikiNewLink">ColdFusion<a rel="nofollow" href="/bin/edit/Projects/ColdFusion?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span>, and providing built-in functions to quickly adapt to any type of environment, security, and helping to overcome cross-browser compatibility problems.
+<p />
+ajaxCFC is designed as <span class="twikiNewLink">ColdFusion<a rel="nofollow" href="/bin/edit/Projects/ColdFusion?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> components, following the best practices of object oriented programming and design patterns. Programming with ajaxCFC involves extending components and creating your own ajax facades.
+<p />
+Pros: <ul>
+<li> Works with <span class="twikiNewLink">ColdFusion<a rel="nofollow" href="/bin/edit/Projects/ColdFusion?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> MX 6.0, 6,1, 7.0, Scorpio, and <span class="twikiNewLink">BlueDragon<a rel="nofollow" href="/bin/edit/Projects/BlueDragon?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span>.
+</li> <li> Integration with Model-Glue and <span class="twikiNewLink">MachII<a rel="nofollow" href="/bin/edit/Projects/MachII?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span>, two of the most popular MVC frameworks widely used by the <span class="twikiNewLink">ColdFusion<a rel="nofollow" href="/bin/edit/Projects/ColdFusion?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> community.
+</li> <li> Supports many browsers including FF/Moz, IE5.5+, Safari/Konq, Opera and IE with Active-X turned off via iframe fallback
+</li> <li> Automatically handles complex object transmitted from the client to the server and vice versa.
+</li> <li> Optional use of XML Sockets to push data from the server.
+</li> <li> Built-in security add-ons.
+</li> <li> Hosted now by <a href="http://ajaxcfc.riaforge.org" target="_top">Adobe's RIAForge</a>
+</li> <li> Licensed under the Apache License Version 2.0, by <a href="http://www.robgonda.com" target="_top">Rob Gonda</a>.
+</li></ul> 
+<p />
+<h2><a name="AjaxTags component of Java Web P"></a><a name="_AjaxTags component of Java Web "></a> AjaxTags component of Java Web Parts </h2>
+<a href="http://javawebparts.sourceforge.net" target="_top">http://javawebparts.sourceforge.net</a>
+<p />
+<strong>License:</strong> Apache 2
+<p />
+<strong>Description:</strong>
+AjaxTags was originally an extended version of the Struts HTML taglib, but was made into a generic taglib (i.e., not tied to Struts) and brought under the Java Web Parts library. AjaxTags is somewhat different from most other Ajax toolkits in that it provides a declarative approach to Ajax.  You configure the Ajax events you want for a given page via XML config file, including what you want to happen when a request is sent and when a response is received.  This takes the form of request and response handlers.  A number of rather useful handlers are provided out-of-the-box, things like updating a &lt;div&gt;, sending a simple XML document, transforming returned XML via XSLT, etc.  All that is required to make this work on a page is to add a single tag at the end, and then one following whatever page element you want to attach an Ajax event to.  Any element on a page can have an Ajax event attached to it.  If this sounds interesting, it is suggested you download the binary Java Web Parts distro and play with the sample app.  This includes a number of excellent examples of what AjaxTags can do.
+<p />
+<strong>Pros:</strong> <ul>
+<li> There is <strong>no</strong> Javascript coding required, unless you need or want to write a custom request/response handler, which is simply following a pattern.
+</li> <li> Very easy to add Ajax functions to an existing page without changing any existing code and without adding much beyond some tags.  Great for retroactively adding Ajax to an app (but perfect for new development too!)
+</li> <li> Completely declarative approach to Ajax.  If client-side coding is not your strong suite, you will probably love AjaxTags.
+</li> <li> Has most of the basic functions you would need out-of-the-box, with the flexibility and extensibility you might need down the road.
+</li> <li> Cross-browser support (IE 5.5+ and FF 1.0.7+ for sure, probably some older versions too).
+</li> <li> Is well-documented with a good example app available.
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> Because it's a taglib, it is Java-only.
+</li> <li> Doesn't provide pre-existing Ajax functions like many other libraries, things like Google Suggests and such.  You will have to create them yourself (although AjaxTags will make it a piece of cake!).  Note that there are some cookbook examples available that shows a type-ahead suggestions application, and a double-select population application.  Check them out, see how simple they were to build!
+</li> <li> AjaxTags says absolutely nothing about what happens on the server, that is entirely up to you.
+</li> <li> Might be some slight confusion because there is another project named AjaxTags at SourceForge.  The AjaxTags in Java Web Parts existed first though, and in any case they have very different focuses.  Just remember, this AjaxTags is a part of Java Web Parts, the other is not.
+</li></ul> 
+<p />
+<h2><a name="AJS"></a> AJS </h2>
+<a href="http://orangoo.com/labs/AmiNation/AJS/" target="_top">http://orangoo.com/labs/AmiNation/AJS/</a>
+<p />
+<strong>License:</strong> MIT.
+<p />
+<strong>Description:</strong>
+AJS is a ultra lightweight JavaScript library. It's only about 30 KB. AJS main force is performance - both in execution and file size. It has a lot of functionality in common with <span class="twikiNewLink">MochiKit<a rel="nofollow" href="/bin/edit/Projects/MochiKit?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span>.
+<p />
+<strong>Pros:</strong> <ul>
+<li> AJAX support
+</li> <li> Drag and drop support
+</li> <li> One namespace
+</li> <li> Documentation and examples on most important functions
+</li> <li> Polymorphic - A Python script can scan your code, find the AJS functions you use and create a special AJS file for you that is much smaller
+</li> <li> Supports latest IE, Firefox, Safari and Opera browsers
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> Does not support old browsers (like Netscape 4 or IE 5)
+</li> <li> Limited visual effects
+</li></ul> 
+<h2><a name="Anaa"></a> Anaa </h2>
+<p />
+<a href="http://www.anaa.eu" target="_top">http://www.anaa.eu</a>
+<p />
+<strong>License</strong>: Mozilla 1.1.
+<p />
+<strong>Description:</strong> Anaa means for An Ajax API and is a simple but complete framework built around <span class="twikiNewLink">XMLHttpRequest<a rel="nofollow" href="/bin/edit/Projects/XMLHttpRequest?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span>. Anaa does support GET and POST methods. Plain Text (including JSON) and XML file are handled.<b>
+<p />
+Pros:</b> <ul>
+<li> Easy to understand. This allows to extend the library with personal features more easily.
+</li> <li> Complete for a such simple library.
+</li> <li> Good documentation.
+</li> <li> JavaScript only. Compatible with any server-side language.<br />
+</li> <li> Pretty website!
+</li></ul> 
+<b>
+<p />
+Cons:</b> <ul>
+<li> Rather minimal for now. There are projects to extend it with optional modules.<br />
+</li></ul> 
+<h2><a name="DHTMLX"></a> DHTMLX </h2>
+<a href="http://dhtmlx.com/" target="_top">http://dhtmlx.com/</a>
+<p />
+<strong>License:</strong> GPL, commercial
+<p />
+<strong>Description:</strong> DHTMLX is a JavaScript library of Ajax-enabled user interface components for building feature rich web applications. It includes the most widely-used types of UI components: grid, treegrid, treeview, combobox, tabbar, menu, windows, calendar, layout, and more.
+<p />
+<strong>Pros:</strong> <ul>
+<li> cross-browser compatibility (IE, FF, Opera, Safari, Google Chrome);
+</li> <li> detailed documentation + lots of samples;
+</li> <li> rich JavaScript API;
+</li> <li> special techniques for handling huge datasets;
+</li> <li> built-in mechanism for client-server communication;
+</li> <li> drag-n-drop, in-line editing, clipboard operations; 
+</li> <li> XML/CSV/JSON support.
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> some advanced functionality is available in commercial version only;
+</li> <li> big size of full package.
+</li></ul> 
+<p />
+<h2><a name="Dojo"></a> Dojo </h2>
+<a href="http://dojotoolkit.org/" target="_top">http://dojotoolkit.org/</a>
+<p />
+<strong>License:</strong> Academic Free License v 2.1.
+<p />
+<strong>Description:</strong>
+Dojo is an Open Source effort to create a UI toolkit that allows a larger number of web application authors to easily use the rich capabilities of modern browsers.
+<p />
+<strong>Pros:</strong> <ul>
+<li> Dev roadmap encompasses a broad range of areas needed to do browser-based app development -- Even the 0.1 release includes implementations of GUI elements, AJAX-style communication with the server, and visual effects.
+</li> <li> Build system uses Ant, so core devs seem to be on friendly terms with Java.
+</li> <li> Browser compatibility targets are: degrade gracefully in all cases, IE 5.5+, Firefox 1.0+, latest Safari, latest Opera
+</li> <li> Most core parts of the system are unit tested (an unit tests are runnable at the command line)
+</li> <li> Includes package system and build system that let you pull in only what you need
+</li> <li> Comprehensive demo at <a href="http://archive.dojotoolkit.org/nightly/tests/" target="_top">http://archive.dojotoolkit.org/nightly/tests/</a>
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> Documentation is lacking, but what's available is linked from <a href="http://dojotoolkit.org/docs" target="_top">http://dojotoolkit.org/docs</a> .
+</li></ul> 
+<p />
+<h2><a name="DotNetRemoting Rich Web Client S"></a><a name="_DotNetRemoting Rich Web Client "></a> DotNetRemoting Rich Web Client SDK for ASP.NET </h2>
+<a href="http://www.dotnetremoting.com" target="_top">http://www.dotnetremoting.com</a>
+<p />
+<strong>License:</strong> - commercial license
+<p />
+<strong>Description:</strong>
+Rich Web Client SDK is a platform for developing  rich internet applications (including AJAX). The product is available for .NET environment and includes server side DLL and a client side script 
+<p />
+Pros: <ul>
+<li> No need for custom method attributes, special signatures or argument types. Does not require stub or script generation.
+</li> <li> Available for .NET
+</li> <li> Automatically generates the objects from the existing .Net classes.
+</li> <li> Supports Hashtable and <span class="twikiNewLink">ArrayList<a rel="nofollow" href="/bin/edit/Projects/ArrayList?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> on the client
+</li> <li> The client and the server objects are interchangeable
+</li> <li> Can Invoke server methods methods from the client with classes as arguments
+</li> <li> Very easy to program
+</li> <li> Professional support
+</li></ul> 
+<p />
+Cons: <ul>
+<li> Lacks out of the box UI components.
+</li></ul> 
+<p />
+<h2><a name="DWR"></a> DWR </h2>
+<a href="http://www.getahead.ltd.uk/dwr/" target="_top">http://www.getahead.ltd.uk/dwr/</a>
+<p />
+<strong>License:</strong> Apache 2.0 
+<p />
+<strong>Description:</strong>
+DWR (Direct Web Remoting) is easy AJAX for Java. It reduces development time and the likelihood of errors by providing commonly used functions and removing almost all of the repetitive code normally associated with highly interactive web sites.
+<p />
+Pros: <ul>
+<li> Good integration with Java.
+</li> <li> Extensive documentation.
+</li> <li> Supports many browsers including FF/Moz, IE5.5+, Safari/Konq, Opera and IE with Active-X turned off via iframe fallback
+</li> <li> Integration with many Java OSS projects (Spring, Hibernate, JDOM, XOM, Dom4J)
+</li> <li> Automatically generated test pages to help diagnose problems
+</li></ul> 
+<p />
+Cons: <ul>
+<li> Java-exclusive -- seems to be Java code that generates JavaScript. This limits its utility in non-Java environments, and the potential reusability by the community.
+</li></ul> 
+<p />
+<h2><a name="Fleegix.js"></a> Fleegix.js </h2>
+<a href="http://js.fleegix.org/" target="_top">http://js.fleegix.org/</a>
+<p />
+<strong>License:</strong> Apache License, Version 2.
+<p />
+<strong>Description:</strong>
+Fleegix.js provides a lightweight, cross-browser set of JavaScript tools for building dynamic Web-app UIs. 
+<p />
+Includes a concise but powerful events system, an industrial-strength XHR library, a simple, no-muss-no-fuss XML parser, and some handy tools for working with Web forms, as well as other basic tools you need to build an Ajaxy Web UI.
+<p />
+<strong>Compatibility:</strong>
+It is well tested in the major-market-share browsers -- Firefox 1+, Internet Explorer 6+, and Safari 2.
+<p />
+<strong>Disclaimer:</strong>
+Fleegix.js is used in OSAF's <a href="http://windmill.osafoundation.org/" target="_top">Windmill</a> Web UI testing framework.
+<p />
+<h2><a name="JsHttpRequest"></a><a name="_JsHttpRequest"></a> JsHttpRequest </h2>
+<a href="http://en.dklab.ru/lib/JsHttpRequest/" target="_top">http://en.dklab.ru/lib/JsHttpRequest/</a>
+<p />
+<strong>License:</strong> LGPL
+<p />
+<strong>Pros:</strong> <ul>
+<li> Excellent cross-browser compatibility (e.g. works with IE 5.0 with disabled ActiveX).
+</li> <li> Support and "transparent" work with any character encoding (including any national).
+</li> <li> AJAX file uploads from a user browser to the server without a page reloading.
+</li> <li> Full support of PHP debug features and coding traditions.
+</li> <li> Multi-dimensional data structures exchange (associative arrays).
+</li> <li> Automatic choice of the best AJAX realization (XMLHttpRequest, SCRIPT, IFRAME).
+</li> <li> XMLHttpRequest-compatible interface is available.
+</li></ul> 
+<p />
+The main idea of JsHttpRequest is to be simple and transparent for all programmers and habitual programming techniques. 
+<p /> <ul>
+<li> PHP notices and errors (including fatal) are not break the script execution;
+</li> <li> there is no need of any framework (e.g. classes) to build a server part;
+</li> <li> PHP arrays are converted to JS objects and back fully transparently;
+</li> <li> forget about national encodings problems (e.g. works with windows-1251 on PHP part).
+</li></ul> 
+<p />
+Examples:
+<pre>
+ // JavaScript code:
+ JsHttpRequest.query(
+     &#39;your&#95;ajax&#95;script.php&#39;,
+     {
+         first: &#39;Dmitry&#39;,  
+         last: &#39;Koterov&#39;,
+         file: document.getElementById(&#34;my&#95;upload&#95;file&#34;)
+     },
+     function(result, debugMessages) {
+         document.getElementById(&#34;result&#34;).innerHTML &#61; result.text; 
+         if (debugMessages) alert(debugMessages);
+     }
+ );
+
+ // PHP code:
+ require&#95;once &#34;lib/JsHttpRequest.php&#34;;
+ $JsHttpRequest &#61;&#38; new JsHttpRequest(&#34;windows-1251&#34;);
+ $&#95;RESULT&#91;&#39;text&#39;] &#61; &#34;Hello, {$&#95;REQUEST&#91;&#39;first&#39;]} {$&#95;REQUEST&#91;&#39;last&#39;]}!&#34;;
+ echo &#34;Any debug message or even a fatal PHP error&#34;;
+</pre>
+<p />
+<strong>Cons:</strong> <ul>
+<li> Interface of the library is low-level. It is not a framework, but a library.
+</li> <li> Except PHP, no other official backend languages supported.
+</li></ul> 
+<p />
+<h2><a name="JSON-RPC-JAVA"></a> JSON-RPC-JAVA </h2>
+<a href="http://oss.metaparadigm.com/jsonrpc/index.html" target="_top">http://oss.metaparadigm.com/jsonrpc/index.html</a>
+<p />
+<strong>License:</strong> JSON-RPC-Java is licensed under the LGPL which allows use within commerical/proprietary applications (with conditions).
+<p />
+<strong>Description:</strong>
+JSON-RPC-Java is a key piece of Java web application middleware that allows JavaScript DHTML web applications to call remote methods in a Java Application Server (remote scripting) without the need for page reloading (as is the case with the vast majority of current web applications). It enables a new breed of fast and highly dynamic enterprise Java web applications (using similar techniques to Gmail and Google Suggests).
+<p />
+<strong>Pros:</strong> <ul>
+<li> Exceptionally easy to use and setup
+</li> <li> Transparently maps Java objects to JavaScript objects.
+</li> <li> Supports Internet Explorer, Mozilla, Firefox, Safari, Opera and Konqueror
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> JavaScript Object Notation can be difficult to read
+</li> <li> Possible scalability issues due to the use of HTTPSession
+</li></ul> 
+<p />
+<h2><a name="MochiKit"></a><a name="_MochiKit"></a> MochiKit </h2>
+<a href="http://mochikit.com/" target="_top">http://mochikit.com/</a>
+<p />
+<strong>License:</strong> MIT or Academic Free License, v2.1.
+<p />
+<strong>Description:</strong>
+"MochiKit makes JavaScript suck less." MochiKit is a highly documented and well tested, suite of JavaScript libraries that] will help you get shit done, fast. We took all the good ideas we could find from our Python, Objective-C, etc. experience and adapted it to the crazy world of JavaScript.
+<p />
+<strong>Pros:</strong> <ul>
+<li> Test-driven development -- "MochiKit has HUNDREDS of tests."
+</li> <li> Exhaustive documentation -- "You're unlikely to find any JavaScript code with better documentation than MochiKit. We make a point to maintain 100% documentation coverage for all of MochiKit at all times."
+</li> <li> Scriptaculous-style visual effects
+</li> <li> Supports latest IE, Firefox, Safari browsers
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> Support for IE is limited to version 6. According to the lead dev on the project, "IE 5.5 might work with a little prodding."
+</li> <li> Scriptaculous-style visual effects are still in beta
+</li></ul> 
+<p />
+<h2><a name="My Library"></a> My Library </h2>
+<a href="http://www.cinsoft.net/mylib.html" target="_top">http://www.cinsoft.net/mylib.html</a>
+<p />
+<strong>License:</strong> Free for non-commercial use. Commercial licenses available.
+<p />
+<strong>Description:</strong>
+My Library is a comprehensive, modular browser scripting library. Unlike similar libraries, it is based on feature detection and testing, rather than technically baseless browser sniffing.  Some of the areas covered are Ajax, animations, audio, CSS selector queries, DOM manipulation, drag and drop, event normalization, forms and Flash.  The script was written by David Mark.
+<p />
+<strong>Pros:</strong> <ul>
+<li> Modular
+</li> <li> No browser sniffing
+</li> <li> Compatible with virtually any past, present or future user agent
+</li> <li> Supports both HTML and XHTML DOM's
+</li> <li> Supports frames
+</li> <li> Simplifies feature detection for calling applications
+</li> <li> Very efficient and speedy DOM traversal (see speed test for comparison to similar libraries)
+</li> <li> Online builder application
+</li> <li> Optional OOP interface is overlaid, rather than tangled up in the functional API
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> Relatively new and officially still a Beta (though much of the code has been used in production environments)
+</li> <li> Documentation is unfinished
+</li></ul> 
+<p />
+<h2><a name="Plex Toolkit"></a> Plex Toolkit </h2>
+<a href="http://www.plextk.org" target="_top">http://www.plextk.org</a> - see <a href="http://www.protea-systems.com" target="_top">http://www.protea-systems.com</a> (and view source!) for sample site
+<p />
+<strong>License:</strong> - LGPL or GPL (optional)
+<p />
+<strong>Description:</strong>
+Open source feature-complete DHTML GUI toolkit and AJAX framework based on a Javascript/DOM implementation of Macromedia's Flex technology. Uses the almost identical markup language to Flex embedded in ordinary HTML documents for describing the UI. Binding is done with Javascript.
+<p />
+Pros: <ul>
+<li> Full set of widgets such as datagrid, tree, accordion, pulldown menus, DHTML window manager, viewstack and more
+</li> <li> Markup driven (makes it easy to visually build the interface)
+</li> <li> Interface components can be easily themed with CSS
+</li> <li> Client side XSLT for IE and Mozilla
+</li> <li> Well documented with examples.
+</li> <li> Multiple remoting transport options - <span class="twikiNewLink">XMLHttpRequest<a rel="nofollow" href="/bin/edit/Projects/XMLHttpRequest?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span>, IFrame (RSLite cookie based coming soon)
+</li> <li> Back button support
+</li> <li> Support for YAML serialization
+</li></ul> 
+<p />
+Cons: <ul>
+<li> Lacks animation framework.
+</li></ul> 
+<p />
+<h2><a name="PokeIn"></a> <span class="twikiNewLink">PokeIn<a rel="nofollow" href="/bin/edit/Projects/PokeIn?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> </h2>
+<a href="http://pokein.codeplex.com" target="_top">http://pokein.codeplex.com</a> 
+<p />
+<strong>License:</strong> - GPL v2
+<p />
+<strong>Description:</strong>
+Comet Ajax library for .Net , defines server side objects on client side and every server object knows the owner client. Its very easy to convert exist ASP.NET applications to use this library.
+<p />
+<strong>Pros:</strong> <ul>
+<li> Call server side (static/dynamic) methods directly (DWR like .NET ajax! but eaiser and painless)
+</li> <li> You dont have to focus or worry about AJAX or Serialization
+</li> <li> Auto organized client based objects!
+</li> <li>  Easy but powerfull settings
+</li> <li> Lightweight and cross-browser!
+</li> <li> Server CPU Friendly
+</li> <li> Multi user in Multi thread safely
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> New 
+</li></ul> 
+<p />
+<h2><a name="Prototype"></a> Prototype </h2>
+<a href="http://prototype.conio.net/" target="_top">http://prototype.conio.net/</a>
+<p />
+<strong>License:</strong> MIT
+<p />
+<strong>Description:</strong>
+Prototype is a JavaScript framework that aims to ease development of dynamic web applications. Its development is driven heavily by the Ruby on Rails framework, but it can be used in any environment.
+<p />
+<strong>Pros:</strong> <ul>
+<li> Fairly ubiquitous as a foundation for other toolkits -- used in both Scriptaculous and Rico (as well as in Ruby on Rails)
+</li> <li> Provides fairly low-level access to XMLHttpRequest
+</li> <li> Now well documented (officially) at [[http://prototypejs.org] [PrototypeJS.org]]
+</li></ul> 
+<strong>Cons:</strong> <ul>
+<li> IE support is limited to IE6.
+</li> <li> Has no visual effects library (but see Scriptaculous)
+</li> <li> Has no built-in way of acessing AJAX result as an XML doc.
+</li> <li> Modifications to <code>Object.prototype</code> apparently cause issues with for/in loops in interating through arrays. I could not find any information to indicate that this problem has been fixed.
+</li></ul> 
+<p />
+<h2><a name="Rialto"></a> Rialto </h2>
+<a href="http://rialto.application-servers.com/" target="_top">http://rialto.application-servers.com/</a>
+<p />
+<strong>License:</strong> Apache 2.0
+<p />
+<strong>Description:</strong>
+Rialto is a cross browser javascript widgets library. Because it is technology agnostic it can be encapsulated in JSP, JSF, .Net or PHP graphic components.
+<p />
+<strong>Pros:</strong> <ul>
+<li> Technology Agnostic
+</li> <li> Finition of widgets
+</li> <li> Vision of the architecture
+</li> <li> Tab drag and drop
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> Scant documentation -- currently consists of two PDFs and a single Weblog entry.
+</li> <li> Supports IE6.x and Firefox 1.x.
+</li> <li> Documentation
+</li></ul> 
+<p />
+<h2><a name="Rico"></a> Rico </h2>
+<a href="http://openrico.org/" target="_top">http://openrico.org/</a>
+<p />
+<strong>License:</strong> Apache 2.0
+<p />
+<strong>Description:</strong>
+An open-source JavaScript library for creating rich Internet applications. Rico provides full Ajax support, drag and drop management, and a cinematic effects library.
+<p />
+<strong>Pros:</strong> <ul>
+<li> Corporate sponsorship from Sabre Airline Solutions (Apache 2.0 License). This means that the code is driven by practical business use-cases, and user-tested in commercial applications.
+</li> <li> Extensive range of functions/behaviors.
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> Scant documentation -- currently consists of two PDFs and a single Weblog entry.
+</li> <li> Supports IE5.5 and higher only. Also, no Safari support. From the Web site: "Rico has been tested on IE 5.5, IE 6, Firefox 1.0x/Win Camino/Mac, Firefox 1.0x/Mac. Currently there is no Safari or Mac IE 5.2 support. Support will be provided in a future release for Safari."
+</li> <li> Has no built-in way of acessing AJAX result as an XML doc.
+</li> <li> Drag-and-drop apparently broken in IE (tested in IE6)
+</li></ul> 
+<p />
+<h2><a name="SAJAX"></a> SAJAX </h2>
+<a href="http://www.modernmethod.com/sajax/" target="_top">http://www.modernmethod.com/sajax/</a>
+<p />
+<strong>License:</strong> BSD
+<p />
+<strong>Description:</strong>
+Sajax is an open source tool to make programming websites using the Ajax framework — also known as XMLHTTPRequest or remote scripting — as easy as possible. Sajax makes it easy to call PHP, Perl or Python functions from your webpages via JavaScript without performing a browser refresh. The toolkit does 99% of the work for you so you have no excuse to not use it.
+<p />
+<strong>Pros:</strong> Supports many common Web-development languages.
+<p />
+<strong>Cons:</strong> <ul>
+<li> Seems limited just to AJAX -- i.e., XMLHttpRequest. No visual effects library or anything else.
+</li> <li> Integrates with backend language, and has no Java or JSP support.
+</li></ul> 
+<p />
+<h2><a name="Sardalya"></a> Sardalya </h2>
+<a href="http://www.sarmal.com/sardalya/" target="_top">http://www.sarmal.com/sardalya/</a>
+<p />
+<strong>License:</strong> free for uncommercial use; almost free for commercial use.
+<p />
+<strong>Description:</strong>
+s@rdalya, is a cross-browser interface that aims to make dynamic HTML programming easy and fun. It is a cross-browser compatible system which is designed to work in all DOM-supporting browsers.
+<p />
+Though the developer doesn't test on a Mac, I encountered no problems viewing all of the many DHTML samples he provides. Sardalya includes Ajax functions as well as a comprehensive DOM-based DHTML library.
+<p />
+The library received an "A grade" from musingsfrommars.org:
+<a href="http://www.musingsfrommars.org/2006/03/ajax-dhtml-library-scorecard.html" target="_top">http://www.musingsfrommars.org/2006/03/ajax-dhtml-library-scorecard.html</a>
+<p />
+In its blog, the developer says that the next version of the library will include:
+<p /> <ul>
+<li> A better AJAX integration.
+</li> <li> And more objects to play with(such as Effect object for scheduled transitions such as background fades, or <span class="twikiNewLink">ModalDialog<a rel="nofollow" href="/bin/edit/Projects/ModalDialog?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> object which generates a DOM generated modal dialog, which is a cross-browser DOM-implementation of IE's modal dialog, which is not being used much because it is vendor-specific and not supported in other browsers.
+</li></ul> 
+<p />
+<strong>Pros:</strong> <ul>
+<li> Object-oriented.
+</li> <li> Flexible, easily extendible.
+</li> <li> Works in almost any modern browser.
+</li> <li> Independent of OS.
+</li> <li> Lightweight when you consider what is does.
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> Since it is being constantly developed, the documentation may not be in sync with the most recent version. However viewing the sources of examples are adequate to learn how to use the API.
+</li></ul> 
+<p />
+<h2><a name="Scriptaculous"></a> Scriptaculous </h2>
+<a href="http://script.aculo.us/" target="_top">http://script.aculo.us/</a>
+<p />
+<strong>License:</strong> MIT
+<p />
+<strong>Description:</strong>
+Script.aculo.us provides you with easy-to-use, compatible and, ultimately, totally cool! JavaScript libraries to make your web sites and web applications fly, Web 2.0 style. A lot of the more advanced Ajax support in Ruby on Rails (like visual effects, auto-completion, drag-and-drop and in-place-editing) uses this library.
+<p />
+<strong>Pros:</strong> <ul>
+<li> Well-designed site actually has some reference materials attached to each section.
+</li> <li> Lots of neat visual effects.
+</li> <li> Simple and easy to understand object-oriented design.
+</li> <li> Although developed together with Ruby on Rails it's not dependent on Rails at all, has been used successfully at least in Java and PHP projects and should work with any framework.
+</li> <li> Because of the large user-group coming from Ruby on Rails it has very good community support.
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> No IE5.x support --  see Prototype -- Cons 1., above. (Edit July 22, 2006: IE5 is now supported.  See website.)
+</li></ul> 
+<p />
+<h2><a name="Sombrero"></a> Sombrero </h2>
+<a href="http://www.sombrerosoft.de/" target="_top">http://www.sombrerosoft.de/</a>
+<p />
+<strong>License:</strong> Sombrero license
+<p />
+<strong>Description:</strong>
+Sombrero ist a german Java software development framework that allows web developers to create "MDI"-web pages for database applications.
+<p />
+<strong>Pros:</strong> Very good GUI controls
+<p />
+<strong>Cons:</strong> <ul>
+<li> tutorial is in german language
+</li></ul> 
+<p />
+<h2><a name="SmartClient from Isomorphic Soft"></a><a name="_SmartClient from Isomorphic Sof"></a> SmartClient from Isomorphic Software </h2>
+<a href="http://www.smartclient.com/" target="_top">http://www.smartclient.com/</a>
+<p />
+<strong>License:</strong> 
+LGPL with commercial licenses available
+<p />
+<strong>Description:</strong>
+SmartClient is the cross-platform AJAX RIA system chosen by top commercial software vendors, on-demand service providers, and enterprise IT developers for thousands of deployments since 2000.
+<p />
+SmartClient provides a complete application stack, from rich, skinnable, extensible RIA components to declarative databinding and SOA integration, paired with a mature, searchable documentation suite and integrated tooling.
+<p />
+SmartClient AJAX applications run on Internet Explorer, Mozilla, Netscape, Firefox, and Safari web browsers, on Windows, MacOS, Linux, and Solaris.  A Java integration server is provided with the commercial license, and SmartClient can also be integrated directly with any XML
+or JSON-based service without need of a server.  Visit SmartClient.com for hundreds of live examples, browseable documentation and a downloadable SDK.
+<p />
+<strong>Pros:</strong> <ul>
+<li> Proven in the world's most sophisticated AJAX applications
+</li> <li> Excellent documentation
+</li> <li> Extensible; build new components out of existing components without DHTML experience
+</li> <li> Broadest browser and platform support
+</li> <li> Declarative integration with web services
+</li> <li> Skinning, drag and drop and animation effects
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> Large download (but provides modular delivery and background download features)
+</li> <li> No Opera support yet
+</li></ul> 
+<p />
+<h2><a name="TIBCO General Interface (AJAX RI"></a> TIBCO General Interface (AJAX RIA Framework and IDE since 2001) </h2>
+<a href="http://developer.tibco.com" target="_top">http://developer.tibco.com</a>
+<p />
+TIBCO General Interface is a mature AJAX RIA framework that's been at work powering applicaitions at Fortune 100 and US Government organziations since 2001.  Infact the framework is so mature, that TIBCO General Interface's visual development tools themselves run in the browser alongside the AJAX RIAs as you create them.  
+<p />
+See an amazing demo in Jon Udell's coverage at <span class="twikiNewLink">InfoWorld<a rel="nofollow" href="/bin/edit/Projects/InfoWorld?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span>.
+<a href="http://weblog.infoworld.com/udell/2005/05/25.html" target="_top">http://weblog.infoworld.com/udell/2005/05/25.html</a>
+<p />
+You can also download the next version of the product and get many sample applications from their developer community site via <a href="https://power.tibco.com/app/um/gi/newuser.jsp" target="_top">https://power.tibco.com/app/um/gi/newuser.jsp</a>
+<p />
+Pros: <ul>
+<li> Dozens of types of extensible GUI components
+</li> <li> Vector based charting package
+</li> <li> Support for SOAP communication (in adiition to your basic HTTP and XML too)
+</li> <li> Full visual development environment          - WYSIWYG GUI layouts           - step-through debugging           - code completion          - visual tools for connecting to services
+</li> <li> An active developer community at <a href="http://power.tibco.com/GI" target="_top">http://power.tibco.com/GI</a>
+</li></ul> 
+<p />
+Cons: <ul>
+<li> Firefox support is in the works, but not released yet making this still something for enterprises to use where Internet Explorer is on 99.9% of business user desktops, but probably not for use on web sites that face the general population.
+</li></ul> 
+<p />
+More info at <a href="http://developer.tibco.com" target="_top">http://developer.tibco.com</a> 
+<p />
+<h2><a name="Visual _WebGui (The .NET answer"></a><a name="Visual _WebGui (The .NET answer "></a> Visual <span class="twikiNewLink">WebGui<a rel="nofollow" href="/bin/edit/Projects/WebGui?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> (The .NET answer to Google's GWT that extends <span class="twikiNewLink">WinForms<a rel="nofollow" href="/bin/edit/Projects/WinForms?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> over ASP.NET) </h2>
+<a href="http://www.visualwebgui.com" target="_top">http://www.visualwebgui.com</a>
+<p />
+Visual <span class="twikiNewLink">WebGui<a rel="nofollow" href="/bin/edit/Projects/WebGui?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> (VWG) is an open source AJAX framework with a growing 
+community that extends ASP.NET with the <span class="twikiNewLink">WinForms<a rel="nofollow" href="/bin/edit/Projects/WinForms?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> programming model. 
+<p />
+VWG provides an alternative to ASP.NET's page model in the form of 
+<span class="twikiNewLink">WinForms<a rel="nofollow" href="/bin/edit/Projects/WinForms?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> forms and form events. Since VWG, like most .NET AJAX 
+frameworks, is implemented using an <span class="twikiNewLink">IHttpHandler<a rel="nofollow" href="/bin/edit/Projects/IHttpHandler?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span>, it can still interact 
+with ASP.NET pages enabling usage of VWG within an existing ASP.NET 
+site. 
+<p />
+VWG features: <ul>
+<li> AJAX application development using <span class="twikiNewLink">WinForms<a rel="nofollow" href="/bin/edit/Projects/WinForms?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> development patterns and practices with no prior AJAX (or web development) skills.
+</li> <li> <span class="twikiNewLink">WinForms<a rel="nofollow" href="/bin/edit/Projects/WinForms?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> controls (most of .NET 2.0 controls) implemented for VWG.
+</li> <li> Ability to create custom controls (including full inheritance).
+</li> <li> Ability to interoperate with existing ASP.NET controls and pages.
+</li> <li> Ability to customize control behavior and appearance.
+</li> <li> .NET 1.x/2.0 support.
+</li> <li> An active developer community at <a href="http://www.visualwebgui.com/tabid/53/Default.aspx" target="_top">http://www.visualwebgui.com/tabid/53/Default.aspx</a>
+</li></ul> 
+<p />
+VWG unlike GWT: <ul>
+<li> Does not generate JavaScript code – debugging is done within the server-based .NET code that executes in runtime.
+</li> <li> Does not run application logic on the client – all processing is done on the server.
+</li> <li> Does not expose unnecessary services to the client – server sends UI updates / client sends user event queues.
+</li> <li> Results in a thin client rather than a fat client.
+</li> <li> Is based on a familiar <span class="twikiNewLink">WinForms<a rel="nofollow" href="/bin/edit/Projects/WinForms?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> object model.
+</li> <li> Is provided with full <span class="twikiNewLink">WinForms<a rel="nofollow" href="/bin/edit/Projects/WinForms?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> like design time capabilities.
+</li></ul> 
+<p />
+See an rich demo can be found here:
+<a href="http://samples.visualwebgui.com/mainforms.wgx" target="_top">http://samples.visualwebgui.com/mainforms.wgx</a> 
+<p />
+You can also download the framework and sample projects from:
+<a href="http://www.visualwebgui.com/tabid/110/Default.aspx" target="_top">http://www.visualwebgui.com/tabid/110/Default.aspx</a>
+<p />
+More info at <a href="http://www.visualwebgui.com" target="_top">http://www.visualwebgui.com</a>
+<p />
+<h2><a name="xWire"></a> xWire </h2>
+<a href="http://xwire.solutionPioneers.com" target="_top">http://xwire.solutionPioneers.com</a>
+<p />
+<strong>License:</strong> Apache V2.0
+<p />
+<strong>Description:</strong>
+xWire is a mature, object-oriented, enterprise-class toolkit that consists of both client (browser) and server (Java) editions.  You can use either or both editions depending upon your environment.  xWire was originally built back in 2001 and originally supported only IE5.  Support has expanded to IE6, IE7 and Firefox.  Opera support is coming soon.  You can literally write enterprise-class AJAX applications that work in all of the supported browsers.  We have lots of features that can be independently used as desired on both the client and the server.  Additionally, COMET support is on the way.
+<p />
+<strong>Client Features:</strong> <ul>
+<li> Simple API for cross browser functionality including <span class="twikiNewLink">XmlHttp<a rel="nofollow" href="/bin/edit/Projects/XmlHttp?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span>, DOM, XPath, XSLT
+</li> <li> Completely object-oriented using Javascript classes
+</li> <li> Configurable logging mechanism
+</li> <li> Incredibly flexible event mechanism
+</li> <li> Includes some great widgets such as a hierarchical tree and notebook
+</li> <li> XML form binding for easily copying HTML form field values to/from one or more XML documents
+</li> <li> Working examples
+</li> <li> Frequent enhancements
+</li> <li> Well documented with meaningful and thorough comments throughout the code
+</li></ul> 
+<p />
+<strong>Server Features:</strong> <ul>
+<li> Mature toolkit (originally written in 2001)
+</li> <li> Ideal for building the server side of an AJAX client application
+</li> <li> Can be used for most any Java application including web and desktop
+</li> <li> Seamless integration with several open source toolkits including Struts, iBatis, Log4J, Commons Configuration, Xalan and XStream
+</li> <li> Provides for Struts actionless development
+</li> <li> Well designed and well layered
+</li> <li> Scalable and stable
+</li> <li> Innovative features include XML streaming into and out of the server and Javascript Bundles
+</li> <li> Collection of useful standalone services that can be used together or separately
+</li> <li> Can be used in conjunction with the xWire client
+</li> <li> Pick and choose which features to use
+</li> <li> Working examples
+</li> <li> Frequent enhancements
+</li> <li> Well documented with meaningful and thorough comments throughout the code
+</li></ul> 
+<p />
+<h2><a name="WebORB"></a><a name="_WebORB"></a> WebORB </h2>
+<a href="http://www.themidnightcoders.com" target="_top">http://www.themidnightcoders.com</a>
+<p />
+<strong>License:</strong> Standard Edition is free, Professional Edition - commercial license
+<p />
+<strong>Description:</strong>
+WebORB is a platform for developing AJAX and Flash-based rich internet applications. The product is available for Java and .NET environments and includes a client side toolkit - Rich Client System to enable binding to server side objects (java, .net, web services, ejb, cold fusion), data paging and interactive messaging.
+<p />
+Pros: <ul>
+<li> Zero-changes deployment. Does not require any modifications on the server-side code, no need for custom method attributes, special signatures or argument types. Does not require stub or script generation.
+</li> <li> Available for Java and .NET
+</li> <li> One line API client binding. Same API to bind to any supported server-side type. Generated client-side proxy object have the same methods as the remote counter parts
+</li> <li> Automatically adapts client side method arguments to the appropriate types on the server. Supports all possible argument types and return values (primitives, strings, dates, complex types, collections, data and result sets). Server-side arguments can be interfaces or abstract types
+</li> <li> Includes a highly dynamic message server to allow clients to message each other. Server side code can push data to the connected clients (both AJAX and Flash)
+</li> <li> Supports data paging. Clients can retrieve large data sets in chunks and efficiently page through the results.
+</li> <li> Extensive security. Access to the application code can be restricted on the package/namespace, class or method level.
+</li> <li> Detailed documentation.
+</li> <li> Professional support
+</li></ul> 
+<p />
+Cons: <ul>
+<li> Lacks out of the box UI components.
+</li></ul> 
+<p />
+<h2><a name="Zimbra"></a> Zimbra </h2>
+<a href="http://www.zimbra.com/" target="_top">http://www.zimbra.com/</a>
+<p />
+<strong>License:</strong> Zimbra Ajax Public License ZAPL (derived from Mozilla Public License MPL)
+<p />
+<strong>Description:</strong>
+Zimbra is a recently released client/server open source email system. Buried deep within this product is an excellent Ajax Tool Kit component library (<span class="twikiNewLink">AjaxTK<a rel="nofollow" href="/bin/edit/Projects/AjaxTK?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span>) written in Javascript. A fully featured demo of the product is available on zimbra.com, and showcases the extensive capabilities of their email client. A very large and comprehensive widget library as only avialable in commercial Ajax toolkits is now available to the open source community. Download the entire source tree to find the AJAX directory which includes example applications.
+<p />
+<strong>Pros:</strong> <ul>
+<li> Full support of drag and drop in all widgets. Widgets include data list, wizard, button, text node, rich text editor, tree, menus, etc.
+</li> <li> Build system uses Ant and hosting is based on JSP and Tomcat.
+</li> <li> Very strong client-side MVC architecture based; architect is ex-Javasoft lead developer.
+</li> <li> Communications support for client-side SOAP, and <span class="twikiNewLink">XmlHttpRequest<a rel="nofollow" href="/bin/edit/Projects/XmlHttpRequest?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> as well as iframes.
+</li> <li> Support for JSON serialized objects, and Javascript-based XForms.
+</li> <li> Strong muli-browser capabilities: IE 5.5+, Firefox 1.0+, latest Safari
+</li> <li> Hi quality widgets have commercial quaility since this is a commerical open source product.
+</li> <li> Widget library is available as a separate build target set from the main product.
+</li> <li> Debugging facility is built in to library, displays communications request and response.
+</li> <li> License terms making it suitable for inclusion in other commercial products free of charge.
+</li></ul> 
+<p />
+<strong>Cons:</strong> <ul>
+<li> Does not currently support: Keyboard commands in menus, in-place datasheet editing.
+</li> <li> Does not support gracefull degradation to iframes if other transports unavailable.
+</li> <li> Documentation is lacking, but PDF white paper describing widget set and drag and drop is available.
+</li></ul> 
+<p />
+<h2><a name="Others"></a> Others </h2>
+<strong>Bling!</strong>
+<p />
+<a href="http://bcsaller.blogspot.com/2005/12/bling.html" target="_top">http://bcsaller.blogspot.com/2005/12/bling.html</a>
+<a href="http://darcs.objectrealms.net/darcsweb.cgi/bling" target="_top">http://darcs.objectrealms.net/darcsweb.cgi/bling</a>
+<p />
+<strong>Description</strong>: <span class="twikiNewLink">MochiKit<a rel="nofollow" href="/bin/edit/Projects/MochiKit?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span>, Prototype, Scripaculous and <span class="twikiNewLink">OpenRico<a rel="nofollow" href="/bin/edit/Projects/OpenRico?topicparent=Projects.AjaxLibraries" title="Create this topic"><sup>?</sup></a></span> wrapped up into one package for Plone, isolating web developers from writing and debugging JS.
+<p />
+<strong>Xajax</strong>
+<p />
+<a href="http://xajax.sourceforge.net/" target="_top">http://xajax.sourceforge.net/</a>
+<p />
+<strong>Description:</strong> PHP-centric, looks very new
+<p />
+<strong>License:</strong> LGPL 
+<p />
+<strong>SACK</strong>
+<p />
+<a href="http://twilightuniverse.com/projects/sack/" target="_top">http://twilightuniverse.com/projects/sack/</a>
+<p />
+<strong>Description:</strong> New, limited feature set
+<p />
+<strong>License:</strong> modified X11
+<p />
+<strong>ZK</strong>
+<p />
+<a href="http://www.zkoss.org" target="_top">http://www.zkoss.org</a>
+<p />
+Description: ZK is an open-source Ajax Web framework that enables rich user interface for Web applications with little programming 
+<p />
+<strong>Licsense:</strong> Open Source
+<p />
+There is another <a href="http://edevil.wordpress.com/2005/11/14/javascript-libraries-roundup/" target="_top">excellent and comprehensive list of libraries</a> at <a href="http://edevil.wordpress.com" target="_top">EDevil's Weblog</a>.</div><!-- /patternTopic-->
+<div class="twikiAfterText"></div></div><!-- /patternContent-->
+<a name="topic-actions"> </a><div class="patternTopicActions"><div class="patternTopicAction"><span class="patternActionButtons"> <span class="patternButton"><a href="http://chandlerproject.org/bin/edit/Projects/AjaxLibraries?t=1292621419" rel="nofollow" title='Edit this topic text' accesskey="E"><span class='twikiAccessKey'>E</span>dit</a></span><span class="twikiSeparator">&nbsp;|&nbsp;</span><span class="patternButton"><a href="http://chandlerproject.org/bin/edit/Projects/AjaxLibraries?cover=kupu&amp;t=1292621419" rel="nofollow" title='Edit this topic text' accesskey="W"><span class='twikiAccessKey'>W</span>YSIWYG</a></span><span class="twikiSeparator">&nbsp;|&nbsp;</span><a href="/bin/attach/Projects/AjaxLibraries" accesskey="A" title="Attach an image or document to this topic" rel="nofollow"><span class='twikiAccessKey'>A</span>ttach</a><span class="twikiSeparator">&nbsp;|&nbsp;</span><a href="/Projects/AjaxLibraries?template=viewprint" title="Printable version of this topic" accesskey="P" rel="nofollow"><span class='twikiAccessKey'>P</span>rintable</a><span class="twikiSeparator">&nbsp;|&nbsp;</span><a href='/Projects/AjaxLibraries?raw=on' title='View raw text without formatting' accesskey='r' rel='nofollow'><span class='twikiAccessKey'>R</span>aw View</a><span class="twikiSeparator">&nbsp;|&nbsp;</span>Backlinks: <a href="/bin/oops/Projects/AjaxLibraries?template=backlinksweb" title='Search the Projects Web for topics that link to here' accesskey="b">We<span class='twikiAccessKey'>b</span></a>, <a href="/bin/oops/Projects/AjaxLibraries?template=backlinksallwebs" title="Search all webs for topics that link to here" accesskey="L">A<span class='twikiAccessKey'>l</span>l Webs</a><span class="twikiSeparator">&nbsp;|&nbsp;</span><span class="patternRevision"><a href="/bin/rdiff/Projects/AjaxLibraries?type=history" title="View total topic history" accesskey="H" rel="nofollow"><span class='twikiAccessKey'>H</span>istory</a>: r50&nbsp;<a rel="nofollow" href="/bin/rdiff/Projects/AjaxLibraries?rev1=50;rev2=49">&lt;</a>&nbsp;<a rel="nofollow" href="/Projects/AjaxLibraries?rev=49">r49</a>&nbsp;<a rel="nofollow" href="/bin/rdiff/Projects/AjaxLibraries?rev1=49;rev2=48">&lt;</a>&nbsp;<a rel="nofollow" href="/Projects/AjaxLibraries?rev=48">r48</a>&nbsp;<a rel="nofollow" href="/bin/rdiff/Projects/AjaxLibraries?rev1=48;rev2=47">&lt;</a>&nbsp;<a rel="nofollow" href="/Projects/AjaxLibraries?rev=47">r47</a>&nbsp;<a rel="nofollow" href="/bin/rdiff/Projects/AjaxLibraries?rev1=47;rev2=46">&lt;</a>&nbsp;<a rel="nofollow" href="/Projects/AjaxLibraries?rev=46">r46</a></span><span class="twikiSeparator">&nbsp;|&nbsp;</span><a href="/bin/oops/Projects/AjaxLibraries?template=oopsmore&amp;param1=50&amp;param2=50" title='Delete or rename this topic; set parent topic; view and compare revisions' accesskey="M" rel="nofollow"><span class='twikiAccessKey'>M</span>ore topic actions</a></span></div></div><!--/patternTopicActions-->
+</div><!-- /patternMainContents-->
+</div><!-- /patternMain--><div id="patternLeftBar"><div id="patternClearHeaderLeft"></div>
+<div id="patternLeftBarContents">
+<p />
+<a href="http://chandlerproject.org/" target="_top">chandlerproject.org</a><br/>
+<p />
+<a href="http://chandlerproject.org/vision" target="_top">VISION</a><br/>
+<a href="/Projects/ProductTour" class="twikiLink">TOUR</a><br/>
+<p />
+<a href="http://chandlerproject.org/download" target="_top">Download Desktop</a><br/>
+<a href="http://chandlerproject.org/hubsignup" target="_top">Get a Hub Account</a><br/>
+<a href="http://chandlerproject.org/serverdownload" target="_top">Get Chandler Server</a>
+<p />
+<a href="http://chandlerproject.org/faq" target="_top">FAQ</a><br/>
+<a href="/Projects/GetStarted" class="twikiLink">Get Started</a>
+<p />
+<a href="http://blog.chandlerproject.org/" target="_top">Blog</a><br/>
+<a href="http://chandlerproject.org/mailinglists" target="_top">Mailing Lists</a><br/>
+<a href="http://chandlerproject.org/irc" target="_top">Chat on IRC</a><br/>
+<p />
+<a href="http://chandlerproject.org/reportabug" target="_top">Report a Bug</a><br/>
+<a href="http://chandlerproject.org/getinvolved" target="_top">Get Involved</a><br/>
+<p />
+<a href="http://chandlerproject.org/community" target="_top">OSAF Community</a><br/>
+<a href="http://www.osafoundation.org/" target="_top">About OSAF</a><br/>
+<p />
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<p />
+<a href="/Projects/WebChanges" class="twikiLink">Projects&nbsp;Wiki&nbsp;Changes</a><br/>
+<a href="http://chandlerproject.org/bin/view/Main/WebAtom"><img src="http://chandlerproject.org/pub/TWiki/TWikiDocGraphics/xml-feed.gif" alt="Feed for new/changed Main pages" title="Feed for new/changed Main pages" width="36" height="14" /></a>
+</div><!-- /patternLeftBarContents--></div><!-- /patternLeftBar-->
+</div><!-- /patternFloatWrap-->
+<div class="clear">&nbsp;</div>
+</div><!-- /patternOuter--></div><!-- /patternWrapper--><div id="patternTopBar"><div id="patternTopBarContents"><table border="0" cellpadding="0" cellspacing="0" style="width:100%; margin-top:11px;">
+<tr><td valign="middle"><a href="http://www.osafoundation.org/"><span id="osafLogoText">Open Source Applications Foundation</span></a></td>
+<td align="right" valign="top" class="patternMetaMenu">
+ <ul>
+<li> <form name="TWikiWebTopBarChangeLanguage" action="/bin/oops/Projects/AjaxLibraries" method="get"><select name="language" onchange="document.TWikiWebTopBarChangeLanguage.submit()"><option  value="da">Dansk</option> <option  value="de">Deutsch</option> <option selected="selected" value="en">English</option> <option  value="es">Español</option> <option  value="fi">Finnis</option> <option  value="fr">Français</option> <option  value="it">Italiano</option> <option  value="nl">Nederlands</option> <option  value="pl">Polski</option> <option  value="pt">Português</option> <option  value="sv">Svenska</option> <option  value="zh-cn">简体中文</option> <option  value="zh-tw">繁體中文</option></select><input type="hidden" name="template" value="oopslanguagechanged" /><noscript><input class="twikiButton" type="submit" value="Change language" /></noscript></form>
+</li> <li> <form name="jumpForm" action="/Projects/AjaxLibraries"><input id="jumpFormField" type="text" class="twikiInputField patternFormFieldDefaultColor" name="topic" size="14" value="Jump" onfocus="clearDefaultandCSS(this);" onblur="setDefaultText(this);" /></form>
+</li> <li> <form name="quickSearchForm" action="/Projects/WebSearch"><input type="text" class="twikiInputField patternFormFieldDefaultColor" name="search" value="Search" size="14" onfocus="clearDefaultandCSS(this);" onblur="setDefaultText(this);" /></form>
+</li></ul> 
+</td></tr></table></div></div><!-- /patternTopBar--><div id="patternBottomBar"><div id="patternBottomBarContents"><font size="-2">Except where otherwise noted, this site and its content are licensed by OSAF under an <a rel="license" href="http://creativecommons.org/licenses/by/3.0/" class="NavSubSectionLink">Creative Commons License, Attribution Only 3.0</a>.<br/>See <a href="http://chandlerproject.org/bin/view/TWiki/WebContributors?web=Projects&amp;page=AjaxLibraries&amp;revision=50&amp;skin=plain">list of page contributors</a> for attributions.</font>
+</div><!-- /patternBottomBarContents--></div><!-- /patternBottomBar-->
+</div><!-- /patternPage-->
+</div><!-- /patternPageShadow-->
+</div><!-- /patternScreen-->
+</body></html>
