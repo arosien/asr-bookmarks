@@ -1,0 +1,629 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" id="sixapart-standard">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Persistent Login Cookie Best Practice - The Fishbowl</title>
+    <meta name="generator" content="Movable Type Open Source 4.1" />
+    <link rel="stylesheet" href="http://fishbowl.pastiche.org/styles.css" type="text/css" />
+    <link rel="shortcut icon" href="http://fishbowl.pastiche.org/favicon.ico">
+    
+    
+<link rel="alternate" type="application/atom+xml" title="All Entries Feed (Atom)" href="/atom.xml" />
+<link rel="openid.server" href="http://fishbowl.pastiche.org/plugins/openid-server/server.cgi" />
+<meta name="ICBM" content="-33.84917, 151.21583"/>
+<meta name="DC.title" content="The Fishbowl"/>
+<meta name="description" content="Charles Miller's weblog, covering Apple, Java, and whatever assorted nerdery happens to cross my path."/> 
+
+    <link rel="start" href="http://fishbowl.pastiche.org/" title="Home" />
+        
+
+    
+
+    <link rel="prev" href="http://fishbowl.pastiche.org/2004/01/19/confluence_beta_2_er_3/" title="Confluence Beta 2... er... 3" />
+    <link rel="next" href="http://fishbowl.pastiche.org/2004/01/25/snippet/" title="Snippet" />
+    
+    
+
+    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-214651-1";
+urchinTracker();
+</script>
+
+
+</head>
+<body class="mt-archive-listing mt-entry-archive layout-wtt">
+  <div id="banner">
+     <h1 id="blog-title"><a href="http://fishbowl.pastiche.org/" accesskey="1">The Fishbowl</a></h1>
+     <p id="blog-subtitle">tail -f /dev/mind > blog</p>
+  </div>
+  <div id="content">
+
+
+<div id="entry-1291" class="entry-asset asset hentry">
+    <div class="asset-header">
+        <h1 id="page-title" class="asset-name entry-title">Persistent Login Cookie Best Practice</h1>
+        <p class="published">January 19, 2004 11:52 PM</p>
+    </div>
+    <div class="asset-content entry-content">
+
+        <div class="asset-body">
+            <p>Persistent login cookies are the cookies that are stored with your browser when you click the "remember me" button on the login form. I would like to be able to say that such cookies are obselete, and <a href="http://fishbowl.pastiche.org/2003/12/30/saving_http_authentication">we have a better way of handling user logins</a>, but they aren't, and we don't.</p>
+
+<p>The following recipe for persistent cookies requires no crypto more powerful than a good random number generator.</p>
+
+<p><strong>Premises</strong></p>
+
+
+<ol>
+<li>Cookies are vulnerable. Between common browser cookie-theft vulnerabilities and cross-site scripting attacks, we must accept that cookies are not safe</li>
+<li>Persistent login cookies are on their own sufficient authentication to access a website. They are the equivalent of both a valid username and password rolled into one</li>
+<li>Users reuse passwords. Hence, any login cookie from which you can recover the user's password holds significantly more potential for harm than one from which you can not</li>
+<li>Binding persistent cookies to a particular IP address makes them not particularly persistent in many common cases</li>
+<li>A user may wish to have persistent cookies on multiple web browsers on different machines simultaneously</li>
+</ol>
+
+
+
+<p><strong>Charles' Recipe</strong></p>
+
+<p>The cookie should consist of the user's username, followed by a separator character, followed by some large random number (128 bits seems mind-bogglingly large enough to be acceptable). The server keeps a table of number-&gt;username associations, which is looked up to verify the validity of the cookie. If the cookie supplies a random number and username that are mapped to each other in the table, the login is accepted.</p>
+
+<p>At any time, a username may be mapped to several such numbers. Also, while incredibly unlikely, it does not matter if two usernames are mapped to the same random number.</p>
+
+<p>A persistent cookie is good for a single login. When authentication is confirmed, the random number used to log in is invalidated and a brand new cookie assigned. Standard session-management handles the credentials for the life of the session, so the newly assigned cookie will not be checked until the <em>next</em> session (at which point it, too, will be invalidated after use).</p>
+
+<p>The server need not make the effort of deliberately trying to avoid re-assigning random numbers that have been used before: the chance of it happening is so low that even if it did, nobody would know to make use of it.</p>
+
+<p>When a user logs out through some deliberate logout function, their current cookie number is also invalidated. The user also has an option somewhere to clear <em>all</em> persistent logins being remembered by the system, just in case.</p>
+
+<p>Periodically, the database is purged of associations older than a certain time-period (three months, perhaps: the size of the table would be far more an issue than any possibilities of collision in a 128 bit random space).</p>
+
+<p>The following user functions must <em>not</em> be reachable through a cookie-based login, but only through the typing of a valid password:</p>
+
+
+<ul>
+<li>Changing the user's password</li>
+<li>Changing the user's email address (especially if email-based password recovery is used)</li>
+<li>Any access to the user's address, payment details or financial information</li>
+<li>Any ability to make a purchase</li>
+</ul>
+
+
+
+<p><strong>Results</strong></p>
+
+<p>If the login cookie is compromised, the attacker has access to the common functions of the site as that user. This is inevitable whatever the cookie contains. However, the attacker can not:</p>
+
+
+<ul>
+<li>Access sensitive user information</li>
+<li>Spend the user's money</li>
+<li>Recover the user's password and try it on other sites</li>
+<li>Prevent the user from receiving notifications from the site of things that may have been done in their name</li>
+<li>Share the stolen login with others</li>
+</ul>
+
+
+
+<p>The mutating nature of the cookie also provides a much smaller window of opportunity for an attacker to exploit a stolen cookie, and means the attacker must be far more careful they don't end up with a useless set of credentials.</p>
+
+<p><strong>Update:</strong> Barry Jaspan suggests <a href="http://jaspan.com/improved_persistent_login_cookie_best_practice">an addition to the protocol</a> that would further reduce the window of opportunity for stolen cookies: if a cookie that has been known to be used before (and thus invalidated) is presented, treat it as evidence of an attack and invalidate <i>all</i> saved logins for that user.</p>
+        </div>
+
+
+    </div>
+    <div class="asset-footer">
+        
+                
+
+    </div>
+</div>
+
+
+
+<div id="trackbacks" class="trackbacks">
+    <h2 class="trackbacks-header">7 TrackBacks</h2>
+    <div class="trackbacks-info">
+        <p>Listed below are links to blogs that reference this entry: <a href="http://fishbowl.pastiche.org/2004/01/19/persistent_login_cookie_best_practice/">Persistent Login Cookie Best Practice</a>.</p>
+        <p>TrackBack URL for this entry: <span id="trackbacks-link">http://fishbowl.pastiche.org/mt-tb.cgi/464</span></p>
+    </div>
+    
+        
+    <div class="trackbacks-content">
+        
+        <div class="trackback" id="ping-282">
+            <div class="inner">
+                <div class="trackback-header">
+                    <div class="asset-meta">
+                        <a href="http://www.raibledesigns.com/page/rd/20040119#how_blogging_has_helped_me" rel="nofollow">How blogging has helped me this morning</a> from Raible Designs ~ We Build Web Apps on <a href="#ping-282" rel="nofollow">January 20, 2004  1:46 AM</a>
+                    </div>
+                </div>
+                <div class="trackback-content">
+                    <p>
+                        My early-morning blog reading somes through once again.  First off,  Charles explains how I should implement Remember Me .  If understand him correctly, I basically need to create a new table (i.e. user_cookie) that has two columns: username and cookie_id <a href="http://www.raibledesigns.com/page/rd/20040119#how_blogging_has_helped_me" rel="nofollow">Read More</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    
+        
+        <div class="trackback" id="ping-283">
+            <div class="inner">
+                <div class="trackback-header">
+                    <div class="asset-meta">
+                        <a href="http://weblog.anthonyeden.com/archives/000061.html" rel="nofollow">Persistent Login Cookie</a> from All Things on <a href="#ping-283" rel="nofollow">January 20, 2004  1:48 AM</a>
+                    </div>
+                </div>
+                <div class="trackback-content">
+                    <p>
+                        Charles has a nice post on Persistent Login Cookie Best Practice. I was about to work on this problem (and I know others were doing the same) so Charles' post is quite timely.... <a href="http://weblog.anthonyeden.com/archives/000061.html" rel="nofollow">Read More</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    
+        
+        <div class="trackback" id="ping-284">
+            <div class="inner">
+                <div class="trackback-header">
+                    <div class="asset-meta">
+                        <a href="http://www.jroller.com/page/xroads/20040119#cookie_bandits" rel="nofollow">Cookie bandits</a> from In dust we trust on <a href="#ping-284" rel="nofollow">January 20, 2004 12:30 PM</a>
+                    </div>
+                </div>
+                <div class="trackback-content">
+                    <p>
+                        I don't like cookies. No big deal, I'm really not the only one, I think. For those looking up surprised, I  am  talking about those little things some websites drop on your pc... you didn't ask for it, they left it anyway, they don't apologize nor clean u <a href="http://www.jroller.com/page/xroads/20040119#cookie_bandits" rel="nofollow">Read More</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    
+        
+        <div class="trackback" id="ping-285">
+            <div class="inner">
+                <div class="trackback-header">
+                    <div class="asset-meta">
+                        <a href="http://www.amber.org/~petrilli/archive/2004/01/27/swimming_with_fish_and_authentication_on_the_web.html" rel="nofollow">Swimming with fish and authentication on the web</a> from Pensieri di un lunatico minore on <a href="#ping-285" rel="nofollow">January 28, 2004  2:11 AM</a>
+                    </div>
+                </div>
+                <div class="trackback-content">
+                    <p>
+                        From the Fishbowl comes a good summary of doing persistent login cookies in a way that is sane and logical.... <a href="http://www.amber.org/~petrilli/archive/2004/01/27/swimming_with_fish_and_authentication_on_the_web.html" rel="nofollow">Read More</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    
+        
+        <div class="trackback" id="ping-286">
+            <div class="inner">
+                <div class="trackback-header">
+                    <div class="asset-meta">
+                        <a href="http://www.burningdoor.com/eric/archives/000375.html" rel="nofollow">"Remember Me" Best Practice</a> from Dancing About Architecture on <a href="#ping-286" rel="nofollow">February  3, 2004  7:58 AM</a>
+                    </div>
+                </div>
+                <div class="trackback-content">
+                    <p>
+                        Implementing a persistent login cookie is one of those annoying little tasks that you have to do when creating a web UI. I just wanted to say thank you to Charles Miller for documenting his best practice for handling that ... good job. Source: The Fish... <a href="http://www.burningdoor.com/eric/archives/000375.html" rel="nofollow">Read More</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    
+        
+        <div class="trackback" id="ping-287">
+            <div class="inner">
+                <div class="trackback-header">
+                    <div class="asset-meta">
+                        <a href="http://weblogs.asp.net/guys/archive/2004/11/05/252737.aspx" rel="nofollow">Cookies Overview: HttpCookie Class, usage and considerations</a> from guyS's WebLog on <a href="#ping-287" rel="nofollow">November  5, 2004  7:26 PM</a>
+                    </div>
+                </div>
+                <div class="trackback-content">
+                    <p>
+                        TITLE: Cookies Overview: HttpCookie Class, usage and considerations
+URL: http://weblogs.asp.net/guys/archive/2004/11/05/252737.aspx
+IP: 66.129.67.203
+BLOG NAME: guyS's WebLog
+DATE: 11/05/2004 07:26:27 PM <a href="http://weblogs.asp.net/guys/archive/2004/11/05/252737.aspx" rel="nofollow">Read More</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    
+        
+        <div class="trackback" id="ping-288">
+            <div class="inner">
+                <div class="trackback-header">
+                    <div class="asset-meta">
+                        <a href="http://blog.goranrakic.com/archives/2005/03/sigurno_kodiranje_u_phpu.html" rel="nofollow">Sigurno kodiranje u PHP-u</a> from Moja škrabalica on <a href="#ping-288" rel="nofollow">March 11, 2005  9:26 AM</a>
+                    </div>
+                </div>
+                <div class="trackback-content">
+                    <p>
+                        Prateći neke blogove i mailing liste stekao sam utisak da je od početka ove godine u PHP zajednici ukazivanje na probleme sigurnosti u PHP skriptovima mnogo obimnije nego ranije. PHP je jezik koji dozvoljava "prljavo" kodiranje - jednostavnim pozivim... <a href="http://blog.goranrakic.com/archives/2005/03/sigurno_kodiranje_u_phpu.html" rel="nofollow">Read More</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+        
+    
+</div>
+
+
+
+
+<div id="comments" class="comments">
+    
+    
+        
+    <h2 class="comments-header">16 Comments</h2>
+    <div class="comments-content">
+        
+        <div class="comment" id="comment-1080">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author"><a title="http://raibledesigns.com" href="http://raibledesigns.com" rel="nofollow">Matt Raible</a></span> on <a href="#comment-1080"><abbr class="published" title="2004-01-20T02:15:16+11:00">January 20, 2004  2:15 AM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>I imagine this could also be implemented using two cookies - one for the username, and the 2nd for the random number.  Then add an additional column to your "user" table for storing the random number.  This number (and cookie) would be updated each time the user logs in.  Is this any less secure than your recommended strategy?  I think it would be easier to implement (no new table or database logic required).</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1081">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author"><a title="http://ianjoyce.org/" href="http://ianjoyce.org/" rel="nofollow">Ian Joyce</a></span> on <a href="#comment-1081"><abbr class="published" title="2004-01-20T04:48:53+11:00">January 20, 2004  4:48 AM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>Instead of using a large random number, how about using something like:  ONE_WAY_HASH_FUNCTION(username + SECRETS_STRING).  No new database table is needed because you can verify the number on the fly.</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1082">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author">David Durrant</span> on <a href="#comment-1082"><abbr class="published" title="2004-01-20T06:14:56+11:00">January 20, 2004  6:14 AM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>Matt: It would work, but the advantage of Charles' solution is that it provides a "remember me" function from any number of PCs from which you have logged-in. To provide that you'd need a one-to-many mapping table between user and cookie in your existing db.</p>
+
+<p>Ian: the purpose is that the random number is only valid once, the next time you visit the site.</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1083">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author"><a title="http://fishbowl.pastiche.org/" href="http://fishbowl.pastiche.org/" rel="nofollow">Charles Miller</a></span> on <a href="#comment-1083"><abbr class="published" title="2004-01-20T06:25:08+11:00">January 20, 2004  6:25 AM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>Matt: You need multiple user->number associations so that someone can stay logged in from two different browsers. I don't want logging on to a site from work to log me off from home.</p>
+
+<p>Ian: that would work, but you'd just lose the advantages of having a string of one-time authentication tokens.</p>
+
+<p>I'm not entirely sure why the extra table is such a hassle. After all, it's only three columns (username, random id and age), and lookups will take no time whatsoever if you index it by the random number. I should write another article some day on the developer's instinctive fear of DBAs. :)</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1084">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author"><a title="http://cardboard.nu" href="http://cardboard.nu" rel="nofollow">Alan Green</a></span> on <a href="#comment-1084"><abbr class="published" title="2004-01-20T08:35:53+11:00">January 20, 2004  8:35 AM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>That is a neat idea, Charles. Thanks for sharing - you might have tried to patent it.</p>
+
+<p>> The user also has an option somewhere to clear <br />
+> all persistent logins being remembered by the <br />
+> system, just in case.</p>
+
+<p>An intuitive place for this option would be to do it whenever the user changes their password. Invalidating all auto-logins on password change mimics the behaviour of 'Remember Me' schemes that place the password into the cookie - the user must type the new password at their next browser session.</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1085">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author"><a title="http://raibledesigns.com" href="http://raibledesigns.com" rel="nofollow">Matt Raible</a></span> on <a href="#comment-1085"><abbr class="published" title="2004-01-20T11:36:34+11:00">January 20, 2004 11:36 AM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>Correct me if I'm wrong, but even with this strategy, it still *is possible* for folks to steal this cookie (if it's a site like JRoller and you allow HTML comments).  Although it's must less likely that they can login because the cookie is only valid once - it is possible, right?</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1086">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author"><a title="http://fishbowl.pastiche.org/" href="http://fishbowl.pastiche.org/" rel="nofollow">Charles Miller</a></span> on <a href="#comment-1086"><abbr class="published" title="2004-01-20T12:21:58+11:00">January 20, 2004 12:21 PM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>Like I said in the article: "If the login cookie is compromised, the attacker has access to the common functions of the site as that user. This is inevitable whatever the cookie contains."</p>
+
+<p>Protecting the integrity cookie is the first line of defense, and the most important one. Defense in depth, however, tells us that we must also make sure exposure is minimised in the event our first line of defense is breached.</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1087">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author">Rajeev </span> on <a href="#comment-1087"><abbr class="published" title="2004-01-21T00:54:27+11:00">January 21, 2004 12:54 AM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>Charles,<br />
+Am i correct in saying this is somewhat similiar to token pattern. Also instead of random number wont it be nice to use a date field. The advantage being it will be unique always and also if the user does not log on to a particular PC for quite some time say a week or so then the username need not be displayed. Please correct me if I am wrong.</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1088">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author"><a title="http://madbean.com/blog/" href="http://madbean.com/blog/" rel="nofollow">Matt Quail</a></span> on <a href="#comment-1088"><abbr class="published" title="2004-01-21T22:02:02+11:00">January 21, 2004 10:02 PM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>Charles,</p>
+
+<p>There is an "easy" solution to the random-number-collision problem (you dismiss it because it is so unlikely, but there is a solution, for completeness).</p>
+
+<p>In the "database" where you are storing the mapping random->userid, add a unique primary key cookieid, and each row is now a tuple (cookieid, random, userid). (Obviously, use your DB's native "auto increment" primary key column type.)</p>
+
+<p>Then, the cookie value is just cookieid:random:username.</p>
+
+<p>=Matt</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1089">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author"><a title="http://fishbowl.pastiche.org/" href="http://fishbowl.pastiche.org/" rel="nofollow">Charles Miller</a></span> on <a href="#comment-1089"><abbr class="published" title="2004-01-21T22:44:35+11:00">January 21, 2004 10:44 PM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>Matt: "auto-increment" implies that the magic number is predictable. Which is a bad thing.</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1090">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author"><a title="http://madbean.com/blog/" href="http://madbean.com/blog/" rel="nofollow">Matt Quail</a></span> on <a href="#comment-1090"><abbr class="published" title="2004-01-22T21:45:09+11:00">January 22, 2004  9:45 PM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>Charles: I'm saying use a auto-increment as the primary key, but don't throw away that random! Basically, if you append something trully unique to something truly random (with a seperator) you end up with something truly random AND truly unique.</p>
+
+<p>=Matt</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1091">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author">Paul Kilroy</span> on <a href="#comment-1091"><abbr class="published" title="2004-01-31T14:40:03+11:00">January 31, 2004  2:40 PM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>I don't understand the point of a one time use cookie...</p>
+
+<p>When I have seen one time use passwords in the past, I use a device that when I give it my password, it gives me a one time use password. When I log into the application with this password, it is no-longer valid. The thing is, I go to my device to get another one. In this situation the site gives me another one time use password. I don't think this adds any safety. Am I wrong?</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1092">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author"><a title="http://www.vasavoir.org" href="http://www.vasavoir.org" rel="nofollow">Gabriel Kastenbaum</a></span> on <a href="#comment-1092"><abbr class="published" title="2004-02-07T00:37:51+11:00">February  7, 2004 12:37 AM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>Hi,</p>
+
+<p>Isn't there still a problem with having a new randomly choosen cookie as an id? <br />
+- when the customer arrives onto the site, the previous cookie is invalidate and the new one is created.<br />
+- And as long as the customer goes onto the site it sends the newer cookie with the new key.<br />
+Someone can sniff the network to catch one good new key.</p>
+
+<p>Am I missing something?</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1093">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author">Frank</span> on <a href="#comment-1093"><abbr class="published" title="2004-05-08T05:49:17+11:00">May  8, 2004  5:49 AM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>@Paul:</p>
+
+<p>You are confusing two things. one-time passwords are passwords that are valid only once and indeed you have device (or paper) with the codes in/on them. Charles' scheme works with one-time tokens with which the user is not bothered. The cookie is fed with a token that is valid only the next visit and then renewed.</p>
+
+<p>@Gabriel:</p>
+
+<p>If user A (legitimately) enters your site, (s)he gets a new token. Should user B (maliciously) want to enter the site he could sniff for the cookie (and thus the token). He then has to use that token before user A enters (another page on) the site again. Suppose he succeeds - then user A will be logged out upon the next visit. He has to log in again (using the password) and thus creates a new string of one-time-tokens. User B can continue to impersonate A until the cookie expires.</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1094">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author">Jimmy</span> on <a href="#comment-1094"><abbr class="published" title="2004-09-14T15:48:14+11:00">September 14, 2004  3:48 PM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>hi</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    
+        
+        <div class="comment" id="comment-1095">
+    <div class="inner">
+        <div class="comment-header">
+            <div class="asset-meta">
+                <span class="byline">By <span class="vcard author">Vince</span> on <a href="#comment-1095"><abbr class="published" title="2004-10-02T07:41:46+11:00">October  2, 2004  7:41 AM</abbr></a></span>
+            </div>
+        </div>
+        <div class="comment-content">
+            <p>Nicely said Frank, I just recently implemented the best practice by Charles into a website I am making. My cookie so far does not change on every page but on each entry into the site. </p>
+
+<p>I was a little concerned about the theft of cookies and was thinking how about a IP check as well for each time cookie is used for login. <br />
+Is this over the top? </p>
+
+<p>I would like to use as little system resources as possible but is this worth it?</p>
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+        
+    
+    
+    
+
+      <p class="comments-closed">Comments are no longer being accepted for this blog entry. If you really want to make your voice heard, you can always <a href="mailto:cmiller@pastiche.org">email me</a>.</p> 
+
+
+    
+</div>
+
+
+
+<div id="entry-navigation">
+    <p><i>Previously:</i> <a href="http://fishbowl.pastiche.org/2004/01/19/confluence_beta_2_er_3/">Confluence Beta 2... er... 3</a></p>
+    <p><i>Next:</i> <a href="http://fishbowl.pastiche.org/2004/01/25/snippet/">Snippet</a></p>
+</MTEntryNext>
+
+
+
+            </div>
+            <div id="footer">
+                        <div class="footer-navigation"><a title="Atom feed for this site" href="http://fishbowl.pastiche.org/atom.xml"><img alt="Atom Feed"  src="http://fishbowl.pastiche.org/pictures/feed-icon-14x14.png" width="14" height="14" class="feed icon"/></a>
+<p><b>The Fishbowl is the Weblog of Charles Miller.</b> (<a href="/archives/">Archives</a>)</p>
+<p><a href="mailto:cmiller@pastiche.org">cmiller@pastiche.org</a> (email, <a href="xmpp:cmiller@pastiche.org">Jabber</a> and MSN IM)
+| <a href="aim:goaim?screenname=carlfishy">carlfishy</a>@AIM 
+| <a href="ymsgr:sendim?carlfishie">carlfishie</a>@Yahoo IM
+<p><a href="http://flickr.com/photos/cmiller">Flickr</a> | <a href="http://delicio.us/carlfish">delicio.us</a> | <a href="http://twitter.com/carlfish">Twitter</a> | <a href="http://charles.livejournal.com">Livejournal</a></p>
+</div>
+                        <div class="widget-powered widget">
+                            <div class="widget-content">
+                                Powered by <a href="http://www.movabletype.com/">Movable Type Open Source</a>
+                            </div>
+                        </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
