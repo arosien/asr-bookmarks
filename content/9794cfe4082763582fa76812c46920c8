@@ -1,0 +1,876 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="Wensong Zhang">
+  <meta name="Description" content="This is the place to get LVS software">
+  <meta name="Keywords" content="Cluster, Load Balancing, Scalability, Availability">
+  <title>IPVS Software - Advanced Layer-4 Switching</title>
+  <link rel="icon" href="../logo/lvs-16.png" type="image/png">
+  <link rel="home" title="Home" href="http://www.LinuxVirtualServer.org/">
+  <link rel="stylesheet" type="text/css" href="../css/base/content.css" media="all">
+  <link rel="stylesheet" type="text/css" href="../css/base/template.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="../css/cavendish/content.css" title="Cavendish" media="all">
+  <link rel="stylesheet" type="text/css" href="../css/cavendish/template.css" title="Cavendish" media="screen">
+  <style type="text/css">
+    h2 { font-family: Arial, Helvetica, sans-serif;
+	 font-size: 120%; font-weight: bold; background: #d0d0f0;}
+    h3 { font-family: Arial, Helvetica, sans-serif;
+	 font-size: 110%; font-weight: bold; background: #e0f0e0;}
+  </style>
+</head>
+
+<body class="homepage">
+<div id="container">
+
+<div id="header">
+ <h1><a href="../index.html" title="Back to home page" accesskey="1">Home</a></h1>
+ <ul>
+  <li><a href="../about.html" title="about LVS project">About</a></li>
+  <li><a href="http://kb.linuxvirtualserver.org/wiki/Main_Page" title="Community contributed LVS knowledge base">Wiki</a></li>
+  <li><a href="../mailing.html" title="LVS mailing lists & archive">Lists</a></li>
+  <li><a href="../Documents.html" title="LVS documentation">Documentation</a></li>
+  <li><a href="index.html" title="Software information">Software</a></li>
+  <li><a href="../whatis.html" title="Brief introduction about LVS">Introduction</a></li>
+ </ul>
+ <form id="search" method="get" action="http://www.google.com/custom" title="LinuxVirtualServer.org Search">
+ <div>
+  <label for="q" title="Search on LVS site">Search LVS: </label>
+  <input type="hidden" name="cof" value="DIV:#336699;ALC:#0000ff;GFNT:#0000ff;LC:#0000ff;BGC:white;AH:center;VLC:#663399;GL:0;GALT:#008000">
+  <input type="hidden" name="domains" value="linuxvirtualserver.org">
+  <input type="hidden" name="sitesearch" value="linuxvirtualserver.org">
+  <input id="q" type="text" name="q" size="30">
+  <input id="submit" type="submit" value="Go">
+ </div>
+ </form>
+</div>
+<!-- closes #header-->
+
+<div id="mBody">
+<div id="side">
+
+<ul id="nav">
+<li><a title="LVS software" href="index.html"><strong>Software</strong></a>
+<ul>
+<li><a title="IPVS software" href="ipvs.html">IPVS</a></li>
+<li><a title="Julian's Software and Patches page" href="http://www.linuxvirtualserver.org/~julian/">Julian's software</a></li>
+<li><a title="Keepalived software" href="http://www.keepalived.org/">Keepalived</a></li>
+<li><a title="KTCPVS software" href="ktcpvs/ktcpvs.html">KTCPVS</a></li>
+<li><a title="TCP splicing implementation" href="tcpsp/index.html">TCP splicing</a></li>
+<li><a title="TCP handoff implementation" href="http://dragon.linux-vs.org/~dragonfly/htm/tcpha.htm">TCP handoff</a></li>
+<li><a title="Other software components for LVS" href="index.html#others">Others</a></li>
+</ul>
+</li>
+</ul>
+
+<hr class="hide">
+<script type="text/javascript"><!--
+google_ad_client = "pub-5166885998505756";
+google_ad_width = 160;
+google_ad_height = 600;
+google_ad_format = "160x600_as";
+google_ad_type = "text_image";
+google_ad_channel ="";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "003399";
+google_color_url = "008000";
+google_color_text = "000000";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+<br/>
+<br/>
+<script type="text/javascript"><!--
+google_ad_client = "pub-5166885998505756";
+google_ad_width = 160;
+google_ad_height = 90;
+google_ad_format = "160x90_0ads_al";
+google_ad_channel ="6418630078";
+google_color_border = "336699";
+google_color_bg = "FFFFFF";
+google_color_link = "003399";
+google_color_url = "008000";
+google_color_text = "000000";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+<div id="mainContent">
+
+<hr class="hide">
+
+<h1>IPVS</h1>
+
+<p>IPVS (IP Virtual Server) implements transport-layer load balancing
+inside the Linux kernel, so called Layer-4 switching. IPVS running on
+a host acts as a <a href="http://kb.linuxvirtualserver.org/wiki/Load_balancer">load balancer</a> at the front of a cluster of real
+servers, it can direct requests for TCP/UDP based services to the real
+servers, and makes services of the real servers to appear as a virtual
+service on a single IP address.</p>
+
+
+<a name="kernel-2.6"></a>
+
+<h2>The IP Virtual Server Netfilter module for kernel 2.6</h2>
+
+<p><b>Status</b>: The ipvs 1.2.1 is the latest stable version, it is
+in the official kernel 2.6.10 released on December 24, 2004.</p>
+
+<p>IPv6 support for IPVS was included in the Linux kernel 2.6.28-rc3 on November 2, 2008. See <a href="http://kb.linuxvirtualserver.org/wiki/IPv6_load_balancing">the wiki page of IPv6 load balancing</a> for the status of IPv6 support.</p>
+
+<p>Your testings, comments and bug report/fixes are very welcome. The
+<a href="kernel-2.6/ChangeLog">ChangeLog</a> is available here.</p>
+
+<p>Go to <a href="http://kernel.org/">http://kernel.org/</a> to get a
+clean copy of kernel 2.6.10 or later, and download the ipvsadm utility
+<b>here</b> to administer the IP Virtual Server inside the Linux
+kernel. See the article <a href="http://kb.linuxvirtualserver.org/wiki/Compiling_ipvsadm_on_different_Linux_distributions">
+Compiling ipvsadm on different Linux distributions</a> at wiki.</p>
+
+<ul>
+
+<li><a href="kernel-2.6/ipvsadm-1.25-1.src.rpm">
+ipvsadm-1.25-1.src.rpm</a> (for kernel 2.6.28-rc3 or later) - November 5, 2008</li>
+<li><a href="kernel-2.6/ipvsadm-1.25.tar.gz">
+ipvsadm-1.25.tar.gz</a> (for kernel 2.6.28-rc3 or later) - November 5, 2008</li>
+
+<br/>
+
+<li><a href="kernel-2.6/ipvsadm-1.24-6.src.rpm">
+ipvsadm-1.24-6.src.rpm</a> (for kernel between 2.6.10 and 2.6.27.4) - December 10, 2005
+
+<li><a href="kernel-2.6/ipvsadm-1.24-5.src.rpm">
+ipvsadm-1.24-5.src.rpm</a> (for 1.2.0 or later) - October 27, 2004
+
+<li><a href="kernel-2.6/ipvsadm-1.24-4.src.rpm">
+ipvsadm-1.24-4.src.rpm</a> (for 1.1.8 or later) - January 10, 2004
+
+<li><a href="kernel-2.6/ipvsadm-1.24-3.src.rpm">
+ipvsadm-1.24-3.src.rpm</a> (for 1.1.8 or later) - December 20, 2003
+
+<li><a href="kernel-2.6/ipvsadm-1.24.tar.gz">ipvsadm-1.24.tar.gz</a> -
+December 10, 2005
+
+</ul>
+
+<a name="kernel-2.5"></a>
+
+<h2>The IP Virtual Server Netfilter module for kernel 2.5</h2>
+
+<p><b>Status</b>: The ipvs 1.1.x is development version for kernel 2.5.</p>
+
+<p>Your testings, comments and bug report/fixes are very welcome. The
+<a href="kernel-2.5/ChangeLog">ChangeLog</a> is available here.</p>
+
+<p>If you like a single kernel patch, you don't need to download the
+tar ball, just download a kernel patch and a separate ipvsadm srpm
+here.</p>
+
+<h3>The 1.1.x development branch</h3>
+
+<ul>
+
+<li>The IPVS Netfilter module for kernel 2.5 - <a
+href="kernel-2.5/ipvs-1.1.7.tar.gz">Version 1.1.7</a> - July 5,
+2003</li>
+
+<li>The IPVS Netfilter module for kernel 2.5 - <a
+href="kernel-2.5/ipvs-1.1.6.tar.gz">Version 1.1.6</a> - June 8,
+2003</li>
+
+<li>The IPVS Netfilter module for kernel 2.5 - <a
+href="kernel-2.5/ipvs-1.1.5.tar.gz">Version 1.1.5</a> - May 10,
+2003</li>
+
+<li>The IPVS Netfilter module for kernel 2.5 - <a
+href="kernel-2.5/ipvs-1.1.4.tar.gz">Version 1.1.4</a> - April 18,
+2003</li>
+
+<li>The IPVS Netfilter module for kernel 2.5 - <a
+href="kernel-2.5/ipvs-1.1.3.tar.gz">Version 1.1.3</a> - March 22,
+2003</li>
+
+<li>The IPVS Netfilter module for kernel 2.5 - <a
+href="kernel-2.5/ipvs-1.1.2.tar.gz">Version 1.1.2</a> - December 19,
+2002</li>
+
+<li>The IPVS Netfilter module for kernel 2.5 - <a
+href="kernel-2.5/ipvs-1.1.1.tar.gz">Version 1.1.1</a> - November 30,
+2002</li>
+
+<li>The IPVS Netfilter module for kernel 2.5 - <a
+href="kernel-2.5/ipvs-1.1.0.tar.gz">Version 1.1.0</a> - September 15,
+2002</li>
+
+<p>
+
+<li><a href="kernel-2.5/linux-2.5.74-ipvs-1.1.7.patch.gz">
+linux-2.5.74-ipvs-1.1.7.patch.gz</a> - July 5, 2003</li>
+
+<li><a href="kernel-2.5/linux-2.5.70-ipvs-1.1.6.patch.gz">
+linux-2.5.70-ipvs-1.1.6.patch.gz</a> - June 8, 2003</li>
+
+<li><a href="kernel-2.5/linux-2.5.69-ipvs-1.1.5.patch.gz">
+linux-2.5.69-ipvs-1.1.5.patch.gz</a> - May 10, 2003</li>
+
+<li><a href="kernel-2.5/linux-2.5.66-ipvs-1.1.4.patch.gz">
+linux-2.5.66-ipvs-1.1.4.patch.gz</a> - April 18, 2003</li>
+
+<li><a href="kernel-2.5/linux-2.5.65-ipvs-1.1.3.patch.gz">
+linux-2.5.65-ipvs-1.1.3.patch.gz</a> - March 22, 2003</li>
+
+<li><a href="kernel-2.5/linux-2.5.52-ipvs-1.1.2.patch.gz">
+linux-2.5.52-ipvs-1.1.2.patch.gz</a> - December 19, 2002</li>
+
+<li><a href="kernel-2.5/linux-2.5.50-ipvs-1.1.1.patch.gz">
+linux-2.5.50-ipvs-1.1.1.patch.gz</a> - December 1, 2002</li>
+
+<p>
+
+<li><a href="kernel-2.5/ipvsadm-1.24-2.src.rpm">
+ipvsadm-1.24-2.src.rpm</a> (for 1.1.6 or later) - July 5, 2003</li>
+
+<li><a href="kernel-2.5/ipvsadm-1.24-1.src.rpm">
+ipvsadm-1.24-1.src.rpm</a> (for 1.1.6 or later) - June 8, 2003</li>
+
+<li><a href="kernel-2.5/ipvsadm-1.23-2.src.rpm">
+ipvsadm-1.23-2.src.rpm</a> (for 1.1.5 or later) - May 10, 2003</li>
+
+<li><a href="kernel-2.5/ipvsadm-1.23-1.src.rpm">
+ipvsadm-1.23-1.src.rpm</a> (for 1.1.4 or later) - April 18, 2003</li>
+
+<li><a href="kernel-2.5/ipvsadm-1.22-4.src.rpm">
+ipvsadm-1.22-4.src.rpm</a> (for 1.1.1 or later) - March 22, 2003</li>
+
+<li><a href="kernel-2.5/ipvsadm-1.22-3.src.rpm">
+ipvsadm-1.22-3.src.rpm</a> (for 1.1.1 or later) - December 19, 2002</li>
+
+<li><a href="kernel-2.5/ipvsadm-1.24.tar.gz">ipvsadm-1.24.tar.gz</a> -
+July 5, 2003</li>
+
+<li><a href="kernel-2.5/ipvsadm-1.23.tar.gz">ipvsadm-1.23.tar.gz</a> -
+May 10, 2003</li>
+
+<li><a href="kernel-2.5/ipvsadm-1.22.tar.gz">ipvsadm-1.22.tar.gz</a> -
+March 22, 2003</li>
+
+</ul>
+
+
+<a name="kernel-2.4"></a>
+
+<h2>The IP Virtual Server Netfilter module for kernel 2.4</h2>
+
+<p><b>Status</b>: If you want to ipvs for kernel 2.4 in production, we
+highly recommend you to use stable version 1.0.x. The version 0.9.x
+was for development, and 0.8.x was old stable version.</p>
+
+<p>The ipvs 1.0.12 was in the offical Linux kernel 2.4.28 released on
+November 17, 2004. It has one bug fix.</p>
+ 
+<p>Your testings, comments and bug report/fixes are very welcome. The
+<a href="kernel-2.4/ChangeLog">ChangeLog</a> is available here.</p>
+
+<p>If you want to use ipvs 1.0.12, go to <a href="http://kernel.org/">
+http://kernel.org/</a> to download a clean copy of kernel 2.4.28 or
+later, and download the ipvsadm utility <b>here</b> to administer the
+IP Virtual Server inside the Linux kernel. See the article <a href="http://kb.linuxvirtualserver.org/wiki/Compiling_ipvsadm_on_different_Linux_distributions">
+Compiling ipvsadm on different Linux distributions</a> at wiki.</p>
+
+<p>If you like a single kernel patch, you don't need to download the
+tar ball, just download a kernel patch and a separate ipvsadm srpm
+here.</p>
+
+<h3>The 1.0.x stable branch</h3>
+
+<ul>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.10.tar.gz">Version 1.0.10</a> - August 10, 2003</li>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.10rc2.tar.gz">Version 1.0.10rc2</a> - July 27, 2003</li>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.10rc1.tar.gz">Version 1.0.10rc1</a> - July 20, 2003</li>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.9.tar.gz">Version 1.0.9</a> - May 21, 2003</li>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.8.tar.gz">Version 1.0.8</a> - April 11, 2003</li>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.7.tar.gz">Version 1.0.7</a> - November 14, 2002</li>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.6.tar.gz">Version 1.0.6</a> - August 17, 2002</li>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.5.tar.gz">Version 1.0.5</a> - August 10, 2002</li>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.4.tar.gz">Version 1.0.4</a> - July 11, 2002</li>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.3.tar.gz">Version 1.0.3</a> - May 30, 2002</li>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.2.tar.gz">Version 1.0.2</a> - April 3, 2002</li>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.1.tar.gz">Version 1.0.1</a> - March 25, 2002</li>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-1.0.0.tar.gz">Version 1.0.0</a> - February 27, 2002</li>
+
+<p>
+
+<li><a href="kernel-2.4/linux-2.4.21-ipvs-1.0.10.patch.gz">
+linux-2.4.21-ipvs-1.0.10.patch.gz</a> - August 10, 2003</li>
+
+<li><a href="kernel-2.4/linux-2.4.20-ipvs-1.0.9.patch.gz">
+linux-2.4.20-ipvs-1.0.9.patch.gz</a> - May 21, 2003</li>
+
+<li><a href="kernel-2.4/linux-2.4.20-ipvs-1.0.8.patch.gz">
+linux-2.4.20-ipvs-1.0.8.patch.gz</a> - April 11, 2003</li>
+
+<li><a href="kernel-2.4/linux-2.4.19-ipvs-1.0.7.patch.gz">
+linux-2.4.19-ipvs-1.0.7.patch.gz</a> - November 18, 2002</li>
+
+<li><a href="kernel-2.4/linux-2.4.19-ipvs-1.0.6.patch.gz">
+linux-2.4.19-ipvs-1.0.6.patch.gz</a> - August 18, 2002</li>
+
+<li><a href="kernel-2.4/linux-2.4.19-ipvs-1.0.5.patch.gz">
+linux-2.4.19-ipvs-1.0.5.patch.gz</a> - August 10, 2002</li>
+
+<li><a href="kernel-2.4/linux-2.4.18-ipvs-1.0.4.patch.gz">
+linux-2.4.18-ipvs-1.0.4.patch.gz</a> - July 11, 2002</li>
+
+<li><a href="kernel-2.4/linux-2.4.18-ipvs-1.0.3.patch.gz">
+linux-2.4.18-ipvs-1.0.3.patch.gz</a> - May 30, 2002</li>
+
+<li><a href="kernel-2.4/linux-2.4.18-ipvs-1.0.2.patch.gz">
+linux-2.4.18-ipvs-1.0.2.patch.gz</a> - April 3, 2002</li>
+
+<li><a href="kernel-2.4/linux-2.4.18-ipvs-1.0.1.patch.gz">
+linux-2.4.18-ipvs-1.0.1.patch.gz</a> - March 25, 2002</li>
+
+<li><a href="kernel-2.4/linux-2.4.18-ipvs-1.0.0.patch.gz">
+linux-2.4.18-ipvs-1.0.0.patch.gz</a> - February 27, 2002</li>
+
+<p>
+
+<li><a href="kernel-2.4/ipvsadm-1.21-11.src.rpm">
+ipvsadm-1.21-11.src.rpm</a> (for 1.0.12 or later) - January 22, 2005</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.21-10.src.rpm">
+ipvsadm-1.21-10.src.rpm</a> (for 1.0.4 or later) - October 27, 2004</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.21-9.src.rpm">
+ipvsadm-1.21-9.src.rpm</a> (for 1.0.4 or later) - January 10, 2004</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.21-8.src.rpm">
+ipvsadm-1.21-8.src.rpm</a> (for 1.0.4 or later) - November 2, 2003</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.21-7.src.rpm">
+ipvsadm-1.21-7.src.rpm</a> (for 1.0.4 or later) - July 13, 2003</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.21-6.src.rpm">
+ipvsadm-1.21-6.src.rpm</a> (for 1.0.4 or later) - May 21, 2003</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.21-5.src.rpm">
+ipvsadm-1.21-5.src.rpm</a> (for 1.0.4 or later) - April 29, 2003</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.21-4.src.rpm">
+ipvsadm-1.21-4.src.rpm</a> (for 1.0.4 or later) - April 11, 2003</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.21-3.src.rpm">
+ipvsadm-1.21-3.src.rpm</a> (for 1.0.4 or later) - November 14, 2002</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.21-2.src.rpm">
+ipvsadm-1.21-2.src.rpm</a> (for 1.0.4 or later) - August 10, 2002</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.21-1.src.rpm">
+ipvsadm-1.21-1.src.rpm</a> (for 1.0.4 or later) - July 11, 2002</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.20-7.src.rpm">
+ipvsadm-1.20-7.src.rpm</a> (for 0.9.7 to 1.0.3) - May 30, 2002</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.20-6.src.rpm">
+ipvsadm-1.20-6.src.rpm</a> (for 0.9.7 to 1.0.3) - March 25, 2002</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.20-5.src.rpm">
+ipvsadm-1.20-5.src.rpm</a> (for 0.9.7 to 1.0.3) - January 24, 2002</li>
+
+<p>
+
+<li><a href="kernel-2.4/ipvsadm-1.21-11.tar.gz">ipvsadm-1.21-11.tar.gz</a> -
+January 22, 2005</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.21.tar.gz">ipvsadm-1.21.tar.gz</a> -
+October 27, 2004</li>
+
+<li><a href="kernel-2.4/ipvsadm-1.20.tar.gz">ipvsadm-1.20.tar.gz</a> -
+May 30, 2002</li>
+
+</ul>
+
+<h3>The 0.9.x development branch</h3>
+
+<ul>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.9.10.tar.gz">Version 0.9.10</a> - January 31, 2002
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.9.9.tar.gz">Version 0.9.9</a> - January 24, 2002
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.9.8.tar.gz">Version 0.9.8</a> - December 11, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.9.7.tar.gz">Version 0.9.7</a> - November 23, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.9.6.tar.gz">Version 0.9.6</a> - November 4, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.9.5.tar.gz">Version 0.9.5</a> - October 19, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.9.4.tar.gz">Version 0.9.4</a> - September 18, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.9.3.tar.gz">Version 0.9.3</a> - August 27, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.9.2.tar.gz">Version 0.9.2</a> - June 20, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.9.1.tar.gz">Version 0.9.1</a> - June 4, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.9.0.tar.gz">Version 0.9.0</a> - May 10, 2001
+
+<p>
+
+<li><a href="kernel-2.4/linux-2.4.17-ipvs-0.9.10.patch.gz">
+linux-2.4.17-ipvs-0.9.10.patch.gz</a> - January 31, 2002
+
+<li><a href="kernel-2.4/linux-2.4.17-ipvs-0.9.9.patch.gz">
+linux-2.4.17-ipvs-0.9.9.patch.gz</a> - January 24, 2002
+
+<li><a href="kernel-2.4/linux-2.4.16-ipvs-0.9.8.patch.gz">
+linux-2.4.16-ipvs-0.9.8.patch.gz</a> - December 11, 2001
+
+<li><a href="kernel-2.4/linux-2.4.15-ipvs-0.9.7.patch.gz">
+linux-2.4.15-ipvs-0.9.7.patch.gz</a> - November 24, 2001
+
+<li><a href="kernel-2.4/linux-2.4.13-ipvs-0.9.6.patch.gz">
+linux-2.4.13-ipvs-0.9.6.patch.gz</a> - November 5, 2001
+
+<li><a href="kernel-2.4/linux-2.4.12-ipvs-0.9.5.patch.gz">
+linux-2.4.12-ipvs-0.9.5.patch.gz</a> - October 20, 2001
+
+<li><a href="kernel-2.4/linux-2.4.9-ipvs-0.9.4.patch.gz">
+linux-2.4.9-ipvs-0.9.4.patch.gz</a> - September 19, 2001
+
+<li><a href="kernel-2.4/linux-2.4.9-ipvs-0.9.3.patch.gz">
+linux-2.4.9-ipvs-0.9.3.patch.gz</a> - August 27, 2001
+
+<li><a href="kernel-2.4/linux-2.4.5-ipvs-0.9.2.patch.gz">
+linux-2.4.5-ipvs-0.9.2.patch.gz</a> - June 20, 2001
+
+<li><a href="kernel-2.4/linux-2.4.5-ipvs-0.9.1.patch.gz">
+linux-2.4.5-ipvs-0.9.1.patch.gz</a> - June 12, 2001
+
+<p>
+
+<li><a href="kernel-2.4/ipvsadm-1.20-5.src.rpm">
+ipvsadm-1.20-5.src.rpm</a> (for 0.9.7 to 1.0.3) - January 24, 2002
+
+<li><a href="kernel-2.4/ipvsadm-1.20-4.src.rpm">
+ipvsadm-1.20-4.src.rpm</a> (for 0.9.7 to 1.0.3) - November 24, 2001
+
+<li><a href="kernel-2.4/ipvsadm-1.20-3.src.rpm">
+ipvsadm-1.20-3.src.rpm</a> (for 0.9.6) - November 4, 2001
+
+<li><a href="kernel-2.4/ipvsadm-1.20-2.src.rpm">
+ipvsadm-1.20-2.src.rpm</a> (for 0.9.5) - October 19, 2001
+
+<li><a href="kernel-2.4/ipvsadm-1.20-1.src.rpm">
+ipvsadm-1.20-1.src.rpm</a> (for 0.9.4) - September 18, 2001
+
+<li><a href="kernel-2.4/ipvsadm-1.19-1.src.rpm">
+ipvsadm-1.19-1.src.rpm</a> (for 0.9.3) - August 27, 2001
+
+<li><a href="kernel-2.4/ipvsadm-1.18-2.src.rpm">
+ipvsadm-1.18-2.src.rpm</a> (for 0.9.2) - June 23, 2001
+
+<li><a href="kernel-2.4/ipvsadm-1.18-1.src.rpm">
+ipvsadm-1.18-1.src.rpm</a> (for 0.9.2) - June 20, 2001
+
+<li><a href="kernel-2.4/ipvsadm-1.18.tar.gz">ipvsadm-1.18.tar.gz</a> -
+June 23, 2001
+
+</ul>
+
+
+<h3>The 0.8.x stable branch</h3>
+
+<ul>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.8.2.tar.gz">Version 0.8.2</a> - October 23, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.8.1.tar.gz">Version 0.8.1</a> - June 22, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.8.0.tar.gz">Version 0.8.0</a> - May 9, 2001
+
+<p>
+<li><a href="kernel-2.4/linux-2.4.12-ipvs-0.8.2.patch.gz">
+linux-2.4.12-ipvs-0.8.2.patch.gz</a> - October 24, 2001
+
+<li><a href="kernel-2.4/linux-2.4.5-ipvs-0.8.1.patch.gz">
+linux-2.4.5-ipvs-0.8.1.patch.gz</a> - June 24, 2001
+
+<li><a href="kernel-2.4/linux-2.4.4-ipvs-0.8.0.patch.gz">
+linux-2.4.4-ipvs-0.8.0.patch.gz</a> - May 9, 2001
+
+<p>
+
+<li><a href="kernel-2.4/ipvsadm-1.17-2.src.rpm">
+ipvsadm-1.17-2.src.rpm</a>  - June 22, 2001
+
+<li><a href="kernel-2.4/ipvsadm-1.17-1.src.rpm">
+ipvsadm-1.17-1.src.rpm</a>  - March 24, 2001
+
+<li><a href="kernel-2.4/ipvsadm-1.17.tar.gz">ipvsadm-1.17.tar.gz</a>
+- June 22, 2001
+
+</ul>
+
+<h3>The old development versions</h3>
+
+<ul>
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.12.tar.gz">Version 0.2.12</a> - May 5, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.11.tar.gz">Version 0.2.11</a> - April 20, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.10.tar.gz">Version 0.2.10</a> - April 19, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.9.tar.gz">Version 0.2.9</a> - April 12, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.8.tar.gz">Version 0.2.8</a> - April 4, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.7.tar.gz">Version 0.2.7</a> - March 22, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.6.tar.gz">Version 0.2.6</a> - March 18, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.5.tar.gz">Version 0.2.5</a> - February 23,
+2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.4.tar.gz">Version 0.2.4</a> - February 15, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.3.tar.gz">Version 0.2.3</a> - January 29, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.2.tar.gz">Version 0.2.2</a> - January 26, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.1.tar.gz">Version 0.2.1</a> - January 15, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.2.0.tar.gz">Version 0.2.0</a> - January 10, 2001
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.1.2.tar.gz">Version 0.1.2</a> - December 19, 2000
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.1.1.tar.gz">Version 0.1.1</a> - November 30, 2000
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.1.0.tar.gz">Version 0.1.0</a> - November 26, 2000
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.0.5.tar.gz">Version 0.0.5</a> - September 6, 2000
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.0.4.tar.gz">Version 0.0.4</a> - July 30, 2000
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.0.3.tar.gz">Version 0.0.3</a> - July 6, 2000
+
+<li>The IPVS Netfilter module for kernel 2.4 - <a
+href="kernel-2.4/ipvs-0.0.1.tar.gz">Version 0.0.1</a> - May 31st, 2000
+
+<p>
+
+<li><a href="kernel-2.4/linux-2.4.4-ipvs-0.2.12.patch.gz">
+linux-2.4.4-ipvs-0.2.12.patch.gz</a> - May 5, 2001
+
+<li><a href="kernel-2.4/linux-2.4.3-ipvs-0.2.11.patch.gz">
+linux-2.4.3-ipvs-0.2.11.patch.gz</a> - April 20, 2001
+
+<li><a href="kernel-2.4/linux-2.4.3-ipvs-0.2.9.patch.gz">
+linux-2.4.3-ipvs-0.2.9.patch.gz</a> - April 13, 2001
+
+<li><a href="kernel-2.4/linux-2.4.3-ipvs-0.2.8.patch.gz">
+linux-2.4.3-ipvs-0.2.8.patch.gz</a> - April 4, 2001
+
+<li><a href="kernel-2.4/linux-2.4.2-ipvs-0.2.7.patch.gz">
+linux-2.4.2-ipvs-0.2.7.patch.gz</a> - March 24, 2001
+
+</ul>
+
+<a name="kernel-2.2"></a>
+
+<h2>The IP Virtual Server patch for kernel 2.2</h2>
+
+<p><b>The IP Virtual Server patch status:</b> The IP Virtual Server
+patch version 1.0.8 is a stable version for production. The virtual
+server patch v0.9.13+ for kernel 2.2 are also stable, but may be lack
+of some features. The <a href="ChangeLog">ChangeLog</a> is available
+here.</p>
+
+<ul>
+
+<li>The IPVS patch for Linux 2.2.19 - <a
+href="ipvs-1.0.8-2.2.19.tar.gz">Version 1.0.8</a> - May 14, 2001
+
+<li>The IPVS patch for Linux 2.2.19 - <a
+href="ipvs-1.0.7-2.2.19.tar.gz">Version 1.0.7</a> - April 19, 2001
+
+<li>The IPVS patch for Linux 2.2.19 - <a
+href="ipvs-1.0.6-2.2.19.tar.gz">Version 1.0.6</a> - March 27, 2001
+
+<li>The IPVS patch for Linux 2.2.18 - <a
+href="ipvs-1.0.5-2.2.18.tar.gz">Version 1.0.5</a> - February 8, 2001
+
+<li>The IPVS patch for Linux 2.2.18 - <a
+href="ipvs-1.0.4-2.2.18.tar.gz">Version 1.0.4</a> - February 2, 2001
+
+<li>The IPVS patch for Linux 2.2.18 - <a
+href="ipvs-1.0.3-2.2.18.tar.gz">Version 1.0.3</a> - December 30, 2000
+
+<li>The IPVS patch for Linux 2.2.18 - <a
+href="ipvs-1.0.2-2.2.18.tar.gz">Version 1.0.2</a> - December 17, 2000
+
+<li>The IPVS patch for Linux 2.2.17 - <a
+href="ipvs-1.0.2-2.2.17.tar.gz">Version 1.0.2</a> - December 3, 2000
+
+<li>The IPVS patch for Linux 2.2.17 - <a
+href="ipvs-1.0.1-2.2.17.tar.gz">Version 1.0.1</a> - November 23, 2000
+
+<li>The IPVS patch for Linux 2.2.17 - <a
+href="ipvs-1.0.0-2.2.17.tar.gz">Version 1.0.0</a> - November 16, 2000
+
+<li>The IPVS patch for Linux 2.2.17 - <a
+href="ipvs-1.0.0beta1-2.2.17.tar.gz">Version 1.0.0beta1</a> - November
+2, 2000
+
+<li>The IPVS patch for Linux 2.2.17 - <a
+href="ipvs-0.9.16-2.2.17.tar.gz">Version 0.9.16</a> - September 5, 2000
+
+<li>The IPVS patch for Linux 2.2.16 - <a
+href="ipvs-0.9.15-2.2.16.tar.gz">Version 0.9.15</a> - June 28, 2000
+
+<li>The IPVS patch for Linux 2.2.16 - <a
+href="ipvs-0.9.14-2.2.16.tar.gz">Version 0.9.14</a> - June 17, 2000
+
+<li>The IPVS patch for Linux 2.2.15 - <a
+href="ipvs-0.9.13-2.2.15.tar.gz">Version 0.9.13</a> - May 25, 2000
+
+<li>The IPVS patch for Linux 2.2.15 - <a
+href="ipvs-0.9.12-2.2.15.tar.gz">Version 0.9.12</a> - May 10, 2000
+
+<li>The IPVS patch for Linux 2.2.14 - <a
+href="ipvs-0.9.12-2.2.14.tar.gz">Version 0.9.12</a> - May 2, 2000
+
+<li>The IPVS patch for Linux 2.2.14 - <a
+href="ipvs-0.9.11-2.2.14.tar.gz">Version 0.9.11</a> - April 17, 2000
+
+<li>The IPVS patch for Linux 2.2.14 - <a
+href="ipvs-0.9.10-2.2.14.tar.gz">Version 0.9.10</a> - April 9, 2000
+<br>Here is <a href="ipvs-0.9.10-fwmark.patch">the little patch</a> to
+fix the bug about trash lookup and new destination for fwmark service.
+
+<li>The IPVS patch for Linux 2.2.14 - <a
+href="ipvs-0.9.9-2.2.14.tar.gz">Version 0.9.9</a> - March 16, 2000
+
+<li>The IPVS patch for Linux 2.2.14 - <a
+href="ipvs-0.9.8-2.2.14.tar.gz">Version 0.9.8</a> - March 13, 2000
+
+<li>The IPVS patch for Linux 2.2.14 - <a
+href="ipvs-0.9.7-2.2.14.tar.gz">Version 0.9.7</a> - January 19, 2000
+<br>Here is <a href="ipvs-0.9.7-template.patch">a little patch</a> to
+fix negative counter bug for persistent services.
+
+<li>The IPVS patch for Linux 2.2.13 - <a
+href="ipvs-0.9.7-2.2.13.tar.gz">Version 0.9.7</a> - December 22, 1999
+
+<li>The IPVS patch for Linux 2.2.13 - <a
+href="ipvs-0.9.6-2.2.13.tar.gz">Version 0.9.6</a> -  December 7, 1999
+
+<li>The IPVS patch for Linux 2.2.13 - <a
+href="ipvs-0.9.5-2.2.13.tar.gz">Version 0.9.5</a> -  November 28, 1999
+
+<li>The IPVS patch for Linux 2.2.13 - <a
+href="ipvs-0.9.4-2.2.13.tar.gz">Version 0.9.4</a> - November 10, 1999
+
+<li>The IPVS patch for Linux 2.2.13 - <a
+href="ipvs-0.9.3-2.2.13.tar.gz">Version 0.9.3</a> - November 7, 1999
+
+<li>The IPVS patch for Linux 2.2.12 - <a
+href="ipvs-0.9.2-2.2.12.tar.gz">Version 0.9.2</a> - October 17, 1999
+
+<li>The IPVS patch for Linux 2.2.12 - <a
+href="ipvs-0.9.1-2.2.12.tar.gz">Version 0.9.1</a> - October 6, 1999
+
+<li>The IPVS patch for Linux 2.2.12 - <a
+href="ipvs-0.9.0-2.2.12.tar.gz">Version 0.9.0</a> - September 24, 1999
+
+<li>The IPVS patch for Linux 2.2.12 - <a
+href="ipvs-0.8.3-2.2.12.tar.gz">Version 0.8.3</a> - September 8, 1999
+
+</ul>
+
+<p><b>The SRPMS and tar ball of ipvsadm are available for ipvs-0.9.10
+(kernel 2.2) or later</b> (already included in the ipvs tar ball)</p>
+
+<ul>
+
+<li><a href="ipvsadm-1.15-1.src.rpm">ipvsadm-1.15-1.src.rpm</a>
+
+<li><a href="ipvsadm-1.14-1.src.rpm">ipvsadm-1.14-1.src.rpm</a>
+
+<li><a href="ipvsadm-1.13-1.src.rpm">ipvsadm-1.13-1.src.rpm</a>
+
+<li><a href="ipvsadm-1.12-1.src.rpm">ipvsadm-1.12-1.src.rpm</a>
+
+<li><a href="ipvsadm-1.11-4.src.rpm">ipvsadm-1.11-4.src.rpm</a>
+
+<li><a href="ipvsadm-1.15.tar.gz">ipvsadm-1.15.tar.gz</a>
+
+<li><a href="ipvsadm-1.14.tar.gz">ipvsadm-1.14.tar.gz</a>
+
+<li><a href="ipvsadm-1.13.tar.gz">ipvsadm-1.13.tar.gz</a>
+
+<li><a href="ipvsadm-1.12.tar.gz">ipvsadm-1.12.tar.gz</a>
+
+<li><a href="ipvsadm-1.11.tar.gz">ipvsadm-1.11.tar.gz</a>
+
+</ul>
+
+
+<a name="kernel-2.0"></a>
+
+<h2>The IPVS patch for kernel 2.0</h2>
+
+<p>Note that the IP virtual server patch for kernel 2.0 is a little
+bit old.
+
+<ul>
+
+<li>the IPVS patch for Linux 2.0 - <a href="vs-0.9.tar.gz">Version
+0.9</a> - May 1, 1999
+
+<li>the IPVS patch for Linux 2.0 - <a href="vs-0.8.tar.gz">Version
+0.8</a> - March 6, 1999
+
+</ul>
+
+
+<h2>Source code via Subversion</h2>
+
+<p>What's Subversion? Subversion is a system for revision control, and
+is designed to be a modern replacement of CVS. Start at 
+<a href="http://subversion.tigris.org/">subversion.tigris.org</a> to
+learn more and read the <a href="http://svnbook.red-bean.com/">Subversion Book</a>.</p>
+
+<p>The ipvs kernel code was already included in kernel 2.4 and
+2.6. The source code of ipvsadm is available via Subversion. Anyone
+can check out the sources via Subversion, but only certain people have
+the ability to check in.</p>
+
+<p>To browse around or download a few individual files, click
+<a href="http://svn.linuxvirtualserver.org/repos/ipvsadm/">
+http://svn.linuxvirtualserver.org/repos/ipvsadm/</a>.</p>
+
+<p>To check out the sources, you need to be running Subversion client. For example, you can enter the following commands for checking out the latest source code of ipvsadm:</p>
+
+<blockquote>
+<code>
+svn co http://svn.linuxvirtualserver.org/repos/ipvsadm/trunk/ ipvsadm
+</code>
+</blockquote>
+
+<p>To check out ipvsadm source code for kernel 2.4, need to use the branch "ipvs-1-0-stable" in the Subversion checkout command.
+
+<blockquote>
+<code>
+svn co http://svn.linuxvirtualserver.org/repos/ipvsadm/branches/ipvs-1-0-stable/ ipvsadm
+</code>
+</blockquote>
+
+<p>Once you've checked out a copy of the source tree, you can update
+your source tree at any time so it is in sync with the latest one by
+running the command:</p>
+
+<blockquote>
+<code>
+svn update
+</code>
+</blockquote>
+
+<p>If you make some changes of the source code, please generate the
+diff file and submit it to <a href="../mailing.html">the mailing
+list</a> or <a href="mailto:wensong@linux-vs.org">me</a> for inclusion.
+
+<blockquote>
+<pre>
+svn diff
+</pre>
+</blockquote>
+
+</div>
+<!-- closes #mainContent-->
+
+</div>
+<!-- closes #mBody-->
+
+<div id="footer">
+<p><font size="-1">$Id: ipvs.html,v 1.27 2008/11/08 16:59:22 wensong Exp $
+<br>Created on: 1998/5/28</font></p>
+</div>
+
+</div>
+<!-- closes #container -->
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-405205-1";
+urchinTracker();
+</script>
+
+</body>
+</html>
