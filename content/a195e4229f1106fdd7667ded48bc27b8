@@ -1,0 +1,1790 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en">
+
+
+<head>
+    <meta http-equiv="Content-Type"
+          content="text/html;charset=utf-8" />
+
+    <title> Manageability - Open Source AJAX Frameworks with Server-Side Java Support </title>
+
+    <link rel="openid.server" href="https://pip.verisignlabs.com/server" />
+    <link rel="openid.delegate" href="http://ceperez.pip.verisignlabs.com" />
+
+    
+        
+            <base href="http://www.manageability.org/blog/stuff/ajax-libraries" />
+        
+    
+
+    <meta name="generator" content="Plone - http://plone.org" />
+
+    <meta content="opensource" name="keywords" />
+    <meta content="opensource" name="DC.subject" />
+    <meta content="2005-10-18 19:59:52"
+          name="DC.date.created" />
+    <meta content="2007-02-25 06:48:01"
+          name="DC.date.modified" />
+    <meta content="News Item" name="DC.type" />
+    <meta content="text/html" name="DC.format" />
+    <meta content="en" name="DC.language" />
+
+    <!-- Basic crude style for Netscape4.x - This can be removed
+         if you don't want the special NS4 look - it will still work,
+         just be plain text instead. Column layout for Netscape4.x included -->
+    <link rel="Stylesheet" type="text/css"
+          href="http://www.manageability.org/ploneNS4.css" />
+
+    <!-- Column style sheet. -->
+    <style type="text/css" media="all">@import url(http://www.manageability.org/ploneColumns.css);</style>
+
+    <!-- Main style sheets for CSS2 capable browsers -->
+    <style type="text/css" media="screen"> @import url(http://www.manageability.org/plone.css);</style>
+
+    <!-- Old style sheet from Plone 1.0, remove tal:condition="nothing" if you need to use the old styles.
+         Will be removed in Plone 2.1. -->
+    
+
+    <!-- Alternate style sheets for the bigger/smaller text switcher -->
+    <link rel="alternate stylesheet" type="text/css"
+          media="screen"
+          href="http://www.manageability.org/ploneTextSmall.css"
+          title="Small Text" />
+    <link rel="alternate stylesheet" type="text/css"
+          media="screen"
+          href="http://www.manageability.org/ploneTextLarge.css"
+          title="Large Text" />
+
+    <!-- Custom style sheet if available -->
+    <style type="text/css" media="all">@import url(http://www.manageability.org/ploneCustom.css);</style>
+
+    <!-- Style sheet used for printing -->
+    <link rel="stylesheet" type="text/css" media="print"
+          href="http://www.manageability.org/plonePrint.css" />
+
+    <!-- Style sheet used for presentations (Opera is the only browser supporting this at the moment) -->
+    <link rel="stylesheet" type="text/css"
+          media="projection"
+          href="http://www.manageability.org/plonePresentation.css" />
+
+    <!-- Internet Explorer CSS Fixes -->
+    <!--[if IE]>
+    <style type="text/css" media="all">@import url(http://www.manageability.org/ploneIEFixes.css);</style>
+    <![endif]-->
+
+    <link rel="shortcut icon"
+          href="http://www.manageability.org/favicon.ico"
+          type="image/x-icon" />
+
+    <link rel="search"
+          href="http://www.manageability.org/search_form"
+          title="Search this site" />
+
+    
+    <link rel="up"
+          href="http://www.manageability.org/blog/stuff"
+          title="Up one level" />
+    <link rel="copyright" href="copyright"
+          title="Copyright information" />
+    <link rel="author" href="author"
+          title="Author information" />
+
+    
+
+    <!-- Disable IE6 image toolbar -->
+    <meta http-equiv="imagetoolbar" content="no" />
+
+    
+      <!-- A slot where you can insert CSS in the header from a template -->
+        
+    
+
+    
+
+    <!-- min-width support for IE via Javascript, required for tableless -->
+    <!--[if IE]>
+    <script type="text/javascript"
+            src="http://www.manageability.org/plone_minwidth.js"></script>
+    <![endif]-->
+
+    
+    
+    
+    
+    
+    
+
+
+    
+      <!-- A slot where you can insert elements in the header from a template -->
+    
+
+    
+      <!-- A slot where you can insert javascript in the header from a template -->
+        
+    
+
+    <!-- Common Plone ECMAScripts -->
+
+    <!-- Pull-down ECMAScript menu, only active if logged in -->
+    
+
+    <!-- Define dynamic server-side variables for javascripts in this one  -->
+    <script type="text/javascript"
+            src="http://www.manageability.org/plone_javascript_variables.js">
+    </script>
+
+    <script type="text/javascript"
+            src="http://www.manageability.org/plone_javascripts.js">
+    </script>
+
+    
+
+      <!-- Old JS from Plone 1.0, remove tal:condition="nothing" if you need to use the old pop-ups.
+           Will be removed in Plone 2.1 -->
+      
+
+    
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-1084530886015925";
+google_ad_width = 728;
+google_ad_height = 15;
+google_ad_format = "728x15_0ads_al";
+google_ad_channel ="9272253978";
+google_color_border = "414141";
+google_color_bg = "414141";
+google_color_link = "FF9933";
+google_color_url = "FF9933";
+google_color_text = "000000";
+//--></script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+
+
+
+  </head>
+
+<body>
+
+<div id="visual-portal-wrapper">
+
+<div id="portal-top">
+
+    <a href="#documentContent" class="hiddenStructure">Skip to content.</a>
+
+    <h1 id="portal-logo">
+    <a href="http://www.manageability.org">Manageability</a>
+</h1>
+
+    <div id="portal-skinswitcher">
+  
+</div>
+
+    <ul id="portal-siteactions">
+
+    <li id="siteaction-small_text"><a
+    href="javascript:setActiveStyleSheet('Small Text', 1);"
+    title="Small Text">Small Text</a></li>
+    <li id="siteaction-normal_text"><a
+    href="javascript:setActiveStyleSheet('', 1);"
+    title="Normal Text">Normal Text</a></li>
+    <li id="siteaction-large_text"><a
+    href="javascript:setActiveStyleSheet('Large Text', 1);"
+    title="Large Text">Large Text</a></li>
+
+</ul>
+
+    <div id="portal-searchbox-google">
+<!-- Google CSE Search Box Begins -->
+  <form id="searchbox_007818200722637091384:xzu48a7fcv8" action="http://www.google.com/cse">
+    <input type="hidden" name="cx" value="007818200722637091384:xzu48a7fcv8" />
+    <input name="q" type="text" size="40" />
+    <input type="submit" name="sa" value="Search" />
+    <input type="hidden" name="cof" value="FORID:1" />
+  </form>
+  <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_007818200722637091384%3Axzu48a7fcv8"></script>
+<!-- Google CSE Search Box Ends -->
+    </div>
+
+    <div id="portal-searchbox">
+    <form name="searchform"
+          action="http://www.manageability.org/search">
+        <label for="searchGadget" class="hiddenStructure">Search</label>
+        <input id="searchGadget" name="SearchableText"
+               type="text" size="20" alt="Search"
+               title="Search" accesskey="s"
+               class="visibility:visible" tabindex="30001" />
+        <input class="searchButton" type="submit"
+               value="Search" accesskey="s" tabindex="30002" />
+    </form>
+</div>
+
+    
+    <h5 class="hiddenStructure">Sections</h5>
+
+    <ul id="portal-globalnav">
+        
+        <li id="portaltab-index_html" class="plain">
+            <a href="http://www.manageability.org"
+               accesskey="t">Home</a>
+        </li>
+        
+        
+        <li id="portaltab-news" class="plain">
+            <a href="http://www.manageability.org/news"
+               accesskey="t">News</a>
+        </li>
+        
+    </ul>
+
+
+
+    
+
+<h5 class="hiddenStructure">Personal tools</h5>
+
+<ul id="portal-personaltools">
+    
+
+    <li class="portalNotLoggedIn">
+              You are not logged in
+    </li>
+
+       
+
+</ul>
+
+
+    <div id="portal-breadcrumbs">
+
+    You are here:
+    
+            <a href="http://www.manageability.org/">Home</a>
+            <span class="breadcrumbSeparator">&raquo;</span>
+    
+    
+    <span>
+        
+            <a href="http://www.manageability.org/blog/"
+               accesskey="accesskeys-breadcrumbs">blog</a>
+            <span class="breadcrumbSeparator"> &raquo; </span>
+            
+         
+    </span>
+    <span>
+        
+            <a href="http://www.manageability.org/blog/stuff/"
+               accesskey="accesskeys-breadcrumbs">stuff</a>
+            <span class="breadcrumbSeparator"> &raquo; </span>
+            
+         
+    </span>
+    <span>
+        
+            
+            
+            <span>Open Source AJAX Frameworks with Server-Side Java Support</span>
+         
+    </span>
+</div>
+</div>
+
+<div class="visualClear"></div>
+
+<!-- The wrapper div. It contains the three columns. -->
+<div id="portal-columns" class="visualColumnHideTwo">
+
+    <!-- start of the main and left columns -->
+    <div id="visual-column-wrapper">
+
+        <!-- start of main content block -->
+        <div id="portal-column-content">
+
+            <div id="content" class="documentEditable">
+
+                
+                    
+
+        <h5 class="hiddenStructure">Views</h5>
+
+        <ul class="contentViews">
+
+            
+              <li id="contentview-view" class="selected">
+                <a href="http://www.manageability.org/blog/stuff/ajax-libraries/newsitem_view"
+                   accesskey="v">View</a>
+              </li>
+            
+            
+              <li id="contentview-reply" class="plain">
+                <a href="http://www.manageability.org/blog/stuff/ajax-libraries/discussion_reply_form"
+                   accesskey="accesskeys-Reply">Reply</a>
+              </li>
+            
+
+        </ul>
+
+    
+
+                    <div class="contentActions">
+
+        
+
+        
+
+        
+
+<ul>
+
+    
+
+    <li class="actionSingular">
+        State:
+        <span class="state-published">published</span>
+    </li>
+
+
+    
+    
+    
+
+    
+
+    
+
+</ul>
+
+
+
+        
+
+    </div>
+                
+
+                <div class="documentContent" id="region-content">
+
+                    <a name="documentContent"></a>
+
+                    
+
+                    
+
+                    <div>
+    
+
+        
+        <h1 class="documentFirstHeading">Open Source AJAX Frameworks with Server-Side Java Support</h1>
+        
+    
+        <div class="documentActions">
+
+    <h5 class="hiddenStructure">Document Actions</h5>
+
+    <ul>
+    
+        <li>
+            <a href="http://www.manageability.org/blog/stuff/ajax-libraries/sendto_form">
+            
+                <img src="http://www.manageability.org/mail_icon.gif"
+                     alt="Send this page to somebody"
+                     title="Send this page to somebody"
+                     height="16" width="16" />
+            </a>
+        </li>
+    
+    
+        <li>
+            <a href="javascript:this.print();">
+            
+                <img src="http://www.manageability.org/print_icon.gif"
+                     alt="Print this page"
+                     title="Print this page" height="16"
+                     width="16" />
+            </a>
+        </li>
+    
+
+    </ul>
+
+    
+
+</div>
+    
+        <div class="documentDescription"></div>
+
+        
+        
+    
+<span>
+
+<table border="0" align="top" cellpadding="0" cellspacing="0">
+<tr valign="bottom" align="center">
+<td></td>
+</tr>
+<tr>
+<td>
+<table border="0" bordercolor="#ffffff" cellspacing="0" cellpadding="0">
+<tr>
+<td>
+
+
+<span>
+<script type="text/javascript"><!--
+google_ad_client = "pub-1084530886015925";
+/* Opensource right */
+google_ad_slot = "6744549163";
+google_ad_width = 336;
+google_ad_height = 280;
+//-->
+</script>
+</span>
+
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></td>
+
+
+<td>
+
+
+<span>
+<script type="text/javascript"><!--
+google_ad_client = "pub-1084530886015925";
+/* Small Font, Open Source, 336x280 */
+google_ad_slot = "1195629570";
+google_ad_width = 336;
+google_ad_height = 280;
+//-->
+</script>
+</span>
+
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></td>
+
+</tr>
+
+</table>
+</td>
+
+
+</tr>
+</table>
+</span>
+
+<table align="left">
+<tr><td>
+<script type="text/javascript">var dzone_url = 'http://www.manageability.org/blog/stuff/ajax-libraries';</script> 
+        <script type="text/javascript">var dzone_title = Open Source AJAX Frameworks with Server-Side Java Support';</script>
+        <script type="text/javascript">var dzone_blurb = ';</script>
+        <script type="text/javascript">var dzone_style = '1';</script>
+        <script language="javascript" src="http://widgets.dzone.com/widgets/zoneit.js"></script>
+</td></tr>
+<tr></tr>
+</table>    
+
+<table align="right">
+<tr>
+<td>  <script type="text/javascript"><!--
+google_ad_client = "pub-1084530886015925";
+/* Small Font, Skyscraper, 120x600, created 9/17/10 */
+google_ad_slot = "8624595750";
+google_ad_width = 120;
+google_ad_height = 600;
+//-->
+</script>
+<!-- script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script-->
+</td></tr>
+<tr></tr>
+</table> 
+        
+                
+
+        
+            <p>
+It's time for yet another open source list.  <a href="http://www.adaptivepath.com/publications/essays/archives/000385.php">AJAX</a> is all the craze these days. Although AJAX is primarily a Javascript based platform, I figure that developers would be interested in continually leveraging their Java skills. Therefore, this list is really about open source java support on the serverside for AJAX development. It's a mouthful but I hope you grok it. So here's the list:
+</p>
+<blockquote>
+<ul>
+
+
+<li><a href="http://www.getahead.ltd.uk/dwr/">DWR</a> -  DWR (Direct Web Remoting) is a way of calling Java code on the server directly from Javascript in the browser.  DWR consists of two main parts: JavaScript running in the user's browser to communicate with the server and dynamically update the webpage, and a Java Servlet running on the server that processes requests and sends responses back to the browser. DWR takes a novel approach to AJAX by dynamically generating JavaScript code based Java classes. Thus the web developer can use Java code from JavaScript as if it were local to the web-browser; whereas in reality the Java code runs in the web-server and has full access to web-server resources.</li>
+
+<li><a href="http://oss.metaparadigm.com/jsonrpc/">JSON-RPC-Java</a> - JSON-RPC-Java is a dynamic JSON-RPC implementation in Java. It allows you to transparently call server-side Java code from JavaScript with an included lightweight JSON-RPC JavaScript client. It is designed to run in a Servlet container such as Tomcat and can be used with JBoss and other J2EE Application servers to allow calling of plain Java or EJB methods from within a JavaScript DHTML web application.</li>
+
+<li><a href="http://ajaxtags.sourceforge.net/">AjaxTags</a> -  The AJAX Tag Library is a set of JSP tags that simplify the use of Asynchronous JavaScript and XML (AJAX) technology in JavaServer Pages.  This tag library fills that need by not forcing J2EE developers to write the necessary JavaScript to implement an AJAX-capable web form. The tag library provides support for live form updates for the following use cases: autocomplete based on character input to an input field, select box population based on selections made from another field, callout or balloon popups for highlighting content, refreshing form fields, and toggling images and form field states on/off. </li>
+
+
+<li><a href="http://www.nextapp.com/products/echo2/">Echo 2</a> - Echo2 is the next-generation of the Echo Web Framework, a platform for developing web-based applications that approach the capabilities of rich clients. The 2.0 version holds true to the core concepts of Echo while providing dramatic performance, capability, and user-experience enhancements made possible by its new Ajax-based rendering engine. </li>
+
+<li><a href="http://ajaxanywhere.sourceforge.net/">AjaxAnywhere</a> - AjaxAnywhere is designed to turn any set of existing JSP components into AJAX-aware components without complex JavaScript coding.  </li>
+
+<li><a href="http://www.activemq.com/Ajax">ActiveMQ Ajax Support</a> - Ajax support in ActiveMQ builds on top of the REST connector for ActiveMQ which allows any web capable device to send or receive messages over JMS.  All the Ajax examples are currently using OpenRico.</li>
+
+<li><a href="http://tacos.sourceforge.net/">Tacos</a> - The Tacos library project provides components and ajax behaviour for the Tapestry java web application framework.  Most of the library relies almost exclusively on Dojo. 
+</li>
+
+<li><a href="http://www.opensymphony.com/webwork/">WebWork 2.2</a> 
+Awesome AJAX support built on top of DWR and Dojo. Form validation, tabbed panels, remotable forms, and remote divs. More AJAX components will be coming in subsequent releases.
+</li>
+
+<li><a href="https://swf.dev.java.net/">Simple Web Framework</a> - The Simple Web Framework (SWF) is an event based framework targeting Struts developers who want to build rich Web applications but do not want to migrate to JSF. The SWF is built upon the same Jakarta commons basis as Struts, but uses a different request processor (front controller.) The SWF event model supports XmlHttpRequest (as well as form/submit) based event posting, similar to VB.NET or JSF, with In place Page Updating (IPU) rather than page reloading. 
+</li>
+
+<li><a href="http://wicket.sourceforge.net/">Wicket 1.1 rc2</a> - Dojo, Scriptaculous and Wicket integration. The release consists of an Ajax handler, allowing you to create your own custom Wicket Ajax components based on the Dojo toolkit.</li>
+
+<li><a href="http://taconite.sourceforge.net/">Taconite</a> - The heart of Taconite is a parser that converts normal (X)HTML code into a series of JavaScript commands that dynamically create the content on the browser. This parser allows you, the developer, to write content in way that is natural -- as (X)HTML. You no longer have to crowd your pages with a slew of document.createElement and document.appendChild commands to dynamically create new content.   The Taconite custom parser is implemented as a set of JSP custom tags, which can be used in any Java servlet container, or as a client-side JavaScript library, meaning it can be used in conjunction with virtually any server-side technology.</li>
+
+<li><a href="http://swato.throughworks.com/">SWATO</a> - Server side Java library can be deployed in Servlet 2.3+ compatible containers.   Client side JavaScript library is base on Prototype.  JSON based marshalling. Spring integration.  Includes several reusable components like auto-suggest Textbox, Javascript templates and logging.</li>
+
+<li><a href="http://www.zimbra.com/">Zimbra</a> - Zimbra is an open source server and client technology for AJAX based messaging and collaboration.  The collaboration server is built using Java based technologies. The server features file based message storate, a SQL metadata storage, Lucene based search, clustering, replication, archiving and LDAP support. 
+</li>
+
+<li><a href="http://www.orbeon.com/">Orbeon Forms</a> -  An XForms engine much improved over OPS 2.8's, significant improvements in the Page Flow Controller, and more.  The XForms engine is based on Ajax technologies. This makes the XForms engine much more responsive to user interaction than with OPS 2.8.  </li>
+
+<li><a href="http://www.jsorb.org">JsOrb</a> - JsOrb includes code generators that build on demand JavaScript classes for your POJOs and as proxies to your business logic interfaces. The JavaScript classes have the same methods as your POJOs and business logic interfaces, so your JavaScript code ends up looking surprisingly similar to Java.
+</li>
+
+<li><a href="http://zk1.sourceforge.net/">ZK</a> - ZK is an event-driven, XUL-based, AJAX-embedded, all Java framework to enable rich user interfaces for Web applications. With ZK, you represent and manipulate RIA in XUL/HTML components all at the server similar to how you developed desktop apps. ZK includes an AJAX-based event-driven engine to automate interactivity, and a rich set of XUL-based components.
+</li>
+
+<li><a href="http://rialto.application-servers.com/">Rialto</a> - Rialto is a cross browser javascript widgets library. It supports pure javascript development and JSP/taglib development. A JSF integration is planned.
+</li>
+
+<li><a href="http://jspcontrols.sourceforge.net/">JSP Controls Tag Library</a> - JSP Controls Tag Library (the "Library") provides the lifecycle for portlet-like JSP components. The Library does not require a portal engine or other central controller. The components built with the Library can be used in any JSP-based application.  The Library supports two request processing modes: Non-Ajax and Ajax.  Pages composed with JSP Controls Tag Library look and behave the same way whether they run in Ajax mode or not. 
+</li>
+
+<li><a href="http://www.openlaszlo.org/">OpenLaszlo</a> - OpenLaszlo programs are written in XML and JavaScript and transparently compiled to Flash and DHTML. The OpenLaszlo APIs provide animation, layout, data binding, server communication, and declarative UI. </li>
+
+<li><a href="http://www.nexaweb.com/open/xap/index.aspx?id=384">XAP</a> - The basic intent of XAP is to leverage existing Ajax projects such as Apache Kabuki and Dojo, as well as other community efforts such as Eclipse openAjax. It aims to be pluggable with various Ajax toolkits, reduce the need of scripting and solve the development challenge as well as application maintenance challenges associated with Ajax programming.</li>
+
+<li><a href="https://ajax4jsf.dev.java.net/">AJAX4JSF</a> - Ajax4jsf fully leverages the benefits of the JavaServer Faces framework including lifecycle, validation, and conversion facilities, along with management of static and dynamic resources.  Ajax4jsf enables page-wide AJAX support instead of the traditional component-wide support. This means you can define the event in the page that invokes an AJAX request and then the areas of the page that should be synchronized with the JSF Component Tree after the AJAX request changes the data on the server.</li>
+
+<li><a href="http://www.clearnova.com/">ThinkCAP JX</a> -  ThinkCAP's core is an advanced MVC framework that manages the runtime layout and presentation of GUI components, state management, data binding, validation, and data persistence. The framework is driven by Java classes and XML metadata generated by the Workbench. The current 6.0 version is very Struts-like.</li>
+
+<li><a href="https://ajax.dev.java.net/">jMaki</a> - jMaki is all about enabling Java developers to use JavaScript in their Java based applications as either a JSP tag library or a JSF component.jMaki uses the best parts of Java and the best parts of JavaScript to deliver a rich AJAX style widgets.  jMaki currently provides bootstrap widgets for many components from Dojo, Scriptaculus, and Yahoo UI Widgets. Also included in this project are a set of AJAX widgets with a focus on Web 2.0. Included are a RSS widget, a del.icio.us Bookmark widget, a Chat widget, and many more to come.</li>
+
+<li><a href="http://code.google.com/webtoolkit/">GWT</a> - Google Web Toolkit (GWT) is a Java software development framework that makes writing AJAX applications like Google Maps and Gmail easy for developers who aren't experience with javascript. GWT lets you avoid tedious and error-prone javascript programming while offering your users the same dynamic, standards-compliant experience. You write your front end in the Java programming language, and the GWT compiler converts your Java classes to browser-compliant JavaScript and HTML.</li>
+
+<li><a href="http://www.helmitechnologies.com/open_source/overview/">Helmi</a> - Helmi's Open Source RIA Platform permits client- and server-side engineers to work independently while communicating effectively through an object-oriented environment.  This solution is composed of a 100% browser-based Client Framework, a Virtual Browser that enables cross-browser application operations, an Integrated Development Environment (IDE), and a J2EE-based AJAX Server Connect that simplifies transmitting data from server to client.</li>
+
+<li><a href="http://www.openjacob.org/">Open jACOB</a> - Open-jACOB is a Java rapid application development tool (RAD) based on Eclipse that enables the development of Rich Internet Applications (RIA) that are based entirely on Java.  The primary goal of the jACOB Framework is to handle web applications with CRUD (create, retrieve, update, delete) with little or no Java programming. Instead of telling the application how to retrieve and how to display the data. The developer creates the Web-UI with a point&click eclipse UI-Designer. </li>
+
+<li><a href="http://www.thinwire.com/">ThinWire</a> - ThinWire is an open source  development framework that allows you to easily build RIA applications.   Notable features include a familiar event-driven GUI programming model, state maintenace via variables and not via session, 
+exclusively server-side language and supports all major browsers.</li>
+
+<li><a href="http://icefaces.org">ICEfaces</a> - 
+ICEfaces is a RIA framework that delivers unique Ajax Push capabilities. Discover the power of Ajax Push and create collaborative and dynamic enterprise applications.
+ICEfaces leverages the entire standards-based Java EE ecosystem of tools and execution environments. Rich enterprise application features are developed in pure Java, and in a pure thin-client model.  ICEfaces is based on JavaServer Faces (JSF).</li>
+
+</ul>
+</blockquote>
+<p>
+If I may have missed something then please let me know.
+In addition here's an article "<a href="http://encytemedia.com/blog/articles/2005/10/13/dispelling-the-myths-of-javascript-degredation">Dispelling the Javascript Degredation Myth</a>" that may be ammunition in arguing for an AJAX approach. 
+</p>
+        
+
+
+    
+        <div class="documentByLine">
+
+  
+
+  
+
+  
+
+  <span></span>
+
+  <br />
+
+  
+
+  
+
+  <span>
+    Last modified
+  </span>
+  2007-02-25 06:48 AM
+
+  
+
+</div>
+
+
+
+<span>
+<script type="text/javascript" src="http://shots.snap.com/ss/1cdfb2805e27416c43e45f0c2541340d/snap_shots.js"></script>
+</span>
+
+<!-- del.icio.us -->
+<script type="text/javascript">
+    if (typeof window.Delicious == "undefined") window.Delicious = {};
+    Delicious.BLOGBADGE_DEFAULT_CLASS = 'delicious-blogbadge-line';
+</script>
+<script src="http://images.del.icio.us/static/js/blogbadge.js"></script>
+<!--
+       <a href="http://www.ether.com/CallButton/ceperez/6753565.aspx"><img src="http://www.ether.com/CallButtonImage/ceperez/6753565.aspx?q=11-0" style="border:none;"></a> <br/>
+-->    
+   <br />
+       <div class="icons">
+        [<a href="http://www.manageability.org/blog/stuff/ajax-libraries">pemalink</a>]&nbsp; 
+	[<span class="delicious"><a href="http://del.icio.us/post?url=http://www.manageability.org/blog/stuff/ajax-libraries&amp;title=Open Source AJAX Frameworks with Server-Side Java Support">del.icio.us it</a></span>]&nbsp;
+	[<span class="digg"><a href="http://digg.com/submit?phase=2&amp;url=http://www.manageability.org/blog/stuff/ajax-libraries">digg it</a></span>]&nbsp;
+	[<span class="reddit"><a href="http://reddit.com/submit?url=http://www.manageability.org/blog/stuff/ajax-libraries&amp;title=Open Source AJAX Frameworks with Server-Side Java Support">reddit</a></span>]&nbsp;
+	[<span class="stumble this"><a
+    href="http://www.stumbleupon.com/submit?url=http://www.manageability.org/blog/stuff/ajax-libraries&amp;title=Open Source AJAX Frameworks with Server-Side Java Support">stumble this</a></span>]&nbsp;
+	[<span class="technorati"><a
+    href="http://technorati.com/search/http://www.manageability.org/blog/stuff/ajax-libraries">see who is linking it</a></span>]&nbsp;
+	[<span class="delicious"><a href="http://del.icio.us/url/check?url=http://www.manageability.org/blog/stuff/ajax-libraries">see who is bookmarking it</a></span>]&nbsp;
+       </div>
+   
+
+    
+</div>
+
+                    
+                        <div class="discussion">
+
+    
+
+        <form name="reply"
+              action="http://www.manageability.org/blog/stuff/ajax-libraries/discussion_reply_form"
+              method="post">
+
+            <input class="standalone" type="submit"
+                   value="Add Comment" />
+        </form>
+
+        
+
+        <a name="comments"> </a>
+        
+
+                <div class="comment">
+                    <h3>
+                        <img src="http://www.manageability.org/discussionitem_icon.gif" alt="" title="Comment" longdesc="" height="16" width="16" />
+                        Tersus - Visual AJAX
+                    </h3>
+
+                    <div class="documentByLine">
+                        <span>Posted by</span>
+                        
+                        Anonymous User
+                        <span>Anonymous User</span>
+                        <span>at</span>
+                        2005-10-19 07:50 AM
+                        
+                    </div>
+
+                    <div class="commentBody"><p>My project, <a href="http://www.tersus.org/about/visual_ajax">Tersus</a>, seems relevant as well.</p>
+</div>
+
+                    <form name="reply"
+                          action="http://www.manageability.org/blog/stuff/ajax-libraries/talkback/1129726206/discussion_reply_form"
+                          method="post"
+                          style="display: inline;">
+
+                        <input class="standalone"
+    type="submit" value="Reply to this" />
+                    </form>
+
+                    
+
+                    
+
+                    
+
+                    
+
+                </div>
+
+            
+        
+
+                <div class="comment">
+                    <h3>
+                        <img src="http://www.manageability.org/discussionitem_icon.gif" alt="" title="Comment" longdesc="" height="16" width="16" />
+                        AJAX FAQ for the Java Developer
+                    </h3>
+
+                    <div class="documentByLine">
+                        <span>Posted by</span>
+                        
+                        Anonymous User
+                        <span>Anonymous User</span>
+                        <span>at</span>
+                        2005-12-15 10:39 AM
+                        
+                    </div>
+
+                    <div class="commentBody"><p>See <a href="https://blueprints.dev.java.net/ajax-faq.html">AJAX FAQ for the Java Developer</a> for more tips.</p>
+</div>
+
+                    <form name="reply"
+                          action="http://www.manageability.org/blog/stuff/ajax-libraries/talkback/1134664796/discussion_reply_form"
+                          method="post"
+                          style="display: inline;">
+
+                        <input class="standalone"
+    type="submit" value="Reply to this" />
+                    </form>
+
+                    
+
+                    
+
+                    
+
+                    
+
+                </div>
+
+            
+        
+
+                <div class="comment">
+                    <h3>
+                        <img src="http://www.manageability.org/discussionitem_icon.gif" alt="" title="Comment" longdesc="" height="16" width="16" />
+                        Here is a Visual  AJAX tool and library for  AJAX Developers
+                    </h3>
+
+                    <div class="documentByLine">
+                        <span>Posted by</span>
+                        
+                        Anonymous User
+                        <span>Anonymous User</span>
+                        <span>at</span>
+                        2006-06-12 10:32 PM
+                        
+                    </div>
+
+                    <div class="commentBody"><p>Here is a Visual  AJAX tool and library for  AJAX Developers</p>
+<p>It's free trial. http://eng.joyistar.com</p>
+</div>
+
+                    <form name="reply"
+                          action="http://www.manageability.org/blog/stuff/ajax-libraries/talkback/1150169544/discussion_reply_form"
+                          method="post"
+                          style="display: inline;">
+
+                        <input class="standalone"
+    type="submit" value="Reply to this" />
+                    </form>
+
+                    
+
+                    
+
+                    
+
+                    
+
+                </div>
+
+            
+        
+
+                <div class="comment">
+                    <h3>
+                        <img src="http://www.manageability.org/discussionitem_icon.gif" alt="" title="Comment" longdesc="" height="16" width="16" />
+                        IT Mill Toolkit 5: Open Source, Java, Server-side, Ajax
+                    </h3>
+
+                    <div class="documentByLine">
+                        <span>Posted by</span>
+                        
+                        Anonymous User
+                        <span>Anonymous User</span>
+                        <span>at</span>
+                        2007-12-11 01:24 PM
+                        
+                    </div>
+
+                    <div class="commentBody">You might want to take a look at IT Mill Toolkit 5:<br><br>http://www.itmill.com/itmill-toolkit/<br><br>Java-based server-side framework. It does not have a visual designer, but the programming model is much like Swing. It provides a lot of good looking Ajax components based on GWT (Google Web Toolkit) and is open sourced (Apache 2.0).<br><br>And, take a look at the tutorial video. Its on Eclipse, but other IDEs should be almost as easy: http://www.itmill.com/videos/The_IT_Mill_Toolkit_5_QuickStart_with_Eclipse.htm </div>
+
+                    <form name="reply"
+                          action="http://www.manageability.org/blog/stuff/ajax-libraries/talkback/1197401075/discussion_reply_form"
+                          method="post"
+                          style="display: inline;">
+
+                        <input class="standalone"
+    type="submit" value="Reply to this" />
+                    </form>
+
+                    
+
+                    
+
+                    
+
+                    
+
+                </div>
+
+            
+        
+
+                <div class="comment">
+                    <h3>
+                        <img src="http://www.manageability.org/discussionitem_icon.gif" alt="" title="Comment" longdesc="" height="16" width="16" />
+                        Another one: ItsNat, Natural AJAX
+                    </h3>
+
+                    <div class="documentByLine">
+                        <span>Posted by</span>
+                        
+                        Anonymous User
+                        <span>Anonymous User</span>
+                        <span>at</span>
+                        2007-12-13 03:51 AM
+                        
+                    </div>
+
+                    <div class="commentBody">Another one to your list: ItsNat, Natural AJAX<br><br>ItsNat is an open source Java AJAX Component based Web Framework. ItsNat simulates a Universal W3C Java Browser in the server, containing a W3C DOM Level 2 node tree and receiving W3C DOM Events using AJAX. Every DOM server change is automatically sent to the client and updated the client DOM accordingly. Consequences: pure (X)HTML templates and pure Java W3C DOM for the view logic. No JSP, no custom tags, no XML meta-programming, no expression languages, no black boxed components. The developer has the full control of the view. ItsNat includes many interesting features like COMET, built-in functional testing etc.<br><br>http://www.itsnat.org<br></div>
+
+                    <form name="reply"
+                          action="http://www.manageability.org/blog/stuff/ajax-libraries/talkback/1197539481/discussion_reply_form"
+                          method="post"
+                          style="display: inline;">
+
+                        <input class="standalone"
+    type="submit" value="Reply to this" />
+                    </form>
+
+                    
+
+                    
+
+                    
+
+                    
+
+                </div>
+
+            
+        
+
+                <div class="comment">
+                    <h3>
+                        <img src="http://www.manageability.org/discussionitem_icon.gif" alt="" title="Comment" longdesc="" height="16" width="16" />
+                        http://www.jzeno.org
+                    </h3>
+
+                    <div class="documentByLine">
+                        <span>Posted by</span>
+                        
+                        Anonymous User
+                        <span>Anonymous User</span>
+                        <span>at</span>
+                        2008-01-11 08:48 AM
+                        
+                    </div>
+
+                    <div class="commentBody">Another framework that specializes in building business oriented web applications in Java is jZeno (http://www.jzeno.org).<br>From the jZeno web-site : <br><br>jZeno is an open source java development framework that offers the ability to develop rich web applications. The main architectural goal of jZeno is to allow people to create web applications using pure java development as much as possible. Largely reducing the need to know technologies like javascript, HTML, CSS, database specific SQL, JSP, JSF, etc... Instead of expressing things on a low technical level we not only provide standard components to use, but encourage people to focus on learning more important skills much deeper. We think these skills are a thorough understanding of java, OO development, design patterns and other abstraction techniques. </div>
+
+                    <form name="reply"
+                          action="http://www.manageability.org/blog/stuff/ajax-libraries/talkback/1200062900/discussion_reply_form"
+                          method="post"
+                          style="display: inline;">
+
+                        <input class="standalone"
+    type="submit" value="Reply to this" />
+                    </form>
+
+                    
+
+                    
+
+                    
+
+                    
+
+                </div>
+
+            
+        
+
+                <div class="comment">
+                    <h3>
+                        <img src="http://www.manageability.org/discussionitem_icon.gif" alt="" title="Comment" longdesc="" height="16" width="16" />
+                        WaveMaker Visual Ajax
+                    </h3>
+
+                    <div class="documentByLine">
+                        <span>Posted by</span>
+                        
+                        Anonymous User
+                        <span>Anonymous User</span>
+                        <span>at</span>
+                        2008-02-14 04:59 PM
+                        
+                    </div>
+
+                    <div class="commentBody">Another visual AJAX framework for building web applications is &lt;a href=&quot;http://www.wavemaker.com&quot;&gt;WaveMaker&lt;/a&gt;<br><br>WaveMaker is an open-source framework for visual AJAX web development. WaveMaker uses drag and drop assembly to create database-driven web applications. WaveMaker applications are pure Java WAR files based on standard open-source components, including Spring, Hibernate, JSON and Dojo.<br><br>Anybody who wants a highly productive visual studio for building Java web applications should use WaveMaker. WaveMaker is also great for developers who have used tools like Visual Basic, MS Access, PowerBuilder or Lotus Notes.<br></div>
+
+                    <form name="reply"
+                          action="http://www.manageability.org/blog/stuff/ajax-libraries/talkback/1203029983/discussion_reply_form"
+                          method="post"
+                          style="display: inline;">
+
+                        <input class="standalone"
+    type="submit" value="Reply to this" />
+                    </form>
+
+                    
+
+                    
+
+                    
+
+                    
+
+                </div>
+
+            
+
+    
+
+</div>
+                    
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- end of main content block -->
+
+        <!-- start of the left (by default at least) column -->
+        <div id="portal-column-one">
+            <div class="visualPadding">
+                
+                    
+
+    
+
+        
+            <div>
+
+    <div class="portlet" id="portlet-related">
+
+        <h5>Related</h5>
+
+
+        <div class="portletBody">
+            <div class="portletContent odd">
+
+                
+                <br />
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open_source_repos">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Corporate Open Source Repositories You Never Knew Existed</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/rule_engines">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Rule Engines Written In Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/workflow_in_java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Workflow Engines Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open_source_portal_servers_in_java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Portal Servers Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/template-engines-in-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Novel Open Source Template Engines Written In Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/single-sign-on-in-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Identity Management Solutions Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-messaging-integration-transformation-routing-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source EAI Written In Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-agent-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Agent Systems Written In Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-structured-graphics-libraries-in-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Structured Graphics Libraries Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-graph-network-visualization-in-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Graph or Network Visualization Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/full-text-lucene-jxta-search-engine-java-xml">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Full Text Search Engines Written In Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/distributed-cache-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Distributed Cache Solutions Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/how-to-evaluate-open-source-library">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">How to Choose an Open Source Library</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-isr-research">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Under The Microscope</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-profilers-for-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Profilers for Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-automated-test-tools-written-in-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Automated Test Tools Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-web-crawlers-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Web Crawlers Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-statemachine-for-user-interfaces-written-in-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source PageFlow (a.k.a. State Machine) Written In Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-manageability-of-sony-ericsson-t610">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Manageability For My Sony Ericsson T610 Phone</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-xml-diff-in-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source XML Diff Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/how-many-java-web-frameworks">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">How Many Java Web Frameworks Can You Name?</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-personal-proxy-servers-written-in-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Personal Proxy Servers Written In Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/screen-scraping-tools-written-in-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">HTML Screen Scraping Tools Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-projects-that-use-java-nio">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Projects That Use Java NIO</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-probabilistic-networks-in-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Probabilistic Networks Written In Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-java-data-structures-and-algorithms">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Java Collections API Extensions</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/top-ten-truly-obscure-java-projects">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Top Ten Truly Obscure But Useful Java Projects - Circa 2004</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-jms-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source JMS (Java Message Service) Implementations</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/jdbc-proxy-drivers">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source JDBC Proxy Drivers</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-etl">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source ETL (Extraction, Transform, Load) Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-document-repository">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Document Management Solutions Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/java-and-sugar-crm-dont-mix">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Java and SugarCRM don't Mix</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-learning-management-systems">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Learning Management Systems (LMS) Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/how-to-pick-a-winner">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">How to Pick an Open Source Winner</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-crm">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source CRM Solutions Written in Java.</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/alternative-persistence-open-source-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Alternative Persistence Written in Open Source Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/jbi-containers">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Java Business Integration</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/openstorm">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">OpenStorm BPEL Suite to go Open Source</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/sourefire-checkpoint">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Company Acquired for $225 Million!</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-model-translators-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Model  Driven Translators Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/configuration-deployment-frameworks-in-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Configuration Deployment Frameworks Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-project-task-management-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Resource and Task Management Projects written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-collaborative-filter-in-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Collaborative Filtering Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-java-calendar">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Calendar Management Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-java-business-intelligence">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Business Intelligence Tools Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/java-open-source-replication-synchronization">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Replication and Synchronization Tools Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/java-open-source-social-network">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Social Networking Applications Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/open-source-grid-cluster-java">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Open Source Grid and Cluster Computing Frameworks Written in Java</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/stuff/top-ten-truly-obscure-java-projects-2007">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">Top Ten Obscure but Useful Java Open Source Projects - Circa 2007</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/archive/20030611%23101_ways_to_make_money1">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">101 Ways to Make Money off Open Source</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+                <div>
+                    <a href="http://www.manageability.org/blog/archive/20030222%23open_source_in_a_box">
+                       <!-- img src="" alt=""
+                            tal:attributes="src string:$portal_url/${related/icon};alt here/title" /-->
+                       <u><b><font style="11px; font-size: 11px; font-family: verdana, arial, sans-serif;
+">"Open Source in a Box" gets $11m in Funding</font></b></u>
+                       <br /><br />
+                    </a>
+                </div>
+            </div>
+
+
+
+            
+
+        </div>
+
+    </div>
+
+</div>
+        
+
+        
+    
+    
+
+        
+            
+    <div class="portlet" id="portlet-navigation-tree">
+    <div>
+        <h5>Navigation</h5>
+        <div class="portletBody">
+            <div class="portletContent odd">
+                
+                
+                    
+                        
+
+                        <a href="http://www.manageability.org/"
+                           accesskey="n"
+                           class="navItem navRootItem"
+                           title="Manageability">
+                            <img
+    src="http://www.manageability.org/site_icon.gif"
+    height="16" width="16" alt="" class="navIconRoot"
+    title="Plone Site" />
+                            <span class="navItemText">
+                                  Home
+                            </span>
+                        </a>
+                    
+                
+                
+                    
+                        <a href="http://www.manageability.org/blog/"
+                           accesskey="n"
+                           class="navItem navLevel1"
+                           title="Dive into the different Blog Categories.">
+                            <img
+    src="http://www.manageability.org/folder_icon.gif"
+    height="16" width="16" alt="" class="navIcon"
+    title="Folder" />
+                            <span class="navItemText">blog</span>
+                        </a>
+
+                        
+                    
+                
+                
+                    
+                        <a href="http://www.manageability.org/blog/concepts/topic_view"
+                           accesskey="n"
+                           class="navItem navLevel2"
+                           title="Why everything you know is wrong.">
+                            <img
+    src="http://www.manageability.org/topic_icon.gif"
+    height="16" width="16" alt="" class="navIcon"
+    title="Topic" />
+                            <span class="navItemText">Software Engineering Concepts Revisited</span>
+                        </a>
+
+                        
+                    
+                
+                
+                    
+                        <a href="http://www.manageability.org/blog/archive/"
+                           accesskey="n"
+                           class="navItem navLevel2"
+                           title="Old Freeroller stuff goes here.">
+                            <img
+    src="http://www.manageability.org/folder_icon.gif"
+    height="16" width="16" alt="" class="navIcon"
+    title="Folder" />
+                            <span class="navItemText">archive</span>
+                        </a>
+
+                        
+                    
+                
+                
+                    
+                        <a href="http://www.manageability.org/blog/opensource/topic_view"
+                           accesskey="n"
+                           class="navItem navLevel2"
+                           title="A Collection of Collections of interesting Open Source projects written in Java. &lt;a href=&quot;http://www.java-source.com&quot;&gt;[perma link]&lt;/a&gt;">
+                            <img
+    src="http://www.manageability.org/topic_icon.gif"
+    height="16" width="16" alt="" class="navIcon"
+    title="Topic" />
+                            <span class="navItemText">Java Open Source</span>
+                        </a>
+
+                        
+                    
+                
+                
+                    
+                        <a href="http://www.manageability.org/blog/stuff/"
+                           accesskey="n"
+                           class="navItem navLevel2 currentNavItem"
+                           title="All stuff goes here.">
+                            <img
+    src="http://www.manageability.org/folder_icon.gif"
+    height="16" width="16" alt="" class="navIcon"
+    title="Folder" />
+                            <span class="navItemText">stuff</span>
+                        </a>
+
+                        
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+        
+
+        
+    
+    
+
+        
+            
+        
+
+        
+    
+    
+
+        
+
+        <!-- The About box -->
+
+<span class="box" summary="Links" cellpadding="0"
+      cellspacing="0">
+
+<div class="box">
+    <h5>visitors</h5>
+          <div class="body">
+<center>
+<script type="text/javascript" src="http://pub.mybloglog.com/comm2.php?mblID=2006102612332348&amp;c_width=180&amp;c_sn_opt=n&amp;c_rows=10&amp;c_img_size=h&amp;c_heading_text=recent+readers&amp;c_color_heading_bg=FFFFFF&amp;c_color_heading=CCCCCC&amp;c_color_link_bg=E3E3E3&amp;c_color_link=FF6633&amp;c_color_bottom_bg=FFFFFF"></script></center>
+</div>
+ </div>         
+         
+                 
+
+</span>
+
+    
+    
+
+        
+
+        <!-- The About box -->
+
+<span class="box" summary="Links" cellpadding="0"
+      cellspacing="0">
+
+<div class="box">
+    <h5>reading</h5>
+          <div class="body">
+
+
+<center>
+<script language="javascript" type="text/javascript" src="http://www.librarything.com/jswidget.php?reporton=ceperez&amp;show=random&amp;header=1&amp;num=5&amp;covers=small&amp;text=title&amp;tag=alltags&amp;amazonassoc=manageability-20&amp;css=1&amp;style=4&amp;version=1">
+</script>
+</center>
+</div>
+ </div>         
+         
+                 
+
+</span>
+
+    
+
+                
+                &nbsp;
+            </div>
+        </div>
+        <!-- end of the left (by default at least) column -->
+
+    </div>
+    <!-- end of the main and left columns -->
+
+    <!-- start of right (by default at least) column -->
+    
+    <!-- end of the right (by default at least) column -->
+
+    <div class="visualClear">&nbsp;</div>
+
+</div>
+<!-- end column wrapper -->
+
+<hr class="netscape4" />
+
+<div id="portal-footer">
+
+<a href="http://java-source.com">
+Java Open Source
+</a>
+<br />
+<center>
+<a href="http://feeds.feedburner.com/manageability" title="Subscribe to my feed"><img src="http://www.feedburner.com/fb/images/pub/flchklt.gif" style="border:0" /></a>
+<p><a href="http://feeds.feedburner.com/manageability"><img src="http://feeds.feedburner.com/~fc/manageability?bg=ff9933&amp;fg=444444&amp;anim=0" height="26" width="88" style="border:0" alt="" /></a></p>
+<center>
+
+
+<!-- Creative Commons License -->
+<a rel="license" href="http://creativecommons.org/licenses/by-nd/2.0/"><img alt="Creative Commons License" border="0" src="http://creativecommons.org/images/public/somerights20.gif" /></a><br />
+<!-- /Creative Commons License -->
+
+
+<!--
+
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="">
+   <dc:type rdf:resource="http://purl.org/dc/dcmitype/Text" />
+   <license rdf:resource="http://creativecommons.org/licenses/by-nd/2.0/" />
+</Work>
+
+<License rdf:about="http://creativecommons.org/licenses/by-nd/2.0/">
+   <permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+   <permits rdf:resource="http://web.resource.org/cc/Distribution" />
+   <requires rdf:resource="http://web.resource.org/cc/Notice" />
+   <requires rdf:resource="http://web.resource.org/cc/Attribution" />
+</License>
+
+</rdf:RDF>
+
+-->
+<br />
+
+
+<br />
+
+<center>
+<br />
+
+<!--WEBBOT bot="HTMLMarkup" startspan ALT="Site Meter" -->
+<script type="text/javascript" language="JavaScript">var site="sm9ceperez"</script>
+<script type="text/javascript" language="JavaScript1.2" src="http://sm9.sitemeter.com/js/counter.js?site=sm9ceperez">
+</script>
+<noscript>
+<a href="http://sm9.sitemeter.com/stats.asp?site=sm9ceperez" target="_top">
+
+<img src="http://sm9.sitemeter.com/meter.asp?site=sm9ceperez" alt="Site Meter" border="0"></a>
+</noscript>
+<!-- Copyright (c)2002 Site Meter -->
+<!--WEBBOT bot="HTMLMarkup" Endspan -->
+</center>
+<br />
+
+<center>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-62616-1";
+urchinTracker();
+</script>
+</center>
+
+
+
+<center>
+</center>
+
+
+</center></center></div>
+
+<div id="portal-colophon">
+<!-- 
+     
+     Please keep the Plone Powered button (or a textual link to us) if you use 
+     Plone on your site. It's a nice token of gratitude, and we appreciate your
+     help in promoting the Plone name. 
+     
+     Plone is powered by the combined forces of Zope and CMF, two absolutely
+     great systems made by Zope Corporation (http://zope.com) and they in turn
+     are based on the best programming language in the world - Python
+     (http://www.python.org). We owe these guys a lot, thanks for making Plone
+     possible!
+     
+ -->
+
+<a href="http://plone.org">
+<img src="http://www.manageability.org/plone_powered.gif"
+     height="15" width="80" alt="Powered by Plone"
+     title="This Plone site was built using the Plone Content Management System. Click for more information." />
+</a>
+
+<p class="discreet">
+This site conforms to the following standards:
+</p>
+
+<ul>
+    <li>
+        <a href="http://www.section508.gov"
+           title="This Plone site conforms to the US Government Section 508 Accessibility Guidelines.">
+        Section 508
+        </a>
+    </li>
+    <li>
+        <a href="http://www.w3.org/WAI/WCAG1AAA-Conformance"
+           title="This Plone site conforms to the W3C-WAI Web Content Accessibility Guidelines.">
+        WAI-AAA
+        </a>
+    </li>
+    <li>
+        <a href="http://validator.w3.org/check/referer"
+           title="This Plone site is valid XHTML.">
+        Valid XHTML
+        </a>
+    </li>
+    <li>
+        <a href="http://jigsaw.w3.org/css-validator/check/referer"
+           title="This Plone site was built with valid CSS and semantically correct use of tables.">
+	Valid CSS and tableless layout
+        </a>
+    </li>
+</ul>
+ 
+</div>
+
+</div>
+
+</body>
+</html>
+
+
