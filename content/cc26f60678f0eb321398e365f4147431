@@ -1,0 +1,1049 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="verify-v1" content="ynzW/GE7rr+SwTxuVauAHAJHCND7JANXtoLBw5Ci6tY=" />
+	<title>MySQL ::   MySQL 5.0 Reference Manual :: 11.12 Encryption and Compression Functions</title> 
+
+	 
+
+	<link rel="stylesheet" type="text/css" media="screen" href="/common/css/mysql.css" />
+	<link rel="stylesheet" type="text/css" media="projection" href="/common/css/mysql.css" />
+	<link rel="stylesheet" type="text/css" media="print" href="/common/css/print.css" />
+	
+	 
+		<link rel="stylesheet" type="text/css" href="/doc/docs.css" />
+	 
+		
+		
+		
+		
+	<link rel="contents" href="index.html" title="MySQL Manual" /><link rel="start" href="index.html" title="MySQL Manual" /><link rel="stylesheet" type="text/css" href="/doc/docs.css" /><link rel="prev" href="bit-functions.html" title="11.11 Bit Functions"/><link rel="next" href="information-functions.html?ff=nopfpls" title="11.13 Information Functions"/><link rel="up" href="functions.html" title="11 Functions and Operators"/> 
+		<link rel="shortcut icon" href="/common/themes/sakila/favicon.ico" />
+	
+		<script language="javascript" type="text/javascript" src="/common/js/clear_search_text.js"></script>
+    	
+		<noscript></noscript>
+	    
+		    
+    <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js"></script>
+    
+    
+</head>
+
+<body class="doc" >
+
+<div id="container">
+
+<!--UdmComment-->
+<a class="skipToContent" href="#mainContent">Skip navigation links</a>
+
+	<div id="header" >
+	
+	<div class="left">
+
+    <div id="logo">
+		    					
+				<a href="http://dev.mysql.com/" title="MySQL">
+						    <img src="/common/logos/logo-mysql-110x57.png" alt="MySQL" width="110" height="57" /></a>
+		    </div>
+		    <div id="tagline">The world's most popular open source database</div>
+
+
+				
+
+	</div>
+	
+	<div class="right">
+				
+		<div id="search_box"> <!-- Start Search -->
+				<form id="searchform" name="searchform" method="get" action="http://search.mysql.com/search/query/search">
+			<input type="text" id="q" name="q" value="Search" class="swap_value" onfocus="clearSearchText();" />
+			<input type="hidden" id="search_dest" name="group" value="Documentation"/>
+			<input type="image" src="/common/themes/sakila/search_g.png" id="go" alt="Search" title="Search" value="Search" />
+		    </form>		</div> <!-- End Search -->
+
+				
+		  		  
+		<div id="login" >
+				
+							 <p><a href="http://dev.mysql.com/login/?dest=http%3a%2f%2fdev.mysql.com%2Fdoc%2Frefman%2F5.0%2Fen%2Fencryption-functions.html">Login</a> | <a href="http://dev.mysql.com/register.php">Register</a></p>
+			
+		</div>
+  
+			</div>
+
+	</div> 
+
+	<!-- MySQL Navigation -->
+	<div id="nav_container">
+	
+	<div id="flags">
+            <ul>
+		<br />
+            </ul>
+    </div>
+		
+						<div id="tab_last">
+		<ul>
+			<li class="first"><a href="http://dev.mysql.com">Developer Zone</a></li>
+			<li class="second"><a href="http://dev.mysql.com/downloads/">Downloads</a></li>
+			<li class="current"><a href="http://dev.mysql.com/doc/">Documentation</a></li>
+		</ul>
+		</div>	
+				
+
+	
+	<div id="mysql_menu">
+	    <ul>
+	<li class="current"><a class="current " href="/doc/">MySQL Manual</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-gui.html">MySQL Workbench</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-expert.html">Expert Guides</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-topic.html">Topic Guides</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-cluster.html">MySQL Cluster</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-other.html">Other Docs</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-mysqlu.html">MySQL Uni</a>
+	
+		
+		
+	</li>
+	
+	<li class="link"><a  href="/doc/index-about.html">About</a>
+	
+		
+		
+	</li>
+	
+	<li class="link last"><a  href="/doc/index-archive.html">Archives</a>
+	
+		
+		
+	</li>
+	
+</ul>
+	</div>
+
+		<div id="og_sakila">&nbsp;</div>
+	        <div id="og_title">&nbsp;</div>
+	
+	</div>
+	<!-- End Navigation Container -->
+
+<!--/UdmComment-->
+
+<div class="page_container">
+	<div class="page_sidebar">
+	<!--UdmCommentTest-->
+
+	<div id="menu_title"></div>
+
+	<div id="menu">
+		<ul>
+			<li class="current"><a class="current subitems" href="/doc/index.html">Documentation Library</a>
+
+			<ul class="subitems1">
+				 <li><a href="index.html"><b>Table of Contents</b></a>
+
+
+				 <ul class="subitems2">
+				 
+				 					 		<li>
+					 	<a href="/doc/refman/5.5/en/encryption-functions.html" >MySQL 5.5 Manual</a>  					
+				 	</li>
+
+				 
+				 					 		<li>
+					 	<a href="/doc/refman/5.1/en/encryption-functions.html" >MySQL 5.1 Manual</a>  					
+				 	</li>
+
+				 
+				 					 		<li class="current">MySQL 5.0 Manual
+				 	
+				 	</li>
+
+				 
+				 					 		<li>
+					 	<a href="/doc/refman/4.1/en/encryption-functions.html" >MySQL 3.23/4.0/4.1 Manual</a>  					
+				 	</li>
+
+				 
+				 </ul>
+
+
+
+				 </li>
+
+
+			</ul>
+
+
+			</li>
+		</ul>
+
+	 <div class="searchmanual">
+			<form action="http://search.mysql.com/search/query/search" method="get" id="docsearch">
+		<strong><label for="searchq">Search manual:</label></strong> <br />
+			 <input id="searchq" type="text" name="q" value="" size="14" />
+			 <input id="searchsubmit" type="submit" value="Go" />
+			<input id="searchgroup" type="hidden" name="group" value="refman-50" />
+			<input id="search_p_atname" type="hidden" name="search_p_atname" value="Language" />
+			<input id="search_p_op" type="hidden" name="search_p_op" value="equals" />
+			<input id="search_p_val" type="hidden" name="search_p_val" value="en" />
+			</form>
+	 </div>
+
+
+	</div>
+
+	
+</div>  
+<!-- Main content -->
+<a name="mainContent"></a>
+
+<div id="page" class="sidebar" >
+
+	 
+	
+	
+
+
+
+
+	<!--UdmComment-->
+
+<div id="docheader"><a href="index.html"> MySQL 5.0 Reference Manual</a> :: <a href="functions.html">11 Functions and Operators</a> :: 11.12 Encryption and Compression Functions</div>
+
+	 
+	
+
+	
+<script language="javascript">
+
+<!--
+function toggle(what){
+ if(document.getElementById(what).style.display == "none"){
+   document.getElementById(what).style.display = "block";
+ }else{
+   document.getElementById(what).style.display = "none";
+ }
+}
+//-->
+
+</script>
+<noscript></noscript>
+
+<div style="float: right; width: 250px; margin: 0px 0px 8px 8px; background: white">
+	<div style="text-align: right; font-size: 90%; margin-bottom: 4px">
+		<div style="text-align: left;"><a style="text-decoration: none" href="bit-functions.html" title="Previous Section">&laquo; 11.11 Bit Functions</a></div>
+		<hr size="1" noshade="noshade" align="center" width="40" style="margin: 0px auto 2px auto" />		<a style="text-decoration: none" href="information-functions.html" title="Next Section">11.13 Information Functions  &raquo;</a>	</div>
+	<div style="padding: 4px 0px 0px 4px; border: 2px dotted #ccc; border-right: none;">
+		<b>Section Navigation</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>[<a href="#" onclick="toggle('sectionnav');"  onkeypress="if (event.keyCode == 13) { toggle('sectionnav'); }">Toggle</a>]</small>
+			<ul id="sectionnav">
+				<li class="p"><a href="functions.html">11 Functions and Operators</a></li><li><a href="func-op-summary-ref.html">11.1 Function and Operator Reference</a></li>
+<li><a href="type-conversion.html">11.2 Type Conversion in Expression Evaluation</a></li>
+<li><a href="non-typed-operators.html">11.3 Operators</a></li>
+<li><a href="control-flow-functions.html">11.4 Control Flow Functions</a></li>
+<li><a href="string-functions.html">11.5 String Functions</a></li>
+<li><a href="numeric-functions.html">11.6 Numeric Functions and Operators</a></li>
+<li><a href="date-and-time-functions.html">11.7 Date and Time Functions</a></li>
+<li><a href="mysql-calendar.html">11.8 What Calendar Is Used By MySQL?</a></li>
+<li><a href="fulltext-search.html">11.9 Full-Text Search Functions</a></li>
+<li><a href="cast-functions.html">11.10 Cast Functions and Operators</a></li>
+<li><a href="bit-functions.html">11.11 Bit Functions</a></li>
+<li class="self">11.12 Encryption and Compression Functions</li>
+<li><a href="information-functions.html">11.13 Information Functions</a></li>
+<li><a href="miscellaneous-functions.html">11.14 Miscellaneous Functions</a></li>
+<li><a href="group-by-functions-and-modifiers.html">11.15 Functions and Modifiers for Use with GROUP BY Clauses</a></li>
+<li><a href="spatial-extensions.html">11.16 Spatial Extensions</a></li>
+<li><a href="precision-math.html">11.17 Precision Math</a></li>
+</ul>
+
+			</ul>		
+	</div>
+
+</div>
+<!--/UdmComment-->
+
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="encryption-functions"></a>11.12. Encryption and Compression Functions</h2></div></div></div>
+<a class="indexterm" name="id2901378"></a><a class="indexterm" name="id2901387"></a><div class="table">
+<a name="id2901399"></a><p class="title"><b>Table 11.16. Encryption Functions</b></p>
+<table summary="Encryption Functions" border="1">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Name</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><a href="encryption-functions.html#function_aes-decrypt"><code class="literal">AES_DECRYPT()</code></a></td>
+<td>Decrypt using AES</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_aes-encrypt"><code class="literal">AES_ENCRYPT()</code></a></td>
+<td>Encrypt using AES</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_compress"><code class="literal">COMPRESS()</code></a></td>
+<td>Return result as a binary string</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_decode"><code class="literal">DECODE()</code></a></td>
+<td>Decodes a string encrypted using ENCODE()</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_des-decrypt"><code class="literal">DES_DECRYPT()</code></a></td>
+<td>Decrypt a string</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_des-encrypt"><code class="literal">DES_ENCRYPT()</code></a></td>
+<td>Encrypt a string</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_encode"><code class="literal">ENCODE()</code></a></td>
+<td>Encode a string</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_encrypt"><code class="literal">ENCRYPT()</code></a></td>
+<td>Encrypt a string</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_md5"><code class="literal">MD5()</code></a></td>
+<td>Calculate MD5 checksum</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_old-password"><code class="literal">OLD_PASSWORD()</code></a></td>
+<td>Return the value of the  pre-4.1 implementation of PASSWORD</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_password"><code class="literal">PASSWORD()</code></a></td>
+<td>Calculate and return a password string</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_sha1"><code class="literal">SHA1()</code>, <code class="literal">SHA()</code></a></td>
+<td>Calculate an SHA-1 160-bit checksum</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_uncompress"><code class="literal">UNCOMPRESS()</code></a></td>
+<td>Uncompress a string compressed</td>
+</tr>
+<tr>
+<td><a href="encryption-functions.html#function_uncompressed-length"><code class="literal">UNCOMPRESSED_LENGTH()</code></a></td>
+<td>Return the length of a string before compression</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+      Many encryption and compression functions return strings for which
+      the result might contain arbitrary byte values. If you want to
+      store these results, use a column with a
+      <a href="binary-varbinary.html" title="10.4.2. The BINARY and
+        VARBINARY Types"><code class="literal">VARBINARY</code></a> or
+      <a href="blob.html" title="10.4.3. The BLOB and
+        TEXT Types"><code class="literal">BLOB</code></a> binary string data type. This
+      will avoid potential problems with trailing space removal or
+      character set conversion that would change data values, such as
+      may occur if you use a nonbinary string data type
+      (<a href="char.html" title="10.4.1. The CHAR and
+        VARCHAR Types"><code class="literal">CHAR</code></a>,
+      <a href="char.html" title="10.4.1. The CHAR and
+        VARCHAR Types"><code class="literal">VARCHAR</code></a>,
+      <a href="blob.html" title="10.4.3. The BLOB and
+        TEXT Types"><code class="literal">TEXT</code></a>).
+    </p>
+<p>
+      For functions such as <code class="literal">MD5()</code> or
+      <code class="literal">SHA1()</code> that return a string of hex digits, the
+      return value cannot be converted to uppercase or compared in
+      case-insensitive fashion as is. You must convert the value to a
+      nonbinary string. See the discussion of binary string conversion
+      in <a href="cast-functions.html" title="11.10. Cast Functions and Operators">Section 11.10, “Cast Functions and Operators”</a>.
+    </p>
+<p>
+      If an application stores values from a function such as
+      <a href="encryption-functions.html#function_md5"><code class="literal">MD5()</code></a> or
+      <a href="encryption-functions.html#function_sha1"><code class="literal">SHA1()</code></a> that returns a string of hex
+      digits, more efficient storage and comparisons can be obtained by
+      converting the hex representation to binary using
+      <a href="string-functions.html#function_unhex"><code class="literal">UNHEX()</code></a> and storing the result in a
+      <a href="binary-varbinary.html" title="10.4.2. The BINARY and
+        VARBINARY Types"><code class="literal">BINARY(<em class="replaceable"><code>N</code></em>)</code></a>
+      column. Each pair of hex digits requires one byte in binary form,
+      so the value of <em class="replaceable"><code>N</code></em> depends on the length
+      of the hex string. <em class="replaceable"><code>N</code></em> is 16 for an
+      <a href="encryption-functions.html#function_md5"><code class="literal">MD5()</code></a> value and 20 for a
+      <a href="encryption-functions.html#function_sha1"><code class="literal">SHA1()</code></a> value.
+    </p>
+<p>
+      The size penalty for storing the hex string in a
+      <a href="char.html" title="10.4.1. The CHAR and
+        VARCHAR Types"><code class="literal">CHAR</code></a> column is at least two times,
+      up to six times if the value is stored in a column that uses the
+      <code class="literal">utf8</code> character set (where each character uses 3
+      bytes). Storing the string also results in slower comparisons
+      because of the larger values and the need to take character set
+      collation rules into account.
+    </p>
+<p>
+      Suppose that an application stores
+      <a href="encryption-functions.html#function_md5"><code class="literal">MD5()</code></a> string values in a
+      <a href="char.html" title="10.4.1. The CHAR and
+        VARCHAR Types"><code class="literal">CHAR(32)</code></a> column:
+    </p>
+<pre class="programlisting">CREATE TABLE md5_tbl (md5_val CHAR(32), ...);
+INSERT INTO md5_tbl (md5_val, ...) VALUES(MD5('abcdef'), ...);
+</pre>
+<p>
+      To convert hex strings to more compact form, modify the
+      application to use <a href="string-functions.html#function_unhex"><code class="literal">UNHEX()</code></a> and
+      <a href="binary-varbinary.html" title="10.4.2. The BINARY and
+        VARBINARY Types"><code class="literal">BINARY(16)</code></a> instead as follows:
+    </p>
+<pre class="programlisting">CREATE TABLE md5_tbl (md5_val BINARY(16), ...);
+INSERT INTO md5_tbl (md5_val, ...) VALUES(UNHEX(MD5('abcdef')), ...);
+</pre>
+<p>
+      Applications should be prepared to handle the very rare case that
+      a hashing function produces the same value for two different input
+      values. One way to make collisions detectable is to make the hash
+      column a primary key.
+    </p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<div class="admon-title">Note</div>
+<p>
+        Exploits for the MD5 and SHA-1 algorithms have become known. You
+        may wish to consider using one of the other encryption functions
+        described in this section instead.
+      </p>
+</div>
+<div class="caution" style="margin-left: 0.5in; margin-right: 0.5in;">
+<div class="admon-title">Caution</div>
+<p>
+        Passwords or other sensitive values supplied as arguments to
+        encryption functions are sent in plaintext to the MySQL server
+        unless an SSL connection is used. Also, such values will appear
+        in any MySQL logs to which they are written. To avoid these
+        types of exposure, applications can encrypt sensitive values on
+        the client side before sending them to the server. The same
+        considerations apply to encryption keys. To avoid exposing
+        these, applications can use stored procedures to encrypt and
+        decrypt values on the server side.
+      </p>
+</div>
+<div class="itemizedlist"><ul>
+<li>
+<p><a name="function_aes-decrypt"></a>
+          <a class="indexterm" name="id2901936"></a>
+
+          <a href="encryption-functions.html#function_aes-decrypt"><code class="literal">AES_DECRYPT(<em class="replaceable"><code>crypt_str</code></em>,<em class="replaceable"><code>key_str</code></em>)</code></a>
+        </p>
+<p>
+          This function decrypts data using the official AES (Advanced
+          Encryption Standard) algorithm. For more information, see the
+          description of <a href="encryption-functions.html#function_aes-encrypt"><code class="literal">AES_ENCRYPT()</code></a>.
+        </p>
+</li>
+<li>
+<p><a name="function_aes-encrypt"></a>
+          <a class="indexterm" name="id2902013"></a>
+
+          <a href="encryption-functions.html#function_aes-encrypt"><code class="literal">AES_ENCRYPT(<em class="replaceable"><code>str</code></em>,<em class="replaceable"><code>key_str</code></em>)</code></a>
+        </p>
+<p>
+          <a href="encryption-functions.html#function_aes-encrypt"><code class="literal">AES_ENCRYPT()</code></a> and
+          <a href="encryption-functions.html#function_aes-decrypt"><code class="literal">AES_DECRYPT()</code></a> enable encryption
+          and decryption of data using the official AES (Advanced
+          Encryption Standard) algorithm, previously known as
+          “<span class="quote">Rijndael.</span>” Encoding with a 128-bit key length is
+          used, but you can extend it up to 256 bits by modifying the
+          source. We chose 128 bits because it is much faster and it is
+          secure enough for most purposes.
+        </p>
+<p>
+          <a href="encryption-functions.html#function_aes-encrypt"><code class="literal">AES_ENCRYPT()</code></a> encrypts a string
+          and returns a binary string.
+          <a href="encryption-functions.html#function_aes-decrypt"><code class="literal">AES_DECRYPT()</code></a> decrypts the
+          encrypted string and returns the original string. The input
+          arguments may be any length. If either argument is
+          <code class="literal">NULL</code>, the result of this function is also
+          <code class="literal">NULL</code>.
+        </p>
+<p>
+          Because AES is a block-level algorithm, padding is used to
+          encode uneven length strings and so the result string length
+          may be calculated using this formula:
+        </p>
+<pre class="programlisting">16 * (trunc(<em class="replaceable"><code>string_length</code></em> / 16) + 1)
+</pre>
+<p>
+          If <a href="encryption-functions.html#function_aes-decrypt"><code class="literal">AES_DECRYPT()</code></a> detects
+          invalid data or incorrect padding, it returns
+          <code class="literal">NULL</code>. However, it is possible for
+          <a href="encryption-functions.html#function_aes-decrypt"><code class="literal">AES_DECRYPT()</code></a> to return a
+          non-<code class="literal">NULL</code> value (possibly garbage) if the
+          input data or the key is invalid.
+        </p>
+<p>
+          You can use the AES functions to store data in an encrypted
+          form by modifying your queries:
+        </p>
+<pre class="programlisting">INSERT INTO t VALUES (1,AES_ENCRYPT('text','password'));
+</pre>
+<p>
+          <a href="encryption-functions.html#function_aes-encrypt"><code class="literal">AES_ENCRYPT()</code></a> and
+          <a href="encryption-functions.html#function_aes-decrypt"><code class="literal">AES_DECRYPT()</code></a> can be considered
+          the most cryptographically secure encryption functions
+          currently available in MySQL.
+        </p>
+</li>
+<li>
+<p><a name="function_compress"></a>
+          <a class="indexterm" name="id2902220"></a>
+
+          <a href="encryption-functions.html#function_compress"><code class="literal">COMPRESS(<em class="replaceable"><code>string_to_compress</code></em>)</code></a>
+        </p>
+<p>
+          Compresses a string and returns the result as a binary string.
+          This function requires MySQL to have been compiled with a
+          compression library such as <code class="literal">zlib</code>.
+          Otherwise, the return value is always <code class="literal">NULL</code>.
+          The compressed string can be uncompressed with
+          <a href="encryption-functions.html#function_uncompress"><code class="literal">UNCOMPRESS()</code></a>.
+        </p>
+<pre class="programlisting">mysql&gt; <strong class="userinput"><code>SELECT LENGTH(COMPRESS(REPEAT('a',1000)));</code></strong>
+        -&gt; 21
+mysql&gt; <strong class="userinput"><code>SELECT LENGTH(COMPRESS(''));</code></strong>
+        -&gt; 0
+mysql&gt; <strong class="userinput"><code>SELECT LENGTH(COMPRESS('a'));</code></strong>
+        -&gt; 13
+mysql&gt; <strong class="userinput"><code>SELECT LENGTH(COMPRESS(REPEAT('a',16)));</code></strong>
+        -&gt; 15
+</pre>
+<p>
+          The compressed string contents are stored the following way:
+        </p>
+<div class="itemizedlist"><ul>
+<li><p>
+              Empty strings are stored as empty strings.
+            </p></li>
+<li><p>
+              Nonempty strings are stored as a four-byte length of the
+              uncompressed string (low byte first), followed by the
+              compressed string. If the string ends with space, an extra
+              “<span class="quote"><code class="literal">.</code></span>” character is added to
+              avoid problems with endspace trimming should the result be
+              stored in a <a href="char.html" title="10.4.1. The CHAR and
+        VARCHAR Types"><code class="literal">CHAR</code></a> or
+              <a href="char.html" title="10.4.1. The CHAR and
+        VARCHAR Types"><code class="literal">VARCHAR</code></a> column. (However,
+              use of nonbinary string data types such as
+              <a href="char.html" title="10.4.1. The CHAR and
+        VARCHAR Types"><code class="literal">CHAR</code></a> or
+              <a href="char.html" title="10.4.1. The CHAR and
+        VARCHAR Types"><code class="literal">VARCHAR</code></a> to store compressed
+              strings is not recommended anyway because character set
+              conversion may occur. Use a
+              <a href="binary-varbinary.html" title="10.4.2. The BINARY and
+        VARBINARY Types"><code class="literal">VARBINARY</code></a> or
+              <a href="blob.html" title="10.4.3. The BLOB and
+        TEXT Types"><code class="literal">BLOB</code></a> binary string column
+              instead.)
+            </p></li>
+</ul></div>
+</li>
+<li>
+<p><a name="function_decode"></a>
+          <a class="indexterm" name="id2902420"></a>
+
+          <a href="encryption-functions.html#function_decode"><code class="literal">DECODE(<em class="replaceable"><code>crypt_str</code></em>,<em class="replaceable"><code>pass_str</code></em>)</code></a>
+        </p>
+<p>
+          Decrypts the encrypted string
+          <em class="replaceable"><code>crypt_str</code></em> using
+          <em class="replaceable"><code>pass_str</code></em> as the password.
+          <em class="replaceable"><code>crypt_str</code></em> should be a string
+          returned from <a href="encryption-functions.html#function_encode"><code class="literal">ENCODE()</code></a>.
+        </p>
+</li>
+<li>
+<p><a name="function_des-decrypt"></a>
+          <a class="indexterm" name="id2902501"></a>
+
+          <a href="encryption-functions.html#function_des-decrypt"><code class="literal">DES_DECRYPT(<em class="replaceable"><code>crypt_str</code></em>[,<em class="replaceable"><code>key_str</code></em>])</code></a>
+        </p>
+<p>
+          Decrypts a string encrypted with
+          <a href="encryption-functions.html#function_des-encrypt"><code class="literal">DES_ENCRYPT()</code></a>. If an error
+          occurs, this function returns <code class="literal">NULL</code>.
+        </p>
+<p>
+          This function works only if MySQL has been configured with SSL
+          support. See <a href="secure-connections.html" title="5.5.6. Using SSL for Secure Connections">Section 5.5.6, “Using SSL for Secure Connections”</a>.
+        </p>
+<p>
+          If no <em class="replaceable"><code>key_str</code></em> argument is given,
+          <a href="encryption-functions.html#function_des-decrypt"><code class="literal">DES_DECRYPT()</code></a> examines the
+          first byte of the encrypted string to determine the DES key
+          number that was used to encrypt the original string, and then
+          reads the key from the DES key file to decrypt the message.
+          For this to work, the user must have the
+          <a href="privileges-provided.html#priv_super"><code class="literal">SUPER</code></a> privilege. The key file
+          can be specified with the
+          <a href="server-options.html#option_mysqld_des-key-file"><code class="option">--des-key-file</code></a> server option.
+        </p>
+<p>
+          If you pass this function a <em class="replaceable"><code>key_str</code></em>
+          argument, that string is used as the key for decrypting the
+          message.
+        </p>
+<p>
+          If the <em class="replaceable"><code>crypt_str</code></em> argument does not
+          appear to be an encrypted string, MySQL returns the given
+          <em class="replaceable"><code>crypt_str</code></em>.
+        </p>
+</li>
+<li>
+<p><a name="function_des-encrypt"></a>
+          <a class="indexterm" name="id2902644"></a>
+
+          <a href="encryption-functions.html#function_des-encrypt"><code class="literal">DES_ENCRYPT(<em class="replaceable"><code>str</code></em>[,{<em class="replaceable"><code>key_num</code></em>|<em class="replaceable"><code>key_str</code></em>}])</code></a>
+        </p>
+<p>
+          Encrypts the string with the given key using the Triple-DES
+          algorithm.
+        </p>
+<p>
+          This function works only if MySQL has been configured with SSL
+          support. See <a href="secure-connections.html" title="5.5.6. Using SSL for Secure Connections">Section 5.5.6, “Using SSL for Secure Connections”</a>.
+        </p>
+<p>
+          The encryption key to use is chosen based on the second
+          argument to <a href="encryption-functions.html#function_des-encrypt"><code class="literal">DES_ENCRYPT()</code></a>, if
+          one was given. With no argument, the first key from the DES
+          key file is used. With a <em class="replaceable"><code>key_num</code></em>
+          argument, the given key number (0 to 9) from the DES key file
+          is used. With a <em class="replaceable"><code>key_str</code></em> argument,
+          the given key string is used to encrypt
+          <em class="replaceable"><code>str</code></em>.
+        </p>
+<p>
+          The key file can be specified with the
+          <a href="server-options.html#option_mysqld_des-key-file"><code class="option">--des-key-file</code></a> server option.
+        </p>
+<p>
+          The return string is a binary string where the first character
+          is <a href="string-functions.html#function_char"><code class="literal">CHAR(128 |
+          <em class="replaceable"><code>key_num</code></em>)</code></a>. If an error
+          occurs, <a href="encryption-functions.html#function_des-encrypt"><code class="literal">DES_ENCRYPT()</code></a> returns
+          <code class="literal">NULL</code>.
+        </p>
+<p>
+          The 128 is added to make it easier to recognize an encrypted
+          key. If you use a string key,
+          <em class="replaceable"><code>key_num</code></em> is 127.
+        </p>
+<p>
+          The string length for the result is given by this formula:
+        </p>
+<pre class="programlisting"><em class="replaceable"><code>new_len</code></em> = <em class="replaceable"><code>orig_len</code></em> + (8 - (<em class="replaceable"><code>orig_len</code></em> % 8)) + 1
+</pre>
+<p>
+          Each line in the DES key file has the following format:
+        </p>
+<pre class="programlisting"><em class="replaceable"><code>key_num</code></em> <em class="replaceable"><code>des_key_str</code></em>
+</pre>
+<p>
+          Each <em class="replaceable"><code>key_num</code></em> value must be a number
+          in the range from <code class="literal">0</code> to
+          <code class="literal">9</code>. Lines in the file may be in any order.
+          <em class="replaceable"><code>des_key_str</code></em> is the string that is
+          used to encrypt the message. There should be at least one
+          space between the number and the key. The first key is the
+          default key that is used if you do not specify any key
+          argument to <a href="encryption-functions.html#function_des-encrypt"><code class="literal">DES_ENCRYPT()</code></a>.
+        </p>
+<p>
+          You can tell MySQL to read new key values from the key file
+          with the <a href="flush.html" title="12.4.6.2. FLUSH Syntax"><code class="literal">FLUSH
+          DES_KEY_FILE</code></a> statement. This requires the
+          <a href="privileges-provided.html#priv_reload"><code class="literal">RELOAD</code></a> privilege.
+        </p>
+<p>
+          One benefit of having a set of default keys is that it gives
+          applications a way to check for the existence of encrypted
+          column values, without giving the end user the right to
+          decrypt those values.
+        </p>
+<pre class="programlisting">mysql&gt; <strong class="userinput"><code>SELECT customer_address FROM customer_table </code></strong>
+     &gt; <strong class="userinput"><code>WHERE crypted_credit_card = DES_ENCRYPT('credit_card_number');</code></strong>
+</pre>
+</li>
+<li>
+<p><a name="function_encode"></a>
+          <a class="indexterm" name="id2902921"></a>
+
+          <a href="encryption-functions.html#function_encode"><code class="literal">ENCODE(<em class="replaceable"><code>str</code></em>,<em class="replaceable"><code>pass_str</code></em>)</code></a>
+        </p>
+<p>
+          Encrypt <em class="replaceable"><code>str</code></em> using
+          <em class="replaceable"><code>pass_str</code></em> as the password. To
+          decrypt the result, use
+          <a href="encryption-functions.html#function_decode"><code class="literal">DECODE()</code></a>.
+        </p>
+<p>
+          The result is a binary string of the same length as
+          <em class="replaceable"><code>str</code></em>.
+        </p>
+<p>
+          The strength of the encryption is based on how good the random
+          generator is. It should suffice for short strings.
+        </p>
+</li>
+<li>
+<p><a name="function_encrypt"></a>
+          <a class="indexterm" name="id2903010"></a>
+
+          <a href="encryption-functions.html#function_encrypt"><code class="literal">ENCRYPT(<em class="replaceable"><code>str</code></em>[,<em class="replaceable"><code>salt</code></em>])</code></a>
+        </p>
+<p>
+          Encrypts <em class="replaceable"><code>str</code></em> using the Unix
+          <code class="function">crypt()</code> system call and returns a binary
+          string. The <em class="replaceable"><code>salt</code></em> argument must be a
+          string with at least two characters or the result will be
+          <code class="literal">NULL</code>. If no <em class="replaceable"><code>salt</code></em>
+          argument is given, a random value is used.
+        </p>
+<pre class="programlisting">mysql&gt; <strong class="userinput"><code>SELECT ENCRYPT('hello');</code></strong>
+        -&gt; 'VxuFAJXVARROc'
+</pre>
+<p>
+          <a href="encryption-functions.html#function_encrypt"><code class="literal">ENCRYPT()</code></a> ignores all but the
+          first eight characters of <em class="replaceable"><code>str</code></em>, at
+          least on some systems. This behavior is determined by the
+          implementation of the underlying <code class="function">crypt()</code>
+          system call.
+        </p>
+<p>
+          The use of <a href="encryption-functions.html#function_encrypt"><code class="literal">ENCRYPT()</code></a> with the
+          <code class="literal">ucs2</code> multi-byte character set is not
+          recommended because the system call expects a string
+          terminated by a zero byte.
+        </p>
+<p>
+          If <code class="function">crypt()</code> is not available on your
+          system (as is the case with Windows),
+          <a href="encryption-functions.html#function_encrypt"><code class="literal">ENCRYPT()</code></a> always returns
+          <code class="literal">NULL</code>.
+        </p>
+</li>
+<li>
+<p><a name="function_md5"></a>
+          <a class="indexterm" name="id2903181"></a>
+
+          <a href="encryption-functions.html#function_md5"><code class="literal">MD5(<em class="replaceable"><code>str</code></em>)</code></a>
+        </p>
+<p>
+          Calculates an MD5 128-bit checksum for the string. The value
+          is returned as a binary string of 32 hex digits, or
+          <code class="literal">NULL</code> if the argument was
+          <code class="literal">NULL</code>. The return value can, for example, be
+          used as a hash key. See the notes at the beginning of this
+          section about storing hash values efficiently.
+        </p>
+<pre class="programlisting">mysql&gt; <strong class="userinput"><code>SELECT MD5('testing');</code></strong>
+        -&gt; 'ae2b1fca515949e5d54fb22b8ed95575'
+</pre>
+<p>
+          This is the “<span class="quote">RSA Data Security, Inc. MD5 Message-Digest
+          Algorithm.</span>”
+        </p>
+<p>
+          See the note regarding the MD5 algorithm at the beginning this
+          section.
+        </p>
+</li>
+<li>
+<p><a name="function_old-password"></a>
+          <a class="indexterm" name="id2903287"></a>
+
+          <a href="encryption-functions.html#function_old-password"><code class="literal">OLD_PASSWORD(<em class="replaceable"><code>str</code></em>)</code></a>
+        </p>
+<p>
+          <a href="encryption-functions.html#function_old-password"><code class="literal">OLD_PASSWORD()</code></a> was added when
+          the implementation of
+          <a href="encryption-functions.html#function_password"><code class="literal">PASSWORD()</code></a> was changed in MySQL
+          4.1 to improve security.
+          <a href="encryption-functions.html#function_old-password"><code class="literal">OLD_PASSWORD()</code></a> returns the
+          value of the pre-4.1 implementation of
+          <a href="encryption-functions.html#function_password"><code class="literal">PASSWORD()</code></a> as a binary string,
+          and is intended to permit you to reset passwords for any
+          pre-4.1 clients that need to connect to your version
+          5.0 MySQL server without locking them out. See
+          <a href="password-hashing.html" title="5.3.2.3. Password Hashing in MySQL">Section 5.3.2.3, “Password Hashing in MySQL”</a>.
+        </p>
+</li>
+<li>
+<p><a name="function_password"></a>
+          <a class="indexterm" name="id2903384"></a>
+
+          <a href="encryption-functions.html#function_password"><code class="literal">PASSWORD(<em class="replaceable"><code>str</code></em>)</code></a>
+        </p>
+<p>
+          Calculates and returns a password string from the plaintext
+          password <em class="replaceable"><code>str</code></em> and returns a binary
+          string, or <code class="literal">NULL</code> if the argument was
+          <code class="literal">NULL</code>. This is the function that is used for
+          encrypting MySQL passwords for storage in the
+          <code class="literal">Password</code> column of the
+          <code class="literal">user</code> grant table.
+        </p>
+<pre class="programlisting">mysql&gt; <strong class="userinput"><code>SELECT PASSWORD('badpwd');</code></strong>
+        -&gt; '*AAB3E285149C0135D51A520E1940DD3263DC008C'
+</pre>
+<p>
+          <a class="indexterm" name="id2903474"></a>
+
+          <a href="encryption-functions.html#function_password"><code class="literal">PASSWORD()</code></a> encryption is
+          one-way (not reversible).
+        </p>
+<p>
+          <a href="encryption-functions.html#function_password"><code class="literal">PASSWORD()</code></a> does not perform
+          password encryption in the same way that Unix passwords are
+          encrypted. See <a href="encryption-functions.html#function_encrypt"><code class="literal">ENCRYPT()</code></a>.
+        </p>
+<p>
+          In MySQL 5.0, enabling the
+          <a href="server-system-variables.html#sysvar_read_only"><code class="literal">read_only</code></a> system variable
+          does not prevent use of
+          <a href="encryption-functions.html#function_password"><code class="literal">PASSWORD()</code></a>.
+        </p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<div class="admon-title">Note</div>
+<p>
+            The <a href="encryption-functions.html#function_password"><code class="literal">PASSWORD()</code></a> function is
+            used by the authentication system in MySQL Server; you
+            should <span class="emphasis"><em>not</em></span> use it in your own
+            applications. For that purpose, consider
+            <a href="encryption-functions.html#function_md5"><code class="literal">MD5()</code></a> or
+            <a href="encryption-functions.html#function_sha1"><code class="literal">SHA1()</code></a> instead. Also see
+            <a href="http://www.faqs.org/rfcs/rfc2195.html" target="_top">RFC 2195,
+            section 2 (Challenge-Response Authentication Mechanism
+            (CRAM))</a>, for more information about handling
+            passwords and authentication securely in your applications.
+          </p>
+</div>
+<div class="important" style="margin-left: 0.5in; margin-right: 0.5in;">
+<div class="admon-title">Important</div>
+<p>
+            Statements that invoke
+            <a href="encryption-functions.html#function_password"><code class="literal">PASSWORD()</code></a> may be recorded in
+            server logs or in a history file such as
+            <code class="filename">~/.mysql_history</code>, which means that
+            plaintext passwords may be read by anyone having read access
+            to that information. See
+            <a href="password-security.html" title="5.3.2. Password Security in MySQL">Section 5.3.2, “Password Security in MySQL”</a>.
+          </p>
+</div>
+</li>
+<li>
+<p><a name="function_sha1"></a>
+          <a class="indexterm" name="id2903634"></a>
+
+          <a class="indexterm" name="id2903643"></a>
+
+          <a href="encryption-functions.html#function_sha1"><code class="literal">SHA1(<em class="replaceable"><code>str</code></em>)</code></a>,
+          <a href="encryption-functions.html#function_sha1"><code class="literal">SHA(<em class="replaceable"><code>str</code></em>)</code></a>
+        </p>
+<p>
+          Calculates an SHA-1 160-bit checksum for the string, as
+          described in RFC 3174 (Secure Hash Algorithm). The value is
+          returned as a binary string of 40 hex digits, or
+          <code class="literal">NULL</code> if the argument was
+          <code class="literal">NULL</code>. One of the possible uses for this
+          function is as a hash key. See the notes at the beginning of
+          this section about storing hash values efficiently. You can
+          also use <a href="encryption-functions.html#function_sha1"><code class="literal">SHA1()</code></a> as a
+          cryptographic function for storing passwords.
+          <a href="encryption-functions.html#function_sha1"><code class="literal">SHA()</code></a> is
+          synonymous with <a href="encryption-functions.html#function_sha1"><code class="literal">SHA1()</code></a>.
+        </p>
+<pre class="programlisting">mysql&gt; <strong class="userinput"><code>SELECT SHA1('abc');</code></strong>
+        -&gt; 'a9993e364706816aba3e25717850c26c9cd0d89d'
+</pre>
+<p>
+          <a href="encryption-functions.html#function_sha1"><code class="literal">SHA1()</code></a> can be considered a
+          cryptographically more secure equivalent of
+          <a href="encryption-functions.html#function_md5"><code class="literal">MD5()</code></a>. However, see the note
+          regarding the MD5 and SHA-1 algorithms at the beginning this
+          section.
+        </p>
+</li>
+<li>
+<p><a name="function_uncompress"></a>
+          <a class="indexterm" name="id2903792"></a>
+
+          <a href="encryption-functions.html#function_uncompress"><code class="literal">UNCOMPRESS(<em class="replaceable"><code>string_to_uncompress</code></em>)</code></a>
+        </p>
+<p>
+          Uncompresses a string compressed by the
+          <a href="encryption-functions.html#function_compress"><code class="literal">COMPRESS()</code></a> function. If the
+          argument is not a compressed value, the result is
+          <code class="literal">NULL</code>. This function requires MySQL to have
+          been compiled with a compression library such as
+          <code class="literal">zlib</code>. Otherwise, the return value is always
+          <code class="literal">NULL</code>.
+        </p>
+<pre class="programlisting">mysql&gt; <strong class="userinput"><code>SELECT UNCOMPRESS(COMPRESS('any string'));</code></strong>
+        -&gt; 'any string'
+mysql&gt; <strong class="userinput"><code>SELECT UNCOMPRESS('any string');</code></strong>
+        -&gt; NULL
+</pre>
+</li>
+<li>
+<p><a name="function_uncompressed-length"></a>
+          <a class="indexterm" name="id2903904"></a>
+
+          <a href="encryption-functions.html#function_uncompressed-length"><code class="literal">UNCOMPRESSED_LENGTH(<em class="replaceable"><code>compressed_string</code></em>)</code></a>
+        </p>
+<p>
+          Returns the length that the compressed string had before being
+          compressed.
+        </p>
+<pre class="programlisting">mysql&gt; <strong class="userinput"><code>SELECT UNCOMPRESSED_LENGTH(COMPRESS(REPEAT('a',30)));</code></strong>
+        -&gt; 30
+</pre>
+</li>
+</ul></div>
+</div><div class="copyright-footer">
+    Copyright © 1997, 2010, Oracle and/or its affiliates. All
+    rights reserved.
+  <a href="index.html#legalnotice">Legal Notices</a>
+</div>
+<!--UdmComment--><div id="docnav"><a rel="prev" href="bit-functions.html" title="11.11 Bit Functions">Previous</a> / <a rel="next" href="information-functions.html" title="11.13 Information Functions">Next</a> / <a rel="up" href="functions.html" title="11 Functions and Operators">Up</a> / <a rel="contents" href="index.html">Table of Contents</a></div><!--/UdmComment--><br class="clear" /><!--UdmComment--><div id="comments"><h1>User Comments</h1><table id="c5575" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Ralf Hauser on January 14 2005 12:24pm</td><td align="right">[<a href="/doc/mysql/comment.php?id=5575&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=5575">Edit</a>]</td></tr></table><p class="commenttext">before storing an AES key to the server, please investigate whether it will be swapped out to disk on that server or not (<a href="http://bugs.mysql.com/bug.php?id=7846">http://bugs.mysql.com/bug.php?id=7846</a>)<br /></p><table id="c5617" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Patrick Denny on January 20 2005 8:32pm</td><td align="right">[<a href="/doc/mysql/comment.php?id=5617&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=5617">Edit</a>]</td></tr></table><p class="commenttext">Note, <br />ENCODE and DECODE don't seem to accept a row name as the second argument. so the following WILL FAIL:<br /><br />select * from `table_name` where `encrypted_row` = ENCODE('passed_value',`salt_row`)<br /><br />however, the first argument can be a row name, as follows:<br /><br />select * from `table_name` where `encrypted_row` = ENCODE(`salt_row`,'passed_value')<br /><br /></p><table id="c5716" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Stewart Smith on February 11 2005 12:32am</td><td align="right">[<a href="/doc/mysql/comment.php?id=5716&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=5716">Edit</a>]</td></tr></table><p class="commenttext">The first example of using md5 to store passwords to a web app is not ideal. It is vulnerable to dictonary attacks.<br /><br />For a start, the users password may pass over the network (if your web app and mysql server are on different machines). If you're not using SSL to mysql, then this will be in plain text. PHP has an md5 function, it may be better to use that (especially if this is a secure web app running over SSL).<br /><br />If I were to get a dump of your password table, and I had a list of pre-computed md5 sums for possible passwords, i could quite easily do a compare to see if any user has a password in my list.<br /><br />The way the UNIX password file (now) does it is to add some 'salt' to the password. You add an extra field to your password table, 'salt'. This is a random string (generated each time the user changes their password). This salt is stored in plain text. When you are computing the md5 of the password, you prepend (or append, it doesn't matter - as long as you're consistent) the salt to the password. e.g. md5($salt . $password). When they try to log in, you do the same thing md5($salt . $entered_password). If that equals the value of the password field in the database, you allow access!<br /><br />this means that if an attacker gets a dump of your password table, they are going to have to get their list of passwords and md5 sum every single one with every single salt value (in your table) to do a dictionary attack.<br /><br />Instantly you now have better security!<br /></p><table id="c6028" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Robert Nice on April 28 2005 5:15am</td><td align="right">[<a href="/doc/mysql/comment.php?id=6028&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=6028">Edit</a>]</td></tr></table><p class="commenttext">If I understand correctly that the keys to all these algorithms are sent in plain text to the SQL server so that it can perform the crypto then using any of these is insanely dangerous.<br /><br />Most likely your keys will end up in update logs, packet sniffer logs, replication logs, error logs....who knows.<br /><br />Do the crypto in your application before inserting and after selecting. THERE SHOULD BE A BIG WARNING ABOUT THIS.<br /></p><table id="c7321" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Rolf Martin-Hoster on March 10 2006 7:51pm</td><td align="right">[<a href="/doc/mysql/comment.php?id=7321&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=7321">Edit</a>]</td></tr></table><p class="commenttext">AES_ENCRYPT: if strlen(str) % 16 == 0 then AES_ENCRYPT will add an axtra block of chr(16). This is particularly useful to know when trying to use PHP's mcrypt.<br /></p><table id="c7452" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Mark Hedges on April 7 2006 12:33am</td><td align="right">[<a href="/doc/mysql/comment.php?id=7452&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=7452">Edit</a>]</td></tr></table><p class="commenttext">That's totally correct about the use of SQL encryption functions.  If you don't use a localhost or SSL connection to your database server, the plaintext and key string are sent in the clear and encryption does not protect any data from attackers along that path.<br /><br />One way to protect more sensitive information, for instance, credit card numbers, is to use GnuPG to encrypt the data with the public part of a key whose private counterpart only lives on a very secure machine that runs the batch transaction, and requires a passphrase to load it into memory in your charging program.  The encrypted block is stored in a text field, the plaintext never crosses the network, and an attack on the web server or database cannot compromise the data.<br /><br />The slightly stronger exception might be the use of DES_ENCRYPT, which if you have configured your keyring on your server, does not need to transmit the locking key with the plaintext data.  (Though it still transmits the plaintext in the clear.)<br /><br />Also, regarding the mentioned exploit of sha1, there are stronger versions like sha256, sha384, sha512 etc. but mysql does not implement them; they would have to be implemented in code.<br /></p><table id="c8562" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Philip Mather on April 22 2007 10:55pm</td><td align="right">[<a href="/doc/mysql/comment.php?id=8562&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=8562">Edit</a>]</td></tr></table><p class="commenttext">   If you've implemented SSL, see...<br /><br /><a href="http://dev.mysql.com/doc/refman/5.0/en/secure-create-certs.html">http://dev.mysql.com/doc/refman/5.0/en/secure-create-certs.html</a><br /><br />...you can use Triggers and DES_ENCRYPT to move your password encryption to the database level and enforce it in a way that stops developers forgeting to use it (or bypassing it) with the following triggers...<br /><br />CREATE TRIGGER user_insert BEFORE INSERT ON `user` FOR EACH ROW SET NEW.TimeStampCreated = NOW(), NEW.Password = DES_ENCRYPT(NEW.Password);<br /><br />CREATE TRIGGER user_update BEFORE UPDATE ON `user` FOR EACH ROW SET NEW.Password = DES_ENCRYPT(NEW.Password);<br /><br />...you'll also notice the first one enforces auditing in a way that saves you from relying on developers getting that right as well.<br /><br />   You could give your dev's a nice stored proc to retrieve or comapre their submitted password but hopefully they can remember either DES_ENCRYPT/_DECRYPT or your phone number ;^).<br /><br />   Whilst bearing in mind that this doesn't magically make your entire system &quot;secure&quot; by some magic wave of a wand, given that you've implemented SSL it should be trivial to secure the link between web and database server (if there even is a gap) and then you can use HTTPS and only a little more careful thought to implement a system that is secure from submission page through to backup system in such a way that only someone physically stood at the server with the server's and Mysql's root password could decrypt the password/data.<br /></p><table id="c8995" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Steve Brendtro on October 22 2007 5:13pm</td><td align="right">[<a href="/doc/mysql/comment.php?id=8995&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=8995">Edit</a>]</td></tr></table><p class="commenttext">If you are using MySQL to store any sort of encrypted credit card information, note that you will want NOT want to do the encryption using the built in encryption functions, as encryption key AND the CLEAR TEXT VERSION OF THE DATA will end up in your replication logs, and possibly error logs.  Do your encryption in your application.<br /></p><table id="c9276" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by John Bayly on February 11 2008 4:19pm</td><td align="right">[<a href="/doc/mysql/comment.php?id=9276&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=9276">Edit</a>]</td></tr></table><p class="commenttext">As noted in Bug #16713 (AES_Encrypt / AES_Decrypt functions is low documented), the full specs of the encryption function are not given, so Steve Brendtro's suggestion made it difficult to implement a client side AES_ENCRYPT method.<br />It took a lot of searching to come across the bug report whilst trying to find the option when using the MS .Net RijndaelManaged methods, so I thought I'd share the code:<br /><br />public byte[] AESEncrypt(byte[] plaintext, byte[] key) {<br />  /* Simulate MySQL AES_ENCRYPT function<br />   * Block Length: 128bit<br />   * Block Mode:   ECB<br />   * Data Padding: Padded by bytes which Asc() equal for number of padded bytes (done automagically)<br />   * Key Padding:  0x00 padded to multiple of 16 bytes<br />   * IV:           None<br />  */<br />  RijndaelManaged aes = new RijndaelManaged();<br />  aes.BlockSize = 128;<br />  aes.Mode = CipherMode.ECB;<br />  aes.Key = key;<br /><br />  // Create the Encrypter &amp; streams needed<br />  ICryptoTransform encryptor = aes.CreateEncryptor();<br />  MemoryStream mem = new MemoryStream();<br />  CryptoStream cryptStream = new CryptoStream(mem, encryptor,<br />   CryptoStreamMode.Write);<br /><br />  // Write the Plaintext &amp; flush<br />  cryptStream.Write(plaintext, 0, plaintext.Length);<br />  cryptStream.FlushFinalBlock();<br /><br />  // Get the encrypted bytes<br />  byte[] cypher = mem.ToArray();<br /><br />  // Tidy up<br />  cryptStream.Close();<br />  cryptStream = null;<br />  encryptor.Dispose();<br />  aes = null;<br /><br />  return cypher;<br />}<br /><br />Hopefully this will help anyone who's been trying to get around this issue.<br /></p><table id="c9812" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Pongrac Nemeth on November 5 2008 12:48pm</td><td align="right">[<a href="/doc/mysql/comment.php?id=9812&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=9812">Edit</a>]</td></tr></table><p class="commenttext">Shorter MD5 :) here in my idea:<br />In a MySQL function:<br /><br />declare $s char(32);<br />set $s=md5($word);<br />return concat(conv(substr($s,1,16),16,36),'x',conv(substr($s,17),16,36));<br /><br />'x' must be a char which is not in result of conv()!!!<br />'x' must NOT be 0-9 and A-Z ! For example '-' is also good.<br /><br />It is nice, not much slower then alone md5 function.<br />Length of this is 25-27 characters instead of 32.<br />(Max. 27 (2x13+1) because length of conv('FFFFFFFFFFFFFFFF',16,36) is 13!)<br /><br /></p><table id="c9952" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Devon McCullough on February 2 2009 11:37pm</td><td align="right">[<a href="/doc/mysql/comment.php?id=9952&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=9952">Edit</a>]</td></tr></table><p class="commenttext">MySQL UNCOMPRESS sans MySQL - yes, generic *n*x tools can recover the data.<br /><br />Using only non-MySQL tools:<br /><br />wget <a href="http://www.zlib.net/zpipe.c">http://www.zlib.net/zpipe.c</a><br />gcc -o zpipe zpipe.c -lz<br />mysql -B -e &quot;SELECT HEX(COMPRESS('Test data!'))&quot; | xxd -r -ps | dd bs=1 skip=4 2&gt;/dev/null | ./zpipe -d; echo<br />Test data!<br /><br />Wrap it with HEX (mysql is binary-unsafe)<br />and unwrap it with xxd<br />then drop the header with dd<br />and uncompress with zpipe, i.e.,<br />(0) start with the string 'Test data!'<br />(1) COMPRESS compresses it to binary<br />(2) HEX renders it to text<br />(3) xxd reverts it to binary<br />(4) dd discards the UNCOMPRESSED_LENGTH header<br />(5) zpipe uncompresses the rest<br />(6) echo adds a newline<br /><br />Repeat using MySQL:<br /><br />mysql -B -e &quot;SELECT HEX(COMPRESS('Test data!'))&quot; | tail +2 | mysql -B -e &quot;SELECT UNCOMPRESS(UNHEX('`cat`'))&quot; | tail +2<br />Test data!<br /><br />i.e.,<br />(7) same as 0-2<br />(8) tail discards the echoed SQL command<br />(9) cat obtains the piped data<br />(10) UNHEX same as 3<br />(11) UNCOMPRESS same as 4-5<br />(12) tail same as 8<br /><br />Nice to have the added safety of a second source.<br /></p><table id="c10496" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Shamus Husheer on November 23 2009 1:38am</td><td align="right">[<a href="/doc/mysql/comment.php?id=10496&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=10496">Edit</a>]</td></tr></table><p class="commenttext">One of the main benefits of the encryption features in MySQL, as opposed to in the language of your choice, is that Stored Procedures can be used to perform encryption without exposing keys to the client.  At <a href="http://www.duofertility.com">http://www.duofertility.com</a> we transmit medical data between client and database, for example, so secure authentication is critical - however cryptographic authentication is not included in MySQL natively.<br /><br />However the below implements HMAC-MD5 with 128-bit keys (see FRC2104) as a Stored Procedure.  The keytable has &quot;id&quot; and &quot;key&quot;, the calling code simply passes the &quot;id&quot; and the message to HMACMD5, and is returned the HMAC as a binary string.  Access to the keytable must be limited, but access to call HMAC-MD5 can be given out freely.<br /><br />Modifying the size of the key and the hash function would yield HMAC-SHA1, however beware that binary XOR only operates on up to 64 bit values, hence the convoluted ipad/opad generation.<br /><br /> DELIMITER //<br />  CREATE PROCEDURE HMACMD5(IN keynumber INTEGER, IN message BLOB, OUT output BINARY(16))<br />     BEGIN<br />	DECLARE ipad,opad BINARY(64);<br />	DECLARE hexkey CHAR(32);<br /><br />	SELECT LPAD(HEX(`key`),32,&quot;0&quot;) INTO hexkey FROM `keytable` WHERE `id` = keynumber;<br /><br />	SET ipad = UNHEX(CONCAT(LPAD(RIGHT(CONV(CONV( MID(hexkey,1,11) , 16, 10 ) ^ CONV( '36363636363', 16, 10 ),10,16),11),11,&quot;0&quot;),<br />LPAD(RIGHT(CONV(CONV( MID(hexkey,12,11) , 16, 10 ) ^ CONV( '63636363636' , 16, 10 ),10,16),11),11,&quot;0&quot;),<br />LPAD(RIGHT(CONV(CONV( MID(hexkey,23,10) , 16, 10 ) ^ CONV( '3636363636' , 16, 10 ),10,16),10),10,&quot;0&quot;),'363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636'));<br /><br />	SET opad = UNHEX(CONCAT(LPAD(RIGHT(CONV(CONV( MID(hexkey,1,11) , 16, 10 ) ^ CONV( '5c5c5c5c5c5', 16, 10 ),10,16),11),11,&quot;0&quot;),<br />LPAD(RIGHT(CONV(CONV( MID(hexkey,12,11) , 16, 10 ) ^ CONV( 'c5c5c5c5c5c' , 16, 10 ),10,16),11),11,&quot;0&quot;),<br />LPAD(RIGHT(CONV(CONV( MID(hexkey,23,10) , 16, 10 ) ^ CONV( '5c5c5c5c5c' , 16, 10 ),10,16),10),10,&quot;0&quot;),'5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c'));<br /><br />	SET output = UNHEX(MD5(CONCAT(opad,UNHEX(MD5(CONCAT(ipad,message))))));<br /><br />     END //<br />  DELIMITER ;<br /><br /></p><table id="c11563" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Fernando Claudio dos Santos Junior on November 4 2010 8:48pm</td><td align="right">[<a href="/doc/mysql/comment.php?id=11563&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=11563">Edit</a>]</td></tr></table><p class="commenttext">Hi people,<br /><br />These functions in few steps helps crypt in SSHA.<br /><br />DROP FUNCTION IF EXISTS fc_ssha_encode;<br />DELIMITER /<br />CREATE FUNCTION fc_ssha_encode(_senha VARCHAR(255))<br />RETURNS CHAR (46)<br />DETERMINISTIC<br />BEGIN<br />  /* <br />   Funcao para criptografar em Salted SHA {SSHA}<br />   Muito útil para LDAP com MySQL Backend.<br />  <br />   Por Fernando Claudio dos Santos Junior (04/11/2010)<br />  <br />   Inspirado no Post de vovó Vicki (<a href="http://www.numaboa.com/criptografia/codigos/codigos-abertos/492-base64">http://www.numaboa.com/criptografia/codigos/codigos-abertos/492-base64</a>)<br />   e no Utilitário Javascript UTF-8 Decoder and Encoder - base64 Encoder and Decoder de Tobias Kieslich.<br />  <br />   Uso livre.<br />   Sem qualquer garantia de funcionamento ou seguranca. <br />  */ <br />  DECLARE MAPA CHAR(64);<br />  DECLARE SALT CHAR(10);<br />  DECLARE SALTBITS CHAR(80);<br />  DECLARE B_ALEATORIO CHAR(8);<br />  DECLARE C_ALEATORIO CHAR(1);<br />  DECLARE SHASED CHAR(40);<br />  DECLARE SHASEDBITS CHAR(160);<br />  DECLARE SSHABITS CHAR(240);<br />  DECLARE SSHA CHAR(46);<br />  DECLARE CONT TINYINT UNSIGNED;<br /><br />  SET MAPA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'; #BASE64<br /><br />  /* Passo 1) Gerar um salt aleatorio com 10 caracteres. Obs.: 10 é importante para garantir o tamanho final da senha criptografada. */<br />  /* Passo 2) Coverter caracter por caracter  do salt em byte com 8 bits cada. */<br />  SET SALT = '';  <br />  SET SALTBITS = '';<br />  SET CONT = 1;<br />  WHILE (CONT &lt; 11) DO<br />    SET B_ALEATORIO = CONCAT(ROUND(RAND()), ROUND(RAND()), ROUND(RAND()), ROUND(RAND()), ROUND(RAND()), ROUND(RAND()));<br />    SET C_ALEATORIO = SUBSTRING(MAPA, CONV(B_ALEATORIO,2,10)+1, 1);<br />    SET SALT = CONCAT(SALT, C_ALEATORIO);<br />    SET SALTBITS = CONCAT(SALTBITS,LPAD(CONV(ORD(C_ALEATORIO),10,2),8,'0'));<br />    SET CONT = CONT + 1;<br />  END WHILE;<br />  <br />/*<br />  #FORCE SALT (para obter hash constante)<br />  SET  SALTBITS = '01110011010101100110110000110010010000010110010001100100010010010110111001000110';<br />  SET  SALT = 'sVl2AddInF';<br />*/<br /><br />  /* Passo 3) Criptografar utilizando SHA1(), o salt gerado irá garantir distintos resultados a cada tentativa. */<br />  SET SHASED = SHA1(CONCAT(_senha, SALT));<br />  <br />  /* Passo 4) Obter bits do hash gerado pelo SHA1(), para isso converter 2 a 2 caracteres de hexadecimal para base binaria, em byte com 8 bits cada. */<br />  SET SHASEDBITS = '';<br />  SET CONT = 1;<br />  WHILE CONT &lt; 40 DO<br />    SET SHASEDBITS = CONCAT(SHASEDBITS, LPAD(CONV(SUBSTRING(SHASED,CONT,2),16,2),8,'0'));<br />    SET CONT = CONT + 2;<br />  END WHILE;<br /><br />  /* Passo 5) Obter todos bits da senha criptografada em SSHA, juntar bits do Passo4 com os bits do Passo2. */<br />  SET SSHABITS = CONCAT(SHASEDBITS,SALTBITS);<br />  <br />  /* Passo 6) Transformar bits do Passo5 em BASE64, para isso ler de 6 bits em 6 bits, comparado o respectivo valor decimal com a posicao no MAPA. */<br />  SET SSHA = '{SSHA}';<br />  SET CONT = 1;<br />  WHILE CONT &lt; 240 DO<br />    SET SSHA = CONCAT(SSHA,SUBSTRING(MAPA,CONV(SUBSTRING(SSHABITS,CONT,6),2,10)+1,1));<br />    SET CONT = CONT + 6;<br />  END WHILE;<br /><br />RETURN SSHA;<br />END /<br /><br />DELIMITER ;<br /><br />DROP FUNCTION IF EXISTS fc_bind_ssha_password;<br />DELIMITER /<br />CREATE FUNCTION fc_bind_ssha_password(_senha VARCHAR(255), _hash VARCHAR(255))<br />RETURNS VARCHAR (10)<br />DETERMINISTIC<br />BEGIN<br />  /* <br />   Funcao para validar senhas criptografadas com Salted SHA {SSHA}<br />   Muito útil para LDAP com MySQL Backend.<br />  <br />   Por Fernando Claudio dos Santos Junior (04/11/2010)<br />  <br />   Inspirado no Post de vovó Vicki (<a href="http://www.numaboa.com/criptografia/codigos/codigos-abertos/492-base64">http://www.numaboa.com/criptografia/codigos/codigos-abertos/492-base64</a>)<br />   e no Utilitário Javascript UTF-8 Decoder and Encoder - base64 Encoder and Decoder de Tobias Kieslich.<br />  <br />   Uso livre.<br />   Sem qualquer garantia de funcionamento ou seguranca. <br />  */ <br />  DECLARE MAPA CHAR(64);<br />  DECLARE SSHA, SHASED CHAR(40);<br />  DECLARE SSHABITS, SSHABITS2 CHAR(240);<br />  DECLARE SALTBITS CHAR(80);<br />  DECLARE SALT CHAR(10);<br />  DECLARE SHASEDBITS CHAR(160);<br />  DECLARE CONT TINYINT UNSIGNED;<br />  SET MAPA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'; #BASE64<br />  <br />  /* Passo 1) Tranformar caracter em caracter do _hash em bytes de 6 bits, de acordo com o MAPA Base64 */<br /><br />  SET SSHA = SUBSTRING(_hash, 7, 40);<br />  SET SSHABITS = '';<br />  SET CONT = 1;<br />  WHILE CONT &lt; 41 DO<br />    SET SSHABITS = CONCAT(SSHABITS, LPAD( CONV( POSITION(SUBSTRING(SSHA,CONT,1) IN CONVERT(MAPA USING BINARY))-1, 10, 2),6,'0'));<br />    SET CONT = CONT + 1;<br />  END WHILE;<br /> <br />  /* Passo 2) Pegar bits apartir da posicao 161 a 240 */<br />  SET SALTBITS = SUBSTRING(SSHABITS,161,80);<br />  <br />  /* Passo 3) Obter salt, Ler de 8 em 8 bits, transformado o octeto em caracteres */<br />  SET SALT = '';<br />  SET CONT = 1;<br />  WHILE CONT &lt; 80 DO<br />    SET SALT = CONCAT(SALT, CHAR(CONV(SUBSTRING(SALTBITS,CONT,8), 2, 10)));<br />    SET CONT = CONT + 8;<br />  END WHILE;<br />  <br />  /* Passo 4) Criptografar senha testada com salt encontrado no rash, transformar em seguida, 2 a 2 de hexadecimal para binario. */<br />  SET SHASED = SHA1(CONCAT(_senha, SALT));  <br />  SET SHASEDBITS = '';<br />  SET CONT = 1;<br />  WHILE CONT &lt; 40 DO<br />    SET SHASEDBITS = CONCAT(SHASEDBITS, LPAD(CONV(SUBSTRING(SHASED,CONT,2),16,2),8,'0'));<br />    SET CONT = CONT + 2;<br />  END WHILE;<br /><br />  /* Passo 5) Obter todos bits da senha criptografada em SSHA, juntar bits do Passo4 com os bits do Passo2. */<br />  SET SSHABITS2 = CONCAT(SHASEDBITS,SALTBITS);<br />  <br />  /* Passo 6) Testar se os hashs conferem */<br />  RETURN (SSHABITS2 = SSHABITS);<br />END /<br />DELIMITER ;<br /><br />/* Testando: */<br /><br />&gt;SET @_HASH = `fc_ssha_encode`('y0uR_Pa$$W0Rd');<br /><br />&gt;SELECT @_HASH AS SSHA_HASH, `fc_bind_ssha_password`('y0uR_Pa$$W0Rd',@_HASH) AS VALIDATED;<br /></p><table id="c11637" class="commentdetails" summary="" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>Posted by Jake Gelbman on December 17 2010 9:01pm</td><td align="right">[<a href="/doc/mysql/comment.php?id=11637&amp;action=delete">Delete</a>] [<a href="/doc/mysql/comment.php?id=11637">Edit</a>]</td></tr></table><p class="commenttext">Ive wrote a function that can be used to generate an arbitrary length base64 encoded value. Here it is:<br /><br />    create function hex2b64 (hex text)<br />    returns text<br />    comment 'Converts a string containing hex values into base64'<br />    deterministic<br />    begin<br />        declare b64set text default<br />            &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789./&quot;;<br />        declare bin text default '';<br />        declare b64 text default '';<br />        declare chars int;<br />        declare chip int;<br />        declare n int default 0;<br />        declare d char(1);<br />        -- mysql's conv function has a limit on the length of the hex string<br />        -- it can convert in one shot, so convert it one character at a time.<br />        HEX2BIN: loop<br />           if n = length(hex) then<br />               leave HEX2BIN;<br />           end if;<br />           set n = n + 1;<br />           set d = substr(hex, n, 1);<br />           set bin = concat(bin, conv(d, 16, 2));<br />        end loop;<br />        -- Chip away at the binary representation of the hex string 6 bits at<br />        -- a time. 6 bits =&gt;  2**6 =&gt; base64. The binary number can then be<br />        -- used as an index into b64set to get the next base64 character.<br />        B64DIGIT: loop<br />            set chars = length(bin);<br />            if !chars then<br />                leave B64DIGIT;<br />            end if;<br />            set chip = if(chars % 6, chars % 6, 6);<br />            set n = conv(substr(bin, 1, chip), 2, 10);<br />            set d = substr(b64set, n + 1, 1);<br />            set b64 = concat(b64, d);<br />            set bin = substr(bin, chip + 1);<br />        end loop;<br />        return b64;<br />    end<br /><br />And it can be used as:<br /><br />    mysql&gt; select hex2b64('deadbeef');<br />    +---------------------+<br />    | hex2b64('deadbeef') |<br />    +---------------------+<br />    | Derb7v              |<br />    +---------------------+<br />    1 row in set (0.00 sec)<br /><br />    mysql&gt; select hex2b64(md5('deadbeef'));<br />    +--------------------------+<br />    | hex2b64(md5('deadbeef')) |<br />    +--------------------------+<br />    | T5pxPtaep/diRuXm         |<br />    +--------------------------+<br />    1 row in set (0.00 sec)<br /><br />Might be useful...<br /></p><p><a href="/doc/mysql/comment.php?sect=encryption-functions">Add your own comment.</a></p></div><!--UdmComment--><div id="docnav"><a href="#">Top</a> / <a rel="prev" href="bit-functions.html" title="11.11 Bit Functions">Previous</a> / <a rel="next" href="information-functions.html" title="11.13 Information Functions">Next</a> / <a rel="up" href="functions.html" title="11 Functions and Operators">Up</a> / <a rel="contents" href="index.html">Table of Contents</a></div><!--/UdmComment--></div></div>
+
+
+
+
+
+
+
+
+
+ </div> 
+</div> 
+<div id="footer">
+
+    <div class="links">
+        <ul>
+            <li class="top"><a href="http://dev.mysql.com">Developer Zone</a></li>
+	    <li><a href="http://dev.mysql.com/doc/">Documentation</a></li>
+            <li><a href="http://dev.mysql.com/librarian/">Librarian</a></li>
+            <li><a href="http://dev.mysql.com/articles/">Developer Articles</a></li>
+			<li><a href="http://dev.mysql.com/news-and-events/">News &amp; Events</a></li>
+            <li><a href="http://forums.mysql.com/">Forums</a></li>
+            <li><a href="http://bugs.mysql.com/">Bugs</a></li>
+            <li><a href="http://forge.mysql.com/">Forge</a></li>
+			            <li><a href="http://planet.mysql.com/">Planet MySQL</a></li>
+			            <li><a href="http://labs.mysql.com/">Labs</a></li>
+        </ul>
+    </div>
+    
+    <div class="links">
+        <ul>
+            <li class="top"><a href="http://dev.mysql.com/downloads/">Downloads</a></li>
+            <li><a href="http://dev.mysql.com/downloads/mysql/">MySQL Community Server</a></li>
+            <li><a href="http://dev.mysql.com/downloads/mysql-proxy/">MySQL Proxy</a></li>
+            <li><a href="http://dev.mysql.com/downloads/cluster/">MySQL Cluster</a></li>
+            <li><a href="http://dev.mysql.com/downloads/workbench/">MySQL Workbench</a></li>
+            <li><a href="http://dev.mysql.com/downloads/connector/">MySQL Connectors</a></li>
+            <li><a href="http://downloads.mysql.com/archives.php">Archives</a></li>
+            <li><a href="http://downloads.mysql.com/snapshots.php">Snapshots</a></li>
+            <li><a href="http://dev.mysql.com/downloads/mirrors.html">Mirrors</a></li>
+        </ul>
+    </div>
+    
+    <div class="links">
+        <ul>
+            <li class="top"><a href="http://dev.mysql.com/doc/">Documentation</a></li>
+            <li><a href="http://dev.mysql.com/doc/">MySQL Reference Manuals</a></li>
+            <li><a href="http://dev.mysql.com/doc/index-gui.html">MySQL Workbench</a></li>
+            <li><a href="http://dev.mysql.com/doc/index-expert.html">Expert Guides</a></li>
+            <li><a href="http://dev.mysql.com/doc/index-topic.html">Topic Guides</a></li>
+            <li><a href="http://dev.mysql.com/doc/index-cluster.html">MySQL Cluster</a></li>
+            <li><a href="http://dev.mysql.com/doc/index-other.html">Other Documents</a></li>
+            <li><a href="http://dev.mysql.com/doc/index-mysqlu.html">MySQL University</a></li> 
+            <li><a href="http://dev.mysql.com/doc/index-about.html">About</a></li>     
+            <li><a href="http://dev.mysql.com/doc/index-archive.html">Archives</a></li>   
+        </ul>
+    </div>
+
+    <div class="links">
+        <ul>
+            <li class="top"><a href="http://dev.mysql.com/support/">Support</a></li>
+            <li><a href="http://forge.mysql.com/wiki/Category:MySQLUserGroups">MySQL Meetups</a></li>
+            <li><a href="http://dev.mysql.com/guilds/">Guilds</a></li>
+            <li><a href="http://lists.mysql.com/">Lists</a></li>
+            <li><a href="http://forums.mysql.com/">Forums</a></li>            
+		</ul>
+			
+		<ul>
+            <li class="top">Other</li>     
+            <li><a href="http://dev.mysql.com/legal/">Legal</a></li>            
+            <li><a href="http://dev.mysql.com/legal/mysql_web_privacy_policy.html">Privacy Policy</a></li>
+			<li><a href="http://dev.mysql.com/contact/">Contact Us</a></li>
+            <li><a href="http://dev.mysql.com/sitemap.html">Site Map</a></li>
+        </ul>
+    </div>
+    
+
+        
+    <div id="search" class="en">
+	        <form id="footer_search" action="http://search.mysql.com/search/query/search" method="get">
+            <input type="text" id="f_q" name="q" value="" class="swap_value" onfocus="clearSearchText();" />
+	    <input type="hidden" id="search_dest" name="group" value="Documentation"/>
+	    <input type="image" src="/common/themes/sakila/footer_search_g.png" id="f_go" alt="Search" title="Search" value="Search" />
+        </form>    </div>
+
+</div><!-- End Footer -->
+		<div id="copyright-oracle"><a href="http://www.oracle.com/"><img src="/common/logos/logo-oracle-red-91x22.gif" alt="Oracle" width="91" height="22" border="0" /></a>&nbsp;&nbsp;<span>&copy; 2010, Oracle Corporation and/or its affiliates</span></div>
+
+
+<script type="text/javascript" src="/common/js/s_code_remote.js?ver=20091011"></script>
+
+</body>
+</html>
