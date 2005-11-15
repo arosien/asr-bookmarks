@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>mir.aculo.us JavaScript with Thomas Fuchs  &raquo; Blog Archive   &raquo; AJAX Activity indicators with Rails 0.14.3</title>
+<link rel="stylesheet" href="http://mir.aculo.us/wp-content/themes/clean-home/style.css" type="text/css" media="screen" />
+<link rel="alternate" type="application/rss+xml" title="RSS" href="http://feeds.feedburner.com/miraculous" />
+<link rel="pingback" href="http://mir.aculo.us/xmlrpc.php" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://mir.aculo.us/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://mir.aculo.us/wp-includes/wlwmanifest.xml" /> 
+<link rel='index' title='mir.aculo.us' href='http://mir.aculo.us/' />
+<link rel='start' title='Austrian comedy podcast &#8211; Radio Koffer by Golch and Flubis' href='http://mir.aculo.us/2005/07/17/austrian-comedy-podcast-radio-koffer-by-golch-and-flubis/' />
+<link rel='prev' title='llor.nu, a Rails and scriptaculous-powered web board game' href='http://mir.aculo.us/2005/11/08/llor-nu-a-rails-and-scriptaculous-powered-web-board-game/' />
+<link rel='next' title='Vienna OSS web development frameworks action day' href='http://mir.aculo.us/2005/11/15/vienna-oss-web-development-frameworks-action-day/' />
+<meta name="generator" content="WordPress 3.0.3" />
+<link rel='canonical' href='http://mir.aculo.us/2005/11/14/ajax-activity-indicators-with-rails-0-14-3/' />
+<link rel='shortlink' href='http://mir.aculo.us/?p=175' />
+</head>
+<body>
+<div id="wrapper">
+  <div id="header">
+    <div id="nav">
+      <form role="search" method="get" id="searchform" action="http://mir.aculo.us/" >
+<a href="http://feeds2.feedburner.com/miraculous"><img src="http://mir.aculo.us/wp-content/uploads/2009/06/feedicon.png" alt="Feed" style="float:left;margin-right:6px;margin-top:0px;width:20px;height:20px"/></a>
+
+  <a href="http://feeds2.feedburner.com/miraculous" style="margin-right:40px"><img src="http://feeds2.feedburner.com/~fc/miraculous?bg=dddddd&amp;fg=333333&amp;anim=0" height="26" width="88" style="border:0" alt="" /></a><div style="float:right;margin-top:-4px">
+      <img src="http://mir.aculo.us/wp-content/uploads/2010/05/search.png" style="vertical-align:middle"/>
+<input type="search" placeholder="Search mir.aculo.us" value="" style="width:150px" name="s" id="s"/>
+      </div></form>
+    </div>
+    <div id="logo">
+    <h1><a href="http://mir.aculo.us">mir.aculo.us</a></h1>
+    </div>
+  </div>
+  <div id="blurb">
+    <div class="avatar">
+      <img src="/wp-content/uploads/2010/05/thomasfuchs.png" alt="Thomas Fuchs" />
+      <div class="howdy"> </div>
+      <div class="mask"> </div>
+    </div>
+    			<div class="textwidget"><em>Hi, I'm Thomas Fuchs.</em> I'm the author of the <a href="http://script.aculo.us/">script.aculo.us</a> user interface JavaScript library, a member of the <a href="http://prototypejs.org/">Prototype</a> core team and a <a href="http://www.rubyonrails.org/">Ruby on Rails core alumnus</a>.<br/>
+You're using my JavaScript work every day, even if you're not aware of it!<br/>
+<small style="font-size:12px">
+<a href="http://twitter.com/thomasfuchs">@thomasfuchs on Twitter</a> &nbsp;&nbsp;&nbsp;Need corporate training or want me to speak at your conference? <a href="http://script.aculo.us/thomas">Contact me!</a></small></div>
+		  </div>
+	<div id="content">
+	
+				
+		<div class="post">
+			<h1><a href="http://mir.aculo.us/2005/11/14/ajax-activity-indicators-with-rails-0-14-3/">AJAX Activity indicators with Rails 0.14.3</a></h1>
+			<small class="date">November 14th, 2005</small>
+			<p><strong>Step 1:</strong></p>
+<p>Create an element on the page that should be displayed while <span class="caps">AJAX</span> Requests are active. I mostly use an <code>IMG</code> element displaying an animated <span class="caps">GIF</span> file. Give this element an <code>id="busy"</code> attribute.</p>
+<p><strong>Step 2:</strong></p>
+<p>Create a file <code>application.js</code> in your <code>public/javascripts</code> folder (if you don&#8217;t already have one!), and be sure to use <code>&lt;%= javascript_include_tag :defaults %&gt;</code> in the <code>HEAD</code> section of your layout or view template to include the Rails-provided JavaScripts.</p>
+<p>Insert the following code into the <code>application.js</code> file:</p>
+<pre><code>
+Ajax.Responders.register({
+  onCreate: function() {
+    if($('busy') &#38;&#38; Ajax.activeRequestCount&gt;0)
+      Effect.Appear('busy',{duration:0.5,queue:'end'});
+  },
+  onComplete: function() {
+    if($('busy') &#38;&#38; Ajax.activeRequestCount==0)
+      Effect.Fade('busy',{duration:0.5,queue:'end'});
+  }
+});
+</code></pre>
+<p><strong>Step 3:</strong></p>
+<p>Enjoy!</p>
+                        <a href="http://twitter.com/share?url=http%3A%2F%2Fmir.aculo.us%2F2005%2F11%2F14%2Fajax-activity-indicators-with-rails-0-14-3%2F&amp;text=AJAX%20Activity%20indicators%20with%20Rails%200.14.3" class="twitter-share-button" data-count="vertical" data-via="thomasfuchs">Tweet</a>
+		</div>
+		
+		
+		<div class="navigation">
+			<div class="alignleft"></div>
+			<div class="alignright"></div>
+		</div>
+
+	
+	</div>
+	
+	<div id="sidebar">
+	<div class="block text-454980826 widget_text">			<div class="textwidget"><style>
+.mcb {
+display: block;
+border-radius:15px;
+-moz-border-radius:15px;
+border: 2px solid #f372ab;
+background:#e53b69;
+padding:10px;
+color: #fff;
+text-align: center;
+font: 16px/18px Helvetica, Arial;
+text-shadow:0px -1px 1px rgba(0,0,0,0.5);
+background:-webkit-gradient(linear,left top,left bottom, from(#ef5c91), to(#d82a49));
+font-weight: bold;
+text-decoration: none;
+margin-bottom: 15px;
+-webkit-transition: -webkit-transform 0.6s;
+-webkit-transform: scale(0.9);
+}
+.mcb:hover {
+background: -webkit-gradient(linear,left top,left bottom,from(#f97eaa),to(#ee4966));
+color: #fff;
+-webkit-transition: -webkit-transform 0.6s;
+-webkit-transform: scale(1);
+}
+.mcb div {
+margin: 0;
+}
+.mcb .large {
+font-size: 25px;
+line-height: 29px;
+}
+#sidebar .mcb {
+ color: #fff;
+}
+.mcb .additional {
+ color: #000;
+ background: yellow;
+ font-size: 14px;
+ font-weight: normal;
+text-shadow:0;
+}
+</style>
+
+<br/>
+
+<a class="mcb" href="http://javascriptmasterclass.com/">
+   <div>JavaScript Master Class Virtual Edition</div>
+   <div class="large">January 20/21</div>
+  <div>Want to see what makes libraries and frameworks tick? Take a plunge into real JavaScript programming!</div>
+   <div>Online Class &mdash; Book Now!</div>
+</a>
+
+<a class="mcb" href="http://html5mobilepro.com/">
+   <div class="large">HTML5 Mobile Pro<br/> Virtual Edition</div>
+   <div class="large">January 14, 2010</div>
+   <div>Learn how to build<br/>AWESOME<br/>mobile HTML5 apps!</div>
+   <div>Online Class &mdash; Book Now!</div>
+</a></div>
+		</div><div class="block text-454980828 widget_text"><h3>Subscribe by email</h3>			<div class="textwidget"><p>
+<a href="http://feedburner.google.com/fb/a/mailverify?uri=miraculous&amp;loc=en_US">Subscribe by Email</a> and always get my articles delivered right into your inbox!
+</p></div>
+		</div>		<div class="block recent-posts-2 widget_recent_entries">		<h3>Recent Posts</h3>		<ul>
+				<li><a href="http://mir.aculo.us/2010/12/16/learn-advanced-javascript-and-mobile-html5-in-2011/" title="Learn advanced JavaScript and mobile HTML5 in 2011!">Learn advanced JavaScript and mobile HTML5 in 2011!</a></li>
+				<li><a href="http://mir.aculo.us/2010/12/03/freelancing-check-out-freelancember/" title="Freelancing? Check out Freelancember!">Freelancing? Check out Freelancember!</a></li>
+				<li><a href="http://mir.aculo.us/2010/12/01/zepto-js-v0-2-%e2%80%94-backbone-js-compatibility-unbind-text-better-ajax/" title="Zepto.js v0.2 — backbone.js compatibility, .unbind, .text, better Ajax">Zepto.js v0.2 — backbone.js compatibility, .unbind, .text, better Ajax</a></li>
+				<li><a href="http://mir.aculo.us/2010/11/01/zepto-js-0-1-1/" title="Zepto.js 0.1.1: JS-based inheritance, .load, .is, $(document).ready, $.os">Zepto.js 0.1.1: JS-based inheritance, .load, .is, $(document).ready, $.os</a></li>
+				<li><a href="http://mir.aculo.us/2010/10/28/zepto-js-a-jquery-compatible-mobile-javascript-framework-in-2k-presentation/" title="Zepto.js, a jQuery-compatible mobile JavaScript framework in 2K (presentation)">Zepto.js, a jQuery-compatible mobile JavaScript framework in 2K (presentation)</a></li>
+				<li><a href="http://mir.aculo.us/2010/10/26/the-changelog-interview/" title="The Changelog Interview">The Changelog Interview</a></li>
+				<li><a href="http://mir.aculo.us/2010/10/23/how-long-should-a-javascript-function-be/" title="How long should a JavaScript function be?">How long should a JavaScript function be?</a></li>
+				<li><a href="http://mir.aculo.us/2010/10/19/standards-bloat-and-html5/" title="Standards bloat and HTML5">Standards bloat and HTML5</a></li>
+				<li><a href="http://mir.aculo.us/2010/10/15/how-we-use-mobile-javascript-in-freckle/" title="How we use mobile JavaScript in Freckle">How we use mobile JavaScript in Freckle</a></li>
+				<li><a href="http://mir.aculo.us/2010/10/13/flipping-images-with-just-css/" title="Flipping images with just CSS">Flipping images with just CSS</a></li>
+				<li><a href="http://mir.aculo.us/2010/10/12/the-long-search-for-a-terminal-font-is-over/" title="The long search for a terminal font is over">The long search for a terminal font is over</a></li>
+				<li><a href="http://mir.aculo.us/2010/10/08/quick-and-easy-orientation-detection-for-mobile-sites/" title="Quick and easy orientation detection for mobile sites">Quick and easy orientation detection for mobile sites</a></li>
+				<li><a href="http://mir.aculo.us/2010/10/04/js1k-intro-fun-with-css-transforms-and-hardware-acceleration/" title="JS1k intro: fun with CSS transforms and hardware acceleration">JS1k intro: fun with CSS transforms and hardware acceleration</a></li>
+				<li><a href="http://mir.aculo.us/2010/09/27/help-make-javascript-documentation-better/" title="Help make JavaScript documentation better!">Help make JavaScript documentation better!</a></li>
+				<li><a href="http://mir.aculo.us/2010/09/21/zepto-js-a-minimalist-javascript-framework-for-mobile-webkit-browsers/" title="Zepto.js, a minimalist JavaScript framework for mobile WebKit browsers">Zepto.js, a minimalist JavaScript framework for mobile WebKit browsers</a></li>
+				</ul>
+		</div><div class="block text-3 widget_text"><h3>Projects</h3>			<div class="textwidget"><p style="padding-top:10px">
+ <a href="http://script.aculo.us/"><img src="http://mir.aculo.us/wp-content/uploads/2009/06/scriptaculous.png" alt="script.aculo.us - it's about the user interface, baby!"/></a><br/>
+  The JavaScript UI framework used on sites like Apple, CNN.com and NASA. Open source goodness so <a href="http://script.aculo.us/">you can use it too!</a>
+</p>
+<p style="padding-top:10px">
+ <a href="http://scripty2.com/"><img src="http://mir.aculo.us/wp-content/uploads/2009/06/scripty2-alpha.png" alt="scripty2: for a more delicious web"/></a><br/>
+  Next-generation HTML-based visual effects for a more delicious web. <a href="http://scripty2.com">Available as an alpha release now</a>!
+</p>
+<p style="padding-top:20px"
+<a href="http://textorize.org/"><img src="http://mir.aculo.us/wp-content/uploads/2009/10/textorize.png"/></a><br/>Beautiful sub-pixel antialiased font rendering for the Web.
+</p>
+<p style="padding-top:20px">
+ <a href="http://slash7.com/company"><img src="http://mir.aculo.us/wp-content/uploads/2009/06/slash7.png" alt="slash7" style="padding-bottom:5px"/></a><br/>
+  slash7 is <a href="http://slash7.com">Amy Hoy</a> and <a href="http://mir.aculo.us">Thomas Fuchs</a>. We produce the interface uncommon: useful, stunning, revealing, unexpected &amp; mesmerizing interactive software. <a href="http://slash7.com/company"><em>Hire us.</em></a>
+</p>
+
+<p  style="padding-top:20px">
+ <ul>
+   <li><a href="http://twistori.com/">twistori</a></li>
+<li><a href="http://twistoridesktop.com/">Twistori Desktop</a></li>
+<li><a href="http://www.creativescrape.com/">creativescrape</a></li>
+ </ul>
+</p></div>
+		</div><div class="block dfrads-widget-4 dfrads"><p style="margin-top:15px;line-height:15px;font-size:12px"><a href="http://javascriptrocks.com/performance/"><img src="http://mir.aculo.us/wp-content/uploads/2010/01/javascript_rocks_240.gif" alt="JavaScript Performance Rocks!"/></a><br/><br/><a href="http://javascriptrocks.com/performance/">Grab a copy of my book</a> and learn how to make your JavaScript load & run really fast!</p></div><div class="block text-454980825 widget_text"><h3>Recent Appearances</h3>			<div class="textwidget"><p style="margin-top:10px">
+September 2010<br/>
+<a href="http://funconf.com/">Funconf, Ireland</a>
+</p>
+<p style="margin-top:10px">
+June 2010<br/>
+<a href="http://www.meetup.com/budapest-js/calendar/13588990/">budapest.js, Budapest, Hungary</a>
+</p>
+<p style="margin-top:10px;">
+March 2010<br/>
+<a href="http://javascriptmasterclass.com/">JavaScript Master Class, Vienna, Austria</a><br/>
+</p>
+<p style="margin-top:10px;">
+February 2010<br/>
+<a href="http://viennajs.org/">vienna.js meetup, Vienna, Austria</a><br/>
+<a href="http://www.webstock.org.nz/">Webstock 2010, Wellington, New Zealand</a> (<a href="http://mir.aculo.us/2010/02/19/i-cant-believe-its-not-flash/">Slides</a>)
+</p>
+<p style="margin-top:10px;">
+January 2010<br/>
+<a href="http://javascriptmasterclass.com/philadelphia-2010/">JavaScript Master Class, Philadelphia, PA</a>
+</p>
+<p style="margin-top:10px;">
+November 2009<br/>
+<a href="http://fronteers.nl/congres/2009/information">Fronteers, Amsterdam</a>(<a href="http://mir.aculo.us/2009/11/07/a-50-lines-of-code-javascript-animation-framework-say-hello-to-emile/">Slides</a>)<br/>
+<a href="http://javascriptmasterclass.com/berlin-2009/">JavaScript Master Class, Berlin</a><br/>
+<a href="http://jsconf.eu/2009/">JSConf.eu, Berlin</a>(<a href="http://mir.aculo.us/2009/11/08/6-easy-things-you-can-do-to-improve-your-javascript-runtime-performance/">Slides</a>)<br/>
+</p>
+<p style="margin-top:10px;">October 2009<br/>
+<a href="http://conferences.yapceurope.org/ipw2009/">Italian Perl Workshop, Pisa</a> (<a href="http://www.slideshare.net/madrobby/rich-and-snappy-apps-no-scaling-required">Slides</a>)
+</p>
+<p style="margin-top:10px;">September 2009<br/>
+<a href="http://curucamp.org/">Curucamp, Vienna</a> (<a href="http://mir.aculo.us/2009/09/29/textorize-pristine-font-rendering-for-the-web/">Slides</a>)
+</p>
+<p style="margin-top:10px;">June 2009<br/>
+<a href="http://kingsofcode.nl/">Kings of Code, Amsterdam</a> (<a href="http://www.slideshare.net/madrobby/rich-and-snappy-apps-no-scaling-required">Slides</a>)
+</p>
+
+<p style="font-size:11px;line-height:13px;color:#888;margin-top:15px">Want me to speak at your conference?<br/><a href="http://script.aculo.us/thomas" style="color:#888">Contact me.</a>
+</p></div>
+		</div><div class="block tag_cloud-3 widget_tag_cloud"><h3>Tags</h3><div><a href='http://mir.aculo.us/tag/animation/' class='tag-link-41' title='1 topic' style='font-size: 8pt;'>animation</a>
+<a href='http://mir.aculo.us/tag/awards/' class='tag-link-31' title='1 topic' style='font-size: 8pt;'>Awards</a>
+<a href='http://mir.aculo.us/tag/book/' class='tag-link-22' title='5 topics' style='font-size: 13.3333333333pt;'>Book</a>
+<a href='http://mir.aculo.us/tag/books/' class='tag-link-19' title='1 topic' style='font-size: 8pt;'>Books</a>
+<a href='http://mir.aculo.us/tag/browser/' class='tag-link-30' title='1 topic' style='font-size: 8pt;'>Browser</a>
+<a href='http://mir.aculo.us/tag/browsers/' class='tag-link-16' title='2 topics' style='font-size: 10pt;'>Browsers</a>
+<a href='http://mir.aculo.us/tag/conference/' class='tag-link-44' title='1 topic' style='font-size: 8pt;'>Conference</a>
+<a href='http://mir.aculo.us/tag/design/' class='tag-link-43' title='1 topic' style='font-size: 8pt;'>Design</a>
+<a href='http://mir.aculo.us/tag/development/' class='tag-link-29' title='1 topic' style='font-size: 8pt;'>development</a>
+<a href='http://mir.aculo.us/tag/documentation/' class='tag-link-18' title='1 topic' style='font-size: 8pt;'>Documentation</a>
+<a href='http://mir.aculo.us/tag/fonts/' class='tag-link-42' title='1 topic' style='font-size: 8pt;'>Fonts</a>
+<a href='http://mir.aculo.us/tag/freckle/' class='tag-link-25' title='3 topics' style='font-size: 11.3333333333pt;'>freckle</a>
+<a href='http://mir.aculo.us/tag/fun/' class='tag-link-26' title='2 topics' style='font-size: 10pt;'>Fun</a>
+<a href='http://mir.aculo.us/tag/goodies/' class='tag-link-39' title='1 topic' style='font-size: 8pt;'>goodies</a>
+<a href='http://mir.aculo.us/tag/hints/' class='tag-link-24' title='5 topics' style='font-size: 13.3333333333pt;'>Hints</a>
+<a href='http://mir.aculo.us/tag/javascript/' class='tag-link-12' title='35 topics' style='font-size: 22pt;'>JavaScript</a>
+<a href='http://mir.aculo.us/tag/multitouch/' class='tag-link-37' title='1 topic' style='font-size: 8pt;'>Multitouch</a>
+<a href='http://mir.aculo.us/tag/optimization/' class='tag-link-40' title='1 topic' style='font-size: 8pt;'>Optimization</a>
+<a href='http://mir.aculo.us/tag/performance/' class='tag-link-13' title='7 topics' style='font-size: 14.6666666667pt;'>Performance</a>
+<a href='http://mir.aculo.us/tag/php/' class='tag-link-20' title='1 topic' style='font-size: 8pt;'>PHP</a>
+<a href='http://mir.aculo.us/tag/presentation/' class='tag-link-9' title='2 topics' style='font-size: 10pt;'>Presentation</a>
+<a href='http://mir.aculo.us/tag/prototype/' class='tag-link-27' title='4 topics' style='font-size: 12.4444444444pt;'>Prototype</a>
+<a href='http://mir.aculo.us/tag/ruby/' class='tag-link-23' title='2 topics' style='font-size: 10pt;'>Ruby</a>
+<a href='http://mir.aculo.us/tag/rails/' class='tag-link-7' title='2 topics' style='font-size: 10pt;'>Ruby on Rails</a>
+<a href='http://mir.aculo.us/tag/safari/' class='tag-link-45' title='1 topic' style='font-size: 8pt;'>Safari</a>
+<a href='http://mir.aculo.us/tag/script-aculo-us/' class='tag-link-15' title='8 topics' style='font-size: 15.2222222222pt;'>script.aculo.us</a>
+<a href='http://mir.aculo.us/tag/slides/' class='tag-link-10' title='5 topics' style='font-size: 13.3333333333pt;'>Slides</a>
+<a href='http://mir.aculo.us/tag/tutorial/' class='tag-link-11' title='1 topic' style='font-size: 8pt;'>Tutorial</a>
+<a href='http://mir.aculo.us/tag/twitter/' class='tag-link-21' title='5 topics' style='font-size: 13.3333333333pt;'>Twitter</a>
+<a href='http://mir.aculo.us/tag/ui/' class='tag-link-14' title='2 topics' style='font-size: 10pt;'>UI</a>
+<a href='http://mir.aculo.us/tag/web/' class='tag-link-17' title='3 topics' style='font-size: 11.3333333333pt;'>Web</a>
+<a href='http://mir.aculo.us/tag/webkit/' class='tag-link-46' title='2 topics' style='font-size: 10pt;'>Webkit</a></div>
+</div><div class="block text-454980829 widget_text">			<div class="textwidget"><p style="margin-top:20px"><center><a href='https://developer.mozilla.org/en/JavaScript' title='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'><img src='http://static.jsconf.us/promotejsvs.png' height='280' width='160' alt='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'/></a></center>
+</p></div>
+		</div>	</div>
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+  <div id="footer">
+
+  <p style="font-size:14px;line-height:18px;color:#000;margin:10px 0px 30px 0px;width:550px;border-top:1px solid #ccc;padding-top:30px">
+    <a href="http://twitter.com/thomasfuchs"><img src="http://mir.aculo.us/wp-content/uploads/2010/08/thomas-small.png" style="float:left;margin-right:10px;"/></a>
+    Questions, corrections or constructive criticism? <a href="mailto:thomas@fesch.at">Write me an email.</a><br/>
+    <a href="http://twitter.com/thomasfuchs">Follow me on Twitter @thomasfuchs</a>
+  </p>
+
+  <p style="clear:both;margin-top:10px;line-height:14px">
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0;margin-right:10px;float:left;" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a>
+
+&copy; Copyright 2010 <a href="http://script.aculo.us/thomas" style="font-weight:normal;color:#666">Thomas Fuchs</a><br/>
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" style="font-weight:normal;color:#666">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.
+
+</p>
+  <p></p>
+  </div>
+</div>
+<script type="text/javascript">
+var domainy = location.protocol == "https:" ? "https://static.getclicky.com" : "http://static.getclicky.com";
+document.write(unescape("%3Cscript src='" + domainy + "/138863.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<noscript><img alt="Clicky" width="1" height="1" src="http://static.getclicky.com/138863-db20.gif" /></noscript>
+</body>
+</html>
+<!-- Dynamic page generated in 0.171 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2010-12-17 22:24:09 -->
