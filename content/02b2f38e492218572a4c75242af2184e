@@ -1,0 +1,362 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=iso-8859-1"><title>The Tomcat 4 Servlet/JSP Container - Sharing session data between contexts HOW-TO</title><meta value="Johannes Fiala" name="author"><meta value="johannes.fiala@fwd.at" name="email"></head><body vlink="#525D76" alink="#525D76" link="#525D76" text="#000000" bgcolor="#ffffff"><table cellspacing="4" width="100%" border="0"><!--PAGE HEADER--><tr><td colspan="2"><!--JAKARTA LOGO--><a href="http://www.fwd.at/"><img border="0" alt="The Jakarta Project" align="left" src="./images/fwd-logo.jpg"></a><!--PROJECT LOGO--><a href="http://jakarta.apache.org/tomcat/"><img border="0" alt="
+      The Tomcat Servlet/JSP Container
+    " align="right" src="./images/tomcat.gif"></a></td></tr><!--HEADER SEPARATOR--><tr><td colspan="2"><hr size="1" noshade=""></td></tr><tr><!--LEFT SIDE NAVIGATION--><!--RIGHT SIDE MAIN BODY--><td align="left" valign="top" width="80%"><div align="center"><h1>Sharing session data between contexts HOW-TO</h1></div><table width="100%" cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#525D76"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+<p>written by Johannes Fiala, johannes.fiala@fwd.at in May 2003</p>
+
+<p>This HOW-TO covers my experiences how to share session data between different contexts.
+</p>
+
+<p>I'll cover the following aspects step by step:</p>
+<ul>
+<li>Ways to pass a sessionid of a Context to another Context</li>
+<li>Using a "shared" Context to store session data</li>
+<li>Using persistent storage to store session data</li>
+</ul>
+
+<p>
+I'll first describe how a sessionid can be passed from one Context to another Context (e.g. be shared).
+Next, I'll describe a basic technique to store objects into a central Context to be retrieved from other
+Context.
+Finally, I'll touch the area of making shared session data persistent to share it easily with other Contexts.
+This scenario is certainly the way to go in a clustered environment.
+</p>
+
+<p>
+After reading this HOWTO, you should be able to share sessions across Contexts.</p>
+<p>
+Note: This guide should apply to all J2EE containers.
+</p>
+
+</blockquote></td></tr></table><table width="100%" cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#525D76"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Update%20history"><strong>Update history</strong></a></font></td></tr><tr><td><blockquote>
+<p>
+<b>Update 2003-05-31:</b>
+</p>
+<p>
+Brushed up the whole HOWTO with examples, finished the shared Context part.
+</p>
+<p>
+<b>Update 2003-05-26:</b>
+</p>
+<p>
+Entered first ideas.
+</p>
+</blockquote></td></tr></table><table width="100%" cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#525D76"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Tested%20configurations"><strong>Tested configurations</strong></a></font></td></tr><tr><td><blockquote>
+<p>
+I tested the following configurations:</p>
+<ul>
+<li>Tomcat 4.1.24 with JDK 1.4 on Win 2K Professional/Win NT 4.0</li>
+<li>Tomcat 4.1.12 with JDK 1.3.1 on IBM AIX 4.3</li>
+</ul>
+
+</blockquote></td></tr></table><table width="100%" cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#525D76"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Prerequisites"><strong>Prerequisites</strong></a></font></td></tr><tr><td><blockquote>
+
+<p>To use this document, you should download and install (=unzip) the following components:
+</p>
+<ul>
+<li>Tomcat 4.1.24</li>
+</ul>
+
+</blockquote></td></tr></table><table width="100%" cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#525D76"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Ways%20to%20pass%20a%20sessionid%20of%20a%20Context%20to%20another%20Context"><strong>Ways to pass a sessionid of a Context to another Context</strong></a></font></td></tr><tr><td><blockquote>
+<p>
+According to the J2EE specification, every Context has his own session management.
+</p>
+<p>
+The statement above may sound unspectacular first, but may turn out to be cumbersome. Since every Context
+manages his own session, you don't know anything about other sessions the user may have at other Contexts of
+your J2EE container.
+
+This means if a user comes across Context A and gets sessionid A and then clicks to Context B he'll get a
+sessionid B. However, how will Context B know that the same user has another session running at Context A?
+</p>
+<p>
+If you plan to create bigger webapps, you'll surely notice that it makes sense to set up individual WAR files
+for individual applications. We had such a scenario for a portal which will eventually include three different
+WAR files, one for services, one for forms to be filled in and one for managing the content of the portal.
+</p>
+<p>
+Thus we knew right from the beginning that we will have session data to be shared across contexts.
+But how to pass the session id from one Context to another Context easily?
+I think there are two possible ways:
+</p>
+<ul>
+<li>Passing the original sessionid along using an URL parameter</li>
+<li>Passing the original sessionid along using a Cookie</li>
+</ul>
+<p>
+The first approach using the URL is applicable to all browsers. However, you'll have to pass a 32 character string
+along with each request which will switch to another Context. If you already include the jsessionid from
+your current Context, you'll soon have to live with really long URLs (32 chars from the Context's sessionid and
+32 chars from the original Context).<br>
+If you can bear that, this is your choice.
+</p>
+
+<p>
+The second approach using Cookies is a bit more tricky, so I'll spend the next paragraph on it:
+</p>
+
+<table cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#828DA6"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Using%20a%20Url%20parameter%20to%20share%20the%20sessionid"><strong>Using a Url parameter to share the sessionid</strong></a></font></td></tr><tr><td><blockquote>
+Using a url parameter is quite easy, all you have to do is to add the parameter to all links to other Contexts
+you want to share the original sessionid with:
+
+e.g.
+<code>/mycontext/myservlet?ssosessionid=XXX</code>
+
+</blockquote></td></tr></table>
+
+<table cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#828DA6"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Using%20a%20Cookie%20to%20share%20the%20sessionid"><strong>Using a Cookie to share the sessionid</strong></a></font></td></tr><tr><td><blockquote>
+<p>
+First, it is important to note that Tomcat will use a Cookie to store the sessionid across requests of the
+same user.
+The sessionid will be stored using a path, which is the path of the Context it belongs to.
+e.g. a Cookie for "/mycontext" will be stored using the path "/mycontext".
+Because a Cookie is being associated with a path, the browser knows it will only send the sessionid to
+requests which contain this path.
+Other Context will never see this sessionid (and they wouldn't be able to deal with it).
+</p>
+
+<p>
+You can work around this path restriction, if you set a cookie yourself.
+You simply create a Cookie in your servlet and attach it to the current response object.
+By setting the path to "/" you tell the browser to send this cookie to EVERY Context.
+This way, we have a "Single Signon Sessionid". This is why I gave the Cookie the
+descriptive name "ssosessionid".
+</p>
+
+<p>Here's the code to set the ssosessionid and attach it to the root path:</p>
+<div align="left"><table border="0" cellpadding="0" cellspacing="4"><tr><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr><tr><td width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#ffffff"><pre>
+String sessionid = session.getId();
+Cookie ssocookie = new Cookie("SSOSESSIONID", sessionid);
+// we want the cookie to be returned to any app below root
+ssocookie.setPath("/");
+// adding the cookie to the HttpResponse
+response.addCookie(ssocookie);
+</pre></td><td width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr><tr><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr></table></div>
+
+<p>And here's the code how to read it: </p>
+
+<div align="left"><table border="0" cellpadding="0" cellspacing="4"><tr><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr><tr><td width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#ffffff"><pre>
+String ssosessionid = getCookieValue(request, "SSOSESSIONID");
+</pre></td><td width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr><tr><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr></table></div>
+
+<p>I set up a separate routine in one of my libraries to read the Cookie value:</p>
+
+<div align="left"><table border="0" cellpadding="0" cellspacing="4"><tr><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr><tr><td width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#ffffff"><pre>
+public static String getCookieValue(HttpServletRequest request, String name) {
+    boolean found = false;
+    String result = null;
+    Cookie[] cookies = request.getCookies();
+    if (cookies!=null) {
+        int i = 0;
+        while (!found &amp;&amp; i &lt; cookies.length) {
+            if (cookies[i].getName().equals(name)) {
+                found=true;
+                result = cookies[i].getValue();
+            }
+            i++;
+    	  }
+    }
+
+    return (result);
+}
+</pre></td><td width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr><tr><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr></table></div>
+
+</blockquote></td></tr></table>
+
+<table cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#828DA6"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Summary"><strong>Summary</strong></a></font></td></tr><tr><td><blockquote>
+So we're now able to pass the sessionid of Context A to Context B using a Url or a Cookie (which is in my opinion the
+more elegant approach).
+</blockquote></td></tr></table>
+</blockquote></td></tr></table><table width="100%" cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#525D76"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Using%20a%20%22shared%22%20Context%20to%20store%20session%20data"><strong>Using a "shared" Context to store session data</strong></a></font></td></tr><tr><td><blockquote>
+<p>
+Next, we want to read the session data of Context A from Context B. Since we know the sessionid, it
+should be straightforward you might think. This is when the J2EE spec comes into our way:
+</p>
+<p>
+Reading the session data of another Context has been deprecated for security reasons as of Java Servlet API 2.1.
+</p>
+<p>
+<a href="http://java.sun.com/products/servlet/2.3/javadoc/javax/servlet/http/HttpSessionContext.html#getSession(java.lang.String)" target="_blank">Link: Javadoc reference</a>
+</p>
+
+<p>
+So we'll have to find another way to share data between Contexts.
+I came up with three major options: use a Context itself, use a database or use a file resource (e.g. XML file).
+</p>
+
+<table cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#828DA6"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Putting%20shared%20objects%20into%20a%20Context%20-%20Advantages%20&%20Drawbacks"><strong>Putting shared objects into a Context - Advantages &amp; Drawbacks</strong></a></font></td></tr><tr><td><blockquote>
+<p>
+The bigggest advantage of using a Context to store your shared session data is that you don't have to
+serialize your objects. You only have to put it into the Context and you're done.
+</p>
+
+<p>The biggest drawback certainly is that sessions could be transferred automatically between servers in a
+clustered Tomcat environment. If you ever plan to cluster your Tomcats, use an external resource (database or file) to
+store your shared session data. Additionally, you have to make sure that the database or file system will be
+available to all Tomcat servers running in your cluster.</p>
+
+</blockquote></td></tr></table>
+
+<table cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#828DA6"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="How%20to%20put%20shared%20data%20into%20a%20Context"><strong>How to put shared data into a Context</strong></a></font></td></tr><tr><td><blockquote>
+
+<p>
+Imagine the following scenario: I have an authentication Context (Context A) which will perform some basic checks and then
+will store some user info (roles, groups, ...).
+The sessionid A which will be automatically assigned when the user accesses Context A is used as the shared
+sessionid (ssosessionid = single signon sessionid).
+</p>
+
+<p>
+
+I used the following approach to store shared session data:
+First, I store the ssosessionid into a Cookie at the root path to make it available to all Contexts.
+Next, I store the shared data (user roles and groups in my case) into an Hashtable using the ssosessionid as the key.
+Then, this Hashtable in turn gets stored into the Context.
+</p>
+
+<p>To make everything clearer, here are some lines of code:</p>
+<div align="left"><table border="0" cellpadding="0" cellspacing="4"><tr><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr><tr><td width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#ffffff"><pre>
+public synchronized static void storeDataInContext
+	(ServletContext context, String sessionid, Vector userroles) {
+
+    // load the shared_userroles from the context
+    Hashtable shareddata = (Hashtable)context.getAttribute("shared_userroles");
+
+    // if not yet available, create a new one
+    if (shareddata==null) {
+        shareddata = new Hashtable();
+    }
+
+    // store the userroles of the current session
+    shareddata.put(sessionid, userroles));
+
+    // store the shareddata back into the Context
+    context.setAttribute("shared_userroles", shareddata);
+
+}
+</pre></td><td width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr><tr><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr></table></div>
+
+<p>Please note that I marked the routine <code>synchronized</code> to prevent simultaneous updates of the shared Context data.</p>
+
+</blockquote></td></tr></table>
+
+<table cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#828DA6"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="How%20to%20read%20shared%20data%20from%20a%20foreign%20Context"><strong>How to read shared data from a foreign Context</strong></a></font></td></tr><tr><td><blockquote>
+
+<p>
+Now we're going to use the shared data which we've just put into the Context A.
+Suppose the user just has entered Context B. At the server side, we're able to read the ssosessionid from the Cookie
+(or from an URL) and now we want to read the shared session data stored in Context B.
+</p>
+
+<p>
+To do that, we only have to know what's the name of the Context which stores shared data and use <code>getServletContext()</code>
+to retrieve this Context A. Next, we can simply use <code>getAttribute()</code> to get the Hashtable with the
+shared user infos. Using the ssosessionid as the key, we're able to access the right value object (e.g. a Vector).
+</p>
+
+<div align="left"><table border="0" cellpadding="0" cellspacing="4"><tr><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr><tr><td width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#ffffff"><pre>
+public static Vector getUserRolesFromContext(ServletContext context, String ssosessionid) {
+
+    // read the name of the Context storing shared session data
+    String SignonContext = context.getInitParameter("SharedSessiondataContext");
+
+    // get the Context containing the shared session data
+    ServletContext ssocontext = context.getContext(SignonContext);
+
+    Vector userroles = null;
+
+    // read the shareddata
+    Hashtable shareddata = (Hashtable)ssocontext.getAttribute("shared_userroles");
+    if (shareddata!=null) {
+        // get the right Vector using the ssosessionid
+        userroles = (Vector)shareddata.get(ssosessionid);
+    }
+
+    return userroles;
+}
+</pre></td><td width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr><tr><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr></table></div>
+
+</blockquote></td></tr></table>
+
+<table cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#828DA6"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Making%20sure%20to%20get%20rid%20of%20the%20session%20data"><strong>Making sure to get rid of the session data</strong></a></font></td></tr><tr><td><blockquote>
+
+<p>
+Of course we don't want to have a Context filled up with thousands of sessions which have been abandoned long
+ago. All you have to do to prevent this, is to implement a HttpSessionListener and use the <code>sessionDestroyed()</code>
+routine. This routine will be called whenever a session expires or is destroyed programmatically.
+Using this technique your Context will stay as small as possible regarding shared session data.
+</p>
+
+<div align="left"><table border="0" cellpadding="0" cellspacing="4"><tr><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr><tr><td width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#ffffff"><pre>
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+import java.util.Hashtable;
+
+public class SSOSessionListener implements HttpSessionListener {
+
+  public void sessionCreated (HttpSessionEvent e) {
+
+  }
+
+  public void sessionDestroyed (HttpSessionEvent e) {
+      HttpSession session = e.getSession();
+      String sessionid = session.getId();
+      System.out.println("Looking if session " + sessionid + " is enabled for SSO");
+
+      ServletContext context = session.getServletContext();
+      // look if the session being destroyed is stored in the ServletContext
+      Hashtable shareddata = (Hashtable)context.getAttribute("shared_userroles");
+
+      if (shareddata.containsKey(sessionid)) {
+          System.out.println("Removing SSO data for session " + sessionid);
+          shareddata.remove(sessionid);
+          context.setAttribute("shared_userroles", shareddata);
+      }
+
+  }
+
+
+}
+</pre></td><td width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr><tr><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td><td height="1" width="1" bgcolor="#023264"><img border="0" hspace="0" vspace="0" height="1" width="1" src="./images/void.gif"></td></tr></table></div>
+
+</blockquote></td></tr></table>
+
+</blockquote></td></tr></table><table width="100%" cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#525D76"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Using%20persistent%20storage%20to%20store%20shared%20session%20data"><strong>Using persistent storage to store shared session data</strong></a></font></td></tr><tr><td><blockquote>
+<p>
+If you expect to have a clustered J2EE environment sometime in the future, you'll certainly want
+to make shared session data available to multiple servers.
+</p>
+<p>
+This certainly prevents you from storing shared session data into a shared Context as outlined above. You'll
+want to make shared session data available to all interested applications. This means you have to use a
+resource which is accessible to all Tomcat servers in your clustered environment.
+</p>
+
+<table cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#828DA6"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Making%20Java%20objects%20persistent%20-%20some%20thoughts"><strong>Making Java objects persistent - some thoughts</strong></a></font></td></tr><tr><td><blockquote>
+<p>
+The problem with making data persistent in a database or an XML file is the serialization/deserialization process.
+To store an object and to revoke it from the shared session datastore, you'll have to serialize and deserialize it.
+
+Here are the options I think you might have:
+</p>
+<ul>
+<li>Using the serializable interface to serialize objects and store them in files</li>
+<li>Using the same technique as Apache Axis/Soap to serialize objects into XML files</li>
+<li>Using the same technique as JDO to serialize objects into a JDBC database or object-oriented database</li>
+</ul>
+ </blockquote></td></tr></table>
+</blockquote></td></tr></table><table width="100%" cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#525D76"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Open%20issues"><strong>Open issues</strong></a></font></td></tr><tr><td><blockquote>
+<p><b>Using persistent storage - example</b><br>
+I haven't yet used persistent storage in a clustered environment to serialize the shared session data.
+</p>
+
+</blockquote></td></tr></table><table width="100%" cellpadding="2" cellspacing="0" border="0"><tr><td bgcolor="#525D76"><font face="arial,helvetica.sanserif" color="#ffffff"><a name="Credits"><strong>Credits</strong></a></font></td></tr><tr><td><blockquote>
+<ul>
+<li>Yoav Shapira: thx for your extensive support at the userlist.</li>
+<li>Tomcat userlist: thx for sharing ideas.</li>
+<li>XML/XSLT layout: The XSLT layout has been copied and adapted from the original Tomcat project.</li>
+</ul>
+</blockquote></td></tr></table></td></tr><!--FOOTER SEPARATOR--><tr><td colspan="2"><hr size="1" noshade=""></td></tr><!--PAGE FOOTER--><tr><td colspan="2"><div align="center"><font size="-1" color="#525D76"><em>
+        Copyright &copy; <a href="http://www.fwd.at">Fiala Web Development GmbH</a>, All rights reserved.<br>
+        		written by Johannes Fiala.  <br></em></font></div></td></tr></table></body></html>
