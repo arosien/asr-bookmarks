@@ -1,0 +1,622 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html> 
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>The Regex Coach - interactive regular expressions</title>
+  <style type="text/css">
+  pre { padding:5px; background-color:#e0e0e0 }
+  h3, h4 { text-decoration: underline; }
+  a { text-decoration: none; padding: 1px 2px 1px 2px; }
+  a:visited { text-decoration: none; padding: 1px 2px 1px 2px; }
+  a:hover { text-decoration: none; padding: 1px 1px 1px 1px; border: 1px solid #000000; } 
+  a:focus { text-decoration: none; padding: 1px 2px 1px 2px; border: none; }
+  a.none { text-decoration: none; padding: 0; }
+  a.none:visited { text-decoration: none; padding: 0; } 
+  a.none:hover { text-decoration: none; border: none; padding: 0; } 
+  a.none:focus { text-decoration: none; border: none; padding: 0; } 
+  a.noborder { text-decoration: none; padding: 0; } 
+  a.noborder:visited { text-decoration: none; padding: 0; } 
+  a.noborder:hover { text-decoration: none; border: none; padding: 0; } 
+  a.noborder:focus { text-decoration: none; border: none; padding: 0; }  
+  pre.none { padding:5px; background-color:#ffffff }
+  </style>
+</head>
+
+<body style="background-color:white">
+
+<h2>The Regex Coach - interactive regular expressions</h2>
+
+<blockquote>
+<br>&nbsp;<br><h3>Abstract</h3>
+
+<a class=noborder
+href="http://www.lispworks.com/"><img src="lisp_logo.jpg" border="0"
+width="240" height="167" align="right" vspace="20" hspace="20"
+alt="Made with Lisp"></a><em>The Regex Coach</em> is a graphical
+application for Windows which
+can be used to experiment with (Perl-compatible) regular expressions
+interactively. It has the following features:
+<ul>
+
+<li>It shows whether a regular expression matches a particular target
+string.
+
+<li>It can also show which parts of the target string correspond
+to captured register groups or to arbitrary parts of the regular
+expression.
+
+<li>It can &quot;walk&quot; through the target string one match at a
+time.
+
+<li>It can simulate Perl's <code>split</code> and <code>s///</code>
+(substitution) operators.
+
+<li>It tries to describe the regular expression in plain English.
+
+<li>It can show a graphical representation of the regular expression's
+parse tree.
+
+<li>It can single-step through the matching process as performed by
+the regex engine.
+
+<li>Everything happens in &quot;real time&quot;, i.e. as soon as you
+make a change somewhere in the application all other parts are
+instantly updated.
+
+</ul>
+
+<a name="paypal" class=none></a>If you find this software useful then please consider making a
+small donation towards the ongoing development costs. Website hosting
+costs money, as do compilers and development tools.
+
+<table width="200" border="0" align="center"><tr>
+<td><p align="center"><a class=noborder href="https://www.paypal.com/xclick/business=edi%40agharta.de&amp;item_name=The+Regex+Coach&amp;no_note=1&amp;currency_code=USD&amp;amount=5.00"><img src="paypal.gif" alt="Make a secure donation via PayPal" width="62" height="31" border="0"></a><br>US$&nbsp;5</p></td>
+<td><p align="center"><a class=noborder href="https://www.paypal.com/xclick/business=edi%40agharta.de&amp;item_name=The+Regex+Coach&amp;no_note=1&amp;currency_code=USD&amp;amount=10.00"><img src="paypal.gif" alt="Make a secure donation via PayPal" width="62" height="31" border="0"></a><br>US$&nbsp;10</p></td>
+<td><p align="center"><a class=noborder href="https://www.paypal.com/xclick/business=edi%40agharta.de&amp;item_name=The+Regex+Coach&amp;no_note=1&amp;currency_code=USD&amp;amount=20.00"><img src="paypal.gif" alt="Make a secure donation via PayPal" width="62" height="31" border="0"></a><br>US$&nbsp;20</p></td>
+<td><p align="center"><a class=noborder href="https://www.paypal.com/xclick/business=edi%40agharta.de&amp;item_name=The+Regex+Coach&amp;no_note=1"><img src="paypal.gif" alt="Make a secure donation via PayPal" width="62" height="31" border="0"></a><br>more...</p></td>
+</tr></table>Click any of the PayPal images to donate.
+
+</blockquote>
+
+<br>&nbsp;<br><h3><a class=none name="contents">Contents</a></h3>
+(A <a href="http://pc.de/pages/regex-coach-be">Belorussian version</a> of the documentation is available thanks to Patricia Clausnitzer.)
+<ul>
+  <li><a href="#install">Download and installation</a>
+  <ul>
+    <li><a href="#older">Older versions, Linux, FreeBSD, Mac</a>
+  </ul>
+  <li><a href="#license">License</a>
+  <li><a href="#mail">Support, bug reports, mailing list</a>
+  <ul>
+    <li><a href="#report">How to report bugs</a>
+  </ul>
+  <li><a href="tutorial1.html"><font color=red><b>Quick start tutorial</b></font></a><br>
+      (An <a href="http://ldphq.zapto.org/regexcoach_it/">Italian version</a> of the tutorial is available thanks to Lorenzo Marcon.)
+  <li><a href="#howto">How to use <em>The Regex Coach</em></a>
+  <ul>
+    <li><a href="#panes">The main panes</a>
+    <li><a href="#messages">The message areas</a>
+    <li><a href="#highlight">Highlighting selected parts of the match</a>
+    <li><a href="#highlight-buttons">The highlight buttons</a>
+    <li><a href="#highlight-messages">The highlight messages</a>
+    <li><a href="#walking">Walking through the target string</a>
+    <li><a href="#narrow">Narrowing the scan</a>
+    <li><a href="#info">The info pane</a>
+    <li><a href="#parse-tree">The parse tree</a>
+    <li><a href="#replace">Replacing text</a>
+    <li><a href="#split">Splitting text</a>
+    <li><a href="#step">Single-stepping through the matching process</a>
+    <li><a href="#modifiers">Modifiers</a>
+    <li><a href="#resize">Resizing</a>
+    <li><a href="#file">Saving to and loading from files</a>
+    <li><a href="#autoscroll">Autoscroll</a>
+  </ul>
+  <li><a href="#bugs">Known bugs and limitations</a>
+  <li><a href="#technical">Technical information</a>
+  <li><a href="#perl">Compatibility with Perl</a>
+  <li><a href="#ack">Acknowledgements</a>
+</ul>
+
+<br>&nbsp;<br><h3><a name="install" class=none>Download and installation</a></h3>
+
+<em>The Regex Coach</em> together with this documentation can be
+downloaded
+from <a
+href="http://weitz.de/files/regex-coach.exe">http://weitz.de/files/regex-coach.exe</a>.
+The current version is 0.9.2 - see
+the <a href="changelog.txt">changelog</a> for what's new. The file (an
+installer) is about 2MB in size.
+<p>
+You <em>should</em> use Windows&nbsp;2000 or Windows&nbsp;XP with
+all <a href="http://update.microsoft.com/">updates and service
+packs</a> installed.  The program <em>might</em> work with older or
+unpatched Windows versions, but don't expect support for these
+configurations.  See also <a href="#older">below</a>.
+<p>
+You also <b>must</b> have the Microsoft runtime
+library <a class=none name="msvcr"><code>msvcr80.dll</code></a> installed.  If you don't have it or
+if you aren't sure, you can get
+it from <a
+href="http://www.microsoft.com/downloads/details.aspx?familyid=32BC1BEE-A3F9-4C13-9C99-220B62A191EE&amp;displaylang=en">http://www.microsoft.com/downloads/details.aspx?familyid=32BC1BEE-A3F9-4C13-9C99-220B62A191EE&amp;displaylang=en</a>.
+<p>
+If you have a previous version (0.8.5 or earlier) of <em>The Regex
+Coach</em> installed, <em>uninstall</em> it first before you install
+the new version!  If you haven't done this, and the new application won't
+start, remove the
+file <a class=none name="manifest"><code>The&nbsp;Regex&nbsp;Coach.exe.manifest</code></a> from the
+application directory.
+
+<h4><a class=none name="older">Older versions, Linux, FreeBSD, Mac</a></h4>
+
+Beginning with version 0.9.0, there will no longer be a Linux version
+of <em>The Regex Coach</em> - too few people were using it, and it's
+simply too much work for me to maintain both versions.  You can still
+download the last (now unsupported) Linux release
+from <a href="http://weitz.de/files/regex-coach-0.8.5.tgz">http://weitz.de/files/regex-coach-0.8.5.tgz</a>
+- it will also run on FreeBSD, see documentation.  In addition to
+that,
+see <a href="http://perl.net.au/wiki/RegexCoachInstallHints_Installation_Hints">these
+installation hints</a> for running <em>The Regex Coach</em> under
+<a href="http://winehq.com/">Wine</a>.  There's also an RPM for
+OpenSUSE&nbsp;11.1
+available <a href="http://download.opensuse.org/repositories/home:/malcolmlewis/openSUSE_11.1">here</a>
+thanks to Malcolm Lewis.
+<p>
+If you have an older version of Windows and the current version
+of <em>The Regex Coach</em> doesn't work for you, you can try the last
+release which was built
+with <a href="#technical">LispWorks&nbsp;4.4.6</a> - it is
+at <a
+href="http://weitz.de/files/regex-coach-0.8.5.exe">http://weitz.de/files/regex-coach-0.8.5.exe</a>.
+If that works for you - fine.  Don't expect <a href="#mail">support</a> or updates,
+though.
+<p>
+There is no Mac version and I have no plans to release one.  Sending
+me email and begging for it won't change that.  And, no, I don't want
+to open source the application or send the source code to <em>you</em>
+privately - no need to ask...
+<p>
+Jeremy Rayner has written a "homage" to <em>The Regex Coach</em> in Java - see <a href="http://common-lisp.net/pipermail/regex-coach/2007-April/000178.html">here</a> for more details.
+
+<br>&nbsp;<br><h3><a name="license" class=none>License</a></h3>
+
+<em>The Regex Coach</em> is Copyright &copy; 2003-2008 Dr. Edmund
+Weitz - All Rights Reserved.
+<p>
+<em>The Regex Coach</em> is free
+for private or non-commercial use but if you like and use it it'd be
+nice if you could <a href="#paypal">donate a small amount</a> to fund further development.
+<em>The Regex Coach</em> is also free for commercial <em>use</em> but
+you are <b>not</b> allowed to re-distribute it and/or charge money for
+it without written permission by the author - email me
+at <a href="mailto:edi@weitz.de">edi@weitz.de</a> for details.
+<p>
+The program is provided 'as is' with <em>no</em> warranty - use at your own risk.
+
+<br>&nbsp;<br><h3><a class=none name="mail">Support, bug reports, mailing list</a></h3>
+
+If you want to be notified about new releases of <em>The Regex Coach</em> please subscribe to the &quot;regex-coach&quot; mailing list using the web frontend at <a href="http://common-lisp.net/mailman/listinfo/regex-coach">http://common-lisp.net/mailman/listinfo/regex-coach</a>. You can <b>search</b> the mailing list archives using <a href="http://google.com/coop/cse?cx=000682109305866939995%3A7v26m29hxc0">this Google Custom Search Engine</a>.
+<p>
+You should also use this list for questions, bug reports, and feature requests.
+
+<h4><a class=none name="report">How to report bugs</a></h4>
+
+If you've found a bug in <em>The Regex Coach</em>, I'm happy if you
+report it and I'll try to fix it.  However, please follow the
+following procedure:
+<ul>
+  <li>Make sure you're using the <a href="#install">latest version</a>
+  of <em>The Regex Coach</em> on Windows.  Older versions and other
+  operating systems are no longer supported.
+  <li>Make sure you have <code>msvcr80.dll</code> installed - see <a href="#msvcr">above</a>.
+  <li>Make sure you <em>don't</em> have the old manifest file anymore - see <a href="#manifest">above</a>.
+  <li>Provide information about the Windows version (including service
+  pack) you're using.
+  <li>Try to reduce the problem you're encountering to a simple,
+  self-contained test case, so that I can reproduce the bug easily.
+  <li>Send bug reports to the <a href="#mail">mailing list</a>
+  and <b>not</b> to me privately.  I might simpy ignore reports not
+  sent to the list.
+  <li>If you have five minutes,
+  read <a
+  href="http://www.chiark.greenend.org.uk/~sgtatham/bugs.html">this
+  text</a> by Simon Tatham.
+</ul>
+If you think this is asking too much, please keep in mind that you
+get <em>The Regex Coach</em> for free and nobody pays me for fixing
+bugs or answering questions.  If it's too much work for you to send a
+decent bug report to the right place, then I think it's only fair if I
+consider it too much work for me to answer.
+
+<br>&nbsp;<br><h3><a class=none name="howto">How to use <em>The Regex Coach</em></a></h3>
+
+<em>The Regex Coach</em> enables you to try out the behaviour of
+Perl's regular expression operators (namely <code>m//</code>,
+<code>s///</code>, and <code>split</code>) interactively and in
+&quot;real time&quot;, i.e. as soon as you make changes somewhere the
+results are instantly displayed. You can also query the regex engine
+about selected parts of your regular expression and watch how it
+parses your input.
+<p>
+Of course, this application should also be useful to programmers using
+Perl-compatible regex toolkits like <a
+href="http://www.pcre.org/">PCRE</a> (which is used by projects like
+<a href="http://www.python.org/">Python</a>, <a
+href="http://httpd.apache.org/">Apache</a>, and <a
+href="http://www.php.net/">PHP</a>) or <a
+href="http://weitz.de/cl-ppcre/">CL-PPCRE</a>. Also, <a
+href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html">Java's
+regular expressions</a> and those of <a href="http://www.xmlschemareference.com/regularExpression.html">XML Schema</a> are very similar to Perl's.
+<p>
+The following descriptions will use the notions introduced by this
+annotated screenshot. The screenshot itself is an imagemap - click on
+any part of it to go directly to the relevant section of the
+docs.<br>&nbsp;<br>
+
+<a class=none name=shot><img src="shot.png" width=759 height=601 border=0 usemap="#regex_map" alt="Screen Shot"></a>
+<map name="regex_map">
+<area shape="rect" coords="138,67,169,83" href="#file" title="Saving to and loading from files" alt="Saving to and loading from files">
+<area shape="rect" coords="365,389,402,404" href="#step" title="Single-stepping" alt="Single-stepping">
+<area shape="rect" coords="322,390,361,406" href="#split" title="Splitting text" alt="Splitting text">
+<area shape="rect" coords="270,389,319,404" href="#replace" title="Replacing text" alt="Replacing text">
+<area shape="rect" coords="228,389,267,403" href="#parse-tree" title="The parse tree" alt="The parse tree">
+<area shape="rect" coords="187,389,225,403" href="#info" title="The info pane" alt="The info pane">
+<area shape="rect" coords="141,506,242,531" href="#walking" title="Walking through the target string" alt="Walking through the target string">
+<area shape="rect" coords="257,507,452,530" href="#narrow" title="Narrowing the scan" alt="Narrowing the scan">
+<area shape="rect" coords="460,223,617,244" href="#modifiers" title="Modifiers" alt="Modifiers">
+<area shape="rect" coords="298,10,443,33" href="#modifiers" title="Modifiers" alt="Modifiers">
+<area shape="rect" coords="16,567,121,590" href="#walking" title="Walking through the target string" alt="Walking through the target string">
+<area shape="rect" coords="344,571,456,594" href="#narrow" title="Narrowing the scan" alt="Narrowing the scan">
+<area shape="rect" coords="139,367,258,386" href="#messages" title="The message areas" alt="The message areas">
+<area shape="rect" coords="10,209,116,248" href="#messages" title="The message areas" alt="The message areas">
+<area shape="rect" coords="147,210,289,228" href="#messages" title="The message areas" alt="The message areas">
+<area shape="rect" coords="5,86,106,125" href="#messages" title="The message areas" alt="The message areas">
+<area shape="rect" coords="146,104,616,207" href="#panes" title="The main panes" alt="The main panes">
+<area shape="rect" coords="144,262,618,364" href="#panes" title="The main panes" alt="The main panes">
+<area shape="rect" coords="640,228,729,254" href="#panes" title="The main panes" alt="The main panes">
+<area shape="rect" coords="633,70,718,97" href="#panes" title="The main panes" alt="The main panes">
+<area shape="rect" coords="282,243,460,250" href="#resize" title="Resizing" alt="Resizing">
+<area shape="rect" coords="635,296,739,323" href="#resize" title="Resizing" alt="Resizing">
+<area shape="rect" coords="402,381,561,388" href="#resize" title="Resizing" alt="Resizing">
+<area shape="rect" coords="20,429,111,474" href="#highlight-messages" title="The highlight messages" alt="The highlight messages">
+<area shape="rect" coords="139,440,257,455" href="#highlight-messages" title="The highlight messages" alt="The highlight messages">
+<area shape="rect" coords="139,421,537,437" href="#highlight-buttons" title="The highlight buttons" alt="The highlight buttons">
+<area shape="rect" coords="141,456,541,473" href="#highlight-buttons" title="The highlight buttons" alt="The highlight buttons">
+<area shape="rect" coords="630,501,756,531" href="#highlight-buttons" title="The highlight buttons" alt="The highlight buttons">
+</map>
+
+<h4><a class=none name="panes">The main panes</a></h4>
+
+The main area of the application is inhabitated by two panes which are
+always visible. Both behave like simple editors, i.e. you can type
+text into them and modify it. You can also copy and paste text between
+these panes and other applications. On Windows, the keybindings
+resemble those of typical Windows editors, on Linux the keybindings
+are those of <a
+href="http://www.gnu.org/software/emacs/emacs.html"><code>GNU
+Emacs</code></a>. (If you have never used Emacs you might know a
+couple of these keybindings from the <code>bash</code> shell.)  You
+can use the <code>TAB</code> key to switch between these editors. This
+will also cycle through the <a href="#replace">replacement pane</a> if
+it's visible.
+<p>
+The upper pane is the <a href="#shot"><em>regex pane</em></a>. Here
+you'll type the regular expression you want to investigate.
+<p>
+The second pane is the <a href="#shot"><em>target pane</em></a>. Here
+you'll type the text (the <em>target string</em>) the regular
+expression will try to match.
+<p>
+If there's a match, the part of the target string that matched will be
+emphasized by a yellow background.  (If you also check the
+'<code>g</code>' <a href="#modifiers"><em>modifier checkbox</em></a>
+all matches will be emphasized - the <a href="#walking">"current"</a> one in yellow, the
+others in green.)
+
+<h4><a class=none name="messages">The message areas</a></h4>
+
+Both of the afore-mentioned panes have <em>message areas</em> directly
+below them. The <a href="#shot"><em>regex message area</em></a> is
+usually empty but it will show an error message in red letters if the
+regular expression isn't syntactically correct. It'll also show a
+warning in grey letters if the content of the regex pane ends with
+whitespace because this might not be what you want. You can of course
+ignore this warning if you typed the whitespace characters on purpose.
+<p>
+The <a href="#shot"><em>target message area</em></a> will show the
+extent of the match (or notify you that there isn't a match at
+all). This is particularly useful if there's a zero-length match
+because you won't see any highlighted characters in the target pane in
+this case. The message &quot;Match from <em>n</em> to <em>m</em>&quot;
+means that the characters starting from position <em>n</em> up to
+<em>m</em> (exclusively) belong to the match. The first character of
+the string is character 0 (zero) as usual.
+
+<h4><a class=none name="highlight">Highlighting selected parts of the match</a></h4>
+
+If there's a match you can highlight selected parts of the match which
+are shown in orange. The default setting is to reflect the
+<em>selection</em> you've made in the regex pane. It works like this:
+If you've selected a valid subexpression of the regular expression in
+the regex pane the corresponding part of the target string is shown in
+orange. You see an example in the <a href="#shot">screen shot</a>
+above where the '<code>b</code>' in the regular expression was
+selected which corresponds to the fourth '<code>b</code>' in the
+target string.
+<p>
+If you've made an invalid selection the <a
+href="#highlight-buttons">selection highlight button</a> is
+disabled. You'll also see a message about your selection being invalid
+in the <a href="#info">info pane</a>.
+<p>
+If you have no idea what a &quot;valid subexpression&quot; of the
+regular expression could be consider the following rule of thumb:
+Every part of the regular expression which can be wrapped in a
+non-capturing group - i.e. with <code>(?:...)</code> - without
+altering the meaning of the expression is valid.
+<p>
+(A more precise description of this would be: Consider the <a
+href="#parse-tree">parse tree</a> of the regular expression and assume
+that every leaf of the tree which is a string is further divided into
+the single characters which together constitute the string. Now, every
+contiguous part of the regular expression which can be completely and
+exactly covered by nodes of the parse tree is a valid subexpression.)
+
+<h4><a class=none name="highlight-buttons">The highlight buttons</a></h4>
+
+Apart from highlighting the part of the target string which
+corresponds to the selected area in the <a href="#shot">regex pane</a>
+you can also highlight the parts which correspond to captured register
+groups (enclosed by parentheses) in the regular expression. This is
+done by selecting one of the <a href="#shot">highlight
+buttons</a>. These are only enabled if there are any captured
+registers.
+<p>
+Press the &quot;nothing&quot; button to disable highlighting.
+
+<h4><a class=none name="highlight-messages">The highlight messages</a></h4>
+
+Each of the <a href="#highlight-buttons">highlight buttons</a> has a
+small <a href="#shot">highlight message</a> associated with it (similar to the <a
+href="#messages">message area</a> of the target pane) which shows
+which part would be highlighted if the corresponding button were
+selected. Again, this is particularly useful in the case of zero-length
+(sub-)matches.
+
+<h4><a class=none name="walking">Walking through the target string</a></h4>
+
+Usually, the application will try to find the first match beginning
+from position 0 of the target string. You can use the <a
+href="#shot"><em>scan buttons</em></a> to move forward (or backward)
+one match at a time if there's more than one match. (This is how the
+Perl regex engine would behave in case of 'global' matches -
+i.e. those with a '<code>g</code>' <a href="#modifiers">modifier</a> -
+or if you apply the <a href="#split"><code>split</code></a> operator.)
+<p>
+The headline above the scan buttons which usually says &quot;Scan
+from&nbsp;0&quot; will change accordingly showing a message like
+&quot;Scan&nbsp;#<em>n</em> from&nbsp;<em>m</em>&quot; which means
+that the regex engine is trying to find the <em>n</em>th&nbsp;match
+starting at character&nbsp;<em>m</em> of the target string. The <a
+href="#messages">target message area</a> will be changed as well -
+it'll say &quot;Match&nbsp;#<em>n</em> from&nbsp;<em>k</em>
+to&nbsp;<em>l</em>&quot; instead of &quot;Match from&nbsp;<em>k</em>
+to&nbsp;<em>l</em>&quot; (or it'll say &quot;No further match&quot;
+instead of &quot;No match&quot; if you've pressed the scan forward
+button too often).
+
+<h4><a class=none name="narrow">Narrowing the scan</a></h4>
+
+By using the <a href="#shot"><em>border buttons</em></a> you can
+narrow the scan to a part of the target string. This 
+effectively hides characters from the start and/or end of the target
+string from the regex engine. The characters which are masked thusly
+are covered with a dark grey color in the <a href="#shot"><em>target
+pane</em></a>. Note that the effect of the <a href="#walking">scan
+buttons</a> is reset by the border buttons.
+
+<h4><a class=none name="info">The info pane</a></h4>
+
+Choosing the &quot;Info&quot; <a href="#shot"><em>tab</em></a> will reveal the
+<em>info pane</em> which is an area where the application tries to
+explain what the regular expression is supposed to do in plain
+English. If you've <a href="#highlight">selected</a> a part of the
+regular expression only this part will be explained.
+
+<h4><a class=none name="parse-tree">The parse tree</a></h4>
+
+If you select the &quot;Tree&quot; <a href="#shot"><em>tab</em></a>
+you'll see a (simplified) graphical representation of the parse tree
+of the regular expression. This is how the regex engine
+&quot;sees&quot; the expression and it might help you to understand
+what's going on (or why the regular expression isn't interpreted as
+you intended it to be).
+
+<h4><a class=none name="replace">Replacing text</a></h4>
+
+By choosing the &quot;Replace&quot; <a href="#shot"><em>tab</em></a>
+you'll open up an area with two panes. The first one includes a simple
+editor like the ones in the <a href="#panes">main panes</a>. Here you
+can type a replacement string which acts like the second argument to
+Perl's <code>s///</code> (substitution) operator. The second pane will
+show the result of the substitution. The contents of these panes are
+meaningless if the regular expression has syntactical
+errors.
+<p>
+Note that you'll have to use &quot;<code>\&</code>&quot;,
+&quot;<code>\`</code>&quot;, &quot;<code>\'</code>&quot; and
+&quot;<code>\<em>n</em></code>&quot; instead of Perl's
+&quot;<code>$&</code>&quot;, &quot;<code>$`</code>&quot;,
+&quot;<code>$'</code>&quot; and &quot;<code>$<em>n</em></code>&quot; -
+see the <a href="http://weitz.de/cl-ppcre/#regex-replace">CL-PPCRE
+documentation</a> for the gory details.
+
+<h4><a class=none name="split">Splitting text</a></h4>
+
+The &quot;Split&quot; <a href="#shot"><em>tab</em></a> will
+reveal a pane which shows the result of applying Perl's
+<code>split</code> operator to the target string. As this result is
+usually an array of strings the elements of this array are visually
+divided by vertical lines the size of a space character. (This implies
+that two vertical lines in a row denote that there's a zero-length string
+between them. And it also follows that the array has only one element
+if there's no vertical line at all.)
+
+<p> You can use the radio buttons below the pane to select another
+divider if the vertical line happens to be a part of your target
+string. But note that choosing the &quot;block&quot; option might
+significantly slow down the program if your target strings are long.
+
+<p>
+You can type a non-negative integer into the &quot;Limit&quot;
+field. This corresponds to the optional third argument to Perl's
+<code>split</code> operator.
+
+<h4><a class=none name="step">Single-stepping through the matching process</a></h4>
+
+Finally, the &quot;Step&quot; <a href="#shot"><em>tab</em></a> will
+lead you to two panes which have the same content as the two <a
+href="#panes">main panes</a>. However, here you can watch the regex
+engine &quot;at work&quot;. This is best explained with an example, so
+see the <a href="tutorial18.html">corresponding part of the
+tutorial</a>.
+<p>
+Note that many of the optimizations done by the <a
+href="http://weitz.de/cl-ppcre/">CL-PPCRE</a> engine are turned off
+here for pedagogical reasons. (For example, when trying to match the
+regex <code>a*abc</code> against the target string <code>aaaabd</code>
+the &quot;real&quot; engine wouldn't even start because it'll first
+use a Boyer-Moore-Horspool search to check if the constant string
+<code>abc</code> is somewhere in the target.) Some of them remain,
+however: The engine will only try to match from position&nbsp;0 if the
+regex starts with <code>.*</code> and is in single-line mode. Also, as
+you'll see, the stepper tries to match constant strings as a whole
+(instead of single characters which would be quite boring).
+
+<h4><a class=none name="modifiers">Modifiers</a></h4>
+
+Pressing one of the <a href="#shot"><em>modifier checkboxes</em></a>
+is equivalent to using the corresponding modifier character in
+Perl. For example, the &quot;<code>i</code>&quot; checkbox toggles
+between case-sensitive and case-insensitive matching. Note that the
+&quot;<code>g</code>&quot; ('global') modifier only affects
+the <a href="#replace">replacement</a> operation - it has no effect on
+the match itself.  If it's enabled other matches the engine would find
+are highlighted in green in the <a href="#shot"><em>target
+pane</em></a>, though.
+
+<h4><a class=none name="resize">Resizing</a></h4>
+
+You can resize the application window as usual by dragging the lower
+right corner. But you can also resize the panes relative to each other
+by dragging one of the <a href="#shot"><em>resize
+dividers</em></a>. These aren't visible in the Windows version but
+you'll note that the cursor changes if you position the mouse above
+them. There's also a resize divider between the two <a
+href="#replace">replacement panes</a>. <em>The Regex Coach</em>
+will remember the size and position of its main window between two
+invocations.
+
+<h4><a class=none name="file">Saving to and loading from files</a></h4>
+
+If one of the two <a href="#panes">main panes</a> has the focus you
+can - from the file menu - insert the contents of a text file into
+this pane or save the contents of this pane to disk. The latter can
+also be done by pressing <code>Ctrl-s</code> (or <code>Ctrl-x&nbsp;Ctrl-s</code> on Linux). The contents of these
+two panes will also remain persistent between two invocations of
+<em>The Regex Coach</em>.
+<p>
+Note: Due to the way Motif works, the file menu can't be used like this on
+Linux. Instead you can use the Emacs key
+sequences <code>Ctrl-x&nbsp;Ctrl-w</code>
+and <code>Ctrl-x&nbsp;i</code>.
+
+<h4><a class=none name="autoscroll">Autoscroll</a></h4>
+
+<em>The Regex Coach</em> has an
+<em>Autoscroll</em> feature which can be switched on and off via
+the corresponding menu. If <em>Autoscroll</em> is on, then
+each time the target string is parsed the scrollbar of the target pane
+will be moved such that the start (or end - depending on what you've
+chosen) of the match is visible more or less in the middle of the
+pane. If you've chosen to <a href="#highlight">highlight</a> specific
+parts of the match, then the scrollbar will move to the start or end
+of the highlighted region instead. This is of course only meaningful if the
+target string is too large to fit into the pane.
+<p>
+No automatic scrolling occurs while the target pane has the input
+focus.
+
+<br>&nbsp;<br><h3><a name="bugs" class=none>Known bugs and limitations</a></h3>
+
+The regex engine might give up with a stack overflow on relatively
+long regular expressions. (This will happen much earlier as with <a
+href="http://weitz.de/cl-ppcre/">CL-PPCRE</a> alone as the parsing
+process is interwoven with code specific to <em>The Regex Coach</em>.)
+Although maybe counter-intuitive, it might help to add some
+non-capturing groups, i.e. &quot;<code>aa...abb...b</code>&quot; (with
+enough characters inbetween) might fail while
+&quot;<code>(?:aa...a)(?:bb...b)</code>&quot; doesn't.
+<p>
+Also, there seem to be problems with Eastern European versions of
+Windows, specifically with &quot;character set 1250&quot; or
+similar. Sorry, I currently don't have the time and resources to
+investigate this any further.
+<p>
+If you encounter any other bugs or problems please send them to the <a href="#mail">mailing list</a>.
+
+<br>&nbsp;<br><h3><a name="technical" class=none>Technical information</a></h3>
+
+<em>The Regex Coach</em> is written in <a
+href="http://www.lisp.org/">Common Lisp</a> and was developed using
+the <a href="http://www.lispworks.com/">LispWorks</a> development
+environment. The
+regex engine used is <a href="http://weitz.de/cl-ppcre/">CL-PPCRE</a>.
+<p>
+It might be worthwhile to note that due to the dynamic nature of Lisp
+<em>The Regex Coach</em> could be written without changing a single
+line of code in the CL-PPCRE engine itself although the application
+has to track information and query the engine <em>while</em> the
+regular expressions is parsed and the scanners are built. All this
+could be done 'after the fact' by using facilities like
+<code>defadvice</code> and <code>:around</code> methods. Imagine
+<a href="http://perl.plover.com/Rx/paper/">writing this application in Perl</a> without touching Perl's regex
+engine... :)
+<p>
+Also, thanks to LispWork's cross-platform CAPI toolkit the code for
+the Windows and Linux versions is nearly identical without any
+platform-specific parts (except for some lines regarding different
+fonts and keybindings).
+
+<br>&nbsp;<br><h3><a class=none name="perl">Compatibility with Perl</a></h3>
+
+See the <a href="http://weitz.de/cl-ppcre/">CL-PPCRE documentation</a>.
+
+<br>&nbsp;<br><h3><a class=none name="ack">Acknowledgements</a></h3>
+
+The script to compile the Windows installer was kindly provided
+by <a href="http://www.digiserv.net/">Ian H.</a> The icon for the
+Windows application was created by Andr&eacute; Derouaux. The PNG
+included with the Linux distribution was contributed by John Troy
+Hurteau and is based on Andr&eacute;'s icon.  The Lisp logo was
+designed by <a href="http://normal-null.de/">Manfred Spiller</a>.
+Thanks to Alex Wood for RPM information.  Thanks to Jim Prewett for FreeBSD info.
+<p>
+Brigitte Bovy from LispWorks ("Xanalys" at that time) support helped
+with the tricky interaction between the editor panes. I also got a
+couple of helpful tips from the Lispworks mailing list, specifically
+from Jeff Caldwell, John DeSoi, David Fox, and Nick Levine.
+<p>
+Thanks to the guys at &quot;<a href="http://www.weinhandel-ottensen.de/">Caf&eacute; Ol&eacute;</a>&quot; in Hamburg
+where I wrote most of the code.
+<p>
+Development of the <em>The Regex Coach</em> has been supported by <a href="http://euphemismen.de">Euphemismen.de</a>.
+
+<p>
+$Header: /usr/local/cvsrep/regex-coach/doc/index.html,v 1.6 2010/07/06 14:33:06 edi Exp $
+<p><a href="http://weitz.de/index.html">BACK TO MY HOMEPAGE</a>
+
+
+</body>
+</html>
