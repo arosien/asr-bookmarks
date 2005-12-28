@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <title>24 ways: Edit-in-Place with Ajax</title>
+    <meta name="description" content="The advent calendar for web geeks. Each day throughout December we publish a daily dose of web design and development goodness to bring you all a little Christmas cheer." />
+    <link rel="stylesheet" href="/css/master.css" media="screen" />
+    <link rel="stylesheet" href="/css/additions.css?v=2" media="screen" />
+    <link rel="stylesheet" href="/css/print.css" media="print" />
+	<!--[if IE 8]>
+			<link rel="stylesheet" href="/css/ie8.css" media="screen" />
+	<![endif]-->
+	<!--[if IE 7]>
+			<link rel="stylesheet" href="/css/ie7.css" media="screen" />
+	<![endif]-->
+	<!--[if IE 6]>
+			<link rel="stylesheet" href="/css/ie6.css" media="screen" />
+	<![endif]-->
+    <link rel="alternate" type="application/rss+xml" title="rss" href="http://feeds.feedburner.com/24ways" />  
+
+    <link rel="alternate shorter shorturl" href="http://24ways.org/200523" />
+
+</head> 
+
+
+
+    	<body class="article">
+	<p id="jump"><a href="#content">Jump to content</a></p>
+	<div id="year">
+	<h3>Year</h3>
+	<ul>
+		<li>1997</li>
+		<li>1998</li>
+		<li>1999</li>
+		<li>2000</li>
+		<li>2001</li>
+		<li>2002</li>
+		<li>2003</li>
+		<li>2004</li>
+        <li class="current"><a href="/2005">2005</a></li>
+        <li><a href="/2006">2006</a></li>
+        <li><a href="/2007">2007</a></li>
+        <li><a href="/2008">2008</a></li>
+        <li><a href="/2009">2009</a></li>
+        <li><a href="/2010">2010</a></li>
+		<li>2011</li>
+		<li>2012</li>
+		<li>2013</li>
+		<li>2014</li>
+		<li>2015</li>
+		<li>2016</li>
+		<li>2017</li>
+		<li>2018</li>
+		<li>2019</li>
+		<li>2020</li>
+	</ul>
+</div><!-- year -->
+<div id="day">
+	<h3>Day</h3>
+	<ul>
+		<li><a href="/2005/have-your-dom-and-script-it-too">24</a></li>
+		<li class="current"><a href="/2005/edit-in-place-with-ajax">23</a></li>
+		<li><a href="/2005/debugging-css-with-the-dom-inspector">22</a></li>
+		<li><a href="/2005/swooshy-curly-quotes-without-images">21</a></li>
+		<li><a href="/2005/naughty-or-nice-css-background-images">20</a></li>
+		<li><a href="/2005/tables-with-style">19</a></li>
+		<li><a href="/2005/introducing-udasss">18</a></li>
+		<li><a href="/2005/avoiding-css-hacks-for-internet-explorer">17</a></li>
+		<li><a href="/2005/zs-not-dead-baby-zs-not-dead">16</a></li>
+		<li><a href="/2005/splintered-striper">15</a></li>
+		<li><a href="/2005/broader-border-corners">14</a></li>
+		<li><a href="/2005/transitional-vs-strict-markup">13</a></li>
+		<li><a href="/2005/introduction-to-scriptaculous-effects">12</a></li>
+		<li><a href="/2005/the-attribute-selector-for-fun-and-no-ad-profit">11</a></li>
+		<li><a href="/2005/auto-selecting-navigation">10</a></li>
+		<li><a href="/2005/putting-the-world-into-world-wide-web">09</a></li>
+		<li><a href="/2005/centered-tabs-with-css">08</a></li>
+		<li><a href="/2005/dont-be-eval">07</a></li>
+		<li><a href="/2005/practical-microformats-with-hcard">06</a></li>
+		<li><a href="/2005/dom-scripting-your-way-to-better-blockquotes">05</a></li>
+		<li><a href="/2005/css-layout-starting-points">04</a></li>
+		<li><a href="/2005/improving-form-accessibility-with-dom-scripting">03</a></li>
+		<li><a href="/2005/an-explanation-of-ems">02</a></li>
+		<li><a href="/2005/easy-ajax-with-prototype">01</a></li>
+	</ul>
+</div><!-- day -->
+	<h1><a href="/">24 Ways <em>to impress your friends</em></a></h1>
+<ul id="navigation">
+	<li id="nav-home"><a href="/">Home</a></li>
+	<li id="nav-archives"><a href="/2010">Archives</a></li>
+	<li id="nav-authors"><a href="/authors">Authors</a></li>
+	<li id="nav-annual"><a href="http://fivesimplesteps.com/books/the-24-ways-annual-2010">Annual</a></li>
+	<li id="nav-twitter"><a href="http://twitter.com/24ways">Twitter</a></li>
+	<li id="search">
+		<form method="get" action="/search">
+		    <div>
+			    
+			        <input type="text" name="q" class="text switcheroo" value="Search&hellip;" />
+			    
+			    <input type="submit" class="submit" value="Go" />
+			    <input type="hidden" name="s" value="search" />
+			</div>
+		</form>
+	</li>
+</ul><!-- navigation -->
+	
+	<div id="content">
+		<div class="meta">
+			<h2><strong>23 <em>12/2005</em></strong> <a href="http://24ways.org/2005/edit-in-place-with-ajax" rel="bookmark">Edit-in-Place with Ajax</a></h2>
+			<p>by <a href="http://allinthehead.com/">Drew McLellan</a></p>
+			<ul>
+				<li id="goto-article"><a href="#article">Article</a></li>
+				<li id="goto-comments"><a href="#comments"><strong>50</strong> comments</a></li>
+			</ul>
+		</div><!-- meta -->
+		<div id="article">
+            	<p>Back on <a href="/advent/easy-ajax-with-prototype">day one</a> we looked at using the <a href="http://prototype.conio.net/">Prototype library</a> to take all the hard work out of making a simple Ajax call. While that was fun and all, it didn&#8217;t go that far towards implementing something really practical. We dipped our toes in, but haven&#8217;t learned to swim yet.</p>
+
+	<p>So here is swimming lesson number one. Anyone who&#8217;s used <a href="http://www.flickr.com/">Flickr</a> to publish their photos will be familiar with the edit-in-place system used for quickly amending titles and descriptions on photographs. Hovering over an item turns its background yellow to indicate it is editable. A simple click loads the text into an edit box, right there on the page.</p>
+
+	<p><img src="/examples/edit-in-place-with-ajax/edit-loop.gif" alt="" width="264" height="126" /></p>
+
+	<p>Prototype includes all sorts of useful methods to help reproduce something like this for our own projects. As well as the simple Ajax <span class="caps">GET</span>s we learned how to do last time, we can also do <span class="caps">POST</span>s (which we&#8217;ll need here) and a whole bunch of manipulations to the user interface &#8211; all through simple library calls. <a href="/examples/edit-in-place-with-ajax/">Here&#8217;s what we&#8217;re building</a>, so let&#8217;s do it.</p>
+
+	<h3>Getting Started</h3>
+
+	<p>There are two major components to this process; the user interface manipulation and the Ajax call itself. Our set-up is much the same as last time (you may wish to read the <a href="/advent/easy-ajax-with-prototype">first article</a> if you&#8217;ve not already done so). We have a basic <span class="caps">HTML</span> page which links in the <code>prototype.js</code> file and our own <code>editinplace.js</code>. Here&#8217;s what Santa dropped down my chimney: </p>
+
+<pre><code>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot;
+     &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;
+ &lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
+ &lt;head&gt;
+     &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;/&gt;
+    &lt;title&gt;Edit-in-Place with Ajax&lt;/title&gt;
+     &lt;link href=&quot;editinplace.css&quot; rel=&quot;Stylesheet&quot; type=&quot;text/css&quot; /&gt;
+     &lt;script src=&quot;prototype.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+     &lt;script src=&quot;editinplace.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;    
+&lt;/head&gt; 
+&lt;body&gt;
+     &lt;h1&gt;Edit-in-place&lt;/h1&gt;
+     &lt;p id=&quot;desc&quot;&gt;Dashing through the snow on a one horse open sleigh.&lt;/p&gt;
+ &lt;/body&gt;
+ &lt;/html&gt;</code></pre>
+
+	<p>So that&#8217;s our page. The editable item is going to be the <code>&lt;p&gt;</code> called <code>desc</code>. The process goes something like this:</p>
+
+	<ol>
+		<li>Highlight the area <code>onMouseOver</code></li>
+		<li>Clear the highlight <code>onMouseOut</code></li>
+		<li>If the user clicks, hide the area and replace with a <code>&lt;textarea&gt;</code> and buttons</li>
+		<li>Remove all of the above if the user cancels the operation</li>
+		<li>When the Save button is clicked, make an Ajax <span class="caps">POST</span> and show that something&#8217;s happening</li>
+		<li>When the Ajax call comes back, update the page with the new content</li>
+	</ol>
+
+	<h3>Events and Highlighting</h3>
+
+	<p>The first step is to offer feedback to the user that the item is editable. This is done by shading the background colour when the user mouses over. Of course, the <span class="caps">CSS</span> <code>:hover</code> pseudo class is a straightforward way to do this, but for three reasons, I&#8217;m using JavaScript to switch class names.</p>
+
+	<ol>
+		<li><code>:hover</code> isn&#8217;t supported on many elements in Internet Explorer for Windows</li>
+		<li>I want to keep control over when the highlight switches off after an update, regardless of mouse position</li>
+		<li>If JavaScript isn&#8217;t available we don&#8217;t want to end up with the <span class="caps">CSS</span> suggesting it might be</li>
+	</ol>
+
+	<p>With this in mind, here&#8217;s how <code>editinplace.js</code> starts:</p>
+
+	<p><pre><code>Event.observe(window, &#8216;load&#8217;, init, false);</p>
+
+ function init(){
+     makeEditable(&#8216;desc&#8217;);
+ }
+
+ function makeEditable(id){
+     Event.observe(id, &#8216;click&#8217;, function(){edit($(id))}, false);
+     Event.observe(id, &#8216;mouseover&#8217;, function(){showAsEditable($(id))}, false);
+     Event.observe(id, &#8216;mouseout&#8217;, function(){showAsEditable($(id), true)}, false);
+ }
+
+ function showAsEditable(obj, clear){
+     if (!clear){
+          Element.addClassName(obj, &#8216;editable&#8217;);
+     }else{
+          Element.removeClassName(obj, &#8216;editable&#8217;);
+     }
+ }</code></pre>
+
+	<p>The first line attaches an <code>onLoad</code> event to the window, so that the function <code>init()</code> gets called once the page has loaded. In turn, <code>init()</code> sets up all the items on the page that we want to make editable. In this example I&#8217;ve just got one, but you can add as many as you like.</p>
+
+	<p>The function <code>madeEditable()</code> attaches the mouseover, mouseout and click events to the item we&#8217;re making editable. All <code>showAsEditable</code> does is add and remove the class name <code>editable</code> from the object. This uses the particularly cunning methods <code>Element.addClassName()</code> and <code>Element.removeClassName()</code> which enable you to cleanly add and remove effects without affecting any styling the object may otherwise have.</p>
+
+	<p>Oh, remember to add a rule for <code>.editable</code> to your style sheet:</p>
+
+<pre>&lt;/code&gt;.editable{
+     color: #000;
+     background-color: #ffffd3;
+ }&lt;/code&gt;</pre>
+
+	<h3>The Switch</h3>
+
+	<p>As you can see above, when the user clicks on an editable item, a call is made to the function <code>edit()</code>. This is where we switch out the static item for a nice editable textarea. Here&#8217;s how that function looks.</p>
+
+	<p><pre><code>function edit(obj){
+     Element.hide(obj);</p>
+
+     var textarea =&#8217;<div id="' + obj.id + '_editor">
+          <textarea id="' + obj.id + '_edit" name="' + obj.id + '" rows="4" cols="60">&#8216;
+          + obj.innerHTML + &#8216;</textarea>&#8216;;
+
+     var button = &#8216;<input id="' + obj.id + '_save" type="button" value="SAVE" /> OR 
+          <input id="' + obj.id + '_cancel" type="button" value="CANCEL" /></div>&#8216;;
+
+     new Insertion.After(obj, textarea+button);
+
+     Event.observe(obj.id+&#8217;_save&#8217;, &#8216;click&#8217;, function(){saveChanges(obj)}, false);
+     Event.observe(obj.id+&#8217;_cancel&#8217;, &#8216;click&#8217;, function(){cleanUp(obj)}, false);
+
+ }</code></pre>
+
+	<p>The first thing to do is to hide the object. Prototype comes to the rescue with <code>Element.hide()</code> (and of course, <code>Element.show()</code> too). Following that, we build up the textarea and buttons as a string, and then use <code>Insertion.After()</code> to place our new editor underneath the (now hidden) editable object.</p>
+
+	<p>The last thing to do before we leave the user to edit is it attach listeners to the Save and Cancel buttons to call either the <code>saveChanges()</code> function, or to <code>cleanUp()</code> after a cancel.</p>
+
+	<p>In the event of a cancel, we can clean up behind ourselves like so:</p>
+
+<pre><code>function cleanUp(obj, keepEditable){
+     Element.remove(obj.id+&#39;_editor&#39;);
+     Element.show(obj);
+     if (!keepEditable) showAsEditable(obj, true);
+ }</code></pre>
+
+	<h3>Saving the Changes</h3>
+
+	<p>This is where all the Ajax fun occurs. Whilst the previous article introduced <code>Ajax.Updater()</code> for simple Ajax calls, in this case we need a little bit more control over what happens once the response is received. For this purpose, <code>Ajax.Request()</code> is perfect. We can use the <code>onSuccess</code> and <code>onFailure</code> parameters to register functions to handle the response.</p>
+
+	<p><pre><code>function saveChanges(obj){
+     var new_content = escape($F(obj.id+&#8217;_edit&#8217;));</p>
+
+     obj.innerHTML = &#8220;Saving&#8230;&#8221;;
+     cleanUp(obj, true);
+
+     var success = function(t){editComplete(t, obj);}
+     var failure = function(t){editFailed(t, obj);}
+
+     var url = &#8216;edit.php&#8217;;
+     var pars = &#8216;id=&#8217; + obj.id + &#8216;&amp;content=&#8217; + new_content;
+     var myAjax = new Ajax.Request(url, {method:&#8216;post&#8217;,
+          postBody:pars, onSuccess:success, onFailure:failure});
+ }
+
+ function editComplete(t, obj){
+     obj.innerHTML = t.responseText;
+     showAsEditable(obj, true);
+ }
+
+ function editFailed(t, obj){
+     obj.innerHTML = &#8216;Sorry, the update failed.&#8217;;
+     cleanUp(obj);
+ }</code></pre>
+
+	<p>As you can see, we first grab in the contents of the textarea into the variable <code>new_content</code>. We then remove the editor, set the content of the original object to &#8220;Saving&#8230;&#8221; to show that an update is occurring, and make the Ajax <span class="caps">POST</span>.</p>
+
+	<p>If the Ajax fails, <code>editFailed()</code> sets the contents of the object to &#8220;Sorry, the update failed.&#8221; Admittedly, that&#8217;s not a very helpful way to handle the error but I have to limit the scope of this article somewhere. It might be a good idea to stow away the original contents of the object (<code>obj.preUpdate = obj.innerHTML</code>) for later retrieval <em>before</em> setting the content to &#8220;Saving&#8230;&#8221;. No one likes a failure &#8211; especially a messy one.</p>
+
+	<p>If the Ajax call is successful, the server-side script returns the edited content, which we then place back inside the object from <code>editComplete</code>, and tidy up.</p>
+
+	<h3>Meanwhile, back at the server</h3>
+
+	<p>The missing piece of the puzzle is the server-side script for committing the changes to your database. Obviously, any solution I provide here is not going to fit your particular application. For the purposes of getting a functional demo going, here&#8217;s what I have in <span class="caps">PHP</span>.</p>
+
+<pre><code>&lt;?php
+     $id = $_POST[&#39;id&#39;];
+     $content = $_POST[&#39;content&#39;];
+     echo htmlspecialchars($content);
+ ?&gt;</code></pre>
+
+	<p>Not exactly rocket science is it? I&#8217;m just catching the <code>content</code> item from the <span class="caps">POST</span> and echoing it back. For your application to be useful, however, you&#8217;ll need to know exactly which record you should be updating. I&#8217;m passing in the ID of my <code>&lt;div&gt;</code>, which is not a fat lot of use. You can modify <code>saveChanges()</code> to post back whatever information your app needs to know in order to process the update.</p>
+
+	<p>You should also check the user&#8217;s credentials to make sure they have permission to edit whatever it is they&#8217;re editing. Basically the same rules apply as with any script in your application.</p>
+
+	<h3>Limitations</h3>
+
+	<p>There are a few bits and bobs that in an ideal world I would tidy up. The first is the error handling, as I&#8217;ve already mentioned. The second is that from an idealistic standpoint, I&#8217;d rather not be using <code>innerHTML</code>. However, the reality is that it&#8217;s presently the most efficient way of making large changes to the document. If you&#8217;re serving as <span class="caps">XML</span>, remember that you&#8217;ll need to replace these with proper <span class="caps">DOM</span> nodes.</p>
+
+	<p>It&#8217;s also important to note that it&#8217;s quite difficult to make something like this universally accessible. Whenever you start updating large chunks of a document based on user interaction, a lot of non-traditional devices don&#8217;t cope well. The benefit of this technique, though, is that if JavaScript is unavailable none of the functionality gets implemented at all &#8211; it fails silently. It is for this reason that <strong>this shouldn&#8217;t be used as a complete replacement for a traditional, universally accessible edit form</strong>. It&#8217;s a great time-saver for those with the ability to use it, but it&#8217;s no replacement.</p>
+
+	<h3>See it in action</h3>
+
+	<p>I&#8217;ve put together an <a href="/examples/edit-in-place-with-ajax/">example page</a> using the inert <span class="caps">PHP</span> script above. That is to say, your edits aren&#8217;t committed to a database, so the example is reset when the page is reloaded.</p>
+
+ <div class="bio vcard">
+
+	<h3>About the author</h3>
+
+	<p><span class="fn">Drew McLellan</span> is a web developer, author and no-good swindler from just outside London, England. At the <a class="org" href="http://www.webstandards.org/">Web Standards Project</a> he works on press, strategy and tools. Drew keeps a <a class="url" href="http://www.allinthehead.com/">personal weblog</a> covering web development issues and themes.</p>
+
+ </div>
+            <div class="domore">
+                <h3>Like what you read?</h3>
+                <ul>
+                    <li class="tweetthis"><a href="http://twitter.com/?status=Edit-in-Place%20with%20Ajax%20http://24ways.org/200523">Tweet this article</a></li>
+                    <li>or</li>
+                    <li id="goto-comments-alt" class="leavecomment"><a href="#comments">Leave a comment</a></li>
+                </ul>
+            </div>
+		</div><!-- article -->
+		<div id="comments">
+		    <h3>Comments</h3>
+
+
+<ul class="comments">
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000571" id="c000571">23/12/2005</a></p>
+	<h4><a href="blocklevel.com/weblog"><img src="http://www.gravatar.com/avatar.php?gravatar_id=c55f2bacb8162c094509201b673cc5b8&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> CM Harrington <small>blocklevel.com/weblog</small></a></h4>
+	<p>Thanks so much for this! </p>
+
+	<p>I needed it for a project, and I was trying to figure out the most efficient way to go about solving the problem.</p>
+
+	<p>Cheers!</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000572" id="c000572">23/12/2005</a></p>
+	<h4><a href="reganweb.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=b5f2c493a48d2d2170a705abe8c02c5c&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> John <small>reganweb.com</small></a></h4>
+	<p>Incredible example. Thank you so much for this.</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000573" id="c000573">23/12/2005</a></p>
+	<h4><a href="eseth.org/"><img src="http://www.gravatar.com/avatar.php?gravatar_id=e00a4f90b164763c64c2d48d977fb8d0&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> whiteinge <small>eseth.org/</small></a></h4>
+	<p>Very nicely done!</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000576" id="c000576">23/12/2005</a></p>
+	<h4><a href="www.ofdreamsandmadness.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=fcf6da49173acbcf0f249b5c2588178c&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Ballwalkin' Mike <small>www.ofdreamsandmadness.com</small></a></h4>
+	<p>Great Tutorial.  This is JUST what I was looking for in my next project!</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000578" id="c000578">23/12/2005</a></p>
+	<h4><a href="www.dustindiaz.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=cfac4fc60b4e72258138903daab65b44&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Dustin Diaz <small>www.dustindiaz.com</small></a></h4>
+	<p>Cool stuff Drew. This reminds of PPK&#8217;s <a href="http://www.quirksmode.org/dom/cms.html">edit in place idea</a> for a CMS&#8230;although, he never actually did anything with it except save the changes into the DOM memory. This&#8230;actually does something! Great work man.</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000580" id="c000580">23/12/2005</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=713606fc14703859d0d27b57709dd586&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> chandru <small></small></a></h4>
+	<p>Too good.  Very nice article and neatly explained. thats really of u.</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000581" id="c000581">23/12/2005</a></p>
+	<h4><a href="www.jpofy.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=33838aa89eaf37488a31e65220c35388&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Jonatan Olofsson <small>www.jpofy.com</small></a></h4>
+	<p>Very good article, easily explained and a good example</p>
+
+	<p>Thanks!</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000583" id="c000583">23/12/2005</a></p>
+	<h4><a href="archmond.mizc.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=e6d95cba42a80d3a78414983184b26ea&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> archmond <small>archmond.mizc.com</small></a></h4>
+	<p>wow.. great idea.</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000585" id="c000585">23/12/2005</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=f41397d5aceb0ca947bf3999bf89c50b&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> JérÔÔme <small></small></a></h4>
+	<p>cÔÔl ! <br /><br />I think you need to CSS-style the TextArea though, so that in place editing isn&#8217;t too confusing (i.e. clicking a word and then needing to go up or down a line, depending on the new layout to change it).<br /><br />You are mentionning finding a way to Highlight the fact you did change something, but the font switch is too much a change, I think.(as seen with FireFox 1.5 at least)</p>
+
+	<p>I definitely think we should find an idea to pursue this &#8216;Impress your friends&#8217; serie beyond the 24th.</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000587" id="c000587">23/12/2005</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=f2a34b67dc1fabd279a0f5d3602d1c67&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> xvrd <small></small></a></h4>
+	<p>found some very cool tutorials on this site. thanks for all the work you put into this! the question is though&#8230; what happens on the 25th? is all that wonderful content just going to disappear? or are you maybe planning on zipping all the tutorials and sample files up into one handy package for people to download? enquiering minds want to know&#8230;</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000589" id="c000589">23/12/2005</a></p>
+	<h4><a href="www.virlander.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=095b511fe58ec353cb70cd668a369264&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Vesa Virlander <small>www.virlander.com</small></a></h4>
+	<p>Now this was interesting article. Good work! I&#8217;ll have to start playing with it.</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000590" id="c000590">23/12/2005</a></p>
+	<h4><a href="www.logicbox.net"><img src="http://www.gravatar.com/avatar.php?gravatar_id=167aa833d38507bc7042cc432f105a31&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Will Kelly <small>www.logicbox.net</small></a></h4>
+	<p>Good tutorial. I recently got inspired by Flickr too, to do a similar thing in a CMS.</p>
+
+	<p>One thing that could be done to improve it is to hook it into a form. For instance if it was a text input field not a textarea (i.e. for a title) pressing return would automatically submit without having to do extra coding. It could also be a fall-back if the ajax call failed or wasn&#8217;t supported in a particular browser.</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000594" id="c000594">23/12/2005</a></p>
+	<h4><a href="www.trovster.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=a489725ad8451b6e87fcb9ed4f189cf9&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> trovster <small>www.trovster.com</small></a></h4>
+	<p>Nice little explaination. Prototype is pretty massive and daunting task if you don&#8217;t know JavaScript very well.</p>
+
+	<p>When I first looked into copying the Flickr experience I found this <a href="http://tool-man.org/examples/edit-in-place.html">edit in place</a> function, but it didn&#8217;t have the AJAX element.</p>
+
+	<p>In the end I made it up myself, it works, but probably not as well as this.</p>
+
+	<p>As for XML and innerHTML. FF1.5 now supports it when sending pages as XML. Good or bad, I haven&#8217;t yet decided.</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000596" id="c000596">23/12/2005</a></p>
+	<h4><a href="www.fewagainstmany.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=509a1651aa69233889051580cd9664f3&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Tim <small>www.fewagainstmany.com</small></a></h4>
+	<p>Thx Drew &#8211; this is probably the best christmas gift for all of us :-)<br /><br /><strong>Merry Christmas</strong></p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000598" id="c000598">23/12/2005</a></p>
+	<h4><a href="minchiachefame.iobloggo.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=e1613fc9d7ea08224a451a6eb91dbf14&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> marco <small>minchiachefame.iobloggo.com</small></a></h4>
+	<p>ooohh this is sweeet! thank you! <br /><br />..and yes, Merry Christmas!</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000600" id="c000600">23/12/2005</a></p>
+	<h4><a href="blakems.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=8b162302db0fee647fc8c93175e91cb2&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Blake Scarbrough <small>blakems.com</small></a></h4>
+	<p>Very slick. One issue I ran into was when I placed and named html entity like & or &hellip;, it didn&#8217;t save it as I typed it in. Is there a way to escape the ampersand?</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000601" id="c000601">23/12/2005</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=8d57f60c392d2dbf29cca7842776f611&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> db <small></small></a></h4>
+	<p>pretty cool!  i was wondering, say i wanted to run the cleanup function just by clicking outside of the textarea, how would i go about that.  i tried attaching to the body tag, but i couldn&#8217;t get it to work&#8230; thx!</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000602" id="c000602">23/12/2005</a></p>
+	<h4><a href="allinthehead.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=13734b0cb20708f79e730809c29c3c48&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Drew McLellan <small>allinthehead.com</small></a></h4>
+	<p>db: You may wish to rethink your goal. What would happen if a user clicked outside of the edit box part way through making an edit? (e.g. they may be switching between windows, copying and pasting from elsewhere).</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000603" id="c000603">23/12/2005</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=8d57f60c392d2dbf29cca7842776f611&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> db <small></small></a></h4>
+	<p>that&#8217;s true, but i wouldn&#8217;t use it for large amounts of text.  more like titles or tags, as in flickr or del.icio.us&#8230; but that&#8217;s a good point.</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000604" id="c000604">23/12/2005</a></p>
+	<h4><a href="rynoweb.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=22bac44175a8d184f052df428668656d&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Chuck Reynolds <small>rynoweb.com</small></a></h4>
+	<p>I&#8217;d like to see &#8220;nl2br&#8221; integrated and html as well.</p>
+
+	<p>You know what would really be cool, integrate TinyMCE or FCKeditor into the edit screen &#8211; that would rock.</p>
+
+	<p>Good job though &#8211; nice exp.</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000605" id="c000605">23/12/2005</a></p>
+	<h4><a href="allinthehead.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=13734b0cb20708f79e730809c29c3c48&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Drew McLellan <small>allinthehead.com</small></a></h4>
+	<p><strong>xvrd:</strong> I have no plans to remove any content published here this month. All the URLs can be considered permanent. (If I do reshuffle for whatever reason, I&#8217;ll make sure the links keep working).</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000607" id="c000607">23/12/2005</a></p>
+	<h4><a href="www.favoriterun.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=28668141f2faf4eb9f90fbaab79d220c&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> dave <small>www.favoriterun.com</small></a></h4>
+	<p>You can also use the Ajax.InPlaceEditor that is from http://script.aculo.us that simplifies some of this&#8230;</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000610" id="c000610">24/12/2005</a></p>
+	<h4><a href="www.dealazon.com/"><img src="http://www.gravatar.com/avatar.php?gravatar_id=5602d4e6be1e0efd5eda66505b267e42&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Pete Freitag <small>www.dealazon.com/</small></a></h4>
+	<p>Once again thanks for the great article!</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000616" id="c000616">24/12/2005</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=1d9a12af9cacab4b68c1509c5c7c6f13&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Joe Winterhalter <small></small></a></h4>
+	<p>Thanks for the great tut, cant seem to get the function to saving the text at all, where does the php go?</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000628" id="c000628">25/12/2005</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=b839568da431e7d69662130b7877f3da&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> eli <small></small></a></h4>
+	<p>is there anyone with a working version of this that has their source code that i could some how download?  i have done this tutorial about 3 times now and NOTHING on it is working.  i&#8217;m an experienced mysql/php web designer but new to this whole ajax thing and just trying out some demos here and there.  i got the other ajax demo to work just fine, but all this one does is display a title and a paragraph and nothing is editable or changes colors on mouse over or anything.  any help?  thanks.</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000635" id="c000635">26/12/2005</a></p>
+	<h4><a href="http://photosydney.blogspot.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=a79a29df75c6eb2e2da75f7dc5e3e102&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Ben <small>http://photosydney.blogspot.com</small></a></h4>
+	<p>Interesting tutorial &#8211; I&#8217;ll have to give it a try.</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000648" id="c000648">27/12/2005</a></p>
+	<h4><a href="verens.com/"><img src="http://www.gravatar.com/avatar.php?gravatar_id=18404b689a7d9428a438890d10de555f&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Kae Verens <small>verens.com/</small></a></h4>
+	<p>eli, I have a working example of something similar to this in my own cms. goto <a href="http://webmecms.org/admin/">the admin area</a>, log in as &#8220;demo&#8221; &#8220;demo&#8221;, click &#8220;pages&#8221;, then &#8220;sample events page&#8221;. you can edit the news easily by simply clicking on what you want to change. it also has a wysiwyg built-in (fckeditor)</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000649" id="c000649">27/12/2005</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=b839568da431e7d69662130b7877f3da&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> eli <small></small></a></h4>
+	<p>kae verens, i checked your example, and it seems to be working as you said, but do you have a working example of THIS TUTORIAL?  i need to take a look at the source file and see what is wrong with mine.  anyone else have any help?  did you get this tutorial to work?  thanks.</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000652" id="c000652">28/12/2005</a></p>
+	<h4><a href="www.madwebskills.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=b513bab3030cf07c2cb5f6d1dad98258&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Michael McCorry <small>www.madwebskills.com</small></a></h4>
+	<p>eli: Err, but <a href="http://24ways.org/examples/edit-in-place-with-ajax/">there is one</a>  right here on this site.</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000654" id="c000654">28/12/2005</a></p>
+	<h4><a href="slipsnisse.se/"><img src="http://www.gravatar.com/avatar.php?gravatar_id=8b164a2231bf2f31ac90ad4ece31f19d&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Mats Lindblad <small>slipsnisse.se/</small></a></h4>
+	<p>I got it working, although I decided to use className instead because it was a list of stuff I wanted editable.</p>
+
+	<p>Great job. Made my life a bit easier.</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000656" id="c000656">28/12/2005</a></p>
+	<h4><a href="www.designers-forum.com/"><img src="http://www.gravatar.com/avatar.php?gravatar_id=c9c47875936bed67032a12c047b468a8&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Gavin Laking <small>www.designers-forum.com/</small></a></h4>
+	<p>function init(){<br /><br />var max = 50;<br /><br />for (i = 1; i lt= max; i++){<br /><br />makeEditable(&#8216;item_&#8217;+i);}<br /><br />}</p>
+
+	<p>Replace lt with the less-than symbol. Use this in place of the existing init() function in editinplace.js for those multiple item pages you have; dynamically generated of course :-)</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000663" id="c000663">29/12/2005</a></p>
+	<h4><a href="www.esells.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=acef8717685b0483074d4e7df27fc11f&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Steve <small>www.esells.com</small></a></h4>
+	<p>eli, make sure you download the other files in the include:</p>
+
+     
+
+
+	<p>http://24ways.org/examples/edit-in-place-with-ajax/editinplace.css</p>
+
+	<p>http://24ways.org/examples/edit-in-place-with-ajax/prototype.js</p>
+
+	<p>http://24ways.org/examples/edit-in-place-with-ajax/editinplace.js</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000668" id="c000668">30/12/2005</a></p>
+	<h4><a href="www.vsdotnetug.org"><img src="http://www.gravatar.com/avatar.php?gravatar_id=4d0ae64db969f97ff11e3ef3a7527be1&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Maud-Dib of Dune <small>www.vsdotnetug.org</small></a></h4>
+	<p>Awesome! Love it, love the well thought explanation; very consise and very readable and ultimately lowers the hurdle more than any others on AJAX which myn eyes have read today or previously.</p>
+
+	<p>I do NOT like/use/no PHP, but dig how it can be used in place of ActiveX for posting w/o refresh &#8211; which is the ultimate end game issue. Do you have any excellent redirections to how-to w/o PHP?</p>
+
+	<p>Here are typos:<br /><br />1) make:<br /><br />&#8220;The function madeEditable() attaches the mouseover&#8230;&#8221;<br /><br />should say:<br /><br />makeEditable instead of madeEditable.</p>
+
+	<p>2) , false<br /><br />&#8220;Event.observe(obj.id+&#8217;_cancel&#8217;, &#8216;click&#8217;, function(){cleanUp(obj)}, false);&#8221;<br /><br />should have a &#8221;, false)&#8221; parameter in the call to cleanUp as in:<br /><br />Event.observe(obj.id+&#8217;_cancel&#8217;, &#8216;click&#8217;, function(){cleanUp(obj,false)}, false);</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000674" id="c000674">31/12/2005</a></p>
+	<h4><a href="www.lindkold.dk"><img src="http://www.gravatar.com/avatar.php?gravatar_id=34cfd3dddb6f200802f85435c9054b2d&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> www.lindkold.dk <small>www.lindkold.dk</small></a></h4>
+	<p>Thx for a great example &#8211; just what I was looking for in a new project. Good informing tutorial.</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000684" id="c000684">02/01/2006</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=c0af8e111d583a0f06e166a3243b7128&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Petar Pavlovic <small></small></a></h4>
+	<p>I think the problem with this script is that text &#8220;Saving&#8230;&#8221; when you click on Save button should not replace editable content.<br /><br />For example, I&#8217;ve edited content, then killed my Internet connection and click on Save. In the place of edited text I get &#8220;Saving&#8230;&#8221;. Because the Internet connection is broken (or Work Offline is selected on browser), next click on editable DIV brings me text &#8220;Saving&#8230;&#8221; to edit, and the previous content is <strong>lost</strong>.</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000685" id="c000685">02/01/2006</a></p>
+	<h4><a href="www.servletsuite.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=52a4e8430e102c26886b3e2a3272e2af&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Dan Novik <small>www.servletsuite.com</small></a></h4>
+	<p>There are several components for JSP<br /><br />in Coldtags suite http://www.servletsuite.com/jsp.htm <br /><br />that provides the same</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000687" id="c000687">03/01/2006</a></p>
+	<h4><a href="www.pietertje.nl"><img src="http://www.gravatar.com/avatar.php?gravatar_id=75c8a7f25d09c3398ed03cd98840930d&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> pietertje <small>www.pietertje.nl</small></a></h4>
+	<p>Thanx a lot!</p>
+
+	<p>I&#8217;ve added:<br /><br /><code>document.getElementById(obj.id+'_edit').focus();</code><br /><br />at the end of the <code>edit</code>-function to focus on that field, maybe handy for other users..</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000688" id="c000688">03/01/2006</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=eea269c29cd5ae70991895e52cca8e88&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Andrew <small></small></a></h4>
+	<p>I try replacing function init() for a page with multiple items with:-</p>
+
+	<p>function init(){</p>
+
+	<p>var max = 50;</p>
+
+	<p>for (i = 1; i lt= max; i++){</p>
+
+	<p>makeEditable(‘item_’+i);}</p>
+
+	<p>}</p>
+
+	<p>but when i run the script i get the error &#8220;expected &#8217;;&#8217; on line 7&#8221; which equates to the &#8220;for&#8221; line.</p>
+
+	<p>Does anyone have any ideas or suggestions as to whythis doesnt work?</p>
+
+	<p>Thanks, Andrew</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000690" id="c000690">03/01/2006</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=44c5593d56d70c3d9842dcfd01f7afbb&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Dan Glegg <small></small></a></h4>
+	<p>Great article! I&#8217;m currently working on a project that needs some inline editing &#8211; however, there&#8217;s an additional kicker in that some editables are not text-only. Within the rails app, the editor needs to support custom &#8220;read&#8221; and &#8220;write&#8221; partials to dump into the editor form.</p>
+
+	<p>I&#8217;ve implimented it using a regex to properly escape any quotes in the partials and dumping them into the onclick call on the editable element.<br /><br />Early days yet but so far it looks like this:</p>
+
+	<p>http://files.angryamoeba.co.uk/crap/tails-editors.png</p>
+
+	<p>couple of points:-<br /><br />1. I&#8217;m using position: absolute because some editable elements are in small screen areas that will not contain a form in a presentable manner.<br /><br />2. I&#8217;m fading down the opacity on the edited element for additional feedback.</p>
+
+	<p>Hope that&#8217;s of use to someone out there. Keep up the great work with this site.</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000691" id="c000691">04/01/2006</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=1d9a12af9cacab4b68c1509c5c7c6f13&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> John Winter <small></small></a></h4>
+	<p>How would you go about changing the ID elements to classes so that you could make more then one unit editable? I cant seem to figure this out.</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000698" id="c000698">05/01/2006</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=c64b7f02f93d1085effc9b76dca43518&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Maarten Brands <small></small></a></h4>
+	<p>It&#8217;s a super article! I have it working, but I&#8217;m busy to implement TinyMCE or FCKeditor, but it don&#8217;t work. Could somebody explain me, how I make it? Sorry for my bad english.</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000703" id="c000703">06/01/2006</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=5f6f2b95708ca6e579b2c7dc63bbc469&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Fixe <small></small></a></h4>
+	<p>function init(){</p>
+
+	<p>var max = 50;</p>
+
+	<p>for (i = 1; i < max; i++){</p>
+
+	<p>makeEditable(‘item_’+i);}</p>
+
+	<p>}</p>
+
+	<p>it worked for me Andrew. </p>
+
+	<p>nice article !!</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000704" id="c000704">08/01/2006</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=eea269c29cd5ae70991895e52cca8e88&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Andrew <small></small></a></h4>
+	<p>Please could someone email me a working copy of the files to allow editing of mutliple items &#8216;made editable&#8217; via the finction discussed above.</p>
+
+	<p>Please send to andrew[dot]bean[at]gmail.com.</p>
+
+	<p>Thanks in advacne,</p>
+
+	<p>Andrew</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000705" id="c000705">09/01/2006</a></p>
+	<h4><a href="www.ansett.nl"><img src="http://www.gravatar.com/avatar.php?gravatar_id=28ff7de975bf997a907c59aec29434c9&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Arnold Zanting <small>www.ansett.nl</small></a></h4>
+	<p>First of all, GREAT SCRIPT!!</p>
+
+	<p>I got it working with multiple items. The only thing I want to do is send an extra id to the edit.php file. So I can use it to update a single row in a mysql database.<br /><br />Someone got an idea?</p>
+
+	<p>Greetings Arnold</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000708" id="c000708">10/01/2006</a></p>
+	<h4><a href="www.e-makers.com.br"><img src="http://www.gravatar.com/avatar.php?gravatar_id=7fc8360d82468b3c2240da2105e8ce01&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Diogo <small>www.e-makers.com.br</small></a></h4>
+	<p>That&#8217;s so great !</p>
+
+	<p>This is a excelent site to learn more.</p>
+
+	<p>Thank you</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000710" id="c000710">11/01/2006</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=d19a84793ee363ee7419dc70edba83ca&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Alste <small></small></a></h4>
+	<p>Indeed this is a great tutorial although one of some problems is apparent. For example, after editing content and clicking on &#8220;Save&#8221;, you get text &#8220;Saving&#8230;&#8221; which is also editable (!!) whereas it shouldn&#8217;t be. Can you fix that? (I&#8217;m talking about your example page)</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000715" id="c000715">15/01/2006</a></p>
+	<h4><a href="www.darrenhoyt.com"><img src="http://www.gravatar.com/avatar.php?gravatar_id=d56d5e840289926ca0140e8c4084ed96&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Darren Hoyt <small>www.darrenhoyt.com</small></a></h4>
+	<p>Best edit-in-place tutorial I&#8217;ve seen yet. Nice work.</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000716" id="c000716">16/01/2006</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=bf23c46d9be54fd8d79f603eb32b8a2d&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Bruno <small></small></a></h4>
+	<p>I would change htmlspecialchars($content) for stripslashes(htmlentities($content))</p>
+
+	<p>This way, it adds suport for quotes and foreign languages</p>
+</div>
+</li>
+	<li><div class="even">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000719" id="c000719">17/01/2006</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=42422a7a92fbc5cb3cc19b9383ade3aa&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Greg <small></small></a></h4>
+	<p>GAh! This is soo cool but I don&#8217;t know any php so I have no idea how to actually save what I modify.  Could somone post or e-mail a php script/method that will allow me to save changes?</p>
+</div>
+</li>
+	<li><div class="odd">
+	<p class="permlink"><a href="http://24ways.org/2005/edit-in-place-with-ajax#c000721" id="c000721">19/01/2006</a></p>
+	<h4><a href=""><img src="http://www.gravatar.com/avatar.php?gravatar_id=5797e84418951f96b14f6afe571f9785&amp;size=100&amp;default=http%3A%2F%2Fcloud.24ways.org%2Fimg%2Fgravatar.png" class="gravatar" alt="" height="100" width="100" /> Lucas <small></small></a></h4>
+	<p>Had tested it in Zope, and works like a charm!</p>
+
+	<p>Really interesting site.</p>
+
+	<p><em>to:Kae Verens</em> &#8211; <strong>WOW</strong>, your cms seems very cool, good job</p>
+</div>
+</li>
+</ul>
+
+<div id="newcomment">
+    
+    	<p class="note">Commenting is closed for this article.</p>
+    
+</div><!-- newcomment -->
+		</div><!-- comments -->
+		<!-- meta -->
+		<div id="author" class="vcard">
+			<h3>About the author</h3>
+			<p><a href="/authors/drewmclellan" title="More information about Drew McLellan"><img src="http://cloud.24ways.org/authors/drewmclellan160.jpg" width="160" height="160" alt="Drew McLellan" /></a></p>
+			<p><strong class="fn">Drew McLellan</strong> is Director and Senior Developer at <span class="adr"><span class="country-name" title="United Kingdom">UK</span></span>-based web development agency <a href="http://edgeofmyseat.com/" class="org">edgeofmyseat.com</a>, and is the lead developer on <a href="http://grabaperch.com/" class="url">Perch</a>. Formerly Group Lead at the <a class="org" href="http://www.webstandards.org/">Web Standards Project</a>, he likes to chat about <a href="http://microformats.org/">microformats</a> whenever the opportunity arises. When not publishing <a href="/" rel="self">24 ways</a>, Drew keeps a <a class="url" href="http://allinthehead.com/" rel="me">personal site</a> covering web development issues and themes and <a href="http://twitter.com/drewm" class="url">tweets a lot</a>.</p>
+
+			<p class="more"><a href="/authors/drewmclellan">More information</a></p>
+		</div><!-- author -->
+		<div id="related">
+			<h3>Related articles</h3>	
+			<ul>
+			    <li>
+	<h4><a rel="bookmark" href="http://24ways.org/2010/real-animation-using-javascript-css3-and-html5-video">Real Animation Using JavaScript, CSS3, and HTML5 Video</a></h4>
+	<p>15/12/2010 by <a href="/authors/danmall">Dan Mall</a></p>
+</li><li>
+	<h4><a rel="bookmark" href="http://24ways.org/2009/self-testing-pages-with-javascript">Self-Testing Pages with JavaScript</a></h4>
+	<p>12/12/2009 by <a href="/authors/rossbruniges">Ross Bruniges</a></p>
+</li><li>
+	<h4><a rel="bookmark" href="http://24ways.org/2009/front-end-code-reusability-with-css-and-javascript">Front-End Code Reusability with CSS and JavaScript</a></h4>
+	<p>06/12/2009 by <a href="/authors/trevormorris">Trevor Morris</a></p>
+</li><li>
+	<h4><a rel="bookmark" href="http://24ways.org/2009/breaking-out-the-edges-of-the-browser">Breaking Out The Edges of The Browser</a></h4>
+	<p>02/12/2009 by <a href="/authors/remysharp">Remy Sharp</a></p>
+</li><li>
+	<h4><a rel="bookmark" href="http://24ways.org/2008/easier-page-states-for-wireframes">Easier Page States for Wireframes</a></h4>
+	<p>11/12/2008 by <a href="/authors/richardrutter">Richard Rutter</a></p>
+</li><li>
+	<h4><a rel="bookmark" href="http://24ways.org/2008/sitewide-search-on-a-shoestring">Sitewide Search On A Shoe String</a></h4>
+	<p>04/12/2008 by <a href="/authors/chrisheilmann">Christian Heilmann</a></p>
+</li><li>
+	<h4><a rel="bookmark" href="http://24ways.org/2007/keeping-javascript-dependencies-at-bay">Keeping JavaScript Dependencies At Bay</a></h4>
+	<p>18/12/2007 by <a href="/authors/chrisheilmann">Christian Heilmann</a></p>
+</li><li>
+	<h4><a rel="bookmark" href="http://24ways.org/2007/conditional-love">Conditional Love</a></h4>
+	<p>15/12/2007 by <a href="/authors/ethanmarcotte">Ethan Marcotte</a></p>
+</li><li>
+	<h4><a rel="bookmark" href="http://24ways.org/2007/unobtrusively-mapping-microformats-with-jquery">Unobtrusively Mapping Microformats with jQuery</a></h4>
+	<p>12/12/2007 by <a href="/authors/simonwillison">Simon Willison</a></p>
+</li><li>
+	<h4><a rel="bookmark" href="http://24ways.org/2007/javascript-internationalisation">JavaScript Internationalisation</a></h4>
+	<p>08/12/2007 by <a href="/authors/matthewsomerville">Matthew Somerville</a></p>
+</li>
+            </ul>
+			<p><a href="/2009">Article archives&hellip;</a></p>
+		</div><!-- related -->
+<div class="ad">
+<p class="assoc">In association with:</p>
+<p><a href="http://grabaperch.com/"><img src="/img/promos/perch.gif" alt="Perch - a really little cms" /></a></p>
+<p class="assoc">Use code <strong>24WAYS</strong> for a 20% discount until 25th Dec.</p>
+</div>
+
+<div class="annualpromo">
+                <h3><a href="http://www.fivesimplesteps.com/books/the-24-ways-annual-2010">Buy the Annual</a></h3> 
+                <p>This year, in partnership with <a href="http://fivesimplesteps.com/">Five Simple Steps</a>, we&#8217;re printing all of the articles in a beautiful limited edition annual. All proceeds will go to</p>
+                <img src="http://cloud.24ways.org/img/annual/unicef.png" width="180" height="44" alt="Unicef" />
+                <p class="deemphasise">So far, we&#8217;ve raised:</p>
+                <p class="total">&pound;3,728</p>
+                <p><strong>Order your limited edition Annual now for only &pound;8!</strong></p>
+                <a class="button" href="https://fivesimplesteps.com/addtocart?nid=129">Preorder</a>
+                <div class="sponsors">
+                    <p class="deemphasise">Kindly sponsored by:</p>      
+                    <a href="http://www.vps.net/"><img src="http://cloud.24ways.org/img/annual/vpsnet.png" alt="VPS NET" width="85" height="23" /></a>
+                    <a href="http://leftlogic.com/"><img class="last" src="http://cloud.24ways.org/img/annual/leftlogic.png" alt="LeftLogic" width="86" height="23" /></a>
+                </div>
+            </div>
+
+	</div><!-- content -->
+
+    		<ul id="footer">
+			<li><strong>24 ways</strong> is an <a href="http://edgeofmyseat.com/">edgeofmyseat.com</a> production.</li>
+			<li>Edited by <a href="http://allinthehead.com/">Drew McLellan</a> and <a href="http://suda.co.uk/">Brian Suda</a>.</li>
+			<li>Assisted by <a href="http://maban.co.uk/">Anna Debenham</a> and <a href="http://fullcreammilk.co.uk/">Owen Gregory</a>.</li>
+			<li>Design delivered by <a href="http://madebyelephant.com/">Made by Elephant</a>.</li>
+			<li>Possible only with the help of <a href="/authors">our splended authors</a>.</li>
+			<li>Grab our <a href="http://feeds.feedburner.com/24ways">RSS feed</a>.</li> 
+			<li>Follow us on <a href="http://twitter.com/24ways">Twitter</a> or <a href="http://www.facebook.com/24ways">Facebook</a> for daily updates.</li>
+		</ul><!-- footer -->
+		<ul id="unnecessary">
+			<li id="top"></li>
+			<li id="right"></li>
+			<li id="bottom"></li>
+			<li id="left"></li>
+		</ul><!-- unnecessary -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>
+    <script src="http://cloud.24ways.org/js/all.js" type="text/javascript"></script>
+    <script src="http://stats.24ways.org/mint/?js" type="text/javascript"></script>
+</body>
+
+
+
+
+
+</html>
