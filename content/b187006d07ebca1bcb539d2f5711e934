@@ -1,0 +1,679 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+
+
+
+
+  
+  
+  
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+
+
+
+
+
+
+  
+  
+  
+  
+  <meta name="KEYWORDS" content="library, C, C++,
+ Oracle, SQL Server, SQLServer, DB2, Sybase, Informix, InterBase, SQLBase, MySQL, Postgre, ODBC, SQLite
+ client, database, programming, development, software, Win32, Windows, Linux, Unix, Solaris,
+ Microsoft, Borland, Centura, Gupta, IBM">
+
+
+
+
+  
+  
+  
+  
+  <meta name="DESCRIPTION" content="SQLAPI++ is C++ library for accessing SQL databases (Oracle, SQL Server, Sybase, DB2, InterBase, SQLBase, Informix, MySQL, Postgre, ODBC).
+ It is easy to use and very efficient.">
+
+
+
+
+  
+  
+  
+  
+  <title>SQLAPI++ - C++ library for accessing SQL databases</title>
+
+
+
+
+</head><body style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); background-image: url(./images/bg.gif);">
+<!--class="GlbHdr"-->
+<table id="TABLE1" align="right" border="2" bordercolor="#004fcd" cellpadding="0" cellspacing="2" width="600" frame="hsides" height="40">
+
+
+
+
+  <tbody>
+    <tr>
+<!--class="GlbActive"--> <td bordercolor="black" align="center" bgcolor="#00bb00" width="70"> <a style="text-decoration: none;" href="./index.html"> <font color="white" face="sans-serif" size="3"> <b>Home</b></font></a></td>
+      <td bordercolor="black" align="center" bgcolor="#000094" width="70"> <a style="text-decoration: none;" href="./HowTo/index.html"> <font color="white" face="sans-serif" size="3"> <b>How To</b></font></a></td>
+<!--class="GlbDefault"--> <td bordercolor="black" align="center" bgcolor="#000094" width="70"> <a style="text-decoration: none;" href="./OnLineDoc/index.html"> <font color="white" face="sans-serif" size="3"> <b>Online Documentation</b></font></a></td>
+<!--class="GlbDefault"--> <td bordercolor="black" align="center" bgcolor="#000094" width="70"> <a style="text-decoration: none;" href="./Support/index.html"> <font color="white" face="sans-serif" size="3"> <b>Support</b></font></a></td>
+      <td bordercolor="black" align="center" bgcolor="#000094" width="70"> <a style="text-decoration: none;" href="./Download/index.html"> <font color="white" face="sans-serif" size="3"> <b>Download</b></font></a></td>
+      <td bordercolor="black" align="center" bgcolor="#000094" width="70"> <a style="text-decoration: none;" href="./Order/index.html"> <font color="white" face="sans-serif" size="3"> <b>Order</b></font></a></td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+&nbsp;
+<p>&nbsp;</p>
+
+
+
+
+<table width="100%">
+
+
+
+
+  <tbody>
+    <tr>
+      <td valign="top" width="165"><!--class="LeftMenu"-->
+      <table cellspacing="5" width="165" frame="void">
+        <tbody>
+          <tr>
+            <td>
+            <p>
+            <table cellspacing="5" width="165" frame="void">
+              <tbody>
+                <tr>
+                  <td>
+                  <p> </p>
+                  <br>
+                  </td>
+                </tr>
+                <tr>
+                  <td><img src="./images/green.gif" align="middle" width="12" height="12"><a style="text-decoration: none;" href="#Benefits"><font color="white" face="sans-serif" size="2">Benefits</font></a></td>
+                </tr>
+                <tr>
+                  <td><img src="./images/green.gif" align="middle" width="12" height="12"><a style="text-decoration: none;" href="#Examples"><font color="white" face="sans-serif" size="2">Examples</font></a></td>
+                </tr>
+                <tr>
+                  <td><img src="./images/green.gif" align="middle" width="12" height="12"><a style="text-decoration: none;" href="#History"><font color="white" face="sans-serif" size="2">History</font></a>
+                  </td>
+                </tr>
+                <tr>
+                  <td><img src="./images/green.gif" align="middle" width="12" height="12"><a style="text-decoration: none;" href="references.html"><font color="white" face="sans-serif" size="2">SQLAPI++
+References</font></a> </td>
+                </tr>
+                <tr>
+                  <td><font color="white" face="sans-serif" size="2">&nbsp;</font></td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+            </p>
+            <p><font color="white"><strong>Quick download:</strong> </font></p>
+            <p><a style="text-decoration: none;" href="http://www.sqlapi.com/Download/sqlapi_trial.exe"> <font color="white" face="sans-serif" size="2"><u>SQLAPI++ Win32</u> </font></a>
+            </p>
+            <p><a style="text-decoration: none;" href="http://www.sqlapi.com/Download/sqlapi_trial.tar.gz"> <font color="white" face="sans-serif" size="2"><u>SQLAPI++ Linux</u> </font></a>
+            </p>
+            <p><a style="text-decoration: none;" href="http://www.sqlapi.com/Download/sqlapi_trial-3.7.18.tar.Z"> <font color="white" face="sans-serif" size="2"><u>SQLAPI++ Sun SPARC Solaris</u>
+            </font></a> </p>
+            </td>
+          </tr>
+          <tr>
+            <td> <br>
+            </td>
+          </tr>
+          <tr>
+            <td> <br>
+            </td>
+          </tr>
+          <tr>
+            <td> <br>
+            </td>
+          </tr>
+          <tr>
+            <td> <br>
+            </td>
+          </tr>
+          <tr>
+            <td> <br>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </td>
+<!--empty column--> <td width="20">
+      <p> </p>
+      <br>
+      </td>
+<!--Content--> <td align="left" valign="top">
+      <center>
+      <h1> SQLAPI++ Library</h1>
+      </center>
+      <p>SQLAPI++ is a C++ library for accessing multiple SQL databases
+(Oracle, SQL Server, DB2, Sybase, Informix, InterBase, SQLBase, MySQL,
+PostgreSQL and ODBC, SQLite). It uses native APIs of target DBMS so
+applications developed with SQLAPI++ library run swiftly and
+efficiently. The product also provides a low-level interface that
+allows developers to access database-specific features. By
+encapsulating a vendor's API, SQLAPI++ library acts as middleware and
+delivers database portability. See details on supporting SQL database
+servers on different platforms:</p>
+      <p>
+      <table border="1" cellpadding="1" cellspacing="1">
+        <tbody>
+          <tr bgcolor="blue">
+            <td><strong><font style="background-color: rgb(0, 0, 255);" color="white">Server</font></strong></td>
+            <td><strong><font style="background-color: rgb(0, 0, 255);" color="white">Win32</font></strong></td>
+            <td><font style="background-color: rgb(0, 0, 255);" color="white"><strong>Linux/Unix</strong></font></td>
+          </tr>
+          <tr>
+            <td>Oracle Database Server </td>
+            <td> Supported (OCI)</td>
+            <td>Supported (OCI)</td>
+          </tr>
+          <tr>
+            <td>Microsoft SQL Server</td>
+            <td>Supported (DB-Library, OLE DB)</td>
+            <td>FreeTDS ODBC driver should be used<br>
+            </td>
+          </tr>
+          <tr>
+            <td>Sybase</td>
+            <td>Supported (Open Client, ASE &amp; ASA)</td>
+            <td>Supported (Open Client, ASE &amp; ASA)</td>
+          </tr>
+          <tr>
+            <td>DB2</td>
+            <td>Supported (DB2 CLI)</td>
+            <td>Supported (DB2 CLI)</td>
+          </tr>
+          <tr>
+            <td>Informix</td>
+            <td>Supported (Informix CLI)</td>
+            <td>Supported (Informix CLI)</td>
+          </tr>
+          <tr>
+            <td>InterBase/Firebird</td>
+            <td>Supported</td>
+            <td>Supported</td>
+          </tr>
+          <tr>
+            <td>Centura (formerly Gupta) SQLBase</td>
+            <td>Supported (CAPI)</td>
+            <td>Supported (CAPI)</td>
+          </tr>
+          <tr>
+            <td>MySQL</td>
+            <td>Supported (MySQL C API)&nbsp;</td>
+            <td>Supported (MySQL C API)</td>
+          </tr>
+          <tr>
+            <td>PostgreSQL</td>
+            <td>Supported (libpq)</td>
+            <td>Supported (libpq)</td>
+          </tr>
+          <tr>
+            <td>ODBC</td>
+            <td>Supported</td>
+            <td>Supported (iODBC, see <a href="http://www.iodbc.org">www.iodbc.org</a>)</td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">SQLite<br>
+            </td>
+            <td style="vertical-align: top;">Supported<br>
+            </td>
+            <td style="vertical-align: top;">Supported</td>
+          </tr>
+        </tbody>
+      </table>
+      </p>
+      <p>Currently SQLAPI++ library supports the following C/C++
+compilers:</p>
+      <ul>
+        <li> Microsoft Visual C++ </li>
+        <li>Borland C++ Builder </li>
+        <li>GNU project C and C++ compiler</li>
+      </ul>
+      <h2><a name="Benefits"></a>Why use SQLAPI++?</h2>
+      <ul>
+        <li>SQLAPI++ directly calls native API's of target DBMSs
+(unlike ADO which uses OLEDB and/or ODBC intermediate layer). That's
+why SQLAPI++ is the fastest way to manage you data. </li>
+        <li>No need (vs ADO) to install and configure OLEDB and/or ODBC
+drivers when developing and distributing your applications. </li>
+        <li>Low-level interface that allows developers to access
+database-specific features. </li>
+        <li>SQLAPI++ ships with all the sources. </li>
+        <li>Free lifetime support, bugs fixing and new version updates.</li>
+      </ul>
+      <h2><a name="Examples"></a> Examples</h2>
+      <h3>Steps</h3>
+      <p><a href="./Examples/step1.cpp">Step 1</a>. Connecting to
+database (and error handling)<br>
+      <a href="./Examples/step2.cpp">Step 2</a>. Executing a simple SQL
+command<br>
+      <a href="./Examples/step3.cpp">Step 3</a>. Binding input
+parameters<br>
+      <a href="./Examples/step4.cpp">Step 4.</a> Executing a select
+query (and fetching result set)<br>
+      <a href="./Examples/step5.cpp">Step 5.</a> Binding LongBinary,
+LongChar, BLob and CLob data<br>
+      <a href="./Examples/step6.cpp">Step 6.</a> Fetching LongBinary,
+LongChar, BLob and CLob data<br>
+      <a href="./Examples/step7.cpp">Step 7.</a> Multithreading support
+and canceling queries<br>
+      </p>
+      <h3>Advanced Examples</h3>
+      <p><a href="./Examples/refcursors.cpp">Using Oracle REF CURSORs</a><br>
+      <a href="./Examples/nestedcursors.cpp">Using Oracle nested cursors</a><br>
+      <a href="./Examples/bulk_fetch.cpp">Fetching records in bulk</a><br>
+      </p>
+      <h2><a name="History"></a>History</h2>
+<table style="width: 100%;" border="0" cellpadding="1" cellspacing="1" width="100%">
+<tbody>
+<tr bgcolor="blue">
+<td><font color="#ffffff"><strong>31 August 2010</strong></font></td>
+</tr>
+<tr>
+<td>
+<p>Version 3.7.33 of SQLAPI++ library released.</p>
+<p>New features:</p>
+<ul>
+<li>SQLServer: OLEDB, fixed parameter date type name for ICommandWithParameters::SetParameterInfo (thanks Michael Soliman).</li>
+<li>General: SACommand::Param(int) method performance improved.</li>
+<li>MySQL: Fixed binding of the binary data (thanks Martin Herb).</li>
+<li>MySQL: Fixed the error processing when mysql_fetch_row returns NULL (thanks Michael Graf).</li>
+<li>Sybase: Added 15.5 context support.</li>
+<li>Sybase: Added SA_UNICODE_WITH_UTF8 build option support (EXPERIMENTAL).</li>
+<li>MySQL: Added scrollable cursor support (EXPERIMENTAL).</li>
+<li>General: Added SA_32BIT build option (Linux/Unix g++ build files).</li>
+<li>ODBC: 2-byte buffer used with SQLGetData (getting the long field size, thanks David Stewart).</li>
+<li>General: SA_STRING_EXT build option added (string buffer allocation optimization, thanks iontrading.com).</li>
+<li>Sybase: Fix for 64-bit DLL names under Windows (thanks iontrading.com).</li>
+<li>ODBC: Set SQL_ATTR_ODBC_CURSORS later to avoid crash when using iODBC (thanks iontrading.com).</li>
+<li>General: Use C runtime routines at SAString::CompareNoCase (thanks iontrading.com).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+
+<table style="width: 100%;" border="0" cellpadding="1" cellspacing="1" width="100%">
+<tbody>
+<tr bgcolor="blue">
+<td><font color="#ffffff"><strong>2 July 2010</strong></font></td>
+</tr>
+<tr>
+<td>
+<p>Version 3.7.32 of SQLAPI++ library released.</p>
+<p>New features:</p>
+<ul>
+<li>SQLite: Now (if "SQLiteDateValueType" = "DOUBLE") SQLAPI++
+interprets a datetime value as a Julian Day JD double value (before we
+used SADateTime interpretation).</li>
+<li>SQLite: Added "SQLiteDateValueType" option, SQLAPI++ uses
+"YYYY-MM-DD HH:MM:SS.SSS" formatted strings for date/time parameters by
+default.</li>
+<li>SQLite: Changed "SQLiteDateTypes" option default value (now it's "DATE,DATETIME,TIME,TIMESTAMP").</li>
+<li>MySQL: Fixed bug with the binding of zero-length blob- and byte- fields (thanks Taneli Otala).</li>
+<li>Sybase: Connection options "SYBINTL.LIBS", "SYBCOMN.LIBS", "SYBTCL.LIBS", "SYBCT.LIBS", "SYBCS.LIBS" added.</li>
+<li>General: Fixed problem with MacOS X and asctime_r function (thanks Michael Dickey).</li>
+<li>General: More information provided if DBMS API loading fails.</li>
+<li>General: 8-byte data length is allowed for SA_dtULong type.</li>
+<li>SQLite: SA_STATIC_SQLITE build option added.</li>
+<li>SQLite: The server/client version number is returned in common format now (hi- and low-word parts).</li>
+<li>Oracle: SQLT_FLT binding type is used instead of SQLT_BDOUBLE even when it's supported by OCI.</li>
+<li>General: SA_MANIFEST_EMB build option added.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+
+<table style="width: 100%;" border="0" cellpadding="1" cellspacing="1" width="100%">
+<tbody>
+<tr bgcolor="blue">
+<td><font color="#ffffff"><strong>24 March 2010</strong></font></td>
+</tr>
+<tr>
+<td>
+<p>Version 3.7.31 of SQLAPI++ library released.</p>
+<p>New features:</p>
+<ul>
+<li>ODBC: Numeric data truncation bug fixed (thanks Gebert, Alfred).</li>
+<li>SQLServer: OLEDB and ODBC, fixed bug with long/LOB data binding (thanks Thomas Häußermann).</li>
+<li>SQLServer: OLEDB, added DBPROP_COMMITPRESERVE command parameter.</li>
+<li>ODBC: fixed bug with long/LOB data binding.</li>
+<li>Sybase: Bind ' ' character for empty procedure parameter strings (thanks Vlad Imshenetskiy).</li>
+<li>General: Borland C++ 5.2 fixes.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+
+<table style="width: 100%;" border="0" cellpadding="1" cellspacing="1" width="100%">
+<tbody>
+<tr bgcolor="blue">
+<td><font color="#ffffff"><strong>10 February 2010</strong></font></td>
+</tr>
+<tr>
+<td>
+<p>Version 3.7.30 of SQLAPI++ library released.</p>
+<p>New features:</p>
+<ul>
+<li>General: Added new methods - SAConnection::Reset() and SACommand::Reset().</li>
+<li>PostgreSQL: Fixed memory leak when "UseCursor" option is set (thanks Vlad Romascanu).</li>
+<li>Oracle: Fixed problem with OCI version 8.1.x and 9.0.x.</li>
+<li>SQLServer: Fixed bug with unsigned 32-bit integer parameters (thanks Kyle Stock).</li>
+<li>SQLServer: Fixed problem with [n]varchar|varbinary(max) output parameters (thanks Alfred Gebert).</li>
+<li>SQLServer: Fixed bug with SAParam::setAsBool method (thanks Jacob Pedersen).</li>
+<li>General: Performance improved (Christian Zink).</li>
+<li>Sybase: Fixed bug in error handling (thanks Volodymyr Drobot).</li>
+<li>MySQL: Fixed bug with UTF-8 client charcter set and BLob binding (Jason Tai).</li>
+<li>SQLServer: Fixed SA_tdBool data binding (thanks Jacob Pedersen).</li>
+<li>DB2: Fixed problem with prefetching on 64-bit platforms (thanks Cal Heldenbrand).</li>
+<li>Oracle: Added experimental scrollable cursor support (thanks combit.net and Alexander Horak).</li>
+<li>SQLServer: Added native (ODBC) API support.</li>
+<li>PostgreSQL: Connection option "UseDLLonWin32" replaced by "LIBPQ.LIBS" (can define several library names).</li>
+<li>ODBC: Connection option "UseManagerOnUNIX" replaced by "ODBC.LIBS" (also can define several library names).</li>
+<li>MySQL: Connection option "MYSQL.LIBS" added (can define several library names).</li>
+<li>Oracle: Connection option "OCI8.LIBS" added (can define several library names).</li>
+<li>DB2: Connection option "DB2CLI.LIBS" added (can define several library names).</li>
+<li>Informix: Connection option "INFCLI.LIBS" added (can define several library names).</li>
+<li>SQLBase: Connection option "SQLBASE.LIBS" added (can define several library names).</li>
+<li>SQLite: Connection option "SQLITE.LIBS" added (can define several library names).</li>
+<li>InterBase: Connection option "ClientLibraryName" replaced by "IBASE.LIBS" (also can define several library names).</li>
+<li>Sybase: Bind ' ' character for empty procedure parameter strings (thanks Vlad Imshenetskiy).</li>
+<li>Sybase: SA_PARAM_USE_DEFAULT support added.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+      <table style="width: 100%;" border="0" cellpadding="1" cellspacing="1" width="100%">
+        <tbody>
+          <tr bgcolor="blue">
+            <td><font color="#ffffff"><strong>14 October 2009</strong></font></td>
+          </tr>
+          <tr>
+            <td>
+            <p>Version 3.7.29 of SQLAPI++ library released.</p>
+            <p>New features:</p>
+            <ul>
+              <li>General: Added Borland compilation option SA_MINDEP.
+Now dynamic RTL is used by default with bcc compiler.</li>
+              <li>DB2: Fixed bug with Unicode DB2 data type(vargraphic)
+interpretation.</li>
+              <li>General: Fixed Borland C++ SQLServer OLEDB
+compilation problem (sa_max() using instead of max()).</li>
+              <li>SQLite: Fixed bug at the text data conversion with
+Unicode configuration (thanks Holger Fischer).</li>
+              <li>SQLite: Added new SAConection option
+"SQLiteDateTypes" (thanks Jonathan Gonzalez Encarnacion).</li>
+              <li>SQLite: Fixed bug with SAConnection::setAutoCommit
+functionality (thanks Jonathan Gonzalez Encarnacion).</li>
+              <li>Oracle: Fixed temporary LOBs memory leak (thansk Marc
+Oliver R. Castaneda).</li>
+              <li>Sybase: Fixed 64-bit related INT type size bug
+(thanks Jon Linkins).</li>
+              <li>SQLite: Added declared type processing if there are
+no any rows at the result set (thanks Jonathan Gonzalez Encarnacion).</li>
+              <li>SQLServer: Fixed bug with "Execute_riid" option is
+set to "IID_IStream" (thanks Patrik Luscan).</li>
+              <li>MySQL: Fixed datetime and boolean type processing if
+statement API is used (thanks Christophe Benoit).</li>
+              <li>MySQL: Fixed bug with non-SELECt queries if statement
+API is used (thanks Christophe Benoit).</li>
+              <li>General: Fixed bug with SANumeric from string
+operator (thanks Christophe Benoit).</li>
+              <li>Firebird: Fixed 64-bit version (thanks evenreal.com).</li>
+              <li>Oracle: Fixed CLOB output parameter reading with
+ReadLob2 (thanks Gebert, Alfred).</li>
+              <li>Oracle: Fixed field and output parameter buffer size
+for multi-byte client character sets (thanks Gebert, Alfred).</li>
+            </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table style="width: 100%;" border="0" cellpadding="1" cellspacing="1" width="100%">
+        <tbody>
+          <tr bgcolor="blue">
+            <td><font color="#ffffff"><strong>27 May 2009</strong></font></td>
+          </tr>
+          <tr>
+            <td>
+            <p>Version 3.7.28 of SQLAPI++ library released.</p>
+            <p>New features:</p>
+            <ul>
+              <li>SQLServer: Added SAConnection OLEDB options
+"CompactEdition.3.0" and "CompactEdition.3.5" (thanks Johannes Maly).</li>
+              <li>SQLServer: Fixed processing of 'real' and 'tinyint'
+field types for SQLCE (thanks Jacob Pedersen).</li>
+              <li>General: Linux/Unix, added SQLAPI_SOLARIS compilation
+option and fixed pthread compilation problem (thanks Bogdan Pytlik).</li>
+              <li>SQLServer: OLEDB, fixed bug with empty second result
+set at the same scrollable SACommand (thanks Bjoern Eggstein).</li>
+              <li>General: Linux/Unix, added SQLAPI_SCOOSR5 compilation
+option (implemented for SCO OpenServer 5.0.7 by Andrew Thornton).</li>
+              <li>General: Linux/Unix, removed stabs+ debug information
+format specification (thanks Andrew Thornton).</li>
+              <li>MySQL: Fixed bug when it was impossible to process
+several result sets those a procedure returns (thanks Klass, Markus).</li>
+              <li>Oracle: Added a code that uses new OCILogRead2 when
+available (thanks Jeff Huttel).</li>
+              <li>MySQL: Fixed problem with prepared statements and
+different MYSQL_BIND versions (thanks Alexander Petrossian).</li>
+              <li>General: Several performance improvements (thanks
+Mike Moening).</li>
+              <li>MySQL: Fixed bug with SA_UNICODE_WITH_UTF8 and text
+fields when statement API used (thanks Jason at goffconcepts.com).</li>
+              <li>DB2: Fixed bug with text fields (UNICODE version).</li>
+              <li>General: For 'SACommand::Field(const SAString
+&amp;sField)' added the second cycle for the field searching by short
+name (thanks Felix Nawothnig).</li>
+              <li>Sybase: Fixed long text field reading (SA_UNICODE).</li>
+              <li>Sybase: Added ability to define procedure parameters
+when the procedure name includes its number (ASE, like 'procedure1;1',
+thanks Vlad Imshenetskiy).</li>
+              <li>Sybase: Added method to detect server type (ASA or
+ASE) to avoid any extra internal exception processing (thanks Vlad
+Imshenetskiy).</li>
+              <li>SQLServer: Added 2008 OLEDB client support.</li>
+              <li>SQLServer: Added 2008 new data type support (thanks
+Justin Matthews).</li>
+              <li>SQLServer: Added fixes those allows to use
+"ICommandPrepare" = "skip" with procedures (without preparing there was
+string data truncation, thanks Justin Matthews).</li>
+              <li>MySQL: Added using 'KILL QUERY' command instead of
+mysql_kill with MySQL version &gt;= 5.0 (thanks Andrew Thornton).</li>
+              <li>General: Documentation improved (thanks Justin
+Matthews and Kaarel Odraks).</li>
+              <li>Oracle: Fixed double values binding - using
+SQLT_BDOUBLE rather then SQLT_FLT (thanks Alan Hardin).</li>
+            </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table style="width: 100%;" border="0" cellpadding="1" cellspacing="1" width="100%">
+        <tbody>
+          <tr bgcolor="blue">
+            <td><font color="#ffffff"><strong>22 January 2009</strong></font></td>
+          </tr>
+          <tr>
+            <td>
+            <p>Version 3.7.27 of SQLAPI++ library released.</p>
+            <p>New features:</p>
+            <ul>
+              <li>General: Now 'SANumeric::operator double() const'
+again uses strtod() variant but with '.' replaced by
+localeconv()-&gt;decimal_point (thanks Alasdair Richardson).</li>
+              <li>General: 'SAGlobals::UnloadAPI() = true' behavior
+fixed (thanks Christophe Benoit).</li>
+              <li>MySQL: Fixed bug at ImyCursor::MySQLEscapeString(),
+if If a string is passed in that only contains escapable chars (thanks
+Oliver Watson).</li>
+              <li>SQLServer: Fixed bug with scrollable statement
+reusing that results in wrong result set processing (thanks Alexander
+Horak).<br>
+              </li>
+            </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table style="width: 100%;" border="0" cellpadding="1" cellspacing="1" width="100%">
+        <tbody>
+          <tr bgcolor="blue">
+            <td><font color="#ffffff"><strong>3 December 2008</strong></font></td>
+          </tr>
+          <tr>
+            <td>
+            <p>Version 3.7.26 of SQLAPI++ library released.</p>
+            <p>New features:</p>
+            <ul>
+              <li>ODBC: Now SA_dtNumeric SQLAPI++ type is used by
+default for SQL_NUMERIC, SQL_DECIMAL and SQL_BIGINT (before SA_dtDouble
+was there).. </li>
+              <li>ODBC: Added new option SAConnection option
+ODBCUseNumeric. </li>
+              <li>PostgreSQL: Added support for SA_UNICODE_WITH_UTF8
+build option (experimental). </li>
+              <li>Sybase: sybAPI::DefaultLongMaxLength method added to
+control max 'long' field size (when the using of ct_get_data is
+impossible).<br>
+              </li>
+              <li>Sybase: SAGlobals::SetSybaseMessageCallback method
+renamed/moved to sybAPI::SetMessageCallback (still EXPERIMENTAL). </li>
+              <li>InterBase: Added ability to use new Firebird
+fb_interpret call instead of unsafe isc_interprete (thanks Diane
+Downie). </li>
+              <li>General: SQLAPI++ parameters and fields buffers
+allocation optimized (thanks Jeff Huttel). </li>
+              <li>Sybase: CS_LOCALE connection option added. </li>
+              <li>SQLServer: Fixed bug with numeric parameter presicion
+(truncation, thanks Jean-Claude Chauve). </li>
+              <li>PostgreSQL: Fixed bug with SAParam::setAsULong
+(thanks Vlad Romascanu). </li>
+              <li>Sybase: Added 'date' type support for the stored
+procedure parameters (thanks Vlad Imshenetskiy). </li>
+              <li>Sybase: Fixed problem with the procedure parameters
+describing when procedure is located in another database (Georgiy
+Pakhutin). </li>
+              <li>ODBC: Added new connection options -
+SQL_DRIVER_PROMPT,SQL_DRIVER_COMPLETE,SQL_DRIVER_COMPLETE_REQUIRED,DSN.
+              </li>
+              <li>SQLServer: Fixed bug with procedure preparation. </li>
+            </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table style="width: 100%;" border="0" cellpadding="1" cellspacing="1" width="100%">
+        <tbody>
+          <tr bgcolor="blue">
+            <td><font color="#ffffff"><strong>12 September 2008</strong></font></td>
+          </tr>
+          <tr>
+            <td>
+            <p>Version 3.7.25 of SQLAPI++ library released.</p>
+            <p>New features:</p>
+            <ul>
+              <li>General: saConnectionHandler_t callback added at
+SAConnection::Connect method. </li>
+              <li>SQLServer: SQLCE, "CreateDatabase" option added. </li>
+              <li>SQLServer: SQLCE, use SA_dtString program type for
+uniqueidentifier fields. </li>
+              <li>Oracle: Fixed memory leak when SYS_REFCURSOR
+parameters returns a cursor field (thanks mera.ru) </li>
+              <li>General: Added compilation option
+SA_UNICODE_WITH_UTF8. Used with MySQL to turn on utf-8 client character
+set for SA_UNICODE configuration. </li>
+              <li>General: SA_UNICODE configuration. Added SAString
+methods GetUTF8Chars, GetUTF8CharsLength, SetUTF8Chars. </li>
+              <li>Oracle: Fixed option processing
+OCI_ATTR_CHARSET_FORM=SQLCS_NCHAR for NCLOB binding (thanks Andreas
+Wenzel). </li>
+              <li>Oracle: Fixed binding(SA_UNICODE) CLOB procedure
+parameters (thanks Marcel Rassinger). </li>
+              <li>General: Fixed 'SANumeric::operator double() const'
+bug with locale settings those use a special character as a decimal
+delimiter instead of '.'. </li>
+              <li>SQLite: Added new API functions - sqlite3_threadsafe
+and sqlite3_last_insert_rowid. </li>
+              <li>SQLite: Fixed wrong API initialization (thanks Peter
+Klotz). </li>
+              <li>SQLite: Added "BusyTimeout" connection option. </li>
+              <li>General: Added version info into sqlapi.dll (thanks
+Frank Hilliger). </li>
+              <li>Sybase: SACommand::Cancel should work now (thanks
+Georgiy Pakhutin). </li>
+              <li>SQLServer: OLEDB, SACommand::Cancel works with
+multiple results (required SQLNCLI, thanks Georgiy Pakhutin). </li>
+              <li>SQLServer: OLEDB, the default value of
+"ICommadPrepare" option was changed to "skip". </li>
+              <li>Sybase: "SybaseResultType" and "SybaseResultCount"
+SACommand options added. </li>
+              <li>Sybase: SAGlobals::SetSybaseMessageCallback method
+added (EXPERIMENTAL, allows to process Sybase messages manually).</li>
+              <li>DB2: Added mapping
+DECFLOAT&lt;-&gt;SA_dtString(thanks Dmitry Chaikovsky).</li>
+            </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table style="width: 100%;" border="0" cellpadding="1" cellspacing="1" width="100%">
+        <tbody>
+          <tr bgcolor="blue">
+            <td><font color="#ffffff"><strong>26 February 2008</strong></font></td>
+          </tr>
+          <tr>
+            <td>
+            <p>Version 3.7.24 of SQLAPI++ library released.</p>
+            <p>New features:</p>
+            <ul>
+              <li>MySQL: Connection options MYSQL_OPT_READ_TIMEOUT,
+MYSQL_OPT_WRITE_TIMEOUT and MYSQL_OPT_CONNECT_TIMEOUT added.</li>
+              <li>MySQL: Version 5.1 supported now.</li>
+              <li>Oracle: CLOB/BLOB truncation bug fixed.</li>
+              <li>Oracle: REFCURSOR memory leak problem fixed.</li>
+              <li>SQLite: Initial support for SQLite added.</li>
+              <li>ODBC: Added the special code for situations when the
+ODBC driver returns 0 bytes instead of SQL_NO_DATA (LongChar reading,
+thanks Frank Hilliger).</li>
+              <li>SQLServer: SQLOLEDB layer modified for Compact
+Edition 3.5.</li>
+              <li>SQLServer: Added Compact Edition specific options.
+Now CE layer is available at UNICODE version only.</li>
+              <li>DB2: Fixed the problem with column names (UNICODE
+version, thanks Adrian Studer).</li>
+              <li>General: Fixed the problem with the SANumeric
+rounding (thanks Mike Moening).</li>
+              <li>MySQL: Added SAInterval parameter processing (thanks
+Frank Hilliger).</li>
+            </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table><p>See <a href="history.html">Full History...</a></p>
+      <hr>
+      <p align="center"><font size="2">Last modified: 31 August 2010<br>
+      <a href="mailto:webmaster@sqlapi.com">webmaster@sqlapi.com</a></font></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+</body></html>
