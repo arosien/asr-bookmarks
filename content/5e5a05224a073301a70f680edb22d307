@@ -1,0 +1,783 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+
+<head>
+
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+	<title>MySQL++</title>
+
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud?source=profiles"> 
+	<link rel="openid2.local_id" href="http://www.google.com/profiles/tangentsoft"> 
+
+	<link href="/root.css" rel="Stylesheet" type="text/css">
+
+</head>
+
+<body>
+	<div id="body">
+ 
+		<!--  Page Body  -->
+
+
+
+
+
+
+
+
+
+<h1>MySQL++</h1>
+
+
+
+<IMG SRC="bitmaps/logo-small.jpg" WIDTH="300" HEIGHT="142" ALT="MySQL++ rocks" align=right hspace=10 vspace=10 class=bordered>
+
+<p>MySQL++ is a C++ wrapper for <a
+href="http://mysql.com/">MySQL</a>&rsquo;s C API. It is built around
+the same principles as the Standard C++ Library, to make dealing with
+the database as easy as dealing with STL containers. In addition,
+MySQL++ provides facilities that let you avoid the most repetitive
+sorts of SQL within your own code, providing native C++ interfaces
+for these common tasks.</p>
+
+<p>If you have any questions about this project, <b>do not email
+us about it</b> unless the question is inherently personal. The
+<a href="doc/">documentation</a> answers most questions, and
+the 	<a href="http://lists.mysql.com/plusplus/">mail list</a> archives are a treasure trove of
+information:</p>
+
+<div style="margin-left: 40pt">
+	<form action="http://www.google.com/cse" id="cse-search-box">
+		<input type="hidden" name="cx" value="002612788972101143184:91t8hriimjc" />
+		<input type="text" name="q" size="25" />
+		<input type="submit" name="sa" value="Search the List" />
+	</form>
+	<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&lang=en"></script>
+</div>
+
+<p>If you can&rsquo;t find an answer in the documentation or the
+list archives, 	<a href="http://lists.mysql.com/plusplus/">ask on the list</a>. Everyone active in
+MySQL++&rsquo;s development monitors that mailing list, and the
+library&rsquo;s primary maintainer responds to almost every question
+posted there. By posting to the mailing list, your question and any
+answers are archived for future developers to find, and you reach a
+wider audience than is possible with personal email.</p>
+
+
+
+
+
+<!--
+<h3>Test Versions</h3>
+
+<p>The following are for people who want to play with what will become
+the next version of MySQL++. You should not use it in production yet,
+but please test it, as a stable release will be following soon!</p>
+
+<p>@ FILELINK("test","mysql++-3.0.0-rc5.tar.gz")@ &mdash; Final (?)
+release candiate for v3.0.0.</p>
+
+<p>@ FILELINK("test","mysql++-3.0.0-rc5.src.rpm")@ &mdash; Source
+RPM version of previous item.</p>
+-->
+
+
+<a name="stable">
+<h3>Latest Stable Version</h3>
+
+<p>Before upgrading an existing version of MySQL++, please scan
+through the <a href="ChangeLog">change log</a> first. If you&rsquo;re
+coming from a much older version, better read through the &ldquo;<a
+href="doc/html/userman/breakages.html">Incompatible Library
+Changes</a>&rdquo; chapter in the <a href="doc/html/userman/">user
+manual</a> instead.</p>
+
+<a name="source">
+<h4>Source Code</h4>
+
+<p><a href="releases/mysql++-3.1.0.tar.gz">mysql++-3.1.0.tar.gz</a>&nbsp;(1.9&nbsp;MB,&nbsp;2010.06.03) &mdash; Library
+source code. If you aren&rsquo;t sure which file to download, download this.</p>
+
+<p><a href="releases/mysql++-3.1.0-1.src.rpm">mysql++-3.1.0-1.src.rpm</a>&nbsp;(1.9&nbsp;MB,&nbsp;2010.06.03) &mdash; Source
+RPM, for those that need to build their own binary RPMs. To do this,
+run this command as root:</p>
+
+<p class=inset><tt># rpmbuild --rebuild
+/wherever/it/is/mysql++-3.1.0-1.src.rpm</tt></p>
+
+<p>The resulting mysql++, mysql++-devel and mysql++-manuals RPMs
+will be in a distribution-dependent directory, typically somewhere
+under /usr/src.</p>
+
+
+<h4>Linux Binary RPMs</h4>
+
+<p>These RPMs are fairly closely tied to the system they were built on.
+This means that if you:</p>
+
+<ul><ol type="a">
+	<li>use a different distribution of Linux, or
+	<li>use a different compiler than the one that came with the OS, or
+	<li>use a different version of MySQL, or
+	<li>need thread support
+</ol></ul>
+
+<p>...then you must build from <a href="#source">source</a>, or else you
+will have <a href="#segfaults">problems</a>.</p>
+
+<h5>CentOS 3</h5>
+
+<p>These are built on CentOS 3.9 with GCC 3.2.3, against the <a
+href="http://dev.mysql.com/downloads/mysql/4.1.html">official MySQL 4.1
+RPMs</a>.</p>
+
+<p class=inset>
+	<a href="releases/mysql++-3.1.0-1.el3.i386.rpm">mysql++-3.1.0-1.el3.i386.rpm</a>&nbsp;(188&nbsp;KB,&nbsp;2010.06.03)
+	&mdash; the library itself (libmysqlpp.so*)<br>
+	<a href="releases/mysql++-devel-3.1.0-1.el3.i386.rpm">mysql++-devel-3.1.0-1.el3.i386.rpm</a>&nbsp;(190&nbsp;KB,&nbsp;2010.06.03)
+	&mdash; corresponding development and example files
+</p>
+
+<h5>CentOS 4</h5>
+
+<p>These are built on CentOS 4.8 with GCC 3.4.6, against the <a
+href="http://dev.mysql.com/downloads/mysql/4.1.html">official MySQL 4.1
+RPMs</a>.</p>
+
+<p class=inset>
+	<a href="releases/mysql++-3.1.0-1.el4.i386.rpm">mysql++-3.1.0-1.el4.i386.rpm</a>&nbsp;(184&nbsp;KB,&nbsp;2010.06.03)
+	&mdash; the library itself (libmysqlpp.so*)<br>
+	<a href="releases/mysql++-devel-3.1.0-1.el4.i386.rpm">mysql++-devel-3.1.0-1.el4.i386.rpm</a>&nbsp;(190&nbsp;KB,&nbsp;2010.06.03)
+	&mdash; corresponding development and example files
+</p>
+
+<h5>CentOS 5</h5>
+
+<p>These are built on CentOS 5.5 with GCC 4.1.2, against the <a
+href="http://dev.mysql.com/downloads/mysql/5.0.html">official MySQL 5.1
+RPMs</a>.</p>
+
+<p class=inset>
+	<a href="releases/mysql++-3.1.0-1.el5.i386.rpm">mysql++-3.1.0-1.el5.i386.rpm</a>&nbsp;(180&nbsp;KB,&nbsp;2010.06.03)
+	&mdash; the library itself (libmysqlpp.so*)<br>
+	<a href="releases/mysql++-devel-3.1.0-1.el5.i386.rpm">mysql++-devel-3.1.0-1.el5.i386.rpm</a>&nbsp;(192&nbsp;KB,&nbsp;2010.06.03)
+	&mdash; corresponding development and example files
+</p>
+
+
+<a name="oldver">
+<h3>Old Versions</h3>
+
+<p><a href="releases/mysql++-3.0.9.tar.gz">mysql++-3.0.9.tar.gz</a>&nbsp;(2.6&nbsp;MB,&nbsp;2009.02.04) &mdash; Last version in
+the 3.0.<i>x</i> line. Use this only if you have existing code that you
+don&rsquo;t want to upgrade to the current version.</p>
+
+<p><a href="releases/mysql++-2.3.2.tar.gz">mysql++-2.3.2.tar.gz</a>&nbsp;(1.6&nbsp;MB,&nbsp;2007.07.11) &mdash; Last version in
+the 2.<i>x</i> line. Use this only if you have existing code that you
+don&rsquo;t want to upgrade to the current version.</p>
+
+<p><a href="releases/mysql++-1.7.40.tar.gz">mysql++-1.7.40.tar.gz</a>&nbsp;(1.7&nbsp;MB,&nbsp;2005.05.26) &mdash; Last version
+in the 1.<i>x</i> line. Use this only if you have existing code that you
+don&rsquo;t want to upgrade to the current version.</p>
+
+<p><a href="releases/mysql++-1.7.9.tar.gz">mysql++-1.7.9.tar.gz</a>&nbsp;(731&nbsp;KB,&nbsp;2001.05.01) &mdash; Last version
+Sinisa Milivojevic maintained. This version is significant because it
+was the only &ldquo;official&rdquo; version for over three years.  As a
+result, there are many patches floating around on the Internet that
+apply to this version of the library. Also, it is the last version of
+the library known to work on GCC 2.95.x without changes.</p>
+
+<p><a href="releases/mysql++-1.7.1-win32-vc++.zip">mysql++-1.7.1-win32-vc++.zip</a>&nbsp;(786&nbsp;KB,&nbsp;2000.05.17) &mdash; Ancient
+version for Visual C++ 6.0. Use this only if you absolutely, positively
+cannot upgrade to Visual C++ 2003 or newer. It is 	<a href="http://lists.mysql.com/plusplus/1069">known
+to have bugs</a>, and there is almost no chance they will ever be fixed.
+The path forward is to switch to a newer compiler; see below for
+information on obtaining a free version of Visual C++ 2008!</p>
+
+<p><a href="releases/">All files</a> &mdash; This is simply a link to
+the raw directory view. There are old versions of the source code going
+back to 0.64, old binaries, etc.</p>
+
+
+<a name="docs">
+<h3>Documentation</h3>
+
+<p>The user and reference manuals can be downloaded either in RPM form
+(<a href="releases/mysql++-manuals-3.1.0-1.i386.rpm">mysql++-manuals-3.1.0-1.i386.rpm</a>&nbsp;(1.2&nbsp;MB,&nbsp;2010.06.03)), or as
+part of the source code tarball above.</p>
+
+<p>The documentation is also <a href="./doc/">available
+online</a>.</p>
+
+
+<a name="contrib">
+<h3>Contributing to the Effort</h3>
+
+<p>The easiest thing to do if you want to help out with the MySQL++
+development effort is to participate on the 	<a href="http://lists.mysql.com/plusplus/">mailing list</a>.
+We could use help answering questions, and it&rsquo;s frequently helpful
+to have different voices contributing to discussions about the
+library&rsquo;s future.</p>
+
+<p>If you want to participate in the coding
+effort, the MySQL++ development project is hosted
+<a href="http://gna.org/projects/mysqlpp/">here</a>,
+courtesy of <a href="http://gna.org/">Gna!</a> They host
+the <a href="http://gna.org/svn/?group=mysqlpp">MySQL++
+Subversion repository</a>, which holds the
+version history going back to version 1.7.9. The <tt><a
+href="http://svn.gna.org/viewcvs/*checkout*/mysqlpp/trunk/HACKERS.txt">HACKERS.txt</a></tt>
+file included with the MySQL++ sources contains further
+instructions; please read it before making changes to the
+library. For a great source of projects to tackle, see the Wishlist
+file. There&rsquo;s a copy distributed with MySQL++, but the <a
+href="http://svn.gna.org/viewcvs/*checkout*/mysqlpp/trunk/Wishlist">repository
+version</a> may be more current. You wouldn&rsquo;t want to go to
+the effort of creating a patch, only to find that someone had already
+checked in a change for that item!</p>
+
+<p>If you just want to keep up on the in-progress developments, you can
+sign up for the mysqlpp-commits mailing list on our Gna! project page.
+This mails you all of the Subversion commit messages. Between that and
+the regular mailing list traffic, you will know as much about
+MySQL++&rsquo;s development as anyone save the people actually working
+on it.  <tt><b>:)</b></tt></p>
+
+
+
+<a name="faq">
+<h3>FAQs</h3>
+
+<h5>What version of MySQL++ should I use?</h5>
+
+<p>If you&rsquo;re writing new code, you should use the <a
+href="#stable">latest stable version</a>.</p>
+
+<p>If you have existing code currently using an older version of
+MySQL++, you may not want to upgrade all the way to the current
+version, at least not in a single step. You might want to upgrade to
+an <a href="#oldver">intermediate version</a> first, just to get bug
+fixes and maybe some minor features. Then once that step is working and
+tested, you can think about jumping to the latest stable version.</p>
+
+<p>MySQL++ uses the standard major.minor.bug-fix version
+number scheme.  A change in the library&rsquo;s major version
+number denotes changes that will almost certainly require
+source code changes in your program. See the &ldquo;<a
+href="doc/html/userman/breakages.html">Incompatible Library
+Changes</a>&rdquo; chapter of the user manual for details. A change
+in the minor version number indicates added features that don&rsquo;t
+change existing library interfaces. If you don&rsquo;t want to use
+those features, you should be able to install the new library without
+rebuilding your program. A change in the bug-fix number indicates
+internal bug fixes, which don&rsquo;t affect the library interface
+at all, so such versions are always safe to install.</p>
+
+<p>We haven&rsquo;t followed this discipline perfectly. The
+library&rsquo;s binary interface <a
+href="doc/html/userman/breakages.html#abi-1.7.18">changed a few
+times</a> between the epochal 1.7.9 release and the final 1.<i>x</i>
+release, 1.7.40. If your program uses a version in between, be prepared
+to change the code when upgrading. The library interface also <a
+href="doc/html/userman/breakages.html#abi-3.0.0">changed a few times</a>
+early in the 3.0.<i>x</i> series before settling down.</p>
+
+
+<h5>What platforms does it work on?</h5>
+
+<p>MySQL++ should work on any platform that has a Standard C++ compiler
+and the MySQL C API development files. The code does use some C99/TR1
+features that are widely supported in advance of full standardization,
+but these are optional.</p>
+
+<p>In practice, MySQL++ works best on the platforms that get the most
+attention. This means mass-market operating systems on common hardware,
+and the default tool chain for the platform. There are FAQ items for
+most common platforms below; if your platform isn&rsquo;t addressed and
+it&rsquo;s outside the mainstream or older than about 2003, the chance
+of it working out of the box are low.  We&rsquo;re happy to discuss
+porting on the mailing list, but be prepared to do most of the work
+yourself; if MySQL++ hasn&rsquo;t been ported to your system already,
+there&rsquo;s usually a pretty good reason why not.</p>
+
+<p>If you use a different platform and it isn&rsquo;t mentioned in the
+subsequent FAQ items, probably little is known about it. If it builds
+out of the box, we&rsquo;d appreciate it if you&rsquo;d send a report to
+the mailing list. If not, please send patches to fix this to the mailing
+list. We will support any platform that gets enough interest from the
+users.</p>
+
+
+<h5>What versions of MySQL does it work with?</h5>
+
+<p>MySQL++ works best with MySQL version 4.1 or higher, simply because
+this is the oldest version that it&rsquo;s regularly tested against
+during development.</p>
+
+<p>We do most of the development against the current &ldquo;GA&rdquo;
+release of MySQL, 5.1 as of this writing.  Because MySQL++ is intended
+for use in production environments, we don&rsquo;t test it against
+bleeding-edge versions of MySQL; we wait for the GA release. We&rsquo;re
+not opposed to supporting newer versions, we just don&rsquo;t build test
+environments for these newer versions in advance of need. If you find
+that MySQL++ isn&rsquo;t building against a newer release of MySQL, a
+short <a href="#bugreport">bug report</a> is usually sufficient to get
+it fixed.</p>
+
+<p>It probably builds fine against MySQL 4.0, but this hasn&rsquo;t been
+tested in quite a long time now. Some of the examples demonstrate the
+explicit UTF-8 support available in MySQL 4.1 and newer. If you want to
+run the examples, you will need to remove the UTF-8 bits from the
+<tt>CREATE TABLE</tt> statements in <tt>examples/resetdb.cpp</tt>. Older
+versions of MySQL will allow implicit use of UTF-8, they just
+won&rsquo;t let you declare your intentions, or give you features like
+UTF-8 aware sorting.</p>
+
+<p>MySQL++ can be made to build against MySQL 3.23, but it won&rsquo;t
+do so out of the box. The last time I tried this, the only thing that
+needed doing was changing <tt>MYSQL_TYPE_</tt>* in
+<tt>lib/type_info.cpp</tt> to <tt>FIELD_TYPE_</tt>*. (It&rsquo;s a
+fairly invasive change, which is the only reason the library
+doesn&rsquo;t come with this change already.) Also, the UTF-8 comments
+above apply equally to older versions of MySQL.</p>
+
+
+<a name="license">
+<h5>What software license does MySQL++ use? Is it free?</h5>
+
+<p>MySQL++ is free software, licensed under the <a
+href="http://www.gnu.org/licenses/lgpl.html">GNU LGPL</a>.</p>
+
+
+<a name="whylgpl">
+<h5>What does the LGPL license mean to me, as far as MySQL++ goes?</h5>
+
+<p>The common wisdom regarding LGPL&rsquo;d libraries is that you
+can use them with a program using almost any software license as
+long as you&rsquo;re willing to link dynamically. Think of the GNU
+C library (glibc) on Linux: it&rsquo;s LGPL&rsquo;d and linked to
+almost everything on a Linux system, at least indirectly. If your
+program&rsquo;s software license allows dynamic linking to glibc,
+it should allow you to use MySQL++ dynamically, too.</p>
+
+<p>If you link to MySQL++ statically, you trigger the
+&ldquo;viral&rdquo; provisions of the LGPL. Practically speaking,
+it means your program must be licensed under the LGPL or something
+compatible with it, such as the GPL. This rules out static linking
+when you want to keep your source code closed, and even rules out
+static linking with some open source licenses, since not all of them
+are compatible with LGPL at that level.</p>
+
+<p>There&rsquo;s no practical way of avoiding this. MySQL++&rsquo;s
+licensing history is tangled, what with the numerous changes of
+maintainership and the lack of a copyright assignment system for
+third-party contributions. It would simply be impractical to contact all
+of the past contributors and get them to agree on the licensing changes
+needed to make this happen.</p>
+
+<p>If you need to link to your C++ database library statically
+and can&rsquo;t use the LGPL or something compatible with it for
+your program, you might consider using MySQL&rsquo;s Connector/C++
+instead. The free version is GPL&rsquo;d, but they will sell you a
+commercial license which allows static linking.</p>
+
+
+<a name="mysqlclientgpl">
+<h5>Doesn&rsquo;t the MySQL C API library&rsquo;s GPL license override
+MySQL++&rsquo;s LGPL license?</h5>
+
+<p>The MySQL C API library is available under <i>two</i> different
+licenses, not one.</p>
+
+<p>The default license for MySQL (including its C API library) is
+GPL with the FOSS license exception. This is what you get if you got
+MySQL for free, such as by downloading it from <tt>mysql.com</tt> or
+as part of your Linux distro. The less liberal distribution terms of
+the C API library&rsquo;s GPL do override the less restrictive ones of
+MySQL++&rsquo;s LGPL license. This matters if you want to distribute
+your program as a binary only, keeping the source to yourself.</p>
+
+<p>If you need to be able to distribute closed-source
+programs, MySQL, Inc. will happily sell you a <a
+href="http://www.mysql.com/about/legal/licensing/oem/">commercial
+distribution license</a> for their C API library.</p>
+
+<p>This issue really has nothing to do with MySQL++. The same
+restriction applies if you write your program directly against the C
+API library. The only reason I even put this here is because people
+keep asking the question. Please work out the licensing with MySQL,
+Inc. Having settled that, the previous FAQ item applies.</p>
+
+
+<a name="conncpp">
+<h5>How does MySQL++ compare to MySQL&rsquo;s Connector/C++?</h5>
+
+<p><a
+href="http://forge.mysql.com/wiki/Connector_C%2B%2B">Connector/C++</a>
+is a new C++ wrapper for the MySQL C API library, fully developed
+under the MySQL corporate aegis. By contrast, MySQL++ has a long,
+complex <a href="doc/html/userman/index.html#history">development
+history</a>. MySQL++ started out as a third-party library, was
+maintained and enhanced by MySQL for several years, then got spun
+back out again, this time probably for good. MySQL does still host
+our 	<a href="http://lists.mysql.com/plusplus/">mailing list</a>, for which we thank them, but they
+don&rsquo;t control the hosting or development of MySQL++ any more.</p>
+
+<p>MySQL decided to create a competing library for two reasons. First,
+having the entire thing to themselves mean they can do the same
+dual-licensing thing they do with the C API library. Second, after
+Sun bought MySQL, they wanted to put MySQL support into OpenOffice,
+and wanted a <a href="http://en.wikipedia.org/wiki/Jdbc">JDBC</a>
+style API for that support.</p>
+
+<p>By contrast with Connector/C++&rsquo;s Java-style database API,
+MySQL++ is very much a native C++ library: we use STL and other
+Standard C++ features heavily. If you are a Java developer or simply
+admire its database interface design, you may prefer Connector/C++.</p>
+
+<p>Another way to look at it is that Connector/C++ is new and therefore
+perhaps less crufty, while MySQL++ is mature and featureful.</p>
+
+
+<a name="gcc">
+<a name="gcc2">
+<h5>Will it build under GCC?</h5>
+
+<p>Yes, with GCC version 3.0 and up, except on <a
+href="#mingw">MinGW</a>, which requires 3.4.5 at minimum.</p>
+
+<p>The last version of MySQL++ that works with GCC 2.95.<i>x</i> is <a
+href="#oldver">1.7.9</a>. It may be less painful to port the current
+version back to GCC 2.95 than to live with the limitations and bugs of
+this older version. The main thing breaking this backwards compatibility
+are the steps forward we&rsquo;ve taken for Standard C++ compliance. If
+you work around or revert these, it should work on GCC 2.95 again.</p>
+
+<p>If you&rsquo;re stuck on anything older than GCC 2.95, we recommend
+that you use the MySQL C API instead of trying to arm-twist MySQL++ into
+working.</p>
+
+
+<a name="vstudio">
+<h5>Will it build under Visual C++?</h5>
+
+<p>Yes, it works out of the box with Visual C++ 2005, 2008, and
+2010.</p>
+
+<p>There are still some hiccups with MySQL++ on Visual C++ 2010, but
+since we&rsquo;re not being inundated with bug reports &mdash; or
+patches &mdash; for these, we assume the problems are not serious. The
+library&rsquo;s primary maintainer doesn&rsquo;t use MySQL++ with Visual
+C++, and only has a copy of VC++ 2010 Express for testing, so
+we&rsquo;re more reliant on testing and patches from the user base for
+this platform than for the primary development platforms, Linux and OS
+X.</p>
+
+<p>MySQL++ mostly works with Visual C++ 2003. The main exception is the
+<a href="doc/html/userman/ssqls.html">Specialized SQL Structures</a>
+feature, which doesn&rsquo;t work at all any more. It appears to be
+difficult to fix, because the symptom is that the compiler crashes when
+you try to build even the most trivial SSQLS code. There are <a
+href="doc/html/userman/ssqls.html#ssqls-vc2003">several possible
+ways</a> to work around this limitation.</p>
+
+<p>If you must use Visual C++ 2002 (a.k.a. 7.0) or older, you can try
+the <a href="#oldver">ancient 1.7.1 version</a> of MySQL++. This is a
+third-party contribution which is 	<a href="http://lists.mysql.com/plusplus/1069">known to have bugs</a>.
+You might be better off using the MySQL C API instead.</p>
+
+<p>If you&rsquo;re not using the current version of Visual C++, you
+should really consider upgrading as the compliance of the compiler has
+improved a lot. Microsoft is <a
+href="http://www.microsoft.com/express/vc/">giving away</a> a limited
+but functional version of Visual C++ 2010 which works just fine with
+MySQL++. Microsoft says they&rsquo;re going to continue offering this
+indefinitely, so as long as the limitations don&rsquo;t impact you,
+there&rsquo;s no reason not to use this version. The main limitation is
+that this version doesn&rsquo;t include MFC. If you need to build GUI
+programs using only Standard C++, we recommend the free <a
+href="http://www.wxwidgets.org/">wxWidgets</a> library as a capable MFC
+substitute. If you don&rsquo;t mind stepping into the
+.NET world, there is explicit support for C++/CLI in MySQL++ now,
+including a Windows Forms based example program.</p>
+
+
+<a name="osx">
+<a name="xcode">
+<h5>Will it build on Mac OS X?</h5>
+
+<p>Yes, it builds just fine, both from within the Xcode environment and
+at the command line. We currently test only on OS X 10.5 and up. The
+Xcode project files are for Xcode 2, so they make work on 10.4, but no
+older. In the past, we tested command line builds on systems as old as
+10.3, but we no longer have development systems that old.</p>
+
+<p>The Xcode project files are known to work out of the box as of
+MySQL++ 3.1.0. Command line builds are still preferred, however, as
+there is more flexibility to be had here. See
+<tt>README-Mac-OS-X.txt</tt> in the MySQL++ tarball for details. That
+file also contains instructions on getting the MySQL C API for OS X,
+which MySQL++ builds against.</p>
+
+<a name="cygwin">
+<h5>Will it build under Cygwin?</h5>
+
+<p>Yes, but beware of Cygwin&rsquo;s licensing: any program linked
+to cygwin1.dll is subject to the GPL, unless you&rsquo;ve <a
+href="http://www.redhat.com/software/cygwin/">purchased</a>
+($$) a commercial license for Cygwin from Red
+Hat. If that&rsquo;s not a problem for you, see the <tt><a
+href="http://svn.gna.org/viewcvs/*checkout*/mysqlpp/trunk/README-Cygwin.txt">README-Cygwin.txt</a></tt>
+file.</p>
+
+<p>If you are making a closed-source program, we recommend using Visual
+C++ or MinGW instead.</p>
+
+
+<a name="mingw">
+<h5>Will it build under MinGW?</h5>
+
+<p>Yes. It does require at least GCC 3.4.5, however. Older versions
+don&rsquo;t build MySQL++ correctly. Also, as of this writing, GCC
+4 reportedly still has problems dealing with exceptions when thrown
+across a DLL boundary, so you may have to build MySQL++ as a static
+library if you wish to use GCC 4. This is no doubt an area the MinGW
+folk are concentrating on, so it may have changed by the time you
+read this.</p>
+
+
+<a name="solaris">
+<h5>Will it build under Solaris?</h5>
+
+<p>Yes, we have reports of people building it successfully on
+versions as old as Solaris 8. It gets the most testing with GCC, but
+we have heard occasional success reports from people using Sun CC.
+I&rsquo;ve personally only built it with GCC under OpenSolaris 2008.05
+and 2008.11.</p>
+
+<p>Just use the built-in package manager to install MySQL 5.0 and GCC,
+and you&rsquo;re set. Beware, the &ldquo;mysql&rdquo; package is MySQL
+4.0, which MySQL++ no longer works 100% with out of the box. (See
+above.) You want the &ldquo;mysql5&rdquo; package instead.</p>
+
+
+<a name="borland">
+<h5>Will it build under Borland C++ Builder?</h5>
+
+<p>It can be made to work, mostly.</p>
+
+<p>The only major feature that doesn&rsquo;t work out of the box is the
+<a href="doc/html/userman/ssqls.html">Specialized SQL Structures</a>.
+It can&rsquo;t work as-is due to a compiler limitation. A full
+discussion of the problem and possible workarounds is in
+	<a href="http://lists.mysql.com/plusplus/4307">this mailing list message</a>.</p>
+
+<p>Fixes and further support are unlikely, as it seems that this is a
+dead product now.</p>
+
+
+<h5>g++ simple1.cpp -o simple1 ?</h5>
+
+<p>No! See <a href="#linkerrors">the next item</a>.</p>
+
+
+<a name="linkerrors">
+<h5>It compiles, but it won&rsquo;t link! Why?</h5>
+
+<p>To build any program using MySQL++, at minimum you must link to the
+MySQL++ library and also to the MySQL C API library that MySQL++ is
+built upon. The MySQL++ library is <tt>libmysqlpp.so</tt> on Unixy
+systems, and <tt>mysqlpp.lib</tt> on Windows. The MySQL C API library is
+either <tt>libmysqlclient{_r}.{a,so}</tt> on Unixy systems and
+<tt>libmysql.lib</tt> on Windows.</p>
+
+<p><b>Visual C++</b>: An additional requirement with Visual
+C++ is that you must link to the same C Run-Time Library (RTL)
+for all modules throughout your project. The Visual C++ project
+files that come with MySQL++ use the multithreaded DLL version
+(<tt>/MD</tt> or <tt>/MDd</tt>) of the C RTL. If you link MySQL++
+to a program or additional third party library that uses a different
+RTL, you will get link errors. Study the example projects&rsquo;
+settings to see how this is done. The instructions in the <tt><a
+href="http://svn.gna.org/viewcvs/*checkout*/mysqlpp/trunk/README-Visual-C++.txt">README-Visual-C++.txt</a></tt>
+file may also be helpful.</p>
+
+<p>For building the examples, it&rsquo;s simplest to just use the
+Makefiles or project files appropriate to your platform. The standard
+Makefiles are a little too complex for learning, so if you&rsquo;re on a
+Unixy platform and just want to learn how to build programs using
+MySQL++, study <tt>Makefile.simple</tt>. It&rsquo;s a fairly bare-bones
+Makefile that should work out of the box on a standard GCC-based system,
+and can probably be ported to other toolchains without a whole lot of
+work.</p>
+
+
+<a name="memleak">
+<h5>Why is my program leaking memory?</h5>
+
+<p>The current version of MySQL++ has no known memory leaks. If you free
+all of the MySQL++ objects you allocate, it should not be leaking
+memory.</p>
+
+<p>If you&rsquo;re getting a report from a memory debugger about a
+leak, most likely you&rsquo;re seeing the memory that the MySQL C
+API library allocates for housekeeping purposes. MySQL++ is built
+atop this library, so it can look like it&rsquo;s MySQL++ leaking
+the memory. This underlying C library automatically allocates one
+block per thread using the database, plus one for the overall use
+of the library. There is no corresponding automatic memory cleanup
+(this is C++, after all), so a memory debugger na&iuml;vely calls
+it a &ldquo;leak.&rdquo; I characterize it like that because if your
+program is typical in that it keeps the database connection open for
+its entire run time, failing to free this overhead memory is harmless:
+the OS will release this memory when your program exits.</p>
+
+<p>That said, it&rsquo;s annoying to see these reports of leaked
+memory, particularly if you&rsquo;re regularly running your program
+under a memory debugger. (Recent versions of Visual Studio do this
+for any program run in Debug mode, for example.) You can placate
+the memory debugger by calling <tt>Connection::thread_end()</tt>
+from each thread that uses a database connection when that thread
+finishes using the database. In addition, after the last bit of code
+that uses MySQL++ stops, you need to call the MySQL C API function
+<tt>mysql_library_end()</tt> to free the per-application block.
+If you&rsquo;re using a <tt>ConnectionPool</tt>, you might put this
+last call in the destructor, since the pool object is typically the
+last MySQL++ object to be destroyed.</p>
+
+<p>If you&rsquo;ve done that and still think you really have a serious
+memory leak &mdash; one of those &ldquo;the longer it runs, the more
+memory it uses&rdquo; sorts of leak &mdash; you need to tie it to
+some unit of work. Does memory go up as a function of time?  number of
+queries issued? count of rows retreived? Until you can establish this
+link, it&rsquo;s premature to post to the MySQL++ mailing list claiming
+there&rsquo;s a leak in MySQL++. Even if you can establish such a link,
+it&rsquo;s far more likely that you&rsquo;re not releasing the MySQL++
+objects you allocate than MySQL++ itself failing to release memory.</p>
+
+
+<a name="segfaults">
+<h5>My program is crashing. Help!</h5>
+
+<p>The most common cause of crashes in MySQL++ is uncaught exceptions.
+The library throws exceptions when it detects errors, such as invalid
+SQL syntax, invalid login parameters, etc. Try running the example
+programs, since they all catch exceptions properly.</p>
+
+<p>If the examples also crash and you&rsquo;re using one of the binary
+RPMs above, try rebuilding the RPMs from the <a
+href="#source">source</a> RPM. The resulting binary RPM is fairly
+closely tied to the system it is built under, so it&rsquo;s possible
+that RPMs you build on your system will work better than mine.</p>
+
+
+<a name="broken">
+<h5>Nothing&rsquo;s working at all! Is it broken?</h5>
+
+<p>Maybe, but have you tried running
+the examples? Follow the instructions in the <tt><a
+href="http://svn.gna.org/viewcvs/*checkout*/mysqlpp/trunk/README-examples.txt">README-examples.txt</a></tt>
+file. If the examples work but your program doesn&rsquo;t, chances
+are good that the error is in your program; study the examples, and <a
+href="doc/">read the manuals</a>.  If the examples also fail to work,
+post to the mailing list with a detailed failure report.</p>
+
+
+<a name="bugreport">
+<h5>I&rsquo;m sure I&rsquo;ve found a bug. How do I submit a
+report?</h5>
+
+<p>We&rsquo;ll want some code that demonstrates the bug. No doubt
+you&rsquo;d rather not send us a copy of your database to demonstrate
+the problem, and to be frank, we don&rsquo;t want your database, either.
+The best thing is to modify one of the MySQL++ examples so that it
+reproduces the problem you&rsquo;re seeing. This lets the people that
+can help you reproduce the problem on their machines, without needing
+your database.</p>
+
+<p>Once you have your problem boiled down to a simple example, send the
+source code to the mailing list along with a detailed report.  We want
+to know what you expect the program to do, and what it actually does on
+your machine. Keep in mind, programs often behave differently on
+different systems. As a programmer yourself, you know what it is like to
+deal with vague user bug reports. Give us the sort of error report
+you&rsquo;d like to receive for your programs.</p>
+
+
+<a name="patches">
+<h5>How do I submit a change to MySQL++?</h5>
+
+<p>This is covered in detail in the <tt><a
+href="http://svn.gna.org/viewcvs/*checkout*/mysqlpp/trunk/HACKERS.txt">HACKERS.txt</a></tt>
+file that accompanied MySQL++.</p>
+
+<p>But in brief: we want the patch in unified diff format, made against
+either the latest release of MySQL++ or (preferrably) against the <a
+href="http://gna.org/svn/?group=mysqlpp">svn repository</a>.  You can
+send it either to the 	<a href="http://lists.mysql.com/plusplus/">mailing list</a>, or to <a
+href="http://gna.org/bugs/?group=mysqlpp">the bug tracker</a>. We
+prefer that you only use the bug tracker for patches that are so trivial
+or obvious that they won&rsquo;t need discussion.</p>
+
+<p>When a patch is rejected, the most common reason is that it breaks
+the library&rsquo;s binary interface (ABI), so that an old program
+can&rsquo;t link to the changed library without recompiling. We only
+make such changes at major version transitions. These transitions are
+rare, and we can&rsquo;t even promise that there will ever be another
+one, much less when it will occur. If you have a choice of two ways to
+get your desired effect and one of them doesn&rsquo;t break the ABI, it
+will increase the chances that we accept your patch if you do it that
+way.</p>
+
+<!--  Vertical padding to ensure that link targets can always be
+           placed at the top of the browser window.  -->
+
+<img src="/bitmaps/dot-clear.gif" alt="" width=1 height=200>
+
+<p class="notification">This space intentionally left blank. <tt><b>:)</b></tt></p>
+
+<img src="/bitmaps/dot-clear.gif" alt="" width=1 height=100>
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="halfwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="halfwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+
