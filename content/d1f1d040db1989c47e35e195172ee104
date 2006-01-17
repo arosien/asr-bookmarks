@@ -1,0 +1,893 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"  xmlns:v="urn:schemas-microsoft-com:vml"  id="sixapart-standard">
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="generator" content="Movable Type 4.25" />
+
+   <link rel="stylesheet" href="http://earthcode.com/styles-site.css" type="text/css" />
+   <link rel="alternate" type="application/atom+xml" title="Atom" href="http://earthcode.com/atom.xml" />
+   <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://earthcode.com/index.xml" />
+<!--mtextra incudes -->
+   <script type="text/javascript" src="http://earthcode.com/mt-site.js"></script>
+	 <script type="text/javascript" src="/includes/scripts/earthcode.js"></script>
+
+<!--mtextra incudes (inside js tags)-->	 
+
+   <title>Andre Lewis is on the Internet: JSLog - a Lightweight Ajax logger</title>
+
+   <link rel="start" href="http://earthcode.com/" title="Home" />
+   
+   <link rel="next" href="http://earthcode.com/blog/2005/12/jslog_example.html" title="JSLog Example" />
+
+   
+
+   
+
+</head>
+<body class="layout-two-column-right" onload="individualArchivesOnLoad(commenter_name)">
+   <div id="container">
+	  <div id="container-inner" class="pkg">
+
+		 <div id="banner">					
+				<div id="banner-inner" class="pkg"> <table width="100%" border="0">
+  <tr>
+    <td style="width:216px;min-width:216px">
+       &nbsp;
+    </td>
+    <td style="min-width:550px" valign="top">
+      <h1 id="banner-header"><a href="http://www.earthcode.com/" accesskey="1"><span>Hi, I'm </span>Andre Lewis <span>and I'm </span>on the Internet</a></h1>
+
+      <h2 id="banner-description"></h2>
+
+    </td>
+    <td width="*" align="right" valign="top">
+       &nbsp;
+<!--
+      <div id="upper-right-nav">
+        <form method="get" action="http://www.earthcode.com/cgi-bin/mt/mt-search.cgi">
+          <a class="clean" href="http://feeds.feedburner.com/earthcode" title="Subscribe to my feed" rel="alternate" type="application/rss+xml">
+            <img src="/images/partner/feed-icon12x12.png" alt="Subscribe to my feed" style="border:0"/></a> |
+          <a href="http://www.earthcode.com">home</a> |
+          <a href="http://www.earthcode.com/about.html">about</a> |
+          <input type="hidden" name="IncludeBlogs" value="1"/>
+          <input id="search" name="search" size="18" onclick="if(value==' search '){value=''}" value=" search "/>
+
+          <input type="image" src="/images/search-button.gif" align="texttop"/>
+        </form>
+      </div>
+-->
+    </td>
+  </tr>
+</table>
+
+<a href="http://github.com/andre" class="clean">
+  <image height="149" width="149" src="/images/github.png" style="position:absolute;top:0px;right:0px;z-index:2000" alt="Andre Lewis at Github"/>
+</a>
+ </div>
+		 </div>
+
+		 <div id="pagebody">
+			<div id="pagebody-inner" class="pkg">
+			   <div id="alpha">
+				  <div id="alpha-inner" class="pkg">
+
+<!--
+					 <p class="content-nav">
+						
+						<a href="http://earthcode.com/">Main</a>
+						| <a href="http://earthcode.com/blog/2005/12/jslog_example.html">JSLog Example &raquo;</a>
+					 </p>
+-->
+					 <a id="a000005"></a>
+					 <div class="entry" id="entry-5">
+					 
+						<div class="entry-header"> 
+							<h3><a rel="bookmark" href="http://earthcode.com/blog/2005/12/jslog.html">JSLog - a Lightweight Ajax logger</a></h3>
+							<div class="entry-subheader"> Dec 18, 2005 by 
+								Andre 
+						</div>
+
+						
+						<div class="entry-content">
+						   <div class="entry-body">
+						   <!-- mtextrafields mtextra fieldvalue entry_header -->
+							  <h2>What JSLog looks like</h2>	
+<p>When <b>collapsed</b>, it sits unobtrusively in the upper left-hand 
+corner of the page like so: <img src="/images/jslog-collapsed.gif"/> <br/>
+When <b>expanded</b>, it looks like this: <br/>
+<img src="/images/jslog-expanded.gif"/></p>
+
+<h2>Why you should use JSLog</h2>
+<p>Every language needs a System.out.println() or a Console.writeLine() -- a quick 
+and easy way to output messages to you, the developer, during development and 
+testing. Historically, Javascript programmers have used alert() for this purpose. 
+The problems are: 
+<ol>
+	<li>alert() forces you to acknowledge each message, which makes it very bad for debugging things like loops and mouseovers</li>
+	<li>there's no graceful way to begin "productionizing" your code when it has a bunch of alerts() in it -- you have to go through and delete all the alerts or comment them out</li>
+	<li>alert() notifications are incredibly intrusive, and while they are there in your code, it's impossible to ignore them</li>
+	<li>once you acknowledge an alert() box, it's contents are gone and you can't refer to it again</li>
+</ol> 
+Safe to say that if you've done AJAX programming, you are sick of alert(). <strong>JSLog solves these problems!</strong> Read on for more details.</p>
+
+						   </div>
+						   <div id="more" class="entry-more">
+							  <h2>Expanding and Collapsing the logging panel</h2>
+<p>A double-click on the "handle" expands or collapses the logger display. Regardless of whether it's expanded or collapsed, you can log messages to it, and if it's collapsed, the 
+number in the handle increments to show you the total number of logged messages.</p>
+<p>If you have the scriptaculous libraries available, JSLog will automatically 
+detect their availability and allow you to drag the logging panel to anywhere 
+on the screen. In between page refreshes, JSLog remembers its location and state 
+(expanded/collapsed). So, you can bring it front and center to debug something, 
+and then just as easily place it out of the way in a corner somewhere.</p>
+
+<h2>Let's get started! Installation and usage</h2>
+<p><strong>Installation</strong> is dead simple. Download the one .js file (see the top of this page), and include it on your page. That's all you need -- no additional stylesheets or anything (in case you're wondering, JSLog appends it's own small stylesheet on instantiation. But you don't need to worry about it, it happens behind the scenes).</p>
+
+<p><strong>To use</strong>, just place calls to JSLog where ever it makes sense 
+for development or debugging -- in mouseovers, onclicks, pageloads, loops, etc. 
+Here are some examples to get you started: </p>
+
+<textarea name="code" class="javascript">
+	<script language="JavaScript" src="/includes/scripts/jslog.js"></script>
+</textarea>
+
+<p>Including this script instantiates a Javascript object called jslog. To begin using the logger, there's just one method you need to know:
+</p>
+<textarea name="code" class="javascript">
+	<script language="JavaScript">
+		jslog.debug("Hello World!");
+	</script>
+</textarea>
+
+<p>Try it. Your whole page should look like this:</p>
+
+<textarea name="code" class="javascript">
+<html>
+<head>
+	<script language="JavaScript" src="/includes/scripts/jslog.js"></script>
+	<script language="JavaScript">
+		jslog.debug("Hello World!");
+	</script>
+</head>
+<body>
+</body>
+</html>
+</textarea>
+
+<p>This will log a message immediately upon page page load. </p>
+
+<p>Next, add some event-based log entries to get a feel for how it works: </p>
+<textarea name="code" class="javascript">
+	<html>
+	  <head>
+	    <script language="JavaScript" src="/includes/scripts/jslog.js"></script>
+	      <script language="JavaScript">
+	        jslog.debug("Hello World!");
+	      </script>
+	  </head>
+	  <body>
+		
+		<div style="padding-top:400px">			
+			<a href="javascript:jslog.info('you clicked me')">
+				Click me for an info message</a>
+			<br /><br />
+			<div style="width:400px; background:gray" 
+				onmouseover="jslog.debug('Mouseover!')">
+				Mouse over me for a debug message</div>
+		</div>
+		
+	  </body>
+	</html>
+</textarea>
+
+<h2>Methods on the JSLog Object</h2>
+<p>So far you've seen two methods on the jslog object -- jslog.info() and jslog.debug(). Here are all the methods: </p>
+
+<ul>
+	<li>These methods all create entries in JSLog. The only difference is the severity of the entry created:</li>
+	<ul>
+		<li>jslog.debug()</li>
+		<li>jslog.info()</li>
+		<li>jslog.warning()</li>
+		<li>jslog.error()</li>
+	</ul>
+	<li>The next method places text in JSLog's text box -- the one at the botom of the JSLog panel. 
+	This is useful if, during debugging, you need a convenient place to put a large block of text which
+	wouldn't fit well in a normal JSLog entry.</li>
+	<ul>
+		<li>jslog.text()</li>
+	</ul>		
+</ul>
+
+<h2>Configuration: enabling/disabling JSLog</h2>
+<p>In the jslog.js file, find the line: var Config_Logging_Enabled = true;</p>
+<p>When set to true, this enables JSLog on every page on which JSLog included. 
+When set to false, JSLog will not appear on any page, regardless of whether or not the jslog.js file is included. The idea is allow you to switch your entire site from development/debug mode to production mode by simply changing this one configuration setting.</p>
+
+						   </div>
+						</div>
+						<!--
+						<p class="entry-footer">
+						</p>
+						-->
+					 </div>
+
+					 
+					 <div class="trackbacks">
+						<h3 id="trackback" class="trackbacks-header">TrackBack URL: </h3>
+						<!--
+						<div id="trackbacks-info">
+						</div>
+						-->
+						<div class="trackbacks-content">
+						   
+						   
+						   <p>Listed below are links to weblogs that reference <a href="http://earthcode.com/blog/2005/12/jslog.html" rel="nofollow">JSLog - a Lightweight Ajax logger</a>:</p>
+						   
+						   <a id="p1408"></a>
+						   <div class="trackback" id="ping-1408">
+							  <div class="trackback-content">
+								 <p>
+									&raquo; <a href="http://www.dirk-blasius.de/serendipity/archives/14-AJAX.html" rel="nofollow">AJAX</a> from Merkblatt<br />
+									JSLog - JavaScript Log <a href="http://www.dirk-blasius.de/serendipity/archives/14-AJAX.html" rel="nofollow">[Read More]</a>
+								 </p>
+							  </div>
+							  <p class="trackback-footer">
+								 Tracked on <a href="#ping-1408" rel="nofollow">April 25, 2006  2:50 AM</a>
+							  </p>
+						   </div>
+						   
+						</div>
+					 </div>
+					 
+
+					 
+					 <div id="comments" class="comments">
+						<div class="comments-content">
+						   
+						   <h3 class="comments-header">Comments</h3>
+						   <a id="c000337"></a>
+
+                <div class="comment " id="comment-337">
+                <span class="comment-number">1</span>
+							  <div class="comment-content">
+							  <p class="comment-header">
+								 <a title="http://jroller.com/page/stritti" href="http://jroller.com/page/stritti" rel="nofollow">stritti</a>  on
+								 <a href="#comment-337">Aug 01</a>
+							  </p>								
+								 <p>Interessting logger! Probably you want to add it as new Appender to Log4js (http://log4js.berlios.de)?</p>
+
+<p>My goal is to unify all the logging APIs which are growing currently.</p>
+							  </div>
+								<p class="comment-footer"></p>
+						   </div>
+						   
+						   
+						   <a id="c000340"></a>
+
+                <div class="comment " id="comment-340">
+                <span class="comment-number">2</span>
+							  <div class="comment-content">
+							  <p class="comment-header">
+								 <a title="http://earthcode.com" href="http://earthcode.com" rel="nofollow">Andre Lewis</a>  on
+								 <a href="#comment-340">Aug 03</a>
+							  </p>								
+								 <p>stritti: thanks for the heads up on Log4js. The goal of JSLog is a little different - it's to present a very simple debug output mechanism, without a lot of choices to make. It's neither better not worse, just a different design philosophy.</p>
+							  </div>
+								<p class="comment-footer"></p>
+						   </div>
+						   
+						   
+						   <a id="c000395"></a>
+
+                <div class="comment " id="comment-395">
+                <span class="comment-number">3</span>
+							  <div class="comment-content">
+							  <p class="comment-header">
+								 <a title="http://www.aspcode.net/articles/l_en-US/t_default/ASP.NET/ASP.NET2.0/Controls/JSLog.NET/category_62.aspx" href="http://www.aspcode.net/articles/l_en-US/t_default/ASP.NET/ASP.NET2.0/Controls/JSLog.NET/category_62.aspx" rel="nofollow">Stefan Holmberg</a>  on
+								 <a href="#comment-395">Oct 24</a>
+							  </p>								
+								 <p>I have been looking at console loggers for days until I found yours. Just what I needed! I have created a asp.net wrapper around it, allowing for global debugging on/off (autogenerating "dummy" class when in production) and embedding the javascript so no external files are needed. Thanks for your great code!</p>
+							  </div>
+								<p class="comment-footer"></p>
+						   </div>
+						   
+						   
+						   <a id="c000499"></a>
+
+                <div class="comment " id="comment-499">
+                <span class="comment-number">4</span>
+							  <div class="comment-content">
+							  <p class="comment-header">
+								 Keith Mashinter  on
+								 <a href="#comment-499">Jan 24</a>
+							  </p>								
+								 <p>Nice work -- simple and useful.  I have a couple of recommended changes to open it up to run an eval() to get any String rather than just the innerHTML of something.  Altered code is below, and I've changed the go button to a-link so that it becomes a tab stop.</p>
+
+<p>function getHTML(){<br />
+var _15=$(_a+"_idToInspect").value;<br />
+if(_15==""){<br />
+warning("Provide a non-blank javascript reference, e.g. $(myelementid).innerHTML");<br />
+}else{<br />
+try{<br />
+var _16=$(_a+"_textArea").value=eval("new String("+_15+")");<br />
+info("new String("+_15+") is now in the text box below!");<br />
+}<br />
+catch(e){<br />
+error("Could not get new String("+_15+"): "+e.message);<br />
+}<br />
+EC.F.setCookie(_9+"_idToInspect",_15);<br />
+}<br />
+}</p>
+
+<p>// ...</p>
+
+<p><a>go</a></p>
+							  </div>
+								<p class="comment-footer"></p>
+						   </div>
+						   
+						   
+						   <a id="c000500"></a>
+
+                <div class="comment " id="comment-500">
+                <span class="comment-number">5</span>
+							  <div class="comment-content">
+							  <p class="comment-header">
+								 Alex Escalante  on
+								 <a href="#comment-500">Jan 24</a>
+							  </p>								
+								 <p>Well, its difficult to be unobtrusive if you use global objects and functions, don't you think?</p>
+
+<p>Just for starters: I loaded jslog with  another library and it didn't work. It showed a message saying :</p>
+
+<p>"Code-level error initializing jslog: undefined"</p>
+
+<p>And then I can see in the source it looks for some "Draggable" constructor there, maybe from Prototype, Scriptacolous or something. What if I also have a Draggable object I wrote myself (which is the case)? It will blow.</p>
+
+<p>To summarize: it is a bit ingenuous to say "unobtrusive" and "self-contained" in this case.</p>
+							  </div>
+								<p class="comment-footer"></p>
+						   </div>
+						   
+						   
+						   <a id="c000503"></a>
+
+                <div class="comment " id="comment-503">
+                <span class="comment-number">6</span>
+							  <div class="comment-content">
+							  <p class="comment-header">
+								 <a title="http://earthcode.com" href="http://earthcode.com" rel="nofollow">Andre Lewis</a>  on
+								 <a href="#comment-503">Jan 24</a>
+							  </p>								
+								 <p>Alex, JavaScript makes it quite difficult to write code which is guaranteed to never collide with anything else. Generally, you want to clutter the global namespace with as few tokens as possible -- JSLog puts only 2 (or it may be 3) in the global namespace. Which is much preferred to having a bunch of loose functions sitting around.</p>
+
+<p>You have a point about it checking for Draggable. I'd like to remove it's use of Prototype/Scriptaculous, and internalize the dragging code -- of course, you're always welcome to send me a patch with improvements ;-)</p>
+							  </div>
+								<p class="comment-footer"></p>
+						   </div>
+						   
+						   
+						   <a id="c000640"></a>
+
+                <div class="comment " id="comment-640">
+                <span class="comment-number">7</span>
+							  <div class="comment-content">
+							  <p class="comment-header">
+								 Fredrik Gustafson  on
+								 <a href="#comment-640">Jun 20</a>
+							  </p>								
+								 <p>Hi,<br />
+I like JSLog very much, nice and easy to use. However, one problem I encountered was that<br />
+it seems to interfere with the page layout -<br />
+in my instance it cause a couple of lines to<br />
+be longer, thereby pushing content away on the<br />
+page - and this was done only by including the<br />
+jslog script file. This prevents me unfortunately<br />
+from keeping logging statements in the code, instead I have to comment everything out before<br />
+the JSP pages are deployed. Is there a solution for this somehow?</p>
+
+<p>Regards<br />
+Fredrik</p>
+							  </div>
+								<p class="comment-footer"></p>
+						   </div>
+						   
+						   
+						   <a id="c000761"></a>
+
+                <div class="comment " id="comment-761">
+                <span class="comment-number">8</span>
+							  <div class="comment-content">
+							  <p class="comment-header">
+								 yuan cai  on
+								 <a href="#comment-761">Dec 02</a>
+							  </p>								
+								 <p>Very useful.I'm a java programmer from china.<br />
+In java there are four method such as isDebugEnabled(),isInfoEnabled(),isWarnEnabled(),isErrorEnabled().</p>
+
+<p>Considered of efficiency,I think these are also useful. <p><br />
+if(jslog.isDebugEnabled())<br />
+{<br />
+    jslog.debug("debug message"); <br />
+    jslog.debug("debug message2"); <br />
+    jslog.debug("debug message3"); <br />
+}<br />
+</p><br />
+Three method will not run if debug is disabled.<br />
+</p>
+							  </div>
+								<p class="comment-footer"></p>
+						   </div>
+						   
+						   
+						   <a id="c000995"></a>
+
+                <div class="comment " id="comment-995">
+                <span class="comment-number">9</span>
+							  <div class="comment-content">
+							  <p class="comment-header">
+								 Peter Bremer  on
+								 <a href="#comment-995">Oct 20</a>
+							  </p>								
+								 <p>You call this an "AJAX logger". However, AJAX implies an application that is both client- and server-side. As far as I can tell, your application is only DHTML!</p>
+
+<p>It's great you say you have "LESS web 2.0", but you're still mis-using it's hype...</p>
+							  </div>
+								<p class="comment-footer"></p>
+						   </div>
+						   
+						   
+						   <a id="c001037"></a>
+
+                <div class="comment " id="comment-1037">
+                <span class="comment-number">10</span>
+							  <div class="comment-content">
+							  <p class="comment-header">
+								 Christiaan  on
+								 <a href="#comment-1037">Jan 20</a>
+							  </p>								
+								 <p>I found a very particular error. When u include DOMassistant 2.7.4 and jslog together then the onload event in body doesn't fire in IE6 en IE7. Try this and find that the alert doesn't show. When you remove just one of both script includes, the alert shows.</p>
+
+<p><br />
+<br />
+<br />
+  <br />
+  <br />
+<br />
+<br />
+<br />
+<br />
+</p>
+							  </div>
+								<p class="comment-footer"></p>
+						   </div>
+						   
+						</div>
+
+						 
+						
+					  <div id="comment-form-area"> 
+						<form method="post" action="http://earthcode.com/cgi-bin/mt/mt-comments.cgi" name="comments_form" onsubmit="if (false) rememberMe(this)">
+						   <input type="hidden" name="static" value="1" />
+						   <input type="hidden" name="entry_id" value="5" />
+									<h2 class="comments-open-header">Post a comment</h2>
+								 <script type="text/javascript">
+								 <!--
+								 writeTypeKeyGreeting(commenter_name, 5);
+								 //-->
+								 </script>
+								 <table>
+									<tr> 
+										<td class="label"> <label for="comment-author">Name:</label> </td>
+										<td class="content"> <input id="comment-author" name="author" size="30" /> 
+										</td>
+									</tr>
+									<tr> 
+										<td class="label"> <label for="comment-email">Email Address:</label> </td>
+										<td class="content"> <input id="comment-email" name="email" size="30" /> </td>
+									</tr>
+									<tr> 
+										<td class="label"> <label for="comment-url">URL:</label> </td>
+										<td class="content"> <input id="comment-url" name="url" size="30" /> </td>
+									</tr>
+									<tr> 
+										<td class="label"> <label for="comment-text">Comments:<br/>(HTML OK)</label> </td>
+										<td class="content"> <textarea id="comment-text" name="text" rows="10" cols="30"></textarea> 
+										</td>
+									</tr>
+									<tr> 
+										<td>&nbsp; 
+											
+										</td>
+										<td> <label for="da_passphrase">Please enter the word 'human' below <strong>(required)</strong></label> 
+										<br /><input id="da_passphrase" name="da_passphrase" /> 
+										<div style="font-size:10px; color: #BD0509">This is so filters can reject the spam-bots. Thanks!</div>
+										</td>
+									</tr>
+									<tr> 
+										<td>&nbsp; </td>
+										<td> <input type="submit" accesskey="v" name="preview" id="comment-preview" value="Preview" /> 
+											<input type="submit" accesskey="s" name="post" id="comment-post" value="Post" /> 
+										</td>
+									</tr>
+								</form>
+							</div>						
+						
+						
+					 </div>
+					 
+				  </div>
+			   </div>
+							 
+
+			 <div id="beta">
+				  <div id="beta-inner" class="pkg">
+
+            <!-- Stay in touch -->
+						<div class="module-search module">
+  <h2 class="module-header">Stay in Touch</h2>
+
+  <div class="module-content">
+
+    <div style="display:block;margin:10px 0 10px 0">
+      <a class="clean" title="Andre Lewis on Twitter" href="http://twitter.com/alewis"><img src="/images/twitter.png" alt="Andre Lewis on twitter" border="0" width="90" height="55"></a>
+    </div>
+    <div style="display:block;margin:0 0 10px 0">
+      <a href="http://feeds.feedburner.com/earthcode" class="clean"><img src="http://feeds.feedburner.com/~fc/earthcode?bg=EEEEEE&amp;fg=000066&amp;anim=1" height="26" width="88" style="border:0" alt="subscribe to my RSS"/></a>
+    </div>
+    <!--
+    <a href="http://www.workingwithrails.com/recommendation/new/person/7228-andre-lewis">Recommend me at WWR</a>
+    -->
+  </div>
+</div>
+					 						
+						<div class="module"> 
+							<h2 class="module-header">Last Five Posts</h2>
+							<div class="module-content">  <a href="http://earthcode.com/blog/2010/01/rails_on_ruby_191_in_productio.html">Rails on Ruby 1.9.1 in production: just do it</a><br />
+									 <a href="http://earthcode.com/blog/2009/10/rubymine_snow_leopard_garbled.html">RubyMine + Snow Leopard</a><br />
+									 <a href="http://earthcode.com/blog/2009/10/business_lessons_learned.html">Business lessons learned</a><br />
+									 <a href="http://earthcode.com/blog/2009/08/load_averages_explained.html">Load Averages, Explained</a><br />
+									 <a href="http://earthcode.com/blog/2009/06/git_remote_branch.html">git remote branch</a><br />
+									 
+							</div>
+						</div>
+
+						<div class="module"> 
+							<h2 class="module-header">My Book</h2>
+							<div class="module-content">
+								<div style="margin:auto; text-align:center;">
+								<a href="http://www.amazon.com/exec/obidos/ASIN/1590597877/geo0f-20" class="clean"><img src="/images/google-maps-book.gif" /></a>
+								</div>
+								Available now from Apress
+							</div>
+						</div>
+
+					 <div class="module-categories module">
+						<h2 class="module-header">Categories</h2>
+						<div class="module-content">
+						
+						<ul class="module-list">
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/ajax/contents.html" title="">Ajax</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/entrepreneurial/contents.html" title="">Entrepreneurial</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/gadgets/contents.html" title="">Gadgets</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/geokit/contents.html" title="">GeoKit</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/google/contents.html" title="">Google</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/google_maps/contents.html" title="">Google Maps</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/howto/contents.html" title="">How-to</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/javascript/contents.html" title="">Javascript</a>
+						   
+						   
+							  
+						<ul class="module-list">
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/javascript/prototype/contents.html" title="">Prototype</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/javascript/jquery/contents.html" title="">jQuery</a>
+						   
+						   
+							  
+						   </li>
+						</ul>
+						
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/misc/contents.html" title="">Misc</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/mysql/contents.html" title="">MySQL</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/open_source/contents.html" title="">Open source</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/openid/contents.html" title="">OpenID</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/placeshout/contents.html" title="">PlaceShout</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/railsconf/contents.html" title="">Railsconf</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/ruby/contents.html" title="">Ruby</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/ruby_on_rails/contents.html" title="">Ruby on Rails</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/seo/contents.html" title="">SEO</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/scout/contents.html" title="">Scout</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/shapewiki/contents.html" title="">ShapeWiki</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/sinatra/contents.html" title="">Sinatra</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/speaking_writing/contents.html" title="">Speaking / writing</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/tools/contents.html" title="">Tools</a>
+						   
+						   
+							  
+						<ul class="module-list">
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/tools/jslog/contents.html" title="">JSLog</a>
+						   
+						   
+							  
+						   </li>
+						</ul>
+						
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/usability/contents.html" title="">Usability</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/web/contents.html" title="">Web</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/web_20/contents.html" title="">Web 2.0</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/wifi_cafes/contents.html" title="">Wifi Cafes</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/git/contents.html" title="">git</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/iphone/contents.html" title="">iphone</a>
+						   
+						   
+							  
+						   </li>
+						
+						
+						
+						   
+						   <li class="module-list-item"><a href="http://earthcode.com/blog/system/contents.html" title="">system</a>
+						   
+						   
+							  
+						   </li>
+						</ul>
+						
+						</div>
+					 </div>
+					 
+
+						<div class="module"> 
+							<h2 class="module-header">My WiFi site</h2>
+							<div class="module-content"> <p>Top cities: 
+<a href="http://hotspotr.com/wifi/list/1-san-francisco-ca">San Francisco WiFi</a>;
+<a href="http://hotspotr.com/wifi/list/13-portland-or">Portland WiFi</a>;
+<a href="http://hotspotr.com/wifi/list/56-charlotte-nc">Charlotte WiFi</a></p> </div>
+						</div>
+					 
+					 
+					 
+				  </div>
+			   </div>
+
+							 
+			</div>
+		 </div>
+	  </div>
+   </div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-334055-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
+
