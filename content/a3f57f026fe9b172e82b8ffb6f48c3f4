@@ -1,0 +1,461 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<html>
+	<head>
+		<title>retrievr - search by sketch / search by image</title>
+		<style>
+			html, body {
+				height: 100%;
+			}
+			body {
+				margin: 0px;
+				font: 12px Arial, Helvetica, sans-serif;				
+			}
+			#masterColumn {
+				width: 760px;
+				margin-left: auto;
+				margin-right: auto;				
+				height: 100%;
+				background-color: white;
+			}
+			#topBar {
+				background-color: #ececec;
+				padding: 6px;
+				padding-left: 7px;
+			}
+			#logoBar {
+				position: relative;
+				padding: 6px;
+				padding-left: 7px;
+				background: url(/retrievr/Static/images/dots.png) top repeat-x;
+				height: 38px;				
+			}
+			#logo {
+				position: absolute;
+				top: 5px;
+				right: 0px;
+				font-size: 40px;
+				font-weight: bold;
+				color: black;
+			}
+			#headerBar {
+				padding: 6px;
+				padding-left: 7px;
+				background: url(/retrievr/Static/images/dots.png) top repeat-x;
+				height: 38px;
+			}
+			#header {
+				font-size: 22px;
+				font-weight: bold;
+			}
+			#logo #r {
+				color: #6f92c2;
+			}
+			a {
+				color: #6f92c2;
+			}
+			a:hover {
+				background-color: #6f92c2;
+				color: white;
+				text-decoration: none;
+			}
+			.thumbnail {
+				position: relative;
+				font-size: 11px;
+				padding: 0px;
+				margin-top: 0px;
+				margin-right: 10px;
+				margin-bottom: 5px;
+				float: left;
+				text-align: center;
+				width: 110px;
+				height: 135px;				
+			}			
+			.thumbnail img {
+				border: 1px solid #dddddd;
+			}
+			.lens {
+				position: absolute;
+				top: -10px;
+				right: -10px;
+				visibility: hidden;
+			}
+			.lensContainer {
+				position: relative;
+			}
+			#content {
+				padding-top: 20px;
+			}
+			#leftColumn {
+				width: 250px;
+				vertical-align: top;
+			}
+			#body {
+				vertical-align: top;				
+			}
+			.content {
+				width: 510px;
+				vertical-align: top;
+				margin: 0px;
+				padding: 0px;
+			}
+			.separator {
+				background: url(/retrievr/Static/images/dots-180.png) repeat-x center;
+				height: 50px;
+				width: 180px;
+			}
+			#info {
+				font-size: 11px;
+				width: 180px;
+			}
+			#info a {
+				text-decoration: none;
+			}
+			#goto {
+				font-size: 11px;
+				float: right;
+				margin-top: 1px;
+				margin-right: 1px;
+			}
+			sup {
+				color: red;
+			}
+			.inFrame {
+				position: absolute;
+				top: -100px;
+				left: 0px;
+				width: 1px;
+				height: 1px;
+				
+			}			
+			.headline {
+				font-size: 18px;
+				font-weight: bold;
+			}
+			#imagePanel ul {
+				margin-left: 0px;
+				margin-bottom: 0px;
+				padding: 0px 0px 0px 15px;
+			}
+			#previewImage {
+				padding: 9px;
+				border: 1px solid #9A9A9A;
+				width: 160px;
+				text-align: center;
+			}
+			#previewImage img {
+				border: none;
+			}
+			#rateBox {			
+				text-align: center;							
+			}
+			#rateBox img {				
+				border: 1px solid #9A9A9A;							
+			}
+			#rateOptions {
+				padding: 50px 0px 50px 0px;
+				font-size: 18px;
+				font-weight: bold;
+			}
+			.new {
+				color: white;
+				background-color: red;
+			}
+			.taor {			
+				margin-left: 10px;
+				margin-bottom: 10px;
+				float: left;
+			}
+			.taor img {
+				border: 1px solid #9A9A9A;
+				width: 152px;
+				height: 152px;
+			}
+		</style>		
+		<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+		<script type="text/javascript">			
+			_uacct = "UA-80093-6";
+			urchinTracker();			
+		</script>
+		<script type="text/javascript">
+			// -- Utilities --
+
+function $(id) {
+	return document.getElementById(id);
+}
+
+function display(id, x) {
+	$(id).style.display = "block";
+}
+
+function hide(id, x) {
+	$(id).style.display = "none";
+}
+
+function xfer(a, b) {
+	$(b).innerHTML = $(a).innerHTML;
+}
+
+// -- Saved State --
+
+savedStates = {};
+
+function getSavedState(name) {
+	var index = document.location.href.indexOf("#");
+	if (index == -1)
+		return null;
+	var state = {};	
+	var stateStrings = document.location.href.substring(index + 1).split("&");				
+	for (var i = 0; i < stateStrings.length; i++) {					
+		var eqIndex = stateStrings[i].indexOf("=");					
+		state[stateStrings[i].substring(0, eqIndex)] = stateStrings[i].substring(eqIndex + 1);
+	}		
+	return name ? state[name] : state;
+}
+
+function setSavedState(state) {
+	var index = document.location.href.indexOf("#");
+	var baseHref = index == -1
+		? document.location.href
+		: document.location.href.substring(0, index)
+	;
+	var buffer = [baseHref, "#"];
+	var stateBuffer = [];
+	for (var x in state)
+		stateBuffer.push(encodeURIComponent(x) + "=" + encodeURIComponent(state[x]));
+	buffer.push(stateBuffer.join("&"));	
+	document.location.href = buffer.join("");
+}
+
+function applySavedState(name) {
+	if (getSavedState(name)) {
+		var href = document.location.href;
+		var retr = "/retrievr";
+		var suffix = "?" + name + "=" + getSavedState(name);
+		document.location.href = href.substring(0, href.indexOf(retr) + retr.length) + "/" + suffix;
+	}
+}
+
+// -- Modes --
+
+currentMode = "sketch";
+
+function switchMode(mode) {
+	if (currentMode != mode) {
+		if (mode == "sketch") {
+			hide("imagePanel");
+			hide("imageContent");
+			display("sketchPanel");
+			display("sketchContent");
+		} else if (mode == "image") {
+			display("imagePanel");
+			display("imageContent");
+			hide("sketchPanel");
+			hide("sketchContent");
+		}
+		savedStates[currentMode] = getSavedState();
+		if (savedStates[mode])
+			setSavedState(savedStates[mode]);
+		currentMode = mode;
+	}
+}
+
+function autoSwitchMode() {
+	if (document.location.href.indexOf("locator=") >= 0 || document.location.href.indexOf("url=") >= 0) {
+		$("imageContent").innerHTML = "";
+		switchMode("image");		
+	}
+}
+
+// -- Dispatching --
+
+function update(mode, fragments, state) {
+	if (mode != currentMode)
+		switchMode(mode);
+	for (var x in fragments)
+		$(x).innerHTML = fragments[x];
+	setSavedState(state);
+}
+
+// -- Lens --
+
+function propagateWidth(element) {
+	with (element.parentNode.parentNode.style) {
+		width = element.width + "px";
+		marginLeft = "auto";
+		marginRight = "auto";
+	}	
+}
+
+function showLens(element) {
+	element.getElementsByTagName('div')[0].style.visibility = "visible";
+}
+
+function hideLens(element) {
+	element.getElementsByTagName('div')[0].style.visibility = "hidden";
+}
+
+function focusOn(locator) {
+	window.frames["in"].location.href = "/retrievr/in?locator=" + encodeURIComponent(locator);
+}
+
+// -- Misc --
+
+function showImageActions() {				
+	xfer("imageActions", "imageContent");
+}
+
+// -- Initialization --
+
+applySavedState("sketchName");
+applySavedState("locator");
+			
+		</script>
+	</head>
+	<body>
+		<div id="masterColumn">
+			<div id="topBar">				
+				<div id="goto">
+					<a href="http://labs.systemone.at/retrievr/about">About Retrievr</a> |
+					<a href="http://www.systemone.at/en/company/labs/">System One Labs</a> |
+					<a href="http://www.flickr.com">Flickr</a>
+				</div>
+				<a href="http://labs.systemone.at/retrievr/">Home</a>
+			</div>
+			<div id="logoBar">				
+				<div id="logo">retriev<span id="r">r</span></div>
+				<div>
+					Welcome in 2006!
+				</div>
+			</div>
+			<div id="headerBar">
+				<div id="header">All images</div>
+			</div>
+			<div id="content">
+				<table cellspacing="0" cellpadding="0">
+					<tr>
+						<td id="leftColumn">
+							Search by:<br />
+
+<div id="sketchPanel">
+	<b>Sketch</b> &bull; <b><a href="javascript:void(switchMode('image'))">Image</a></b>
+
+<div class="separator"><!-- --></div>
+<div id="drawlet">
+	<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+		 codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+		 width="181" height="360">
+	<param name="FlashVars" value="sketchName=2006-01-17-16-57-10-752439.2" />
+	<param name="movie" value="/retrievr/Static/draw-4b.swf" />
+	<param name="quality" value="high" />
+	<param name="bgcolor" value="#FFFFFF">
+	<embed src="/retrievr/Static/draw-4b.swf" FlashVars="sketchName=2006-01-17-16-57-10-752439.2" quality="high" bgcolor="#FFFFFF"
+		width="181"
+		height="360"
+		type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+	</embed>
+</object>
+	
+</div>
+
+</div>
+<div id="imagePanel" style="display: none;">
+	<b><a href="javascript:void(switchMode('sketch'))">Sketch</a></b> &bull; <b>Image</b>
+
+<div class="separator"><!-- --></div>
+<div id="previewImage"><br />
+Please upload
+<br>
+an image!
+<br />
+&nbsp;</div>
+
+<div class="separator"><!-- --></div>
+
+Search for similar images by
+<ul>
+	<li><b><a href="javascript:void(showImageActions())">uploading</a></b> an image file</li>
+	<li>or <b><a href="javascript:void(showImageActions())">entering the URL</a></b><br />of an image.</li>
+</ul>
+
+</div>
+
+<div id="inHolder">
+	<iframe src="/retrievr/in?url=&locator=" id="in" name="in" class="inFrame"></iframe>
+</div>
+
+<div class="separator"><!-- --></div>
+<div id="info">
+	<b><span class="new">&nbsp;New!&nbsp;</span></b> Please help us <a href="/retrievr/rate">rate sketches</a> for <a href="/retrievr/taor?c=1">The Art of retrievr</a>! Only a million to go ...
+	<br /><br />
+	<b>Still new!</b> You can search by <a href="javascript:void(switchMode('image'))">uploading images</a> now as well. Also: Your sketches have URLs! Send 'em around.
+	<br /><br />
+	This is an experimental service. Please treat it nicely and send copious amounts of <a href="mailto:chris@langreiter.com">feedback</a>!
+	For some background, <a href="http://labs.systemone.at/retrievr/about">read here</a>.	
+	<br /><br />								
+	retrievr relies on parts of the <a href="http://www.systemone.at/en/technology/overview/">System&nbsp;One</a> platform.
+</div>
+
+						</td>
+						<td id="body">
+							<div id="sketchContent" class="content">
+	Hello <a href="http://online.wsj.com/public/article/SB116068684427191119-KrE8VZvSkItrc4czqBuDP_l5uIA_20071017.html">WSJ</a> &amp; <a href="http://slashdot.org/articles/06/10/18/0110219.shtml">Slashdot</a> readers!
+</div>
+<div id="imageContent" class="content" style="display: none;">
+	<div class="headline">Upload an image file ...</div>
+
+<p>
+	Select an image file from your hard disk.
+	<br />
+	<form action="/retrievr/in" method="POST" enctype="multipart/form-data" target="in">
+		<input type="file" size="35" name="file" />	
+		<input type="submit" value="Retrieve" />
+	</form>
+</p>
+
+<br />
+
+<div class="headline">... or enter its URL</div>
+
+<p>
+	<form action="/retrievr/in" target="in">
+		<input type="text" size="35" name="url" value="http://" />
+		<input type="submit" value="Retrieve" />
+	</form>
+</p>
+
+</div>
+<div id="imageActions" class="content" style="display: none;">
+	<div class="headline">Upload an image file ...</div>
+
+<p>
+	Select an image file from your hard disk.
+	<br />
+	<form action="/retrievr/in" method="POST" enctype="multipart/form-data" target="in">
+		<input type="file" size="35" name="file" />	
+		<input type="submit" value="Retrieve" />
+	</form>
+</p>
+
+<br />
+
+<div class="headline">... or enter its URL</div>
+
+<p>
+	<form action="/retrievr/in" target="in">
+		<input type="text" size="35" name="url" value="http://" />
+		<input type="submit" value="Retrieve" />
+	</form>
+</p>
+
+</div>
+
+						</td>						
+					</tr>					
+				</table>				
+			</div>
+		</div>
+		<script>
+			autoSwitchMode();	
+		</script>
+	</body>
+</html>
