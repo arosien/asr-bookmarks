@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="author" content="mad4milk" />
+	<meta name="copyright" content="copyright 2007 www.mad4milk.net" />
+	<meta name="description" content="mad4milk, a web design, web application agency located in rome, italy" />
+	<meta name="keywords" content="mad4milk, web design, web applications, rome, spaghetti, italy, moo.fx" />
+	<meta name="robots" content="all" />
+	<!--
+
+               ____        _                      __  __      __   __
+   ___   __   / __'\     _\'\      __   ___   __ /\_\/\ \    /\ \ / /  web 2.0 beta
+  /\  \_/ '\ /\ \Z\ \   / __ \    /__\ /\  \_/ '\\/_/\ \ \   \ \ \ /__
+  \ \  __/\ \\ \  __ \ /\ \Z\ \  / \Z\\\ \  __/\ \  __\ \ \___\ \  _ '\
+   \ \_\ \ \_\\ \_\ \ \\ \_____\/\____ \\ \_\ \ \_\/\ \\ \____\\ \_\ \_\
+    \/_/  \/_/ \/_/\/_/ \/_____/\/___/\_\\/_/  \/_/\ \_\\/____/ \/_/\/_/
+                                     \/_/           \/_/       be happy.
+
+	-->
+	<title>mad4milk - moo.ajax</title>
+	
+	<script src="http://www.google-analytics.com/ga.js" type="text/javascript"></script>
+
+	<script type="text/javascript">
+	var pageTracker = _gat._getTracker("UA-112611-6");
+	pageTracker._initData();
+	pageTracker._trackPageview();
+	</script>
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="/assets/styles/article.css" />
+	<link rel="shortcut icon" href="/icon.png" type="image/x-icon" />
+	
+</head>
+
+<body>
+	
+	<div id="content">
+		
+		<div id="header">
+			<h1><a href="http://mad4milk.net">mad4milk</a> archive</h1>
+		</div>
+		
+		<div class="title">
+
+			<h2>moo.ajax</h2>
+
+			<h3>December 20 2005, 08:06:00</h3>
+	
+		</div>
+
+		<p class="notice"><strong>Notice</strong>: moo.ajax is now deprecated, as it has been replaced by <a href="http://mootools.net">mootools</a>. Go <a href="http://mootools.net/download">get it now</a>.</p>
+
+<p>I noticed many of you requested if it would have been possible to use the full prototype, instead of <a href="http://moofx.mad4milk.net/scripts/prototype.lite.js">the lite one</a> I provided with the full download of <a href="http://moofx.mad4milk.net">moofx</a>, to use its ajax capabilities along with the effects. Sure you can, but wouldn&#8217;t it be cooler if there was a more lightweigt one? </p>
+
+<p>Just to continue my mission in small javascripting, I have arranged this moo.ajax, in just 1.3kb of uncompressed sweetness.</p>
+
+<p><a href="http://www.mad4milk.net/entry/moo.ajax">read more for instructions</a>, or <a href="http://www.mad4milk.net/examples/mooajax/moo.ajax.js">download the script</a>. As always, any <a href="http://www.mad4milk.net/entry/moo.ajax/#comments">comments/corrections/suggestions </a>are highly appreciated.</p>
+
+
+		<p>moo.ajax is a very simple ajax class, to be used with prototype.lite from moo.fx. It&#8217;s roughly based on the prototype one, so their usage are very similar.</p>
+
+<h4>The request</h4>
+
+<p>to make any request just call</p>
+
+<pre><code>new ajax(url, options);
+</code></pre>
+
+<h4>The options</h4>
+
+<ul>
+<li>method: choose either post or get. The default is post.</li>
+<li><del>posyBody</del> postBody: if you choose post as method, you can write parameters here.</li>
+<li>onComplete: a function that will be fired when your request is complete. The request object will be passed as a parameter of the function.</li>
+<li>update: an dom element or an element&#8217;s id. This element will be filled with the request&#8217;s responsetext.</li>
+</ul>
+
+<h4>An example</h4>
+
+<p>This will call my script.php via post, setting as parameter sleep=3. When the request is complete I want an alert with the response text, and I want an element to be updated with the responsetext as well.</p>
+
+<pre><code>new ajax ('sleep.php', {postBody: 'sleep=3', update: $('myelementid'), onComplete: myFunction});
+function myFunction(request){
+  alert(request.responseText);
+}
+</code></pre>
+
+<p>Is pretty simple, isn&#8217;t it? You can also <a href="http://www.mad4milk.net/examples/mooajax">watch a demo of this</a>.</p>
+
+<h4>And now, the conclusion</h4>
+
+<p>This little script is meant to be used for simple ajax calls (take <a href="http://www.mad4milk.net/entries/mooflex">mooflex</a> for example). If you need to use JSON or you intend to use ajax more extensively, I suggest you to use <a href="http://prototype.conio.net">the full prototype</a> instead.</p>
+
+<p>Next week I&#8217;ll publish moo.dom, a lightweight (ofcourse!) script also based on prototype.lite, to provide easy dom navigation.</p>
+
+		
+		<div id="footer">
+			copyright &copy; 2004-2007 <a href="http://mad4milk.net">mad4milk</a>
+		</div>
+	
+	</div>
+
+</body>
+</html>
