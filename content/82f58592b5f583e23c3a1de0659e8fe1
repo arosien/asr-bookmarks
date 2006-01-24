@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>FireBug - JoeHewitt.com</title>
+
+<style type="text/css" media="screen">@import "/themes/sheet/sheet.css";</style>
+<style type="text/css" media="screen">@import "firebug.css";</style>
+
+<script language="JavaScript">
+
+function installXPI()
+{
+    if (typeof(InstallTrigger) != 'undefined')
+    {
+        var xpi = {'FireBug': 'http://www.joehewitt.com/software/firebug/releases/firebug0.4.1.xpi'};
+        InstallTrigger.install(xpi);
+        return false;
+    }
+    else
+        return true;
+}
+
+function randomizeImage()
+{
+    var images = ["headerConsole.png", "headerInspector.png", "headerDebugger.png"];
+    var index = Math.floor(Math.random() * images.length);
+    document.getElementById("headerImage").src = images[index];
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div id="content">
+<div class="contentTop1"><div class="contentTop2"> </div></div>
+
+<div class="contentInner1">
+<div class="contentInner2">
+<div class="contentInner3">
+<div class="contentInner">
+
+    <h1 class="siteTitle"><a href="/"><span class="bigLetter">J</span>OE<span class="bigLetter">H</span>EWITT.COM</a></h1>
+
+<div class="pageHead">
+    <a href="/software/firebug/"><img class="pageIcon" src="firebug.png" title="FireBug - Web Debugging Evolved"></a>
+</div>
+
+<div class="blogPost">
+
+<div class="imageHeader">
+    <img id="headerImage">
+    <script language="JavaScript">randomizeImage();</script>
+</div>
+
+
+<div style="float: right">
+
+<div>
+    <a href="#" onclick="installXPI(); return 0;">
+        <img src="install.png" class="installLink">
+    </a>
+</div>
+
+<div class="navBox">
+    <div><a href="screens.php">Screen Shots</a></div>
+    <div><a href="docs.php">Documentation</a></div>
+    <div><a href="faq.php">FAQ</a></div>
+    <div><a href="forums">Forums</a></div>
+    <div><a href="/">Blog</a></div>
+</div>
+
+<!--
+<div class="navBox">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but21.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----MIIHNwYJKoZIhvcNAQcEoIIHKDCCByQCAQExggEwMIIBLAIBADCBlDCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20CAQAwDQYJKoZIhvcNAQEBBQAEgYC2NVrIdpCJrTZ6LFSDxS9qVQwj2sYhwQPhrnErXBDTbFQAtghRBRMsxwtgpE3MEDzAknq+xcjE3WacDhoz5GoCdyL3ktyJ8TKYpeguBAa+BIZKTnHXyAJuwOzFsGcPPCMtDAWoEYvuZT8ju7QEVFAl1G4NKjjPnH1c23F299xlJTELMAkGBSsOAwIaBQAwgbQGCSqGSIb3DQEHATAUBggqhkiG9w0DBwQIoa5sxbUdMCSAgZAgrfNdRO7ucyn1bxQdVms4VXNxq6ppvNe38DXGG4SX6k4JzrelkQGa9RDpGpqHXRIkpIz+Vhh5cc3nNX6322nWjFXI1CfA0PR6H/wdXih/QvCwzHcG3mVZwu25Ot526WnySM/pCAqYYvfcyEJF2g+debbtGb6TIbEAXKAMoeFGvE/aRcG1dgCmKiy+KEMiVWegggOHMIIDgzCCAuygAwIBAgIBADANBgkqhkiG9w0BAQUFADCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20wHhcNMDQwMjEzMTAxMzE1WhcNMzUwMjEzMTAxMzE1WjCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMFHTt38RMxLXJyO2SmS+Ndl72T7oKJ4u4uw+6awntALWh03PewmIJuzbALScsTS4sZoS1fKciBGoh11gIfHzylvkdNe/hJl66/RGqrj5rFb08sAABNTzDTiqqNpJeBsYs/c2aiGozptX2RlnBktH+SUNpAajW724Nv2Wvhif6sFAgMBAAGjge4wgeswHQYDVR0OBBYEFJaffLvGbxe9WT9S1wob7BDWZJRrMIG7BgNVHSMEgbMwgbCAFJaffLvGbxe9WT9S1wob7BDWZJRroYGUpIGRMIGOMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ0ExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC1BheVBhbCBJbmMuMRMwEQYDVQQLFApsaXZlX2NlcnRzMREwDwYDVQQDFAhsaXZlX2FwaTEcMBoGCSqGSIb3DQEJARYNcmVAcGF5cGFsLmNvbYIBADAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUAA4GBAIFfOlaagFrl71+jq6OKidbWFSE+Q4FqROvdgIONth+8kSK//Y/4ihuE4Ymvzn5ceE3S/iBSQQMjyvb+s2TWbQYDwcp129OPIbD9epdr4tJOUNiSojw7BHwYRiPh58S1xGlFgHFXwrEBb3dgNbMUa+u4qectsMAXpVHnD9wIyfmHMYIBmjCCAZYCAQEwgZQwgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tAgEAMAkGBSsOAwIaBQCgXTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0wNjA1MjMwNDM2MDFaMCMGCSqGSIb3DQEJBDEWBBTZOKUir8Rci3c/MThETu6+0yHB1DANBgkqhkiG9w0BAQEFAASBgA95jiX1T4wgNjmMNTBSiaPs1q+mZdQrYjJ1QtqFhBoCnKo7Urd/gB3ccCaqW/z11GXCzNZIJOukaIamqN4m/3Pe7znrKle0mcO9DsbpeK+LqNFrvH3ycsBOcYWzKY9mu4o3qaxeU+uKCQDueLUrKkjLoiykQqf6Ckt8uHZUF/kt-----END PKCS7-----
+">
+</form>
+</div>
+-->
+
+<div class="navBox">
+
+<a href="http://www.spreadfirefox.com/?q=affiliates&id=0&t=64"><img border="0" alt="Get Firefox!" title="Get Firefox!" src="http://sfx-images.mozilla.org/affiliates/Buttons/110x32/get.gif"/></a>
+
+</div>
+
+</div>
+
+<p class="lead">FireBug lets you explore the far corners of the DOM by keyboard or mouse.  All of the tools you need to poke, prod, and monitor your JavaScript, CSS, HTML and Ajax are brought together into one seamless experience, including a debugger, error console, command line, and a variety of fun inspectors.</p>
+
+<h2>Some Fun Features</h2>
+
+<h3>Logging for web pages</h3>
+<p>Web developers have suffered with "alert debugging" for centuries.  If you enjoy clicking the "Ok" button 40,000 times a day, FireBug is not for you.  Otherwise, you'll enjoy having the ability to log messages from JavaScript in your web page directly to the FireBug console.</p>
+
+<h3>JavaScript Debugging</h3>
+<p>Want to stop your JavaScript and step through it line by line?  No need to fire up a big fat debugger.  FireBug includes a simple lightweight way to set breakpoints in your scripts and examine every step of execution.</p>
+
+<h3>Errors at your fingertips</h3>
+<p>Nobody likes to see errors in their web pages, but with FireBug <a href="screens/bonanza.png">you won't mind as much</a>.  FireBug adds <a href="screens/indicator.png">a little icon</a> to the Firefox status bar which tells you if your page is busted.  Open up the FireBug panel and you're looking at the errors that occurred in that page, and only that page.  No more digging through the muddy pile of errors in the JavaScript Console window.</p>
+
+<h3>Inspectors galore</h3>
+<p>Elements and styles and events, oh my.  <a href="screens/source.png">There's</a> a lot <a href="screens/style.png">going</a> on <a href="screens/events.png">behind</a> the <a href="screens/dom.png">curtain</a> of a web page.  FireBug's inspectors let you stroll lazily through the DOM using the familiar hyperlink model of the web.  If you see an object reference, you can click it to inspect it.</p>
+
+<h3>Command line</h3>
+<p>If you enjoy "alert debugging" then you probably also enjoy typing "javascript: " urls in the location bar all day.  If not, then you'll enjoy using FireBug's <a href="screens/cl.png">JavaScript command line</a> instead.</p>
+
+<h3>Ajax Request Spy</h3>
+<p>If you feel hip every time you fire off an XMLHttpRequest on your Ajax website, FireBug will secure your place amongst the avante garde.  The FireBug console can <a href="screens/spy.png">log all Ajax request traffic</a> as it happens, and allows you to inspect the responses.</p>
+
+<h3>Live Editing</h3>
+<p>It's no fun just looking at the DOM.  FireBug's inspectors <a href="screens/editing.png">let you edit</a> some parts of the DOM.  More editing features to come in a future version...</p>
+
+
+<h2>Thanks</h2>
+
+<p>The FireBug logo was created by Jamey Boje of <a href="http://graphicsguru.com/">graphicsguru</a>.</p>
+
+<p>Some of FireBug's features were inspired by other great Firefox extensions, including <a href="http://www.mozilla.org/projects/venkman/">Venkman</a>, <a href="https://addons.mozilla.org/extensions/moreinfo.php?id=655&application=firefox">View Rendered Source Chart</a>, <a href="https://addons.mozilla.org/extensions/moreinfo.php?id=1815&application=firefox">Console2</a>, <a href="http://www.karmatics.com/aardvark/">Aardvark</a>, and Bob Ippolito's excellent <a href="http://mochikit.com/examples/interpreter/">MochiKit JavaScript Interpreter</a>.</p>
+
+</div>
+
+<div class="navLinks">
+    <a class="navLink" href="/">HOME</a>
+    |
+    <a class="navLink" href="/about.php">ABOUT ME</a>
+    |
+    <a class="navLink" href="/blog/">ARCHIVES</a>
+</div>
+
+</div></div></div></div>
+
+<div class="contentBottom1"><div class="contentBottom2"> </div></div>
+</div>
+
+</body>
+</html>
