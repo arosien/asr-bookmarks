@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>cosign: web single sign-on</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="DESCRIPTION" content="Open source, secure single sign-on web authentication system (webiso). cosign is part of the National Science Foundation Middleware Initiative (NMI) EDIT software release.">
+<meta name="KEYWORDS" content="cosign,webiso,websso,kerberos,uportal,nmi,mace,shibboleth,n-tier,proxy,multi-factor,pam">
+
+</style>
+<link href="cosign.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+    <!--
+    body,td,th {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+    }
+    body {
+	background-color: #FFFFFF;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+    }
+    -->
+</style>
+<script language="JavaScript" type="text/JavaScript">
+    <!--
+    function MM_reloadPage(init) {
+	//reloads the window if Nav4 resized
+	if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+	    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+	else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+	}
+	MM_reloadPage(true);
+    //-->
+</script>
+</head>
+
+<body>
+ 
+<table width="100%"  border="0" cellpadding="0" cellspacing="0" background="images/header_skyrepeat.gif">
+  <tr>
+    <td width="55" class="hd-lt-bg"><img src="images/header_leftcap.gif" width="55" height="241"></td>
+    <td align="left" valign="top" class="hd-panorama"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="right" class="head_gapspace"><img src="images/spacer.gif" width="1" height="29"></td>
+      </tr>
+      <tr>
+<!--        <td align="right"><img src="images/head_umichtype.gif" width="343" height="23"></td>
+-->
+      </tr>
+      <tr>
+        <td align="right"><a href="https://sourceforge.net/projects/cosign/files/cosign/cosign-3.1.2/cosign-3.1.2.tar.gz/download"><img src="images/icon_dl_cosign.gif" width="91" height="115" border="0" class="hd-imagespace"></a><a href="https://sourceforge.net/projects/cosign/files/cosign-windows/"><img src="images/icon_dl_iis.gif" width="91" height="115" border="0" class="hd-imagespace"></a><a href="https://sourceforge.net/projects/cosign/files/cosign-java/JavaCosignV3.jar/download"><img src="images/icon_dl_java.gif" width="91" height="115" border="0" class="hd-imagespace"></a>
+
+<!--<a href="http://cosign.cvs.sourceforge.net/cosign/"><img src="images/icon_browse_cvs.gif" width="91" height="115" border="0" class="hd-imagespace" #invalid_attr_id="15px 0px 0px 15px"></a>-->
+	</td>
+      </tr>
+      <tr>
+        <td align="right"><img src="images/spacer.gif" width="722" height="1"></td>
+      </tr>
+    </table></td>
+    <td width="50" align="right" class="hd-lt-bg"><img src="images/header_rightcap.gif" width="50" height="241"></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellpadding="0" cellspacing="0">
+  <tr align="right" valign="middle">
+    <td colspan="2" class="hd-subgray-bg"><a href="cosign-announce/" class="headerlinks">Announcements</a><a href="cosign-discuss/" class="headerlinks">Discussion</a></td>
+  </tr>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" class="navzone"><table width="200" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="nav-ed-top">&nbsp;</td>
+      </tr>
+      <tr>
+        <td class="nav-ed-l"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+          <td class="menu-l1y"><img src="images/chevron_gold_sm.gif" width="6" height="10" hspace="4">
+<a href="../cosign/"class="link-l1y">home</a></td>
+</tr>
+          <tr>
+            <td class="navdivider"><img src="images/spacer.gif" width="1" height="2"></td>
+          </tr>
+          <tr>
+            <td class="menu-l1"><img src="images/chevron_gray_sm.gif" width="6" height="10" hspace="4"><a href="download.shtml" class="link-l1">download</a></td>
+          </tr>
+          <tr>
+            <td class="navdivider"><img src="images/spacer.gif" width="1" height="2"></td>
+          </tr>
+          <tr>
+            <td class="menu-l1"><img src="images/chevron_gray_sm.gif" width="6" height="10" hspace="4"><a href="build.shtml" class="link-l1">build</a></td>
+          </tr>
+          <tr>
+            <td class="navdivider"><img src="images/spacer.gif" width="1" height="2"></td>
+          </tr>
+          <tr>
+            <td class="menu-l1"><img src="images/chevron_gray_sm.gif" width="6" height="10" hspace="4"><a href="overview.shtml" class="link-l1">overview</a></td>
+          </tr>
+          <tr>
+            <td class="navdivider"><img src="images/spacer.gif" width="1" height="2"></td>
+          </tr>
+          <tr>
+            <td class="menu-l1"><img src="images/chevron_gray_sm.gif" width="6" height="10" hspace="4"><a href="http://webapps.itcs.umich.edu/cosign/" class="link-l1">wiki</a></td>
+          </tr>
+          <tr>
+            <td class="navdivider"><img src="images/spacer.gif" width="1" height="2"></td>
+          </tr>
+          <tr>
+            <td class="menu-l1"><img src="images/chevron_gray_sm.gif" width="6" height="10" hspace="4"><a href="faq.shtml" class="link-l1">faq</a></td>
+          </tr>
+          <tr>
+            <td class="navdivider"><img src="images/spacer.gif" width="1" height="2"></td>
+          </tr>
+          <tr>
+            <td class="menu-l1"><img src="images/chevron_gray_sm.gif" width="6" height="10" hspace="4"><a href="filter.shtml" class="link-l1">filter</a></td>
+          </tr>
+          <tr>
+            <td class="navdivider"><img src="images/spacer.gif" width="1" height="2"></td>
+          </tr>
+          <tr>
+            <td class="menu-l1"><img src="images/chevron_gray_sm.gif" width="6" height="10" hspace="4"><a href="roadmap.shtml" class="link-l1">roadmap</a></td>
+          </tr>
+          <tr>
+            <td class="navdivider"><img src="images/spacer.gif" width="1" height="2"></td>
+          </tr>
+          <tr>
+            <td class="menu-l1"><img src="images/chevron_gray_sm.gif" width="6" height="10" hspace="4"><a href="license.shtml" class="link-l1">license</a></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td class="nav-ed-bot"><img src="images/navcap_bot2.gif" width="200" height="12"></td>
+      </tr>
+    </table>
+    <p><a href="http://www.nmi-edit.org/" target="_blank"><img src="images/nmi_logobutton.gif" alt="NSF Middleware Initiative Website" width="80" height="75" vspace="20" border="0"></a></p></td>
+    <td valign="top"> <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td valign="top" class="contentzone"><p>
+<!--
+<a href="http://www.nmi-edit.org/" target="_blank"><img src="images/nmi_logobutton.gif" alt="NSF Middleware Initiative Website" align="right" valign="top" width="80" height="75" vspace="0" border="0"></a>
+-->
+	<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="18" rowspan="2" align="left" valign="middle"><img src="images/chevron_blue_lg.gif" width="12" height="20"></td>
+                <td class="cnt-head1">
+CoSign: Secure, Intra-Institutional Web Authentication</td>
+              </tr>
+              <tr>
+                <td class="cnt-sub-ital">Open Source Web Single Sign-On</td>
+              </tr>
+              <tr>
+                <td colspan="2" align="left" valign="middle" class="line-bluedot">&nbsp;</td>
+              </tr>
+	</table>
+
+          <p>An open source project originally designed to provide the University of Michigan with a secure single sign-on web authentication system. cosign is part of the National Science Foundation  Middleware Initiative (NMI) <a href="http://www.nmi-edit.org/">EDIT</a> software release.</p>
+
+
+          <h4>News:</h4>
+	  <p>
+	    <em>25 June 2010</em> - cosign 3.1.2 is now available for <a href="https://sourceforge.net/projects/cosign/files/cosign/cosign-3.1.2/">download</a>.
+	    This release fixes a module ordering bug for the Apache 2.2 filter.
+          <p>
+            <em>Urgent!</em>&nbsp;
+	    A session fixation vulnerability simplifying phishing attacks
+	    has been discovered in all releases of cosign up to and including
+	    cosign 2.1.1:
+            <a href="./cosign-vuln-2009-002.txt">COSIGN-VULN-2009-002</a>.
+	    Cosign-protected organizations should upgrade to cosign 3.0
+	    immediately, available on the
+	    <a href="./download.shtml">download</a> page.
+          </p>
+	  <p><a href="http://drupal.org/project/cosign">cosign module</a> for <a href="http://drupal.org/">Drupal</a> is now available</p>
+          <p>The <a href="http://webapps.itcs.umich.edu/cosign/">cosign Wiki</a> is up and running.</p>
+          <p>The <a href="media/cosignscheme2006a.rtf">comprehensive cosign scheme document</a> is now available.</p>
+	  <p>The cosign Friend system is now <a href="download.shtml">available separately</a> from CoSign, to facilitate its integration with other web single sign-on systems</p>
+          <p>The updated <a href="media/multifactor_spec_draft6.pdf" class="link-ltblue">specification for Multiple Factor Authentication</a> is now available.
+          <p>See the download page for <a href="download.shtml" class="link-ltblue">download links</a>, revision history, and checksums.</p>
+
+
+          <h4>Features:</h4>
+          <ul class="list-blue">
+		  <li>Passwords, if used, are sent only to the central weblogin service over SSL.</li>
+          <li>Users need only authenticate once per session to access any number of cosign-protected campus sites.</li>
+	  <li>Optional per-service re-authentication.
+          <li>A compromised service host (<a href="overview.shtml" class="link-ltblue">see the overview</a>) does not represent a compromise of the cosign system as a whole.</li>
+          <li>x509 users needn't enter a password to authenticate.</li>
+	  <li>SPNEGO logins supported.</li>
+	  <li>Multi-factor authentication.</li>
+          <li>The cosign 'friend' system allows non umich users to authenticate using self-created, centrally-administered guest accounts.</li>
+          <li>Trusted systems can request Kerberos credentials from central server for N-Tier authentication (e.g. IMAP, LDAP, Oracle, etc.).</li>
+          <li>There are no domain cookies used in this system.</li>
+          <li>Sessions have both idle and hard timeouts.</li>
+          <li>Users can logout of all cosign-protected services by visiting a single URL.</li></ul>
+	<p><img src="images/cosign_3d_lg.gif" width="181" height="177" align="right"></p>
+	<p>The University of Edinburgh has provided an <a href="http://www.jisc.ac.uk/uploaded_documents/CMSS-Gilmore.pdf">Evaluation of Web Single Sign-On Technologies</a> to the United Kingdom's JISC.
+	<p>The University of Auckland, New Zealand has provided us with their <a href="http://www.umich.edu/~umweb/downloads/WebSSOImplementationComparision.pdf">WebSSO Implementation Comparison</a> from their review of available solutions.
+	<p>The Pennsylvania State University also has a <a href="http://et.aset.psu.edu/publications/2003/WebSSO.shtml">Web Single Sign On Evaluation Whitepaper</a> available that includes cosign.</p>
+	<p><b>Announcements:</b> <a href="https://lists.sourceforge.net/lists/listinfo/cosign-announce" class="link-ltblue">Join cosign-announce</a></p>
+	<p><b>Discussion:</b> <a href="https://lists.sourceforge.net/lists/listinfo/cosign-discuss">Join cosign-discuss</a></p>
+
+	<p><b>Contact:</b> <em>cosign</em> at <em>umich.edu</em></p>
+	<p>cosign is freely available and distributed under an <a href="license.shtml">open source license</a>.</p></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="2" nowrap class="foot-gold">Copyright &copy; 2002 - 2004 Regents of the University of Michigan : &nbsp;Page last updated 17-December-2010<img src="images/spacer.gif" width="15" height="1"> </td>
+  </tr>
+</table>
+</body>
+</html>
+
