@@ -1,0 +1,213 @@
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
+  <head>
+<!--    <base href="/jspcontrols/components/header.jsp"/> -->
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+
+    <meta name="description" content="JSP Controls Tag Library allows the creation of independent dual-mode (Ajax/non-Ajax) portlet-like page fragments." />
+    <meta name="keywords" content="JSP Controls,JSPControls,JSP Components,JSP Fragment,dual-mode,Ajax,AHAH,in-place update,Web Design,Michael Jouravlev" >
+
+    <link rel="stylesheet" type="text/css" href="./css/sinorca-screen.css" media="screen" title="Sinorca (screen)" />
+    <link rel="stylesheet" type="text/css" href="./css/sinorca-print.css" media="print" />
+
+    <link rel="stylesheet" href="./css/debug.css">
+    <link rel="stylesheet" href="./css/simpleform.css">
+
+    <link rel="stylesheet" href="./css/tigristabs.css">
+    <link rel="stylesheet" href="./css/yahootabs.css">
+
+    <script src="./js/behaviour.js" language="javascript"></script>
+    <script src="./js/jspcontrols.js" language="javascript"></script>
+
+    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+    <script type="text/javascript">_uacct = "UA-513140-4";urchinTracker();</script>
+
+    <title>JSP Controls Tag Library</title>
+  </head>
+
+  <body>
+    <!-- For non-visual user agents: -->
+      <div id="top"><a href="#main-copy" class="doNotDisplay doNotPrint">Skip to main content.</a></div>
+
+    <!-- ##### Header ##### -->
+      <div class="midHeader">
+        <h1 class="headerTitle">JSP Controls Tag Library</h1>
+      </div>
+
+      <div class="subHeader">
+        <span class="doNotDisplay">Navigation:</span>
+        <a href="index.jsp" class="highlight">JSP Controls</a> |
+        <a href="./about/index.jsp">About</a>
+      </div>
+    </div>
+
+
+
+
+
+    <!-- ##### Side Bar ##### -->
+
+    <div id="side-bar">
+
+      <div>
+        <p class="sideBarTitle">Tag Library</p>
+        <ul>
+    	  <li><span class="thisPage">&raquo; Welcome</span></li>
+
+
+	  <li><a href="./quickstart.jsp">&rsaquo; Documentation</a>
+	  
+
+    	  <li><a href="./tldsummary.jsp">&rsaquo; Core Tags</a></li>
+	  
+
+    	  <li><a href="./notebooksummary.jsp">&rsaquo; Tabbed Notebook Tags</a></li>
+	  
+
+    	  <li><a href="./faq.jsp">&rsaquo; FAQ</a></li>
+    	  <li><a href="./license.jsp">&rsaquo; License</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="sideBarTitle">Development</p>
+        <ul>
+    	  <li><a href="./roadmap.jsp">&rsaquo; Roadmap</a></li>
+    	  <li><a href="./status.jsp">&rsaquo; Current Status</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="sideBarTitle">Demos And Downloads</p>
+        <ul>
+    	  <li><a href="./textentry.jsp">&rsaquo; Partial Submit</a></li>
+    	  <li><a href="./buttonsandlinks.jsp">&rsaquo; Buttons And Links</a></li>
+
+    	  <li><a href="./download.jsp">&rsaquo; Download</a></li>
+
+        </ul>
+      </div>
+
+      <div>
+        <p class="sideBarTitle">Community</p>
+        <ul>
+
+    	  <li><a href="./mailinglists.jsp">&rsaquo; Mailing Lists</a></li>
+    	  <li><a href="./tracker.jsp">&rsaquo; Issue Tracker</a></li>
+
+        </ul>
+      </div>
+
+      <div class="lighterBackground">
+	
+        <span class="sideBarText">
+	  JSP Controls Tag Library manages the lifecycle of JSP components. 
+        </span>
+        <span class="sideBarText">
+	  The components can be used in any JSP-based application.
+        </span>
+        <span class="sideBarText">
+	  The components choose Ajax or standard mode automatically, depending on browser capabilities.
+        </span>
+	
+      </div>
+    </div>
+
+
+
+
+    <!-- ##### Main Copy ##### -->
+
+
+    <div id="main-copy">
+	<h1 id="welcome">Welcome</h1>
+
+<p><strong>JSP Controls Tag Library</strong> manages the lifecycle of independent <em>JSP fragments</em> like login forms, checkout wizards, tabbed notebooks or image sliders, also referred to as <em>page components</em> or <em>JSP components</em>. The library automatically selects asynchronous or synchronous mode depending on browser capabilities.</p>
+
+<p>JSP Controls Tag Library is not a collection of ready-to-use widgets; one may think of the library as of a tiny portal engine with an API consisting of just five custom tags. With the help of these tags the page fragments render themselves and handle their own input.</p>
+
+<p>The key difference of JSP Controls Tag Library from other web component solutions is that Javascript is not required for page fragments to function properly. If Javascript is enabled in the browser, the library updates the fragments in-place. If Javascript is disabled, the library falls back to full page refresh, calculating the reload address automatically.</p>
+
+<p>Components built with the library can be used in any JSP-based application and can run in any browser.</p>
+
+
+	<p align="center"><img alt="Login Component" src="./images/jsp_component.gif"></p>
+
+
+
+	
+	
+	<h1 id="ipf">Independent Page Fragments</h1>
+	<p>The Library utilizes two request processing concepts:</p>
+	<ul>
+		<li>Traditional synchronous HTTP request/response cycle (Non-Ajax mode), and</li>
+		<li>Asynchronous in-place update for Javascript-enabled browsers with XMLHTTPRequest support (Ajax mode).</li>
+	</ul>
+
+	<p>In non-Ajax mode after browser submits data to a fragment, the fragment updates its state
+	if necessary and reloads the whole page by redirecting browser to the original page
+	location. A request that follows, pulls up page fragments and they [re]render themselves.</p>
+
+	<p>In Ajax mode an application renders a view directly in response to asynchronous request,
+	no reloading is needed. HTML markup, returned by the fragment, is inserted into the 
+	composite page without full page refresh.</p>
+	
+	<p>Pages composed with JSP Controls Tag Library look and behave the same whether they run in Ajax mode 
+	or not. In fact, a browser that renders web page in an off-screen buffer, may deliver the same 
+	flicker-free experience in non-Ajax mode as other browsers do in Ajax mode.</p>
+
+	<h1>System Requirements</h1>
+    	
+	<ul>
+		<li>Java SDK 1.3+</li>
+		<li>Servlet container, supporting servlet specification 2.3+ and JSP specification 1.2+
+		(Tomcat&nbsp;4, Resin&nbsp;2)</li>
+		<li>A browser supporting either bare HTTP 1.1 (almost any browser) or Javascript+XMLHTTPRequest
+		object (MSIE&nbsp;5+, Firefox&nbsp;1.x, Safari&nbsp;1.2+).</li>
+		<li>Samples use JSTL&nbsp;1.1 and require JSP&nbsp;2.0 container to run (Tomcat&nbsp;5, Resin&nbsp;3)</li>
+	</ul>
+
+
+
+	<h1>Demos</h1>
+	<p>There are not a lot of demos so far. JSP Controls Tag Library is not about ready-to-use
+	components, it is about managing component lifecycle. A couple of simple demos are 
+	available on <a href="http://www.superinterface.com/jspcontrols/">old demos page</a>.
+	More fragments and use cases will be added later.</p>
+
+	<h1>License</h1>
+	<p>The JSP Controls Tag Library is released under <a href="./license.jsp">Apache 2.0 license</a>.</p>
+
+	<h1>Copyrights</h1>
+	<p>All code, documentation and images on this site copyright by members of JSP Controls project
+	unless expressly stated otherwise. Some images are based on page template found at
+	<a href="http://www.templatesbox.com/templates/072.htm">TemplatesBox.com</a> website.</p>
+
+	<p>Java, JSP, and JavaServer Pages are trademarks or registered trademarks of Sun Microsystems, Inc.
+	in the US and other countries. JSP Controls Tag Library is not affiliated with, neither endorsed by 
+	Sun Microsystems, Inc.</p>
+
+    </div>
+    
+    <!-- ##### Footer ##### -->
+
+    <div id="footer">
+
+      <div class="left">
+        <!-- E-mail:&nbsp;<a href="./index.html" title="Email webmaster">webmaster@your.company.com</a>--><br />
+      </div>
+
+      <br class="doNotDisplay doNotPrint" />
+
+      <div class="right">
+	<a class="doNotPrint" href="http://sourceforge.net/projects/jspcontrols"><img src="./images/sflogo.png" alt="Sourceforge"/></a>
+      </div>
+
+    </div>
+
+  </body>
+</html>
