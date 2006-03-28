@@ -1,0 +1,237 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title></title>
+  <link rel="stylesheet" href="/cronolog.css" type="text/css">
+  <link rel="SHORTCUT ICON" href="/favicon.ico">
+  <meta name="description" content="cronolog log file rotation">
+  <meta name="keywords" content="cronolog,log file rotation,log file analysis,access logs,log files,logfiles,Apache">
+  <script src='http://www.google-analytics.com/urchin.js' type='text/javascript'></script>
+  <script type='text/javascript'>
+    _uacct = 'UA-285288-4';
+    urchinTracker();
+  </script>
+</head>
+<body
+  bgcolour="white"
+  text="#666699"
+  link="#666699"
+  alink="#666699"
+  vlink="#666699"
+  leftmargin="0" marginwidth="0" topmargin="0" marginheight="0"
+  >
+<!--htdig_noindex--><table width=779 cellspacing=0 cellpadding=0>
+  <tr><td colspan=2 height=2>&nbsp;</td></tr>
+  <!-- top row: (sponsor and) cronolog.com logo -->
+  <tr>
+    <td align=left valign=middle><table cellspacing=0 cellpadding=0>
+        <tr><td align=center><font size="+1">&nbsp;<a href="/"><img src="/images/logos/cronolog.org.png" 
+                                           alt="cronolog.org" border=0></a>
+                <br><a href="/">flexible web log rotation</a></font></td>
+        </tr>
+      </table></td>
+    <td align=right valign=middle><script type="text/javascript"><!--
+google_ad_client = "pub-8020145214329788";
+google_ad_width = 468;
+google_ad_height = 60;
+google_ad_format = "468x60_as";
+google_ad_channel ="1390845485";
+google_color_border = "A8DDA0";
+google_color_bg = "EBFFED";
+google_color_link = "0000CC";
+google_color_url = "008000";
+google_color_text = "6F6F6F";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></td>
+ </tr>
+        
+ <!-- second row: black bar -->
+ <tr>
+   <td colspan=10 bgcolor=black height=4><img src="/images/1x1.gif" alt=""></td>
+ </tr>
+</table><table width=779 cellspacing=0 cellpadding=5><td width="20%" valign=top bgcolor="#f0e0bb"><table width="100%" cellpadding=5>
+  <tr><td><large><b><a href="/index.html">HOME</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/download/index.html">DOWNLOAD</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/features.html">FEATURES</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/usage.html">USAGE</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/faq.html">FAQ</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/blog/">BLOG</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/bugs.html">KNOWN BUGS</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/security.html">SECURITY</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/patches/index.html">PATCHES</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/users.html">USERS</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/todo.html">TO DO</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/history.html">HISTORY</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/links.html">LINKS</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/feedback.html">FEEDBACK</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/mailing-list/index.html">MAILING LIST</a></b></large></td>
+</tr>
+
+  <tr><td><large><b><a href="/advertising.html">ADVERTISING</a></b></large></td>
+</tr>
+
+</td>
+<tr><td align=center><br>
+<font size=1><a href="/donations.html">support cronolog development</a></font><br><br>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_xclick">
+<input type="hidden" name="business" value="A.Ford@ford-mason.co.uk">
+<input type="hidden" name="item_name" value="donation to support cronolog development">
+<input type="hidden" name="no_note" value="1">
+<input type="hidden" name="no_shipping" value="1">
+<input type="hidden" name="currency_code" value="USD">
+<input type="hidden" name="tax" value="0">
+<input type="hidden" name="return" value="http://www.cronolog.org/donation-received.html">
+<input type="hidden" name="cancel_return" value="http://www.cronolog.org/donation-cancelled.html">
+<input type="hidden" name="cn" value="Message">
+<input type="image" src="https://www.paypal.com/images/x-click-but04.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+</form>
+</td></tr>
+<tr><td align=center><small><br>
+<form method="get" action="/cgi-bin/search">
+<input type="text" size="18" name="words" value=""><br>
+<input type="submit" value="search this site">
+</form></small>
+</td></tr>
+<tr><td align=center><small>
+<a href='http://www.google.com/'><IMG SRC='http://www.google.com/logos/Logo_25wht.gif' border=0 ALT='Google' align='middle'></A> &nbsp; <a href="http://www.google.com/help/basics.html">HELP</a><br clear=all>
+<form method=GET action='http://www.google.com/custom'>
+<input type=text name=q size=18 maxlength=255 value=''><br>
+<input type=submit name=sa VALUE='search the web'>
+<input type=hidden name=client value='pub-8020145214329788'>
+<input type=hidden name=forid value='1'>
+<input type=hidden name=channel value='6393895535'>
+<input type=hidden name=ie value='ISO-8859-1'>
+<input type=hidden name=oe value='ISO-8859-1'>
+<input type=hidden name=safe value='active'>
+<input type=hidden name=cof value='GALT:#336699;GL:1;DIV:#F0E0BB;VLC:336699;AH:center;BGC:FFFFFF;LBGC:F0E0BB;ALC:000000;LC:000000;T:000000;GFNT:B4A88C;GIMP:B4A88C;LH:38;LW:227;L:http://cronolog.org/images/logos/cronolog.org-bb.png;S:http://cronolog.org/;FORID:1;'>
+<input type=hidden name=hl value='en'>
+</form></small></td></tr></table></td>
+<td width="80%" valign=top><!--/htdig_noindex-->
+
+<H1>cronolog</H1>
+
+    Welcome to <b>cronolog.org</b>, the home of the <b>cronolog</b> web log
+    rotation program.
+    
+    <p><b>cronolog</b> is a simple filter program that reads log file
+    entries from standard input and writes each entry to the output
+    file specified by a filename template and the current date and
+    time.  When the expanded filename changes, the current file is
+    closed and a new one opened.  cronolog is intended to be
+    used in conjunction with a Web server, such as <a href="http://www.apache.org/">Apache</a>, to split the
+    access log into daily or monthly logs.
+
+    <p><b>cronolog</b> is not just limited to rotating web server log
+    files.  In fact a <a href="http://www.ckut.ca/">community radio
+    station</a> in Montreal, Quebec, (<a
+    href="http://www.ckut.ca/">CKUT 90.3 FM</a>) uses it as part of a
+    realtime archive/logging system of the broadcasts using
+    open-source software.  [<a href="radio-station.html">more&nbsp;info</a>]
+
+
+    <p>One user described it thus:
+    <blockquote>
+      <i>cronolog kicks ass in every conceivable way in which a utility like cronolog can kick ass.</i>
+    <p align=right><b>--sjd</b>
+    </blockquote>
+
+    If you have any suggestions, bug reports, fixes, or enhancements
+    please <A HREF="mailto:A.Ford@ford-mason.co.uk">email me</A>.
+
+    <p align=right><a href="mailto:A.Ford@ford-mason.co.uk">Andrew Ford</a><br>2004-11-16
+
+    <h2>News</h2>
+
+    <p>2008-01-04: I have removed the wiki as it was just getting spammed and added a <a href="/blog/">blog.</p>
+
+    <p>2007-01-31: The <a
+	    href="http://sf.net/projects/cronolog">cronolog project
+	    page</a> is now live on SourceForge, and there is a new <a
+	    href="https://lists.sourceforge.net/lists/listinfo/cronolog-users">mailing
+	    list</a> (also hosted on SourceForge).
+
+    <p>2007-01-29: I have registered cronolog as a project with
+    SourceForge.  This should be processed in the next couple of days
+    and then I will set up mailing lists, etc. on the SF site.
+
+    <p>2007-01-05: I have set up a wiki.  No content yet ;-)
+
+
+    <p>2004-11-16: added Matthew Grosso's 1.7.0-beta tarball (with the
+    <i>Jumbo Patch</i> applied (see the <a href=patches>patches</a> page).
+
+
+    <p>2004-09-06: the site now has a search facility (it uses <a href="http://www.htdig.org">ht://Dig</a>).
+
+    <p>2004-09-03: there is now an <a
+    href="mailing-list/maillist.html">online archive</a> of the
+    mailing list.
+
+    <p>2003-05-16: development of cronolog suffered a setback in
+    February when I lost my hard disk and didn't have a recent backup
+    of the cronolog sources or the web site sources (it is generated
+    with Template Toolkit).  I have now recovered these and to make a
+    start on the next version I have added a <a
+    href="/patches/">patches</a> page with patches that have been
+    submitted over the last couple of years.  These will most probably
+    find their way into the next version of cronolog.
+    
+    <p><a href="news-archive.html">older news</a>
+<!--htdig_noindex--></td>
+</tr>
+</table><table width=779 cellspacing=0 cellpadding=0>
+  <tr>
+    <td bgcolor=black height=2><img src="/images/1x1.gif" alt=""></td>
+  </tr>
+  <tr>
+    <td><font size=2>Copyright &copy; 1996-2010
+        <a href="http://andrew-ford.com">Andrew Ford</a> and
+        <a href="http://www.ford-mason.co.uk">Ford &amp; Mason Ltd</a></font></td>
+  </tr>
+</table><!--/htdig_noindex-->
+</body>
+</html>
