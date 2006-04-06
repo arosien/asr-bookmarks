@@ -1,0 +1,324 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>ZoooS.com - Your Online Productivity Center</title>
+
+
+<link href="../skin/desk.css" rel="stylesheet" type="text/css" />
+<script>
+var music;
+</script>
+<script src="index.js"></script>
+</head>
+<body onload="document.getElementById('username').focus();init(false);" ondblclick="event.preventDefault(); return false;">
+<div id="main">
+  <div align="center">
+    <table width="100%" id="header">
+      <tr>
+        <td rowspan="2" align="left"><img src="../../../images/zooos-150.gif" width="159" height="52" /></td>
+        <td align="right" valign="top">Home |
+		<a href="../../../en/feedback/">Feedback</a> | <a href="http://zooos.blogspot.com" target="_blank">Blog</a>
+		<!-- | <a href="../../../en/services/" _target="_blank">Services</a>-->
+          <!-- | <a href="../en/learnmore.html" _target="_blank">Learn More</a> | <a href="../en/faq.html" _target="_blank">FAQ </a>-->
+          | <a href="../../../en/api/" _target="_blank">APIs</a> | <a href="../../../en/developer/" _target="_blank">Developers</a></td>
+      </tr>
+      <tr>
+        <td align="right" class="tdmain"><!-- Username:<input type="text" id="frmEmail" name="frmEmail2" />
+        Password:<input type="password" name="frmPassword2" />
+        <input type="submit" name="Submit322" value="Login" /> --></td>
+      </tr>
+    </table>
+    <!-- h5 id="hint">New to Zooos.com? Get familiar with the service or directly sign up. </h5 -->
+    <h5 id="hint">Welcome to Zooos.com</h5>
+  </div>
+  <hr size="1" noshade="noshade" />
+  <div class=cols onclick="toggleBox(event)">
+    <div class="col first">
+      <div class="box">
+        <h3>Applications <span style="color:red">(Preview only)</span> </h3>
+        <div class="content textbox">
+          <p>These apps are still under construction and for preview purposes only. If you would like to contribute or to obtain the source code, please visit our <a href="../../../en/developer/" _target="_blank">developer center</a>.</p>
+        </div>
+        <table id="apps" class="tbl content" width="100%" onclick="return launch(event)">
+          <tr>
+            <td><img src="../../explorer/skin/icons32/folder.gif" for="cExplorer" align="left"/></td>
+            <td class="tdmain"><h4><a href="#" id="cExplorer">File Manager</a> <span class="small">&nbsp;(<a href="#" id="cExplorerMobile">mobile version</a>)</span></h4>
+              Manage your office documents and multimedia files. <a href="#" _target="_blank">Read more...</a> </td>
+          </tr>
+		   <tr>
+            <td colspan="2"><hr /></td>
+          </tr>
+		   <tr>
+		     <td colspan="2"><h4>ZoooS Office Applications</h4></td>
+	      </tr>
+	      <tr>
+            <td><img src="../../explorer/skin/icons32/app_word.png" for="cWrite" align="left"/></td>
+            <td class="tdmain"><h4><a href="../../../accounts/register" _id="cWrite">Write</a></h4>
+              Your Word Processor. <a href="../../../en/ajaxwrite/" _target="_blank">Read more...</a> </td>
+          </tr>
+          <tr>
+            <td><img src="../../explorer/skin/icons32/app_spreadsheet.png" for="cSpreadsheet"  align="left"/></td>
+            <td class="tdmain"><h4><a href="../../../accounts/register" _id="cSpreadsheet">Spreadsheet</a></h4>
+              Edit your spreadsheets online. <a href="../../../en/ajaxxls/" _target="_blank">Read more...</a> </td>
+          </tr>
+          <tr>
+            <td><img src="../../explorer/skin/icons32/app_presentation.png" for="cPresentation"  align="left"/></td>
+            <td class="tdmain"><h4><a href="../../../accounts/register" _id="cPresentation">Presentation</a></h4>
+              Edit and view your presentations. <a href="../../../en/ajaxpresents/" _target="_blank">Read more...</a> </td>
+          </tr>
+          <tr>
+            <td><img src="../../explorer/skin/icons32/app_draw.gif" for="cDraw"  align="left"/></td>
+            <td class="tdmain"><h4><a href="../../../accounts/register" _id="cDraw">Draw</a></h4>
+              Edit your vector graphics. <a href="../../../en/ajaxsketch/" _target="_blank">Read more...</a> </td>
+          </tr>
+          <tr>
+            <td><img src="../../explorer/skin/icons32/app_database.png" for="cDatabase"  align="left"/></td>
+            <td class="tdmain"><h4><a href="../../../accounts/register" _id="cDatabase">SQL Maker</a></h4>
+              Your online SQL database. <a href="../../../en/sqlmaker/" _target="_blank">Read more...</a> </td>
+          </tr>
+          <tr>
+            <td colspan="2"><hr /></td>
+          </tr>
+          <tr>
+            <td><img src="../../explorer/skin/icons32/app_mp3tunes.png"  align="left" for="cMP3"/></td>
+            <td class="tdmain"><h4><a href="../../../accounts/register" _id="cMP3">MP3 Player</a></h4>
+              Listen to your music. Data provided by <a href="http://www.mp3tunes.com" _target="_blank">mp3tunes</a>. </td>
+          </tr>
+          <!--tr>
+            <td><img src="../../explorer/skin/icons32/firefox.png" width="32" height="32"  align="left" /></td>
+            <td class="tdmain"><h4><a href="../../../en/services/firefox.jsp" >Firefox Plug-In</a></h4>
+              <span style="color:red; font-weight:bold;">New:</span> Turn your browser into a fully featured office suite. <a href="../../../en/services/firefox.jsp" _target="_blank">Read more...</a> </td>
+          </tr-->
+        </table>
+      </div>
+      <!--div class="box">
+        <h3>Phone</h3>
+       <div class="textbox content">Call any mobile or landline number worldwide.
+          <form id="phone" name="phone" method="get" action="http://gizmocall.com" onSubmit="launchApp('cGizmo',this.call.value); return false;"  target="_blank">
+            <table width="100%"><tr><td><label>Phone # <br />
+            <input type="text" name="call" />
+            </label></td><td valign="bottom">
+            <input type="submit" name="Submit32" value="Submit" /></td>
+            </tr></table>
+          </form>
+        </div>
+      </div-->
+      <div class="box">
+        <h3>Open Documents </h3>
+        <div class="content textbox">Click  the star to add this document to your favorites list.</div>
+        <!--ul id="windows" class="content"-->
+        <table id="windows" class="tbl content" width="100%">
+        </table>
+        <!--/ul-->
+      </div>
+    </div>
+    <div class="col">
+      <div class="box">
+        <h3>Meet us! </h3>
+         <div class="content textbox">
+          <table id="apps" class="tbl content" width="100%">
+         <tr>
+            <td><p><a href="http://en.oreilly.com/webexberlin2008/"><img src="web20.gif" alt="web 2.0" width="300" height="36" /></a></p>              <p>Meet us at the  <a href="http://en.oreilly.com/webexberlin2008/" target="_blank">Web 2.0 Expo</a>, October 21-23, 2008 in Berlin, Germany. </p></td>
+           </tr></table>
+        </div>
+      </div>
+      <div class="box">
+        <h3>Data Access Points </h3>
+         <div class="content textbox">
+          <p>Now you can access and sync all your data on the web from one place. We are adding new data sources regularly.</p>
+        </div><table id="apps" class="tbl content" width="100%" onclick="return launch(event)">
+
+         <tr>
+            <td><img src="../../explorer/skin/icons32/app_email.png" width="32" height="32" align="left" /></td>
+            <td class="tdmain"><h4><a href="../../../en/services/mail.jsp" >Email Attachments</a> </h4>
+              <span style="color:red; font-weight:bold;">New:</span> Send and receive emails securely and keep them small by storing  attachments here. <a href="../../../en/services/mail.jsp" _target="_blank">Read more...</a> </td>
+          </tr>
+           <tr>
+            <td><img src="../../explorer/skin/icons32/network.gif" width="32" height="32" align="left" /></td>
+            <td class="tdmain"><h4><a href="#" >FTP</a> </h4>
+              Access and sync from/to all your data sources with your favorite FTP client. <a href="../../../en/services/ftp.jsp" _target="_blank">Read more...</a> </td>
+          </tr><!--tr>
+            <td><img src="../../explorer/skin/icons32/app_facebook.png" width="32" height="32" align="left"/></td>
+            <td class="tdmain"><h4><a href="#" >FTP</a></h4>
+              <span style="color:red; font-weight:bold;">New:</span> Access all your data within facebook with a single login. <a href="#" _target="_blank">Read more...</a> </td>
+          </tr-->
+		  </table></div>
+		  <div class="box">
+        <h3>Data Sources </h3>
+     <div class="content textbox">
+              <h4>Available Data Sources</h4>
+              <p>  We are adding new data sources regularly. If your favorite storage place is not yet on our list, please <a href="../../../en/feedback/?subject=feature+request">contact</a> us. </p>
+        </div>  <table id="apps" class="tbl content" width="100%">
+         <tr>
+            <td><img src="../../explorer/skin/icons16/app_zooos.png" alt="ftp" width="16" height="16" border="0" /><br /></td>
+            <td>ZoooS - <a href="#">Smart storage</a> at ZoooS.com </td>
+          </tr> <tr>
+            <td><img src="../../explorer/skin/icons16/network.gif" alt="ftp" width="16" height="16" border="0" /><br /></td>
+            <td>ftp - Access any FTP account worldwide </td>
+          </tr>
+          <tr>
+            <td><img src="../../explorer/skin/icons16/network.gif" alt="webdav" width="16" height="16" border="0" /></td>
+            <td>WebDAV - Access any WebDAV account worldwide </td>
+          </tr>
+          <tr>
+            <td><img src="../../explorer/skin/icons16/app_boxnet.png" width="16" height="16" border="0" /></td>
+            <td>box.net - Get 1GB storage for free at box.net</td>
+          </tr>
+          <tr>
+            <td><img src="../../explorer/skin/icons16/app_mediamax.png" width="16" height="16" border="0" /></td>
+            <td>MediaMax - Get up to 25GB of storage from MediaMax </td>
+          </tr>
+          <tr>
+            <td><img src="../../explorer/skin/icons16/app_picasa.png" width="16" height="16" border="0" /></td>
+            <td>Picasa - Access your photos from Picasa </td>
+          </tr>
+          <tr>
+            <td><img src="../../explorer/skin/icons16/app_youtube.png" width="16" height="16" border="0" /></td>
+            <td>YouTube - Access your YouTube videos </td>
+          </tr>
+          <tr>
+            <td><img src="../../explorer/skin/icons16/app_mp3tunes.png" width="16" height="16" border="0" /></td>
+            <td>mp3tunes - Your music hosted by mp3tunes.com </td>
+          </tr>
+          <!--tr>
+            <td><img src="../../explorer/skin/icons32/app_instantmsg.png" width="32" height="32"  align="left" for="cMeebo"/></td>
+            <td class="tdmain"><h4><a href="#" id="cMeebo"> IM </a></h4>
+              Instant messaging powered by meebo</td>
+          </tr>
+          <tr>
+            <td colspan="2"><hr /></td>
+          </tr>
+          <tr>
+            <td colspan="2">add more...</td>
+          </tr-->
+        </table>
+      </div>
+      <div class="box">
+        <h3>Favorites <img src="../skin/images/star11_active.gif" /></h3>
+        <!--ul class="content"></ul-->
+        <table id="favs" class="tbl content" width="100%">
+        </table>
+      </div>
+    </div>
+    <div class="col">
+      <div id="loggedout" class="box">
+        <h3>Login</h3>
+        <div class="textbox content">Please login to save this screen and your documents.
+          <form action="index.jsp" method="post" name="loginform" id="loginform" xonsubmit="doLogin(this);return false;">
+            <label>Username<br />
+            <input type="text" id="username" name="user" />
+            </label>
+            <br />
+            <label>Password<br />
+            <input type="password" name="pass" />
+            </label>
+            <br />
+            <label>
+            <input type="checkbox" name="remember" value="1" />
+            Remember me on this computer</label>
+            <br />
+            <br />
+            <input type="submit" name="Submit32" value="Login" />
+            <hr />
+            <br />
+            <h4>Not registered yet?
+            <br />
+            Click <a href="../../../accounts/register">here</a>
+            to be one of the first to see ZoooS Office in action. </h4>
+            <div></div>
+            <h4></h4>
+          </form>
+        </div>
+      </div>
+      <div class="box">
+        <h3>Zooos Document Viewer </h3>
+        <div class="textbox content">
+          <script type="text/javascript">
+function checkForm(f) {
+  var v=f.doc.value;
+  if(v.indexOf(".")>-1) {
+    location.href=f.getAttribute("action")+"../../view?doc="+v;
+    //location.href=f.getAttribute("action")+"?doc="+v;
+    //window.open("/docserver/view?doc="+v,"_blank");
+   // f.setAttribute("method","get");
+   // var n=f.newfile;
+    //f.parentNode.removeChild(
+    return false;
+  } else
+  return true;
+}
+
+</script>
+          <form name="hochladen" enctype="multipart/form-data"
+          method="post" action="http://doc.zooos.com/con/../upload.jsp" xaction="http://y.zooos.com:8080/upload.jsp" xtarget="uploadfrm" onSubmit="return checkForm(this)" _target="_blank">
+            <p>Instantly view these types of documents:<br />
+              .pdf .doc .xls .ppt .odt .ods .odp .html .txt
+              <!-- a href="../../../en/examples.html" _target="_blank">Some Examples...</a --></p>
+            <p>Enter a URL<br />
+              <input name="doc" type="text" size="20"/>
+              <br />
+              or upload a file from your computer<br />
+              <input name="newfile" type="file" id="newfile"/>
+              <br />
+              and then press<br />
+              <input type="submit" value="View">
+            </p>
+            <p>
+              <span style="font-weight:bold;">Admins:</span> Check out our <a href="../../../en/services/embed.jsp">how-to</a> page and let your visitors  read or download your  documents without installing any software on their PCs or cell phones.</p>
+          </form>
+        </div>
+      </div>
+      <div class="box">
+        <h3>News & Blogs</h3>
+        <!--div class="content textbox">Click on the star to add this document to your favorites list.</div-->
+        <ul id="windows" class="content">
+          <li>Zooos Launches: Press Release (<a href="../../../en/press_en.html">english</a> | <a href="../../../en/press_de.html">german</a>), <a href="../../../en/screenshots.html">screenshots</a></li>
+        </ul>
+      </div>
+      <!--div class="box" closed="true">
+        <h3>Instant Feedback</h3>
+        <div class="textbox content">Did you find a bug or do you have a comment?
+          Please send us your feedback.
+          <form id="form2" name="form2" method="post" action="">
+            <label>Your email (optional) <br />
+            <input type="text" name="textfield" />
+            </label>
+            <br />
+            <label>Category<br />
+            <select>
+              <option></option>
+              <option>Feature Request</option>
+              <option>Bug Report</option>
+              <option>Comment</option>
+              <option>Other</option>
+            </select>
+            </label>
+            <br />
+            <label>Your comment<br />
+            <textarea name="textfield" rows="6" wrap="virtual"></textarea>
+            </label>
+            <br />
+            <input type="submit" name="Submit32" value="Submit" />
+          </form>
+        </div>
+      </div-->
+    </div>
+  </div>
+  <div align="center" style="clear:both">
+    <hr size="1" noshade="noshade" />
+    <a href="../../../en/about.html" _target="_blank">Company Info</a> | <a href="../../../en/jobs.html" _target="_blank">Job Opportunities</a> | <a href="../../../en/investor.html" _target="_blank">Investor Relations</a> | <a href="../../../en/policy.html" _target="_blank">Privacy Policy</a> | <a href="../../../en/terms.html" _target="_blank">Terms and Conditions</a></div>
+  <div align="center"><br />
+    Copyright © 2008 ZoooS LLC. All rights reserved. </div>
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write("\<script src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'>\<\/script>" );
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-3224259-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+</body>
+</html>
