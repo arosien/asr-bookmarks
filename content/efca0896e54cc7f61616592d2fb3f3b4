@@ -1,0 +1,1004 @@
+
+
+
+
+<?xml version "1.0" encoding "UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<title>XML.com: Designing Extensible, Versionable XML Formats</title>
+	<meta name="keywords" content="XML.com,O'Reilly Network,oreillynet,oreillynet.com,O'Reilly,OREILLY,Vocabularies, Instruction,Schemas,Dare Obasanjo,WXS,must understand,must ignore,xpath,versioning,extensibility" />
+	<meta name="description" content="Dare Obasanjo explores the issues surrounding the design of extensible, versionable XML vocabularies." />
+	<meta name="date" content="Jul. 21, 2004" />
+	<meta name="pagename" content="Designing Extensible, Versionable XML Formats" />
+	<meta name="site" content="XML.com" />
+	<meta name="author" content="Dare Obasanjo" />
+	<meta name="safariu_url" content="http://www.xml.com/pub/a/2004/07/21/design.html" />
+
+
+
+<!-- feed autodiscovery links -->
+
+<link rel="alternate" type="application/rss+xml" title="XML.com Articles and Weblogs" href="http://feeds2.feedburner.com/oreilly/xml" />
+
+<!--
+
+<link rel="alternate" type="application/atom+xml" title="XML.com Articles and Weblogs" href="http://www.oreillynet.com/pub/feed/20" />
+<link rel="alternate" type="application/rdf+xml" title="XML.com Articles and Weblogs" href="http://www.oreillynet.com/pub/feed/20?format=rss1" />
+
+-->
+
+<!-- stylesheet -->
+<link rel="STYLESHEET" type="text/css" href="http://www.xml.com/styles/pc-px-msie.css" />
+<link rel="STYLESHEET" type="text/css" href="http://www.xml.com/styles/global.css" />
+<script language="JavaScript" type="text/javascript" src="http://www.xml.com/common.js"></script>
+<script language="JavaScript" type="text/javascript" src="http://www.xml.com/common.js"></script>
+
+<!-- urchin tag -->
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-31074-1";
+urchinTracker();
+</script>
+
+<!-- 
+<script src="http://www.xml.com/__utm.js" type="text/javascript"></script>
+
+-->
+
+<script type="text/javascript" src="http://www.xml.com/tabber.js"></script>
+
+<!-- additional css -->
+<link rel="stylesheet" type="text/css" href="http://www.oreillynet.com/styles/articles.css" />
+
+<!-- MyBuys libraries and style sheet -->
+<link href="http://t.p.mybuys.com/css/mbstyles.css" type="text/css" rel="stylesheet" id="mybuysstyles">
+<script type="text/javascript" src="http://t.p.mybuys.com/js/mybuys3.js"></script>
+<script type="text/javascript" src="http://t.p.mybuys.com/clients/OREILLY/js/setup.js"></script>
+<!-- End MyBuys libraries and style sheet -->
+
+</head>
+<body id="xml">
+<div id="page">
+<div id="header" class="noindex">
+
+
+<h1><div style="padding:5px;">
+<a href="/index.csp"><img src="/images/logo_tagline.jpg" width="135" height="74" border="0" hspace="0" vspace="0"  alt="XML.com: XML From the Inside Out" /></a>
+</div></h1>
+
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right" valign="bottom">
+<a href="/cs/user/login?x-redirect=/cs/user/home" class="tiny">Sign In/My Account</a>&nbsp;|&nbsp;<a href="http://epoch.oreilly.com/shop/cart.orm" class="tiny">View Cart</a>&nbsp;&nbsp;</td>
+</tr></table>
+
+
+
+
+
+<div id="newHead">
+
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/all.css" type="text/css" />
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/about-121707.css" />
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/store2.css" />
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreilly.com/styles/catalog.css" />
+
+<div id="nav" class="noindex">
+<ul>
+<li><a href="http://www.oreilly.com/">O'Reilly Home</a></li>
+<li><a href="http://news.oreilly.com/">Community</a></li>
+<li><a href="http://www.oreilly.com/store/">Books & Videos</a></li>
+<li><a href="http://safari.oreilly.com/?cid=orm-nav-global">Safari Books Online</a></li>
+<li><a href="http://conferences.oreillynet.com/">Conferences</a></li>
+<li><a href="http://training.oreilly.com/">Training</a></li>
+<li><a href="http://www.oreillyschool.com/">School of Technology</a></li>
+<li><a href="http://www.oreilly.com/about/">About</a></li>
+
+</ul>
+<div class="clear"></div>
+</div><!-- /#nav -->
+
+
+
+
+
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/all_new.css" />
+
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/all.css" />
+
+
+<link rel="stylesheet" rev="stylesheet" href="http://www.oreillynet.com/styles/main.css" />
+
+
+
+<div id="search-box">
+
+
+
+<b>
+We've expanded our <a href="http://xml.oreilly.com">XML news coverage</a> and improved our search! </b> Search for all things XML across O'Reilly!
+
+<br /><br />
+<div id="search-box" class="yui-skin-sam">
+
+            <form method="get" action="http://search.oreilly.com" id="search-form" name="searchfield">
+                <fieldset>
+
+
+
+                    <span id="search-title" style="color:#474747">Search</span>
+                    <span id="search-input">
+                        <span id="search-input-top">
+                            <span id="search-input-bot">
+                                <span id="search-field"><input style="//height: 25px;" id="q" name="q" type="text" maxlength="64" accesskey="s" value="" /></span>
+                                <span id="search-button"><input type="image" name="submit" src="http://www.oreilly.com/images/oreilly/search_bar_btn.gif" alt="Submit" onclick="return searchverif();" /></span>
+                                <span class="clear"></span>
+                            </span>
+    </span>
+                    </span>
+                            <div id="autocomplete"></div>
+                   
+                    <span id="search-tips"><a href="http://www.oreillynet.com/search/tips.csp" target="_blank">Search Tips</a></span>
+                </fieldset>
+            </form>
+
+<br />
+        </div><!-- /#search-box -->
+
+<br />
+        
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+<!--
+<h1><csinclude record="lc/3" field="html" /></h1>
+<br />
+-->
+
+
+<!-- tabs 
+<csinclude record="lc/15" field="html" />
+-->
+
+
+<div id="leaderboard">
+<img src="http://www.oreillynet.com/images/ads/ad-tag-vertical.gif" width="11" height="90" border="0" alt="advertisement" style="float:right;"/>
+
+<div style="width:728px;margin:0 auto;">
+<!-- ###Leaderbord here###-->
+  <!-- XML Leaderboard Ad -->
+
+<!--JavaScript Tag // Tag for network 5159: TechVertical // Website: OR - XML.com // Page: XML // Placement: ros_728x90 (425861) // created at: Oct 9, 2008 5:49:51 PM-->
+<script language="javascript"><!--
+document.write('<scr'+'ipt language="javascript1.1" src="http://adserver.adtechus.com/addyn/3.0/5159/425861/0/225/ADTECH;loc=100;target=_blank;key=key1+key2+key3+key4;grp=[group];misc='+new Date().getTime()+'"></scri'+'pt>');
+//-->
+</script><noscript><a href="http://adserver.adtechus.com/adlink/3.0/5159/425861/0/225/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" target="_blank"><img src="http://adserver.adtechus.com/adserv/3.0/5159/425861/0/225/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" border="0" width="728" height="90"></a></noscript>
+
+<!-- End of JavaScript Tag -->
+
+<!-- End ad -->
+<!-- ###END Leaderbord###-->
+</div>
+</div> <!-- end leaderboard -->
+
+<div id="colored-bar-ad" class="tinywhite" align="center" style="background-color:#cc0033;"><!-- XML Text link Ad -->
+
+<!--JavaScript Tag // Tag for network 5159: TechVertical // Website: OR - XML.com // Page: XML // Placement: text (425860) // created at: Oct 9, 2008 5:49:53 PM-->
+<script language="javascript"><!--
+document.write('<scr'+'ipt language="javascript1.1" src="http://adserver.adtechus.com/addyn/3.0/5159/425860/0/16/ADTECH;loc=100;target=_blank;key=key1+key2+key3+key4;grp=[group];misc='+new Date().getTime()+'"></scri'+'pt>');
+//-->
+</script><noscript><a href="http://adserver.adtechus.com/adlink/3.0/5159/425860/0/16/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" target="_blank"><img src="http://adserver.adtechus.com/adserv/3.0/5159/425860/0/16/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" border="0" width="1" height="1"></a></noscript>
+<!-- End of JavaScript Tag -->
+
+<!-- End ad --></div>
+
+
+<!-- </div>  end header -->
+<!--
+<div id="page-content">
+-->
+
+<div id="page-content" style="clear: left;">
+<div id="article" style="width: 650px;">
+
+
+<p>
+<!-- begin content-->
+
+
+<div align="center">
+<!-- begin ad tag -->
+<script language="JavaScript" type="text/javascript">
+//<![CDATA[
+var ord = (ord != null ? ord : Math.random()*10000000000000000 );
+document.write('<script language="JavaScript" src="http://ad.doubleclick.net/adj/ttm.xml/art;tn=3;tw=300;th=55;to=h;tcs=0;tcp=0;ta=center;tva=bottom;tc=ffffff;tnm=3;te=1;sz=100x50;ord=' + ord + '?" type="text/javascript"><\/script>');
+//]]>
+</script><noscript><a href="http://ad.doubleclick.net/adj/ttm.xml/art;tn=3;tw=300;th=55;to=h;tcs=0;tcp=0;ta=center;tva=bottom;tc=ffffff;tnm=3;te=1;sz=100x50;ord=123456789?" target="_blank"><img src="http://ad.doubleclick.net/adj/ttm.xml/art;tn=3;tw=300;th=55;to=h;tcs=0;tcp=0;ta=center;tva=bottom;tc=ffffff;tnm=3;te=1;sz=100x50;ord=123456789?" width="100" height="50" border="0" alt="" /></a></noscript>
+<!-- End ad tag -->
+</div>
+<br />
+
+<!-- begin  print-discuss-del.icio.us options -->
+<div style="margin: 0px 10px 0px 6px; float: right; width: 170px;">
+<a class="print" style="font-size:90%;" title="Go to a print-friendly version of this page." href="/lpt/a/1449">Print</a>
+
+
+<a class="subscribe" style="font-size:90%;" title="Subscribe" href="http://www.oreillynet.com/pub/feed/20">Subscribe to XML</a>
+
+
+
+</div>
+<!-- end  print-discuss-del.icio.us options -->
+
+
+
+<!-- ISI_LISTEN_START -->
+<span class=ISI_MESSAGE><!--  This article is brought to you by XML.com, your source for all XML news.  --></span>  
+<!-- content here -->
+
+<h2>Designing Extensible, Versionable XML Formats</h2>
+<div style="clear: left;">by <a href="/pub/au/142">Dare Obasanjo</a></div>
+<div>July 21, 2004</div><br clear="all" />
+
+
+
+
+
+
+
+	<!-- mega preparse mp: -->
+
+
+
+
+<p><!-- XML MPU Ad -->
+
+<!-- End ad -->
+<!-- me -->
+
+        An XML vocabulary should be designed in such a way that
+        the applications that process it do not break when it is
+        inevitably changed. One of the primary benefits of using XML
+        for building data interchange formats is that the APIs and
+        technologies for processing XML are quite resilient when
+        faced with additions to vocabularies.</p>
+
+<p>If I write an application that loads RSS feeds looking for <code>item</code> elements, then processes their <code>link</code> and <code>title</code> elements using any one of the <a href="http://www.xml.com/pub/a/2003/07/09/xmlapis.html">various technologies and APIs for processing XML</a> -- SAX, the DOM,
+        or XSLT -- it is quite straightforward to build the
+        application so that it is unaffected by RSS specification
+        changes as long as the link and title elements always appear
+        in a feed.</p>
+
+<p>However, this gives the false impression that there
+        are no versioning issues to consider when designing XML
+        formats, since you can always add elements and attributes to
+        the format without causing harm. Experience has shown that
+        this assumption is false. In fact, many of the same problems
+        that face developers when versioning non-XML data formats
+        affect XML-based formats as well.
+      </p>
+<!-- sidebar begins -->
+<!-- don't move sidebars -->
+<!-- sidebar ends -->
+
+      <p>
+        This article explores some of the points to consider when
+        versioning XML formats as well as some approaches to designing
+        extensible XML formats in a manner compatible with existing
+        XML technologies.
+      </p>
+
+      <h3>The Difference Between Versioning and Extensibility</h3>
+      <p>
+        Enabling extension of the format by programmers other than the
+        designers of the format -- thus decentralizing the evolution of
+        the format -- is a desirable feature and one that is often
+        touted as an XML benefit. An example of the enabling nature of
+        extensible XML formats is RSS 2.0 and the various
+        <a href="http://blogs.law.harvard.edu/tech/directory/5/specifications/rss20ModulesNamespaces">modules</a> that extend the functionality provided in the
+        base specification. Designing a format so that it supports
+        third-party extensions is the extensibility problem.
+      </p>
+      <p>
+        An XML format should be both backward and forward
+        compatible. It should be backward compatible in that new
+        versions of the format should also be valid instances of older
+        versions of the format and thus not break any consumers of the
+        original format.</p>
+
+<p>It should be forward compatible in that older
+        versions of the format should also be valid instances of newer
+        versions of the format; so that old producers can work with
+        consumers of the new format.
+      </p>
+      <p>
+        There are a four broad classes of changes that could occur in the
+        process of transitioning from one version of a format to another.
+      </p>
+      <p>
+        1.      New concepts are added (e.g., new elements or attributes
+        added to format or new values for enumerations).
+      </p>
+      <p>
+        2.      Existing concepts are changed (e.g., existing elements
+        and attributes should be interpreted differently, added elements
+        or attributes alter semantics of their parent/owning element).
+      </p>
+      <p>
+        3.      Existing concepts are deprecated (e.g., existing elements
+        and  attributes should now issue a warning when consumed by an
+        application).
+      </p>
+      <p>
+        4.      Existing concepts are removed (e.g., existing elements
+        and attributes should no longer work when consumed by an
+        application).
+      </p>
+      <p>
+        Designing XML formats so that the above changes can occur
+        between versions of a format, yet the format remains backward
+        and forward compatible is, obviously, a big versioning problem.
+      </p>
+      <p>
+        Versioning differs from extensibility in two broad ways. The
+        first major difference is that versioning mechanisms must
+        support change in a linear fashion, while extensibility
+        mechanisms must support change in a concurrent fashion. A
+        versioning mechanism must offer a way to create a version 1, a
+        backward-compatible version 2, a backward-compatible version
+        3, and so on.</p>
+
+<p>On the other hand, rather than defining an
+        evolutionary process, an extensibility mechanism provides a
+        way to allow new data to show up side by side (or
+        concurrently) with data for a given format. Secondly, changing
+        an XML format by creating subsequent versions is usually done
+        by the entity that controls the format, while extensions are
+        typically added by third parties. In practice, this tends to
+        mean that versioning is done by the owner of the namespace
+        of the XML format.
+      </p>
+      <p>
+        An ideal XML vocabulary is both extensible and versionable.
+      </p>
+      <h3>
+        Guidelines for Designing Extensible XML Formats
+      </h3>
+      
+<p> In the article <a href="http://www.xml.com/pub/a/2003/12/03/versioning.html">Versioning 
+  XML Vocabularies</a>, David Orchard provided some guidelines for designing extensible 
+  XML formats. The following guidelines are slightly modified from some of the 
+  guidelines in Orchard's article. </p>
+      <ul>
+	    <li>XML formats <strong>should</strong> be designed to be extensible.</li>
+		<li>Extensions <strong>must not</strong> use the namespace of the XML format.</li>
+		<li>All XML elements in the format <strong>should</strong> allow any extension attributes, and elements with complex content <strong>should</strong> allow for extension elements as children.</li>
+        <li> Formats that support extensibility <strong>must</strong> specify a processing model for dealing with extensions.</li>
+      </ul>
+      <p>
+        The guidelines above differ from those in David's article
+        in a few key ways. The major difference is that the guideline
+        about specifying a processing model for extensions is upgraded
+        from a <strong>should</strong> to a <strong>must</strong>. The
+        reason I changed this rule is that without explicit and consistent
+        rules for consumers of the format when dealing with
+        extensions, then interoperability across implementations will
+        suffer.</p>
+
+<p>Another difference is that the guideline about allowing
+        extension elements specified that elements with
+        simple content (i.e. text content) shouldn't be allowed to have
+        extension elements. The following discussions explore each of the
+        above guidelines in more detail.
+      </p>
+      <h4>
+        Why XML formats should be designed to be extensible.
+      </h4>
+	  <!--
+<csperl file="set_book_cover_image">
+-->
+
+<!-- sidebar begins -->
+<table width="140" border="1" cellspacing="2" cellpadding="10" align="right" style="border: 1px solid #333333; margin: 8px;"><tr>
+<td width="140" valign="top" bgcolor="#ffffff" style="border: none;">
+<p class="headline">Related Reading</p>
+<!--
+<csif perl="$cfg->vars('cover_image_url_base')">
+-->
+<a href="http://oreilly.com/catalog/9780596002527/index.html?CMP=ILL-4GV796923290">
+
+<img src="http://covers.oreilly.com/images/9780596002527/cat.gif">
+
+<!--
+
+<csperl>print $cfg->vars('cover_image_url_cat');</csperl>
+-->
+</a>
+<!--
+</csif>
+-->
+<p class="medlist"><span class="title"><a href="http://oreilly.com/catalog/9780596002527/index.html">XML Schema</a></span><strong><br />
+
+The W3C's Object-Oriented Descriptions for XML<br />
+
+By <a href="http://www.oreillynet.com/pub/au/853">Eric van der Vlist</a></strong>
+</p>
+<div class="secondary">
+<!-- builds links to list in sidebar -->
+<!--csperl>
+    my @links = split(/(?:\r?\n)+/, ( $DATA{"supporting_links"} || "" ));
+    for my $link ( @links ) {
+	my ( $name, $url ) = split /=/, $link, 2;	
+	next unless $name and $url;
+	$url = "http://oreilly.com/catalog/$DATA{'reference'}/$url" unless $url =~ /^\w+:/os;
+$url = $url . "?CMP=ILL-4GV796923290";
+        if ($name =~ /Table of Contents/) {
+           print qq~ <a href="$url">$name</a><br /> \n ~;
+        } elsif ($name =~ /Index/) {
+           print qq~ <a href="$url">$name</a><br /> \n ~;
+        } elsif ($name eq "Author's Article") {
+           print qq~ <a href="$url">$name</a><br /> \n ~;
+        } elsif ($name =~ /Sample Chapter/) {
+           print qq~ <a href="$url">$name</a><br /> \n ~;
+        } else {
+           print qq~\n~;
+        }
+    }
+</csperl-->
+
+</div>
+</td>
+</tr></table>
+<!-- sidebar ends -->
+
+      <p>
+        The primary benefit of allowing extensibility in a format is that
+        it enables a format to evolve without requiring central control of
+        the format. A secondary benefit is that it allows the format to
+        stay focused and simple by pushing specialized or niche-use cases
+        and complex solutions into optionally supported extensions.
+      </p>
+      <p>
+        An example of the benefit of designing a format to be extensible
+        is <a href="http://blogs.law.harvard.edu/tech/rss">RSS 2.0</a> and
+        the various <a href="http://blogs.law.harvard.edu/tech/directory/5/specifications/rss20ModulesNamespaces">RSS modules</a>. The core RSS specification defines how to provide
+        basic information such as the title, description, and publication
+        date of one or more entries in a syndication feed.</p>
+
+<p>Various
+        extensions have been designed that enable much richer
+        functionality, such as providing information about the number of
+        comments posted in response to an entry and mechanisms for
+        retrieving the comments to an entry as a separate RSS feed. These
+        extensions have proliferated without the need to modify the RSS
+        specification yet are not mandatory -- so web sites and news
+        aggregators do not have to bear the cost of implementing complex
+        features if they just need simple content syndication.
+      </p>
+      <p>
+        Another showcase of the benefit of extensibility in XML formats is
+        the <a href="http://www.w3.org/TR/xmlschema-1/">W3C XML Schema recommendation</a>. The XML Schema recommendation allows one to
+        place extensions to the specification either as namespace-qualified attributes on elements in the XML schema namespace or as
+        element children of the <code>xs:appinfo</code> element.</p>
+
+<p>Extensions
+        to XML schema have been used to augment its functionality in a
+        number of ways. One example is the ability to
+        <a href="http://www.xfront.com/ExtendingSchemas.html#Supplement">embed Schematron assertions in an XML schema</a> to check constraints
+        that are beyond the capability of W3C XML Schema. Another example, is the
+        <a href="http://msdn.microsoft.com/library/en-us/sqlxml3/htm/ssxsdannotations_1yxt.asp">XML schema annotations used by Microsoft's SQLXML 3.0</a>, which
+        are used for mapping between XML and relational schemas.</p>
+
+<p>Annotated schemas used by SQLXML 3.0 can still be used for validating XML
+        documents but have the added benefit of also being used
+        for shredding XML data into relational tables and vice-versa.
+        These extensions increase the utility of XML Schema without
+        increasing the complexity for all consumers of XML Schema
+        documents since they are primarily beneficial in specialized
+        scenarios.
+      </p>
+      <p>
+        It should be noted that extensibility is a double-edged sword. The
+        fact that evolution of an extensible format is decentralized may
+        harm interoperability in certain cases since not all clients will
+        support the same extensions.
+      </p>
+      <h4>
+        Why extensions must not use the namespace of the XML format.
+      </h4>
+      <p>
+        There are two main reasons extensions must use their own namespace
+        name. The first is that it is important that each family of
+        extensions be distinguishable from the core components of the XML
+        format and other extensions. Without providing such identification
+        there is potential for naming conflicts between different
+        extensions or between extensions and future additions to the core
+        specification.
+      </p>
+      <p>
+        Secondly, there should be a straightforward way to go from
+        identifying an extension to learning more about it. If the
+        namespace name of the extensions is an HTTP URI that points to
+        human- and machine-readable information about the extensions then
+        it allows consumers of the format the chance to learn about the extensions they encounter.
+      </p>
+      <h4>
+        Why all XML elements in the format should allow any extension
+        attributes and extension elements.
+      </h4>
+      <p>
+        Once the decision has been made to make a format extensible the
+        next question is where one should allow extensibility. One could
+        restrict the elements whose content model can be extended or
+        annotated using attributes, but this may end up unnecessarily
+        restricting the usefulness of extensions. Consider the following
+        XML fragment:
+      </p>
+<pre><code>
+&lt;books xmlns='http://www.example.com/books'&gt;
+  &lt;book publisher="Addison Wesley"&gt;
+    &lt;title&gt;Mythical Man Month&lt;/title&gt;
+    &lt;author&gt;Frederick Brooks&lt;/author&gt;
+    &lt;publication-date&gt;1995-06-30&lt;/publication-date&gt;
+  &lt;/book&gt;
+  &lt;book publisher="Apress"&gt;
+    &lt;title&gt;Programmer's Introduction to C#&lt;/title&gt;
+    &lt;author&gt;Eric Gunnerson&lt;/author&gt;
+	&lt;publication-date&gt;2001-06-30&lt;/publication-date&gt;
+  &lt;/book&gt;   
+&lt;/books
+</code></pre>
+      <p>
+        In the above document there are multiple areas where one could augment
+        the information provided. The <code>book</code> element
+        could be extended with an <code>ext:edition</code> attribute that
+        indicates what edition of the book is being described. An
+        <code>ext:price</code> element could be added to the content model
+        of <code>book</code> elements describing the price of the book.
+        The <code>author</code> element could be augmented with an
+        <code>ext:is-editor</code>, which is used on collected works such
+        as anthologies to indicate that the specified author was actually
+        an editor. And so on.
+      </p>
+      <p>
+        The point is that in an XML format it is likely that a lot of the
+        structured data (i.e. elements) in the document can be extended or
+        annotated in a way that adds more value to the data being
+        transmitted. Given this situation, it is likely that designers of
+        XML formats may not be able to anticipate the various ways the
+        data in a format may be augmented or annotated.</p>
+
+<p>Thus, if the
+        author(s) of an XML format restrict which elements can be
+        augmented by extensions there is the possibility that useful
+        extensions may be prohibited by such restrictions. Allowing all
+        elements in the XML format to be extended ensures that no useful
+        extensions are prohibited.
+      </p>
+      <p>
+        When authoring a schema for an XML format using W3C XML Schema,
+        you use <code>xs:anyAttribute</code> to allow extension
+        attributes to appear on an element and <code>xs:any</code> to
+        allow extension elements to appear as children of an element.
+      </p>
+      <h4>
+        Why formats that support extensibility must specify a processing
+        model for dealing with extensions.
+      </h4>
+      
+<p> Another key decision that must be made once an XML format is deemed extensible 
+  is what the processing model should be for handling extensions in consumers 
+  of the format. As pointed out by David Orchard in his article, <a href="http://www.xml.com/pub/a/2003/12/03/versioning.html">Designing 
+  XML Vocabularies</a>, the most popular processing model for dealing with extensions 
+  has been the use of <strong>Must Ignore</strong> rules in combination with <strong>mustUnderstand</strong> 
+  constructs. </p>
+      <p>
+        With <strong>Must Ignore</strong> rules in place consumers of the
+        format are expected to ignore extensions they do not understand.
+        In the case of extension elements this could take one of two
+        forms. Presentation formats such as XHTML only ignore the unknown
+        start and end tags for the extension elements but still process
+        their contents. David calls this the <strong>Must Ignore
+        Container</strong> rule. In most other situations, XML formats
+        apply what David called the <strong>Must Ignore
+        All</strong> rule where the extension element and its children are
+        ignored by the consumer if they are not understood. This implies
+        that ignoring extensions is not fatal to the application and the
+        data they contain is not significant.
+      </p>
+      <p>
+        In certain cases, an extension could be introduced to an XML
+        format that contains data that is significant to the application
+        and should not be ignored by consumers of the format. This
+        situation is especially likely in the case of XML formats that
+        mainly act as containers or envelopes for more specialized data
+        such as <a href="http://www.w3.org/TR/SOAP">SOAP</a>.</p>
+
+<p>If such
+        scenarios are to be supported then designers of the XML
+        format should consider adding <strong>mustUnderstand</strong>
+        constructs to the vocabulary. An example of a <code>mustUnderstand</code> construct is the
+        <a href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383500">SOAP mustUnderstand attribute</a>. The rules for the
+        <code>mustUnderstand</code> attribute in SOAP are given below.
+      </p>
+      <p>
+        The SOAP <code>mustUnderstand</code> global attribute can be used to indicate
+        whether a header entry is mandatory or optional for the recipient
+        to process. The recipient of a header entry is defined by the SOAP
+        actor attribute (see section 4.2.2). The value of the
+        <code>mustUnderstand</code> attribute is either "1" or "0".</p>
+        <p>The absence of the SOAP <code>mustUnderstand</code> attribute is semantically
+        equivalent to its presence with the value 0. If a header element
+        is tagged with a SOAP <code>mustUnderstand</code> attribute with a value of 1, the recipient of that header entry either MUST obey the
+        semantics (as conveyed by the fully qualified name of the element)
+        and process correctly to those semantics, or MUST fail processing
+        the message.
+      </p>
+      <p>
+        XML formats that intend to allow extensions that need to be understood by consumers should use a
+        <code>mustUnderstand</code>construct such as a namespace attribute, which must appear on the extension element.
+      </p>
+      <p>
+        Other processing models for extensions are possible. One approach
+        could be making the <code>mustUnderstand</code> rule the default for the format, meaning that a consumer must always fail if it
+        does not understand an extension. Another approach could be
+        restricting the structure of extensions so that they can be
+        provided to the end user in a consistent manner. For example, restricting extensions to key-value pairs
+        in XML configuration files.
+      </p>
+	  	  <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><p class="secondary">
+
+
+Pages: <b>1</b>, <a href="/pub/a/2004/07/21/design.html?page=2">2</a>, <a href="/pub/a/2004/07/21/design.html?page=3">3</a>
+</p></td><td><p class="secondary" align="right">
+<a href="/pub/a/2004/07/21/design.html?page=2">
+Next Page<img src="/images/blue-arrow.gif" border="0" alt="arrow" width="10" height="12" hspace="2" vspace="0" align="baseline">
+</a></p></td></tr></table>
+
+
+
+
+
+
+<!-- end content -->
+<!-- ISI_LISTEN_STOP -->
+
+
+<!-- talk back -->
+<a name="thread"></a>
+
+
+<br /><br />
+
+
+<!-- end content -->
+
+<!-- horizontal ad -->
+
+
+</div><!-- #article -->
+
+<div class="noindex">
+<div id="related" style="font:12px verdana,arial,helvetica,sans-serif;">
+
+
+<!-- MyBuys Zone and Parameters -->
+<div class="sidebar-item">
+<h3>Recommended for You</h3>
+<div class="sidebar-item-content" style="text-align: center; padding: 0px;">
+<!-- MyBuys Web Recommendation Zone -->
+<div mybuyszone="5"></div>
+<!-- End MyBuys Web Recommendation Zone -->
+<!-- MyBuys Page Parameters -->
+<script type="text/javascript">
+mybuys.setPageType("CONTENT_ITEM");
+mybuys.set("categoryid","http://purl.oreilly.com/resource-center/xml");
+</script>
+</div>
+</div>
+
+
+<!-- HireReach Widget -->
+
+<div style="text-align:center; padding-bottom:20px;">
+
+
+<script type='text/javascript'><!--//<![CDATA[ 
+var m3_u = (location.protocol=='https:')?'https://jobs.hrkspjbs.com/js.ashx':'http://jobs.hrkspjbs.com/js.ashx'; 
+var m3_r = Math.floor(Math.random()*99999999999); 
+document.write ("<sc"+"ri"+"pt type='text/javascript' src='"+m3_u); 
+document.write ("?pid=2B9C484E4C084CE1A90E33EB9CE8FE7B"); 
+document.write ("&amp;tl=" + m3_r); 
+document.write ("&amp;did=a1449"); 
+document.write ("&amp;loc=" + escape(window.location)); 
+if (document.referrer) document.write ("&amp;referer=" +
+escape(document.referrer)); 
+if (document.context) document.write ("&context=" +
+escape(document.context)); 
+document.write ("'></sc"+"ri"+"pt>");
+//]]>--></script>
+
+
+
+</div>
+
+<!-- sponsored developer resources
+<csperl file="grab" domain="on" record="sc/1851" field="html">
+
+$self->include("csinclude", {record => "$table/$ref_id", template => "tagged_articles.view"});
+-->
+
+
+<div style="text-align:center;background-color:#eee;padding-top:10px;padding-bottom:10px;">
+<img src="/images/ads/advertisement.gif" alt="Advertisement" style="padding-bottom:5px;" />
+
+
+<div align="center">
+
+<!-- Stylus Ad and Sponsored Zones -->
+
+<!-- Progress Software -->
+
+<!--
+<csperl>
+## code to insert ad tag 
+my $pathinfo = $cfg->{PATH_INFO} || $cgi->path_info();
+my ($junk,$table,$ref_id) = split /\//, $pathinfo, 3;
+## ads, here only on article pages and not on the wixml pages
+if ($ref_id) {
+  if ($ref_id !~ /^\d+$/) {
+    $ref_id = "/$ref_id";
+  }
+}
+
+my $f = new CS::Form( cfg => $cfg, table => "$table", id => "$ref_id" );
+        unless ($f->{r}->{ARGS}->{'adcode'} eq 'wixml') {
+  	          my %ARGS = ( 'co'     => 'dc',
+                               'pos'    => 'l',
+		               'height'	=> "240",
+		               'width'	=> "120",
+                               'page'   => "home",
+);
+           $id_subject = $f->{r}->{ARGS}->{'id_subject'} ;
+              #if ($id_subject =~ /10/) {
+              #       $ARGS{'page'} = 'databases';
+              #}
+              #if ($id_subject =~ /3/) {
+              #       $ARGS{'page'} = 'mobile';
+              #}
+if ($pathinfo =~ /^\/a\/\//) {
+    $ARGS{'page'} = 'art';
+}
+#if ($pathinfo =~ /^\/databases\//) {
+#    $ARGS{'page'} = 'databases';
+#}
+#if ($pathinfo =~ /^\/mobile\//) {
+#    $ARGS{'page'} = 'mobile';
+#}
+if ($pathinfo =~ /^\/resourceguide\//) {
+    $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /^\/buyersguide\//) {
+    $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /\/pt\// ) {
+   $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /\/r\// ) {
+   $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /\/p\// ) {
+   $ARGS{'co'} = 'none';
+}
+if ($pathinfo =~ /\/rg\// ) {
+   $ARGS{'co'} = 'none';
+}
+
+
+my $ad = new CS::Ad( cfg => $self->{cfg}, params => \%ARGS );
+
+	             print $ad->AdTag;
+         }
+
+</csperl>
+!-->
+
+
+
+<!-- ### textbox start ###-->
+<div class="adtag " style=""><!-- dy -->
+<!-- begin ad tag -->
+<script language="JavaScript" type="text/javascript">
+//<![CDATA[
+var ord = (ord != null ? ord : Math.random()*10000000000000000 );
+document.write('<script language="JavaScript" src="http://ad.doubleclick.net/adj/ttm.oreillynet/textbox;sz=$widthx$height;tile=1;ord=' + ord + '?" type="text/javascript"><\/script>');
+//]]>
+</script><noscript><a href="http://ad.doubleclick.net/jump/ttm.oreillynet/textbox;sz=$widthx$height;tile=1;ord=3968531260?" target="_blank"><img src="http://ad.doubleclick.net/ad/ttm.oreillynet/textbox;sz=$widthx$height;ord=123456789?" width="$width" height="$height" border="0" alt="" /></a></noscript>
+<!-- End ad tag -->
+</div>
+
+
+
+<!-- ### end textbox###-->
+
+
+<br />
+
+
+
+<!-- sponsors -->
+<!-- ### skyscraper start ###-->
+    <!-- XML Skyscraper Ad -->
+
+
+<!--JavaScript Tag // Tag for network 5159: TechVertical // Website: OR - XML.com // Page: XML // Placement: ros_160x600 (425862) // created at: Oct 9, 2008 5:49:49 PM-->
+<script language="javascript"><!--
+document.write('<scr'+'ipt language="javascript1.1" src="http://adserver.adtechus.com/addyn/3.0/5159/425862/0/154/ADTECH;loc=100;target=_blank;key=key1+key2+key3+key4;grp=[group];misc='+new Date().getTime()+'"></scri'+'pt>');
+//-->
+</script><noscript><a href="http://adserver.adtechus.com/adlink/3.0/5159/425862/0/154/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" target="_blank"><img src="http://adserver.adtechus.com/adserv/3.0/5159/425862/0/154/ADTECH;loc=300;key=key1+key2+key3+key4;grp=[group]" border="0" width="160" height="600"></a></noscript>
+
+<!-- End of JavaScript Tag -->
+
+<!-- end ad -->
+<!-- ### end skyscraper ###-->
+</div>
+</div>
+
+</div><!-- #related -->
+</div><!-- end noindex -->
+
+
+</div><!-- #page-content -->
+
+<!-- footer -->
+
+<div style="clear:right;"></div>
+
+
+
+
+<br clear="all">
+
+<div id="footer" class="noindex">
+
+<!-- Start Quantcast tag -->
+
+<script type="text/javascript" src="http://edge.quantserve.com/quant.js"></script>
+<script type="text/javascript">
+_qacct="p-20l78bOOCbhcg";quantserve();</script>
+<noscript>
+<img src="http://pixel.quantserve.com/pixel/p-20l78bOOCbhcg.gif" style="display: none" height="1" width="1" alt="Quantcast"/></noscript>
+
+ <!-- End Quantcast tag -->
+
+<table border="0" style="padding-top:20px; padding-bottom:20px;">
+<tr><td align="left" width="25%" valign="top" style="padding-left: 20px; padding-right: 20px;">
+<a href="http://oreilly.com/"><img height="35" border="0" width="155" src="http://cdn.oreilly.com/images/standard/oreilly-logo-footer.gif" alt="O'Reilly Media"/></a>
+<br/><br/>
+&copy;2010, O'Reilly Media, Inc.<br/>(707) 827-7000 / (800) 998-9938<br/> All trademarks and registered trademarks appearing on oreilly.com are the property of their respective owners. </td>
+
+<td valign="top" class="footercol1">
+<ul>
+<li><a href="http://oreilly.com/about/"><strong>About O'Reilly</strong></a></li>
+
+<li><a href="http://oreilly.com/academic/">Academic Solutions</a></li>
+<li><a href="http://oreilly.com/contact.html">Contacts</a></li>
+<li><a href="http://oreilly.com/oreilly/cs/">Customer Service</a></li>
+<li><a href="http://oreilly.com/jobs/">Careers</a></li>
+<li><a href="http://press.oreilly.com/">Press Room</a></li>
+<li><a href="http://oreilly.com/oreilly/privacy.csp">Privacy Policy</a></li>
+<li><a href="http://oreilly.com/terms/">Terms of Service</a></li>
+<li><a href="http://oreilly.com/oreilly/author/intro.csp">Writing for O'Reilly</a></li>
+</ul>
+
+</td>
+
+<td valign="top" class="footercol2">
+<ul>
+<li><a href="http://oreilly.com/community/"><strong>Community</strong></a></li>
+<li><a href="http://oreilly.com/authors/">Authors</a></li>
+<li><a href="http://forums.oreilly.com/">Forums</a></li>
+<li><a href="https://members.oreilly.com/">Membership</a></li>
+<li><a href="http://elists.oreilly.com/">Newsletters</a></li>
+<li><a href="http://oreilly.com/feeds/">RSS Feeds</a></li>
+<li><a href="http://ug.oreilly.com/">User Groups</a></li>
+
+</ul>
+</td>
+
+<td valign="top" class="footercol3">
+<ul>
+<li><strong>More O'Reilly Sites</strong></li>
+<li><a href="http://igniteshow.com/">igniteshow.com</a></li>
+<li><a href="http://makerfaire.com/">makerfaire.com</a></li>
+<li><a href="http://makezine.com/">makezine.com</a></li>
+<li><a href="http://craftzine.com">craftzine.com</a></li>
+<li><a href="http://labs.oreilly.com">labs.oreilly.com</a></li>
+
+</ul>
+
+<ul>
+<li><strong>Partner Sites</strong></li>
+<li><a href="https://www.x.com/community/ppx/devzone">PayPal Developer Zone</a></li>
+<li><a href="http://insideria.com">InsideRIA</a></li>
+<li><a href="http://www.forbes.com/oreillyinsights/">O'Reilly Insights on Forbes.com</a></li>
+</ul>
+</td>
+</tr>
+</table>
+
+
+<!-- For maximum performance, place these tags at the bottom of the body section of the page(s) containing this search form.  -->
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/yui/2.6.0/build/utilities/utilities.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/yui/2.6.0/build/datasource/datasource-min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/yui/2.6.0/build/autocomplete/autocomplete-min.js"></script>
+<script type="text/javascript" src="//content.atomz.com/sp1003bcf0/publish/autocomplete_data.js?sp_js_cache_ver=3"></script>
+
+</div><!-- /#footer -->
+
+<!-- MyBuys Page Initialization -->
+<script type="text/javascript">
+mybuys.initPage();
+</script>
+<!-- End MyBuys Page Initialization -->
+
+<!-- path_info: /a/2004/07/21/design.html -->
+<!-- table: a - ref_id: /2004/07/21/design.html -->
+<!-- table: a - ref_id: /2004/07/21/design.html -->
+<!-- table: a - ref_id: /2004/07/21/design.html - cs_rid: 1449 -->
+<!-- 0 domain: www.xml.com - path_info: a/2004/07/21/design.html -->
+<!-- 1 domain: www.xml.com - path_info: a/2004/07/21/design.html -->
+<!-- 2 domain: www.xml.com - path_info: a/2004/07/21/design.html -->
+<!-- 3 domain: www.xml.com - path_info: a/2004/07/21/design.html -->
+<!-- 4 domain: xml.com - path_info: a/2004/07/21/design.html -->
+<!-- 5 domain: xml - path_info: a/2004/07/21/design.html -->
+<!-- 6 domain: xml - path_info: a/2004/07/21/design.html s_channel: network -->
+<!-- 7 domain: xml - path_info: a/2004/07/21/design.html -->
+<!-- 8 domain: www.xml.com - path_info: a/2004/07/21/design.html -->
+
+<script language="JavaScript" type="text/javascript"><!--
+var s_account="ornetwork,orglobal"
+//--></script>
+<!-- SiteCatalyst code version: H.20.2. Copyright 1997-2009 Omniture, Inc. More info available at http://www.omniture.com  -->
+<script language="JavaScript" type="text/javascript" src="http://assets.oreilly.com/js/s_code.js"></script>
+<script language="JavaScript" type="text/javascript"><!--
+s.pageName="network:xml:designing extensible, versionable xml formats"
+s.channel="network"
+s.prop1="network:xml"
+s.prop2="network:xml"
+s.prop3="network:xml"
+s.prop4="article"
+s.prop5="designing extensible, versionable xml formats"
+s.prop6="x/a/1449"
+s.prop24="07/21/2004"
+s.prop21="dare obasanjo"
+s.hier1="network,xml"
+/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+var s_code=s.t();if(s_code)document.write(s_code)//--></script>
+<!-- End SiteCatalyst code version: H.20.2. -->
+<!-- analytics.pl: 2010/12/17 6:58:50 -->
+
+
+
+
+
+</div></body> <!-- /#page -->
+
+
+</html>
+
