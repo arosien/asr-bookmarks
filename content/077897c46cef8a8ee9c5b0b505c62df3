@@ -1,0 +1,883 @@
+<html>
+<head>
+	<title>XML.com: Putting REST on Rails</title>
+        <script language="javascript" src="/common.js"></script>
+</head>
+<body>
+
+<a href="http://www.xml.com/"><img src="/images/xml-logo130.jpg" alt="XML.com" width="130" height="57" border="0" hspace="0" vspace="0"></a>&nbsp;
+
+<br clear="all" />
+&nbsp;<font face="verdana,arial,helvetica" size="1">Published on <b><a href="http://xml.com/">XML.com</a></b>&nbsp;<a href="/pub/a/2006/04/19/rest-on-rails.html">http://www.xml.com/pub/a/2006/04/19/rest-on-rails.html</a><br />
+<a href="/pub/a/admin/printhelp.html">See this</a> if you're having trouble printing code examples</font>
+<p>
+&nbsp;</p>
+<font face="verdana,arial,helvetica">
+
+
+<!-- ISI_LISTEN_START -->
+<span class=ISI_MESSAGE><!--  This article is brought to you by XML.com, your source for all XML news.  --></span>  
+
+
+
+<font size="3"><b>Putting REST on Rails</b></font><br />
+<font size="1"><b>By</b> Dan Kubb<br />
+April 19, 2006</font></font>
+<!--CS_PAGE_BREAK-->
+<!-- sidebar begins -->
+<!-- don't move sidebars-->
+<!-- sidebar ends -->
+
+<h3 id="introduction">RESTful Dispatching in Rails</h3>
+
+<p>"Convention over configuration" is one of the key principles behind the design of Ruby on Rails. It was built with a specific way of doing things and as long as you follow the "Rails way" everything will just work with little or no configuration. That's part of the reason Rails is so successful--as long as you follow its conventions you get many benefits with less work than other frameworks that require you to be more explicit.</p>
+
+<p>The HTTP protocol is very similar in this respect. Stray from the path and you'll find yourself hacking together replacements for basic things HTTP gives you for free. Stay on the path and you gain benefits like caching and better scalability of your applications with less effort. A well-designed--which typically means a RESTful--web application makes good use of available HTTP methods, rather than relying on <code>GET</code> requests to trigger server state changes.</p>
+
+<p>The ideal is to dispatch to a different handler based on the HTTP method, actually running different code depending on the method, and making it impossible to unintentionally change state with a <code>GET</code> request.</p>
+
+<h3 id="restful-rails">RESTful Rails</h3>
+
+<p>Chances are, most developers aren't thinking about HTTP simply because it isn't something that's been talked about by mainstream developers until recently. It's pretty common to be a developer and not know much about REST and HTTP, or know why it's important. But what if conventions were established in Rails that gradually steer developers onto a path that makes RESTful applications easier to develop?</p>
+
+<p>With that in mind I set out to develop the <a href="http://restful-rails.rubyforge.org/">RESTful Rails plugin</a> that would make REST applications easier to create in Rails. The project was inspired by the article <a href="http://naeblis.cx/rtomayko/2005/04/22/on-http-abuse">On HTTP Abuse</a> that outlines features in HTTP that most frameworks don't completely support. My primary goal is to round out support for features that aren't already covered in Rails, while requiring only minimal changes to the way Rails applications are currently being developed.</p>
+
+<h3 id="overview">What You'll Learn</h3>
+
+<p>This article introduces a very simple application that uses the RESTful Rails plugin. It will provide an introduction to dispatching to different handlers based on the HTTP method used in a request. If you plan on following along you should already have the latest version of Rails installed (1.1.1 at the time of writing), along with a database of your choice. I will also assume you have basic knowledge about how to configure your database for Rails using <code>config/database.yml</code>. You should also have a <a href="http://subversion.tigris.org/">Subversion</a> client installed since we'll be using it to install the RESTful Rails plugin.</p>
+
+<p>If you're not sure, here are a few excellent tutorials to get you started:</p>
+
+<ul>
+<li><a href="http://www.onlamp.com/pub/a/onlamp/2005/01/20/rails.html">Rolling with Ruby on Rails, Part 1</a>
+</li>
+
+<li><a href="http://www.onlamp.com/pub/a/onlamp/2005/03/03/rails.html">Rolling with Ruby on Rails, Part 2</a>
+</li>
+
+<li><a href="http://www.onlamp.com/pub/a/onlamp/2002/10/31/subversion.html">Single-User Subversion</a>
+</li>
+</ul>
+
+<p>If you already have Rails installed you can upgrade to the latest version of Rails with the following command:</p>
+
+<pre><code>gem install rails --include-dependencies</code></pre>
+
+<p>You should have at least Rails 1.1.1 to follow along with this article, since some of the features we'll be using were not introduced until very recently.</p>
+
+<h3 id="getting-start">Getting Started</h3>
+
+<p>Let's start off by describing the example we'll be using, a simple app to track a personal library of books. To start the Rails project, run the following from the command line:</p>
+
+<pre><code>rails --database=mysql library</code></pre>
+
+<p>Please note that the <code>--database=mysql</code> switch tells Rails to preconfigure <code>config/database.yml</code> for a MySQL database. Alternatively you can use any of the following options if you prefer:</p>
+
+<ul>
+<li><code>oracle</code>
+</li>
+
+<li><code>postgresql</code>
+</li>
+
+<li><code>sqlite2</code>
+</li>
+
+<li><code>sqlite3</code>
+</li>
+</ul>
+
+<p>We then move into the <em>library</em> directory that was just created for this project:</p>
+
+<pre><code>cd library</code></pre>
+
+<!-- sidebar begins -->
+ <!-- article_sidebar2.view begins -->
+
+<div align="center">
+<div style="width:70%;border-top:1px solid #8d8d8d;border-bottom:1px solid #8d8d8d;margin:0.5em 0;padding:0.5em 0;">
+
+<table width="70%" border="0" cellspacing="0" cellpadding="0" align="center">
+
+<tr>
+<td valign="top" width="50%" align="center">
+
+
+
+<a href="http://oreilly.com/catalog/9780596527532/index.html"><img src="http://www.oreillynet.com/catalog/covers/0596527535_cat.gif" alt="Rails Cookbook: Rough Cut Version" border="0" hspace="20" /></a>
+</td>
+<td valign="top" width="50%"><p class="headline">Related Reading</p>
+<p class="medlist"><span class="title"><a href="http://oreilly.com/catalog/9780596527532/index.html?CMP=ILL-4GV796923290">Rails Cookbook: Rough Cut Version</a></span><strong><br />
+
+By <a href="http://www.oreillynet.com/pub/au/2493">Rob Orsini</a></strong>
+</p>
+<div class="secondary">
+<!-- builds links to list in sidebar -->
+<!--csperl>
+    my @links = split(/(?:\r?\n)+/, ( $DATA{"supporting_links"} || "" ));
+    for my $link ( @links ) {
+	my ( $name, $url ) = split /=/, $link, 2;	
+	next unless $name and $url;
+	$url = "http://oreilly.com/catalog/$DATA{'reference'}/$url" unless $url =~ /^\w+:/os;
+$url = $url . "?CMP=ILL-4GV796923290";
+        if ($name eq "Table of Contents") {
+           print qq~ <a href="$url">$name</a><br /> \n ~;
+        } elsif ($name =~ /Table of Contents/) {
+           print qq~ <a href="$url">$name</a><br /> \n ~;
+        } elsif ($name =~ /Index/) {
+           print qq~ <a href="$url">$name</a><br /> \n ~;
+        } elsif ($name eq "Author's Article") {
+           print qq~ <a href="$url">$name</a><br /> \n ~;
+        } elsif ($name =~ /Sample Chapter/) {
+           print qq~ <a href="$url">$name</a><br /> \n ~;
+        } else {
+           print qq~\n~;
+        }
+    }
+</csperl-->
+
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<!-- article_sidebar2.view ends -->
+
+<!-- sidebar ends -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><p class="secondary">
+
+
+<!--CS_PAGE_INDEX-->
+</p></td><td><p class="secondary" align="right">
+<a href="<!--CS_NEXT_REF-->">
+ 
+</a></p></td></tr></table>
+
+
+
+
+
+<!--CS_PAGE_BREAK-->
+
+<p>
+
+
+<!--CS_PAGE_INDEX-->
+</p>
+
+
+
+
+<h3 id="model">The Model</h3>
+
+<p>To keep this example focused on the REST bits, we'll create a <code>Book</code> model with only two attributes (a <code>title</code> and a <code>description</code>) and we'll include no validation or error checking code, which you'd obviously add to a real app.</p>
+
+<p>To create a <code>Book</code> model, type the following at the command line:</p>
+
+<pre><code>ruby script/generate model Book</code></pre>
+
+<p>Test the new model by running its unit tests:</p>
+
+<pre><code>rake test:units</code></pre>
+
+<p>You should see several errors. That's because we need to tell Rails how to connect to the database.</p>
+
+<h4 id="database">Configuring the Database</h4>
+
+<p>I'm using MySQL, but you can use any database that Rails supports to follow along. Open <code>config/database.yml</code> and change it to work with your database configuration.</p>
+
+<p>In my case, <code>config/database.yml</code> now looks like this:</p>
+
+<pre><code>development:
+  adapter: mysql
+  database: library_development
+  username: root
+  password:
+  host: localhost
+  socket: /usr/local/mysql/run/mysql_socket
+
+test:
+  adapter: mysql
+  database: library_test
+  username: root
+  password:
+  host: localhost
+  socket: /usr/local/mysql/run/mysql_socket
+
+production:
+  adapter: mysql
+  database: library_production
+  username: root
+  password:
+  host: localhost
+  socket: /usr/local/mysql/run/mysql_socket</code></pre>
+
+<p>Keep in mind that I'm running this example on a test database server on a local machine. In a production system you would not want to use the root user account. The only requirement for Rails is that the user account needs to be able to <code>CREATE</code> and <code>DROP</code> tables and indexes in addition to the standard SQL commands: <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>.</p>
+
+<p>Also make sure that you've created the databases named in <code>config/database.yml</code> using the approach specific to your database. In my case I ran the following commands to create the databases:</p>
+
+<pre><code>mysqladmin -u root create library_development
+mysqladmin -u root create library_test
+mysqladmin -u root create library_production</code></pre>
+
+<p><code>rake test:units</code> should still fail because we haven't created the table for the books yet.</p>
+
+<h4 id="migrations">Database Migrations</h4>
+
+<p>We need to add the books table to the development database. To do this we'll use the Rails <a href="http://wiki.rubyonrails.com/rails/pages/HowToUseMigrations">migration system</a> which allows you to specify a schema in a database-independent way. When you run the migration the system will check to the current version of your database schema and bring it up to the most current version.</p>
+
+<p>As of Rails 1.1, whenever you create a new model a migration script will be automatically created for it. In our case the migration script for <code>Book</code> is <code>db/migrate/001_create_books.rb</code>. Update this file to look like the following:</p>
+
+<pre><code>class CreateBooks &lt; ActiveRecord::Migration
+  def self.up
+    create_table :books do |t|
+      t.column :title, :string, :limit =&gt; 30, :null =&gt; false
+      t.column :description, :text
+    end
+  end
+
+  def self.down
+    drop_table :books
+  end
+end</code></pre>
+
+<p>This will add the <code>books</code> table with two columns: <code>title</code> and <code>description</code>.</p>
+
+<p>Let's run the migration now:</p>
+
+<pre><code>rake db:migrate</code></pre>
+
+<p>This will update the <code>development</code> database in <code>config/database.yml</code> and add the <code>books</code> table.</p>
+
+<p><code>rake test:units</code> should now pass!</p>
+
+<p>For the remainder of this article we will be in either an "all-tests passing state" or a "failing state." We'll cycle back and forth between these two states as the application begins to take shape.</p>
+
+<h4 id="fixtures">Testing with Fixtures</h4>
+
+<p>Before we dive into the controller we're going to need some data for our tests to work with. We'll use the Rails <a href="http://ar.rubyonrails.org/classes/Fixtures.html">fixture system</a> to load records into our test database each time a unit test or functional test is run.</p>
+
+<p>The first thing we'll do is create a unit test to ensure the fixture has the information we expect in it. Replace the default <code>test_truth</code> method in <code>test/unit/book_test.rb</code> with the following:</p>
+
+<pre><code>def test_fixture
+  assert_kind_of Book, books(:http_book)
+  assert_valid books(:http_book)
+  assert_equal 1, Book.count
+end</code></pre>
+
+<p>This tests that the fixture has a valid <code>:http_book</code> record and contains only one entry. If for some reason the <code>:http_book</code> wasn't found, or more records are added to the the fixture, the unit test will fail.</p>
+
+<p><code>rake test:units</code> should fail because we haven't configured the fixture yet.</p>
+
+<p>Rails automatically created the fixture <code>test/fixtures/books.yml</code> when our <code>Book</code> model was created. Update this file to look like the following:</p>
+
+<pre><code>http_book:
+  id:          1
+  title:       "HTTP: The Definitive Guide"
+  description: "Everything that technical people need for using HTTP efficiently."</code></pre>
+
+<p><code>rake test:units</code> should now pass.</p>
+
+<p>We can be fairly confident that the <code>Book</code> model and its fixture are going to work, so we'll move on to the controller, but first we need to install the RESTful Rails plugin.</p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><p class="secondary">
+
+
+<!--CS_PAGE_INDEX-->
+</p></td><td><p class="secondary" align="right">
+<a href="<!--CS_NEXT_REF-->">
+ 
+</a></p></td></tr></table>
+
+
+
+
+
+<!--CS_PAGE_BREAK-->
+
+<p>
+
+
+<!--CS_PAGE_INDEX-->
+</p>
+
+
+
+
+<h4 id="install-restful-rails">The RESTful Rails Plugin</h4>
+
+<p>The <a href="http://restful-rails.rubyforge.org/">RESTful Rails plugin</a> adds several capabilities to normal Rails controllers that allow them to more effectively use HTTP. The focus of our example will be its most obvious feature, the per-HTTP method dispatching system. With it you will be able to run different code depending on the HTTP request method. A nice extra benefit is that it also takes care of handling the <code>OPTIONS</code> method, which will come in handy in our tests.</p>
+
+<p>To install the plugin, type the following from the command line:</p>
+
+<pre><code>
+svn co svn://rubyforge.org/var/svn/restful-rails/trunk vendor/plugins/restful-rails
+</code></pre>
+
+<p>Or if your project is under version control with Subversion already, install it using the Rails plugin system instead:</p>
+
+<pre><code>
+ruby script/plugin install -x svn://rubyforge.org/var/svn/restful-rails/trunk
+</code></pre>
+
+<p>Both of these commands will retrieve the latest snapshot of the RESTful Rails plugin and place it in the directory <em>vendor/plugins/restful-rails/</em>.</p>
+
+<p>Now that the plugin is installed, let's create the controller.</p>
+
+<h3 id="controller">The Controller</h3>
+
+<p>To create the <code>BookController</code> controller, run the following command:</p>
+
+<pre><code>ruby script/generate controller Book</code></pre>
+
+<p>Test the new controller by running its functional tests:</p>
+
+<pre><code>rake test:functionals</code></pre>
+
+<p>This should pass.</p>
+
+<h4 id="routes">Restful Routes</h4>
+
+<p>The <code>BookController</code> controller is going to handle requests for two URIs:</p>
+
+<table>
+<tr>
+<td><em>/books/</em>
+</td>
+<td>A collection of books</td>
+</tr>
+
+<tr>
+<td><em>/books/{id}</em>
+</td>
+<td>A book identified by an ID</td>
+</tr>
+</table>
+
+<p>Let's test that the URIs are being handled properly.</p>
+
+<p>Replace the default <code>test_truth</code> method in <code>test/functional/book_controller_test.rb</code> with the following:</p>
+
+<pre><code>def test_routing
+  with_options :controller =&gt; 'book' do |test|
+    test.assert_routing 'books',   :action =&gt; 'collection'
+    test.assert_routing 'books/1', :action =&gt; 'by_id', :id =&gt; '1'
+  end
+end</code></pre>
+
+<p>This tests that the URIs route to the correct controller and action. Note the use of the new <code>with_options</code> method which saves you some typing by allowing you to specify the default options supplied to all the methods in the block.</p>
+
+<p><code>rake test:functionals</code> should fail because we haven't set up how URIs are routed to controllers yet.</p>
+
+<p>To set up the routes we need to add a line to <code>config/routes.rb</code> inside the <code>ActionController::Routing::Routes.draw</code> block:</p>
+
+<pre><code>map.connect_resource :book</code></pre>
+
+<p>The <code>connect_resource</code> method is from the RESTful Rails plugin and it will set up routes that match our expected URI structure.</p>
+
+<p><code>rake test:functionals</code> should now pass.</p>
+
+<p>Now that the routes are set up, we'll move on to the controller.</p>
+
+<h4 id="make-rest-controller">Making a RESTful Controller</h4>
+
+<p>At this point our controller doesn't have any knowledge of the RESTful Rails plugin. To add method dispatching and other features, you need to include <code>RestController::Base</code> at the top of <code>app/controllers/book_controller.rb</code> so it becomes:</p>
+
+<pre><code>class BookController &lt; ApplicationController
+  include RestController::Base
+end</code></pre>
+
+<p>We're now ready to add the <code>:collection</code> resource to the controller.</p>
+
+<h4 id="collection">The <code>collection</code> Resource</h4>
+
+<p>The <code>:collection</code> resource represents a list of books. We want to be able to view the list with the <code>GET</code> method, and add to the list using <code>POST</code>. Let's add a test to <code>test/functional/book_controller_test.rb</code> that ensures these methods are handled:</p>
+
+<pre><code>def test_options_collection
+  options :collection
+  assert_response HTTP::Status::NO_CONTENT
+  assert_no_entity
+  assert_allowed_methods :get, :post
+end</code></pre>
+
+<p>This tests that when an <code>OPTIONS</code> request is performed on the <code>:collection</code>, it should return a <code>204 No Content</code> status code. Also the <code>Allow</code> header should identify <code>GET</code> and <code>POST</code> as allowed methods. The <code>options</code>, <code>assert_no_entity</code> and <code>assert_allowed_methods</code> methods are from the RESTful Rails plugin.</p>
+
+<p><code>rake test:functionals</code> should fail because there is no <code>:collection</code> resource in the controller yet.</p>
+
+<p>First we'll stub out the <code>:collection</code> resource to make the functional tests pass for now. Add the following to <code>app/controllers/book_controller.rb</code>:</p>
+
+<pre><code>resource :collection do |r|
+  r.post do
+  end
+end</code></pre>
+
+<p><code>rake test:functionals</code> should now pass.</p>
+
+<p>We only specified a stub handler for <code>POST</code>, but didn't say anything about <code>GET</code>. A RESTful Rails resource will handle <code>GET</code> just like a normal Rails action: if you don't use <code>redirect</code> or <code>render</code>, a template with the same name as the resource (if available) will be displayed.</p>
+
+<h5 id="collection-fixture">Fixtures</h5>
+
+<p>We're almost at the point where we need test data to work with. We'll be reusing the <code>Books</code> fixture we created when testing our model. Simply add the following line above the <code>setup</code> method in <code>test/functional/book_controller_test.rb</code>:</p>
+
+<pre><code>fixtures :books</code></pre>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><p class="secondary">
+
+
+<!--CS_PAGE_INDEX-->
+</p></td><td><p class="secondary" align="right">
+<a href="<!--CS_NEXT_REF-->">
+ 
+</a></p></td></tr></table>
+
+
+
+
+
+<!--CS_PAGE_BREAK-->
+
+<p>
+
+
+<!--CS_PAGE_INDEX-->
+</p>
+
+
+
+
+<h5 id="collection-get">View the List of Books</h5>
+
+<p>Even though <code>GET</code> requests are handled automatically we still need to test what will happen when a <code>GET</code> on <code>:collection</code> is done. In our case we want the collection template to be loaded and display a list of all the books in the database in XML format. Let's add a test to <code>test/functional/book_controller_test.rb</code> that ensures this:</p>
+
+<pre><code>def test_get_collection
+  get :collection
+  assert_response HTTP::Status::OK
+  assert_template 'collection'
+  assert_equal 'application/xml', @response.content_type
+
+  with_options :tag =&gt; 'books' do |test|
+    test.assert_tag :children =&gt; { :count  =&gt; 1, :only =&gt; { :tag =&gt; 'title', :content =&gt; 'Books' } }
+    test.assert_tag :children =&gt; { :count  =&gt; 1, :only =&gt; { :tag =&gt; 'book',  :content =&gt; ''      } }
+  end
+
+  with_options :tag =&gt; 'book' do |test|
+    test.assert_tag :children =&gt; { :count  =&gt; 1, :only =&gt; { :tag =&gt; 'id',    :content =&gt; books(:http_book).id.to_s } }
+    test.assert_tag :children =&gt; { :count  =&gt; 1, :only =&gt; { :tag =&gt; 'title', :content =&gt; books(:http_book).title   } }
+    test.assert_tag :children =&gt; { :count  =&gt; 1, :only =&gt; { :tag =&gt; 'link',  :attributes =&gt; { :href =&gt; @controller.url_for(:action =&gt; 'by_id', :id =&gt; books(:http_book)) } } }
+  end
+end</code></pre>
+
+<p>This tests that when a <code>GET</code> <code>:collection</code> is performed, a <code>200 OK</code> status code should be returned. Also the <code>collection</code> template should be used to render the results in the specified XML format.</p>
+
+<p><code>rake test:functionals</code> should fail because we haven't created the XML template yet.</p>
+
+<p>Before creating the template we need a way to retrieve a list of all the books from the database. Add one line to the beginning of the <code>:collection</code> resource in <code>app/controllers/book_controller.rb</code> so it becomes:</p>
+
+<pre><code>resource :collection do |r|
+  conditions &lt;&lt; @books = Book.find(:all)
+
+  r.post do
+  end
+end</code></pre>
+
+<p>Note that the assignment of <code>@book</code> to <code>conditions</code> is a convention in RESTful Rails. It allows conditional request handling which may be described in more detail at a later time.</p>
+
+<p>Next create the template <code>app/views/book/collection.rxml</code> and make it look like:</p>
+
+<pre><code>xml.instruct!
+
+xml.books do
+  xml.title 'Books'
+
+  @books.each do |book|
+    xml.book do
+      xml.id    book.id
+      xml.title book.title
+      xml.link  :href =&gt; url_for(:only_path =&gt; false, :action =&gt; 'by_id', :id =&gt; book)
+    end
+  end
+end</code></pre>
+
+<p><code>rake test:functionals</code> should now pass.</p>
+
+<h5 id="collection-post">Add to the List of Books</h5>
+
+<p>So what exactly should we do when handling <code>POST</code> in <code>:collection</code>? Well, its job will be to add a new book to the database as well as redirect the client to the new location of the book. With these expectations we add the following to <code>test/functional/book_controller_test.rb</code>:</p>
+
+<pre><code>def test_post_collection
+  new_book = { :title =&gt; 'test' }
+
+  post :collection, :book =&gt; new_book
+  assert_response HTTP::Status::CREATED
+
+  id = Book.maximum('id')
+  assert_location :action =&gt; 'by_id', :id =&gt; id
+
+  book = Book.find(id)
+  assert_kind_of Book, book
+  assert_equal new_book[:title], book.title
+  assert_equal new_book[:description], book.description
+end</code></pre>
+
+<p>This tests that when a <code>POST</code> is performed on <code>:collection</code>, a <code>201 Created</code> status code should be returned. Also the <code>Location</code> header should be set properly and a database check to should be made to ensure the new book was actually created.</p>
+
+<p><code>rake test:functionals</code> should fail because we haven't added the <code>:collection</code> <code>POST</code> handler yet.</p>
+
+<p>To handle <code>POST</code> requests, we update the <code>r.post</code> handler in <code>app/controllers/book_controller.rb</code> to:</p>
+
+<pre><code>r.post do
+  @book = Book.new params[:book]
+  if @book.save
+    render_post_success :action =&gt; 'by_id', :id =&gt; @book
+  end
+end</code></pre>
+
+<p>In this example we use the RESTful Rails <code>render_post_success</code> method which returns a <code>201 Created</code> status, and sets the <code>Location</code> header to the URI of the new book.</p>
+
+<p><code>rake test:functionals</code> should now pass.</p>
+
+<p>We're done with the <code>:collection</code> resource now. It handles <code>GET</code>, <code>HEAD</code>, <code>OPTIONS</code>, and <code>POST</code> requests in about nine lines of code. Next we'll move on to the <code>:by_id</code> resource which represents a book using its ID in the database.</p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><p class="secondary">
+
+
+<!--CS_PAGE_INDEX-->
+</p></td><td><p class="secondary" align="right">
+<a href="<!--CS_NEXT_REF-->">
+ 
+</a></p></td></tr></table>
+
+
+
+
+
+<!--CS_PAGE_BREAK-->
+
+<p>
+
+
+<!--CS_PAGE_INDEX-->
+</p>
+
+
+
+
+<h4 id="by_id">The <code>by_id</code> Resource</h4>
+
+<p>The <code>:by_id</code> resource is a single book identified by its database ID. We want to be able to view a book with the <code>GET</code> method, change it with <code>PUT</code>, and delete it with the <code>DELETE</code> method. Let's add a test to <code>test/functional/book_controller_test.rb</code> that tests our expectations:</p>
+
+<pre><code>def test_options_by_id
+  options :by_id, :id =&gt; books(:http_book).id
+  assert_response HTTP::Status::NO_CONTENT
+  assert_no_entity
+  assert_allowed_methods :get, :put, :delete
+end</code></pre>
+
+<p>This tests that when <code>OPTIONS</code> is performed on <code>:by_id</code>, a <code>204 No Content</code> status code is returned. Also the <code>Allow</code> header should identify <code>GET</code>, <code>PUT</code>, and <code>DELETE</code> as allowed methods.</p>
+
+<p><code>rake test:functionals</code> should fail because there is no for <code>:by_id</code> resource yet.</p>
+
+<p>The process we use is very similar to the <code>:collection</code> resource&#8212;we'll stub out the <code>:by_id</code> resource to make the functional tests pass for now. Add the following to <code>app/controllers/book_controller.rb</code>:</p>
+
+<pre><code>resource :by_id do |r|
+  r.put do
+  end
+
+  r.delete do
+  end
+end</code></pre>
+
+<p>Again, because the RESTful Rails plugin handles requests just like normal Rails, we don't have to do anything to handle <code>GET</code>.</p>
+
+<p><code>rake test:functionals</code> should now pass.</p>
+
+<h5 id="by_id-get">View a Book</h5>
+
+<p>We need to test what will happen when a <code>GET</code> on <code>:by_id</code> is performed. In our case we want the <code>by_id</code> template to be loaded and display a single book from the database in XML format. Let's test this by adding the following to <code>test/functional/book_controller_test.rb</code>:</p>
+
+<pre><code>def test_get_by_id
+  get :by_id, :id =&gt; books(:http_book).id
+  assert_response HTTP::Status::OK
+  assert_template 'by_id'
+  assert_equal 'application/xml', @response.content_type
+
+  with_options :tag =&gt; 'book' do |test|
+    test.assert_tag :children =&gt; { :count  =&gt; 1, :only =&gt; { :tag =&gt; 'id',          :content =&gt; books(:http_book).id.to_s     } }
+    test.assert_tag :children =&gt; { :count  =&gt; 1, :only =&gt; { :tag =&gt; 'title',       :content =&gt; books(:http_book).title       } }
+    test.assert_tag :children =&gt; { :count  =&gt; 1, :only =&gt; { :tag =&gt; 'description', :content =&gt; books(:http_book).description } }
+  end
+end</code></pre>
+
+<p>This tests that when a GET on <code>:by_id</code> is performed, a <code>200 OK</code> status code should be returned, and that the <code>by_id</code> template should be used to render the results in the specified XML format.</p>
+
+<p><code>rake test:functionals</code> should fail because we haven't created the XML template yet.</p>
+
+<p>Before creating the template we first need a way to retrieve the book from the database using the id supplied in the URI. Add one line to the beginning of the <code>:by_id</code> resource in <code>app/controllers/book_controller.rb</code> so it becomes:</p>
+
+<pre><code>resource :by_id do |r|
+  conditions &lt;&lt; @book = Book.find(params[:id])
+
+  r.put do
+  end
+
+  r.delete do
+  end
+end</code></pre>
+
+<p>Next create the template <code>app/views/book/by_id.rxml</code> and make it look like:</p>
+
+<pre><code>xml.instruct!
+@book.to_xml</code></pre>
+
+<p><code>rake test:functionals</code> should now pass.</p>
+
+<h5 id="by_id-put">Change a Book</h5>
+
+<p>Now we want to be able to use <code>PUT</code> to change a book by its ID. We test this by adding the following to <code>test/functional/book_controller_test.rb</code>:</p>
+
+<pre><code>def test_put_by_id
+  changed_book = { :title =&gt; 'a different title', :description =&gt; 'a different description' }
+
+  id = books(:http_book).id
+
+  put :by_id, :id =&gt; id, :book =&gt; changed_book
+  assert_response HTTP::Status::NO_CONTENT
+  assert_no_entity
+
+  book = Book.find id
+  assert_kind_of Book, book
+  assert_equal changed_book[:title], book.title
+  assert_equal changed_book[:description], book.description
+end</code></pre>
+
+<p>This tests that when <code>PUT</code> is performed on <code>:by_id</code>, a <code>204 No Content</code> status code is returned. The test checks the database to ensure the record was changed successfully.</p>
+
+<p><code>rake test:functionals</code> should fail because we haven't added the <code>:by_id</code> <code>PUT</code> handler yet.</p>
+
+<p>To handle <code>PUT</code> requests we update the <code>r.put</code> handler in <code>app/controllers/book_controller.rb</code> to:</p>
+
+<pre><code>r.put do
+  @book.attributes = params[:book]
+  if @book.save
+    render_put_success
+  end
+end</code></pre>
+
+<p>We use the RESTful Rails <code>render_put_success</code> method which returns a <code>204 No Content</code> status.</p>
+
+<p><code>rake test:functionals</code> should now pass.</p>
+
+<h5 id="by_id-delete">Delete a Book</h5>
+
+<p>Finally, we want to use <code>DELETE</code> to remove a book by its ID.</p>
+
+<p>The test we add to <code>test/functional/book_controller_test.rb</code> looks like this:</p>
+
+<pre><code>def test_delete_by_id
+  id = books(:http_book).id
+
+  delete :by_id, :id =&gt; id
+  assert_response HTTP::Status::NO_CONTENT
+  assert_no_entity
+
+  assert_raise(ActiveRecord::RecordNotFound) { Book.find id }
+end</code></pre>
+
+<p>This tests that when <code>DELETE</code> is performed on <code>:by_id</code>, a <code>204 No Content</code> status code is returned. The test checks the database to ensure the record was removed successfully.</p>
+
+<p><code>rake test:functionals</code> should fail because we haven't added the <code>:by_id</code> <code>DELETE</code> handler yet.</p>
+
+<p>To handle <code>DELETE</code> requests we update the <code>r.delete</code> handler in <code>app/controllers/book_controller.rb</code> to:</p>
+
+<pre><code>r.delete do
+  if @book.destroy
+    render_delete_success :id =&gt; nil
+  end
+end</code></pre>
+
+<p>This simply calls <code>@book.destroy</code> and does a <code>render_delete_success</code> when successful.</p>
+
+<p><code>rake test:functionals</code> should now pass.</p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><p class="secondary">
+
+
+<!--CS_PAGE_INDEX-->
+</p></td><td><p class="secondary" align="right">
+<a href="<!--CS_NEXT_REF-->">
+ 
+</a></p></td></tr></table>
+
+
+
+
+
+<!--CS_PAGE_BREAK-->
+
+<p>
+
+
+<!--CS_PAGE_INDEX-->
+</p>
+
+
+
+
+<h3 id="verify">Trust, but Verify</h3>
+
+<p>It's always nice to have test cases that pass, but what about the real world? When I first write my test cases I always like to double-check them to make sure everything is working perfectly. Let's issue a few requests directly to our application using trusty old <code>curl</code>.</p>
+
+<h4 id="test-collection-get">Test Viewing a List of Books</h4>
+
+<p>Before we start we need to bring up a test server with the following command:</p>
+
+<pre><code>ruby script/server</code></pre>
+
+<p>Then open a second command-line prompt and run the following:</p>
+
+<pre><code>curl http://localhost:3000/books/</code></pre>
+
+<p>The expected response is:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;books&gt;
+  &lt;title&gt;Books&lt;/title&gt;
+&lt;/books&gt;</code></pre>
+
+<p>As you can see, there are no books listed yet.</p>
+
+<h4 id="test-collection-post">Test Adding to a List of Books</h4>
+
+<p>Next, create a new book:</p>
+
+<pre><code>curl \
+  -i \
+  -X POST \
+  -H 'Content-Type: application/xml' \
+  -d '&lt;book&gt;&lt;title&gt;a title&lt;/title&gt;&lt;description&gt;a description&lt;/description&gt;&lt;/book&gt;' \
+  http://localhost:3000/books/</code></pre>
+
+<p>The response to this request will include several headers, but the ones we care about are:</p>
+
+<pre><code>HTTP/1.1 201 Created
+Location: http://localhost:3000/books/1</code></pre>
+
+<p>Note the URI in the <code>Location</code> header, we'll be using that in a moment.</p>
+
+<p>To make sure the new book is listed in the collection:</p>
+
+<pre><code>curl http://localhost:3000/books/</code></pre>
+
+<p>The expected response is:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;books&gt;
+  &lt;title&gt;Books&lt;/title&gt;
+  &lt;book&gt;
+    &lt;id&gt;1&lt;/id&gt;
+    &lt;title&gt;a title&lt;/title&gt;
+    &lt;link href="http://localhost:3000/books/1"/&gt;
+  &lt;/book&gt;
+&lt;/books&gt;</code></pre>
+
+<p>Make sure the link's <code>href</code> is the same as the <code>Location</code> header we got from the previous step.</p>
+
+<h4 id="test-by_id-get">Test Viewing a Book</h4>
+
+<p>Follow the <code>Location</code> header from the previous step:</p>
+
+<pre><code>curl http://localhost:3000/books/1</code></pre>
+
+<p>The expected response is:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;book&gt;
+  &lt;title&gt;a title&lt;/title&gt;
+  &lt;id type="integer"&gt;1&lt;/id&gt;
+  &lt;description&gt;a description&lt;/description&gt;
+&lt;/book&gt;</code></pre>
+
+<h4 id="test-by_id-put">Test Changing a Book</h4>
+
+<p>Update the book using <code>PUT</code>:</p>
+
+<pre><code>curl \
+  -i \
+  -X PUT \
+  -H 'Content-Type: application/xml' \
+  -d '&lt;book&gt;&lt;title&gt;a new title&lt;/title&gt;&lt;description&gt;a new description&lt;/description&gt;&lt;/book&gt;' \
+  http://localhost:3000/books/1</code></pre>
+
+<p>This too will return several headers, but at this moment we only care about the first line:</p>
+
+<pre><code>HTTP/1.1 204 No Content</code></pre>
+
+<p>Retrieve the book again to see the changes:</p>
+
+<pre><code>curl http://localhost:3000/books/1</code></pre>
+
+<p>The expected response is:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;book&gt;
+  &lt;title&gt;a new title&lt;/title&gt;
+  &lt;id type="integer"&gt;1&lt;/id&gt;
+  &lt;description&gt;a new description&lt;/description&gt;
+&lt;/book&gt;</code></pre>
+
+<h4 id="test-by_id-delete">Test Deleting a Book</h4>
+
+<p>We'll delete the book like this:</p>
+
+<pre><code>curl -i -X DELETE http://localhost:3000/books/1</code></pre>
+
+<p>Again, there will be several headers, but the one that tells us the <code>DELETE</code> was successful is the first line:</p>
+
+<pre><code>HTTP/1.1 204 No Content</code></pre>
+
+<p>To verify the book is deleted, perform a <code>GET</code> on the collection:</p>
+
+<pre><code>curl http://localhost:3000/books/</code></pre>
+
+<p>The expected response is:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;books&gt;
+  &lt;title&gt;Books&lt;/title&gt;
+&lt;/books&gt;</code></pre>
+
+<p>The collection contains no books now, just as we would expect.</p>
+
+<h3 id="teaser">Only the Beginning</h3>
+
+<p>So now we have a simple RESTful Rails application with a full test suite and HTTP method dispatching. We used the HTTP <code>OPTIONS</code> method to identify the methods each resource supports, and we based our test cases around a relatively simple RESTful protocol.</p>
+
+<p>As far as building RESTful Rails applications in Ruby on Rails we're only at the beginning of what is possible. There's an increased interest by the Rails core development team, and David Heinemeier Hansson <a href="http://www.loudthinking.com/arc/000572.html">in particular</a>, in HTTP and the REST architectural style. The RESTful Rails project is off to a good start with per-method dispatching; conditional <code>GET</code>, HTTP Authentication, and more are planned in the near future.</p>
+
+<p>Given the momentum of Ruby on Rails it's a safe bet that in the coming months you'll see more RESTful applications and a better understanding of the HTTP protocol within the community.</p>
+
+
+<p><font face="verdana,arial,helvetica" size="1"><b>XML.com</b> Copyright &copy; 1998-2006 O'Reilly Media, Inc.</font></p></body>
+
+
+
+<!-- ISI_LISTEN_STOP -->
+
+
+
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
