@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>
+         Octavian.org - Free Software
+      </TITLE>
+   </HEAD>
+   <BODY>
+      Below are implementations of various different algorithms. All of
+      the code was written by me, so any bugs are mine. I stink at
+      math, so if I have overlooked some breathtaking optimization
+      anywhere, please speak up. :-) I welcome all suggestions and/or
+      constructive criticism. If you are using any of these packages
+      and like them please let me know. Seems pointless to do all of
+      this work when it only benefits me.
+      <DL>
+         <DT>
+            <B>Ternary Search Trie</B>
+         <DD>
+	    I first read about Ternary Search Tries in <EM>Algorithms
+	    in C 3rd. Edition</EM> by Sedgewick. Basically, I needed a
+	    fast symbol table algorithm for null terminated character
+	    strings, and binary trees weren't fast enough and there
+	    were too many balancing problems. My ternary search trie
+	    package has the basic search and insert and delete
+	    functions.<BR>
+            This package is now being used within an Apache (my own, not bundled) piped logging module to
+            cache file names and match them up with their descriptors. 
+            <UL>
+               <LI> The <A HREF="tst.tar.gz">original C version</A>
+	       <LI> The <A HREF="tst1.1.tar.gz">new 1.1 C version</A>
+	       has an improved insert function.
+	       <LI> The <A HREF="tst1.2.tar.gz">new 1.2 C version</A>
+	       checks the exist_ptr argument passed to the insert
+	       function. If it is NULL, it is ignored. In addition, even
+	       when the TST_REPLACE option is specified the existing
+	       data pointer will be placed in the supplied exist_ptr
+	       BEFORE it is overwritten with the new data pointer for
+	       the existing key.
+	       <LI> The <A HREF="tst1.3.tar.gz">new 1.3 C version</A>
+	       fixes a potential problem during key insertion. Previously,
+	       if there was a memory allocation error while inserting a
+	       string of new nodes for a key, these nodes would be left
+	       hanging out in space. This problem is fixed in the 1.3
+	       version.
+	       <LI> The <A HREF="tst1.4.tar.gz">new 1.4 C version</A>
+	       adds a new option for the Mongrel URI Classifier
+	       maintainers. The insert routine has been slightly
+	       restructured and a new option TST_SUBSTRING_MATCH added
+	       for the search function. So if the trie contains the
+	       strings "test" and "testing", a search for "testin" with
+	       this option will return the entry for "test". Basically,
+	       the most complete substring found is returned. Another
+	       optional parameter to the search function returns the
+	       length of the match. All docs (as well as CWEB docs) are
+	       in the tst.pdf file. This is the first update to
+	       this library in over 7 years, and there is a lot
+	       that still needs updating.
+            </UL>
+			Note: I have seen some grumbling about how
+			nodes are allocated. The method is very
+			simplistic and does slow down insertions.
+			The reason it is there is because in order
+			to support deletions, the nodes need to be
+			freed/reused individually, since over time
+			a given node may be part of several different
+			strings. So, a better method for doing this
+			is needed. In addition, it is possible to
+			add an option to make the structure "append
+			only", which would allow a simpler node
+			allcation strategy to be used.<BR>
+         <DT>
+            <B>String hashing code</B>
+         <DD>
+            This is a very basic hashing algorithm for strings. The
+            main algorithm is from <EM>The Algorithm Design
+            Manual</EM>, page 177. I added a way to limit how much of
+	    the string gets hashed with the hash_limit parameter. There
+	    are versions below for C and Perl.
+            <UL>
+               <LI> The <A HREF="str_hash.c">C source str_hash.c</A>
+	       <LI> This was originally written entirely in Perl, but I
+	       could find no way to force unsigned integer arithmetic,
+	       so the values output were different from the C only
+	       version. Hence, this is written in C, with a PerlXS
+	       wrapper around it. Build it as you would any Perl
+	       module. <A HREF="str_hash.tar.gz">PerlXS Version</A>
+            </UL>
+         <DT>
+            <B>Misc Java stuff</B>
+	 <DD>
+	 I needed a Queue in Java, so this <A HREF="Queue.java">Java
+	 Queue code</A> is pretty much lifted straight out of <EM>Data
+	 Structures in Java</EM> by Thomas A. Standish. I added the
+	 synchronized keywords to make it thread safe.
+         <DT>
+            <B>Modified Complete Binary Search Tree</B>
+         <DD>
+	    This is an implementation of a structure I read about in
+	    <EM>An Optimal Search Tree: Modified Complete Binary Search
+	    Tree</EM> by Joseph F. Malerba and Narayan Murthy. There
+	    will be C and Java versions. You can grab the
+	    <A HREF="MCBSTree.java">Java version</A> if you want to see
+	    what I have done so far.
+         <DT>
+            <B>Linked List Source</B>
+         <DD>
+		I had written a couple linked list libraries that
+		maintain a "free list" of nodes and allocated the nodes
+		in chunks to make it more efficient. What is included
+		here is a more of an "in place" solution. The idea is
+		that you are putting items into a linked list, you
+		generally have to malloc() memory for whatever it is
+		you are storing. This can require another library to
+		efficiently allocate these structures for you. You
+		can't really do this properly with a library by passing
+		in an object size, because you run into alignment
+		issues with different systems. So, this is not a
+		library, but a source file and header. You define
+		LL_DATA_TYPE to be the data that is stored in each
+		linked list item, as well as LL_PREFIX, which gives a
+		prefix to all of the internal data types and functions,
+		so you don't collide with any other program or library
+		that may use this list source as well. The source is
+		<A href="ll.c">ll.c</A> and the header is
+		<A href="ll.h">ll.h</A>.
+         <DT>
+            <B>thread safe strtok</B>
+         <DD>
+			This is much like strtok_r, but doesn't
+			require that silly REENTRANT define and
+			doesn't call any other functions. Short
+			and simple but useful, here is
+			<A href="el_strtok.c">el_strtok.c</A>.
+			<DT>
+				<B>C++ class for anonymous shared memory</B>
+			<DD>
+			This is a simple class for creating anonymous
+			shared memory segments (memory shared between
+			related processes). If MAP_ANON is defined
+			then that flag is passed to mmap(), otherwise
+			/dev/zero gets mapped. Here is the <A
+			href="AnonymousSharedMemory.cpp">source</A> and
+			the <A href="AnonymousSharedMemory.h">header</A>.
+			<DT>
+				<B>Binary Search for character array</B>
+			<DD>
+			This is a very simple function for performing
+			binary searches of character arrays. This
+			is handy for things like parsers, where you
+			have a list of characters in various
+			groupings, and you need to determine if a
+			given character is part of a particular
+			group. Get the <A href="bcsrch.c">C source</A>.
+			<DT>
+				<B>Function for skipping RFC822 commenting folding white space</B>
+			<DD>
+			This function is used for skipping RFC822
+			commenting folding white space in structured
+			header bodies. Get the <A href="skip_rfc822_cfws.c">C source</A>.
+			<DT>
+				<B>Code snippet to proxy two TCP sockets</B>
+			<DD>
+			This function is used to proxy two TCP sockets. Non-blocking I/O is
+         used, with select() used for determining ready set and timing out
+         operations. Get the <A href="tcp_proxy.c">C source</A>.
+			<DT>
+				<B> Non-recursive quicksort.</B>
+			<DD>
+				This is based on code from <EM>Algorithms
+				in C 3rd. Edition</EM> by Sedgewick. The
+				quicksort routine I was using was
+				blowing up the stack on certain
+				inputs so I needed something heap
+				based. This code is a combination of the
+				non-recursive code example plus some of
+				the optimizations suggested. I haven't
+				gotten around to adding the insertion
+				sort optimization. Note that while it
+				does not use recursive function calls,
+				it does have to save the subfiles on
+				a stack in memory, which you can still
+				run out of. In order to avoid frequent
+				calls to malloc(), as each stack item
+				is allocated and then released it is
+				stored in a linked list so it can be
+				re-used. This stack is freed before the
+				sort returns. Try the <A href="qsort.c">C source</A>.
+			<DT>
+				<B> Utility for encrypting Unix style passwords</B>
+			<DD>
+			This is a basic utility for taking a provided
+			plain text password and encrypting it via
+			crypt(). The salt used can be provided as
+			an argument or will be randomishly generated
+			with a call to rand(). Get the <A href="pwencrypt.c">C source</A>.
+			<blockquote>
+			% ./pwencrypt<br>
+			missing password argument<br>
+			pwencrypt [-s &lt;salt&gt;] &lt;password&gt;<br>
+			% ./pwencrypt password<br>
+			fi1IpG9ta02N.<br>
+			% ./pwencrypt -s fi password<br>
+			fi1IpG9ta02N.<br>
+			</blockquote>
+      </DL>
+      <HR>
+      <ADDRESS>
+        Peter A. Friend <A HREF="mailto:pafriend@octavian.org">pafriend@octavian.org</A><BR>
+        3/25/2008
+      </ADDRESS> 
+   </BODY>
+</HTML>
