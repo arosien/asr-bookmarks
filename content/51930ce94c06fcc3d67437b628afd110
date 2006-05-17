@@ -1,0 +1,517 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+	<title>Ragel State Machine Compiler</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" type="text/css" href="/style.css">
+	<meta name="author" content="Adrian D. Thurston">
+	<meta name='description' content='Ragel compiles finite state machines from regular languages into executable C, C++, Objective-C, D, Java or Ruby code.'>
+	<meta name='keywords' content='compile finite state machine FSM DFA NFA regular language compiler concatenation union kleene star'>
+</head>
+
+<body>
+
+<table id="layout" cellpadding="0" border="0">
+<tr>
+	<td id="column_left">
+	</td>
+
+	<td id="column_middle">
+	<div id="very_top"></div>
+	<div id="title">
+		<font size=6><b>Ragel State Machine Compiler</b></font>
+			</div>
+	<div id="title_sep"><div id="title_sep_line"></div></div>
+	<style type="text/css">
+	span.action { }
+	span.embed { color: #e08000 }
+	span.literal { color: #800000 }
+	span.rlkw { color: #40a000 }
+	span.comm { color: #0020a0 }
+	span.lbl { color: #d06000 }
+	span.ckw { color: #d06000 }
+	div.para {margin-left: 3%; margin-right: 3%; }
+	div.page {margin-left: 20px; margin-right: 20px; }
+</style>
+
+
+<h2>What is Ragel?</h2>
+
+<p>Ragel compiles executable finite state machines from regular languages. Ragel
+targets C, C++, Objective-C, D, Java and Ruby.
+Ragel state machines can not
+only recognize byte sequences as regular expression machines do,
+but can also <em>execute code</em> at arbitrary points in the recognition of
+a regular language. Code embedding is done using inline operators
+that do not disrupt the regular language syntax.
+
+<p>The core language consists of standard regular expression operators (such as
+<em>union</em>, <em>concatenation</em> and <em>Kleene star</em>) and action
+embedding operators. The user's regular expressions are compiled to a
+deterministic state machine and the embedded actions are associated with the
+transitions of the machine. Understanding the formal relationship
+between regular expressions and deterministic finite automata is key to using
+Ragel effectively.
+
+<p> Ragel also provides operators that let you control any non-determinism that
+you create, construct scanners, and build state
+machines using a statechart model. It is also possible to influence the
+execution of a state machine from inside an embedded action by jumping or
+calling to other parts of the machine, or reprocessing input.
+
+<p>Ragel provides a very flexible interface to the host language that
+attempts to place minimal restrictions on how the generated code is
+integrated into the application. The generated code has no
+dependencies.
+
+<p>
+<center>
+<table><tr><td align=left><pre>
+<span class=rlkw>action</span> dgt      { printf(<span class=literal>"DGT: %c\n"</span>, <span class=rlkw>fc</span>); }
+<span class=rlkw>action</span> dec      { printf(<span class=literal>"DEC: .\n"</span>); }
+<span class=rlkw>action</span> exp      { printf(<span class=literal>"EXP: %c\n"</span>, <span class=rlkw>fc</span>); }
+<span class=rlkw>action</span> exp_sign { printf(<span class=literal>"SGN: %c\n"</span>, <span class=rlkw>fc</span>); }
+<span class=rlkw>action</span> number   { <span class=comm>/*NUMBER*/</span> }
+
+number = (
+    <span class=literal>[0-9]</span>+ <span class=embed>$</span>dgt ( <span class=literal>'.'</span> <span class=embed>@</span>dec <span class=literal>[0-9]</span>+ <span class=embed>$</span>dgt )?
+    ( <span class=literal>[eE]</span> ( <span class=literal>[+\-]</span> <span class=embed>$</span>exp_sign )? <span class=literal>[0-9]</span>+ <span class=embed>$</span>exp )?
+) <span class=embed>%</span>number;
+
+main := ( number <span class=literal>'\n'</span> )*;
+</pre></td><td><b>&nbsp;&nbsp;&nbsp;=&gt;&nbsp;&nbsp;&nbsp;</b></td><td><pre>
+<span class=lbl>st0</span>:
+    <span class=ckw>if</span> ( ++p == pe )
+        <span class=ckw>goto</span> out0;
+    <span class=ckw>if</span> ( <span class=literal>48</span> &lt;= (*p) &amp;&amp; (*p) &lt;= <span class=literal>57</span> )
+        <span class=ckw>goto</span> tr0;
+    <span class=ckw>goto</span> st_err;
+<span class=lbl>tr0</span>:
+    { printf(<span class=literal>"DGT: %c\n"</span>, (*p)); }
+<span class=lbl>st1</span>:
+    <span class=ckw>if</span> ( ++p == pe )
+        <span class=ckw>goto</span> out1;
+    <span class=ckw>switch</span> ( (*p) ) {
+        <span class=ckw>case</span> <span class=literal>10</span>: goto tr5;
+        <span class=ckw>case</span> <span class=literal>46</span>: goto tr7;
+        <span class=ckw>case</span> <span class=literal>69</span>: goto st4;
+        <span class=ckw>case</span> <span class=literal>101</span>: goto st4;
+    }
+    <span class=ckw>if</span> ( <span class=literal>48</span> &lt;= (*p) &amp;&amp; (*p) &lt;= <span class=literal>57</span> )
+        <span class=ckw>goto</span> tr0;
+    <span class=ckw>goto</span> st_err;
+</pre></td></tr>
+<tr align=center><td><b>||<br>\/</b></td><td></td></tr>
+</table></center>
+
+<br>
+<center><a href="number_lg.png"><img src="number_sm.png" alt="click for larger" border="0"></a></center>
+<br>
+
+
+<h2>What kind of task is Ragel good for?</h2>
+
+<ul>
+<li>Writing robust protocol implementations.</li>
+<li>Parsing data formats.</li>
+<li>Lexical analysis of programming languages.</li>
+<li>Validating user input.</li>
+</ul>
+      
+<h2>Features</h2>
+      
+<ul>
+<li>Construct finite state machines using:
+	<ul>
+	<li>regular language operators</li>
+	<li>state chart operators</li>
+	<li>a scanner operator</li>
+	<li>some mix of the above</li>
+	</ul>
+</li>
+<li>Embed actions into machines in arbitrary places.</li>
+<li>Control non-determinism using guarded operators.</li>
+<li>Minimize state machines using Hopcroft's algorithm.</li>
+<li>Visualize output with <a href="http://www.graphviz.org/">Graphviz</a>.</li>
+<li>Use byte, double byte or word-sized alphabets.</li>
+<li>Generate C, C++, Objective-C, D, Java or Ruby
+code with no dependencies.</li>
+<li>Choose from table or control flow driven state machines.</li>
+</ul>
+
+<h2>Publications</h2>
+
+<div class="publist">
+<table cellspacing=0 cellpadding="4px" width="100%">
+<tr>
+<td class="cell1">[1]</td>
+<td>Adrian D. Thurston. "Parsing Computer Languages with an
+Automaton Compiled from a Single Regular Expression." In 11th International
+Conference on Implementation and Application of Automata (CIAA 2006),  Lecture
+Notes in Computer Science, volume 4094, pp. 285-286, Taipei, Taiwan, August
+2006. 
+<a href="../thurston/thurston_CIAA_06_sing_regex.pdf">pdf</a>.</td>
+</tr>
+</table>
+</div>
+
+<h2>Documentation, Editors and Mailing List</h2>
+
+<p>Ragel has a user guide available in <a
+href="ragel-guide-6.6.pdf">PDF</a> format as well as a man page. 
+Major version number releases
+contain language changes. See the <a href=ChangeLog>ChangeLog</a> and <a
+href="RELEASE_NOTES_V6">Release Notes</a> for details.
+
+<p>If you use Vim, there is a syntax file <a href=ragel.vim>ragel.vim</a>
+for your editing pleasure. If you use TextMate there is a Ragel bundle
+<a href="http://macromates.com/svn/Bundles/trunk/Bundles/Ragel.tmbundle/"
+>Ragel.tmbundle</a>.
+
+<p>
+
+The Ragel mailing list is available here: <a
+href="http://www.complang.org/mailman/listinfo/ragel-users">ragel-users</a>.
+Ask for help, post parsing problems, or tell us what you think of Ragel. 
+
+<h2>Links</h2>
+
+<table border=0><tbody><tr valign=top><td width="50%"><ul>
+
+<li>Using Ragel and XCode.
+<a href="http://www.entropy.ch/software/macosx/docs/ragel-xcode-graphviz/">link</a>
+</li>
+
+<li><a href="http://mongrel.rubyforge.org">Mongrel</a>
+is an HTTP library and server for Ruby.</li>
+
+<li><a href="http://code.whytheluckystiff.net/hpricot/">Hpricot</a>
+is an HTML parsing and manipulation library for Ruby.</li>
+
+<li><a href="http://rfuzz.rubyforge.org">RFuzz</a> is an HTTP destroyer.</li>
+
+<li>Zed Shaw on Ragel State Charts. <a
+href="http://www.zedshaw.com/essays/ragel_state_charts.html">link</a></li>
+
+<li><a href="http://redhanded.hobix.com/inspect/superredclothAsAChild.html"
+>SuperRedCloth</a> is a snappy implementation of Textile for Ruby.</li>
+
+<li>
+<a href="http://json.rubyforge.org/">json</a>
+A JSON parser and generator for Ruby. 
+</li>
+
+<li>A JSON parser for Pike. <a 
+href="http://modules.gotpike.org/module_info.html?module_id=43">link</a></li>
+
+<li>
+<a href="http://lib2geom.sourceforge.net/">Lib2geom</a>:
+a computational geometry library for
+<a href="http://www.inkscape.org/">Inkscape</a>.
+</li>
+
+<li>
+<a href="http://www.savingtheinternetwithhate.com/">Utu</a>:
+internet communication with cryptographically enforced identity, reputation and
+retribution.
+</li>
+
+<li>
+<a href="http://code.google.com/p/appid/">appid</a>:
+single-pass application protocol identification.
+</li>
+
+<li><a href="http://code.google.com/p/raspf/">RaSPF</a>
+is an SPF library in C.</li>
+
+<li>
+<a href="http://ihate.rubyforge.org/profligacy/lel.html"
+>Layout Expression Language</a> (part of 
+<a href="http://ihate.rubyforge.org/profligacy/">Profligacy</a>)
+is for building Swing GUIs with JRuby.
+</li>
+
+<li><a href="http://qfsm.sourceforge.net">Qfsm</a> is a graphical tool
+for designing state machines. It includes a Ragel export feature.</li>
+
+<li><a href="http://www.2p.cz/en/abnf_gen/">ABNF Generator</a> is a tool which
+accepts grammars in ABNF and outputs Ragel definitions.</li>
+
+<li><a href="http://www.perian.org/">Perian</a> is a QuickTime component that
+adds native support for many popular video formats.</li>
+
+</ul></td><td width="50%"><ul>
+
+<li>devChix article: <a href="http://www.devchix.com/2007/12/13/a-hello-world-for-ruby-on-ragel/"
+>A Hello World for Ruby on Ragel</a>.
+(<a href="http://www.devchix.com/2008/01/13/a-hello-world-for-ruby-on-ragel-60/"
+>updated</a>)
+</li>
+
+<li>
+A Brazilian Portuguese translation of the above: 
+<a href="http://artigos.waltercruz.com/a-hello-world-for-ruby-on-ragel">
+Um Hello World para o Ruby em Ragel 6.0
+</a>
+</li>
+
+<li>Using Ragel for scanning wikitext. <a
+href="http://wincent.com/a/about/wincent/weblog/archives/2008/02/ragel_wins_fata.php"
+>link</a>.</li>
+
+<li>An article in Japanese on using Ragel. <a
+href="http://jp.rubyist.net/magazine/?0023-Ragel">link</a>.</li>
+
+<li>A little assembler that uses Ragel for scanning and Lemon for parsing.  <a
+href="http://zedshaw.com/projects/earing/">link</a>.</li>
+
+<li>An ESI server derived from Mongrel. <a
+href="http://code.google.com/p/mongrel-esi/">link</a>.</li>
+
+<li>CroMo: Morphological analysis of Croatian and other languages.
+<a
+href="http://personal.unizd.hr/~dcavar/CroMo/">link</a>.</li>
+
+<li>An include file dependency scanner, mostly for C files.
+<a href="http://dvide.com/labs/cppinclude/">link</a>.</li>
+
+<li>EaRing, an assembler using Ragel and Lemon.
+<a href="http://zedshaw.com/projects/earing/">link</a>.</li>
+
+<li>Screenplay typesetting. <a
+href="http://eleanor.rubyforge.org/">link</a>.</li>
+
+<li>Source code line counting. <a
+href="http://labs.ohloh.net/ohcount/">link</a>.</li>
+
+<li>An implementation of W3C Selectors in Java. <a
+href="http://wiki.github.com/chrsan/css-selectors/">link</a>.</li>
+
+<li>There are Ragel lexers for the Pygments syntax highlighting system. <a
+href="http://pygments.org/">link</a>.</li>
+
+<li>Lighttpd sandbox (which will become 2.0) uses Ragel. <a
+href="http://redmine.lighttpd.net/wiki/lighttpd-sandbox/">link</a>.</li>
+
+<li>
+<a href="http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&t=80042">Article</a>
+on use of ragel in embedded systems.
+</li>
+
+<li>
+Calculating the mean selector specificity, using a Ragel-generated
+CSS3 parser. 
+<a href="http://github.com/xing/selector-specificity">project</a>,
+<a href="http://devblog.xing.com/frontend/css-selector-specificity-and-complexity-in-development/">blog post</a>.
+</li>
+
+<li>
+<a href="http://www.jitify.com/">Jitify Web Acceleration</a> 
+with <a href="http://github.com/brianpane/jitify-core/">lexers in Ragel</a>.
+</li>
+
+<li>
+<a href="http://thingsaaronmade.com/blog/a-simple-intro-to-writing-a-lexer-with-ragel.html">
+A simple intro to writing a lexer with Ragel
+</a>
+</li>
+
+</ul></td></tr></tbody></table>
+
+
+<h2>Examples</h2>
+
+<table border=0>
+<tbody>
+<tr valign=top><td width="46%">
+<p><b>Clang:</b> a scanner for a simple C like language. <a
+href="examples/clang.rl">clang.rl</a>
+      
+<p><b>Mailbox:</b> parses unix mailbox files. It breaks files
+into separate messages, the headers within messages and the bodies of messages. <a
+href="examples/mailbox.rl">mailbox.rl</a>
+      
+<p><b>AwkEmu:</b> performs the basic parsing that the awk program performs
+on input.  <a href="examples/awkemu.rl">awkemu.rl</a>
+
+<p><b>Atoi:</b> converts a string to an integer. 
+<a href="examples/atoi.rl">atoi.rl</a>
+      
+<p><b>Concurrent:</b> performs multiple independent tasks concurrently. 
+<a href="examples/concurrent.rl">concurrent.rl</a>
+
+</td>
+<td width="8%">
+&nbsp;
+</td>
+<td width="46%">
+
+<p><b>StateChart:</b> the Atoi machine built with the named state and transition list paradigm.
+<a href="examples/statechart.rl">statechart.rl</a>
+	  
+<p><b>GotoCallRet:</b> demonstrates the use of fgoto, fcall, fret and fhold.
+<a href="examples/gotocallret.rl">gotocallret.rl</a>
+
+<p><b>Params:</b> parses command line arguments.
+<a href="examples/params.rl">params.rl</a>
+
+<p><b>RagelScan:</b> scans ragel input files.
+<a href="examples/rlscan.rl">rlscan.rl</a>
+
+<p><b>CppScan:</b> A c++ scanner that uses the longest-match method
+of scanning
+<a href="examples/cppscan.rl">cppscan.rl</a>
+
+</td></tr>
+</tbody>
+</table>
+
+
+<h2>Download</h2>
+
+<p>
+
+<table border=0>
+<tbody>
+<tr valign=top><td width="46%">
+
+<p><b>Development Version:</b>&nbsp;Please use this for creating patches.<br>
+<br>
+<code>http://svn.complang.org/ragel/trunk/</code>
+
+<p><b>Tar.Gz:</b>&nbsp;The latest release is version is <a
+href="ragel-6.6.tar.gz">ragel-6.6.tar.gz</a> (<a
+href="ragel-6.6.tar.gz.asc">sig</a>).
+
+<p><b>Older:</b>&nbsp;Previous versions are available <a href="files.html">here</a>.
+
+<p><b>Debian:</b>&nbsp;
+The homepage for the <a href="http://www.debian.org/">Debian</a> package of Ragel is
+<a href="http://packages.debian.org/sid/ragel">here</a>.
+It is by <a href="http://www.semistable.com/">Robert Lemmen</a>.
+
+<p><b>OpenPKG:</b>&nbsp;Ragel has been included in the <a
+href="http://www.openpkg.org/">OpenPKG</a> project.
+
+<p><b>FreeBSD:</b>&nbsp;A <a
+href="http://www.freebsd.org/cgi/ports.cgi?query=ragel&amp;stype=name">port</a> 
+for Ragel is available in the <a href="http://www.freebsd.org/">FreeBSD</a> ports system.
+
+<p><b>NetBSD:</b>&nbsp;There is a <a
+href="http://pkgsrc.se/devel/ragel/">package</a> 
+for Ragel in the <a href="http://pkgsrc.se/">pkgsrc</a> database.
+
+</td>
+<td width="8%">
+&nbsp;
+</td>
+<td width="46%">
+
+<p><b>Mac OS X:</b>&nbsp;A <a
+href="http://svn.macports.org/repository/macports/trunk/dports/lang/ragel/">port</a> 
+is available in the <a href="http://www.macports.org/">MacPorts</a> repository.
+
+<p><b>Crux:</b>&nbsp;A port for the 
+<a href="http://www.crux.nu/">Crux</a>
+Linux distribution is available
+<a href="http://yhafri.club.fr/crux/index.html">here</a>.
+
+<p><b>Gentoo:</b>&nbsp;A Gentoo <a
+href="http://packages.gentoo.org/package/ragel">port</a> 
+is available.
+
+<p><b>Suse:</b>&nbsp;Packages for Suse can be found <a 
+href="http://download.opensuse.org/repositories/devel:/tools:/building/">here</a>.
+
+<p><b>Windows:</b>&nbsp;Ragel can be compiled using Cygwin or MinGW. Binaries compiled
+with visual studio are 
+<a href="http://www.jgoettgens.de/Meine_Bilder_und_Dateien/ragel-vs2008.7z"
+>here</a> (6.6),
+provided by Joseph Goettgens.
+
+<p><b>Redhat/Fedora:</b>&nbsp;A <a 
+href="https://admin.fedoraproject.org/pkgdb/packages/name/ragel"
+>package</a> for Ragel is available in Fedora Extras. 
+
+<p><b>Slackware:</b>&nbsp;A <a 
+href="http://www.linuxpackages.net/pkg_details.php?id=12598"
+>package</a> is available at <a href="http://www.linuxpackages.net">LinuxPackages.net</a>
+
+</td></tr>
+</tbody>
+</table>
+
+<p><table border="1"><tbody>
+<tr>
+<td align=right>&nbsp;<b>Version:</b>&nbsp;</td>
+<td align=left>&nbsp;6.6&nbsp;</td>
+</tr>
+<tr>
+<td align=right>&nbsp;<b>Date:</b>&nbsp;</td>
+<td align=left>&nbsp;Dec 2, 2009&nbsp;</td>
+</tr>
+<tr>
+<td align=right>&nbsp;<b>Change&nbsp;Log:</b>&nbsp;</td>
+<td align=left>&nbsp;<a href="ChangeLog">ChangeLog</a>&nbsp;</td>
+</tr>
+<tr>
+<td align=right>&nbsp;<b>Tar.Gz:</b>&nbsp;</td>
+<td align=left>&nbsp;<a href="ragel-6.6.tar.gz">ragel-6.6.tar.gz</a>&nbsp;(<a 
+href="ragel-6.6.tar.gz.asc">sig</a>)&nbsp;</td>
+</tr>
+<tr>
+<td align=right>&nbsp;<b>Zip:</b>&nbsp;</td>
+<td align=left>&nbsp;<a href="ragel-6.6.zip">ragel-6.6.zip</a>&nbsp;(<a 
+href="ragel-6.6.zip.asc">sig</a>)&nbsp;</td>
+</tr>
+
+<!--
+<tr>
+<td align=right>&nbsp;<b>Win32&nbsp;Binaries:</b>&nbsp;</td>
+<td align=left>&nbsp;<a href="ragel-6.0-w32bin.zip"
+>ragel-6.0-w32bin.zip</a>&nbsp;</td>
+</tr>
+-->
+
+<tr>
+<td align=right>&nbsp;<b>User&nbsp;Guide&nbsp;PDF:</b>&nbsp;</td>
+<td align=left>&nbsp;<a href="ragel-guide-6.6.pdf">ragel-guide-6.6.pdf</a>&nbsp;</td>
+</tr>
+</tbody></table>
+
+<p>The public key for package signing is <a 
+href="../thurston/thurston.asc">here</a>.
+
+
+<h2>License</h2>
+
+<p>Ragel is released under the GNU General Public License. A copy of
+the license is included in the distribution. It is also available from
+<a href="http://www.gnu.org/">GNU</a>.
+
+<p><b>Note:</b> parts of Ragel output are copied from Ragel source covered by the
+GNU GPL. As a special exception to the GPL, you may use the parts of Ragel
+output copied from Ragel source without restriction. The remainder of Ragel
+output is derived from the input and inherits the copyright status of the
+input file. Use of Ragel makes no requirements about the license of generated
+code.
+
+<h2>Credits</h2>
+
+<p>Ragel was written by <a href="http://www.complang.org/thurston/" >Adrian Thurston</a>. 
+It was originally developed in early 2000 and was first released
+January 2002. Many
+people have contributed feedback, ideas and code. Please have a look at the <a
+href="CREDITS">CREDITS</a> file.
+
+<hr>
+	</td>
+
+	<td id="column_right">
+	</td>
+</tr>
+</table>
+
+</body>
+</html>
