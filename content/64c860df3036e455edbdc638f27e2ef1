@@ -1,0 +1,310 @@
+
+<html>
+<head>
+   <title>Simple 4.1.21</title>
+   <link href="/syntax/prettify.css" type="text/css" rel="stylesheet" />
+   <script type="text/javascript" src="/syntax/prettify.js"></script>
+   <meta name="Description" CONTENT="Simple and embeddable Java HTTP server">
+   <style type="text/css">
+   <!--
+      @import url(/styles/main.css);
+      @import url(/styles/menu.css);
+   -->
+   </style>
+</head>
+<body onload="prettyPrint()" bgcolor="#ffffff">
+<!--127.0.0.1 --><!-- --><div id="page" style="position: absolute; left: 16; top: 20; width: 710; border: 1px solid #ffffff">
+   <div id="top" style="position: relative; left: 0; top: 0;">
+      <table border="0" cellpadding="2">
+<tr>
+   <td valign="top" align="left">
+      <img src="/images/logo-small.png" alt="Simple">
+   </td>
+   <td width="100%">
+      <!-- EMPTY COLUMN -->
+   </td>
+   <td>
+      <!-- <img src="/images/java_logo.gif"> -->
+   </td>
+</tr>
+</table>
+   </div>
+
+   <div id="trail" style="position: relative; left: 5; top: 5;">
+      <font face='verdana'><a href='http://www.simpleframework.org/index.php'>Home</a> &gt;&nbsp;</font>   </div>
+
+   <div id="main_menu" style="position: relative; top: 15; left: 2; z-index: 100;">
+      <script language="JavaScript" type="text/javascript" src="/menu/menu.js"></script>
+<script language="JavaScript" type="text/javascript" src="/menu/menu_items.js"></script>
+<script language="JavaScript" type="text/javascript" src="/menu/menu_tpl.js"></script>
+<script language="JavaScript" type="text/javascript">
+   <!--//
+        new menu (MENU_ITEMS, MENU_POS, MENU_STYLES);
+   //-->
+</script>
+   </div>
+
+   <div id="content" style="position: relative; left: 0; top: 55;">
+      <table border="0" cellpadding="5" cellspacing="0">
+<tr>
+         <td align="left" valign="top">
+         <table border='0' cellspacing='0' cellpadding='0' width='120'>
+<tr>
+   <td>
+   <table border='0' cellspacing='0' cellpadding='0'>
+   <tr>
+      <td><img src='/images/red/red_left.png' height='18' border='0'></td>
+      <td align='center' bgcolor='#000000'>
+         <table border='0' cellspacing='0' cellpadding='0'>
+         <tr>
+            <td><img src='/images/red/red_top.png' border='0' height='2' width='170'></td>
+         </tr>
+         <tr>
+            <td width='100%' bgcolor='#ff0000' height='16'><span style='font: 10px verdana, geneva, arial, sans-serif; color: #ffffff; font-weight: bold;'>Search</span></td>
+         </tr>
+         </table>
+   </td>
+   <td><img src='/images/red/red_right.png' height='18' border='0'></td>
+   </tr>
+   </table>
+   </td>
+</tr>
+<tr>
+   <td bgcolor='#000000'>
+      <table border='0' cellspacing='1' cellpadding='0' width='100%'>
+      <tr>
+         <td bgcolor='#ffffff'>
+            <table border='0' cellspacing='10' cellpadding='0' width='100%'>
+            <tr>
+               <td>
+                  <br>
+                  <div id="search_tool" style="position: relative; height: 60;">
+   <div id="main_search" style="position: relative; height: 30px;">
+      <div id="local_search" style="position: absolute; visibility: visible; left: 15;">
+         <form method=GET action="http://www.google.com/search">
+<input type=text name=q size=18 maxlength=255 value="" class="textsmall">
+<input type="hidden" name="as_sitesearch" value="simpleweb.sourceforge.net">
+</form>
+      </div>
+      <div id="global_search" style="position: absolute; visibility: hidden; left: 15;">
+         <form method=GET action="http://www.google.com/search">
+<input type=text name=q size=18 maxlength=255 value="" class="textsmall">
+</form>
+      </div>
+   </div>
+   <div id="select_search" style="position: relative; left: 15;">
+      <select id="search_method" onchange="document.getElementById('global_search').style.visibility = 'hidden'; document.getElementById('local_search').style.visibility = 'hidden'; document.getElementById(this.options[this.selectedIndex].value).style.visibility = 'visible';" style="width: 120;">
+         <option value="" selected>Select a search ...</option>
+         <option value="local_search">Search this site</option>
+         <option value="global_search">Search the web</option>
+      </select>
+   </div>
+</div>
+               </td>
+            </tr>
+            </table>
+         </td>
+      </tr>
+      </table>
+   </td>
+</tr>
+</table>
+<br>
+<br>
+<table border='0' cellspacing='0' cellpadding='0' width='120'>
+<tr>
+   <td>
+   <table border='0' cellspacing='0' cellpadding='0'>
+   <tr>
+      <td><img src='/images/red/red_left.png' height='18' border='0'></td>
+      <td align='center' bgcolor='#000000'>
+         <table border='0' cellspacing='0' cellpadding='0'>
+         <tr>
+            <td><img src='/images/red/red_top.png' border='0' height='2' width='170'></td>
+         </tr>
+         <tr>
+            <td width='100%' bgcolor='#ff0000' height='16'><span style='font: 10px verdana, geneva, arial, sans-serif; color: #ffffff; font-weight: bold;'>Feedback</span></td>
+         </tr>
+         </table>
+   </td>
+   <td><img src='/images/red/red_right.png' height='18' border='0'></td>
+   </tr>
+   </table>
+   </td>
+</tr>
+<tr>
+   <td bgcolor='#000000'>
+      <table border='0' cellspacing='1' cellpadding='0' width='100%'>
+      <tr>
+         <td bgcolor='#ffffff'>
+            <table border='0' cellspacing='10' cellpadding='0' width='100%'>
+            <tr>
+               <td>
+                  <br>
+                  <table border="0" width="100%">
+<tr>
+   <td align="center">
+   <form name="quick_links">
+   <font size="-1">
+   <select name="chooser" onchange="location.href = this.options[this.selectedIndex].value;">
+      <option value="">Select a link ....</option>
+      <option value="http://sourceforge.net/tracker/?group_id=62369&atid=500353">Report a bug</option>
+      <option value="http://lists.sourceforge.net/lists/listinfo/simpleweb-support">Support requests</option>
+      <option value="http://lists.sourceforge.net/lists/listinfo/simpleweb-support">Feature requests</option>
+
+   </select>
+   </font>
+   </form>
+   </td>
+</tr>
+<tr>
+   <td height='5'></td>
+</tr>
+</table>
+               </td>
+            </tr>
+            </table>
+         </td>
+      </tr>
+      </table>
+   </td>
+</tr>
+</table>
+<br>
+<br>
+      </td>
+      <td>
+         <br>
+      </td>
+      <td align="left" valign="top" width="100%">
+      <p>
+The goal of Simple is to bring the power of simplicity to the world of server
+side Java. The primary focus of the project is to provide a truly embeddable
+Java based HTTP engine capable of handling enormous loads. Simple provides
+a truly asynchronous service model, request completion is driven using an 
+internal, transparent, monitoring system. This allows Simple to
+vastly outperform most popular Java based servers in a multi-tier environment,
+as it requires only a very limited number of threads to handle very high 
+quantities of concurrent clients. Simple has consistently out performed both commercial
+and open source Java Servlet engines and has a fully comprehensive API that is
+as usable for experienced Java developers as it is for beginners. Best of all,
+Simple is completely free, and is released under the terms of the Apache
+License, which ensures its availability for use by open
+source and proprietary developers alike.
+</p>
+<br>
+<br>
+<table width='100%' cellspacing='0' cellpadding='5'>
+<tr valign='top' align='left'>
+<td>
+<a href='https://jersey.dev.java.net/'>
+<img src='/images/home_bullet.gif' border='0' alt='Sat, 25 Apr 2009 12:30:10 GMT'>
+</a>
+</td>
+<td>
+<p>
+<a href='https://jersey.dev.java.net/'>
+<b>Simple and JAX-RS with Jersey</b>
+</a><br>
+Simple is available as a container for the Jersey Project. It provides the highest performance HTTP engine for Jersey outperforming both Grizzly and its stock HTTP container. Jersey is the reference implementation of JAX-RS for REST based services.
+</p>
+</td>
+</tr>
+</table>
+<br>
+<br>
+<table width='100%' cellspacing='0' cellpadding='5'>
+<tr valign='top' align='left'>
+<td>
+<a href='http://www.restlet.org/'>
+<img src='/images/home_bullet.gif' border='0' alt='Thu, 20 Nov 2008 07:55:10 GMT'>
+</a>
+</td>
+<td>
+<p>
+<a href='http://www.restlet.org/'>
+<b>Simple integrated with the Restlet framework</b>
+</a><br>
+Simple has been bundled as a HTTP connector with the popular Restlet framework. The Restlet project is one of the first and most complete implementations of the new JAX-RS 1.0 specification. The Restlet project was started from the observation that no Java framework was available to help developers build RESTful applications.
+</p>
+</td>
+</tr>
+</table>
+<br>
+<br>
+<table width='100%' cellspacing='0' cellpadding='5'>
+<tr valign='top' align='left'>
+<td>
+<a href='http://www.simpleframework.org/performance/comparison.php'>
+<img src='/images/home_bullet.gif' border='0' alt='Wed, 19 Nov 2008 07:55:10 GMT'>
+</a>
+</td>
+<td>
+<p>
+<a href='http://www.simpleframework.org/performance/comparison.php'>
+<b>Performance comparison of Simple and Jetty</b>
+</a><br>
+Performance tests performed on the most recent release of Simple show it out performs two of the most popular NIO based HTTP servers. In a comparison performed with Apache Bench, Simple shows better scalability, higher throughput and more efficient memory consumption.
+</p>
+</td>
+</tr>
+</table>
+<br>
+<br>
+<table width='100%' cellspacing='0' cellpadding='5'>
+<tr valign='top' align='left'>
+<td>
+<a href='http://simple.sourceforge.net/'>
+<img src='/images/home_bullet.gif' border='0' alt='Tue, 23 Jan 2007 07:55:10 GMT'>
+</a>
+</td>
+<td>
+<p>
+<a href='http://simple.sourceforge.net/'>
+<b>Simple XML configuration framework</b>
+</a><br>
+Recent changes to the Simple XML configuration system have been branched as a new project. The new XML configuration system will allow application assembly to be implemented such that components can be integrated and implemented with greater ease.
+</p>
+</td>
+</tr>
+</table>
+<br>
+<br>
+<table cellspacing='0' cellpadding='5' width='100%'>
+<tr valign='top' align='right'>
+<td width='100%'>
+</td>
+<td>
+<a href='news/history.php'>
+<img src='/images/home_bullet.gif' alt='>>' border='0'>
+</a>
+</td>
+<td>
+<a href='news/history.php'>
+<b>Read&nbsp;More</b>
+</a>
+</td>
+</tr>
+</table>
+<br>
+<br>
+   </td>
+</tr>
+</table>
+   </div>
+
+   <div style='position: relative; visibility: hidden;'>
+   <A href="http://sourceforge.net"><IMG src="http://sourceforge.net/sflogo.php?group_id=62369&amp;type=5" width="105" height="31" border="0" alt="SourceForge Logo"></A>
+   </div>
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-7258054-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html><div style="visibility: hidden;">
