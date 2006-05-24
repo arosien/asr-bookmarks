@@ -1,0 +1,125 @@
+<html>
+<head>
+<title>We Feel Fine / API</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="common/styles.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="common/functions.js" type="text/javascript"></script>
+</head>
+
+<body bgcolor="#141414" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="100%" height="100%"  border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="246" align="left" valign="top"><a href="index.html"><img src="common/wefeelfine-medium.gif" width="280" height="288" border="0"></a></td>
+    <td align="left" valign="top" class="normal"><table width="90%"  border="0" cellspacing="0" cellpadding="50">
+      <tr>
+        <td class="normal"><p class="menu"><a href="mission.html">Mission</a> 
+              - <a href="movements.html">Movements</a> - <a href="methodology.html">Methodology</a> 
+              - <a href="faq.html">FAQ</a> - <a href="creators.html">Creators</a> - <a href="gallery/index.php">Gallery</a> 
+              - <a href="news.html">News</a> - API - <a href="#" onClick="wefeelfine(); return false;">Open 
+              Applet</a> - <a href="book/">View Book</a> </p>
+          <p class="title">We Feel Fine API</p>
+          <p class="header">&quot;Bad artists copy. Great artists steal.&quot;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Pablo Picasso          </p>
+          <p>Borrowing is a great tradition in art; each individual piece of art is part of a larger conversation. With technology-based art, we have the ability to enable borrowing more directly by opening up APIs to our work. Accordingly, we have opened up an API for We Feel Fine, to allow other artists to more easily make pieces that explore these human emotions. Since we are borrowing from the feelings of thousands of people across the world to make our piece, we find it fitting for other artists to be able to borrow from our work to make theirs. We are eager to see where this conversation will take us. </p>
+          <p>The API is free under the <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/" target="_blank">Creative Commons Attribution-NonCommercial-Sharealike license</a> and is documented below.</p>          
+          <p class="bar">&nbsp;</p>          <p class="title">Documentation </p>
+          <p class="header">Required: </p>
+          <p>Base URL: <span class="bright">http://api.wefeelfine.org:8080/ShowFeelings?</span></p>          <p><span class="bright">returnfields</span> &ndash; comma delimited list of all the data you want to get back. Options are:</p>
+          <ul>
+            <li><span class="bright">imageid</span> (used to get images)</li>
+            <li><span class="bright">feeling</span> (sad, depressed, happy, etc. &ndash; full list of valid feelings is <a href="data/files/feelings.txt">here</a>)</li>
+            <li><span class="bright">sentence</span> (the full sentence that went with the feeling)</li>
+            <li><span class="bright">posttime</span> (epoch timestamp of the time the post was scraped)</li>
+            <li><span class="bright">postdate</span> (YYYY-MM-DD of the day the post was scraped) </li>
+            <li><span class="bright">posturl</span> (the url of the post)</li>
+            <li><span class="bright">gender</span> (1 (male) or 0 (female))</li>
+            <li><span class="bright">born</span> (YYYY from when the user was born)</li>
+            <li><span class="bright">country</span> (country of the user)</li>
+            <li><span class="bright">state</span> (state of the user)</li>
+            <li><span class="bright">city</span> (city of the user) </li>
+            <li><span class="bright">lat</span> (latitude of the user's city)</li>
+            <li><span class="bright">lon</span> (longitude of the user's city)</li>
+            <li><span class="bright">conditions</span> (the weather when the post was written in that city)
+              <ul>
+                <li>1 = sunny</li>
+                <li>2 = rainy</li>
+                <li>3 = snowy</li>
+                <li>4 = cloudy</li>
+              </ul>
+            </li>
+            </ul>          <p class="header">Optional:</p>
+            <ul>
+              <li><span class="bright">feeling</span> &ndash; specify the feeling you want returned (sad, happy, depressed, etc. &ndash; full list of valid feelings is <a href="data/files/feelings.txt">here</a>)</li>
+              <li><span class="bright">gender</span> &ndash; specify the gender you want returned (1=male, 0=female)</li>
+              <li><span class="bright">agerange</span> &ndash; specify the age range of the user you want returned (0 = 0-9, 10 = 10-19, 20 = 20-29, etc.) </li>
+              <li><span class="bright">conditions</span> &ndash; specify the weather you want returned (1=sunny, 2=rainy, 3=snowy, 4=cloudy)</li>
+              <li><span class="bright">country</span> &ndash; specify the country you want returned (united states, france, etc.)</li>
+              <li><span class="bright">state</span> &ndash; specify the state you want returned (new york, California, etc) </li>
+              <li><span class="bright">city</span> &ndash; specify the city you want returned (tokyo, los angeles, etc.)</li>
+              <li><span class="bright">postdate</span> &ndash; specify the specific day you want returned (YYYY-MM-DD)</li>
+              <li><span class="bright">postmonth</span> &ndash; specify the month you want returned (M or MM)</li>
+              <li><span class="bright">postyear</span> &ndash; specify the year you want returned (YYYY)</li>
+              <li><span class="bright">limit</span> &ndash; specify the number of feelings you want returned (1000, 20, etc.) (The maximum limit is 1500. Any limit specified above that will return 1500 feelings.) </li>
+              <li><span class="bright">extraimages</span> &ndash; specify the number of extra images you want returned (20, 70, etc)</li>
+              <li><span class="bright">display</span> &ndash; if you specify display=text, it will give you plain text. Otherwise, the display will be xml.</li>
+            </ul>            <p class="bar">&nbsp;</p>
+            <p class="header">Sample queries: </p>            <p>&quot;Give me the most recent 50 sentences&quot;<br>
+            <a href="http://api.wefeelfine.org:8080/ShowFeelings?display=xml&returnfields=sentence&limit=50" target="_blank">http://api.wefeelfine.org:8080/ShowFeelings?display=xml&amp;returnfields=<br>
+            sentence&amp;limit=50</a> <br>
+          </p>
+          <p>&quot;Give me the most recent 500 feelings&quot;<br>
+            <a href="http://api.wefeelfine.org:8080/ShowFeelings?display=xml&returnfields=imageid,feeling,sentence,posttime,postdate,posturl,gender,born,country,state,city,lat,lon,conditions&limit=500" target="_blank">http://api.wefeelfine.org:8080/ShowFeelings?display=xml&amp;returnfields=<br>
+            imageid,feeling,
+            sentence,posttime,postdate,posturl,gender,born,country,<br>
+            state,city,lat,lon,conditions&amp;limit=500</a> <br>
+          </p>
+          <p>&quot;Give me the most recent 500 feelings, with 50 extra images&quot;<br>
+            <a href="http://api.wefeelfine.org:8080/ShowFeelings?display=xml&returnfields=imageid,feeling,sentence,posttime,postdate,posturl,gender,born,country,state,city,lat,lon,conditions&limit=500&extraimages=50" target="_blank">http://api.wefeelfine.org:8080/ShowFeelings?display=xml&amp;returnfields=<br>
+            imageid,feeling,sentence,posttime,postdate,posturl,gender,born,country,<br>
+            state,city,lat,lon,conditions&amp;limit=500&amp;extraimages=50 </a><br>
+          </p>
+          <p>&quot;Give me the most recent 500 feelings from women in Tokyo who feel sad, and give me 50 extra images too&quot;<br>
+            <a href="http://api.wefeelfine.org:8080/ShowFeelings?display=xml&returnfields=imageid,feeling,sentence,posttime,postdate,posturl,gender,born,country,state,city,lat,lon,conditions&feeling=sad&city=tokyo&limit=500&extraimages=50" target="_blank">http://api.wefeelfine.org:8080/ShowFeelings?display=xml&amp;returnfields=<br>
+            imageid,feeling,sentence,posttime,postdate,posturl,gender,born,country,<br>
+            state,city,lat,lon,conditions&amp;feeling=sad&amp;city=tokyo&amp;limit=500&amp;extraimages=50</a><br>
+          </p>
+          <p>&quot;Give me 50 sentences from Valentine's day&quot;<br>
+            <a href="http://api.wefeelfine.org:8080/ShowFeelings?display=xml&returnfields=sentence&postdate=2006-02-14&limit=50" target="_blank">http://api.wefeelfine.org:8080/ShowFeelings?display=xml&amp;returnfields=<br>
+            sentence&amp;postdate=2006-02-14&amp;limit=50</a> </p>
+          <p>&quot;Give me 50 sentences from Valentine's day from people who feel loved&quot;<br>
+            <a href="http://api.wefeelfine.org:8080/ShowFeelings?display=xml&returnfields=sentence&postdate=2006-02-14&feeling=loved&limit=50" target="_blank">http://api.wefeelfine.org:8080/ShowFeelings?display=xml&amp;returnfields=<br>
+            sentence&amp;postdate=2006-02-14&amp;feeling=loved&amp;limit=50</a></p>
+          <p class="bar">&nbsp;</p>
+          <p class="header">Retrieving images </p>          <p>Function to get an image's URL based on a postdate and an imageid: </p>
+          <p>// Form full image url<br>
+            String getImgPath(String postdate, String imageid, String imagesize){<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;String imgpath = &quot;http://images.wefeelfine.org/data/images/ &quot;;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;imgpath += postdate.replace('-','/');<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;imgpath += &quot;/&quot;+imageid;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;if(imagesize == &quot;thumb&quot;) imgpath += &quot;_thumb.jpg&quot;; <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;else imgpath += &quot;_full.jpg&quot;;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;return imgpath; <br>
+  }</p>
+          <p class="bar">&nbsp;          </p>          <p class="header">Returned XML samples:</p>
+          <p>&lt;feeling feeling=&quot;sad&quot; sentence=&quot;i still feel sad and heartbroken from the crying&quot;            posttime=&quot;1146809001&quot; postdate=&quot;2006-05-04&quot; posturl=&quot; http://super8mama.livejournal.com/29964.html&quot; born=&quot;1967&quot; gender=&quot;1&quot; country=&quot;united states&quot; state=&quot;california&quot; city=&quot;san francisco&quot; lat=&quot; 37.759881&quot; lon=&quot;-122.437392&quot; conditions=&quot;4&quot; /&gt;</p>
+          <p>&lt;feeling imageid=&quot;15098&quot; feeling=&quot;sad&quot; sentence=&quot;i feel sad for some of them and for some i do not have much feeling sort of a neutral feeling not happy but not too sad as if they were some strangers i don't know&quot; posttime=&quot;1129507200&quot; postdate=&quot;2005-10-17&quot; posturl=&quot; http://jaderays.blogspot.com/2005/10/let-it-go.html&quot; country=&quot;united states&quot; state=&quot;california&quot; /&gt;</p>
+          <p class="bar">&nbsp;</p>          <a name="license"></a><p class="title">License</p>
+          <p><a href="http://creativecommons.org/licenses/by-nc-sa/2.5/" target="_blank"><img src="common/license.gif" width="278" height="80" border="0"></a></p>
+          <p>The API is free under the Creative Commons Attribution-NonCommercial-Sharealike license  (&nbsp;<a href="http://creativecommons.org/licenses/by-nc-sa/2.5/" target="_blank">http://creativecommons.org/licenses/by-nc-sa/2.5/</a>&nbsp;). </p>
+          <p>Sites that use this API must provide attribution by including the following html on their site:</p>
+          <p class="header">Powered by: &lt;a href= http://www.wefeelfine.org&gt;We Feel Fine&lt;/a&gt;.</p>          
+	  <p>Since this is a free API and we're paying for the bandwidth out of our own pockets, we'll ask you to throttle your API queries at a maximum of 4 requests per minute.  (For most applications, one request evey few minutes should be enough).  If your application is too hungry, we may block your IP so the rest of the applications using the API can be fed.  We'll turn you back on if you e-mail us nicely at someone@wefeelfine.org and promise to keep at 4 requests per minute or less.
+          <p>&nbsp;</p>          <p>&nbsp;</p></td>
+      </tr>
+    </table>    <p>&nbsp;</p>
+    </td>
+  </tr>
+</table>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript"> 
+_uacct = "UA-286275-4";
+urchinTracker();
+</script>
+</body>
+</html>
