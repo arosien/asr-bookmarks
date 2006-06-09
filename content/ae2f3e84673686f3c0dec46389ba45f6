@@ -1,0 +1,560 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>CalAtom: Using the Atom Publishing Protocol for Calendaring</title>
+<!-- metadata -->
+<meta name="generator" content="S5" />
+<meta name="version" content="S5 1.2a2" />
+<meta name="author" content="Robert Yates, Dan Gurney" />
+<!-- configuration parameters -->
+<meta name="defaultView" content="slideshow" />
+<meta name="controlVis" content="hidden" />
+<!-- style sheet links -->
+<link rel="stylesheet" href="ui/default/slides.css" type="text/css" media="projection" id="slideProj" />
+<link rel="stylesheet" href="ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
+<link rel="stylesheet" href="ui/default/print.css" type="text/css" media="print" id="slidePrint" />
+<link rel="stylesheet" href="ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+<!-- embedded styles -->
+<style type="text/css" media="all">
+.imgcon {width: 525px; margin: 0 auto; padding: 0; text-align: center;}
+#anim {width: 270px; height: 320px; position: relative; margin-top: 0.5em;}
+#anim img {position: absolute; top: 42px; left: 24px;}
+img#me01 {top: 0; left: 0;}
+img#me02 {left: 23px;}
+img#me04 {top: 44px;}
+img#me05 {top: 43px;left: 36px;}
+</style>
+<!-- S5 JS -->
+<script src="ui/default/slides.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="layout">
+<div id="controls"><!-- DO NOT EDIT --></div>
+<div id="currentSlide"><!-- DO NOT EDIT --></div>
+<div id="header"></div>
+<div id="footer">
+<h1>Version 0.9</h1>
+<h2>May 17th, 2006</h2>
+</div>
+</div>
+
+<ol class="xoxo presentation">
+
+<li class="slide">
+<h1>CalAtom</h1>
+<h3>Rob Yates and Dan Gurney</h3>
+<h4>Using the Atom Publishing Protocol for Calendaring</h4>
+<div class="handout"></div>
+</li>
+
+
+<li class="slide">
+<h1>Agenda</h1>
+<ul>
+<li>Atom Introduction</li>
+<li>What google did</li>
+<li>CRUD operations in CalAtom</li>
+<li>Query operations in CalAtom</li>
+<li>Summary</li>
+</ul>
+</li>
+
+
+<li class="slide">
+<h1>Atom Introduction - Syndication</h1>
+<ul>
+<li>Atom Syndication Format - "RSS <a href="http://en.wikipedia.org/wiki/Atom_%28standard%29#Atom_Compared_to_RSS_2.0">without the bugs"</a></li>
+<ul>
+<li>Became <a href="http://www.ietf.org/rfc/rfc4287.txt">RFC4287</a> in August 2005</li>
+<li>Designed to carry arbitrary payload e.g. <a href="http://tools.ietf.org/html/2445">iCalendar</a></li>
+<ul><li><span style="color:green">either inline</span></li></ul>
+<pre>
+   &lt;feed xmlns="http://www.w3.org/2005/Atom">
+     &lt;title type="text">dan's calendar&lt;/title>
+     &lt;updated>2005-07-31T12:29:29Z&lt;/updated>
+     &lt;id>tag:example.org,2003:3&lt;/id>
+     &lt;link rel="self" type="application/atom+xml"
+      href="http://example.org/feed.atom"/>
+     &lt;entry>
+       &lt;title>CalAtom Presentation&lt;/title>
+       &lt;id>tag:example.org,2003:3.2397&lt;/id>
+       &lt;updated>2005-07-31T12:29:29Z&lt;/updated>
+       &lt;author>&lt;name>Dan Gurney&lt;/name>&lt;/author><span style="color:green">
+       &lt;content type="text/calendar" xml:lang="en">
+        BEGIN:VCALENDAR
+		VERSION:2.0
+		PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+		BEGIN:VEVENT
+		DTSTART:19970714T170000Z
+		DTEND:19970715T035959Z
+		SUMMARY:CalAtom Presentaion
+		END:VEVENT
+        END:VCALENDAR
+       &lt;/content></span>
+     &lt;/entry>
+   &lt;/feed>
+
+</pre>
+</ul>
+</ul>
+</li>
+
+<li class="slide">
+<h1>Atom Introduction - Syndication</h1>
+<ul>
+<li>Atom Syndication Format - "RSS <a href="http://en.wikipedia.org/wiki/Atom_%28standard%29#Atom_Compared_to_RSS_2.0">without the bugs"</a></li>
+<ul>
+<li>Became <a href="http://www.ietf.org/rfc/rfc4287.txt">RFC4287</a> in August 2005</li>
+<li>Designed to carry arbitrary payload e.g. <a href="http://tools.ietf.org/html/2445">iCalendar</a></li>
+<ul><li><span style="color:brown">or via a link</span></li></ul>
+<pre>
+   &lt;feed xmlns="http://www.w3.org/2005/Atom">
+     &lt;title type="text">dan's calendar&lt;/title>
+     &lt;updated>2005-07-31T12:29:29Z&lt;/updated>
+     &lt;id>tag:example.org,2003:3&lt;/id>
+     &lt;link rel="self" type="application/atom+xml"
+      href="http://example.org/feed.atom"/>
+     &lt;entry>
+       &lt;title>CalAtom Presentation&lt;/title>
+       &lt;id>tag:example.org,2003:3.2397&lt;/id>
+       &lt;updated>2005-07-31T12:29:29Z&lt;/updated>
+       &lt;author>&lt;name>Dan Gurney&lt;/name>&lt;/author><span style="color:brown">
+       &lt;content type="text/calendar" src="http://example.org/calendar/1.ics"/></span>
+     &lt;/entry>
+   &lt;/feed>
+
+</pre>
+</ul>
+</ul>
+</li>
+
+
+<li class="slide">
+<h1>Atom Introduction - Syndication</h1>
+<ul>
+<li>Atom Syndication Format - "RSS <a href="http://en.wikipedia.org/wiki/Atom_%28standard%29#Atom_Compared_to_RSS_2.0">without the bugs"</a></li>
+<ul>
+<li>Became <a href="http://www.ietf.org/rfc/rfc4287.txt">RFC4287</a> in August 2005</li>
+<li>Designed to carry arbitrary payload e.g. <a href="http://tools.ietf.org/html/2445">iCalendar</a></li>
+<ul><li><span style="color:blue">can even have alternate represenations</span></li></ul>
+<pre>
+   &lt;feed xmlns="http://www.w3.org/2005/Atom">
+     &lt;title type="text">dan's calendar&lt;/title>
+     &lt;updated>2005-07-31T12:29:29Z&lt;/updated>
+     &lt;id>tag:example.org,2003:3&lt;/id>
+     &lt;link rel="self" type="application/atom+xml"
+      href="http://example.org/feed.atom"/>
+     &lt;entry>
+       &lt;title>CalAtom Presentation&lt;/title>
+       &lt;id>tag:example.org,2003:3.2397&lt;/id>
+       &lt;updated>2005-07-31T12:29:29Z&lt;/updated>
+       &lt;author>&lt;name>Dan Gurney&lt;/name>&lt;/author><span style="color:blue">
+       &lt;link type="application/calendar+xml" href="http://example.org/calendar/1.xml"/></span>
+       &lt;content type="text/calendar" src="http://example.org/calendar/1.ics"/>
+     &lt;/entry>
+   &lt;/feed>
+
+</pre>
+</ul>
+</ul>
+</li>
+
+<li class="slide">
+<h1>Atom Introduction - Publishing</h1>
+<ul>
+<li><a href="http://www.ietf.org/internet-drafts/draft-ietf-atompub-protocol-08.txt">Atom Publishing Protocol</a> - currently in draft</li>
+<li>Provides REST mechanism to Create, Read, Update and Delete resources</li>
+<li>Provides paged collection navigation</li>
+<li>Provides introspection document for discovery of capabilities</li>
+<li>Similar to WebDav, simpler, less functionality</li>
+<ul>
+	<li>no additional HTTP verbs</li>
+	<li>no move or copy</li>
+	<li>collections provided as feeds</li>
+</ul>
+</li>
+</ul>
+
+<li class="slide">
+<h1>Atom Introduction - Publishing</h1>
+<ul>
+<li>e.g. create a blog post</li>
+<pre>
+
+   POST /myblog/entries HTTP/1.1
+   Host: example.org
+   User-Agent: Thingio/1.0
+   Content-Type: application/atom+xml
+   Content-Length: nnn
+
+   &lt;entry xmlns="http://www.w3.org/2005/Atom">
+     &lt;title>Atom-Powered Robots Run Amok&lt;/title>
+     &lt;id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a$lt;/id>
+     &lt;updated>2003-12-13T18:30:02Z&lt;/updated>
+     &lt;content>Some text.$lt;/content>
+   &lt;/entry>
+
+   response
+
+   HTTP/1.1 201 Created
+   Date: Fri, 7 Oct 2005 17:17:11 GMT
+   Content-Length: 0
+   Location: http://example.org/edit/first-post.atom
+   Content-Location: http://example.org/edit/first-post.atom
+
+   &lt;entry xmlns="http://www.w3.org/2005/Atom">
+     &lt;title>Atom-Powered Robots Run Amok&lt;/title>
+     &lt;id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a$lt;/id>
+     &lt;updated>2003-12-13T18:30:02Z&lt;/updated>
+     &lt;content>Some text.$lt;/content>
+   &lt;/entry>
+
+</pre>
+</ul>
+</li>
+
+<li class="slide">
+<h1>Atom Introduction - Publishing</h1>
+<ul>
+<li>accepts media posts which create "media link entries"</li>
+<ul><li>currently a <a href="http://www.intertwingly.net/wiki/pie/PaceMediaEntries4">proposal</a></li></ul>
+<pre>
+
+POST /calendar HTTP/1.1
+Content- Type: text/calendar
+...
+
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+DTSTART:19970714T170000Z
+DTEND:19970715T035959Z
+SUMMARY:Bastille Day Party
+END:VEVENT
+END:VCALENDAR
+
+with response
+
+HTTP/1.1 201 Created
+Location: http://example.org/calendar/1.atom
+
+&lt;entry xmlns="http://www.w3.org/2005/Atom">
+ &lt;title>Bastille Day Party&lt;/title>
+ &lt;id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a&lt;/id>
+ &lt;updated>2003-12-13T18:30:02Z&lt;/updated>
+ &lt;author>&lt;name>John Doe&lt;/name>&lt;/author>
+ &lt;summary type="text" />
+ <span style="color:green">&lt;content type="text/calendar" src="http://example.org/calendar/1.ics"/></span>
+ &lt;link rel="edit" type="application/atom+xml" href="http://example.org/calendar/1.atom" />
+ &lt;link rel="edit-media" type="text/calendar" href="http://example.org/calendar/1.ics" />
+&lt;/entry>
+</pre>
+</ul>
+</li>
+
+<li class="slide">
+<h1>Atom Introduction - Introspection</h1>
+<ul>
+<li>Describes available collections</li>
+<li>The introspection document below contains a reference to the owner's blog, picture folder and calendar</li>
+<li>The accept element describes their allowed contents</li>
+<pre>
+
+&lt;service xmlns="http://purl.org/atom/app#"
+  xmlns:atom="http://www.w3.org/2005/Atom">
+  &lt;workspace title="Dan's Site" >
+    &lt;collection
+      title="My Blog Entries"
+      href="http://example.org/main">
+    &lt;/collection>
+    &lt;collection
+      title="My Pictures"
+      href="http://example.org/pic" >
+      &lt;accept>image/*&lt;/accept>
+    &lt;/collection>
+    <span style="color:green">&lt;collection>
+	  title="My Calendar"
+	  href="http://example.org/calendar" >
+	  &lt;accept>text/calendar,application/calendar+xml&lt;/accept>
+    &lt;/collection></span>
+  &lt;/workspace>
+&lt;/service>
+
+</pre>
+</ul>
+</li>
+
+<li class="slide">
+<h1>What google did</h1>
+<ul>
+<li>Utilized the Atom Publishing Protocol for CRUD operations</li>
+<li>Represented the collection of Calendar events as a feed</li>
+<li><span style="color:red">Created a new Calendaring representation based on an Atom Entry by introducing proprietary atom extensions</span></li>
+<pre>
+
+&lt;entry xmlns='http://www.w3.org/2005/Atom'
+    xmlns:gd='http://schemas.google.com/g/2005'>
+  &lt;category scheme='http://schemas.google.com/g/2005#kind'
+    term='http://schemas.google.com/g/2005#event'>&lt;/category>
+  &lt;title type='text'>Tennis with Beth&lt;/title>
+  &lt;content type='text'>Meet for a quick lesson.&lt;/content>
+  &lt;author>
+    &lt;name>Jo March&lt;/name>
+    &lt;email>jo@gmail.com&lt;/email>
+  &lt;/author>
+  <span style="color:red">&lt;gd:transparency
+    value='http://schemas.google.com/g/2005#event.opaque'>
+  &lt;/gd:transparency>
+  &lt;gd:eventStatus
+    value='http://schemas.google.com/g/2005#event.confirmed'>
+  &lt;/gd:eventStatus>
+  &lt;gd:where valueString='Rolling Lawn Courts'>&lt;/gd:where>
+  &lt;gd:when startTime='2006-04-17T15:00:00.000Z'
+    endTime='2006-04-17T17:00:00.000Z'>&lt;/gd:when></span>
+&lt;/entry>
+</pre>
+</ul>
+</li>
+
+<li class="slide">
+<h1>CalAtom</h1>
+<ul>
+<li>Utilizes the Atom Publishing Protocol for CRUD operations</li>
+<li>Represents the collection of Calendar events as a feed</li>
+<li><span style="color:green">Reuses existing calendaring standards e.g. iCalendar, xCalendar</span></li>
+</ul>
+</li>
+
+
+<li class="slide">
+<h1>CalAtom - creating a calendar event</h1>
+<pre>
+
+POST /calendar HTTP/1.1
+Content- Type: text/calendar
+...
+
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+DTSTART:19970714T170000Z
+DTEND:19970715T035959Z
+SUMMARY:Bastille Day Party
+END:VEVENT
+END:VCALENDAR
+
+with response
+
+HTTP/1.1 201 Created
+Content- Type: application/atom+xml; charset="utf-8"
+Content- Location: http://example.org/calendar/1.atom
+Location: http://example.org/calendar/1.atom
+
+&lt;entry xmlns="http://www.w3.org/2005/Atom">
+ &lt;title>Bastille Day Party&lt;/title>
+ &lt;id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a&lt;/id>
+ &lt;updated>2003-12-13T18:30:02Z&lt;/updated>
+ &lt;author>&lt;name>John Doe&lt;/name>&lt;/author>
+ &lt;summary type="text" />
+ &lt;content type="text/calendar" src=http://example.org/calendar/1.ics/></span>
+ &lt;link rel="edit" type="application/atom+xml" href="http://example.org/calendar/1.atom" />
+ &lt;link rel="edit-media" type="text/calendar" href="http://example.org/calendar/1.ics" />
+ <span style="color:green">&lt;link rel="alternate" type="application/calendar+xml" href="http://example.org/calendar/1.xml" /> <-- xCalendar represenation
+ &lt;link rel="edit-media" type="application/calendar+xml" href="http://example.org/calendar/1.xml" /> <-- xCalendar representation </span>
+&lt;/entry>
+</pre>
+</li>
+
+<li class="slide">
+<h1>CalAtom - updating a calendar event</h1>
+<pre>
+
+PUT /calendar/1.ics HTTP/1.1
+Content- Type: text/calendar
+...
+
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+DTSTART:19970714T170000Z
+DTEND:19970715T035959Z
+<span style="color:green">SUMMARY:Bastille Day Party with an update</span>
+END:VEVENT
+END:VCALENDAR
+
+with response
+
+HTTP/1.1 200 OK
+
+</pre>
+</li>
+
+<li class="slide">
+<h1>CalAtom - listing the events</h1>
+<pre>
+
+GET /calendar HTTP/1.1
+...
+
+&lt;feed xmlns="http://www.w3.org/2005/Atom">
+  &lt;title>My Calendar&lt;/title>
+  &lt;link href="http://example.org/calendar"/>
+  &lt;updated>2003-12-13T18:30:02Z&lt;/updated>
+  &lt;author>
+    &lt;name>John Doe&lt;/name>
+  &lt;/author>
+  &lt;id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6&lt;/id>
+  <span style="color:green">&lt;entry xmlns="http://www.w3.org/2005/Atom">
+   &lt;title>Bastille Day Party&lt;/title>
+   &lt;id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a&lt;/id>
+   &lt;updated>2003-12-13T18:30:02Z&lt;/updated>
+   &lt;author>&lt;name>John Doe&lt;/name>&lt;/author>
+   &lt;summary type="text" />
+   &lt;content type="text/calendar" src=http://example.org/calendar/1.ics/>
+   &lt;link rel="edit" type="application/atom+xml" href="http://example.org/calendar/1.atom" />
+   &lt;link rel="edit-media" type="text/calendar" href="http://example.org/calendar/1.ics" />
+   &lt;link rel="alternate" type="application/calendar+xml" href="http://example.org/calendar/1.xml" />
+   &lt;link rel="edit-media" type="application/calendar+xml" href="http://example.org/calendar/1.xml" />
+  &lt;/entry></span>
+  <span style="color:blue">&lt;entry xmlns="http://www.w3.org/2005/Atom">
+   &lt;title>Queens Birthday Party&lt;/title>
+   &lt;id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efb6a&lt;/id>
+   &lt;updated>2003-12-13T18:30:02Z&lt;/updated>
+   &lt;author>&lt;name>John Doe&lt;/name>&lt;/author>
+   &lt;summary type="text" />
+   &lt;content type="text/calendar" src=http://example.org/calendar/2.ics/>
+   &lt;link rel="edit" type="application/atom+xml" href="http://example.org/calendar/2.atom" />
+   &lt;link rel="edit-media" type="text/calendar" href="http://example.org/calendar/2.ics" />
+   &lt;link rel="alternate" type="application/calendar+xml" href="http://example.org/calendar/2.xml" />
+   &lt;link rel="edit-media" type="application/calendar+xml" href="http://example.org/calendar/2.xml" />
+  &lt;/entry></span>
+ &lt;/feed>
+
+</pre>
+</li>
+
+
+<li class="slide">
+<h1>CalAtom - Querying Requirements</h1>
+<ul>
+<li>MUST make frequent queries simple e.g.</li>
+<ul>
+<li>Find the events for this week</li>
+<li>Find the freetime for this week</li>
+</ul>
+<li>SHOULD support optionally more complex queries</li>
+<ul>
+<li>Events that have the ATTENDEE property with the value "mailto:lisa@example.com" and for which the PARTSTAT parameter is set to "NEEDS-ACTION"</li>
+</ul>
+<li>SHOULD be extensible if additional data is mixed in with the default representation e.g. location as structured data</li>
+  <ul>
+  <li>find all the events in Massachusetts</li>
+  </ul>
+</ul>
+</li>
+
+<li class="slide">
+<h1>CalAtom - Querying - An Approach</h1>
+<ul>
+<li>Server provides 3 logical feeds for querying</li>
+<li>All contain an inline xCalendar payload</li>
+<ul>
+<li>Non-fanned out</li>
+<li>Fanned out</li>
+<li>Fanned out freebusy <- used for freetime lookups only, so event details not available</li>
+</ul>
+<li>"Fanned out" entries contain links to editable representations of repeat parents</li>
+</ul>
+</li>
+
+<li class="slide">
+<h1>CalAtom - ex of fanned out feed</h1>
+<pre>
+
+GET /calendar/fanned HTTP/1.1
+...
+
+&lt;feed xmlns="http://www.w3.org/2005/Atom">
+  &lt;title>My Calendar&lt;/title>
+  &lt;link href="http://example.org/calendar"/>
+  &lt;updated>2003-12-13T18:30:02Z&lt;/updated>
+  &lt;id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6&lt;/id>
+  &lt;entry>
+   &lt;title>Bastille Day Party&lt;/title>
+   &lt;id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a&lt;/id>
+   &lt;updated>2003-12-13T18:30:02Z&lt;/updated>
+   &lt;author>&lt;name>John Doe&lt;/name>&lt;/author>
+   &lt;summary type="text" />
+   &lt;content type="application/calendar+xml">
+    <span style="color:green">&lt;vcalendar version="2.0" prodid="-//hacksw/handcal//NONSGML 1.0//EN"> <--- fanned out
+     &lt;vevent>
+      &lt;uid>19970901T130000Z-123401@host.com&lt;/uid>
+      &lt;dtstamp>19970901T130000Z&lt;/dtstamp>
+      &lt;dtstart>19970903T163000Z&lt;/dtstart>
+      &lt;dtend>19970903T190000Z&lt;/dtend>
+      &lt;summary>Bastille Day&lt;/summary>
+      &lt;class>PRIVATE&lt;/class>
+     &lt;/vevent>
+   &lt;/vcalendar></span>
+   &lt;/content><span style="color:blue">
+   &lt;link rel="alternate" type="text/calendar" href="http://example.org/calendar/1.ics" />   <-- editable representations
+   &lt;link rel="edit-media" type="text/calendar" href="http://example.org/calendar/1.ics" />      repeat parent (if applicable)
+   &lt;link rel="alternate" type="application/calendar+xml" href="http://example.org/calendar/1.xml" />
+   &lt;link rel="edit-media" type="application/calendar+xml" href="http://example.org/calendar/1.xml" /></span>
+  &lt;/entry>
+  &lt;entry>
+   &lt;title>Queens Birthday Party&lt;/title>
+   &lt;id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efb6a&lt;/id>
+   ...
+  &lt;/entry>
+ &lt;/feed>
+
+</pre>
+</li>
+
+<li class="slide">
+<h1>CalAtom - query</h1>
+<ul>
+<li>For all three feeds support the following query parameters</li>
+<ul>
+<li>start-min - Earliest event start time to match</li>
+<li>start-max - Latest event start time to match</li>
+<li>q - full text query</li>
+<li>xpath - an xpath expression used to filter the returned entries</li>
+</ul>
+</ul>
+</li>
+
+
+<li class="slide">
+<h1>CalAtom - query examples</h1>
+<ul>
+<li>All events with a start time between January 3rd, 2006 to January 5th, 2006</li>
+<ul>
+<li>?start-min=20060103T000000Z&start-max=20060105T000000Z</li>
+</ul>
+<li>Return the VEVENT components that have the ATTENDEE property with the value "mailto:lisa@example.com" and for which the PARTSTAT parameter is set to "NEEDS-ACTION"</li>
+<ul><li>?xpath=/feed/entry[content/vcalendar/vevent /attendee[.="mailto:lisa@example.com" and @partstat="NEEDS-ACTION"]]</li></ul>
+</ul>
+</li>
+
+<li class="slide">
+<h1>Why CalAtom?</h1>
+<ul>
+<li>Lower barrier to entry, fewer features (80/20 rule?)</li>
+<li>Consistent with blogging approach, reuses introspection discovery mechanism, etc.</li>
+<li>Can benefit from future blogging atom extensions e.g. comments, reply-to</li>
+</ul>
+</li>
+
+</ol>
+
+</body>
+</html>
