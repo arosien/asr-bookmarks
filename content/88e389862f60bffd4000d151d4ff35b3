@@ -1,0 +1,152 @@
+<HTML>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-jp">
+<title>Metadata database of Japanese old photographs in Bakumatsu-Meiji Period</title>
+<link rel="stylesheet" href="../css/layo.css">
+<script type="text/javascript" src="../js/ctrl.js"></script>
+<script type="text/javascript" src="js/layo.js"></script>
+<script language="JavaScript" type="text/JavaScript">
+<!--//
+//photo;size - 0.75
+
+var lastPictNum = GetLastPictNum();
+var pictScale   = GetPictScale();
+var arrImgNum = new Array(999,999,999,999,999,999);
+
+function ShowPhoto(){
+
+	document.phM1.src = GetPreviewUrl(StartRandom(0));
+	document.phM2.src = GetPreviewUrl(StartRandom(1));
+	document.phM3.src = GetPreviewUrl(StartRandom(2));
+	document.phM4.src = GetPreviewUrl(StartRandom(3));
+	document.phM5.src = GetPreviewUrl(StartRandom(4));
+	document.phM6.src = GetPreviewUrl(StartRandom(5));
+
+}
+
+var nTemp, nLoop;
+
+function StartRandom(nIndex){
+
+	nLength = Number(lastPictNum);
+	nLoop   = 0;
+	nTemp   = Math.round(Math.random() * (nLength - 1));
+
+	if(nIndex != 0)
+	{
+		for(nLoop = 0; nLoop < nIndex ; nLoop++)
+		{
+			if(nTemp == arrImgNum[nLoop])
+			{
+				StartRandom(nIndex);
+			}
+		}
+	}
+	arrImgNum[nIndex] = nTemp;
+
+	return nTemp;
+}
+
+function uAction(n){
+
+	location.href = "target.php?id=" + String(arrImgNum[n - 1]);
+
+}
+
+//-->
+</script>
+
+</head>
+<body onLoad="preloadImages();ShowPhoto();MM_preloadImages('img/m01_on.gif','img/m02_on.gif','img/m03_on.gif','img/m04_on.gif','img/m05_on.gif','img/m06_on.gif','img/m07_on.gif','img/m08_on.gif')">
+<table border="0" cellpadding="0" cellspacing="0" id="mainLayo" class="mainLayo">
+  <tr>
+    <td class="mainLayo_left">&nbsp;</td>
+    <td width="769" valign="top" class="mainLayo_center bkgd01"><table  border="0" cellspacing="0" cellpadding="0" class="mainLayo">
+      <tr>
+        <td height="71"><img src="../img/main_title.gif" width="769" height="71"></td>
+      </tr>
+      <tr>
+        <td height="83" class="shadowPart1"><table width="100%"  border="0" cellpadding="0" cellspacing="0" id="menu_and_title">
+          <tr>
+            <td height="21"><table width="769"  border="0" cellpadding="0" cellspacing="0" class="mainMenu">
+              <tr>
+                <td width="77"><img src="img/m_start.gif" width="77" height="21"></td>
+                <td width="90"><a href="photographer.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('m01','','img/m01_on.gif',1)"><img src="img/m01_df.gif" name="m01" width="90" height="21" border="0"></a></td>
+                <td width="1"><img src="../img/m_slipA.gif" width="1" height="21"></td>
+                <td width="113"><a href="category.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('m02','','img/m02_on.gif',1)"><img src="img/m02_df.gif" name="m02" width="113" height="21" border="0"></a></td>
+                <td width="1"><img src="../img/m_slipA.gif" width="1" height="21"></td>
+                <td width="57"><a href="area.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('m03','','img/m03_on.gif',1)"><img src="img/m03_df.gif" name="m03" width="57" height="21" border="0"></a></td>
+                <td width="1"><img src="../img/m_slipA.gif" width="1" height="21"></td>
+                <td width="119"><a href="keyword.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('m04','','img/m04_on.gif',1)"><img src="img/m04_df.gif" name="m04" width="119" height="21" border="0"></a></td>
+                <td width="1"><img src="../img/m_slipA.gif" width="1" height="21"></td>
+                <td width="52"><a href="cabinet.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('m05','','img/m05_on.gif',1)"><img src="img/m05_df.gif" name="m05" width="52" height="21" border="0"></a></td>
+                <td width="1"><img src="../img/m_slipA.gif" width="1" height="21"></td>
+                <td width="21"><img src="../img/m_center.gif" width="21" height="21"></td>
+                <td width="1"><img src="../img/m_slipB.gif" width="1" height="21"></td>
+                <td width="85"><a href="about.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('m06','','img/m06_on.gif',1)"><img src="img/m06_df.gif" name="m06" width="85" height="21" border="0"></a></td>
+                <td width="1"><img src="../img/m_slipB.gif" width="1" height="21"></td>
+                <td width="72"><a href="handle.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('m07','','img/m07_on.gif',1)"><img src="img/m07_df.gif" name="m07" width="72" height="21" border="0"></a></td>
+                <td width="1"><img src="../img/m_slipB.gif" width="1" height="21"></td>
+                <td width="57"><a href="sitemap.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('m08','','img/m08_on.gif',1)"><img src="img/m08_df.gif" name="m08" width="57" height="21" border="0"></a></td>
+                <td width="18"><img src="img/m_end.gif" width="18" height="21"></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td height="62" align="right" valign="top" class="title01"><table cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="44" height="21"><img src="../img/langCurve.GIF"></td>
+                  <td width="119" height="21"><a href="../jp/index.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('langSw','','img/langSw_j_on.GIF',1)"><img src="img/langSw_j.GIF" name="langSw" border="0"></a></td>
+                  <td width="15" height="21"><img src="../img/langSplit_end.GIF" width="15" height="21"></td>
+                </tr>
+              </table>
+                <p>&nbsp;</p></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td align="center" valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0" id="mainContents">
+          <tr>
+            <td align="center" valign="top">
+		  <table border="0" cellspacing="0" cellpadding="0">
+	            <tr>
+	              <td align="right" valign="bottom"><a href="javascript:uAction(1)"><img name="phM1" src="../img/null.gif" style="width:160px"></a></td>
+	              <td align="left" valign="bottom"><a href="javascript:uAction(2)"><img name="phM2" src="../img/null.gif" style="width:160px"></a></td>
+	              <td rowspan="2" align="left" valign="middle"><a href="javascript:uAction(3)"><img name="phM3" src="../img/null.gif" style="width:180px"></a></td>
+	            </tr>
+	            <tr>
+	              <td align="right" valign="top"><a href="javascript:uAction(4)"><img name="phM4" src="../img/null.gif" style="width:160px"></a></td>
+	              <td align="left" valign="top"><a href="javascript:uAction(5)"><img name="phM5" src="../img/null.gif" style="width:160px"></a></td>
+	            </tr>
+	            <tr>
+	              <td colspan="2" align="center" valign="top"><a href="javascript:uAction(6)"><img name="phM6" src="../img/null.gif" style="width:180px"></a></td>
+	              <td>&nbsp;</td>
+	            </tr>
+        	  </table>
+            </td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td height="40"><table width="100%"  border="0" cellpadding="0" cellspacing="5">
+          <tr>
+            <td height="35" valign="middle"><table  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="90"><img src="../img/w3d.gif" width="87" height="30"></td>
+                <td width="98"><img src="../img/IE_6_v06.gif" width="91" height="34"></td>
+                <td><img src="../img/geta.gif" width="86" height="30"></td>
+              </tr>
+            </table></td>
+            <td width="425" valign="middle"><img src="../img/copyright.gif" width="425" height="21"></td>
+            <td width="35" valign="middle"><a href="http://www.lb.nagasaki-u.ac.jp/english/index.html"><img src="../counter/counter.php?id=2" width="30" height="30" border="0"></a></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table>      
+    </td>
+    <td class="mainLayo_right">&nbsp;</td>
+  </tr>
+</table>
+</body>
+</HTML>
+
