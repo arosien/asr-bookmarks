@@ -1,0 +1,363 @@
+<HTML>
+
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <TITLE>Javassist</TITLE>
+   <STYLE type="text/css">
+   <!--
+   body,td,th {
+	font-size: 14px;
+	font-family:Verdana,Arial,Helvetica,sans-serif;
+   }
+   -->
+   </STYLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+&nbsp;
+
+<div align="right">
+<font color="blue">Javassist is a sub project of <a href="http://www.jboss.org">JBoss</a></font></div>
+<BR>
+<CENTER>
+<H1>
+<FONT color="blue">Javassist</FONT>
+</H1>
+</CENTER>
+
+<TABLE CELLSPACING=20>
+
+<TR>
+<TD VALIGN=TOP>
+<B>
+Welcome...</B>
+</TD>
+
+<TD>
+<p>Javassist (<i>Java</i> Programming <i>Assist</i>ant)
+makes Java bytecode manipulation
+simple.  It is a class library for editing bytecodes in Java;
+it enables Java programs to define a new class at runtime and to
+modify a class file when the JVM loads it.  Unlike other similar
+bytecode editors, Javassist provides two levels of API: source level
+and bytecode level.  If the users use the source-level API, they can
+edit a class file without knowledge of the specifications of the Java
+bytecode.  The whole API is designed with only the vocabulary of the
+Java language.  You can even specify inserted bytecode in the form of
+source text; Javassist compiles it on the fly.  On the other hand, the
+bytecode-level API allows the users to directly edit a class file as
+other editors.
+
+<P><B>Aspect Oriented Programming:</B>
+
+Javassist can be a good tool for adding new methods into a class
+and for inserting before/after/around advice at the both caller and
+callee sides.
+
+<P><B>Reflection:</B>
+One of applications of Javassist is runtime reflection; Javassist
+enables Java programs to use a metaobject that controls method calls
+on base-level objects.  No specialized compiler or virtual machine are
+needed.
+<!--
+For more details, see A HREF="viewdemo.html" a sample applet.
+-->
+
+<!--
+<P><B>Remote method invocation:</B>
+Another application is remote method invocation.  Javassist enables
+applets to call a method on a remote object running on the web server.
+Unlike the Java RMI, the programmer does not need a stub compiler such
+as <code>rmic</code>; the stub code is dynamically produced by Javassist.
+For more details, see A HREF="webdemo.html" a sample applet/A>
+-->
+
+</TD>
+
+<TD WIDTH="10%"></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP>
+<B>News...</B>
+<IMG SRC="../new_tiny.gif" ALT="new" HEIGHT=12 WIDTH=31>
+</TD>
+<TD>
+<p>We have started developing a light-weight but powerful
+AOP framework on top of Javassist.
+<br>Please visit our <a href="/projects/gluonj"><b>GluonJ</b></a> site.
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP>
+<B>Availability...</B>
+</TD>
+
+<TD>Javassist version 3.14.0.GA is available (October 5, 2010).
+<IMG SRC="../new_tiny.gif" ALT="new" HEIGHT=12 WIDTH=31>
+<br>This version is distributed
+under the dual license of the MPL and the LGPL.
+
+<UL>
+<LI>
+<A HREF="https://sourceforge.net/projects/jboss/files/Javassist/">Binaries, sources, samples, API manual, and tutorial.
+(zip)</A></LI>
+
+<P><LI>
+<A HREF="html/index.html">Online API manual (HTML format)</A></LI>
+
+<P><LI>
+<A HREF="tutorial/tutorial.html">Tutorial (HTML format)</A>&nbsp;
+<br>(Japanese translation of the tutorial for version 3.0 is
+<A HREF="http://www.smg.co.jp/seminar/techsquare/javassist01.html">here</A>)
+
+<P><LI>
+The Latest Snapshot
+<p>
+The latest source code is available from Subversion:
+
+<UL><PRE>
+svn co http://anonsvn.jboss.org/repos/javassist/trunk
+</PRE></UL>
+
+<P>This command will create the <tt>./trunk</tt> direcotry.
+
+<!--a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/jboss/javassist/"-->
+
+<!--
+You can check all the source files out from the SVN repository
+with an anonymous account (empty password) with the following two commands:
+
+<UL><PRE>
+cvs -d :pserver:anonymous@anoncvs.forge.jboss.com:/cvsroot/jboss login
+
+cvs -z3 -d :pserver:anonymous@anoncvs.forge.jboss.com:/cvsroot/jboss co javassist
+</PRE></UL>
+
+<P>Note that the login password is empty.  Hit enter at the password prompt.
+
+<P>CVS provides a number of useful commands like update and diff.
+For more details, please read your CVS book or documents.
+-->
+
+<P>To build the downloaded source files, use <code>ant</code>:
+
+<UL><PRE>
+cd trunk	# move to the source directory
+ant jar         # build javassist.jar
+ant javadocs    # build API reference
+</PRE></UL>
+
+<P>For more details, see <code>build.xml</code>.
+
+</LI>
+</ul>
+
+</TD>
+
+</TD></TR>
+
+<TR>
+<TD VALIGN=TOP>
+<B>Info...</B>
+</TD>
+<TD>
+
+<p>Join our discussion forums:
+
+<UL>
+<P><li>
+<a href="https://jira.jboss.org/jira/browse/JASSIST">Bug Tracker</a>
+
+<P><li>Discussion Forums
+[ <a href="http://www.jboss.org/index.html?module=bb&op=viewforum&f=178">Users</a> ]
+[ <a href="http://www.jboss.org/index.html?module=bb&op=viewforum&f=179">Developers</a> ]
+
+<p><li>Articles:
+
+<ul>
+<LI>
+<a href="http://sys-con.com/story/?storyid=38672&DE=1#RES">Javassist: Java Bytecode Engineering Made Simple</a>
+<br>
+by Shigeru Chiba, Java Developer's Journal, vol. 9, issue 1, January 8, 2004.
+
+<p><LI>
+<a href="http://www-106.ibm.com/developerworks/java/library/j-dyn0916.html">Java programming dynamics, Part 4: Class transformation with Javassist</a>
+<br>
+by Dennis M. Sosnoski, IBM developerWorks, September 16, 2003.<br>
+<a href="http://www-106.ibm.com/developerworks/java/library/j-dyn0203.html">Java programming dynamics, Part 5: Transforming classes on-the-fly</a>
+<br>
+by Dennis M. Sosnoski, IBM developerWorks, February 3, 2004.<br>
+<a href="http://www-106.ibm.com/developerworks/java/library/j-dyn0302.html">Java programming dynamics, Part 6: Aspect-oriented changes with Javassist</a>
+<br>
+by Dennis M. Sosnoski, IBM developerWorks, March 2, 2004.
+<IMG SRC="../new_tiny.gif" ALT="new" HEIGHT=12 WIDTH=31>
+
+
+</ul>
+
+<TR>
+<TD VALIGN=TOP>
+<B>Publications...</B>
+</TD>
+
+<TD>
+<DL COMPACT>
+
+<P><DT>
+<b><a href="/paper/chiba-gpce03.pdf">An Easy-to-Use Toolkit for Efficient Java Bytecode Translators</a></b>
+</DT>
+
+<br>Shigeru Chiba and Muga Nishizawa
+<br>Proc. of 2nd Int'l Conf. on Generative Programming
+and Component Engineering (GPCE '03),
+<br>LNCS 2830, pp.364-376, Springer-Verlag, 2003.
+<BR>
+(The performance of Javassist)
+<BR>
+
+<P><DT>
+<B><A HREF="/paper/chiba-ecoopws03.pdf">Using HotSwap for Implementing Dynamic AOP Systems</A></B>
+</DT>
+
+<BR>Shigeru Chiba, Yoshiki Sato, and Michiaki Tatsubori
+<BR>ECOOP'03 Workshop on Advancing the State of the Art in Runtime Inspection (ASARTI), July 21st, 2003.
+<BR>
+(Dynamic AOP, An Application of Javassist)
+<BR>
+
+
+<P><DT>
+<A HREF="jboss2.pdf">
+<B>AOP in the Academia</B></A>
+</DT>
+
+<BR>Shigeru Chiba, JBossTwo AOP Panel, June 2003.
+<BR>
+
+<P>
+<DT>
+<A HREF="../../~mich/pub/200106_ecoop2001.pdf">
+<B>A Bytecode Translator for Distributed Execution of "Legacy" Java
+Software</B></A>
+</DT>
+
+<BR>Michiaki Tatsubori, Toshiyuki Sasaki, Shigeru Chiba and Kozo Itano
+<BR><I>ECOOP 2001 -- Object-Oriented Programming,
+LNCS 2072, Springer Verlag, pp.236-255, 2001.</I>
+<BR>
+(An application of Javassist)
+<BR>
+
+<P>
+<DT>
+<A HREF="../pub/chiba-ecoop00.pdf">
+<B>Load-time Structural Reflection in Java</B></A>
+</DT>
+
+<BR>Shigeru Chiba
+<BR><I>ECOOP 2000 -- Object-Oriented Programming, LNCS 1850,
+Springer Verlag, page 313-336, 2000.</I>
+<BR>
+(The overview of Javassist)
+<BR>
+
+<P>
+
+<DT>
+<A HREF="../oopsla98/proc/chiba.pdf">
+<B>Javassist --- A Reflection-based Programming Wizard for Java</B></A>
+
+<BR>Shigeru Chiba
+<BR>In <I>Proceedings of the ACM OOPSLA'98  Workshop
+on Reflective Programming in C++ and Java</I>
+October, 1998.
+<BR>(An very early sketch of the design of Javassist)
+
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP>
+<B>Related Work...</B>
+</TD>
+
+<TD>
+
+<P>We are developing other reflective systems for C++ and Java.
+
+<P><B><A HREF="../openc++.html">OpenC++</A></B><BR>
+An extensible C++ preprocessor based on compile-time reflection.
+
+<P><B><A HREF="http://www.csg.is.titech.ac.jp/openjava">OJ</A></B>
+<BR>An extensible Java preprocessor based on compile-time reflection.
+</TD>
+<TD></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP>
+<B>Old Versions...</B></TD>
+
+<TD>
+<p>
+Javassist version 2.4 is also available (February 20, 2003)
+<br>This version is distributed under the Mozilla Public License 1.1.
+<BR>
+<UL>
+<LI>
+<A HREF="javassist24.tar.gz">Binaries, sources, samples, and online manuals.
+(tar+gzip)</A></LI>
+
+<P><LI>
+<A HREF="javassist24.jar">The latest snapshot of the jar file (April 30)</A>
+</LI>
+
+</ul>
+
+<P><BR>
+
+<P>Javassist version 1.0 is also available (July 24, 2001).
+
+<UL>
+<LI>
+<A HREF="v1/javassist10.tar.gz">Binaries, sources, samples, and online manuals.
+(tar+gzip)</A></LI>
+
+<P><LI>
+<A HREF="v1/html/index.html">Online manual (HTML format)</A></LI>
+
+<P><LI>
+<A HREF="v1/tutorial.html">Tutorial (HTML format)</A></LI>
+
+<P><LI>
+<A HREF="v1/reflect.tar.gz">Bug-fixed source of javassist.reflect package</A>
+(August 7, 2001).
+</LI></UL>
+
+</TD>
+</TD></TR>
+
+<TR>
+<TD VALIGN=TOP>
+<B>Acknowledgment...</B>
+</TD>
+
+<TD>
+The development of Javassist was supported in part by the PRESTO
+and CREST programs of <A HREF="http://www.jst.go.jp/EN">
+Japan Science and Technology Agency</A>.
+</TD>
+<TD></TD>
+</TR>
+</TABLE>
+
+<HR>
+<ADDRESS>
+[Last Updated: October 5, 2010]</ADDRESS>
+
+<BR><A HREF="../index.html">Shigeru Chiba</A>
+<BR><FONT SIZE=1>Copyright (C) 1999-2010 by Shigeru Chiba.</FONT>
+<BR><FONT SIZE=1>Java(TM) is a trademark of Sun Microsystems, Inc.</FONT>
+</BODY>
+</HTML>
