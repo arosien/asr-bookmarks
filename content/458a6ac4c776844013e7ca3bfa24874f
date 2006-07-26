@@ -1,0 +1,1191 @@
+<html>
+    <head>
+        <title>Apsis Gmbh</title>
+        <style type="text/css">
+            h1 {
+                font-weight: bold;
+                font-size: x-large;
+                font-family: "Arial, Helvetica, sans-serif";
+            }
+
+            h3 {
+                font-weight: bold;
+                font-size: large;
+                font-family: "Arial, Helvetica, sans-serif";
+            }
+
+            p {
+                font-size: medium;
+                font-family: "Arial, Helvetica, sans-serif";
+            }
+
+            .r {
+                text-decoration: none;
+                font-size: medium;
+                font-family: "Arial, Helvetica, sans-serif";
+                color: 6ca1c2;
+            }
+
+            a:link {
+                font-weight: normal;
+                font-family: "Arial, Helvetica, sans-serif";
+                color: 6ca1c2;
+            }
+
+            a:visited {
+                font-weight: normal;
+                font-family: "Arial, Helvetica, sans-serif";
+                color: 6ca1c2;
+            }
+
+            a:hover {
+                text-decoration: underline;
+                font-weight: bold;
+                font-family: "Arial, Helvetica, sans-serif";
+                color: 6ca1c2;
+            }
+        </style>
+    </head>
+<body style="background-color: white; margin-left: 1px; padding-left: 1px;">
+    <table align="center" border="0" cellpadding="10" cellspacing="0" width="95%">
+    <tbody>
+    <tr>
+        <td rowspan="2" align="left" bgcolor="#f3f4f5" height="460" valign="top" width="180">
+            <table border="0" cellpadding="5" cellspacing="0" width="100%">
+            <tbody>
+            <tr>
+                <td><a href="http://www.apsis.ch"><img src="logo_gif" alt="" border="0" hspace="0" vspace="0"></a></td>
+            </tr>
+            <tr>
+                <td>
+                    <hr class="r">
+                    <ul>
+                        <li class="r"><a href="../index_html">Home</a></li>
+                        <li class="r"><a href="../net_html">Networking</a></li>
+                        <li class="r"><a href="../sec_html">IT Security</a></li>
+                        <li class="r"><a href="../data_html">Databases</a></li>
+                        <li class="r"><a href="../svc_html">Services</a></li>
+                        <li class="r" class="r">Products:<br>
+                            <ul>
+                                <li class="r"><a href="../asd2v_html">ASD2v</a></li>
+                            </ul>
+                        </li>
+                        <li class="r">Open Source:
+                            <ul>
+                                <li class="r"><a href="index_html"><em>Pound</em></a></li>
+                                <li class="r"><a href="../bar/index_html"><em>Bar</em></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <hr class="r">
+                </td>
+            </tr>
+            </tbody>
+            </table>
+        </td>
+        <td align="center" valign="top" bgcolor="#f3f4f5">
+<script type="text/javascript"><!--
+google_ad_client = "pub-2500544738859329";
+/* 728x15, created 8/7/09 */
+google_ad_slot = "2309875893";
+google_ad_width = 728;
+google_ad_height = 15;
+//-->
+</script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+          <h1>Pound</h1>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" valign="top">
+            <div>
+<h3>POUND - REVERSE-PROXY AND LOAD-BALANCER</h3>
+
+<p>
+    The <em>Pound</em> program is a reverse proxy, load balancer and
+    HTTPS front-end for Web server(s). <em>Pound</em> was developed
+    to enable distributing the load among several Web-servers
+    and to allow for a convenient SSL wrapper for those Web
+    servers that do not offer it natively. <em>Pound</em> is distributed
+    under the GPL - no warranty, it's free to use, copy and
+    give away.
+</p>
+
+<h3>WHAT POUND IS:</h3>
+<ol>
+<li>a reverse-proxy: it passes requests from client
+        browsers to one or more back-end servers.</li>
+
+<li>a load balancer: it will distribute the requests from
+        the client browsers among several back-end servers,
+        while keeping session information.</li>
+
+<li>an SSL wrapper: <em>Pound</em> will decrypt HTTPS requests
+        from client browsers and pass them as plain HTTP
+        to the back-end servers.</li>
+
+<li>an HTTP/HTTPS sanitizer: <em>Pound</em> will verify requests
+        for correctness and accept only well-formed ones.</li>
+
+<li>a fail over-server: should a back-end server fail,
+        <em>Pound</em> will take note of the fact and stop passing
+        requests to it until it recovers.</li>
+
+<li>a request redirector: requests may be distributed
+        among servers according to the requested URL.</li>
+</ol>
+<p>
+    <em>Pound</em> is a very small program, easily audited for security
+    problems. It can run as setuid/setgid and/or in a chroot
+    jail. <em>Pound</em> does not access the hard-disk at all (except
+    for reading the certificate file on start, if required)
+    and should thus pose no security threat to any machine.
+</p>
+
+<h3>WHAT POUND IS NOT:</h3>
+<ol>
+<li><em>Pound</em> is not a Web server: by itself, <em>Pound</em> serves no
+        content - it contacts the back-end server(s) for that
+        purpose.</li>
+
+<li><em>Pound</em> is not a Web accelerator: no caching is done -
+        every request is passed "as is" to a back-end server.</li>
+</ol>
+
+<h3>STATUS</h3>
+<p>
+    As of release 1.0 <em>Pound</em> is declared to be production-quality code.
+</p>
+<p>
+    Quite a few people have reported using <em>Pound</em> successfully in production
+    environments. The largest volume reported to date is a site with an
+    average of about 30M requests per day, peaking at over 600 requests/sec.
+</p>
+<p>
+    <em>Pound</em> was successfully used in production with a variety of Web servers,
+    including Apache, IIS, Zope, WebLogic, Jakarta/Tomcat, iPlanet, etc. In
+    general <em>Pound</em> passes requests and responses back and forth unchanged,
+    so we have no reason to think that any web server would be incompatible.
+</p>
+<p>
+    Client browsers that were tested:
+</p>
+<ul>
+    <li>IE 5.0/5.5 (Windows) HTTP/HTTPS</li>
+
+    <li>Netscape 4.7 (Windows/Linux) HTTP/HTTPS</li>
+
+    <li>Mozilla (Windows/Linux) HTTP/HTTPS</li>
+
+    <li>Konqueror (Linux) HTTP/HTTPS</li>
+
+    <li>Galleon (Linux) HTTP/HTTPS</li>
+
+    <li>Opera (Linux/Windows) HTTP/HTTPS</li>
+
+    <li>Lynx (Linux) HTTP</li>
+</ul>
+<p>
+    Given that <em>Pound</em> is in production and no problems were reported, we have
+    no reason to believe that other browsers would present a problem. A few
+    issues were observed with problematic SSL implementations, most notably
+    with Opera 6, but these should be OK in the present version.
+</p>
+
+<h3>INSTALLATION</h3>
+<p>
+    Probably the easiest way to install <em>Pound</em> is to use a pre-compiled package
+    if you can find one. While <a href="http://www.apsis.ch"><strong>Apsis<strong></strong></strong></a> offers no such packages,
+    they are available for quite a few systems (<a href="http://www.novell.com/linux">SuSE Linux</a>,
+    <a href="http://www.debian.org">Debian</a> and derivatives such as <a href="http://www.ubuntu.com)">Ubuntu</a>,
+    as well as some private packages:
+</p>
+<ul>
+<li>RPMs for RedHat are available at <a href="http://www.invoca.ch/pub/packages/pound/">http://www.invoca.ch/pub/packages/pound/</a></li>
+<li>A nice FreeBSD live-CD distribution is available at <a href="http://www.targeted.org/files/fbsd71_pound244.iso.gz">http://www.targeted.org/files/fbsd71_pound244.iso.gz</a>, including a Pound binary.</li>
+</ul>
+<p>
+    Failing that you should install from sources:
+</p>
+<ol>
+    <li><p><em>Pound</em> was tested on Linux, Solaris and OpenBSD, but
+        it should work unchanged on just about any modern
+        Unix-like system. You will require OpenSSL and
+        the native threads library. The PCRE package and the tcmalloc (or Hoard)
+        libraries are strongly recommended.
+</p><p>
+        <strong>Warning</strong>: as <em>Pound</em> is a multi-threaded program it requires
+        a version of OpenSSL with thread support. This is normally
+        the case on Linux and Solaris (for example) but not on *BSD.
+        If your system has the wrong library please download, compile
+        and install OpenSSL (from <a href="http://www.openssl.org">http://www.openssl.org</a>)
+        <strong>with threads support</strong>.
+</p><p>
+        If the PCRE, tcmalloc (from the Google perftools package) and/or
+        Hoard are available Pound will link
+        against them. This will provide a significant performance boost
+        and is <strong>highly</strong> recommended.</p></li>
+
+    <li><p>Download the latest version <a href="Pound-2.5.tgz">Pound-2.5.tgz</a>
+        file and unpack it. The archive is <a href="Pound-2.5.asc">signed</a>.
+</p><p>
+        My signature is available <a href="roseg.asc">here</a>.
+</p><p>
+        Alternately see below for experimental versions.</p></li>
+        <li>Unpack. Do the usual thing:
+<pre>
+        ./configure
+</pre></li>
+
+    <li>  The following options are available for the configure script:
+<pre>
+        --with-ssl=ssl_dir   -- OpenSSL home directory
+
+        --disable-super      -- disable supervisor process (default: enabled)
+
+        --with-t_rsa=nnn     -- timeout of the RSA ephemeral keys regeneration (default: 30 minutes).
+
+        --with-owner=owner   -- name of installed binaries owner (default is system-dependent).
+
+        --with-group=group   -- name of installed binaries group (default is system-dependent).
+</pre></li>
+
+
+    <li>  Check that the resulting Makefile is correct and possibly
+        adjust flags as needed on your system. Compile:
+<pre>
+         make
+</pre></li>
+
+    <li>  If it works, you may want to do some testing before installing.</li>
+
+    <li>  Install the executable somewhere (it's likely that
+        /usr/local/sbin would make a good choice), as well
+        as the manual page (pound.8 -> /usr/local/man/man8).
+        The supplied Makefile will do it for you.</li>
+
+    <li>  Make sure <em>Pound</em> gets started on boot. Read the man
+        page for available options and examples.</li>
+</ol>
+
+<h3>COPYRIGHT</h3>
+<p>
+    <em>Pound</em> is copyrighted by Apsis GmbH and is distributed under
+    the terms of the <a href="http://www.gnu.org/licenses/gpl.html">GNU Public License</a> with the additional exemption
+    that compiling, linking, and/or using OpenSSL is allowed.
+    Basically, this means that you can use it free of charge, copy it,
+    distribute it (provided the copyright is maintained and the full
+    package is distributed), modify it, or line a bird-cage with it.
+</p><p>
+    We would be happy to hear from you if you use it and
+    suggestions and improvements are gladly accepted.
+</p>
+
+<h3>CONTACT</h3>
+<p>
+    <a href="mailto:roseg@apsis.ch">Robert Segall</a>
+</p>
+<p>
+    <a href="http://www.apsis.ch"><strong>Apsis GmbH</strong></a>
+</p>
+<p>
+    P O Box
+</p>
+<p>
+    CH-8707 Uetikon am See
+</p>
+<p>
+    Switzerland
+</p>
+<p>
+    +41 - 32 - 512 30 19
+</p>
+
+<h3>MAILING LIST</h3>
+<p>
+    <em>Pound</em> has its own mailing list now: please send a message in order to
+    <a href="mailto:pound@apsis.ch?subject=subscribe">subscribe</a>. You will receive
+    confirmation and instructions in the reply.
+</p>
+<p>
+    All messages are available and indexed (searcheable) in the
+    <a href="http://www.apsis.ch/pound/pound_list">archive</a>.
+</p>
+<p>
+    <u><strong>The mailing list is the primary support forum for Pound - please
+    post there any questions you may have</strong></u>. The developpers' address is
+    given here for information purposes only.
+</p>
+<h3>LOGO</h3>
+<p>
+    If you use <em>Pound</em> we would appreciate your indicating this by adding the
+    logo <img src="pound_png" alt="pound logo"> to your pages, with a link to the <em>Pound</em>
+    <a href="http://www.apsis.ch/pound/index_html">home page</a>.
+</p>
+
+<h3>ZOPE</h3>
+<p>
+    A special note for Zope users: the original intent on
+    developing <em>Pound</em> was to allow distributing the load
+    among several Zope servers running on top of ZEO. This
+    it does.
+</p>
+<p>
+    A special problem arises when you try using <em>Pound</em> as an
+    SSL wrapper: Zope assumes that the requests are made via
+    HTTP and insists on prepending 'http://' to the (correct)
+    address in the replies, including in the <base> tag and
+    the absolute URLs it generates (for images for example).
+    This is clearly an undesirable behavior.
+</p>
+<p>
+    In order to address this issue, a modified z2.py (as well
+    as a patch) is included in the distribution. The main
+    difference is that this z2.py allows starting an additional
+    HTTP server via the -y flag that sets the environment
+    HTTPS variable - thus correcting the problem. That means
+    that in order to use <em>Pound</em> as an SSL wrapper you need to:
+</p>
+<ul>
+    <li> start Zope (modify the 'start' file) as:
+<pre>
+        python -X -w 8080 -y 8443 ...
+</pre></li>
+    <li> start <u>two</u> copies of <em>Pound</em> on the front-end: one listens
+      on port 80 and passes requests to port 8080, the second
+      listens on port 443 and passes requests to port 8443.</li>
+</ul>
+
+
+<h3>VIRTUAL HOSTS (IN GENERAL)</h3>
+<p>
+    Some people asked about the possibility of redirecting requests to back-ends
+    as per some virtual hosts definition. While I believe this is not <em>Pound</em>'s
+    job, it can be done. As of version 0.10, <em>Pound</em> supports filtering requests
+    based not only on the request URL, but also on the presence or absence of
+    certain headers.
+</p>
+<p>
+    Let's assume that you have internal server 192.168.0.10 that is supposed to
+    serve the needs of virtual host www.server0.com and 192.168.0.11 that serves
+    www.server1.com.  You want <em>Pound</em> to listen on address 1.2.3.4 and separate
+    the requests to each host.  The config file would look something like this:
+<pre>
+        ListenHTTP
+            Address 1.2.3.4
+            Port    80
+
+            Service
+                HeadRequire "Host: .*www.server0.com.*"
+
+                BackEnd
+                    Address 192.168.0.10
+                    Port    80
+                End
+            End
+
+            Service
+                HeadRequire "Host: .*www.server1.com.*"
+
+                BackEnd
+                    Address 192.168.0.11
+                    Port    80
+                End
+            End
+        End
+</pre>
+    (add whatever else is necessary) or, if you want even safer filtering:
+<pre>
+        ListenHTTP
+            Address 1.2.3.4
+            Port    80
+
+            Service
+                HeadRequire "Host: .*www.server0.com.*"
+                HeadDeny    "Host: .*www.server1.com.*"
+
+                BackEnd
+                    Address 192.168.0.10
+                    Port    80
+                End
+            End
+
+            Service
+                HeadRequire "Host: .*www.server1.com.*"
+                HeadDeny    "Host: .*www.server0.com.*"
+
+                BackEnd
+                    Address 192.168.0.11
+                    Port    80
+                End
+            End
+        End
+</pre>
+
+    This is NOT recommended (I personally believe that virtual hosts should be
+    implemented in the back-end servers - putting this in a proxy
+    is a major security kludge) but it works.
+</p>
+
+<h3>VIRTUAL HOSTS AND HTTPS</h3>
+<p>
+    Quite often we get inquiries about <em>Pound</em>'s ability to do virtual hosting
+    with HTTPS. In order to lay this matter to rest, let me say:
+<pre>
+        <strong>HTTPS does not allow virtual hosting</strong>
+</pre>
+    This is not a limitation of <em>Pound</em>, but of HTTPS - no Web server or proxy
+    are able to do it due to the nature of the beast.
+</p>
+<p>
+    In order to see why this is the case we need to look at the way HTTPS works.
+    Basically there are three stages in any HTTPS connection:
+</p>
+<ol>
+    <li>  Connection negotiation - the client (your browser) and the server (Web
+        server or proxy) negotiate the basic parameters: ciphers to use, session
+        key, etc.</li>
+
+    <li>  Connection authentication: at the very least the server presents the
+        client with a certificate that says "I am server www.encrypted.com - and
+        certificate.authority.org will verify that". The client may also present
+        a certificate of its own at this stage.</li>
+
+    <li>  Request/response cycle: normal HTTP is sent (through the encrypted
+        channel) back and forth.</li>
+</ol>
+<p>
+    The vital point to notice here is that connection authentication takes place
+    BEFORE any request was issued.
+</p>
+<p>
+    On the other hand, the way virtual hosting works is for the client to
+    specify in the request to which server it would like to talk. This is
+    accomplished via a Host header:
+<pre>
+        GET /index.html HTTP/1.1
+        Host: http://www.virthost.com
+</pre>
+    Combining the two we get to an impasse: on connection setup the server will
+    reply with the certificate for "www.realhost.com", but the request is really
+    for "www.virthost.com" - and most browsers will scream blue murder (as well
+    they should) if the two do not match.
+</p>
+<p>
+    There is a new twist on this however: some of the newer browsers will accept
+    so-called "wild-card certificates". This is a specially crafted certificate
+    that is not issued to a host, but rather to a domain. The result is that
+    on setting-up a new SSL connection, the server replies not with "I am
+    <em>www.encrypted.com</em>", but with "I am <em>*.encrypted.com</em>". If the browser is
+    capable of processing this type of certificate then the connection is
+    set up and normal HTTPS (with <em>www.encrypted.com</em> or <em>special.encrypted.com</em> or
+    even <em>some.other.server.encrypted.com</em> or whatever other name matches) proceeds
+    as usual. <em>Pound</em> supports these certificates and you can use virtual hosts in
+    the normal way.
+</p>
+<p>
+    <strong>Update June 2010</strong>: starting with with the 2.6 series, Pound has SNI support, if your
+    OpenSSL version supports it. Basically you supply Pound with several certificates,
+    one for each virtual host (wild card certificates - as described above - are
+    allowed). On connecting the client signals to which server it wants to talk,
+    and Pound searches among its certificates which would fit. Not all versions
+    of OpenSSL and not all clients support this mode, but if available it allows
+    for virtual hosts over HTTPS.
+</p>
+<p>
+    An additional option is to use a semi-official TLS extension, the so called
+    alternate subject name. If your version of OpenSSL supports it you may specify
+    in one certificate several alternate server names. This requires support for a
+    special TLS feature, and nor all clients accept it.
+</p>
+
+
+<h3>VIRTUAL HOSTS IN ZOPE</h3>
+<p>
+    For reasons I can't quite grasp, it seems that a lot of Zope
+    users are convinced that virtual hosts are only possible through
+    the Apache/VHM combination and that it requires some kind of
+    magic incantation at midnight in order to work (I won't even
+    start on the virgin sacrifices).
+</p>
+<p>
+    The simple fact is that VHM and the Apache VirtualHost directives
+    (as well as various tricks through mod_rewrite and mod_proxy) are
+    (almost) mutually exclusive: they perform exactly the same
+    functions and, leaving aside the logging issues, are used
+    independently of each other.  Let me repeat that: you may use the
+    VHM without Apache - just click on the VHM mappings tab and add
+    whatever virtual host you wish. From this moment on any request
+    to that host will be mapped back and forth by Zope to the required
+    URL. This works if you access Zope directly or via any number
+    of proxies on the way, <em>Pound</em> included.
+</p>
+<p>
+    To test: add a new host name to your /etc/hosts file, making it an
+    alias for localhost - something like:
+<pre>
+        127.0.0.1 localhost www.testhost.mine
+</pre>
+    Add a mapping in VHM from www.testhost.mine to some Zope folder
+    (Examples is already there). Point your browser to http://localhost
+    and you get the normal Zope start page; point it to
+    http://www.testhost.mine and you'll see the Examples starting page.
+    All requests are mapped correctly, and the URLs in the pages (such
+    as base or absoluteURL) are translated correctly in the response.
+</p>
+
+<h3>SESSIONS</h3>
+<p>
+    <em>Pound</em> has the ability to keep track of sessions between a client
+    browser and a back-end server. Unfortunately, HTTP is defined as
+    a stateless protocol, which complicates matters: many schemes have
+    been invented to allow keeping track of sessions, none of which works
+    perfectly. Even worse, sessions are critical in order to allow
+    web-based applications to function correctly - it is vital that once
+    a session is established all subsequent requests from the same browser
+    be directed to the same back-end server.
+</p>
+<p>
+    Six possible ways of detecting a session have been implemented in
+    <em>Pound</em> (hopefully the most useful ones): by client address, by Basic
+    authentication, by URL parameter, by cookie, by HTTP parameter and by
+    header value.
+</p>
+<ul>
+    <li> by client address: in this scheme <em>Pound</em> directs all requests from
+      the same client IP address to the same back-end server. Put the
+      line:
+<pre>
+        Session
+            Type  IP
+            TTL  300
+        End
+</pre>
+      in the configuration file to achieve this effect. The value indicates what
+      period of inactivity is allowed before the session is discarded.</li>
+
+    <li> by Basic Authentication: in this scheme <em>Pound</em> directs all requests from
+      the same user (as identified in the Basic Authentication header ) to the
+      same back-end server. Put the lines:
+<pre>
+        Session
+            Type    Basic
+            TTL     300
+        End
+</pre> 
+      in the configuration file to achieve this effect. The value indicates what
+      period of inactivity is allowed before the session is discarded.
+      WARNING: given the constraints of the HTTP protocol it may very well be
+      that the authenticated request will go to a different back-end server than
+      the one originally requesting it. Make sure all your servers support
+      the same authentication scheme!</li>
+
+    <li> by URL parameter: quite often session information is passed through URL
+      parameters (the browser is pointed to something like http://xxx?id=123).
+      Put the lines:
+<pre>
+        Session
+            Type    URL
+            ID      "id"
+            TTL     300
+        End
+</pre>
+      to support this scheme and the sessions will be tracked based on the value of the "id" parameter.</li>
+
+    <li> by cookie value: applications that use this method pass a certain cookie
+      back and forth. Add the lines:
+<pre>
+        Session
+            Type    Cookie
+            ID      "sess"
+            TTL     300
+        End
+</pre>
+      to your configuration file - the sessions will be tracked by the value of the
+      "sess" cookie.</li>
+
+    <li> by HTTP parameter value: applications that use this method pass a parameter
+      (http://x.y/z;parameter) back and forth. Add the lines:
+<pre>
+        Session
+            Type    PARM
+            TTL     300
+        End
+</pre>
+      to your configuration file - the sessions will be tracked by the value of the
+      "sess" cookie.</li>
+
+    <li> by header value: applications that use this method pass a certain header
+      back and forth. Add the lines:
+<pre>
+        Session
+            Type    Header
+            ID      "X-sess"
+            TTL     300
+        End
+</pre>
+      to your configuration file - the sessions will be tracked by the value of
+      the "X-sess" header.</li>
+</ul>
+<p>
+    Please note the following restrictions on session tracking:
+</p>
+<ul>
+    <li> session tracking is always associated with a certain Service. Thus each
+      group may have other methods and parameters.</li>
+
+    <li> there is no default session: if you have not defined any sessions no
+      session tracking will be done.</li>
+
+    <li> only one session definition is allowed per Service (this may change in
+      a future version). If your application has alternative methods for
+      sessions you will have to define a separate Service for each method.</li>
+</ul>
+<p>
+    A note on cookie injection: some applications have no session-tracking mechanism at
+    all but would still like to have the client always directed to the same back-end
+    time after time. Some reverse proxies use a mechanism called "cookie injection" in
+    order to achieve this: a cookie is added to the back-end responses and tracked by the
+    reverse proxy.
+</p>
+<p>
+    <em>Pound</em> was designed to be as transparent as possible, and this mechanism is not
+    supported. If you really need this sort of persistent mapping use the client address
+    session mechanism (<em>Session Type IP</em>), which achieves the same result without
+    changing the contents in any way.
+</p>
+
+<h3>REQUEST LOGGING</h3>
+<p>
+    As a general rule, <em>Pound</em> passes all headers as they arrive from the client
+    browser to the back-end server(s). There are two exceptions to this rule:
+    <em>Pound</em> may add information about the SSL client certificate (as described
+    below), and it will add an X-Forwarded-For header. The general format is:
+<pre>
+        X-Forwarded-for: client-IP-address
+</pre>
+    The back-end server(s) may use this extra information in order to create
+    their log-files with the real client address (otherwise all requests will
+    appear to originate from <em>Pound</em> itself, which is rather useless).
+</p>
+<p>
+    In addition, <em>Pound</em> logs requests and replies to the system log. This is
+    controlled by the LogLevel configuration variable (0 - no logging,
+    1 - normal log, 2 - full log, 3 - Apache combined log format, 4 - Apache
+    combined log format without virtual host).
+</p>
+<p>
+    By default the messages go to the LOG_DAEMON facility, but you can change
+    this in the configuration. If you don't want to, you can just do a:
+<pre>
+        fgrep pound /var/log/messages
+</pre>
+    to get all the messages generated by <em>Pound</em>.
+</p>
+
+<h3>HTTPS CERTIFICATES</h3>
+<p>
+    If a client browser connects via HTTPS and if it presents a
+    certificate and if HTTPSHeaders is set, <em>Pound</em> will obtain the
+    certificate data and add the following HTTP headers to the
+    request it makes to the server:
+</p>
+<ul>
+    <li> X-SSL-Subject: information about the certificate owner</li>
+
+    <li> X-SSL-Issuer: information about the certificate issuer (CA)</li>
+
+    <li> X-SSL-notBefore: begin validity date for the certificate</li>
+
+    <li> X-SSL-notAfter: end validity date for the certificate</li>
+
+    <li> X-SSL-serial: certificate serial number (in decimal)</li>
+
+    <li> X-SSL-cipher: the cipher currently in use</li>
+
+    <li> X-SSL-certificate: the full client certificate (multi-line)</li>
+</ul>
+<p>
+    It is the application's responsibility to actually use these
+    headers - <em>Pound</em> just passes this information without checking
+    it in any way (except for signature and encryption correctness).
+</p>
+<p>
+    Please note that this mechanism allows forgeries: a client may
+    (maliciously) send these headers to <em>Pound</em> in order to masquerade
+    as an SSL client with a specific certificate. If this is a problem
+    for your application make sure to deny these requests. Add:
+<pre>
+        HeadDeny X-SSL-Subject ".*"
+        HeadDeny X-SSL-Issuer ".*"
+        HeadDeny X-SSL-notBefore ".*"
+        HeadDeny X-SSL-notAfter ".*"
+        HeadDeny X-SSL-serial ".*"
+        HeadDeny X-SSL-cipher ".*"
+</pre>
+    within the UrlGroup(s).
+</p>
+
+<h3>THREADS AND LIMITS</h3>
+<p>
+    A few people ran into problems when installing <em>Pound</em> because of the
+    various threading models and how they interact with system-imposed
+    limits. Please keep in mind the following requirements:
+</p>
+<ul>
+    <li> on most System V derived Unices (of which Linux is one), a thread
+      is a process. This means that when doing a ps you will see as many
+      processes with the name 'pound' as there are active threads. Each
+      such process uses only two file descriptors, but the system needs
+      to support the required number of processes, both in total and per
+      user (possibly also per process group). In bash, this is 'ulimit -u',
+      in csh this is 'limit maxproc'.</li>
+
+    <li> on BSD style systems all threads run in the same process space. Do
+      a ps and you see a single 'pound' process. The process needs two
+      file descriptors per active request (bash: 'ulimit -n', csh
+      'limit maxfiles'/'limit openfiles').</li>
+
+    <li> on most systems the thread library comes with a built-in limit on the
+      maximal number of concurrent threads allowed - on older systems it usually
+      is 1024, on newer systems quite a bit higher. In very
+      rare cases (very high load and long response times) you may run into
+      this limitation - the symptom is log messages saying "can't create
+      thread". Your only solution is to recompile the system threads library
+      with a higher limit.</li>
+</ul>
+<p>
+    Please note that your kernel needs to be configured to support the
+    required resources - the above are just the shell commands.
+</p>
+
+<h3>SIMILAR SYSTEMS</h3>
+<p>
+    Quite a few people asked "What is wrong with Apache/Squid/
+    stunnel/your_favorite? Do we really need another proxy
+    system?". The simple answer is that there is nothing wrong -
+    they are all excellent systems that do their jobs very well.
+    The reasoning behind <em>Pound</em> is however slightly different:
+</p>
+<ul>
+    <li> In my experience, a load-balancer may easily become a
+      bottle-neck in itself. If you have a heavily loaded site,
+      there are few things more depressing than seeing your
+      "load-balancer" slow down the entire network. This means that
+      the load-balancer should be kept as light-weight as possible.</li>
+
+    <li> Security: auditing a large system for security issues is a
+      major undertaking for anybody (ask Bill Gates about it). This
+      implies that in order to avoid introducing new vulnerabilities
+      into a system (after all, your installation is only as secure
+      as its weakest component) the proxy/load-balancer should be
+      kept as small as possible.</li>
+
+    <li> Protection: I assume <em>Pound</em> will be the only component exposed
+      to the Internet - your back-end servers will run in a protected
+      network behind it. This means that <em>Pound</em> should filter requests
+      and make sure only valid, correctly formed ones are passed to the
+      back-end servers, thus protecting them from malicious clients.</li>
+</ul>
+<p>
+    Taking these criteria into consideration, it is easy to see why
+    the other systems mentioned above do not fit:
+</p>
+<ul>
+    <li> Apache (with mod_proxy and mod_backhand): great system, but very
+      large. Imposes a significant load on the system, complex set-up
+      procedure (and it is so easy to get it wrong: check how many Apache
+      servers allow proxying from and to external hosts). While Apache
+      has proven remarkably exploit free, I wouldn't wish to go into a
+      security audit for the tens of thousands of lines of code involved,
+      not to mention all the additional modules.</li>
+
+    <li> Squid: great caching proxy, but even should load-balancing
+      features become available in the future, do you really need
+      caching on the load-balancer? After all, <em>Pound</em> can easily run on a
+      disk-less system, whereas with Squid you'd better prepare a high
+      throughput RAID. Squid is still perfectly usable as a caching
+      proxy between <em>Pound</em> and the actual Web server, should it lack
+      its own cache (which Zope happily has).</li>
+
+    <li> stunnel: probably comes closest to my understanding of software
+      design (does one job only and does it very well). However, it
+      lacks the load balancing and HTTP filtering features that I
+      considered necessary. Using stunnel in front of <em>Pound</em> (for HTTPS)
+      would have made sense, except that integrating HTTPS into <em>Pound</em>
+      proved to be so simple that it was not worth the trouble.</li>
+
+    <li> your favourite system: let me know how it looks in light of the
+      above criteria - I am always interested in new ideas.</li>
+</ul>
+
+<h3>DEDICATED SERVERS</h3>
+<p>
+    Some people asked about the possibility of dedicating specific
+    back-end servers to some clients - in other words, if a request
+    originates from a certain IP address or group of addresses then
+    it should be sent to a specific group of back-end servers.
+</p>
+<p>
+    Given the ease with which IP addresses can be forged I am personally
+    doubtful of the utility of such a feature. Even should you think it
+    desirable, it is probably best implemented via the packet filter,
+    rather than a proxy server. Assuming that requests from x.com are
+    to go to s1.local, requests from y.com to s2.local and everything
+    else to s3.local and s4.local, here is how to do it:
+</p>
+<ul>
+    <li> make sure your firewall blocks requests to port 8080, 8081 and 8082</li>
+
+    <li> configure Pound as follows:
+<pre>
+        ListenHTTP
+            Address 127.0.0.1
+            Port    8080
+
+            Service
+                BackEnd
+                    Address s1.local
+                    Port    80
+                End
+            End
+        End
+
+        ListenHTTP
+            Address 127.0.0.1
+            Port    8081
+
+            Service
+                BackEnd
+                    Address s2.local
+                    Port    80
+                End
+            End
+        End
+
+        ListenHTTP
+            Address 127.0.0.1
+            Port    8082
+
+            Service
+                BackEnd
+                    Address s3.local
+                    Port    80
+                End
+                BackEnd
+                    Address s4.local
+                    Port    80
+                End
+            End
+        End
+</pre></li>
+    <li> have your packet filter redirect requests to the right local ports
+      based on the origin address. In OpenBSD pf syntax this would be
+      something like:
+<pre>
+        rdr on rl0 from x.com to myhost.com port 80 -> localhost port 8080
+        rdr on rl0 from y.com to myhost.com port 80 -> localhost port 8081
+        rdr on rl0 from any to myhost.com port 80 -> localhost port 8082
+</pre>
+      or in Linux iptables:
+<pre>
+        iptables -t nat -A PREROUTING -p tcp -s x.com --dport 80 -i eth0 \
+            -j DNAT --to 127.0.0.1:8080
+        iptables -t nat -A PREROUTING -p tcp -s y.com --dport 80 -i eth0 \
+            -j DNAT --to 127.0.0.1:8081
+        iptables -t nat -A PREROUTING -p tcp --dport 80 -i eth0 -j DNAT \
+            --to 127.0.0.1:8082
+</pre></li>
+</ul>
+<p>
+    This would give you the desired effect and probably better
+    performance than a purely proxy-based solution (though the
+    performance improvement is debatable, at least on Linux).
+</p>
+
+<h3>WebDAV</h3>
+<p>
+    As of version 1.0 <em>Pound</em> supports the full WebDAV command-set. In
+    fact, it has been tested and is known to (almost) work with the
+    Microsoft Outlook Web Gateway, which is quite remarkable given that
+    Microsoft's own proxy does not.
+</p>
+<p>
+    Regrettably, Microsoft adherence to standards leaves something to be
+    desired: they decided to add some characters to their URLs - thus
+    breaking a whole set of RFC's.
+</p>
+<p>
+    Rather then change Pound to accept these characters (which could create
+    some serious issues with security on other systems) we have made this
+    behaviour dependent on a configuration switch: xHTTP (see the man page
+    for details).
+</p>
+<p>
+    If you also use the SSL wrapper feature in front of a Microsoft server
+    you should probably also add
+<pre>
+         HTTPSHeaders 1 "Front-End-Https: on"'
+</pre>
+</p>
+<p>
+    These changes are also required to access a Subversion server via
+    <em>Pound</em>.
+</p>
+
+<h3>OTHER ISSUES</h3>
+<p>
+    The following problems were reported by various people who use pound:
+</p>
+<ul>
+    <li><p>delays in loading pages when the client browser is IE 5.5 (possibly
+      limited to W2K/XP). It seems that IE opens exactly 4 connections (sockets)
+      to the server and keeps them open until some time-out or until the server
+      closes the connection. This works fine, unless you redirect IE to another
+      server - given that all 4 sockets are used IE waits for a while before
+      the redirect is actually performed.
+</p><p>
+      Solution: use the directive "Client 1" to ensure that <em>Pound</em> closes
+      sockets very early, thus freeing the necessary resources. Experiment with
+      the time-out - as it may cause problems with slow connections.</p></li>
+
+    <li><p><em>Pound</em> fails to start; HTTPS is enabled and the message "can't read
+      private key from file xxx" appears in the log.
+</p><p>
+      Solution: make sure that the certificate file includes:</p>
+<ul>
+      <li> (optional) a chain of certificates from a known certificate authority to
+        your server certificate</li>
+
+      <li> the server certificate</li>
+
+      <li> the private key; the key may <strong>not</strong> be password-protected</li>
+</ul>
+<p>
+      The file should be in PEM format. The OpenSSL command to generate a
+      self-signed certificate in the correct format would be something like:
+<pre>
+        openssl req -x509 -newkey rsa:1024 -keyout test.pem -out test.pem -days 365 -nodes
+</pre>
+      Note the '-nodes' flag - it's important!</p></li>
+
+    <li><p><em>Pound</em> fails to operate correctly with SSL when RootJail is specified.
+</p><p>
+      Solution: OpenSSL requires access to /dev/urandom, so make sure such a device
+      is accessible from the root jail directory. Thus if your root jail is
+      something like /var/pound:
+<pre>
+        mkdir /var/pound/dev
+        mknod /var/pound/dev/urandom c 1 9
+</pre>
+      or whatever major/minor number are appropriate for your system.</p></li>
+
+    <li><p>In chroot mode logging may stop functioning.
+</p><p>
+      Solution: make sure /dev and the root jail are on the same filesystem
+      and create a hard link in the root jail to /dev/log:
+<pre>
+        mkdir /chroot/jail/dev
+        ln /dev/log /chroot/jail/dev/log
+</pre>
+      Alternately you can have syslog (or syslog-ng) listen on another socket -
+      see the man page for details.</p></li>
+
+    <li><p>In chroot mode name resolution (and especially redirects) may stop
+      functioning.
+</p><p>
+      Solution: make sure your resolver works correctly in the
+      jail. You probably need copies of /etc/resolv.conf and (at least part)
+      of /etc/hosts. Depending on your system additional files may be required
+      check your resolver man page for details. Should name resolution fail the
+      translation of host names to IP addresses would fail, thereby defeating
+      the mechanism Pound uses to identify when should a Redirect be rewritten.</p></li>
+
+    <li><p>IE 5.x fails to work (correctly or at all) with <em>Pound</em> in HTTPS mode.
+</p><p>
+      Solution: define the supported OpenSSL ciphers for IE compatibility (this
+      is really a work-around for a known IE bug):
+<pre>
+        ListenHTTPS 1.2.3.4,443 /etc/pound.pem ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
+</pre>
+      (Thanks to Andi Roedl for the tip).</p></li>
+
+    <li><p>Linux-specific: some people use various redundant <em>Pound</em> solutions for
+      Linux which require <em>Pound</em> instances on separate machines to bind to the
+      same address. The default configuration of Linux does not allow a
+      program to bind() to non-local addresses, which may cause a problem.
+</p><p>
+      Solution: add
+<pre>
+        echo 1 > /proc/sys/net/ipv4/ip_nonlocal_bind
+</pre>
+      in your start-up script, or just set
+<pre>
+        net.ipv4.ip_nonlocal_bind = 1
+</pre>
+      in /etc/sysctl.conf (if you have one).
+</p><p>
+      (Thanks to Rune Saetre for the suggestion).</p></li>
+</ul>
+
+<h3>ACKNOWLEDGMENTS</h3>
+<p>
+    <a href="mailto:pound@alacra.com">Albert</a> for investigating and writing the
+     <em>TCP_NODELAY</em> code.
+</p>
+<p>
+    <a href="mailto:luuk@planet.nl">Luuk de Boer</a> did some serious testing and
+    debugging of the WebDAV code for Microsoft servers.
+</p>
+<p>
+    <a href="mailto:a.cervellin@virgilio.it">Alessio Cervellin</a> packages and makes
+    available <a href="http://www.blastwave.org/packages.php/pound">Solaris packages</a>
+    for various <em>Pound</em> versions.
+</p>
+<p>
+    <a href="mailto:dc@intuit.com">David Couture</a> found some nasty, lurking bugs,
+    as well as contributing some serious testing on big hardware.
+</p>
+<p>
+    <a href="mailto:j@pureftpd.org">Frank Denis</a> contributed a few excellent code
+    patches and some good ideas.
+</p>
+<p>
+    <a href="mailto:dmitry@targeted.org">Dmitriy Dvoinikov</a> makes available a FreeBSD
+    live-cd distribution which includes a <em>Pound</em> binary.
+</p>
+<p>
+    <a href="mailto:abner@integraweb.com.br">Abner G. Jacobsen</a> did a lot of testing
+    in a production environment and contributed some very nice ideas.
+</p>
+<p>
+    <a href="mailto:a-higuti@gray.plala.or.jp">Akira Higuchi</a> found a significant
+    security issue in <em>Pound</em> and contributed the code to fix it.
+</p>
+<p>
+    <a href="mailto:ken@torus.ca">Ken Lalonde</a> contributed very useful remarks and
+    suggestions, as well as correcting a few code errors.
+</p>
+<p>
+    <a href="mailto:Phil.Lodwick@EFI.com">Phil Lodwick</a> contributed essential parts
+    of the high-availability code and came up with some good ideas. In
+    addition, did some serious testing under heavy loads.
+</p>
+<p>
+    <a href="mailto:simon.matter@ch.sauter-bc.com">Simon Matter</a> packages and makes
+    available <a href="http://www.invoca.ch/pub/packages/pound/">RPMs</a> for various
+    <em>Pound</em> versions.
+</p>
+<p>
+    <a href="mailto:jpmens@yahoo.de">Jan-Piet Mens</a> raised some interesting security
+    points about the HTTPS implementation and brought the original idea
+    for SSL header filtering.
+</p>
+<p>
+    <a href="mailto:andreas.roedl@native-instruments.de">Andreas Roedl</a> for testing
+    and some ideas about logging in root jails.
+</p>
+<p>
+    <a href="mailto:stanaka@hatena.ne.jp">Shinji Tanaka</a> contributed a patch for
+    controlling logging to disk files. This is available
+    <a href="http://www.hatena-inc.co.jp/~stanaka/pound/">here</a>
+</p>
+<p>
+    <a href="mailto:jwashin@vt.edu">Jim Washington</a> contributed the code for WebDAV
+    and tested it.
+</p>
+<p>
+    <a href="mailto:maxime.yve@free.fr">Maxime Yve</a> discovered a nasty bug in the session
+    tracking code and contributed the patch to fix it.
+</p>
+<p>
+    All the others who tested <em>Pound</em> and told me about their results.
+</p>
+
+<h3>STABLE VERSIONS</h3>
+<ul>
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.5.tgz">Pound-2.5.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.5.asc">signature</a>)</li>
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.4.5.tgz">Pound-2.4.5.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.4.5.asc">signature</a>)</li>
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.4.4.tgz">Pound-2.4.4.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.4.4.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.4.3.tgz">Pound-2.4.3.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.4.3.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.4.2.tgz">Pound-2.4.2.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.4.2.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.4.1.tgz">Pound-2.4.1.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.4.1.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.4.tgz">Pound-2.4.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.4.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.3.2.tgz">Pound-2.3.2.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.3.2.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.3.1.tgz">Pound-2.3.1.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.3.1.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.3.tgz">Pound-2.3.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.3.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.2.tgz">Pound-2.2.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.2.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.1.tgz">Pound-2.1.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.1.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.0.tgz">Pound-2.0.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.0.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-1.10.tgz">Pound-1.10.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-1.10.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-1.9.tgz">Pound-1.9.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-1.9.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-1.8.tgz">Pound-1.8.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-1.8.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-1.7.tgz">Pound-1.7.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-1.7.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-1.6.tgz">Pound-1.6.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-1.6.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-1.5.tgz">Pound-1.5.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-1.5.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-1.4.tgz">Pound-1.4.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-1.4.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-1.3.tgz">Pound-1.3.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-1.3.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-1.2.tgz">Pound-1.2.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-1.2.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-1.1.tgz">Pound-1.1.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-1.1.asc">signature</a>)</li>
+
+    <li>   <a href="http://www.apsis.ch/pound/Pound-1.0.tgz">Pound-1.0.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-1.0.asc">signature</a>)</li>
+</ul>
+<h3>EXPERIMENTAL VERSIONS</h3>
+<ul>
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.6b.tgz">Pound-2.6b.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.6b.asc">signature</a>)</li>
+    <li>   <a href="http://www.apsis.ch/pound/Pound-2.6a.tgz">Pound-2.6a.tgz</a>
+        (<a href="http://www.apsis.ch/pound/Pound-2.6a.asc">signature</a>)</li>
+</ul>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+    </table>
+</body>
+</html>
