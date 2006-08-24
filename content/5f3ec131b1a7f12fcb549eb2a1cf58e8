@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+      <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="nonist, nonism, jmorrison, weblog, blog, fiction, news, views, piss and vinegar, science, technology, sights, sounds, art, history, discussion, opinion, truth, reason, culture, space, time, humanism, scepticism, archeography, photography">
+<meta name="description" content="the nonist, now searching recorded history for some semblance of truth.">
+<link rel='stylesheet' type='text/css' media='all' href='http://thenonist.com/index.php?css=thenonist/weblog_css' /> 
+<style type='text/css' media='screen'>@import "http://thenonist.com/index.php?css=thenonist/weblog_css";
+</style>
+
+
+
+<script type="text/javascript">
+function showHide(entryID, entryLink, htmlObj, type) {
+if (type == "comments") {
+extTextDivID = ('comText' + (entryID));
+extLinkDivID = ('comLink' + (entryID));
+} else {
+extTextDivID = ('extText' + (entryID));
+extLinkDivID = ('extLink' + (entryID));
+}
+if( document.getElementById ) {
+if( document.getElementById(extTextDivID).style.display ) {
+if( entryLink != 0 ) {
+document.getElementById(extTextDivID).style.display = "block";
+document.getElementById(extLinkDivID).style.display = "none";
+htmlObj.blur();
+} else { 
+document.getElementById(extTextDivID).style.display = "none";
+document.getElementById(extLinkDivID).style.display = "block";
+}
+} else {
+location.href = entryLink;
+return true;
+}
+} else {
+location.href = entryLink;
+return true;
+}
+}
+
+function showMoreAnything(blocknum, isOpen) {
+hid = ('hide' + (blocknum));
+unhid = ('click' + (blocknum));
+if(document.getElementById) {
+if(document.getElementById(hid).style.display) {
+if(isOpen !=0) {
+document.getElementById(hid).style.display = "block";
+document.getElementById(unhid).style.display = "none";
+} else {
+document.getElementById(hid).style.display = "none";
+document.getElementById(unhid).style.display = "block";
+}
+} else {
+location.href=isOpen;
+return true;
+}
+} else {
+location.href=isOpen;
+return true;
+}
+}
+</script>
+
+<script type="text/javascript">
+
+//////////////////////////////////////////////////////////////////
+// qTip - CSS Tool Tips - by Craig Erskine
+// http://qrayg.com | http://solardreamstudios.com
+//
+// Inspired by code from Travis Beckham
+// http://www.squidfingers.com | http://www.podlob.com
+//////////////////////////////////////////////////////////////////
+
+
+
+var qTipTag = "a"; //Which tag do you want to qTip-ize? Keep it lowercase!//
+var qTipX = -200; //This is qTip's X offset//
+var qTipY = 10; //This is qTip's Y offset//
+
+
+
+//There's No need to edit anything below this line//
+tooltip = {
+  name : "qTip",
+  offsetX : qTipX,
+  offsetY : qTipY,
+  tip : null
+}
+
+tooltip.init = function () {
+	var tipNameSpaceURI = "http://www.w3.org/1999/xhtml";
+	if(!tipContainerID){ var tipContainerID = "qTip";}
+	var tipContainer = document.getElementById(tipContainerID);
+
+	if(!tipContainer) {
+	  tipContainer = document.createElementNS ? document.createElementNS(tipNameSpaceURI, "div") : document.createElement("div");
+		tipContainer.setAttribute("id", tipContainerID);
+	  document.getElementsByTagName("body").item(0).appendChild(tipContainer);
+	}
+
+	if (!document.getElementById) return;
+	this.tip = document.getElementById (this.name);
+	if (this.tip) document.onmousemove = function (evt) {tooltip.move (evt)};
+
+	var a, sTitle;
+	var anchors = document.getElementsByTagName (qTipTag);
+
+	for (var i = 0; i < anchors.length; i ++) {
+		a = anchors[i];
+		sTitle = a.getAttribute("title");
+		if(sTitle) {
+			a.setAttribute("tiptitle", sTitle);
+			a.removeAttribute("title");
+			a.onmouseover = function() {tooltip.show(this.getAttribute('tiptitle'))};
+			a.onmouseout = function() {tooltip.hide()};}
+	}
+}
+
+tooltip.move = function (evt) {
+	var x=0, y=0;
+	if (document.all) {//IE
+		x = (document.documentElement && document.documentElement.scrollLeft) ? document.documentElement.scrollLeft : document.body.scrollLeft;
+		y = (document.documentElement && document.documentElement.scrollTop) ? document.documentElement.scrollTop : document.body.scrollTop;
+		x += window.event.clientX;
+		y += window.event.clientY;
+		
+	} else {//Good Browsers
+		x = evt.pageX;
+		y = evt.pageY;
+	}
+	this.tip.style.left = (x + this.offsetX) + "px";
+	this.tip.style.top = (y + this.offsetY) + "px";
+}
+
+tooltip.show = function (text) {
+	if (!this.tip) return;
+	this.tip.innerHTML = text;
+	this.tip.style.display = "block";
+}
+
+tooltip.hide = function () {
+	if (!this.tip) return;
+	this.tip.innerHTML = "";
+	this.tip.style.display = "none";
+}
+
+window.onload = function () {
+	tooltip.init ();
+}
+
+</script>
+<script type="text/javascript">
+	var days = 0;
+	var months = new Array(31,28,31,30,31,30, 31,31,30,31,30,31);
+	var today = new Date();
+	var years =  today.getYear();
+	
+	// fix browser compatibility	
+	if(years < 2000){
+		// must be netscape, mozilla, or safari
+		years+=1900;
+	}
+	// tally up days
+	days += 365 * years;
+	for(var i=0;i<today.getMonth(); i++){
+		days += months[i];
+	}
+	// add days elapsed in current month
+	days += today.getDate();	
+</script>
+
+
+<script language="JavaScript">
+function show_hide(id, show) {
+        if (el = document.getElementById(id)) {
+                if (null==show) show = el.style.display=='none';
+                el.style.display = (show ? '' : 'none');
+        }
+}
+</script>
+
+
+</head>
+
+<body>
+
+<div id="palette">
+
+
+</div>
+</div>
+
+<div id="footblock">
+<div class="foottext">
+<script type="text/javascript">
+document.write("now searching &ge; " + days + " days of human history for some semblance of truth. | ©2003 the nonist.");</script>
+</div>
+</div>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-504833-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+</body>
+</html>
