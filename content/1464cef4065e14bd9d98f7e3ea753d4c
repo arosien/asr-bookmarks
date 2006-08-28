@@ -1,0 +1,876 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="http://developer.typepad.com/style/screen.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="http://developer.typepad.com/style/screen_custom.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="http://developer.typepad.com/style/print.css" type="text/css" media="print" />
+    <!--[if IE]>
+    <link rel="stylesheet" href="http://developer.typepad.com/style/ie.css" type="text/css" media="screen, projection" />
+    <![endif]-->
+    <title>TypePad Atom API | TypePad Developer Resources</title>
+    <link rel="icon" type="image/png" href="http://6a.typepad.com/favicon.ico">
+    <meta http-equiv="imagetoolbar" content="false" />
+    <meta name="generator" content="Movable Type Pro 4.23-en" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    
+    
+  
+    <script src="http://www.google.com/jsapi" type="text/javascript"></script>
+    <script type="text/javascript">
+  google.load('search', '1', {language : 'en'});
+  google.setOnLoadCallback(function() {
+    var resultsDiv = document.getElementById('search-results');
+
+    var customSearchControl = new google.search.SearchControl();
+    customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);
+
+    var options = new google.search.DrawOptions();
+    options.setAutoComplete(true);
+    options.setDrawMode(google.search.SearchControl.DRAW_MODE_LINEAR);
+
+    var search_options = new google.search.SearcherOptions();
+    search_options.setExpandMode(GSearchControl.EXPAND_MODE_OPEN);
+    search_options.setRoot(resultsDiv);
+
+    var searcher = new google.search.WebSearch();
+    searcher.setSiteRestriction("006680838551165791063:mnjqyrb1zs8");
+    searcher.setUserDefinedLabel("Search Results");
+    searcher.setLinkTarget(google.search.Search.LINK_TARGET_TOP);
+    customSearchControl.setLinkTarget(google.search.Search.LINK_TARGET_TOP);
+    customSearchControl.addSearcher(searcher, search_options);
+    customSearchControl.draw('cse', options);
+  }, true);
+    </script>
+    <link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+</head>
+<body id="page-5225" class="typepad_atom_api  no-js">
+<div class="page">
+<div class="hd">
+    <div class="container">
+        <div class="brand">
+            <strong><a href="http://developer.typepad.com/">TypePad</a></strong>
+            <a href="http://developer.typepad.com/">Developer Resources</a>
+        </div>
+        <div class="user-nav">
+            <ul>
+                <li class="login"><a href="http://www.typepad.com/account/access/api_key">Get an API Key</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="navigation">
+    <div class="container">
+        <ul>
+            <li class="home"><a href="http://developer.typepad.com/"><span>Home</span></a></li>
+            <!--<li class="start"><a href="http://developer.typepad.com/start/"><span>Get Started</span></a></li> -->
+            <li class="documentation"><a href="http://developer.typepad.com/documentation/"><span>Documentation &amp; Examples</span></a></li>
+<li class="api"><a href="http://developer.typepad.com/api/"><span>API & Library References</span></a></li>            
+<li class="devblog"><a href="http://devblog.typepad.com/"><span>Dev Blog</span></a></li>
+            <li class="help"><a href="http://developer.typepad.com/help/"><span>Community &amp; Help</span></a></li>
+           
+        </ul>
+    </div>
+</div>
+<div class="bd">
+
+
+
+
+<div class="container">
+    <div class="span-24 last">
+        <div class="box clearfix">
+            <div class="span-16 border main-content">
+                
+    <h1>TypePad Atom API</h1>
+    <p>This document describes TypePad&#8217;s implementation of the Atom API.</p>
+
+<blockquote>
+  <p><strong>Warning:</strong> This documentation and TypePad&#8217;s Atom implementation are &#8220;alpha&#8221; products and are subject to change without notice. Six Apart does not provide help-desk support for the Atom APIs - they are provided here &#8220;as-is&#8221; without any guarantee of functionality or performance. </p>
+</blockquote>
+
+<h2>Version</h2>
+
+<p>This is version 0.03 of this document.</p>
+
+<h2>Request and Response Format</h2>
+
+<p>TypePad&#8217;s Atom implementation supports both the REST and SOAP formats of the API.</p>
+
+<p>All methods require authentication. Authentication uses WSSE.</p>
+
+<p>More documentation on these formats, along with the WSSE spec, is linked from <a href="http://www.intertwingly.net/wiki/pie/DifferentlyAbledClients">http://www.intertwingly.net/wiki/pie/DifferentlyAbledClients</a>. The latest specification of the API itself is at <a href="http://bitworking.org/projects/atom/draft-gregorio-09.html">http://bitworking.org/projects/atom/draft-gregorio-09.html</a>.</p>
+
+<h2>Root Atom Endpoints</h2>
+
+<p>The root endpoints for weblogs, photo albums, and TypeLists are as follows:</p>
+
+<ul>
+<li>Weblogs: <code>http://www.typepad.com/t/atom/weblog</code></li>
+<li>Photo Albums: <code>http://www.typepad.com/t/atom/gallery</code></li>
+<li>TypeLists: <code>http://www.typepad.com/t/atom/lists</code></li>
+</ul>
+
+<p>All of these endpoints individually implement the Atom API described in the latest specification, with some additional introspection to obtain the user&#8217;s list of weblogs, photo albums, etc.</p>
+
+<h2>Authentication Credentials</h2>
+
+<p>Atom authentication uses WSSE, and is represented as an <code>X-WSSE</code> HTTP header.</p>
+
+<pre><code>X-WSSE: UsernameToken Username="Melody",
+PasswordDigest="VfJavTaTy3BhKkeY/WVu9L6cdVA=",
+Created="2004-01-20T01:09:39Z",
+Nonce="7c19aeed85b93d35ba42e357f10ca19bf314d622"
+</code></pre>
+
+<h3>Username</h3>
+
+<p>The username that the user enters (the TypePad username).</p>
+
+<h3>PasswordDigest</h3>
+
+<p>A SHA-1 digest of the Nonce, Created timestamp, and the password that the user supplies, base64-encoded. In other words, this should be calculated as:</p>
+
+<pre><code>base64(sha1(Nonce . Created . Password))
+</code></pre>
+
+<h3>Created</h3>
+
+<p>The ISO-8601 timestamp marking when Nonce was created.</p>
+
+<h3>Nonce</h3>
+
+<p>A secure token generated anew for each HTTP request.</p>
+
+<h2>URI Types</h2>
+
+<p>There are 5 types of URIs that are defined in our Atom implementation.</p>
+
+<p>Each service-related <code>&lt;link&gt;</code> element in a feed maps to one of the below URIs as associated with one of the user&#8217;s weblogs. In other words, there will be at least 4 <code>&lt;link&gt;</code> elements for each weblog, each describing a different action.</p>
+
+<h3>PostURI</h3>
+
+<p>The URI used to post an entry to the weblog.</p>
+
+<p>Corresponds to <code>@rel</code> equal to <code>service.post</code>.</p>
+
+<h3>FeedURI</h3>
+
+<p>The URI used to obtain a list of all of the posts in the weblog.</p>
+
+<p>Corresponds to <code>@rel</code> equal to <code>service.feed</code>.</p>
+
+<h3>EditURI</h3>
+
+<p>The URI used to update or obtain a post in the weblog.</p>
+
+<p>Corresponds to <code>@rel</code> equal to <code>service.edit</code>.</p>
+
+<h3>UploadURI</h3>
+
+<p>The URI used to upload a file (of any MIME type) to a weblog. Note that this is not the same as posting an entry to a weblog; the act of uploading a file merely writes the file to the user&#8217;s website, but does not create an entry on the weblog.</p>
+
+<p>Corresponds to <code>@rel</code> equal to <code>service.upload</code>.</p>
+
+<h3>CategoryURI</h3>
+
+<p>The URI used to obtain a list of the categories in the weblog.</p>
+
+<p>Corresponds to <code>@rel</code> equal to <code>service.categories</code>.</p>
+
+<h2>Typical Usage</h2>
+
+<h3>1. Listing the User&#8217;s Weblogs</h3>
+
+<p>To get a list of a user&#8217;s weblogs, make a GET request to the root endpoint with authentication information for the user. The response will consist of a list of <code>&lt;link&gt;</code> tags wrapped in a <code>&lt;feed&gt;</code> element. For each weblog, there will be a number of <code>&lt;link&gt;</code> tags relating to the types of URIs above.</p>
+
+<h4>Request</h4>
+
+<pre><code>GET /t/atom/weblog HTTP/1.1
+Host: www.typepad.com
+X-WSSE: my credentials
+</code></pre>
+
+<h4>Response</h4>
+
+<pre><code>HTTP/1.1 200
+Content-Type: application/x.atom+xml
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;feed xmlns="http://purl.org/atom/ns#"&gt;
+  &lt;link rel="service.post" href="http://www.typepad.com/t/atom/weblog/blog_id=1" type="application/x.atom+xml" title="Blog 1" /&gt;
+  &lt;link rel="service.feed" href="http://www.typepad.com/t/atom/weblog/blog_id=1" type="application/x.atom+xml" title="Blog 1" /&gt;
+  &lt;link rel="service.post" href="http://www.typepad.com/t/atom/weblog/blog_id=2" type="application/x.atom+xml" title="Blog 2" /&gt;
+  &lt;link rel="service.feed" href="http://www.typepad.com/t/atom/weblog/blog_id=2" type="application/x.atom+xml" title="Blog 2" /&gt;
+&lt;/feed&gt;
+</code></pre>
+
+<h3>2. Listing the Posts in a Weblog</h3>
+
+<p>To obtain a list of the posts in a selected weblog, send a GET request to the <code>FeedURI</code> for the weblog. The response will be formatted as an Atom feed, containing a list of 20 posts. Within the <code>&lt;feed&gt;</code> there will be <code>&lt;link&gt;</code> tags with <code>@rel</code> equal to <code>prev</code> and <code>next</code> if there are more posts available; the URI values for those tags will be the <code>FeedURI</code>s used to obtain those posts.</p>
+
+<h4>Request</h4>
+
+<pre><code>GET /t/atom/weblog/blog_id=1 HTTP/1.1
+Host: www.typepad.com
+X-WSSE: my credentials
+</code></pre>
+
+<h4>Response</h4>
+
+<pre><code>HTTP/1.1 200
+Content-Type: application/x.atom+xml
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;feed xmlns="http://purl.org/atom/ns#"&gt;
+  &lt;link rel="alternate" type="text/html" href="http://example.typepad.com/weblog/" /&gt;
+  &lt;title&gt;Blog 1&lt;/title&gt;
+  &lt;link rel="service.post" href="http://www.typepad.com/t/atom/weblog/blog_id=1" title="Blog 1" type="application/x.atom+xml" /&gt;
+  &lt;entry&gt;
+    &lt;title&gt;My First Post&lt;/title&gt;
+    &lt;content mode="xml"&gt;Contents of my post&lt;/content&gt;
+    &lt;issued&gt;2003-10-23T18:35:51Z&lt;/issued&gt;
+    &lt;link rel="alternate" type="text/html" href="http://example.typepad.com/weblog/2003/10/my_first_post.html" /&gt;
+    &lt;id&gt;tag:typepad.com,2003:post-3&lt;/id&gt;
+    &lt;link rel="service.edit" href="http://www.typepad.com/t/atom/weblog/blog_id=1/entry_id=3" title="My First Post" type="application/x.atom+xml" /&gt;
+  &lt;/entry&gt;
+&lt;/feed&gt;
+</code></pre>
+
+<h3>3. Retrieving a list of categories</h3>
+
+<p>To retrieve the list of available categories in a weblog, send a GET request to the <code>CategoryURI</code>.</p>
+
+<p>The response will consist of an <code>http://sixapart.com/atom/category#categories</code> element containing multiple <code>http://purl.org/dc/elements/1.1/subject</code> elements. Each element represents the name of a category in the weblog.</p>
+
+<h4>Request</h4>
+
+<pre><code>GET /t/atom/weblog/blog_id=1/svc=categories HTTP/1.1
+Host: www.typepad.com
+X-WSSE: my credentials
+</code></pre>
+
+<h4>Sample Response</h4>
+
+<pre><code>HTTP/1.1 200
+Content-Type: application/x.atom+xml
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;categories xmlns="http://sixapart.com/atom/category#" xmlns:dc="http://purl.org/dc/elements/1.1/"&gt;
+  &lt;dc:subject&gt;Books&lt;/dc:subject&gt;
+  &lt;dc:subject&gt;Travel&lt;/dc:subject&gt;
+  &lt;dc:subject&gt;Movies&lt;/dc:subject&gt;
+&lt;/categories&gt;
+</code></pre>
+
+<h3>4. Posting an entry</h3>
+
+<p>To post an entry to a weblog, send a POST request to the <code>PostURI</code>.</p>
+
+<p>You can specify a category for a weblog post in the optional ement <code>http://purl.org/dc/elements/1.1/subject</code>, which should be the category of the weblog entry. This should be a string taken from the list of available categories obtained by retrieving the list of categories in the weblog.</p>
+
+<p>If the entry is successfully posted, the response will consist of a <code>201 Created</code> response code.</p>
+
+<h4>Request</h4>
+
+<pre><code>POST /t/atom/weblog/blog_id=1 HTTP/1.1
+Host: www.typepad.com
+X-WSSE: my credentials
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;entry xmlns="http://purl.org/atom/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"&gt;
+  &lt;title&gt;Trip to the Lake&lt;/title&gt;
+  &lt;dc:subject&gt;Vacation&lt;/dc:subject&gt;
+  &lt;content type="application/xhtml+xml" mode="xml"&gt;&lt;div xmlns="http://www.w3.org/1999/xhtml"&gt;&lt;img src="http://example.typepad.com/photos/vacation/lake-thumb.jpg" /&gt; Here is a picture of me at the lake.&lt;/div&gt;&lt;/content&gt;
+&lt;/entry&gt;
+</code></pre>
+
+<h4>Response</h4>
+
+<pre><code>HTTP/1.1 200
+Content-Type: application/x.atom+xml
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;entry xmlns="http://purl.org/atom/ns#"&gt;
+  &lt;title&gt;Trip to the Lake&lt;/title&gt;
+  &lt;content mode="xml"&gt;&lt;div xmlns="http://www.w3.org/1999/xhtml"&gt;&lt;img src="http://example.typepad.com/photos/vacation/lake-thumb.jpg" /&gt; Here is a picture of me at the lake.&lt;/div&gt;&lt;/content&gt;
+  &lt;issued&gt;2003-10-23T18:35:51Z&lt;/issued&gt;
+  &lt;link rel="alternate" href="http://example.typepad.com/weblog/2003/10/trip_to_the_lake.html" type="text/html" /&gt;
+  &lt;id&gt;tag:typepad-com:post:3&lt;/id&gt;
+  &lt;link rel="service.edit" href="http://www.typepad.com/t/atom/weblog/blog_id=1/entry_id=3" title="Trip to the Lake" type="application/x.atom+xml" /&gt;
+&lt;/entry&gt;
+</code></pre>
+
+<h3>5. Retrieving a Post</h3>
+
+<p>Each entry in the feed has an <code>EditURI</code>. A GET request to this URI will return the full entry in Atom format for editing; a PUT request to this URI will update the entry, and a successful response to updating a post will be marked with a <code>200 OK</code> header.</p>
+
+<h4>Request to Retrieve Entry</h4>
+
+<pre><code>GET /t/atom/weblog/blog_id=1/entry_id=3 HTTP/1.1
+Host: www.typepad.com
+X-WSSE: my credentials
+</code></pre>
+
+<h4>Response</h4>
+
+<pre><code>HTTP/1.1 200
+Content-Type: application/x.atom+xml
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;entry xmlns="http://purl.org/atom/ns#"&gt;
+  &lt;title&gt;My First Post&lt;/title&gt;
+  &lt;content mode="xml"&gt;Contents of my post&lt;/content&gt;
+  &lt;issued&gt;2003-10-23T18:35:51Z&lt;/issued&gt;
+  &lt;link rel="alternate" type="text/html" href="http://example.typepad.com/weblog/2003/10/my_first_post.html" /&gt;
+  &lt;id&gt;tag:typepad.com,2003:post-3&lt;/id&gt;
+  &lt;link rel="service.edit" href="http://www.typepad.com/t/atom/weblog/blog_id=1/entry_id=3" title="My First Post" type="application/x.atom+xml" /&gt;
+&lt;/entry&gt;
+</code></pre>
+
+<h3>6. Deleting a Post</h3>
+
+<p>A DELETE request to the <code>EditURI</code> for a post will delete the post. A successful response will be marked with a <code>200 OK</code> header.</p>
+
+<h4>Request to Retrieve Entry</h4>
+
+<pre><code>DELETE /t/atom/weblog/blog_id=1/entry_id=3 HTTP/1.1
+Host: www.typepad.com
+X-WSSE: my credentials
+</code></pre>
+
+<h4>Response</h4>
+
+<pre><code>HTTP/1.1 200
+Content-Type: application/x.atom+xml
+</code></pre>
+
+<h2>Atom Entry Elements</h2>
+
+<h3>Photo Albums</h3>
+
+<p>For TypePad&#8217;s Photo Album API, we use the standard Atom namespace for certain elements and a custom namespace, <code>http://sixapart.com/atom/photo#</code>, for additional metadata.</p>
+
+<p>The following entry elements are used in creating new photos and editing existing photos:</p>
+
+<h4>http://purl.org/atom/ns#title</h4>
+
+<p>The name of the photo. Required.</p>
+
+<h4>http://purl.org/atom/ns#summary</h4>
+
+<p>A caption for the photo. Optional.</p>
+
+<h4>http://sixapart.com/atom/photo#filename</h4>
+
+<p>The filename of the photo, including a file extension. Optional.
+If not provided, the filename will be set automatically based on the title and the content type. (See <code>content</code>, below.)</p>
+
+<h4>http://sixapart.com/atom/photo#location</h4>
+
+<p>The location where the photo was taken. Optional.</p>
+
+<h4>http://sixapart.com/atom/photo#taken</h4>
+
+<p>The date and time at which the photo was taken, in ISO-8601 format.</p>
+
+<h4>http://purl.org/atom/ns#issued</h4>
+
+<p>The date and time at which the photo was uploaded to TypePad, in ISO-8601 format.</p>
+
+<h4>http://purl.org/atom/ns#content</h4>
+
+<p>The binary photo data, base-64 encoded and marked as such in the standard <code>content</code> element. Required. If <code>filename</code> is not provided, the <code>content</code> element MUST have a <code>@type</code> attribute for the content type.</p>
+
+<h3>TypeLists</h3>
+
+<p>For the TypeList API, we use the standard Atom namespace for certain elements, and custom namespaces for additional metadata.</p>
+
+<p>In designing the namespaces for TypeLists, we have tried to leverage existing specifications such as RVW and bio, as well as using as much of the Atom format as possible. This has been balanced with a desire to encapsulate as much information as possible about the item itself (a book, for example) in its own namespace.</p>
+
+<p>Because different TypeLists have different requirements for the metadata they contain, each type uses a different set of elements:</p>
+
+<h3>Music</h3>
+
+<h4>http://sixapart.com/atom/song#title</h4>
+
+<p>The song title.</p>
+
+<h4>http://sixapart.com/atom/song#album</h4>
+
+<p>The album title.</p>
+
+<h4>http://sixapart.com/atom/song#artist</h4>
+
+<p>The artist name.</p>
+
+<h4>http://sixapart.com/atom/song#thumbnail</h4>
+
+<p>The URL of the image thumbnail of the album cover.</p>
+
+<h4>http://purl.org/NET/RVW/0.1/value</h4>
+
+<p>The numeric rating given to the track (must be in the range 1 &ndash; 5).</p>
+
+<h4>http://purl.org/atom/ns#content</h4>
+
+<p>Textual notes and/or review of the track.</p>
+
+<h4>http://purl.org/atom/ns#title</h4>
+
+<p>The title of the item, in &#34;Artist Name - Song Title&#34; format. Read-only; IGNORED in PostURI and EditURI.</p>
+
+<h4>http://purl.org/atom/ns#issued</h4>
+
+<p>The date and time at which the item was added to TypePad.</p>
+
+<h3>Books</h3>
+
+<h4>http://sixapart.com/atom/book#isbn</h4>
+
+<p>The ISBN of the book. If this is provided, title and author will be automatically looked up on Amazon.com.</p>
+
+<h4>http://sixapart.com/atom/book#title</h4>
+
+<p>The book title.</p>
+
+<h4>http://sixapart.com/atom/book#author</h4>
+
+<p>The book author.</p>
+
+<h4>http://sixapart.com/atom/book#thumbnail</h4>
+
+<p>The URL of the image thumbnail of the book cover.</p>
+
+<h4>http://purl.org/NET/RVW/0.1/value</h4>
+
+<p>The numeric rating given to the book (must be in the range 1 &ndash; 5).</p>
+
+<h4>http://purl.org/atom/ns#content</h4>
+
+<p>Textual notes and/or review of the book.</p>
+
+<h4>http://purl.org/atom/ns#title</h4>
+
+<p>The title of the item, in &#34;Author Name: Book Title&#34; format. Read-only; IGNORED in PostURI and EditURI.</p>
+
+<h4>http://purl.org/atom/ns#issued</h4>
+
+<p>The date and time at which the item was added to TypePad.</p>
+
+<h3>People</h3>
+
+<h4>http://sixapart.com/atom/person#homepage</h4>
+
+<p>The website URL of the person. If this is provided, TypePad will attempt to fill in the rest of the information automatically from an auto-discovered FOAF file.</p>
+
+<h4>http://sixapart.com/atom/person#name</h4>
+
+<p>The person&#8217;s name.</p>
+
+<h4>http://sixapart.com/atom/person#homepage_name</h4>
+
+<p>The person&#8217;s weblog or website name.</p>
+
+<h4>http://sixapart.com/atom/person#email</h4>
+
+<p>The email address of the person.</p>
+
+<h4>http://sixapart.com/atom/person#foaf_url</h4>
+
+<p>The URL of the person&#8217;s FOAF file.</p>
+
+<h4>http://purl.org/vocab/bio/0.1/olb</h4>
+
+<p>Short (one-line) biography of the person and/or notes.</p>
+
+<h4>http://purl.org/atom/ns#title</h4>
+
+<p>The person&#8217;s name. Read-only; IGNORED in PostURI and EditURI.</p>
+
+<h4>http://purl.org/atom/ns#issued</h4>
+
+<p>The date and time at which the item was added to TypePad.</p>
+
+<h3>Links</h3>
+
+<h4>http://sixapart.com/atom/link#url</h4>
+
+<p>The site URL. If this is provided, TypePad will attempt to fill in the site title automatically by looking at its <code>title</code> tag.</p>
+
+<h4>http://sixapart.com/atom/link#title</h4>
+
+<p>The site title.</p>
+
+<h4>http://purl.org/atom/ns#content</h4>
+
+<p>Notes and/or review of the site.</p>
+
+<h4>http://purl.org/atom/ns#title</h4>
+
+<p>The site title. Read-only; IGNORED in PostURI and EditURI.</p>
+
+<h4>http://purl.org/atom/ns#issued</h4>
+
+<p>The date and time at which the item was added to TypePad.</p>
+
+<h2>Examples</h2>
+
+<h3>Adding a Book Using an ISBN</h3>
+
+<p>Sending this request to the PostURI for a Reading TypeList will create a new item using the given ISBN, along with a rating and a review. The author, title, and thumbnail URL will be automatically pulled from Amazon.com.</p>
+
+<h4>Request</h4>
+
+<pre><code>POST /t/atom/lists/list_id=1 HTTP/1.1
+Host: www.typepad.com
+X-WSSE: my credentials
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;entry xmlns="http://purl.org/atom/ns#" xmlns:book="http://sixapart.com/atom/book#" xmlns:rvw="http://purl.org/NET/RVW/0.1/"&gt;
+  &lt;book:isbn&gt;0375412808&lt;/book:isbn&gt;
+  &lt;content&gt;This is a funny book.&lt;/content&gt;
+  &lt;rvw:value&gt;4&lt;/rvw:value&gt;
+&lt;/entry&gt;
+</code></pre>
+
+<h4>Response</h4>
+
+<pre><code>HTTP/1.1 201 Created
+Content-Type: application/x.atom+xml
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;entry xmlns="http://purl.org/atom/ns#" xmlns:book="http://sixapart.com/atom/book#" xmlns:rvw="http://purl.org/NET/RVW/0.1/"&gt;
+  &lt;title&gt;Jeffrey Steingarten: It Must've Been Something I Ate: The Return of the Man Who Ate Everything&lt;/title&gt;
+  &lt;issued&gt;2003-12-05T00:21:54Z&lt;/issued&gt;
+  &lt;id&gt;tag:typepad.com,2003:listitem-201&lt;/id&gt;
+  &lt;book:title&gt;It Must've Been Something I Ate: The Return of the Man Who Ate Everything&lt;/book:title&gt;
+  &lt;book:author&gt;Jeffrey Steingarten&lt;/book:author&gt;
+  &lt;content&gt;This is a funny book.&lt;/content&gt;
+  &lt;rvw:value&gt;4&lt;/rvw:value&gt;
+  &lt;book:isbn&gt;0375412808&lt;/book:isbn&gt;
+  &lt;book:thumbnail&gt;http://images.amazon.com/images/P/0375412808.01.THUMBZZZ.jpg&lt;/book:thumbnail&gt;
+&lt;/entry&gt;
+</code></pre>
+
+<h4>Example Using the XML::Atom Perl Module</h4>
+
+<pre><code>use XML::Atom::Entry;
+use XML::Atom::Client;
+use XML::Atom;
+
+my $PostURI = 'http://www.typepad.com/t/atom/lists/list_id=1';
+
+my $api = XML::Atom::Client-&gt;new;
+$api-&gt;username('Melody');
+$api-&gt;password('Nelson');
+
+my $book = XML::Atom::Namespace-&gt;new(book =&gt; 'http://sixapart.com/atom/book#');
+my $rvw = XML::Atom::Namespace-&gt;new(rvw =&gt; 'http://purl.org/NET/RVW/0.1/');
+
+my $entry = XML::Atom::Entry-&gt;new;
+$entry-&gt;set($book, 'isbn', '0375412808');
+$entry-&gt;content('This is a funny book.');
+$entry-&gt;set($rvw, 'value', 4);
+
+my $EditURI = $api-&gt;createEntry($PostURI, $entry)
+    or die $api-&gt;errstr;
+</code></pre>
+
+<h3>Adding a Song to a Music TypeList</h3>
+
+<p>Sending this request to the PostURI for a Music TypeList will create a new item using the given artist, album, and song title, along with a rating and a review. The thumbnail URL will be automatically pulled from Amazon.com.</p>
+
+<h4>Request</h4>
+
+<pre><code>POST /t/atom/lists/list_id=1 HTTP/1.1
+Host: www.typepad.com
+X-WSSE: my credentials
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;entry xmlns="http://purl.org/atom/ns#" xmlns:song="http://sixapart.com/atom/song#" xmlns:rvw="http://purl.org/NET/RVW/0.1/"&gt;
+  &lt;song:title&gt;Lucky Star&lt;/song:title&gt;
+  &lt;song:album&gt;Kish Kash&lt;/song:album&gt;
+  &lt;song:artist&gt;Basement Jaxx&lt;/song:artist&gt;
+  &lt;content&gt;Good song.&lt;/content&gt;
+  &lt;rvw:value&gt;4&lt;/rvw:value&gt;
+&lt;/entry&gt;
+</code></pre>
+
+<h4>Response</h4>
+
+<pre><code>HTTP/1.1 201 Created
+Content-Type: application/x.atom+xml
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;entry xmlns="http://purl.org/atom/ns#" xmlns:book="http://sixapart.com/atom/book#" xmlns:rvw="http://purl.org/NET/RVW/0.1/"&gt;
+  &lt;title&gt;Basement Jaxx - Lucky Star&lt;/title&gt;
+  &lt;issued&gt;2003-12-05T10:23:38Z&lt;/issued&gt;
+  &lt;id&gt;tag:typepad.com,2003:listitem-153281&lt;/id&gt;
+  &lt;song:title&gt;Lucky Star&lt;/song:title&gt;
+  &lt;song:album&gt;Kish Kash&lt;/song:album&gt;
+  &lt;song:artist&gt;Basement Jaxx&lt;/song:artist&gt;
+  &lt;content&gt;Good song.&lt;/content&gt;
+  &lt;rvw:value&gt;4&lt;/rvw:value&gt;
+  &lt;song:thumbnail&gt;http://images.amazon.com/images/P/B0000DD56E.01.THUMBZZZ.jpg&lt;/song:thumbnail&gt;
+&lt;/entry&gt;
+</code></pre>
+
+<h4>This Example Using the XML::Atom Perl Module</h4>
+
+<pre><code>use XML::Atom::Entry;
+use XML::Atom::Client;
+use XML::Atom;
+
+my $PostURI = 'http://www.typepad.com/t/atom/lists/list_id=1';
+
+my $api = XML::Atom::Client-&gt;new;
+$api-&gt;username('Melody');
+$api-&gt;password('Nelson');
+
+my $song = XML::Atom::Namespace-&gt;new(song =&gt; 'http://sixapart.com/atom/song#');
+my $rvw = XML::Atom::Namespace-&gt;new(rvw =&gt; 'http://purl.org/NET/RVW/0.1/');
+
+my $entry = XML::Atom::Entry-&gt;new;
+$entry-&gt;set($song, 'title', 'Lucky Star');
+$entry-&gt;set($song, 'album', 'Kish Kash');
+$entry-&gt;set($song, 'artist', 'Basement Jaxx');
+$entry-&gt;content('This is a funny book.');
+$entry-&gt;set($rvw, 'value', 4);
+
+my $EditURI = $api-&gt;createEntry($PostURI, $entry)
+    or die $api-&gt;errstr;
+</code></pre>
+
+<h3>Adding a Photo to a Photo Album</h3>
+
+<p>Sending this request to the PostURI for a TypePad Photo Album will create a new photo. Any EXIF and IPTC metadata will be automatically pulled out of the photo data. Photo content should always be sent in base64 mode.</p>
+
+<p>As a bandwidth consideration, the server will not return the original content posted in the response.</p>
+
+<h4>Request</h4>
+
+<pre><code>POST /t/atom/gallery/set_id=1 HTTP/1.1
+Host: www.typepad.com
+X-WSSE: my credentials
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;entry xmlns="http://purl.org/atom/ns#" xmlns:photo="http://sixapart.com/atom/photo#"&gt;
+  &lt;title&gt;At the Lake&lt;/title&gt;
+  &lt;summary&gt;This is my favorite photo from our trip.&lt;/summary&gt;
+  &lt;content mode="base64" type="image/jpeg"&gt;/9j/2wCEAAQDAwQDAw.../9n/AA==&lt;/content&gt;
+&lt;/entry&gt;
+</code></pre>
+
+<h4>Response</h4>
+
+<pre><code>HTTP/1.1 201 Created
+Content-Type: application/x.atom+xml
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;entry xmlns="http://purl.org/atom/ns#" xmlns:photo="http://sixapart.com/atom/photo#"&gt;
+  &lt;title&gt;At the Lake&lt;/title&gt;
+  &lt;summary&gt;This is my favorite photo from our trip.&lt;/summary&gt;
+  &lt;issued&gt;2003-12-05T10:51:15Z&lt;/issued&gt;
+  &lt;photo:location /&gt;
+  &lt;photo:thumbnail&gt;http://example.typepad.com/photos/vacation/at_the_lake-thumb.jpg&lt;/photo:thumbnail&gt;
+  &lt;photo:taken&gt;2003-12-05T10:51:14Z&lt;/photo:taken&gt;
+  &lt;link rel="alternate" type="text/html" href="http://example.typepad.com/photos/vacation/at_the_lake.html" /&gt;
+  &lt;id&gt;tag:typepad.com,2003:photo-151233&lt;/id&gt;
+&lt;/entry&gt;
+</code></pre>
+
+<h4>This example using the XML::Atom Perl module:</h4>
+
+<pre><code>use XML::Atom::Entry;
+use XML::Atom::Client;
+use XML::Atom;
+use File::Basename;
+
+my $PostURI = 'http://www.typepad.com/t/atom/gallery/set_id=9792';
+
+my $name = shift or die "usage: $0 &lt;photo&gt;";
+open my $fh, $name or die $!;
+binmode $fh;
+my $data = do { local $/; &lt;$fh&gt; };
+close $fh;
+
+my $api = XML::Atom::Client-&gt;new;
+$api-&gt;username('Melody');
+$api-&gt;password('Nelson');
+
+my $entry = XML::Atom::Entry-&gt;new;
+$entry-&gt;content($data);
+$entry-&gt;content-&gt;type('image/jpeg');
+$entry-&gt;title('At the Lake');
+$entry-&gt;summary('This is my favorite photo from our trip.');
+
+my $EditURI = $api-&gt;createEntry($PostURI, $entry)
+    or die $api-&gt;errstr;
+</code></pre>
+
+<h2>Changelog</h2>
+
+<h3>0.3</h3>
+
+<ul>
+<li>Added sections on retrieving categories, posting entries, and deleting entries to &#8220;Typical Usage&#8221;.</li>
+<li>Added description of different URIs returned by TypePad.</li>
+<li>Added description of WSSE.</li>
+</ul>
+
+<h3>0.02</h3>
+
+<ul>
+<li><code>http://sixapart.com/atom/photo#filename</code> is no longer required on requests to the PostURI for a photo album, and will be determined automatically from the title and content type.</li>
+<li>Changed instances of the old version of the <code>&lt;link&gt;</code> tag to the new version with attributes.</li>
+<li>Updated <code>tag:</code> URN format for <code>&lt;id&gt;</code> elements.</li>
+</ul>
+
+<h3>0.01</h3>
+
+<ul>
+<li>Initial version.</li>
+</ul>
+
+    
+
+
+            </div>
+            <div class="span-8 last sidebar">
+                
+                    <div class="box">
+  <h3>Looking for something in particular?  Search through 
+<a href="http://developer.typepad.com">all</a> 
+<a href="http://devblog.typepad.com">of</a> 
+<a href="http://www.typepad.com/services/apidocs">the</a>
+<a href="http://sixapart.github.com">docs</a>!</h3>
+
+<div id="cse" style="width: 100%;">Loading</div>
+
+<div id="search-results"></div>
+
+ 
+</div>
+
+<div class="box">
+  <h3>Join the <a href="http://groups.google.com/group/typepad-dev-network">TypePad Developers Network</a> on Google Groups</h3>
+    <form action="http://groups.google.com/group/typepad-dev-network/boxsubscribe" id="google-group">
+        <label for="email">Email</label>
+        <input type="text" value="" id="email" name="email" />
+        <input type="submit" value="Join" name="sub" />
+    </form>   
+</div>
+
+<div class="box">
+  <h3>Recently on Dev Blog</h3>
+  <span id="devblog"></span>
+<script type="text/javascript">
+function callback(data) {
+   var devblog = document.getElementById("devblog");
+   
+   if (!devblog) { 
+      return;
+   }
+   innerHTML = '<ul style="color: #999;margin-left:1em;margin-right:0;margin-bottom:0;">';
+   for (var i = 0; i < data.entries.length; i++) {
+      innerHTML += 
+"<li><a href='" + data.entries[i].permalinkUrl + "'>" + data.entries[i].title + "</a></li>";
+   }
+   innerHTML += "</ul>";
+   
+   devblog.innerHTML = innerHTML;
+   
+   return;
+}   
+ 
+</script>
+
+
+<script type="text/javascript" charset="utf-8" src="http://api.typepad.com/blogs/6a0120a956067b970b0120a9560791970b/post-assets/@published/@recent.js?max-results=5"></script>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+<!--<div class="beta">
+    <div class="container">
+        This site is currently in <strong>Beta</strong>.
+    </div>
+</div>-->
+<div class="ft">
+    <div class="container">
+        <div class="span-24">
+            <p>
+                <strong>Resources</strong>
+                <a href="http://Developer.Sixapart.com/">Six Apart Developers</a>
+                | <a href="http://www.SixApart.com/labs">Labs</a>
+                | <a href="http://code.sixapart.com/">Code</a>
+                | <a href="http://www.sixapart.com/labs/update//">Update Stream</a>
+                | <a href="http://antispam.typepad.com/">TypePad AntiSpam</a>
+                | <a href="http://www.sixapart.com/developers/typekey.html">TypeKey</a>
+                | <a href="http://github.com/sixapart/">GitHub Repository</a>
+            </p>
+            <p>
+                <strong>Legal</strong>
+                <a href="https://www.typepad.com/legal/api-service-terms-of-use">API Service Terms of Use</a>
+                | <a href="http://www.sixapart.com/general-terms/">Terms of Use</a>
+                | <a href="http://www.sixapart.com/privacy/">Privacy Policy</a>
+            </p>
+            <p>
+                <strong>Company</strong>
+                <a href="http://www.sixapart.com">Six Apart</a>
+                | <a href="http://www.typepad.com">TypePad</a>
+                | <a href="http://www.movabletype.com">MovableType</a>
+                | <a href="http://www.blogs.com">Blogs</a>
+                | <a href="http://www.sixapart.com/about/jobs">Jobs at Six Apart</a>
+            </p>
+
+            <div class="copyright">Copyright &copy; 2010 <a href="http://www.sixapart.com/">Six Apart Ltd.</a> All rights reserved.</div> 
+            
+        </div>
+    </div>
+</div>
+<!-- end .page -->
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load("jquery", "1.4.2");</script>
+<!-- <script type="text/javascript" charset="utf-8" src="http://developer.typepad.com/js/mt.js"></script> -->
+<script type="text/javascript" charset="utf-8" src="http://developer.typepad.com/js/site.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-225723-31");
+pageTracker._trackPageview();
+pageTracker._setDomainName(".typepad.com");
+pageTracker._setDomainName("none");
+pageTracker._setAllowLinker(true);
+} catch(err) {}</script>
+
+</body>
+</html>
+
+
