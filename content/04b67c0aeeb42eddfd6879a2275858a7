@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>JYaml - Yaml library for the Java language</title>
+<meta http-equiv="Content-Type" content="text/HTML; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="theme/style.css" />
+</head>
+<body>
+<div class="header">
+  <h2>JYaml - Yaml library for <br> the Java language</h2>
+</div>
+<div class="nav"> 
+<a href="./index.html">home</a> 
+<a href="./download.html">download</a> 
+<a href="./tutorial.html">documentation</a> 
+<a href="./javadoc/index.html">Javadocs</a>  
+<a href="./yaml4spring.html">YAML4Spring</a> 
+<a href="./yaml4dbunit.html">YAML4DbUnit</a>
+<a href="https://sourceforge.net/projects/jyaml">project page</a>
+</div>
+<div class="upperleft">
+  <div class="upperright">
+    <div class="lowerleft">
+      <div class="lowerright">
+        <div class="introduction">
+        <div class="notice">
+            Notice: I am no longer maintaining JYaml. See this
+            <a href="http://stackoverflow.com/questions/450399/which-java-yaml-library-should-i-use">this Q&A</a> for a list of alternatives.
+        </div>
+            
+        <h2>What is JYaml?</h2>
+        <p>JYaml is a Java library for working with the Yaml file format.<p>
+        <h2>What is <a href="http://yaml.org">Yaml</a>?</h2>
+        <p>Yaml is a data serialization language that is well suited for structured data and yet simpler and more human-readable than XML. It is perfect for configuration files, initialization files, and other application specific files.</p>
+        <h2>Direct mapping to programming objects with JYaml</h2>
+        <p>With JYaml, entities in a Yaml file are directly mapped into programming objects. This means interaction with the library will be very simple, in most cases requiring only one method call. For example, the following Yaml file </p>
+        </div>
+          <pre class="code">
+date: 11/29/2005
+receipts:
+    -   store: ken stanton music
+        category: entertainment
+        description: saxophone repair
+        total: 382.00
+    -   store: walmart
+        category: groceries
+        total: 14.26</pre>
+        <p>
+          transforms into the following data structure
+          </p>
+          <div class="diagram"><img src="yaml_example.png"/></div>
+        <p>with just the following line of code</p>
+        <pre class="code">
+Entry entry = Yaml.loadType(new File("ReceiptEntry.yml"), 
+                                          Entry.class);</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
