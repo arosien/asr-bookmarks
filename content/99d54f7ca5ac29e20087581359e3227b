@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Designing Qt-Style C++ APIs</title>
+<style type="text/css"><!--
+h3.fn,span.fn { margin-left: 1cm; text-indent: -1cm; }
+a:link { color: #004faf; text-decoration: none }
+a:visited { color: #672967; text-decoration: none }
+body { background: #ffffff; color: black; }
+.license { text-align: center }
+.license img { vertical-align: middle }
+.license span { margin-left: 0.5em; vertical-align: middle }
+--></style>
+</head>
+<body>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr bgcolor="#E5E5FF">
+<td valign="center">
+&nbsp;<a href="http://www.trolltech.com">
+<font color="#004faf">Trolltech</font></a>
+| <a href="http://doc.trolltech.com">
+<font color="#004faf">Documentation</font></a>
+| <a href="index.html">
+<font color="#004faf"><i>Qt Quarterly</i></font></a>
+| <a href="qq13-attributes.html"><font color="#004faf">&laquo; Automatic Dialogs</font></a>
+| <a href="qq13-teambuilder.html"><font color="#004faf">Faster Teambuilder Builds &raquo;</font></a>
+</td>
+<td align="right" valign="center"><img src="logo32.png" align="right" width="64" height="32" border="0"/></td></tr></table>
+
+<br clear="true"/>
+<table border="0" cellspacing="0" cellpadding="10" width="100%">
+<tr bgcolor="#808080"><td align="center"><font color="white" size="5"><b>Designing Qt-Style C++ APIs</b></font></td></tr>
+<tr><td><b>by Matthias Ettrich</b></td></tr>
+</table>
+
+<blockquote><b>
+We have done substantial research at Trolltech into improving the Qt
+development experience. In this article, I want to share some of our
+findings and present the principles we've been using when
+designing Qt 4, and show you how to apply them to your code.</b>
+<ul>
+<li><a href="#sixcharacteristicsofgoodapis">Six Characteristics of Good APIs</a></li>
+<li><a href="#theconveniencetrap">The Convenience Trap</a></li>
+<li><a href="#thebooleanparametertrap">The Boolean Parameter Trap</a></li>
+<li><a href="#staticpolymorphism">Static Polymorphism</a></li>
+<li><a href="#theartofnaming">The Art of Naming</a></li>
+<li><a href="#pointersorreferences">Pointers or References?</a></li>
+<li><a href="#casestudyqprogressbar">Case Study: QProgressBar</a></li>
+<li><a href="#howtogetapisright">How to Get APIs Right</a></li>
+</ul>
+</blockquote>
+
+<p>
+Designing application programmer interfaces, APIs, is hard. It is an
+art as difficult as designing programming languages. There are many
+different principles to choose from, many of which tend to contradict
+each other.
+</p>
+
+<p>
+Computer science education today puts a lot of emphasis on algorithms
+and data structures, with less focus on the principles behind
+designing programming languages and frameworks. This leaves application
+programmers unprepared for an increasingly important task: the creation
+of reusable components.
+</p>
+
+<p>
+Before the rise of object-oriented languages, reusable generic code
+was mostly written by library vendors rather than by application
+developers. In the Qt world, this situation has changed significantly.
+Programming with Qt is writing new components all the time. A typical Qt
+application has at least some customized components that are reused
+throughout the application. Often the same components are deployed as
+part of other applications. KDE, the K&nbsp;Desktop Environment, goes even
+further and extends Qt with many add-on libraries that
+implement hundreds of additional classes.
+</p>
+
+<p>
+But what constitutes a good, efficient C++ API? What is good or bad
+depends on many factors -- for example, the task at hand and the
+specific target group. A good API has a number of features, some of
+which are generally desirable, and some of which are more specific to
+certain problem domains.
+</p>
+
+<a name="sixcharacteristicsofgoodapis" />
+<table border="0" cellspacing="0" cellpadding="5" width="100%"><tr bgcolor="#F0F0FF"><td>
+<font size="4"><b>Six Characteristics of Good APIs</b></font>
+</td></tr></table>
+
+<p>
+An API is to the programmer what a GUI is to the end-user.
+The 'P' in API stands for "Programmer", not "Program", to
+highlight the fact that APIs are used by programmers, who are humans.
+</p>
+
+<p>
+We believe APIs should be minimal and complete, have clear and simple semantics,
+be intuitive, be easy to memorize, and lead to readable code.
+
+<ul>
+<li> <b>Be minimal:</b> A minimal API is one that has as few public members per class and as
+few classes as possible. This makes it easier to understand, remember, debug, and
+change the API.</li>
+
+<li> <b>Be complete:</b> A complete API means the expected functionality
+should be there. This can conflict with keeping it minimal. Also, if a
+member function is in the wrong class, many potential users of the
+function won't find it.</li>
+
+<li> <b>Have clear and simple semantics:</b> As with other design work, you
+should apply the principle of least surprise. Make common tasks easy.
+Rare tasks should be possible but not the focus. Solve the specific
+problem; don't make the solution overly general when this is not needed.
+(For example, <a href="/3.3/qmimesourcefactory.html">QMimeSourceFactory</a> in Qt 3 could have been
+called QImageLoader and have a different API.)</li>
+
+<li> <b>Be intuitive:</b> As with anything else on a computer, an API
+should be intuitive. Different experience and background leads to
+different perceptions on what is intuitive and what isn't. An API is
+intuitive if a semi-experienced user gets away without reading the
+documentation, and if a programmer who doesn't know the API can
+understand code written using it.</li>
+
+<li> <b>Be easy to memorize:</b> To make the API easy to remember, choose a
+consistent and precise naming convention. Use recognizable patterns and
+concepts, and avoid abbreviations.</li>
+
+<li> <b>Lead to readable code:</b> Code is written once, but read (and
+debugged and changed) many times. Readable code may sometimes take
+longer to write, but saves time throughout the product's life cycle.</li>
+
+</ul>
+
+Finally, keep in mind that different kinds of users will use
+different parts of the API. While simply using an instance of a Qt
+class should be intuitive, it's reasonable to expect the user to read
+the documentation before attempting to subclass it.
+</p>
+
+<a name="theconveniencetrap" />
+<table border="0" cellspacing="0" cellpadding="5" width="100%"><tr bgcolor="#F0F0FF"><td>
+<font size="4"><b>The Convenience Trap</b></font>
+</td></tr></table>
+
+<p>
+It is a common misconception that the less code you need to achieve
+something, the better the API. Keep in mind that code is written more
+than once but has to be understood over and over again. For example,
+</p>
+<pre>
+    <a href="/3.3/qslider.html">QSlider</a> *slider = new <a href="/3.3/qslider.html">QSlider</a>(12, 18, 3, 13, Qt::Vertical,
+                                  0, "volume");
+    </pre>
+<p>
+is much harder to read (and even to write) than
+</p>
+<pre>
+    <a href="/4.0/qslider.html">QSlider</a> *slider = new <a href="/4.0/qslider.html">QSlider</a>(Qt::Vertical);
+    slider-&gt;setRange(12, 18);
+    slider-&gt;setPageStep(3);
+    slider-&gt;setValue(13);
+    slider-&gt;setObjectName("volume");
+    </pre>
+
+<a name="thebooleanparametertrap" />
+<table border="0" cellspacing="0" cellpadding="5" width="100%"><tr bgcolor="#F0F0FF"><td>
+<font size="4"><b>The Boolean Parameter Trap</b></font>
+</td></tr></table>
+
+<p>
+Boolean parameters often lead to unreadable code. In particular, it's
+almost invariably a mistake to add a <tt>bool</tt> parameter to an
+existing function. In Qt, the traditional example is <tt>repaint()</tt>,
+which takes an optional <tt>bool</tt> parameter specifying whether the
+background should be erased (the default) or not.
+This leads to code such as
+</p>
+<pre>
+    widget-&gt;repaint(false);
+    </pre>
+<p>
+which beginners might read as meaning, "Don't repaint!"
+</p>
+
+<p>
+The thinking is apparently that the <tt>bool</tt> parameter saves one
+function, thus helping reducing the bloat. In truth, it adds
+bloat; how many Qt users know by heart what each of the next three
+lines does?
+</p>
+<pre>
+    widget-&gt;repaint();
+    widget-&gt;repaint(true);
+    widget-&gt;repaint(false);
+    </pre>
+<p>
+A somewhat better API might have been
+</p>
+<pre>
+    widget-&gt;repaint();
+    widget-&gt;repaintWithoutErasing();
+    </pre>
+<p>
+In Qt 4, we solved the problem by simply removing the possibility of
+repainting without erasing the widget. Qt 4's native support for
+double buffering made this feature obsolete.
+</p>
+
+<p>
+Here come a few more examples:
+</p>
+<pre>
+    widget-&gt;setSizePolicy(<a href="/4.0/qsizepolicy.html">QSizePolicy</a>::Fixed,
+                          <a href="/4.0/qsizepolicy.html">QSizePolicy</a>::Expanding, true);
+    textEdit-&gt;insert("Where's Waldo?", true, true, false);
+    <a href="/3.3/qregexp.html">QRegExp</a> rx("moc_*.c??", false, true);
+    </pre>
+<p>
+An obvious solution is to replace the <tt>bool</tt> parameters with enum
+types. This is what we've done in Qt 4 with case sensitivity in
+<a href="/4.0/qstring.html">QString</a>. Compare:
+</p>
+<pre>
+    str.replace("%USER%", user, false);               // Qt 3
+    str.replace("%USER%", user, Qt::CaseInsensitive); // Qt 4
+    </pre>
+
+<a name="staticpolymorphism" />
+<table border="0" cellspacing="0" cellpadding="5" width="100%"><tr bgcolor="#F0F0FF"><td>
+<font size="4"><b>Static Polymorphism</b></font>
+</td></tr></table>
+
+<p>
+Similar classes should have a similar API. This can be done using
+inheritance where it makes sense -- that is, when run-time
+polymorphism is used. But polymorphism also happens at design time.
+For example, if you exchange a <a href="/3.3/qlistbox.html">QListBox</a> with a <a href="/3.3/qcombobox.html">QComboBox</a>, or
+a <a href="/4.0/qslider.html">QSlider</a> with a <a href="/4.0/qspinbox.html">QSpinBox</a>, you'll find that the similarity of
+APIs makes this replacement very easy. This is what we call "static
+polymorphism".
+</p>
+
+<p>
+Static polymorphism also makes it easier to memorize APIs and
+programming patterns. As a consequence, a similar API for a set of
+related classes is sometimes better than perfect individual APIs for
+each class.
+</p>
+
+<a name="theartofnaming" />
+<table border="0" cellspacing="0" cellpadding="5" width="100%"><tr bgcolor="#F0F0FF"><td>
+<font size="4"><b>The Art of Naming</b></font>
+</td></tr></table>
+
+<p>
+Naming is probably the single most important issue when designing an
+API. What should the classes be called? What should the member
+functions be called?
+</p>
+
+<table border="0" cellspacing="0" cellpadding="5" width="100%%"><tr bgcolor="#F2FFF2"><td>
+<font size="3"><b> General Naming Rules </b></font>
+</td></tr></table>
+
+<p>
+A few rules apply equally well to all kinds of names. First, as I
+mentioned earlier, do not abbreviate. Even obvious abbreviations such
+as "prev" for "previous" don't pay off in the long run, because
+the user must remember which words are abbreviated.
+</p>
+
+<p>
+Things naturally get worse if the API itself is inconsistent; for
+example, Qt 3 has <tt>activatePreviousWindow()</tt> and <tt>fetchPrev()</tt>.
+Sticking to the "no abbreviation" rule makes it simpler to create
+consistent APIs.
+</p>
+
+<p>
+Another important but more subtle rule when designing classes is that
+you should try to keep the namespace for subclasses clean. In Qt 3,
+this principle wasn't always followed. To illustrate this, we will
+take the example of a <a href="/3.3/qtoolbutton.html">QToolButton</a>. If you call <tt>name()</tt>,
+<tt>caption()</tt>, <tt>text()</tt>, or <tt>textLabel()</tt> on a <a href="/3.3/qtoolbutton.html">QToolButton</a> in
+Qt 3, what do you expect? Just try playing around with a <a href="/3.3/qtoolbutton.html">QToolButton</a> in
+<i>Qt Designer</i>:
+
+<ul>
+<li> The <tt>name</tt> property is inherited from <a href="/3.3/qobject.html">QObject</a> and refers
+to an internal object name that can be used for debugging and
+testing. </li>
+<li> The <tt>caption</tt> property is inherited from <a href="/3.3/qwidget.html">QWidget</a> and
+refers to the window title, which has virtually no meaning for
+<a href="/3.3/qtoolbutton.html">QToolButton</a>s, since they usually are created with a parent. </li>
+<li> The <tt>text</tt> property is inherited from <a href="/3.3/qbutton.html">QButton</a> and is
+normally used on the button, unless <tt>useTextLabel</tt> is <tt>true</tt>. </li>
+<li> The <tt>textLabel</tt> property is declared in <a href="/3.3/qtoolbutton.html">QToolButton</a> and
+is shown on the button if <tt>useTextLabel</tt> is <tt>true</tt>. </li>
+</ul>
+
+In the interest of readability, <tt>name</tt> is called <tt>objectName</tt> in
+Qt 4, <tt>caption</tt> has become <tt>windowTitle</tt>, and there is no longer
+any <tt>textLabel</tt> property distinct from <tt>text</tt> in <a href="/4.0/qtoolbutton.html">QToolButton</a>.
+</p>
+
+<table border="0" cellspacing="0" cellpadding="5" width="100%%"><tr bgcolor="#F2FFF2"><td>
+<font size="3"><b> Naming Classes </b></font>
+</td></tr></table>
+
+<p>
+Identify groups of classes instead of finding the perfect name for each
+individual class. For example, All the Qt 4 model-aware item
+view classes are suffixed with <tt>View</tt>
+(<a href="/4.0/qlistview.html">QListView</a>,
+<a href="/4.0/qtableview.html">QTableView</a>, and
+<a href="/4.0/qtreeview.html">QTreeView</a>), and the corresponding
+item-based classes are suffixed with <tt>Widget</tt> instead
+(<a href="/4.0/qlistwidget.html">QListWidget</a>,
+<a href="/4.0/qtablewidget.html">QTableWidget</a>, and
+<a href="/4.0/qtreewidget.html">QTreeWidget</a>).
+</p>
+
+<table border="0" cellspacing="0" cellpadding="5" width="100%%"><tr bgcolor="#F2FFF2"><td>
+<font size="3"><b> Naming Enum Types and Values </b></font>
+</td></tr></table>
+
+<p>
+When declaring enums, we must keep in mind that in C++ (unlike in
+Java or C#), the enum values are used <i>without</i> the type. The
+following example shows illustrates the dangers of giving too general
+names to the enum values:
+</p>
+<pre>
+    namespace Qt
+    {
+        enum Corner { TopLeft, BottomRight, ... };
+        enum CaseSensitivity { Insensitive, Sensitive };
+        ...
+    };
+    
+    tabWidget-&gt;setCornerWidget(widget, Qt::TopLeft);
+    str.indexOf("$(QTDIR)", Qt::Insensitive);
+    </pre>
+<p>
+In the last line, what does <tt>Insensitive</tt> mean?
+One guideline for naming enum types is to repeat
+at least one element of the enum type name in each
+of the enum values:
+</p>
+<pre>
+    namespace Qt
+    {
+        enum Corner { TopLeftCorner, BottomRightCorner, ... };
+        enum CaseSensitivity { CaseInsensitive,
+                               CaseSensitive };
+        ...
+    };
+    
+    tabWidget-&gt;setCornerWidget(widget, Qt::TopLeftCorner);
+    str.indexOf("$(QTDIR)", Qt::CaseInsensitive);
+    </pre>
+<p>
+When enumerator values can be OR'd together and be used as flags,
+the traditional solution is to store the result of the OR in an
+<tt>int</tt>, which isn't type-safe. Qt 4 offers a template class
+<a href="/4.0/qflags.html">QFlags</a>&lt;T&gt;, where <tt>T</tt> is the enum
+type. For convenience, Qt provides typedefs for the flag type names, so you can
+type <tt>Qt::Alignment</tt> instead of
+<a href="/4.0/qflags.html">QFlags</a>&lt;Qt::AlignmentFlag&gt;.
+</p>
+
+<p>
+By convention, we give the enum type a singular name (since it can
+only hold one flag at a time) and the "flags" type a plural name.
+For example:
+</p>
+<pre>
+    enum RectangleEdge { LeftEdge, RightEdge, ... };
+    typedef <a href="/4.0/qflags.html">QFlags</a>&lt;RectangleEdge&gt; RectangleEdges;
+    </pre>
+<p>
+In some cases, the "flags" type has a singular name. In that
+case, the enum type is suffixed with <tt>Flag</tt>:
+</p>
+<pre>
+    enum AlignmentFlag { AlignLeft, AlignTop, ... };
+    typedef <a href="/4.0/qflags.html">QFlags</a>&lt;AlignmentFlag&gt; Alignment;
+    </pre>
+
+<table border="0" cellspacing="0" cellpadding="5" width="100%%"><tr bgcolor="#F2FFF2"><td>
+<font size="3"><b> Naming Functions and Parameters </b></font>
+</td></tr></table>
+
+<p>
+The number one rule of function naming is that it should be clear
+from the name whether the function has side-effects or not. In Qt&nbsp;3,
+the const function <a href="/3.3/qstring.html">QString</a>::simplifyWhiteSpace() violated this
+rule, since it returned a <a href="/3.3/qstring.html">QString</a> instead of modifying the string
+on which it is called, as the name suggests. In Qt 4, the function has
+been renamed <a href="/4.0/qstring.html">QString</a>::simplified().
+</p>
+
+<p>
+Parameter names are an important source of information to the
+programmer, even though they don't show up in the code that uses the
+API. Since modern IDEs show them while the programmer is writing
+code, it's worthwhile to give decent names to parameters in the
+header files and to use the same names in the documentation.
+</p>
+
+<table border="0" cellspacing="0" cellpadding="5" width="100%%"><tr bgcolor="#F2FFF2"><td>
+<font size="3"><b> Naming Boolean Getters, Setters, and Properties </b></font>
+</td></tr></table>
+
+<p>
+Finding good names for the getter and setter of a <tt>bool</tt> property is
+always a special pain. Should the getter be called <tt>checked()</tt> or
+<tt>isChecked()</tt>? <tt>scrollBarsEnabled()</tt> or
+<tt>areScrollBarEnabled()</tt>?
+</p>
+
+<p>
+In Qt 4, we used the following guidelines for naming the getter
+function:
+
+<ul>
+<li> Adjectives are prefixed with <tt>is</tt>-. Examples:
+
+<ul>
+<li> <tt>isChecked()</tt> </li>
+<li> <tt>isDown()</tt> </li>
+<li> <tt>isEmpty()</tt> </li>
+<li> <tt>isMovingEnabled()</tt> </li>
+</ul>
+
+However, adjectives applying to a plural noun have no prefix:
+
+<ul>
+<li> <tt>scrollBarsEnabled()</tt>, not <tt>areScrollBarsEnabled()</tt> </li>
+</ul></li>
+
+<li> Verbs have no prefix and don't use the third person (-<tt>s</tt>):
+
+<ul>
+<li> <tt>acceptDrops()</tt>, not <tt>acceptsDrops()</tt> </li>
+<li> <tt>allColumnsShowFocus()</tt> </li>
+</ul></li>
+
+<li> Nouns generally have no prefix:
+
+<ul>
+<li> <tt>autoCompletion()</tt>, not <tt>isAutoCompletion()</tt> </li>
+<li> <tt>boundaryChecking()</tt> </li>
+</ul>
+
+Sometimes, having no prefix is misleading, in which case we
+prefix with <tt>is</tt>-:
+
+<ul>
+<li> <tt>isOpenGLAvailable()</tt>, not <tt>openGL()</tt> </li>
+<li> <tt>isDialog()</tt>, not <tt>dialog()</tt> </li>
+</ul>
+
+(From a function called <tt>dialog()</tt>, we would normally expect that
+it returns a <a href="/4.0/qdialog.html">QDialog</a> <tt>*</tt>.)</li>
+
+</ul>
+
+The name of the setter is derived from that of the getter by removing
+any <tt>is</tt> prefix and putting a <tt>set</tt> at the front of the name; for
+example, <tt>setDown()</tt> and <tt>setScrollBarsEnabled()</tt>.
+The name of the property is the same as the
+getter, but without the <tt>is</tt> prefix.
+</p>
+
+<a name="pointersorreferences" />
+<table border="0" cellspacing="0" cellpadding="5" width="100%"><tr bgcolor="#F0F0FF"><td>
+<font size="4"><b>Pointers or References?</b></font>
+</td></tr></table>
+
+<p>
+Which is best for out-parameters, pointers or references?
+
+</p>
+<pre>
+    void getHsv(int *h, int *s, int *v) const
+    void getHsv(int &amp;h, int &amp;s, int &amp;v) const
+    </pre>
+<p>
+Most C++ books recommend references whenever possible, according to
+the general perception that references are "safer and nicer" than
+pointers. In contrast, at Trolltech, we tend to prefer pointers because
+they make the user code more readable. Compare:
+</p>
+<pre>
+    color.getHsv(&amp;h, &amp;s, &amp;v);
+    color.getHsv(h, s, v);
+    </pre>
+<p>
+Only the first line makes it clear that there's a high probability
+that <tt>h</tt>, <tt>s</tt>, and <tt>v</tt> will be modified by the function
+call.
+</p>
+
+<a name="casestudyqprogressbar" />
+<table border="0" cellspacing="0" cellpadding="5" width="100%"><tr bgcolor="#F0F0FF"><td>
+<font size="4"><b>Case Study: QProgressBar</b></font>
+</td></tr></table>
+
+<p>
+To show some of these concepts in practice, we'll study the
+<a href="/3.3/qprogressbar.html">QProgressBar</a> API of Qt 3 and compare it to
+the Qt 4 API. In Qt 3:
+</p>
+<pre>
+    class <a href="/3.3/qprogressbar.html">QProgressBar</a> : public <a href="/3.3/qwidget.html">QWidget</a>
+    {
+        ...
+    public:
+        int totalSteps() const;
+        int progress() const;
+    
+        const <a href="/3.3/qstring.html">QString</a> &amp;progressString() const;
+        bool percentageVisible() const;
+        void setPercentageVisible(bool);
+    
+        void setCenterIndicator(bool on);
+        bool centerIndicator() const;
+    
+        void setIndicatorFollowsStyle(bool);
+        bool indicatorFollowsStyle() const;
+    
+    public slots:
+        void reset();
+        virtual void setTotalSteps(int totalSteps);
+        virtual void setProgress(int progress);
+        void setProgress(int progress, int totalSteps);
+    
+    protected:
+        virtual bool setIndicator(<a href="/3.3/qstring.html">QString</a> &amp;progressStr,
+                                  int progress,
+                                  int totalSteps);
+        ...
+    };
+    </pre>
+<p>
+The API is quite complex and inconsistent; for example, it's not
+clear from the naming that <tt>reset()</tt>, <tt>setTotalSteps()</tt>, and
+<tt>setProgress()</tt> are tightly related.
+</p>
+
+<p>
+The key to improve the API is to notice that <a href="/3.3/qprogressbar.html">QProgressBar</a> is
+similar to Qt 4's <a href="/4.0/qabstractspinbox.html">QAbstractSpinBox</a> class and its subclasses,
+<a href="/4.0/qspinbox.html">QSpinBox</a>, <a href="/4.0/qslider.html">QSlider</a> and <a href="/4.0/qdial.html">QDial</a>. The solution? Replace
+<tt>progress</tt> and <tt>totalSteps</tt> with <tt>minimum</tt>, <tt>maximum</tt> and
+<tt>value</tt>. Add a <tt>valueChanged()</tt> signal. Add a <tt>setRange()</tt>
+convenience function.
+</p>
+
+<p>
+The next observation is that <tt>progressString</tt>, <tt>percentage</tt> and
+<tt>indicator</tt> really refer to one thing: the text that is shown
+on the progress bar. Usually the text is a percentage, but it can be
+set to anything using the <tt>setIndicator()</tt> function. Here's the new
+API:
+</p>
+<pre>
+    virtual <a href="/4.0/qstring.html">QString</a> text() const;
+    void setTextVisible(bool visible);
+    bool isTextVisible() const;
+    </pre>
+<p>
+By default, the text is a percentage indicator. This can be changed
+by reimplementing <tt>text()</tt>.
+</p>
+
+<p>
+The <tt>setCenterIndicator()</tt> and <tt>setIndicatorFollowsStyle()</tt>
+functions in the Qt 3 API are two functions that influence alignment.
+They can advantageously be replaced by one function,
+<tt>setAlignment()</tt>:
+</p>
+<pre>
+    void setAlignment(Qt::Alignment alignment);
+    </pre>
+<p>
+If the programmer doesn't call <tt>setAlignment()</tt>, the alignment is
+chosen based on the style. For Motif-based styles, the text is shown
+centered; for other styles, it is shown on the right hand side.
+</p>
+
+<p>
+Here's the improved <a href="/4.0/qprogressbar.html">QProgressBar</a> API:
+</p>
+<pre>
+    class <a href="/4.0/qprogressbar.html">QProgressBar</a> : public <a href="/4.0/qwidget.html">QWidget</a>
+    {
+        ...
+    public:
+        void setMinimum(int minimum);
+        int minimum() const;
+        void setMaximum(int maximum);
+        int maximum() const;
+        void setRange(int minimum, int maximum);
+        int value() const;
+    
+        virtual <a href="/4.0/qstring.html">QString</a> text() const;
+        void setTextVisible(bool visible);
+        bool isTextVisible() const;
+        Qt::Alignment alignment() const;
+        void setAlignment(Qt::Alignment alignment);
+    
+    public slots:
+        void reset();
+        void setValue(int value);
+    
+    signals:
+        void valueChanged(int value);
+        ...
+    };
+    </pre>
+
+<a name="howtogetapisright" />
+<table border="0" cellspacing="0" cellpadding="5" width="100%"><tr bgcolor="#F0F0FF"><td>
+<font size="4"><b>How to Get APIs Right</b></font>
+</td></tr></table>
+
+<p>
+APIs need quality assurance. The first revision is never right; you
+must test it. Make use cases by looking at code which uses this API
+and verify that the code is readable.
+</p>
+
+<p>
+Other tricks include having somebody else use the API with or without
+documentation and documenting the class (both the class overview and
+the individual functions).
+</p>
+
+<p>
+Documenting is also a good way of finding good names when you get
+stuck: just try to document the item (class, function, enum value,
+etc.) and use your first sentence as inspiration. If you cannot find
+a precise name, this is often a sign that the item shouldn't exist.
+If everything else fails <i>and</i> you are convinced that the concept
+makes sense, invent a new name. This is, after all, how "widget",
+"event", "focus", and "buddy" came to be.
+</p>
+
+<address><hr />
+<div class="license">
+  <a href="http://creativecommons.org/licenses/by-sa/2.5/legalcode"><img src="images/share.png" />
+  <img src="images/remix.png" />
+  <img src="images/by.png" />
+  <img src="images/sa.png" /></a>
+  <span>This document is licensed under the
+  <a href="http://creativecommons.org/licenses/by-sa/2.5/">Creative Commons Attribution-Share Alike
+  2.5</a> license.</span>
+</div>
+<hr />
+<table width="100%"><tr><td>
+Copyright &copy; 2005 <a href="http://www.trolltech.com/">Trolltech</a> 
+</td><td align="center">
+<a href="http://www.trolltech.com/trademarks.html">Trademarks</a>
+</td><td align="right">
+<a href="qq13-teambuilder.html">Faster Teambuilder Builds &raquo;</a></td>
+</tr></table></address>
+</body>
+</html>
