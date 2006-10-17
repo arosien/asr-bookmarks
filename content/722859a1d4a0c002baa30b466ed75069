@@ -1,0 +1,305 @@
+
+<script type="text/javascript" src="base.js"></script>
+<script type="text/javascript" src="cookies.js"></script>
+<script type="text/javascript" src="utils.js"></script>
+
+<html>
+<head>
+<style type="text/css">
+body {
+  margin:0;
+}
+
+body, td {
+  font-family:helvetica, arial, sans-serif;
+  font-size:14px;
+}
+
+p {
+  margin-top:0;
+  margin-bottom:1em;
+}
+
+a {
+  color:#006;
+}
+
+a:visited {
+ color:#006;
+}
+
+a:hover {
+  background:#def;
+}
+
+#masthead {
+  background:#f2f3f4; 
+}
+
+#masthead td {
+  padding:2px 3px;
+}
+
+#masthead b {
+  color:#090;
+}
+
+.green {
+  color:#090;
+}
+
+.orange {
+  color:#FF7735;
+}
+
+.red {
+  color:#F00;
+}
+
+input, select {
+  border:1px solid grey;
+  margin-top:4px;
+  width:17.7em;
+}
+
+.error {
+  font-weight:bold;
+  color:red;
+}
+
+.ok {
+  color:#090;
+}
+
+#iesux {
+  text-align:center;
+}
+
+#online-login, #offline-login {
+  text-align:left;
+  width:17em;
+  margin:2em auto;
+}
+
+#offline-banner {
+  border:1px solid #999;
+  background:#eee;
+  font-weight:bold;
+  padding:0.5em 1em;
+  margin-bottom:0.5em;
+}
+
+a {
+  margin-right:0.8em;
+}
+</style>
+</head>
+<body style="margin:0;">
+
+<table id="masthead" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr>
+  <td align="left">
+    <b id='title'>Login</b>  </td>
+  <td id="login-bar" align="right" style="display:none">
+    <b id="logged-in-as"></b> 
+    | <a href="#" onclick="logout();">logout</a></span> 
+  </td>
+</tr>
+</table>
+
+<div id="iesux">
+<div id="online-login" style="display:none">
+  <p><b>Hi!</b>
+  <p>I wrote <b class='green'>Halfnote</b> because all the other notepads were too slow and complex.
+  <p>There's no fancy formatting or UI to slow you down. Just a big, beautiful, text box and quick access to your notes from any computer, anywhere.
+  <!--
+  <p>It even works offline.
+  -->
+  <!--
+  <p><b class='green'>Halfnote</b> is a fast and simple notepad for your browser.
+  <p>Your notes are automatically saved, and accessible from any computer.
+  -->
+  <br><br>
+
+<div id="head"></div>
+<div id="clip" style="position:relative; overflow:hidden;" 
+  onkeypress="if (event.keyCode == 13 && presubmit()) document.forms[0].submit()">
+<input id="email" type="text" label="email" value=""><br>
+<input id="password" type="password" label="password"><br>
+<input id="password2" type="password" label="confirm password">
+</div>
+<form method="post" style="margin:0" action="login.php" onsubmit="return presubmit()">
+<input type="submit" value="OK!" style="width:auto;"><br><br>
+<a href="#" onclick="createMode(); return false;">Create account</a
+><a href="#" onclick="forgotMode(); return false;">Forgot password</a
+><a href="#" onclick="loginMode(); return false;">Log in</a>
+<input name="email" type="hidden">
+<input name="password" type="hidden">
+<input name="password2" type="hidden">
+<input name="mode" type="hidden">
+</form>
+</div>
+
+<div id="offline-login" style="display:none">
+  <div id="offline-banner" class="red">You are logging in offline.</div>
+  <p>Your notes will be synchronized with the server the next time you 
+      connect.</p>
+  <br>
+  <select id="users" size="1" style="width:100%" onchange="offlineUserChosen()">
+    <option value="-1">Select a user...</option>
+  </select>
+  <br><br>
+  <a href="#" onclick="location.reload()">Try online login again...</a>
+</div>
+</div>
+
+<script type="text/javascript" src="accelimation.js"></script>
+<script type="text/javascript" src="labels.js"></script>
+<script type="text/javascript">
+  var clip;
+  var fields;
+  var head;
+  var navLinks;
+  var form;
+  var mode;
+  var gears = new Gears();
+
+  if (!gears.canGoLocal) {
+    onlineLogin();
+  } else {
+    var img = new Image();
+    img.onload = onlineLogin;
+    img.onerror = offlineLogin
+    img.src = "x.gif?r=" + new Date().getTime();
+    var timerId = window.setTimeout(offlineLogin, 5000);
+  }
+
+  function offlineLogin() {
+    if (timerId) {
+      window.clearTimeout(timerId);
+    }
+
+    document.getElementById("offline-login").style.display = "block";
+
+    var users = gears.executeToObjects('select cookie from user');
+    var select = document.getElementById("users");
+
+    for (var i = 0, user; user = users[i]; i++) {
+      var opt = document.createElement('option');
+      var email = user.cookie.split('-')[2];
+      opt.appendChild(document.createTextNode(email));
+      opt.value = user.cookie;
+      select.appendChild(opt);
+    }
+  }
+
+  function offlineUserChosen() {
+    var select = document.getElementById("users");
+    var option = select.options[select.selectedIndex];
+
+    createCookie('c', option.value, 30);
+    location.href = ".";
+  }
+
+  function onlineLogin() {
+    if (timerId) {
+      window.clearTimeout(timerId);
+    }
+
+    document.getElementById("online-login").style.display = "block";
+
+
+    clip = document.getElementById("clip");
+    fields = clip.getElementsByTagName("input");
+    head = document.getElementById("head");
+    navLinks = document.forms[0].getElementsByTagName("a");
+    form = document.forms[0];
+    mode = "" || "login";
+
+    setupLabels(fields);
+
+    if (mode == "create") {
+      createMode(true);
+    } else if (mode == "login") {
+      loginMode(true);
+    } else if (mode == "forgot") {
+      forgotMode(true);
+    }
+  }
+
+  function presubmit() {
+    try {
+      form.email.value = document.getElementById("email").value;
+
+      if (form.mode.value == "login") {
+	form.password.value = document.getElementById("password").value;
+	form.password2.value = "";
+      }
+
+      if (form.mode.value == "create") {
+	form.password.value = document.getElementById("password").value;
+	form.password2.value = document.getElementById("password2").value;
+      }
+
+      return true;
+    } catch (e) {
+      alert(e.lineNumber + ": " + e.message);
+      return false;
+    }
+  }
+
+  function loginMode(fast) {
+    head.innerHTML = "<b>Log in</b>:";
+    form.mode.value = "login";
+
+    navLinks[0].style.display = "";
+    navLinks[1].style.display = "";
+    navLinks[2].style.display = "none";
+
+    changeMode(1, fast);
+  }
+
+  function createMode(fast) {
+    head.innerHTML = "<b>Create an account</b>:";
+    form.mode.value = "create";
+
+    navLinks[0].style.display = "none";
+    navLinks[1].style.display = "none";
+    navLinks[2].style.display = "";
+
+    changeMode(2, fast);
+  }
+
+  function forgotMode(fast) {
+    head.innerHTML = "<b>Forgot your password?</b>:";
+    form.mode.value = "forgot";
+
+    navLinks[0].style.display = "none";
+    navLinks[1].style.display = "none";
+    navLinks[2].style.display = "";
+
+    changeMode(0, fast);
+  }
+
+  function changeMode(elmIdx, fast) {
+    for (var i = 0; i < fields.length; i++) {
+      if (i <= elmIdx) {
+	fields[i].style.display = "";
+      } else {
+	fields[i].style.display = "none";
+      }
+    }
+
+    var elm = fields[elmIdx];
+    var h = elm.offsetTop + elm.offsetHeight;
+
+    if (fast) {
+      clip.style.height = h + "px";
+    } else {
+      var a = new Accelimation(clip.style, "height", h, 150, 2, "px");
+      a.start();
+    }
+  }
+</script>
+</body>
+</html>
