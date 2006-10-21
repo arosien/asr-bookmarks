@@ -1,0 +1,436 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <link rel="Stylesheet" type="text/css" href="/css/style.css" >
+  <title>taglist.vim - Source code browser (supports C/C++, java, perl, python, tcl, sql, php, etc) : vim online</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="KEYWORDS" content="Vim, Vi IMproved, text editor, home, documentation, tips, scripts, news">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/vim_shortcut.ico">
+</head>
+
+<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" bgcolor="#ffffff"> 
+
+<!-- HEADER, SPONSOR IMAGE, VIM IMAGE AND BOOK AD -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bordercolor="red">
+  <tr>
+    <td colspan="4" class="lightbg"><img src="/images/spacer.gif" width="1" height="5" alt=""></td>
+  </tr>
+  <tr>
+  <td class="lightbg">&nbsp;&nbsp;&nbsp;</td>
+  <td class="lightbg" align="left"><a href="/sponsor/index.php"><img src="/images/sponsorvim.gif" alt="sponsor Vim development" border="0"></a></td>
+    <td class="lightbg" align="center"><a href="/index.php"><img src="/images/vim_header.gif" border="0" alt="Vim logo"></a></td>
+    <td class="lightbg" align="right"><a href="http://iccf-holland.org/click5.html"><img src="/images/buyhelplearn.gif" alt="Vim Book Ad" border="0"></a></td>
+  </tr>
+  <tr>
+    <td colspan="4" class="lightbg"><img src="/images/spacer.gif" width="1" height="5" alt=""></td>
+  </tr>
+  <tr>
+    <td colspan="4" class="darkbg"><img src="/images/spacer.gif" width="1" height="10" alt=""></td>
+  </tr>
+</table>
+<!-- THE PAGE BODY: BETWEEN HEADER AND FOOTER -->
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <col width="180">
+  <col width="1">
+
+  <tr valign="top">
+    <td class="sidebar">
+      <table width="180" cellpadding="4" cellspacing="0" border="0">
+        <tr valign="top">
+          <td class="sidebar">
+
+<!-- INCLUDE THE PAGE NAVIGATION -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bordercolor="red">
+    <tr>
+        <td><small>not logged in (<a href="/login.php">login</a>)</small></td>
+    </tr>
+    <tr><td>
+<small>&nbsp;</small>
+<form action="http://www.google.com/cse" id="cse-search-box">
+  <div>
+    <input type="hidden" name="cx" value="partner-pub-3005259998294962:bvyni59kjr1" />
+    <input type="hidden" name="ie" value="ISO-8859-1" />
+    <input type="text" name="q" size="20" />
+    <br>
+    <input type="submit" name="sa" value="Search" />
+  </div>
+</form>
+<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
+    </td></tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="1"></td>
+    </tr>
+    <tr>
+        <td class="darkbg"><img src="/images/spacer.gif" alt='' border="0" height="3"></td>
+    </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="2"></td>
+    </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/index.php">Home</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/search.php">Advanced search</a></td>
+        </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="7"></td>
+    </tr>
+    <tr>
+        <td class="checker"><img src="/images/spacer.gif" alt='' border="0" height="1"></td>
+    </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="7"></td>
+    </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/about.php">About Vim</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/community.php">Community</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/news/news.php">News</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/sponsor/index.php">Sponsoring</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/trivia.php">Trivia</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/docs.php">Documentation</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/download.php">Download</a></td>
+        </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="7"></td>
+    </tr>
+    <tr>
+        <td class="checker"><img src="/images/spacer.gif" alt='' border="0" height="1"></td>
+    </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="7"></td>
+    </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/scripts/index.php">Scripts</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/tips/index.php">Tips</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/account/index.php">My Account</a></td>
+        </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="7"></td>
+    </tr>
+    <tr>
+        <td class="checker"><img src="/images/spacer.gif" alt='' border="0" height="1"></td>
+    </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="7"></td>
+    </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/huh.php">Site Help</a></td>
+        </tr>
+</table>
+
+            <table width="172" cellpadding="0" cellspacing="0" border="0">
+              <tr><td><img src="/images/spacer.gif" alt="" border="0" width="1" height="8"></td></tr>
+              <tr><td class="darkbg"><img src="/images/spacer.gif" width="1" height="3" alt=""></td></tr>
+            </table>
+            <br>
+
+<!-- INCLUDE THE PAGE SIDEBAR TEXT -->
+&nbsp;
+
+          </td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="darkbg"><img src="/images/spacer.gif" width="1" height="1" border="0" alt=""><br></td>
+    <td>
+      <table width="100%" cellpadding="10" cellspacing="0" border="0" bordercolor="red">
+        <tr>
+          <td valign="top">
+
+<span class="txth1">taglist.vim : Source code browser (supports C/C++, java, perl, python, tcl, sql, php, etc)</span> 
+
+<br>
+<br>
+
+<!-- karma table -->
+<table cellpadding="4" cellspacing="0" border="1" bordercolor="#000066">
+<tr>
+  <td class="lightbg"><b>&nbsp;script karma&nbsp;</b></td>
+  <td>
+    Rating <b>7374/2324</b>,
+    Downloaded by 136445  </td>
+  <td class="lightbg">
+  <b>&nbsp;Comments, bugs, improvements&nbsp;</b>
+  </td>
+  <td>
+    <a href="http://vim.wikia.com/wiki/Script:273">Vim wiki</a>
+  </td>  
+</tr>
+</table>
+<p>
+
+<table cellspacing="0" cellpadding="0" border="0">
+<tr><td class="prompt">created by</td></tr>
+<tr><td><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td class="prompt">script type</td></tr>
+<tr><td>utility</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td class="prompt">description</td></tr>
+<tr><td>The &quot;Tag List&quot; plugin is a source code browser plugin for Vim and<br>provides an overview of the structure of source code files and allows<br>you to efficiently browse through source code files for different<br>programming languages.&nbsp;&nbsp;You can visit the taglist plugin home page for<br>more information:<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://vim-taglist.sourceforge.net">http://vim-taglist.sourceforge.net</A><br><br>You can subscribe to the taglist mailing list to post your questions<br>or suggestions for improvement or to report bugs. Visit the following<br>page for subscribing to the mailing list:<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://groups.yahoo.com/group/taglist/">http://groups.yahoo.com/group/taglist/</A><br><br>For more information about using this plugin, after installing the<br>taglist plugin, use the &quot;:help taglist&quot; command.</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td class="prompt">install details</td></tr>
+<tr><td>1. Download the taglist.zip file and unzip the files to the $HOME/.vim or the<br>&nbsp;&nbsp;&nbsp;&nbsp;$HOME/vimfiles or the $VIM/vimfiles directory. After this step, you should<br>&nbsp;&nbsp;&nbsp;&nbsp;have the following two files (the directory structure should be preserved):<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; plugin/taglist.vim - main taglist plugin file<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; doc/taglist.txt&nbsp;&nbsp;&nbsp;&nbsp;- documentation (help) file<br><br>&nbsp;&nbsp; Refer to the |add-plugin|, |add-global-plugin| and |runtimepath| Vim<br>&nbsp;&nbsp; help pages for more details about installing Vim plugins.<br>2. Change to the $HOME/.vim/doc or $HOME/vimfiles/doc or $VIM/vimfiles/doc<br>&nbsp;&nbsp;&nbsp;&nbsp;directory, start Vim and run the &quot;:helptags .&quot; command to process the<br>&nbsp;&nbsp;&nbsp;&nbsp;taglist help file. Without this step, you cannot jump to the taglist help<br>&nbsp;&nbsp;&nbsp;&nbsp;topics.<br>3. If the exuberant ctags utility is not present in your PATH, then set the<br>&nbsp;&nbsp;&nbsp;&nbsp;Tlist_Ctags_Cmd variable to point to the location of the exuberant ctags<br>&nbsp;&nbsp;&nbsp;&nbsp;utility (not to the directory) in the .vimrc file.<br>4. If you are running a terminal/console version of Vim and the terminal<br>&nbsp;&nbsp;&nbsp;&nbsp;doesn't support changing the window width then set the<br>&nbsp;&nbsp;&nbsp;&nbsp;'Tlist_Inc_Winwidth' variable to 0 in the .vimrc file.<br>5. Restart Vim.<br>6. You can now use the &quot;:TlistToggle&quot; command to open/close the taglist<br>&nbsp;&nbsp;&nbsp;&nbsp;window. You can use the &quot;:help taglist&quot; command to get more information<br>&nbsp;&nbsp;&nbsp;&nbsp;about using the taglist plugin.<br></td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+
+<!-- rating table -->
+<form name="rating">
+<input type="hidden" name="script_id" value="273">
+<table cellpadding="4" cellspacing="0" border="1" bordercolor="#000066">
+<tr>
+  <td class="lightbg"><b>rate this script</b></td>
+  <td valign="middle">
+    <input type="radio" name="rating" value="life_changing">Life Changing
+    <input type="radio" name="rating" value="helpful">Helpful
+    <input type="radio" name="rating" value="unfulfilling">Unfulfilling&nbsp;
+    <input type="submit" value="rate">
+  </td>
+</tr>
+</table>
+</form>
+<span class="txth2">script versions</span> (<a href="add_script_version.php?script_id=273">upload new version</a>)
+<p>
+Click on the package to download.
+<p>
+
+<table cellspacing="2" cellpadding="4" border="0" width="100%">
+<tr class='tableheader'>
+        <th valign="top">package</th>
+    <th valign="top">script version</th>
+    <th valign="top">date</th>
+    <th valign="top">Vim version</th>
+    <th valign="top">user</th>
+    <th valign="top">release notes</th>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=7701">taglist_45.zip</a></td>
+    <td class="rowodd" valign="top" nowrap><b>4.5</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2007-09-21</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Fix an extra space in the check for exctags. Refresh the taglist window<br>folds after entering a tab. Escape special characters like backslash in<br>the tag name when saving a session file. Add an internal function to get<br>and detect file types.<br></td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=7169">taglist_44.zip</a></td>
+    <td class="roweven" valign="top" nowrap><b>4.4</b></td>
+    <td class="roweven" valign="top" nowrap><i>2007-05-25</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="roweven" valign="top" width="2000">The following fixes are made in this release:<br>1. If multiple Vim plugins register for the BufEnter autocmd, then sometimes<br>&nbsp;&nbsp;&nbsp;&nbsp;the buffer name supplied to the autocmd is incorrect. Use the buffer number<br>&nbsp;&nbsp;&nbsp;&nbsp;instead of buffer name in the BufEnter autocmd.<br>2. Add the filename to the tags menu only for valid file names.<br></td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=6769">taglist_43.zip</a></td>
+    <td class="rowodd" valign="top" nowrap><b>4.3</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2007-02-22</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="rowodd" valign="top" width="2000">1. Added support for jumping to a tag/file in a new or existing tab<br>&nbsp;&nbsp; from the taglist window (works only with Vim7 and above).<br>2. Added support for opening a tag in the previous window.<br>3. With the Tlist_File_Fold_Auto_Close variable set, when opening a<br>&nbsp;&nbsp; file from the file explorer window, the folds in the taglist window<br>&nbsp;&nbsp; are not closed correctly.&nbsp;&nbsp;Fixed this problem.<br></td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=6416">taglist_42.zip</a></td>
+    <td class="roweven" valign="top" nowrap><b>4.2</b></td>
+    <td class="roweven" valign="top" nowrap><i>2006-11-14</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="roweven" valign="top" width="2000">1. After opening a file with no tags defined in it with the<br>&nbsp;&nbsp; Tlist_Compact_Format option set, if the tags are updated, the folds<br>&nbsp;&nbsp; used for the files following the empty tags file are affected.<br>2. On MS-Windows, use a &quot;taglist.cmd&quot; temporary file to run exuberant<br>&nbsp;&nbsp; ctags. This is to handle space characters in the file names and<br>&nbsp;&nbsp; in the exuberant ctags path name.<br>3. In the taglist window, when a file is re-sorted or updated open the<br>&nbsp;&nbsp; fold for the file.<br>4. When the 'shellxquote' option is set to double quotes, escape<br>&nbsp;&nbsp; double quotes in the command executed for exuberant ctags.<br>5. On FreeBSD, exuberant ctags is installed as exctags, look for<br>&nbsp;&nbsp; exctags in the PATH.<br>6. If two taglist plugins are present (one in the system Vim directory<br>&nbsp;&nbsp; and another in the user's .vim/plugin directory), then the plugin<br>&nbsp;&nbsp; in the users's .vim directory overrides the version in the system<br>&nbsp;&nbsp; vim directory.<br>7. When the :TlistMessages command is issued display the debug<br>&nbsp;&nbsp; messages in a taglist.txt buffer.<br>8. Clear the readonly option for the taglist buffer<br>9. When opening a selected file, don't use the preview window, if<br>&nbsp;&nbsp; present.<br></td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=6158">taglist_41.zip</a></td>
+    <td class="rowodd" valign="top" nowrap><b>4.1</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2006-09-10</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="rowodd" valign="top" width="2000">When the Tlist_File_Fold_Auto_Close variable is set to 1, jumping to the taglist window closes all the folds. Modified the plugin to not close the fold for the currently active file. When the TlistLock and TlistUnlock commands are invoked, an error message is displayed. This problem is fixed.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=6147">taglist_40.zip</a></td>
+    <td class="roweven" valign="top" nowrap><b>4.0</b></td>
+    <td class="roweven" valign="top" nowrap><i>2006-09-06</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="roweven" valign="top" width="2000">Fixes:<br>Fix the problems in using the taglist plugin with Vim7 tabs. When<br>Tlist_File_Fold_Auto_Close is set, close the tag fold when leaving a<br>buffer.&nbsp;&nbsp;When jumping to a selected tag, if the file is opened in more<br>than one window, use the previous window from which the user entered<br>the taglist window.<br>New features:<br>Support for displaying the tag prototype as a tooltip.&nbsp;&nbsp;Support for<br>specifying additional commands after the taglist commands using the<br>bar separator.<br></td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=5548">taglist_40b4.zip</a></td>
+    <td class="rowodd" valign="top" nowrap><b>4.0b4</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2006-04-12</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Fixes:<br>1. When 'Tlist_Show_One_File' is set, after few files are opened,<br>&nbsp;&nbsp; unable to select tags from the taglist window.<br>2. When the taglist plugin is stored in a directory with space characters<br>&nbsp;&nbsp; in the name, the autoloading of taglist plugin fails.<br>New features:<br>1. Support for moving cursor to the taglist window when using the<br>&nbsp;&nbsp; &quot;:TlistToggle&quot; command.<br>2. When all the tags in a file are of the same type, in the taglist<br>&nbsp;&nbsp; menu, don't display the tag type.<br>3. Changed the '?' help key to 'F1' in the taglist window.<br>4. Set the filetype for the taglist buffer to 'taglist'<br>5. In Vim7, set the 'winfixwidth' option for the taglist window.<br>6. When jumping between files using the ]] or &lt;Tab&gt; and [[ or &lt;Backspace&gt;<br>&nbsp;&nbsp; keys, wrap around at the first and last file.<br></td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=4924">taglist_40b3.zip</a></td>
+    <td class="roweven" valign="top" nowrap><b>4.0b3</b></td>
+    <td class="roweven" valign="top" nowrap><i>2005-12-28</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="roweven" valign="top" width="2000">The following changes are made in this version:<br><br>1. Delay loading of the taglist plugin to reduce the Vim startup time.<br>2. Support for recursively adding multiples files to the taglist using the<br>&nbsp;&nbsp; ':TlistAddFilesRecursive' command.<br>3. New ':TlistOpen' command to open and jump to the taglist window.<br>4. New ':TlistToggle' command to supersede the ':Tlist' command.<br>5. New 'Tlist_Close_On_Select' option for closing the taglist window<br>&nbsp;&nbsp; when a file is selected.<br>6. New 'Tlist_Auto_Update' option to enable/disable processing of newly<br>&nbsp;&nbsp; edited files.<br>7. New ':TlistLock' and ':TlistUnlock' commands to lock and unlock the<br>&nbsp;&nbsp; taglist.<br>8. New 'Tlist_Highlight_Tag_On_BufEnter' option to enable/disable<br>&nbsp;&nbsp; highlighting of the current tag on entering a buffer.<br>9. When the taglist buffer is created from a Vim session file, update<br>&nbsp;&nbsp; the taglist with the files from the session file.<br>10. Change the background color used for highlighting file names in the<br>&nbsp;&nbsp;&nbsp;&nbsp;taglist window.<br>11. When &lt;Space&gt; is pressed on a file name or a tag type name in the<br>&nbsp;&nbsp;&nbsp;&nbsp;taglist window, display information about the number of tags.<br>12. Set the 'foldlevel' option to a high value in the taglist window.<br>13. When refreshing the taglist window, process all the opened buffers.<br>14. When moving between windows, disable and enable autocommands.<br>15. When a file is selected from the taglist window, use a non-plugin<br>&nbsp;&nbsp;&nbsp;&nbsp;window to edit the file.<br>16. If 'Tlist_Exit_OnlyWindow' is set and when exiting Vim, make sure<br>&nbsp;&nbsp;&nbsp;&nbsp;the '0 mark is set to the previous buffer.<br>17. When using the taglist plugin with the winmanager plugin and<br>&nbsp;&nbsp;&nbsp;&nbsp;'Tlist_Process_File_Always' is set or the taglist menu is enabled,<br>&nbsp;&nbsp;&nbsp;&nbsp;sometimes, it is not possible to jump to other windows from the<br>&nbsp;&nbsp;&nbsp;&nbsp;taglist window using the keyboard. Fixed this problem.<br>18. While opening files in a new window, use filenames instead of buffer<br>&nbsp;&nbsp;&nbsp;&nbsp;numbers.<br></td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=4455">taglist_40b2.zip</a></td>
+    <td class="rowodd" valign="top" nowrap><b>4.0b2</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2005-08-01</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="rowodd" valign="top" width="2000">1. Added the TlistAddFiles command to add multiple files to the taglist window without opening them.<br>2. Maintain the taglist window width and height across Vim window layout changes.<br>3. Restore the Vim window location after the taglist window is closed.<br>4. Use a simpler regular expression for parsing tags output.<br>5. When a closed fold is selected in the taglist window, open the fold and jump to the file.<br>6. When the Tlist_Auto_Open variable is set, open the taglist window only when a supported type of file is opened.<br>7. When displaying tags for a single file, center the current tag line when opening a file.<br>8. When jumping to a tag, add the previous location to the jump list.<br>9. Fixed a problem with recording timestamps in the debug messages on MS-Windows.<br>10. Set the ' mark when jumping to a selected tag.<br></td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=4124">taglist_40b1.zip</a></td>
+    <td class="roweven" valign="top" nowrap><b>4.0b1</b></td>
+    <td class="roweven" valign="top" nowrap><i>2005-04-05</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="roweven" valign="top" width="2000">Added support for optionally displaying the tags in the drop-down/popup menu. Performance enhancments, various bug fixes and debug support.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=3340">taglist.zip</a></td>
+    <td class="rowodd" valign="top" nowrap><b>3.4</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2004-08-16</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="rowodd" valign="top" width="2000">1. Introduced a new option 'Tlist_Show_One_File&quot; to display the tags for only the current buffer in the taglist window.<br>2. Support for not displaying the tags for a user-deleted file in the taglist window.<br>3. Fix for sharing the mouse single click map with other plugins</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=3091">taglist.zip</a></td>
+    <td class="roweven" valign="top" nowrap><b>3.3</b></td>
+    <td class="roweven" valign="top" nowrap><i>2004-06-01</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="roweven" valign="top" width="2000">1. If Tlist_Ctags_Cmd variable is not set, on startup, check for the<br>&nbsp;&nbsp; presence of exuberant-ctags or ctags or tags in the PATH and set<br>&nbsp;&nbsp; Tlist_Ctags_Cmd variable accordingly. If none of the executable is<br>&nbsp;&nbsp; found, then the taglist plugin will not be not loaded.<br>2. Added a new configuration variable Tlist_Enable_Fold_Column to<br>&nbsp;&nbsp; enable or disable fold columns in the taglist window.<br>3. Added support for setting the taglist application name used by the<br>&nbsp;&nbsp; winmanager plugin and the cream package.<br>4. Two new key mappings ([[ and ]]) are added to the taglist window to<br>&nbsp;&nbsp; move between files.<br>5. When a file is modified, the taglist window will be automatically<br>&nbsp;&nbsp; updated (after going to some other window or buffer and then coming<br>&nbsp;&nbsp; to the modified buffer).<br>6. Made the Tlist_Update_File_Tags() function as a global function.<br>&nbsp;&nbsp; This function can be used to add or update the tags for a new file.<br>7. Updated the Tlist_Get_Tag_Prototype_By_Line() and the <br>&nbsp;&nbsp; Tlist_Get_Tagname_By_Line() functions to get the tag name and tag<br>&nbsp;&nbsp; prototype for the specified line in a file.<br></td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=2978">taglist.zip</a></td>
+    <td class="rowodd" valign="top" nowrap><b>3.2</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2004-04-25</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Added support for closing the tags tree for inactive files, removing the tags tree for deleted buffers, processing the tags when the taglist window is not opened, disabling the automatic highlighting of the current tag, displaying name of the current tag.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=2444">taglist.zip</a></td>
+    <td class="roweven" valign="top" nowrap><b>3.1</b></td>
+    <td class="roweven" valign="top" nowrap><i>2003-11-02</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="roweven" valign="top" width="2000">Added support for saving and restoring taglist sessions. Separated the taglist documentation into a separate file in Vim help format.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=2353">taglist.vim</a></td>
+    <td class="rowodd" valign="top" nowrap><b>3.0</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2003-09-24</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Added support for displaying tags defined in multiple files.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=2334">taglist.vim</a></td>
+    <td class="roweven" valign="top" nowrap><b>2.8</b></td>
+    <td class="roweven" valign="top" nowrap><i>2003-09-14</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="roweven" valign="top" width="2000">Added information about the taglist mailing list.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=2250">taglist.vim</a></td>
+    <td class="rowodd" valign="top" nowrap><b>2.7</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2003-08-21</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="rowodd" valign="top" width="2000">1. Added TlistUpdate command to update the taglist window.<br>2. Made the taglist highlight groups user configurable.<br>3. Fixed a problem in the taglist integration with the winmanager plugin</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=2054">taglist.vim</a></td>
+    <td class="roweven" valign="top" nowrap><b>2.6</b></td>
+    <td class="roweven" valign="top" nowrap><i>2003-06-09</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="roweven" valign="top" width="2000">1. Added support for previewing a tag.<br>2. Added the TlistClose command to close the taglist window<br>3. Added the Tlist_Exit_OnlyWindow option to close the taglist window if only that window is open.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=1941">taglist.vim</a></td>
+    <td class="rowodd" valign="top" nowrap><b>2.5</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2003-04-25</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=244">Yegappan Lakshmanan</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Added support for highlighting the tag scope. Added support for displaying namespaces in C++ files. Updated the comments.</td>
+</tr>
+</table>
+<!-- finish off the framework -->
+          </td>
+        </tr>
+      </table>
+    </td>
+
+  </tr>
+</table>
+
+<!-- END OF THE PAGE BODY: BETWEEN HEADER AND FOOTER -->
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bordercolor="red">
+  <tr><td colspan="4"><img src="/images/spacer.gif" width="1" height="5" alt=""></td></tr>
+  <tr><td colspan="4" bgcolor="#000000"><img src="/images/spacer.gif" height="2" width="1" alt=""></td></tr>
+  <tr><td colspan="4"><img src="/images/spacer.gif" width="1" height="5" alt=""></td></tr>
+  <tr>
+    <td><img src="/images/spacer.gif" width="5" height="1" alt=""></td>
+
+    <td align="left" valign="top"><small>
+      If you have questions or remarks about this site, visit the
+      <a href="http://vimonline.sf.net">vimonline development</a> pages.
+      Please use this site responsibly.
+      <br> 
+      
+      Questions about <a href="http://www.vim.org/about.php">Vim</a> should go
+      to the <a href="http://www.vim.org/maillist.php">maillist</a>.
+      Help Bram <a href="http://iccf-holland.org/">help Uganda</a>.
+      </small>
+	&nbsp;
+	&nbsp;
+
+	<!-- Start of StatCounter Code -->
+	<script type="text/javascript" language="javascript">
+	var sc_project=1417324; 
+	var sc_invisible=1; 
+	var sc_partition=11; 
+	var sc_security="d41633bc"; 
+	</script>
+
+	<script type="text/javascript" language="javascript" src="http://www.statcounter.com/counter/counter.js"></script><noscript><a href="http://www.statcounter.com/" target="_blank"><img  src="http://c12.statcounter.com/counter.php?sc_project=1417324&java=0&security=d41633bc&invisible=0" alt="free tracking" border="0"></a> </noscript>
+	<!-- End of StatCounter Code -->
+          </td>
+
+    <td align="right" valign="top">
+      		<a href="http://sourceforge.net/projects/vim" rel="nofollow"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=8&type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a>
+    </td>
+
+    <td><img src="/images/spacer.gif" width="5" height="1" alt=""></td>
+  </tr>
+
+    
+  <tr><td colspan="4"><img src="/images/spacer.gif" width="1" height="5" alt=""></td>
+  
+  </tr>
+</table>
+
+</body>
+</html>
+
