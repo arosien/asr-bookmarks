@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>ccache &mdash; Overview</title>
+<link rel="stylesheet" href="ccache.css" type="text/css">
+<meta name="google-site-verification" content="cVP6RySzgeBmWbeEtVBvQ3eJuXc5gH31LGLfqnNpC1g" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<div id="banner">
+<a href=".">
+<span style="font-size: 500%; text-shadow: 5px 5px 4px #777">ccache</span>
+<span style="font-size: 150%">&mdash; a fast C/C++ compiler cache</span>
+</a>
+</div>
+<div id="navigation">
+<div class="group" style="margin-top: 0">About it:</div>
+<ul>
+<li class="current"><a href=".">Overview</a></li>
+<li><a href="performance.html">Performance</a></li>
+<li><a href="news.html">News</a></li>
+<li><a href="credits.html">Credits</a></li>
+<li><a href="license.html">License</a></li>
+</ul>
+<div class="group">Get it:</div>
+<ul>
+<li><a href="download.html">Download</a></li>
+</ul>
+<div class="group">Use it:</div>
+<ul>
+<li><a href="manual.html">Manual</a></li>
+<li class="level1"><a href="http://lists.samba.org/mailman/listinfo/ccache/">Mailing list</a></li>
+<li class="level2"><a href="http://www.mail-archive.com/ccache@lists.samba.org">&ndash; Archive</a></li>
+</ul>
+<div class="group">Improve it:</div>
+<ul>
+<li><a href="bugs.html">Bug report</a></li>
+<li class="level2"><a href="https://bugzilla.samba.org/buglist.cgi?query_format=specific&amp;order=relevance+desc&amp;bug_status=__all__&amp;product=ccache">&ndash; View existing</a></li>
+<li class="level1"><a href="http://lists.samba.org/mailman/listinfo/ccache/">Mailing list</a></li>
+<li class="level2"><a href="http://www.mail-archive.com/ccache@lists.samba.org">&ndash; Archive</a></li>
+<li><a href="repo.html">Source repository</a></li>
+<li class="level2"><a href="http://gitweb.samba.org/?p=ccache.git">&ndash; Browse</a></li>
+<li class="level2"><a href="http://github.com/jrosdahl/ccache">&ndash; Mirror on GitHub</a></li>
+</ul>
+<div class="group">Related projects:</div>
+<ul>
+<li><a href="http://gcc.gnu.org">GCC</a></li>
+<li><a href="http://distcc.org">distcc</a></li>
+<li><a href="http://en.opensuse.org/Icecream">Icecream</a></li>
+<li><a href="http://cachecc1.sourceforge.net">cachecc1</a></li>
+<li><a href="http://sourceforge.net/projects/gocache">gocache</a></li>
+<li><a href="http://ccontrol.ozlabs.org">ccontrol</a></li>
+<li><a href="http://audited-objects.sourceforge.net">Audited Objects</a></li>
+</ul>
+</div>
+<div id="content">
+<h1>Overview</h1>
+<p>ccache is a compiler cache. It <a href="performance.html">speeds up
+recompilation</a> by caching previous compilations and detecting when the same
+compilation is being done again. Supported languages are C, C++, Objective-C
+and Objective-C++.</p>
+<p>ccache is free software, released under
+the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License
+version 3</a> or later. See also the <a href="license.html">license
+page</a>.</p>
+<h2>Latest news</h2>
+<ul class="news">
+<li><i>2010-11-28:</i> <a href="news.html#2010-11-28"><b>Version 3.1.3 has been released</b></a></li>
+<li><i>2010-11-21:</i> <a href="news.html#2010-11-21"><b>Version 3.1.2 has been released</b></a></li>
+<li><i>2010-11-07:</i> <a href="news.html#2010-11-07"><b>Version 3.1.1 has been released</b></a></li>
+<li><i>2010-09-16:</i> <a href="news.html#2010-09-16"><b>Version 3.1 has been released</b></a></li>
+<li><i>2010-07-15:</i> <a href="news.html#2010-07-15"><b>Version 3.0.1 has been released</b></a></li>
+<li><i>2010-06-20:</i> <a href="news.html#2010-06-20"><b>Version 3.0 has been released</b></a></li>
+<li><i>2010-05-10:</i> <a href="news.html#2010-05-10"><b>Version 3.0pre1 has been released</b></a></li>
+<li><i>2010-02-28:</i> <a href="news.html#2010-02-28"><b>Version 3.0pre0 has been released</b></a></li>
+<li><i>2010-02-11:</i> <a href="news.html#2010-02-11"><b>Searchable mailing list archive</b></a></li>
+<li><i>2010-01-27:</i> <a href="news.html#2010-01-27"><b>New maintainer</b></a></li>
+<li><i>2004-09-13:</i> <a href="news.html#2004-09-13"><b>Version 2.4 has been released</b></a></li>
+</ul>
+<h2>Features</h2>
+<ul>
+<li>Keeps statistics on hits/misses.</li>
+<li>Automatic cache size management.</li>
+<li>Can cache compilations that generate warnings.</li>
+<li>Easy installation.</li>
+<li>Low overhead.</li>
+<li>Optionally uses hard links where possible to avoid copies.</li>
+</ul>
+<h2>Limitations</h2>
+<ul>
+<li>Only knows how to cache the compilation of a single
+C/C++/Objective-C/Objective-C++ file. Other types of compilations (multi-file
+compilation, linking, etc) will silently fall back to running the real
+compiler.</li>
+<li>Only works with <a href="http://gcc.gnu.org">GCC</a> and compilers that
+behave similar enough.</li>
+<li>Some compiler flags are not supported. If such a flag is detected, ccache
+will silently fall back to running the real compiler.</li>
+</ul>
+<h2>Why bother?</h2>
+<p>If you ever run <code>make clean; make</code>, you can probably benefit from
+ccache. It is common for developers to do a clean build of a project for a
+whole host of reasons, and this throws away all the information from your
+previous compilations. By using ccache, recompilation goes much faster.</p>
+<p>Another reason to use ccache is that the same cache is used for builds in
+different directories. If you have several versions or branches of a software
+stored in different directories, many of the object files in a build directory
+can probably be taken from the cache even if they were compiled for another
+version or branch.</p>
+<p>A third scenario is using ccache to speed up clean builds performed by
+servers or build farms that regularly check that the code is buildable.</p>
+<p>You can also share the cache between users, which can be very useful on
+shared compilation servers.</p>
+<h2>Is it safe?</h2>
+<p>Yes. The most important aspect of a compiler cache is to <b>always</b>
+produce exactly the same output that the real compiler would produce. This
+includes providing exactly the same object files and exactly the same compiler
+warnings that would be produced if you use the real compiler. The only way you
+should be able to tell that you are using ccache is the speed.</p>
+<p>ccache has been coded very carefully to try to provide these guarantees.
+However, if you experience any bugs, please <a href="bugs.html">report
+them</a>.</p>
+</div>
+</body>
+</html>
