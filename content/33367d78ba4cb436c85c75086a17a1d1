@@ -1,0 +1,745 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 9">
+<meta name=Originator content="Microsoft Word 9">
+<link rel=File-List href="./index_files/filelist.xml">
+<link rel=Edit-Time-Data href="./index_files/editdata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>DMUCS – Distributed Multi-User Compilation System</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Victor Norman</o:Author>
+  <o:LastAuthor>Victor Norman</o:LastAuthor>
+  <o:Revision>2</o:Revision>
+  <o:TotalTime>294</o:TotalTime>
+  <o:Created>2006-03-28T14:58:00Z</o:Created>
+  <o:LastSaved>2006-03-28T14:58:00Z</o:LastSaved>
+  <o:Pages>2</o:Pages>
+  <o:Words>1121</o:Words>
+  <o:Characters>6395</o:Characters>
+  <o:Company>Marconi</o:Company>
+  <o:Lines>53</o:Lines>
+  <o:Paragraphs>12</o:Paragraphs>
+  <o:CharactersWithSpaces>7853</o:CharactersWithSpaces>
+  <o:Version>9.7616</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+@font-face
+	{font-family:Courier;
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:0;
+	mso-generic-font-family:modern;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:3 0 0 0 1 0;}
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+@font-face
+	{font-family:Batang;
+	panose-1:2 3 6 0 0 1 1 1 1 1;
+	mso-font-alt:\BC14\D0D5;
+	mso-font-charset:129;
+	mso-generic-font-family:roman;
+	mso-font-pitch:variable;
+	mso-font-signature:-1342176593 1775729915 48 0 524447 0;}
+@font-face
+	{font-family:"Lucida Sans";
+	panose-1:2 11 6 2 4 5 2 2 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:-2130662665 32891 8 0 159 0;}
+@font-face
+	{font-family:"\@Batang";
+	panose-1:2 3 6 0 0 1 1 1 1 1;
+	mso-font-charset:129;
+	mso-generic-font-family:roman;
+	mso-font-pitch:variable;
+	mso-font-signature:-1342176593 1775729915 48 0 524447 0;}
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h1
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	font-size:16.0pt;
+	font-family:Arial;
+	mso-font-kerning:16.0pt;}
+h2
+	{mso-style-update:auto;
+	mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:2;
+	font-size:14.0pt;
+	font-family:"Lucida Sans";
+	mso-bidi-font-family:Arial;
+	mso-bidi-font-style:italic;}
+p.MsoBodyTextIndent, li.MsoBodyTextIndent, div.MsoBodyTextIndent
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:1.5in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:Courier;
+	mso-fareast-font-family:Batang;
+	mso-bidi-font-family:"Times New Roman";}
+p.MsoBodyTextIndent2, li.MsoBodyTextIndent2, div.MsoBodyTextIndent2
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Lucida Sans";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;
+	text-underline:single;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+@list l0
+	{mso-list-id:24403149;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1164536884 67698689 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l1
+	{mso-list-id:243926500;
+	mso-list-type:hybrid;
+	mso-list-template-ids:859484044 67698689 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l1:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l2
+	{mso-list-id:1068068939;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-2048514046 67698689 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l2:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l2:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l2:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l2:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l2:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l2:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:3.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l2:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l2:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l2:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:4.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l3
+	{mso-list-id:1382096844;
+	mso-list-type:hybrid;
+	mso-list-template-ids:36630176 67698689 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l3:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l4
+	{mso-list-id:1663702531;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1240371588 67698689 67698691 67698689 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l4:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l4:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l4:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l4:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l4:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l5
+	{mso-list-id:1872721265;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1589672002 67698689 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l5:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l6
+	{mso-list-id:1953240545;
+	mso-list-type:hybrid;
+	mso-list-template-ids:181183572 67698689 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l6:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l7
+	{mso-list-id:2001501839;
+	mso-list-type:hybrid;
+	mso-list-template-ids:657738832 67698689 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l7:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+</head>
+
+<body lang=EN-US link=blue vlink=purple style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<h1><span style='font-family:"Lucida Sans"'>DMUCS – a Distributed Multi-User
+Compilation System<span style='mso-tab-count:3'>             </span><span
+style='mso-tab-count:3'>                  </span><!--[if gte vml 1]><v:shapetype
+ id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t"
+ path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1025" type="#_x0000_t75" style='width:62.25pt;
+ height:65.25pt'>
+ <v:imagedata src="./dmucs-logo-large.gif" o:title="DMUCS"/>
+</v:shape><![endif]--><![if !vml]><img width=83 height=87
+src="./dmucs-logo-large.gif" v:shapes="_x0000_i1025"><![endif]><o:p></o:p></span></h1>
+
+<p class=MsoNormal><span style='font-family:"Lucida Sans"'>(for use with <a
+href="http://distcc.samba.org/">distcc</a>)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Lucida Sans"'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Lucida Sans"'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Lucida Sans";mso-fareast-font-family:
+Batang'>DMUCS is a system that allows a group of users to share a compilation
+farm.<span style="mso-spacerun: yes">  </span>Each compilation request from
+each user will be sent to the fastest available machine, every time.<span
+style="mso-spacerun: yes">  </span>The system has these fine qualities:<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Lucida Sans";mso-fareast-font-family:
+Batang'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo3;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Supports
+     multiple users compiling simultaneously, and scales well to handle the new
+     loads.<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo3;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Supports
+     multiple operating systems in the compilation farm.<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo3;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Uses all
+     processors of a multi-processor compilation host.<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo3;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Makes
+     best use of compilation hosts with widely differing CPU speeds.<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo3;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Guarantees
+     that a compilation host will not be overloaded by compilations.<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo3;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Takes
+     into account the load on a host caused by non-compilation tasks.<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo3;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Supports
+     the dynamic addition and removal of hosts to the compilation farm.<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo3;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Works
+     with distcc, which need not be altered in any way.<o:p></o:p></span></li>
+</ul>
+
+<p class=MsoNormal><span style='font-family:"Lucida Sans";mso-fareast-font-family:
+Batang'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Lucida Sans";mso-fareast-font-family:
+Batang'>DMUCS consists of these (main) programs:<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Lucida Sans";mso-fareast-font-family:
+Batang'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l4 level1 lfo6;tab-stops:list .5in'><i><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>dmucs: </span></i><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>the
+     “host-server”.<span style="mso-spacerun: yes">  </span>This application
+     reads a configuration file indicating the number of CPUs and the “power”
+     of each potential host in the compilation farm.<span style="mso-spacerun:
+     yes">  </span>It then receives over the network:<o:p></o:p></span></li>
+ <ul style='margin-top:0in' type=circle>
+  <li class=MsoNormal style='mso-list:l4 level2 lfo6;tab-stops:list 1.0in'><span
+      style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>load
+      average information from each compilation host.<o:p></o:p></span></li>
+  <li class=MsoNormal style='mso-list:l4 level2 lfo6;tab-stops:list 1.0in'><span
+      style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>host
+      requests from compile tasks that need remote hosts on which to run.<o:p></o:p></span></li>
+  <li class=MsoNormal style='mso-list:l4 level2 lfo6;tab-stops:list 1.0in'><span
+      style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>information
+      requests from monitoring applications.<o:p></o:p></span></li>
+  <li class=MsoNormal style='mso-list:l4 level2 lfo6;tab-stops:list 1.0in'><span
+      style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>status
+      requests from an administrator.<o:p></o:p></span></li>
+ </ul>
+</ul>
+
+<p class=MsoNormal style='margin-left:.5in'><i><span style='font-family:"Lucida Sans";
+mso-fareast-font-family:Batang'>dmucs</span></i><span style='font-family:"Lucida Sans";
+mso-fareast-font-family:Batang'> maintains the database of hosts in the
+compilation farm, and assigns hosts to compilation tasks, giving out the best
+host/cpu available when the compilation task asks.<o:p></o:p></span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l4 level1 lfo6;tab-stops:list .5in'><i><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>gethost: </span></i><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>a
+     compilation task uses <i>gethost </i>get a host/cpu from the <i>dmucs</i>
+     server.<span style="mso-spacerun: yes">  </span>In general, a makefile
+     will perform a compilation this way:<o:p></o:p></span></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:1.5in;text-indent:.5in'><span
+style='font-family:Courier;mso-fareast-font-family:Batang'>gethost distcc gcc
+...<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in'><i><span style='font-family:"Lucida Sans";
+mso-fareast-font-family:Batang'>gethost </span></i><span style='font-family:
+"Lucida Sans";mso-fareast-font-family:Batang'>contacts the server to get a
+host, which it puts into the environment variable DISTCC_HOSTS.<span
+style="mso-spacerun: yes">  </span><i>gethost </i>then calls the program given
+to it.<span style="mso-spacerun: yes">  </span>After that program ends, <i>gethost
+</i>releases the assigned host back to the <i>dmucs</i> server.<o:p></o:p></span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l4 level1 lfo6;tab-stops:list .5in'><i><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>loadavg: </span></i><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>the
+     administrator of the compilation farm must start this application on each
+     compilation host.<span style="mso-spacerun: yes">  </span><i>loadavg</i>
+     sends the load average of the compilation host to the <i>dmucs</i> server
+     periodically.<span style="mso-spacerun: yes">  </span>The <i>dmucs</i>
+     server will “downgrade” a compilation host if the host’s load averages
+     goes too high.<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l4 level1 lfo6;tab-stops:list .5in'><i><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>monitor:</span></i><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'> the
+     administrator (or anyone) may use this program to monitor the busy-ness of
+     the compilation farm.<span style="mso-spacerun: yes">  </span>It displays
+     which hosts/cpus are available in the compilation farm, which hosts/cpus
+     have compilation tasks assigned to them, which hosts have been made
+     administratively unavailable, and which hosts are “silent” – i.e., the <i>dmucs</i>
+     server has not received a load average message from the compilation host
+     for a while.<o:p></o:p></span></li>
+</ul>
+
+<h2><span style='mso-fareast-font-family:Batang'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1026" type="#_x0000_t75" style='width:25.5pt;height:26.25pt'>
+ <v:imagedata src="./dmucs-logo-small.gif" o:title="DMUCS"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=34 height=35
+src="./dmucs-logo-small.gif" v:shapes="_x0000_i1026"><![endif]><span
+style="mso-spacerun: yes">  </span>Installing DMUCS<o:p></o:p></span></h2>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l7 level1 lfo11;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans"'>Get the latest version of DMUCS (0.6)
+     from <a
+     href="http://prdownloads.sourceforge.net/dmucs/dmucs-0.6.tar.bz2?download">here</a>.</span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo14;tab-stops:list .5in'><i><span
+     style='font-family:"Lucida Sans"'>dmucs </span></i><span style='font-family:
+     "Lucida Sans"'>installs using the standard ‘configure’, ‘make’, and ‘make
+     install’ steps.<span style="mso-spacerun: yes">  </span>
+     <i><span style='font-family:
+     "Lucida Sans";mso-fareast-font-family:Batang'><o:p></o:p></span></i></li>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo14;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans"'>Run </span><span style='font-family:
+     Courier'>configure. </span><span style='font-family:"Lucida Sans"'>You may
+     wish to use the -–prefix argument to ‘configure’ if you don’t want the
+     executables, documentation, and configuration files to be installed under
+     /usr/local.<span style="mso-spacerun: yes">  </span>Specifically, the
+     -–prefix argument will tell <i>dmucs</i> where to go to look for the
+     hosts-info file (/usr/local/share/dmucs/hosts-info, by default).<o:p></o:p></span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l6 level1 lfo17;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Run </span><span
+     style='font-family:Courier;mso-fareast-font-family:Batang'>make
+     CPPFLAGS=-DSERVER_MACH_NAME=\\\”&lt;machine-name&gt;\\\”</span><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>, where
+     &lt;machine-name&gt; is where you have chosen to run the <i>dmucs</i>
+     server.<span style="mso-spacerun: yes">  </span></span><span
+     style='font-family:"Lucida Sans"'>NOTE: this machine does <i>not</i> have
+     to be a powerful machine – I’ve used a very wimpy Sun Ultra 5 very
+     successfully.<o:p></o:p></span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l3 level1 lfo20;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Run </span><span
+     style='font-family:"Courier New";mso-fareast-font-family:Batang'>make
+     install</span><span style='font-family:"Lucida Sans";mso-fareast-font-family:
+     Batang'>.<o:p></o:p></span></li>
+</ul>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo14;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans"'>Make sure you have your compilers in
+     place on each host.<span style="mso-spacerun: yes">  </span>They must all
+     be found in the same directory on every compilation host.<span
+     style="mso-spacerun: yes">  </span>Also, make sure you have in place the
+     distcc executables (<i>distcc</i> and <i>distccd</i>, at least).</span><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'><o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo14;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans"'>Make sure the <i>loadavg</i> executable
+     can be accessed and executed on each host.</span><span style='font-family:
+     "Lucida Sans";mso-fareast-font-family:Batang'><o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo14;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans"'>Make sure the <i>dmucs</i> executable
+     can be accessed and executed on the machine you have chosen as your server
+     machine.<span style="mso-spacerun: yes">  </span></span><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'><o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo14;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans"'>Create a <i>hosts-info</i> file in the location
+     ‘/usr/local/share/dmucs/hosts-info’ (or, if you specified –-prefix when
+     ‘configure’ing, in &lt;prefix&gt;/share/dmucs/hosts-info).&nbsp; Here is a
+     sample hosts-info file:</span><span style='font-family:"Lucida Sans";
+     mso-fareast-font-family:Batang'><o:p></o:p></span></li>
+</ul>
+
+<p class=MsoBodyTextIndent># Format: machine number-of-cpus power-index</p>
+
+<p class=MsoNormal style='margin-left:1.5in'><span style='font-family:Courier;
+mso-fareast-font-family:Batang'>linux-comp-1<span style='mso-tab-count:2'>       </span>4<span
+style='mso-tab-count:2'>         </span>10<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.5in'><span style='font-family:Courier;
+mso-fareast-font-family:Batang'>solaris-comp-1<span style='mso-tab-count:2'>     </span>2<span
+style='mso-tab-count:2'>         </span>5<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.5in'><span style='font-family:Courier;
+mso-fareast-font-family:Batang'>solaris-comp-2<span style='mso-tab-count:2'>     </span>2<span
+style='mso-tab-count:2'>         </span>5<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.5in'><span style='font-family:Courier;
+mso-fareast-font-family:Batang'>old-linux-comp-1<span style='mso-tab-count:
+1'>   </span>1<span style='mso-tab-count:2'>         </span>4<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.5in'><span style='font-family:Courier;
+mso-fareast-font-family:Batang'>old-solaris-comp-3<span style='mso-tab-count:
+1'> </span>1<span style='mso-tab-count:2'>         </span>2<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.5in'><span style='font-family:Courier;
+mso-fareast-font-family:Batang'>169.144.80.25<span style='mso-tab-count:2'>      </span>1<span
+style='mso-tab-count:2'>         </span>2<o:p></o:p></span></p>
+
+<p class=MsoBodyTextIndent2>As you can see, the format is simple: each line is
+a host's name, then the number of cpus on that machine, and then the
+&quot;power index&quot; of that machine.&nbsp; If you know that some machines
+are much more powerful than others, then give them higher power indices.&nbsp;
+The value must be &gt;= 1. If you don't want to bother with a hosts-info file,
+the system will still work, but all machines will be treated equally, and the
+code will assume each machine has only 1 cpu.<span style="mso-spacerun: yes"> 
+</span>(More information on how to choose power indices is given below.)<span
+style='mso-fareast-font-family:Batang'><o:p></o:p></span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo14;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans"'>Go to your host server machine and
+     install and start up the <i>dmucs</i> executable.</span><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'><o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo14;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans"'>Go to <i>each</i> compilation host
+     machine and run <i>loadavg </i>and start up the <i>distccd</i> daemons.&nbsp;
+     The output from the <i>dmucs</i> executable should show each host being
+     registered.<span style="mso-spacerun: yes">  </span>(Alternatively, you
+     can use the shell script <i>enable-host</i> found in the dmucs/scripts
+     directory.<span style="mso-spacerun: yes">  </span>This will start up the <i>loadavg
+     and distccd</i> programs on the host machine.)</span><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'><o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo14;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans"'>In your Makefiles (or Construct or
+     SConstruct files), make each compilation line look like this:</span><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'><o:p></o:p></span></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:1.5in'><span style='font-family:Courier;
+mso-fareast-font-family:Batang'>gethost distcc gcc ...<o:p></o:p></span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo25;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Run your
+     build script and see the compilations being farmed out to the fastest
+     available compilation machines in your network.<o:p></o:p></span></li>
+</ul>
+
+<p class=MsoNormal><span style='font-family:"Lucida Sans";mso-fareast-font-family:
+Batang'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<h2><span style='mso-fareast-font-family:Batang'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1027" type="#_x0000_t75" style='width:25.5pt;height:26.25pt'>
+ <v:imagedata src="./dmucs-logo-small.gif" o:title="DMUCS"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=34 height=35
+src="./dmucs-logo-small.gif" v:shapes="_x0000_i1027"><![endif]><span
+style="mso-spacerun: yes">  </span>Tips and Tricks<o:p></o:p></span></h2>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo25;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>If you
+     are having problems getting DMUCS to work, first make sure that you can
+     compile using <i>distcc</i>, but not <i>dmucs</i>.<span
+     style="mso-spacerun: yes">  </span>If this works, then you are most of the
+     way there.<span style="mso-spacerun: yes">  </span>If not, then you should
+     go to the <a href="http://distcc.samba.org/">distcc web page</a> for lots
+     of hints on getting distcc to work.<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo25;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>If you
+     don’t know what values to give for the “power index” values in the
+     hosts-info file, you can do this: <o:p></o:p></span></li>
+ <ol style='margin-top:0in' start=1 type=1>
+  <li class=MsoNormal style='mso-list:l1 level2 lfo25;tab-stops:list 1.0in'><span
+      style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Set up
+      distcc to run a single compilation on a single compilation host.<span
+      style="mso-spacerun: yes">  </span><o:p></o:p></span></li>
+  <li class=MsoNormal style='mso-list:l1 level2 lfo25;tab-stops:list 1.0in'><span
+      style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Repeat this
+      for the same file on each host, measuring the time it takes to compile
+      each time.<o:p></o:p></span></li>
+  <li class=MsoNormal style='mso-list:l1 level2 lfo25;tab-stops:list 1.0in'><span
+      style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Give
+      your slowest machine the power index 1.<span style="mso-spacerun: yes"> 
+      </span>Then, if the second slowest machine is twice as fast give it the
+      index 2.<span style="mso-spacerun: yes">  </span>If you have a machine
+      that is 10 times faster, give it the index 10.<span style="mso-spacerun:
+      yes">  </span><o:p></o:p></span></li>
+  <li class=MsoNormal style='mso-list:l1 level2 lfo25;tab-stops:list 1.0in'><span
+      style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>Note
+      that it is often very useful to have multiple machines have the same
+      power index.<span style="mso-spacerun: yes">  </span>In this case, <i>dmucs</i>
+      will randomly assign compilation tasks to the cpus for hosts with the
+      same power index.<o:p></o:p></span></li>
+ </ol>
+</ul>
+
+<p class=MsoNormal><span style='font-family:"Lucida Sans";mso-fareast-font-family:
+Batang'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<h2><span style='mso-fareast-font-family:Batang'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1028" type="#_x0000_t75" style='width:25.5pt;height:26.25pt'>
+ <v:imagedata src="./dmucs-logo-small.gif" o:title="DMUCS"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=34 height=35
+src="./dmucs-logo-small.gif" v:shapes="_x0000_i1028"><![endif]><span
+style="mso-spacerun: yes">  </span>Details on How </span><i style='mso-bidi-font-style:
+normal'><span style='mso-fareast-font-family:Batang'>DMUCS</span></i><span
+style='mso-fareast-font-family:Batang'> Selects Hosts<o:p></o:p></span></h2>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l5 level1 lfo29;tab-stops:list .5in'><i><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>dmucs</span></i><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'> stores
+     information about each compilation host in a <i>tier</i> that equals the
+     host’s power index.<span style="mso-spacerun: yes">  </span>Thus, if there
+     are 3 machines all with power index 6, <i>dmucs</i> will put all machines
+     at tier 6.</span><span style='mso-fareast-font-family:Batang'><o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l5 level1 lfo29;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>When <i>dmucs</i>
+     gets a host request, it randomly selects one of the cpus from one of the
+     hosts in the highest tier.</span><span style='mso-fareast-font-family:
+     Batang'><o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l5 level1 lfo29;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>When <i>dmucs
+     </i>gets a load average message from a compilation host indicating that
+     the load average on the machine is nearing 1.0 (or, more precisely, <i>number-of-cpus
+     </i>* 1.0), <i>dmucs</i> moves the cpus for that machine from tier <i>power-index</i>
+     to tier <i>power-index </i>– 1.<span style="mso-spacerun: yes"> 
+     </span>Thus, if a machine at tier 6 is getting overloaded, it is moved to
+     tier 5.<span style="mso-spacerun: yes">  </span>Subsequent <i>gethost</i>
+     requests will result in allocations from remaining hosts at tier 6, thus
+     lightening the load on the machine that was “downgraded”.</span><span
+     style='mso-fareast-font-family:Batang'><o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l5 level1 lfo29;tab-stops:list .5in'><span
+     style='font-family:"Lucida Sans";mso-fareast-font-family:Batang'>If a
+     machine’s load average stays above its power-index * 1.0 for more than 5
+     minutes, <i>dmucs</i> will move the machine to the “overloaded” state in
+     its internal database.<span style="mso-spacerun: yes">  </span>No more
+     compilations will be assigned to the host until its load average comes
+     back down, and <i>dmucs</i> moves the machine back to its original tier.</span><span
+     style='mso-fareast-font-family:Batang'><o:p></o:p></span></li>
+</ul>
+
+<p class=MsoNormal><span style='font-family:"Lucida Sans";mso-fareast-font-family:
+Batang'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<h2>Author: <a href="mailto:vic.norman@gmail.com"><span style='color:windowtext;
+text-decoration:none;text-underline:none'>Victor Norman</span></a><span
+style='mso-fareast-font-family:Batang'><o:p></o:p></span></h2>
+
+</div>
+
+</body>
+
+</html>
