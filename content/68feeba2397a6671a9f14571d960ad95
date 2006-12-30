@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>Cerberus: Home</title>
+    <link rel="stylesheet" type="text/css" href="default.css"/>
+    <meta content="Cerberus OpenSource Countinuous Integration CI tool builder Ruby RubyOnRails test infected rake maven subversion Anatol Pomozov">
+  </head>
+  <body>
+    <div id="page">
+      <div id="header">
+       <div id="site-title"><a href="http://cerberus.rubyforge.org/">Ce<font color="red">rb</font>erus</a></div>
+       <div id="site-subtitle">Continuous Integration tool for Ruby.<br><small>Would you like to install it? Just type 'gem install cerberus'.</small></div>
+      </div>
+      <hr class="hidden"/>
+      <div id="main">
+        <div id="sidebar-wrapper">
+          <div id="sidebar">
+            <h3>Menu</h3>
+            <ul><li class="webgen-menu-level1 webgen-menu-item-selected"><span>Home</span></li><li class="webgen-menu-level1"><a href="faq.html">FAQ</a></li><li class="webgen-menu-level1"><a href="options.html">Config Option Index</a></li><li class="webgen-menu-level1"><a href="in_the_web.html">On the Web</a></li><li class="webgen-menu-level1"><a href="credits.html">Credits</a></li></ul>
+            <dl>
+              <dt><a href="http://rubyforge.org/frs/?group_id=1794">Downloads</a><br /></dt>
+              <dt><a href="http://cpjolicoeur.lighthouseapp.com/projects/22299-cerberus">Issue Tracker</a><br /></dt>
+              <dt><a href="http://groups.google.com/group/cerberusci">Public Forum / Mailing List</a><br /></dt>
+              <dt><a href="http://wiki.github.com/cpjolicoeur/cerberus">Wiki</a><br /></dt>
+              <dt><a href="http://github.com/cpjolicoeur/cerberus/tree">GitHub Source</a><br /></dt>
+              <dt><a href="http://twitter.com/cerberusci">Twitter</a><br /></dt>
+            </dl>
+          </div>
+        </div>
+        <div id="content-wrapper">
+          <div id="content"><h2 id='cerberus'>Cerberus</h2>
+
+<p>Cerberus is a lightweight and easy-to-use Continuous Builder software for Ruby. It could be run periodically from a scheduler and check if application tests are broken. In case of failed tests Cerberus sends notification to developers.</p>
+
+<p>Cerberus works perfectly both on Windows and *nix platforms and supports popular version control systems like Subversion, Git, Mercurial, Bazaar, Darcs and Perforce. It also has many ways in publishing build results such as e-mail, jabber, <a href='http://twitter.com'>Twitter</a>, <a href='http://www.campfirenow.com'>Campfire</a>, IRC and RSS files.</p>
+
+<p>Cerberus requires:</p>
+
+<ul>
+<li><a href='http://ruby-lang.org/en/'>ruby</a> - 1.8.2 or higher</li>
+</ul>
+
+<p>Optional requirements:</p>
+
+<ul>
+<li><a href='http://rubyforge.org/projects/rake'>rake</a> - 0.7 or higher</li>
+
+<li><a href='http://subversion.tigris.org/'>subversion</a></li>
+
+<li><a href='http://git.or.cz'>git</a></li>
+
+<li><a href='http://mercurial.selenic.com/'>mercurial</a></li>
+
+<li><a href='http://bazaar-vcs.org/'>bazaar</a></li>
+
+<li><a href='http://darcs.net/'>darcs</a> client - 1.0.7 or higher</li>
+
+<li><a href='http://www.boost.org/tools/build/v2/index.html'>bjam</a></li>
+
+<li><a href='http://www.perforce.com/'>perforce</a></li>
+</ul>
+
+<h4 id='what_does_cerberus_name_mean'>What does &#8216;Cerberus&#8217; name mean?</h4>
+
+<p>Quote from <a href='http://en.wikipedia.org/wiki/Cerberus'>Wikipedia</a></p>
+
+<blockquote>
+<p>Cerberus or Kerberos (Kerberos, demon of the pit), was the hound of Hades-a monstrous three-headed dog with a snake for a tail and innumerable snake heads on his back. He guarded the gate to Hades (the Greek underworld) and ensured that the dead could not leave and the living could not enter. His brother was Orthrus. He is the offspring of Echidna and Typhon.</p>
+</blockquote>
+
+<p><img src='images/cerberus.gif' alt='Cerberus image' /></p>
+
+<p>So Ruby Cerberus tool (like his ancestor) will guard your application tests and won&#8217;t let your project go to the world of dead projects.</p>
+
+<h4 id='there_are_several_solutions_already_present_why_do_you_need_to_use_cerberus'>There are several solutions already present, why do you need to use Cerberus?</h4>
+
+<p>Main advantages of Cerberus over other solutions:</p>
+
+<ul>
+<li>Cerberus could be installed on any machine, not only where SVN repository is located.</li>
+
+<li>Cerberus works not only for Rails projects, but also for any other Ruby projects (more precisely, for all projects using Rake).</li>
+
+<li>Cerberus is multiplatform solution: it runs great on *nix and Windows.</li>
+
+<li>Cerberus is distributed via RubyGems, so it is very easy to install and update to the latest available version.</li>
+
+<li>Cerberus is very easy to start using. Just type <code>cerberus add PROJECT_URL|PROJECT_DIR</code>.</li>
+
+<li>Cerberus is a lightweight solution: most of the time Ruby process will not even run. Cerberus runs <code>rake</code> only in case of changes are found in the project.</li>
+</ul>
+
+<p>It is very easy to use Cerberus. First install it. Using RubyGems package manager is the easiest way to do it.</p>
+<pre>gem install cerberus --include-dependencies</pre>
+<p>or just get Cerberus distribution package right from <a href='http://rubyforge.org/frs/?group_id=1794&amp;release_id=6442'>the download page</a></p>
+
+<p>Then you need to add project which will be watched by Cerberus. Do it by</p>
+
+<p><pre>cerberus add (DIR|SVN_URL) APPLICATION_NAME=some_app RECIPIENTS=dev1@project.com</pre></p>
+
+<p>as a second parameter you could pass URL to subversion repository or directory with working SVN folder.</p>
+
+<p>Go to ~/.cerberus and edit config.yml file (only once after installing Cerberus). Enter your configuration options here like email server, password, user_name and other options. See <a href='http://api.rubyonrails.com/classes/ActionMailer/Base.html'>ActiveMailer</a> description for more - Cerberus uses it as default notification layer.</p>
+
+<p>Here is an example of configuration file</p>
+<pre>
+publisher:
+  mail:
+    address: smtp.gmail.com
+    port: 587
+    domain: gmail.com
+    authentication: plain
+    user_name: someuser
+    password: somemail
+</pre>
+<p>Also check ~/.cerberus/config/&#60;APPLICATION_NAME&#62;.yml and make sure your options are correct.</p>
+
+<p>Then run Cerberus for the project:</p>
+<pre>cerberus build APPLICATION_NAME</pre>
+<p>or build <strong>all</strong> registered projects:</p>
+<pre>cerberus buildall</pre>
+<p>Cerberus will check out latest sources and run tests for your application. If tests are broken, recipients will receive notifications.</p>
+
+<p>But of course it is better to run Cerberus automatically i.e. from Cron, say, every 10 minutes.</p>
+
+<p>Also, if you have the option of installing your own software where the Subversion server is located then it is better to run cerberus from Subversion hook. In this case Cerberus would run right after commit without any delays!</p>
+
+<p>Now you can see that to setup Cerberus is a very easy thing to do - no need for long manuals and costly training, no consultants whatsoever or weeks of setting up the software. Cerberus - Just Use It!&#169;</p></div>
+        </div>
+      </div>
+      <hr class="hidden" />
+      <div id="footer">
+        <p>Copyright &copy; 2006-2009, <a href="http://pomozov.info">Anatol Pomozov</a>. All rights reserved.<br />
+           This site was generated by <a href="http://webgen.rubyforge.org/">WebGen</a>.</p>
+      </div>
+    </div>
+    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+    _uacct = "UA-171695-9";
+    urchinTracker();
+    </script>
+  </body>
+</html>
