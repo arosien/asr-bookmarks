@@ -1,0 +1,589 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<head profile="http://www.w3.org/2000/08/w3c-synd/#">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Created in TextMate on OS X." />
+<meta name="description" content="Daniel Miessler's continuing journey to discover and share the interesting and beautiful things in our world for the purpose of increasing happiness and reducing suffering." /> 
+<meta name="keywords" content="daniel miessler, miessler, information security, infosec, philosophy, politics, humor, photography, table tennis, atheism" />
+<link rel="stylesheet" type="text/css" href="http://danielmiessler.com/css/danielmiessler.css" />
+<link rel="alternate" type="application/rss+xml" title="danielmiessler.com | blog" href="http://feeds.danielmiessler.com/danielmiessler" />
+<script src="http://static.danielmiessler.com/includes/head.load.js"></script> 
+<script> 
+head.js("http://static.danielmiessler.com/includes/googleanalytics.js").js("http://static.danielmiessler.com/includes/chartbeat.js");
+</script>
+<meta name="keywords" content="lsof tutorial, lsof primer, tutorial, primer, linux, linux security, unix, nix, connections, netstat, tcp, udp, listening, outbound, malicious, tcpip, processes, forensics, files, tcp/ip" />
+<title>lsof | danielmiessler.com</title>
+</head>
+
+<body>
+
+<div id="container">
+	
+<!-- Header -->
+<div id="header"> 
+<a href="http://danielmiessler.com"><img width="300" height="50" class="borderless" alt="Logo Image" src="http://static.danielmiessler.com/images/logo.png" /></a> 
+</div>
+<div id="menu"> 
+<a href="/">Blog</a> | <a
+href="/writing/">Writing</a> | <a href="/study/">Study</a> | <a
+href="/projects/">Projects</a> | <a href="/arguments/">Arguments</a> | <a href="/about/">About</a> | <a
+href="/contact/">Contact</a> | <a href="/syndication/">Syndication</a>
+</div>
+<div id="main">
+
+<h1><code>lsof</code></h1>
+
+<!-- Social Header -->
+<!-- Social Bookmarks | Header -->
+<div id="socialheader">
+<ul id="sociallinksheader">
+<li>
+<a id="socialfacebook" href="javascript:window.location=%22http://www.facebook.com/sharer.php?u=%22+encodeURIComponent(document.location)+%22&#38;t=%22+encodeURIComponent(document.title)" title="Share on Facebook..."><span></span></a>
+</li>
+<li>
+<a id="socialtwitter" href="http://twitter.com/danielmiessler" title="Find me on Twitter..."><span></span></a>
+</li>
+<li>
+<a id="socialreddit" href="javascript:window.location = 'http://reddit.com/submit?url=' + encodeURIComponent(window.location)" title="Share on Reddit..."><span></span></a>
+</li>
+<li>
+<a id="socialstumble" href="javascript:window.location = 'http://www.stumbleupon.com/submit?url=' + encodeURIComponent(window.location)" title="Share on Stumbleupon..."><span></span></a>
+</li>
+<li>
+<a id="socialdigg" href="	javascript:location.href='http://digg.com/submit?phase=2&#38;url='+encodeURIComponent(document.location.href)+' '" title="Share on Digg..."><span></span></a>
+</li>
+<li>
+<a id="socialhacker" href="javascript:window.location=%22http://news.ycombinator.com/submitlink?u=%22+encodeURIComponent(document.location)+%22&#38;t=%22+encodeURIComponent(document.title)"><span></span></a>
+</li>
+<li>
+<a id="socialseparator" href="" title="separator"><span></span></a>
+</li>
+<li>
+<a id="socialprint" href="javascript:window.print()" title="Print this page..."><span></span></a>
+</li>
+<li>
+<a id="socialemail" href="mailto:" title="Email this..."><span></span></a>
+</li>
+<li>
+<a id="socialseparator2" href="" title="separator2"><span></span></a>
+</li>
+<li>
+<a id="socialrss" href="http://feeds.danielmiessler.com/danielmiessler" title="Subscribe to my site..."><span></span></a>
+</li>
+</ul>
+</div> 
+<p><code><b>lsof</b></code> is the Linux/Unix über-tool. I use it most for getting network connection related information from a system, but that's just the beginning for this amazing and little-known application. The tool is aptly called lsof because it "<b>list</b>s <b>open</b> <b>files</b>". And remember, in Unix just about everything (including a network socket) is a file.</p>
+
+<p><small><red>** <code><larger>lsof</larger></code> is also the Linux/Unix command with the most switches. It has so many it has to use both pluses and minuses.</red></small></p>
+
+<pre class="codeblock">
+usage: [-?abhlnNoOPRstUvV] [+|-c c] [+|-d s] [+D D] [+|-f[cgG]]
+ [-F [f]] [-g [s]] [-i [i]] [+|-L [l]] [+|-M] [-o [o]]
+ [-p s] [+|-r [t]] [-S [t]] [-T [t]] [-u s] [+|-w] [-x [fl]] [--] [names]
+</pre>
+
+<p>As you can see, <code>lsof</code> has a truly staggering number of options. You can use it to get information about devices on your system, what a given user is touching at any given point, or even what files or network connectivity a process is using. <code>lsof</code> replaces my need for both <code>netstat</code> and <code>ps</code> entirely. It has everthing I get from those tools and much, much more.</p>
+
+<h2>Show Your Network Connections</h2>
+
+<h3>Show all connections with <code><larger>-i</larger></code></h3>
+<code><b>lsof -i</b></code>
+<br />
+<p><pre class="codeblock">
+COMMAND  PID USER   FD   TYPE DEVICE SIZE NODE NAME
+dhcpcd 6061 root 4u IPv4 4510 <purple>UDP *:bootpc</purple>
+sshd 7703 root 3u IPv6  6499 <purple>TCP *:ssh (LISTEN)</purple>
+sshd 7892 root 3u IPv6  6757 <purple>TCP 10.10.1.5:ssh->192.168.1.5:49901 (ESTABLISHED)</purple>
+</pre>
+</p>
+
+<br />
+
+<h3>Show only TCP (works the same for UDP)</h3>
+<code><b>lsof -iTCP</b></code>
+<br />
+<p><pre class="codeblock">
+COMMAND  PID USER   FD   TYPE DEVICE SIZE NODE NAME
+sshd 7703 root 3u IPv6 6499 <green>TCP</green> *:ssh (LISTEN)
+sshd 7892 root 3u IPv6 6757 <green>TCP</green> 10.10.1.5:ssh->192.168.1.5:49901 (ESTABLISHED)
+</pre>
+</p>
+
+<br >
+
+<h3><code><larger>-i :port</larger></code> shows all networking related to a given port</h3>
+<code><b>lsof -i <red>:22</red></b></code>
+<br />
+<p><pre class="codeblock">
+COMMAND  PID USER   FD   TYPE DEVICE SIZE NODE NAME
+sshd 7703 root 3u  IPv6 6499 <green>TCP</green> *:ssh (LISTEN)
+sshd 7892 root 3u  IPv6 6757 <green>TCP</green> 10.10.1.5:ssh->192.168.1.5:49901 (ESTABLISHED)
+</pre>
+</p>
+
+<p class="banner_ad">
+<script type="text/javascript"><!--
+google_ad_client = "pub-2677272500934866";
+/* Study_Links_468x15 */
+google_ad_slot = "1637573605";
+google_ad_width = 468;
+google_ad_height = 15;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</p>
+
+<h3>To show connections to a specific host, use <code><larger>@host</larger></code></h3>
+<code><b>lsof -i@192.168.1.5</b></code>
+<br />
+<p><pre class="codeblock">
+sshd 7892 root 3u IPv6 6757 <brown>TCP 10.10.1.5:ssh->192.168.1.5:49901</brown> (ESTABLISHED)
+</pre>
+</p>
+
+<h3>Show connections based on the host and the port using <code><larger>@host:port</larger></code> </h3>
+<code><b>lsof -i@192.168.1.5<red>:22</red></b></code>
+<br />
+<p><pre class="codeblock">
+sshd 7892 root 3u IPv6 6757 <brown>TCP 10.10.1.5:ssh->192.168.1.5:49901</brown> (ESTABLISHED)
+</pre>
+</p>
+
+<br />
+
+<h3><code><larger>Grep</larger></code></larger>ping for "LISTEN" shows what ports your system is waiting for connections on</small></h3>
+<code><b>lsof -i<orange>| grep LISTEN</orange></b></code>
+<br />
+<p><pre class="codeblock">
+iTunes     400 daniel   16u  IPv4 0x4575228  0t0 TCP *:daap <green>(LISTEN)</green>
+</pre>
+</p>
+
+<br />
+
+<h3><larger><code>Grep</code></larger>ping for "ESTABLISHED" shows current active connections</h3>
+<code><b>lsof -i<orange>| grep ESTABLISHED</orange></b></code>
+<br />
+<p><pre class="codeblock">
+firefox-b 169 daniel  49u IPv4 0t0 TCP 1.2.3.3:1863->1.2.3.4:http <green>(ESTABLISHED)</green>
+</pre>
+</p>
+
+<p class="banner_ad">
+<script type="text/javascript"><!--
+google_ad_client = "pub-2677272500934866";
+/* Study_Links_468x15 */
+google_ad_slot = "1637573605";
+google_ad_width = 468;
+google_ad_height = 15;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</p>
+
+<h2>Working with Users, Processes, and Files</h2>
+
+<p>You can also get information on various users, processes, and files on your system using <code><larger>lsof</larger></code>:</p>
+
+<h3>Show what a given user has open using <larger><code>-u</code></larger></h3>
+<code><b>lsof -u daniel</b></code>
+<br />
+<br />
+<pre class="codeblock">
+-- snipped --
+Dock 155 daniel  txt REG   14,2   2798436   823208 /usr/lib/libicucore.A.dylib
+Dock 155 daniel  txt REG   14,2   1580212   823126 /usr/lib/libobjc.A.dylib
+Dock 155 daniel  txt REG   14,2   2934184   823498 /usr/lib/libstdc++.6.0.4.dylib
+Dock 155 daniel  txt REG   14,2    132008   823505 /usr/lib/libgcc_s.1.dylib
+Dock 155 daniel  txt REG   14,2    212160   823214 /usr/lib/libauto.dylib
+-- snipped --
+</pre>
+</p>
+
+<br />
+
+<h3>See what files and network connections a command is using with <larger><code>-c</code></larger></h3>
+<code><b>lsof -c syslog-ng</b></code>
+<br />
+<pre class="codeblock">
+COMMAND    PID USER   FD   TYPE     DEVICE    SIZE       NODE NAME
+syslog-ng 7547 root  cwd    DIR    3,3    4096   2 /
+syslog-ng 7547 root  rtd    DIR    3,3    4096   2 /
+syslog-ng 7547 root  txt    REG    3,3  113524  1064970 /usr/sbin/syslog-ng
+syslog-ng 7547 root  mem    REG    0,0   0 [heap] 
+syslog-ng 7547 root  mem    REG    3,3  105435   850412 /lib/libpthread-2.4.so
+syslog-ng 7547 root  mem    REG    3,3 1197180   850396 /lib/libc-2.4.so
+syslog-ng 7547 root  mem    REG    3,3   59868   850413 /lib/libresolv-2.4.so
+syslog-ng 7547 root  mem    REG    3,3   72784   850404 /lib/libnsl-2.4.so
+syslog-ng 7547 root  mem    REG    3,3   32040   850414 /lib/librt-2.4.so
+syslog-ng 7547 root  mem    REG    3,3  126163   850385 /lib/ld-2.4.so
+-- snipped --
+</pre>
+</p>
+
+<br />
+
+<h3>Pointing to a file shows what's interacting with that file</h3>
+
+<code><b>lsof /var/log/messages</b></code>
+<br />
+<pre class="codeblock">
+COMMAND    PID USER   FD   TYPE DEVICE   SIZE   NODE NAME
+syslog-ng 7547 root    4w   REG    3,3 217309 834024 /var/log/messages
+</pre>
+</p>
+
+<br />
+
+<h3>The <larger><code>-p</code></larger> switch lets you see what a given process ID has open, which is good for learning more about unknown processes</h3>
+<code><b>lsof -p 10075</b></code>
+<br />
+<pre class="codeblock">
+-- snipped --
+sshd    10068 root  mem    REG    3,3   34808 850407 /lib/libnss_files-2.4.so
+sshd    10068 root  mem    REG    3,3   34924 850409 /lib/libnss_nis-2.4.so
+sshd    10068 root  mem    REG    3,3   26596 850405 /lib/libnss_compat-2.4.so
+sshd    10068 root  mem    REG    3,3  200152 509940 /usr/lib/libssl.so.0.9.7
+sshd    10068 root  mem    REG    3,3   46216 510014 /usr/lib/liblber-2.3
+sshd    10068 root  mem    REG    3,3   59868 850413 /lib/libresolv-2.4.so
+sshd    10068 root  mem    REG    3,3 1197180 850396 /lib/libc-2.4.so
+sshd    10068 root  mem    REG    3,3   22168 850398 /lib/libcrypt-2.4.so
+sshd    10068 root  mem    REG    3,3   72784 850404 /lib/libnsl-2.4.so
+sshd    10068 root  mem    REG    3,3   70632 850417 /lib/libz.so.1.2.3
+sshd    10068 root  mem    REG    3,3    9992 850416 /lib/libutil-2.4.so
+-- snipped --
+</pre>
+</p>
+
+<br />
+
+<h3>The <code><larger>-t</larger></code> option returns just a PID</h3>
+<code><b>lsof -t -c Mail</b></code>
+<br />
+<pre class="codeblock">
+350
+</pre>
+<code><b>ps aux | grep Mail</b></code>
+<pre class="codeblock">
+daniel <b>350</b> 0.0 1.5 405980 31452 ?? S  Mon07PM 2:50.28 /Applications/Mail.app
+</pre>
+</p>
+
+<p><script type="text/javascript"><!--
+google_ad_client = "pub-2677272500934866";
+/* Study_Content_468x60 */
+google_ad_slot = "8606961532";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></p>
+
+<h2>Advanced Usage</h2>
+
+<br />
+
+<h3>Using<larger><code>-a</code></larger> allows you to combine search terms, so the query below says, "show me everything running as daniel connected to 1.1.1.1"</h3>
+<code><b>lsof <brown>-a</brown> <blue>-u</blue> daniel <blue>-i</blue> @1.1.1.1</b></code>
+<br />
+<pre class="codeblock">
+bkdr   1893 daniel 3u  IPv6 3456 <red>TCP 10.10.1.10:1234->1.1.1.1:31337</red> (ESTABLISHED)
+</pre>
+</p>
+
+<br />
+
+<h3>Using the <code><larger>-t</larger></code> and <code><larger>-c</larger></code> options together you can HUP processes</h3>
+<code><b>kill -HUP `lsof -t -c sshd`</b></code>
+</p>
+
+<br />
+
+<h3>You can also use the <code><larger>-t</larger></code> with <code><larger>-u</larger></code> to kill everything a user has open</h3>
+<code><b>kill -9 `lsof -t -u daniel`</b></code>
+</p>
+
+<br />
+
+<h3><larger><code>lsof +L<red>1</red></code></larger> shows you all open files that have a link count less than 1, often indicative of a cracker trying to hide something</h3>
+<code><b>lsof +L1</b></code>
+<br />
+<pre class="codeblock">
+(hopefully nothing)
+</pre>
+</p>
+
+<br />
+
+<h2>Conclusion</h2>
+
+<p>This primer just scratches the surface of <larger><code>lsof</code></larger>'s functionality. For a full reference, run <larger><code>man lsof</code></larger> or check out <a href="http://www.netadmintools.com/html/lsof.man.html">the online version</a>. I hope this has been useful to you, and as always, <a href="/var/www/localhost/htdocs/includes/contact/">comments and corrections are welcomed</a>.</p>
+
+
+<p class="banner_ad"><script type="text/javascript"><!--
+google_ad_client = "pub-2677272500934866";
+/* Study_Content_468x60 */
+google_ad_slot = "8606961532";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></p>
+
+
+<h4>References</h4>
+
+<p>The <larger><code>lsof</code></larger> man page:
+<br />
+<a href="http://www.netadmintools.com/html/lsof.man.html">http://www.netadmintools.com/html/lsof.man.html</a></p>
+
+<!-- Social Study -->
+<div id="social">
+<ul id="sociallinks">
+<li>
+<a id="socialfacebook" href="javascript:window.location=%22http://www.facebook.com/sharer.php?u=%22+encodeURIComponent(document.location)+%22&#38;t=%22+encodeURIComponent(document.title)" title="Share on Facebook..."><span></span></a>
+</li>
+<li>
+<a id="socialtwitter" href="http://twitter.com/danielmiessler" title="Find me on Twitter..."><span></span></a>
+</li>
+<li>
+<a id="socialreddit" href="javascript:window.location = 'http://reddit.com/submit?url=' + encodeURIComponent(window.location)" title="Share on Reddit..."><span></span></a>
+</li>
+<li>
+<a id="socialstumble" href="javascript:window.location = 'http://www.stumbleupon.com/submit?url=' + encodeURIComponent(window.location)" title="Share on Stumbleupon..."><span></span></a>
+</li>
+<li>
+<a id="socialdigg" href="	javascript:location.href='http://digg.com/submit?phase=2&#38;url='+encodeURIComponent(document.location.href)+' '" title="Share on Digg..."><span></span></a>
+</li>
+<li>
+<a id="socialhacker" href="javascript:window.location=%22http://news.ycombinator.com/submitlink?u=%22+encodeURIComponent(document.location)+%22&#38;t=%22+encodeURIComponent(document.title)"><span></span></a>
+</li>
+<li>
+<a id="socialseparator" href="" title="separator"><span></span></a>
+</li>
+<li>
+<a id="socialprint" href="javascript:window.print()" title="Print this page..."><span></span></a>
+</li>
+<li>
+<a id="socialemail" href="mailto:" title="Email this..."><span></span></a>
+</li>
+<li>
+<a id="socialseparator2" href="" title="separator2"><span></span></a>
+</li>
+<li>
+<a id="socialrss" href="http://feeds.danielmiessler.com/danielmiessler_study" title="Subscribe to my study site..."><span></span></a>
+</li>
+</ul>
+</div>
+
+
+</div>
+
+<!-- Sidebar1 -->
+<div id="sidebar1"> 
+<!-- Original Content -->
+<h2>Original Content</h2>
+
+<br />
+
+<h3>Trending</h3>
+
+<ul>
+	<li><a href="http://danielmiessler.com/study/http/"><span class="trending">A Security-focused HTTP Primer</span></a></li>
+	<li><a href="http://danielmiessler.com/study/tar/"><span class="trending">A <code>tar</code> Reference</span></a></li>
+</ul>
+	
+<h3>Popular</h3>
+
+<ul>
+	<li><a href="http://danielmiessler.com/study/tcpdump/"><span class="favorite">A <code>tcpdump</code> Tutorial</span></a></li>
+<li><a href="http://danielmiessler.com/blog/why-planes-fly-what-they-taught-you-in-school-was-wrong"><span class="favorite">What You Learned in School About Airplane Flight Was Probably Wrong</span></a></li>
+<li><a href="http://danielmiessler.com/blog/25-questions-to-ask-during-an-information-security-interview"><span class="favorite">25 Infosec Interview Questions</span></a></li>
+<li><a href="http://danielmiessler.com/blog/10-facts-every-westerner-should-know-about-the-middle-east"><span class="favorite">10 Things Everyone Should Know About the Middle East</span></a></li>
+<li><a href="http://danielmiessler.com/blog/using-git-to-maintain-your-website"><span class="favorite">Managing Your Website With Git</span></a></li>
+<li><a href="http://danielmiessler.com/study/find/"><span class="favorite">The <code>find</code> Command</span> </a></li>
+<li><a href="http://danielmiessler.com/study/lsof/"><span class="favorite">The <code>lsof</code> Command</span></a></li>
+<li><a href="http://danielmiessler.com/writing/va_vs_pt/"><span class="favorite">Vulnerability Assessment vs. Penetration Test</span></a></li>
+<li><a href="http://danielmiessler.com/writing/the_nice_guy_paradox/"><span class="favorite">The Nice Guy Paradox</span></a></li>
+<li><a href="http://danielmiessler.com/blog/federated-id-openid-and-oauth-a-web-authentication-primer"><span class="favorite">A Web Authentication Primer: FedID, OpenID, and OAuth</span></a></li>
+<li><a href="http://danielmiessler.com/study/security_and_obscurity/"><span class="favorite">Security and Obscurity Revisited</span></a></li>
+</ul>
+
+<h3>Information Security / Technology</h3>
+
+<ul>
+<li><a href="http://danielmiessler.com/blog/my-preferred-definition-of-security"><span class="favorite">My Preferred Definition of Information Security</span></a></li>
+<li><a href="http://danielmiessler.com/study/diffiehellman/">The Diffie-Hellman Protocol</a></li>
+<li><a href="http://danielmiessler.com/study/synpackets/">Differences in SYN Packets</a></li>
+<li><a href="http://danielmiessler.com/study/birthday_attack/">The Birthday Attack Explained</a></li>
+<li><a href="http://danielmiessler.com/blog/mac-vs-pc-security-in-one-sentence/">Mac vs. PC Security in One Sentence</a></li>
+<li><a href="http://danielmiessler.com/study/unixlinux_permissions/">A  UNIX/Linux Permissions Refresher</a></li>
+<li><a href="http://danielmiessler.com/study/xss/">Cross Site Scripting Explained</a></li>
+<li><a href="http://danielmiessler.com/blog/security-and-obscurity-does-changing-your-ssh-port-lower-your-risk">A Security/Obscurity Experiment</a></li>
+<li><a href="http://danielmiessler.com/blog/an-infosec-prediction-more-human-based-attacks">Expect More Human-Based Infosec Attacks</a></li>
+<li><a href="http://danielmiessler.com/blog/why-cissps-do-need-to-be-decently-versed-in-technology/">CISSPs Do Need to be Technical</a></li>
+<li><a href="http://danielmiessler.com/study/encoding/"><span class="favorite">An Encoding Primer</span></a></li>
+<li><a href="http://danielmiessler.com/blog/password-reset-mechanisms-the-online-security-threat-nobodys-talking-about">The Under-appreciated Danger of Password Reset Mechanisms</a></li>
+<li><a href="http://danielmiessler.com/study/encoding_vs_encryption/"><span class="favorite">Encoding vs. Encryption</span></a></li>
+<li><a href="http://danielmiessler.com/study/lsof/">An <code>lsof</code> Tutorial</a></li>
+<li><a href="http://danielmiessler.com/blog/the-nmap-dshield-trick">The Nmap/Dshield Trick</a></li>
+<li><a href="http://danielmiessler.com/blog/howto-use-splunk-as-your-remote-syslog-server">Using Splunk as a Syslog Server</a></li>
+<li><a href="http://danielmiessler.com/study/subnetting/">Thinking Through Subnetting</a></li>
+<li><a href="http://danielmiessler.com/study/network_ports/">Explaining Network Ports</a></li>
+</ul>
+
+<h3>Politics</h3>
+<ul>
+<li><a href="http://danielmiessler.com/blog/free-will-vs-determinism-as-the-core-of-political-disagreement"><span class="favorite">Free Will and Determinism as the Core of Political Disagreement</span></a></li>
+<li><a href="http://danielmiessler.com/blog/my-attempt-to-define-liberal-and-conservative">Conservatives are Leave it to Beaver, Liberals are Star Trek</a></li>
+<li><a href="http://danielmiessler.com/blog/socialism-anarchy-and-ideal-government/"><span class="favorite">Socialism and Anarchy</span></a></li>
+<li><a href="http://danielmiessler.com/blog/a-logical-approach-to-the-council-on-foreign-relations-cfr-and-one-world-government-nwo-conspiracy/">On CFR/NWO Conspiracies</a></li>
+<li><a href="http://danielmiessler.com/blog/the-worst-mistake-people-make-in-political-arguments">The Worst Mistake People Make in Political Arguments</a></li>
+<li><a href="http://danielmiessler.com/blog/a-simple-technique-for-successfully-debating-the-ignorant">How to Debate an Idiot</a></li>
+</ul>
+
+<h3>Philosophy &amp; Religion</h3> 
+<ul>
+<li><a href="http://danielmiessler.com/projects/atheist_debate_reference/"><span class="favorite"><span class="favorite">An Atheist Debate Reference</span></span></a></li>
+<li><a href="http://danielmiessler.com/blog/meaning-is-an-illusion"><span class="favorite"><span class="favorite">Meaning is an Illusion</span></span></a></li>
+<li><a href="http://danielmiessler.com/blog/the-best-retort-for-the-atheists-are-arrogant-argument"><span class="favorite"><span class="favorite">The Best Response to "Atheists are arrogant".</span></span></a></li>
+<li><a href="http://danielmiessler.com/blog/the-only-class-that-matters"><span class="favorite"><span class="favorite">The Only Class That Matters</span></span></a></li>
+<li><a href="http://danielmiessler.com/blog/absolute-vs-practical-free-will"><span class="favorite">Free Will: Absolute vs. Practical</span></a></li>
+<li><a href="http://danielmiessler.com/blog/a-simplified-argument-against-free-will"><span class="favorite">A Simplified Argument Against Free Will</span></a></li>
+<li><a href="http://danielmiessler.com/blog/creation-vs-collection">Happiness: Creation vs. Collection</a></li>
+<li><a href="http://danielmiessler.com/blog/want-a-disease-based-in-low-self-esteem">Want: A Disease Based in Low Self-Esteem</a></li>
+<li><a href="http://danielmiessler.com/blog/does-your-morality-come-from-god-or-from-within-a-simple-test">How to See If Your Morality Comes from God</a></li>
+<li><a href="http://danielmiessler.com/blog/outrageous-beliefs-are-not-equal-to-claims-they-are-preposterous/">Outrageous Beliefs Are Not Equal to Claims They Are False</a></li>
+<li><a href="http://danielmiessler.com/blog/was-the-last-time-your-last">Was the Last Time Your Last?</a></li>
+<li><a href="http://danielmiessler.com/writing/how_i_became_an_atheist/">How I Became an Atheist</a></li>
+<li><a href="http://danielmiessler.com/blog/a-letter-to-religious-moderates/">A Letter to Religious Moderates</a></li>
+<li><a href="http://danielmiessler.com/blog/philosophy-science-and-religion-three-ways-of-learning-about-the-world">Philosophy, Science, and Religion: Three Ways of Learning About the World</a></li>
+</ul>
+
+<h3>Technology &amp; Science</h3>
+
+<ul>
+<li><a href="http://danielmiessler.com/blog/a-better-website-concept-a-lifestream-interface">Building a Lifestream Interface</a></li>
+<li><a href="http://danielmiessler.com/blog/some-thoughts-on-the-future-of-it">Thoughts on the Future of the IT Field</a></li>
+<li><a href="http://danielmiessler.com/blog/the-steam-water-and-ice-of-modern-communication">The Steam, Water, and Ice of Modern Communications</a></li>
+<li><a href="http://danielmiessler.com/blog/social-media-is-nothing-but-a-global-interface-to-you-as-a-person">Social Media as a Personal API</a></li>
+<li><a href="http://danielmiessler.com/blog/how-would-you-prove-evolution/">Could You Prove Evolution?</a></li>
+<li><a href="http://danielmiessler.com/blog/dont-ever-argue-again-about-the-pronunciation-of-linux/">How to Pronounce "Linux"</a></li>
+<li><a href="http://danielmiessler.com/blog/my-only-shot-at-immortality">My Only Shot at Immortality</a></li>
+<li><a href="http://danielmiessler.com/blog/this-is-how-you-pronounce-ubuntu/">How to Pronounce "Ubuntu"</a></li>
+<li><a href="http://danielmiessler.com/study/horsepower/"><span class="favorite">Does Acceleration Depend More on Horsepower or Torque?</span></a></li>
+<li><a href="http://danielmiessler.com/blog/the-craziest-thing-youll-ever-learn-about-pi"><span class="favorite">The Craziest Thing You'll Ever Learn about Pi</span></a></li>
+<li><a href="http://danielmiessler.com/blog/what-does-os-x-say-when-you-ask-it-to-pronounce-itself-video/">How to Pronounce "OS X"</a></li>
+<li><a href="http://danielmiessler.com/blog/rijndael-is-pronounced-rhine-dahl/">How to Pronounce "Rijndael"</a></li>
+</ul>
+
+<h3>Culture &amp; Society</h3>
+
+<ul>
+<li><a href="http://danielmiessler.com/blog/lifecasting-what-it-is-and-how-it-will-change-society/"><span class="favorite">Lifecasting and Society</span></a></li>
+<li><a href="http://danielmiessler.com/blog/dear-readers-please-submit-your-own-content/">Please Submit Your Own Content to Social Media Sites</a></li>
+<li><a href="http://danielmiessler.com/writing/the_bimbo_and_the_caveman/">The Bimbo and the Caveman</a></li>
+<li><a href="http://danielmiessler.com/blog/is-it-wrong-to-have-children/">Is it Wrong to Have Children?</a></li>
+<li><a href="http://danielmiessler.com/blog/measuring-the-quality-of-a-society/">The Quality Of a Society</a></li>
+<li><a href="http://danielmiessler.com/blog/socialism-anarchy-and-ideal-government">Socialism and Anarchy</a></li>
+</ul>
+
+<h3>Miscellaneous</h3>
+<ul>
+<li><a href="http://danielmiessler.com/blog/a-coffee-primer/">A Coffee Primer</a></li>
+</ul>
+<br />
+
+<h3>Top Blog Categories</h3>
+	<ul class="sb2">
+	<li><a href="http://danielmiessler.com/categories/politics">Politics</a></li>
+		<li><a href="http://danielmiessler.com/categories/technology">Technology</a></li>
+		<li><a href="http://danielmiessler.com/categories/information-security">Information Security</a></li>
+		<li><a href="http://danielmiessler.com/categories/philosophy">Philosophy</a></li>
+		<li><a href="http://danielmiessler.com/categories/humor">Humor</a></li>
+		<li><a href="http://danielmiessler.com/categories/religion">Religion</a></li>
+		<li><a href="http://danielmiessler.com/categories/programming">Programming</a></li>
+		<li><a href="http://danielmiessler.com/categories/system-administration">System Administration</a></li>
+		<li><a href="http://danielmiessler.com/categories/educaton">Education</a></li>
+		<li><a href="http://danielmiessler.com/categories/culture">Culture</a></li>
+		<li><a href="http://danielmiessler.com/categories/Atheism">Atheism</a></li>
+		<li><a href="http://danielmiessler.com/categories/Music">Music</a></li>
+		<li><a href="http://danielmiessler.com/categories/writing">Writing</a></li>
+		<li><a href="http://danielmiessler.com/categories/geek">Geek</a></li>
+		<li><a href="http://danielmiessler.com/categories/health">Health</a></li>
+		<li><a href="http://danielmiessler.com/categories/apple">Apple</a></li>
+	</ul></div>
+<!-- Sidebar2 -->
+<div id="sidebar2">
+<ul id="feedLinks">
+		<li>
+			<a id="RSSLink" href="http://feeds.danielmiessler.com/danielmiessler" title="RSS Feed"><span>RSS Feed</span></a>
+		</li>
+		<li>
+			<a id="TwitterLink" href="http://twitter.com/danielmiessler" title="@danielmiessler on Twitter"><span>@danielmiessler on Twitter</span></a>
+		</li>
+		<li>
+			<a id="FacebookLink" href="http://www.facebook.com/danielrmiessler" title="Facebook Profile"><span>Facebook Profile</span></a>
+		</li>
+		<li>
+			<a id="SearchLink" href="http://www.google.com/cse/home?cx=000447730453760054418:oa7awt0yiz4" title="Search with Google"><span>Search with Google</span></a>
+		</li>
+	</ul>
+
+<h3>Discovered Content</h3>
+	<ul>
+		<li><a href="http://feeds.danielmiessler.com/discovered">My Discovered Content</a></li>
+	</ul>
+	
+<br />
+
+<h3>Inputs</h3>
+
+<ul> 
+	<li><a href="http://www.overcomingbias.com/">Overcoming Bias</a></li> 
+	<li><a href="http://thelastpsychiatrist.com/">The Last Psychiatrist</a></li> 
+	<li><a href="http://www.thebigquestions.com/blog/">The Big Questions</a></li> 
+	<li><a href="http://lesswrong.com/">Less Wrong</a></li> 
+	<li><a href="http://www.aldaily.com/">Arts & Letters Daily</a></li> 
+	<li><a href="http://dilbert.com/blog">Scott Adams</a></li> 
+	<li><a href="http://www.gnxp.com/wp/">Gene Expression</a></li> 
+	<li><a href="http://www.npr.org/iq?ft=2&f=510184">NPR's Intelligence<sup>2</sup></a></li> 
+	<li><a href="http://www.philosophyetc.net/">Philosophy, et cetera</a></li> 
+	<li><a href="http://meteuphoric.wordpress.com/">Meteuphoric</a></li> 
+	<li><a href="http://roissy.wordpress.com/">Roissy in DC</a></li> 
+	<li><a href="http://freakonomics.blogs.nytimes.com/">Freakonomics Blog</a></li> 
+	<li><a href="http://www.willwilkinson.net/flybottle/">Will Wilkinson</a></li> 
+	<li><a href="http://rationaloptimist.wordpress.com/">The Rational Optimist</a></li> 
+	<li><a href="http://blogs.discovermagazine.com/cosmicvariance/">Cosmic Variance</a></li> 
+	<li><a href="http://www.practicalethicsnews.com/practicalethics/">Practical Ethics</a></li> 
+	<li><a href="http://www.bakadesuyo.com/">Barking Up the Wrong Tree</a></li> 
+	<br />
+	<li><a href="http://reddit.com">Reddit</a></li> 
+	<li><a href="http://news.ycombinator.com">Hacker News</a></li> 
+</ul>
+</div>
+
+<!-- Footer -->
+<div style="clear: both;"> &nbsp;</div>
+<div id="footer">
+<p style="text-align:center">
+Daniel Miessler | 1999-2010 | <a href="http://creativecommons.org/licenses/by-sa/2.0/">Share Alike</a></p>
+<p>Powered by <a href="http://danielmiessler.com/blog/pimping-linode">Linode</a></p>
+</div> 
+
+</div>
+
+
+
+</body>
+
+</html>
