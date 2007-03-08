@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<meta name="DC.Language" content="en">
+	<link rel="shortcut icon" href="favicon.gif">
+	<title>HTTPFS</title>
+<head>
+<body style="font-family:Verdana">
+	<div style="float:right"><a href="de/index.htm"><img src="a.gif"></a>&nbsp;<a href="de/index.htm"><img src="ch.gif"></a>&nbsp;<a href="de/index.htm"><img src="de.gif"></a>&nbsp;</div>
+	<h3>HTTPFS ...</h3>
+	<p>... is a FUSE-based <q><em>file system</em></q>. You may think of it, as a downloader with the speed of light.</p>
+	<ul>
+	<li><a href="http://sourceforge.net/project/showfiles.php?group_id=171260">Download httpfs</a> (26. of August 2006) </li>
+	<li><a href="fuse_intro.htm">Short help for FUSE</a></li>
+	<li><a href="techinfo.htm">How httpfs works</a></li>
+	<li><a href="static.htm">Bloated with uclibc</a> (26. of August 2006) </li>
+	<li><a href="net_boot.htm">Booting from net</a> (1. of September  2006) <img src="new.gif"></li>
+	<li><a href="links.htm">Links</a></li>
+	</ul>
+	<p>A german proverb states: An example tells more than 1000 words.</p>
+	<h4>Let's go</h4>
+	An unprivileged user seems to download almost instantly more than 3.5 GByte to folder <tt>~/test</tt><pre>
+	httpfs http://192.168.0.86/knoppix_dvd_501_stripped.iso ~/test</pre></p>
+	<p style="text-align:center; width:600px; background-color:#eeeea0; padding:5px"><img src="pre_mount.png"><br />(before <q><em>mount</em></q>)</p>
+	<p style="text-align:center; width:600px; background-color:#eeeea0; padding:5px"><img src="post_mount.png"><br />(after <q><em>mount</em></q>)</p>
+	<p style="text-align:center; width:600px; background-color:#eeeea0; padding:5px"><img src="mount_content.png"><br />(content of ~/test)</p>
+	This speed is unbelievable. You may ask, what's the catch?<br />
+	Right, not the whole ISO was fetched. But you can pretend, it has been:<pre>
+	mkdir ~/dvd.iso
+	sudo mount ~/test/knoppix_dvd_501_stripped.iso ~/dvd.iso -o ro,loop</pre>
+	<p style="text-align:center; width:440px; background-color:#eeeea0; padding:5px"><img src="dvd.iso.png"><br />(content of ~/dvd.iso)</p>
+	When will this swindle be revealed? Hopefully never.
+	You can go on, browsing the ISO for files, which may be of interest to you.
+	You can open any <q><em>readme-files</em></q> without losing your illusion.
+	But of course you can't watch a movie, if you only have an analog modem.
+</body>
+</html>
