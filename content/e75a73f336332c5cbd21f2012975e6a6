@@ -1,0 +1,602 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>~jk  MySQL Proxy </title>
+  <meta name="generator" content="Mephisto" />
+  <link href="/stylesheets/main.css" rel="stylesheet" type="text/css" />
+  <link href="/feed/atom.xml" rel="alternate" title="Articles for Home" type="application/atom+xml" />
+  <link href="/javascripts/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="/javascripts/prettify/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+
+  <div id="wrap">
+    <div id="header"><h1><a href="/">~jk</a></h1>
+      <p class="description">/home/jan.kneschke/</p>
+    </div>
+    <div id="content">
+      
+  <h2>MySQL Proxy</h2>
+<div class="entry"><p>Over the last weeks I wrote a mysql-proxy which changes the way you operate with the MySQL Server.</p>
+
+<p><img src="http://jan.kneschke.de/assets/2007/3/26/mysql-proxy-types-client.png" alt="client to server"/></p>
+
+<p>A proxy can operate as <em>Man in the Middle</em> and pass through to network packets to the MySQL Server, but it also change the packets when needed. This opens the several possibilities like a</p>
+
+<ul>
+<li>pseudo server <strong>done</strong></li>
+<li>injection proxy <strong>done</strong></li>
+<li>load-balancing proxy <strong>done</strong></li>
+<li>connection pool </li>
+<li>XA Transaction Manager</li>
+<li>replication client </li>
+<li>replication filter</li>
+<li>replication off-loader</li>
+</ul>
+
+<p>Some of them are already implemented, some are only ideas for the future.</p>
+
+<ul>
+<li><a href="http://forge.mysql.com/wiki/MySQL_Proxy">http://forge.mysql.com/wiki/MySQL_Proxy</a> has the source and the binaries</li>
+<li><a href="http://forums.mysql.com/list.php?146">http://forums.mysql.com/list.php?146</a> is the open forum on the proxy</li>
+</ul>
+
+<h3>Admin Server</h3>
+
+<p>The <code>admin-server</code> is the most basic implementation of the MySQL server protocol and can respond to some basic queries. It implements:</p>
+
+<ul>
+<li>socket handling</li>
+<li>the life-cycle of a connection</li>
+<li>mysql wire-protocol</li>
+<li>len-encoding of some fields</li>
+<li>field-types</li>
+<li>result-sets</li>
+</ul>
+
+<p>While the design is based on the ideas from <a href="http://lighttpd.net/">lighttpd</a> in the way that it is using non-blocking network-io the network-protocol is based on the information available in the <a href="http://dev.mysql.com/doc/internals/en/client-server-protocol.html">internals document</a> from <a href="http://dev.mysql.com/">dev.mysql.com</a></p>
+
+<p>The admin-servers implements 2 basic queries which are issued by the mysql command-line client:</p>
+
+<pre><code>select @@version_comment LIMIT 1;
+select USER();
+</code></pre>
+
+<p>Using the admin server you can implement the functionality in a way that every mysql client (php, jdbc, odbc, perl, ...) can execute them.</p>
+
+<p>We use it to export the current config and to track the open connections:</p>
+
+<pre>
+> select * from proxy_connections;
++------+--------+-------+-------+
+| id   | type   | state | db    |
++------+--------+-------+-------+
+|    2 | proxy  | 8     | world |
+|    3 | server | 8     |       |
++------+--------+-------+-------+
+</pre>
+
+<p>and the config:</p>
+
+<pre>
+> select * from proxy_config;
++---------------------------------+----------------+
+| option                          | value          |
++---------------------------------+----------------+
+| admin.address                   | :4041          |
+| proxy.address                   | :4040          |
+| proxy.backend_addresses[0]      | 127.0.0.1:3306 |
+| proxy.backend_addresses[1]      | 127.0.0.1:3307 |
+| proxy.fix_bug_25371             | 0              |
+| repclient.master_address        |                |
++---------------------------------+----------------+
+</pre>
+
+<h3>Transparent Proxy</h3>
+
+<p>Based on the simple admin server a transparent proxy was implemented:</p>
+
+<p><img src="http://jan.kneschke.de/assets/2007/3/26/mysql-proxy-types-proxy.png" alt="client to proxy to server"/></p>
+
+<p>It allows a a whole range of new applications:</p>
+
+<ul>
+<li>load balancer</li>
+<li>fail-over</li>
+<li>query injection (see Detecting slow Queries below)</li>
+<li>query rewriting</li>
+<li>on the fly bug-fixing <a href="http://bugs.mysql.com/bug.php?id=25371">#25371</a></li>
+</ul>
+
+<p>The implementation was tested with:</p>
+
+<ul>
+<li>the test-suite of ext/mysqlnd (using PHP5)</li>
+<li>the test-suite of Connector/J</li>
+</ul>
+
+<p>As the proxy sits in the connection between app and server it can:</p>
+
+<ul>
+<li>check the query-time with milli-second resolution</li>
+<li>check status counters</li>
+<li>check the SHOW PROFILE</li>
+<li>check for used indexes</li>
+</ul>
+
+<p>If the user wants to ask for</p>
+
+<pre><code>SELECT user FROM mysql.user;
+</code></pre>
+
+<p>we enhance the query a bit:</p>
+
+<pre><code>SHOW SESSION STATUS;
+SELECT user FROM mysql.user;
+SHOW SESSION STATUS;
+</code></pre>
+
+<p>and only send the result-set for the SELECT back to the user. The diff'ed STATUS counters are written to a log-file:</p>
+
+<pre><code>$ mysql --port=4040 --hostname=127.0.0.1 --user=... 
+$ mysql-proxy --proxy-lua-script=balance.lua --proxy-profiling
+
+{ "command" : "Query", "timestamp" : "2007-05-22T07:39:00.141568", "query" : "SELECT MAX(population), continent   FROM Country  GROUP BY continent", "thread_id" : "378069", "exec_time" : "33.266", "tags" : [ "query-cost" ], "status" : { "Table_locks_immediate" : "1", "Bytes_received" : "111", "Com_select" : "1", "Key_reads" : "4", "Handler_read_first" : "1", "Last_query_cost" : "17.199000", "Questions" : "1", "Select_range" : "1", "Key_read_requests" : "32", "Bytes_sent" : "283", "Handler_read_key" : "14", "Key_blocks_unused" : "-4" } }
+</code></pre>
+
+<h4>EXPLAIN for index usage statistics</h4>
+
+<p>But we can use EXPLAIN for something else ... Index Usage. </p>
+
+<p>Up to now the MySQL doesn't expose any statistics on the index usage. Knowing which indexes are used gives an idea which indexes are maintained, but never user. Dropping them would increase the INSERT/UPDATE/DELETE speed.</p>
+
+<pre><code>root@localhost [world]&gt; EXPLAIN SELECT * FROM City WHERE id = 1;
++----+-------------+-------+-------+---------------+---------+---------+-------+------+-------+
+| id | select_type | table | type  | possible_keys | key     | key_len | ref   | rows | Extra |
++----+-------------+-------+-------+---------------+---------+---------+-------+------+-------+
+|  1 | SIMPLE      | City  | const | PRIMARY       | PRIMARY | 4       | const |    1 |       |
++----+-------------+-------+-------+---------------+---------+---------+-------+------+-------+
+</code></pre>
+
+<p>The <code>key</code> column tells us the used index. By maintaining a list of used index and mapping it against the available indexes you can see which of them is used most how often.</p>
+
+<pre><code>root@127.0.0.1 [(none)]&gt; select * from index_usage;
++-------------------------+------+------------------+------------------+
+| name                    | used | max_used_key_len | avg_used_key_len |
++-------------------------+------+------------------+------------------+
+| world.Country.PRIMARY   |    1 |                3 |           3.0000 |
+| world.City.PRIMARY      |    1 |                4 |           4.0000 |
+| world.Country.Continent |    1 |                1 |           1.0000 |
++-------------------------+------+------------------+------------------+
+</code></pre>
+
+<p>Or to show a real application using indexes:</p>
+
+<pre>
+root@127.0.0.1 [(none)]> select * from index_usage;
++------------------------------------------------------------------+------+------------------+------------------+
+| name                                                             | used | max_used_key_len | avg_used_key_len |
++------------------------------------------------------------------+------+------------------+------------------+
+| world.Country.PRIMARY                                            |    1 |                3 |           3.0000 |
+| merlin.inv_agents.PRIMARY                                        |   16 |                4 |           4.0000 |
+| merlin.monitor_history_times.adh_scan_time                       |    2 |                8 |           8.0000 |
+| merlin.dc_schedule.dc_schedule_fk1                               |   14 |                4 |           4.0000 |
+| merlin.monitors.PRIMARY                                          |    8 |                4 |           4.0000 |
+| merlin.monitor_history.PRIMARY                                   |    6 |                4 |           4.0000 |
+| world.City.PRIMARY                                               |    1 |                4 |           4.0000 |
+| merlin.graph_variables.graph_variables_fk1                       |   45 |                4 |           4.0000 |
+| merlin.graph_designs.graph_designs_idx                           |    7 |              767 |         767.0000 |
+| merlin.monitor_history_times_variables.history_id_alarm_time_idx |   26 |                8 |           8.0000 |
+| merlin.monitor_alarm_level.PRIMARY                               |    4 |                4 |           4.0000 |
+| merlin.monitor_schedule.PRIMARY                                  |    2 |                4 |           4.0000 |
+| merlin.monitor_history.monitor_history_idx                       |    4 |                9 |           9.0000 |
+| world.Country.Continent                                          |    1 |                1 |           1.0000 |
+| merlin.inv_servers.PRIMARY                                       |   18 |                4 |           4.0000 |
+| merlin.monitor_category.PRIMARY                                  |    2 |                4 |           4.0000 |
+| merlin.monitor_history.monitor_history_monitor_history_fk1       |   12 |                4 |           4.0000 |
+| merlin.dc_schedule.dc_schedule_fk1,dc_schedule_fk3               |    6 |                4 |           4.0000 |
+| merlin.monitor_history_times.PRIMARY                             |   18 |                4 |           4.0000 |
+| merlin.dc_items.PRIMARY                                          |   14 |                4 |           4.0000 |
+| merlin.inv_servers.server_name                                   |    2 |              386 |         386.0000 |
+| merlin.graph_series.graph_series_fk                              |   31 |                4 |           4.0000 |
+| merlin.monitor_schedule.monitor_schedule_idx                     |   15 |                8 |           8.0000 |
++------------------------------------------------------------------+------+------------------+------------------+
+</pre>
+
+<p>For UPDATE and DELETE statements you can usually rewrite them into SELECT statements to make them EXPLAINable.</p>
+
+<h3>Load Balancing</h3>
+
+<p>Load Balancing selects one backend out of a set of backends to be used as mysql-server. We use SQF (shortest queue first) to distribute the load across the backends equally. Each backend will get the same number of connections.</p>
+
+<p><img src="http://jan.kneschke.de/assets/2007/3/26/mysql-proxy-types-lb.png" alt="load balancing"/></p>
+
+<pre>
+$ ./mysql-proxy  \
+  --proxy-backend-addresses=127.0.0.1:3306 \
+  --proxy-backend-addresses=127.0.0.2:3306 \
+  --proxy-backend-addresses=127.0.0.3:3306
+</pre>
+
+<h4>Fail Over</h4>
+
+<p>Load Balancing and Fail Over are very similar. Both have to detect of a host is reachable and both have to forward connections to one of the backends. Using a different node-selection strategy you get Fail-Over:</p>
+
+<ul>
+<li>pick the first available host from a list</li>
+</ul>
+
+<p>As long as the first host is up, it will be used for all queries. </p>
+
+<p>You can put the HA proxy next to the application and let it forward the requests to the real load balancers:</p>
+
+<p><img src="http://jan.kneschke.de/projects/mysql/mysql-proxy-ha.png" alt="a HA LB-proxy"/></p>
+
+<h4>Latency</h4>
+
+<p>If you want to put a application like the proxy in the middle of your application you want sure that:</p>
+
+<ul>
+<li>it is stable</li>
+<li>it adds as little latency as possible</li>
+</ul>
+
+<p>To measure the latency a small C-API based app was written which is testing:</p>
+
+<ul>
+<li>prepared statements</li>
+<li>plain SELECTs</li>
+<li>large Queries</li>
+</ul>
+
+<p>via the proxy and directly against the database. To get comparable results we used simple queries for the latency checks and verified them against larger queries. The expected latency should be nearly constant if possible:</p>
+
+<pre><code>    /* warmup run */
+    test_server("127.0.0.1", 3306);
+
+    /* real benchmarks */
+    for (rounds = 0; rounds &lt; 3; rounds++) {
+      test_server("127.0.0.1", 3306);
+      test_server("127.0.0.1", 4040);
+    }
+</code></pre>
+
+<p>and each test run wrote a INSERT statement into a text-file with the test-run and its exec-time. Spikes got removed to get useful results on the averages:</p>
+
+<pre><code>+----------------+-----------------------------+--------+--------+-----+
+| benchname      | testname                    | max    | avg    | run |
++----------------+-----------------------------+--------+--------+-----+
+| 127.0.0.1:3306 |   mysql_execute()           |  4.082 |  0.123 | 150 |
+| 127.0.0.1:3306 |   mysql_real_query(large)   | 19.195 |   7.73 | 147 |
+| 127.0.0.1:3306 |   mysql_real_query(small)   |  4.087 |    0.1 | 150 |
+| 127.0.0.1:3306 |   mysql_stmt_bind_result()  |  0.002 |  0.001 | 150 |
+| 127.0.0.1:3306 |   mysql_stmt_fetch()        |  0.003 |  0.001 | 150 |
+| 127.0.0.1:3306 |   mysql_stmt_prepare()      |  0.176 |  0.128 |  30 |
+| 127.0.0.1:3306 |   mysql_store_result(large) |   0.02 |   0.01 | 150 |
+| 127.0.0.1:3306 |   mysql_store_result(small) |  0.003 |  0.001 | 150 |
+| 127.0.0.1:3306 |  mysql_real_connect()       |  16.22 |  1.038 |  30 |
+| 127.0.0.1:3306 |  test_prep_stmt()           |  4.638 |  0.936 |  30 |
+| 127.0.0.1:3306 |  test_select()              |  4.461 |  0.622 |  30 |
+| 127.0.0.1:3306 |  test_select_merlin()       | 53.883 | 38.561 |  27 |
+| 127.0.0.1:3306 | benchmark done              | 56.824 | 41.361 |  27 |
+| 127.0.0.1:4040 |   mysql_execute()           |  4.232 |   0.15 | 150 |
+| 127.0.0.1:4040 |   mysql_real_query(large)   | 15.182 |  7.626 | 147 |
+| 127.0.0.1:4040 |   mysql_real_query(small)   |  4.191 |  0.184 | 150 |
+| 127.0.0.1:4040 |   mysql_stmt_bind_result()  |  0.002 |  0.001 | 150 |
+| 127.0.0.1:4040 |   mysql_stmt_fetch()        |  0.003 |  0.001 | 150 |
+| 127.0.0.1:4040 |   mysql_stmt_prepare()      |  0.275 |  0.185 |  30 |
+| 127.0.0.1:4040 |   mysql_store_result(large) |  0.017 |   0.01 | 150 |
+| 127.0.0.1:4040 |   mysql_store_result(small) |  0.003 |  0.001 | 150 |
+| 127.0.0.1:4040 |  mysql_real_connect()       |  4.549 |  0.769 |  30 |
+| 127.0.0.1:4040 |  test_prep_stmt()           |  5.053 |  1.131 |  30 |
+| 127.0.0.1:4040 |  test_select()              |  4.769 |  1.042 |  30 |
+| 127.0.0.1:4040 |  test_select_merlin()       | 57.647 | 39.239 |  29 |
+| 127.0.0.1:4040 | benchmark done              | 59.558 | 42.265 |  29 |
++----------------+-----------------------------+--------+--------+-----+
+</code></pre>
+
+<p>If you compare the benchmark results:</p>
+
+<pre><code>test_prep_stmt()       0.936 vs.  1.131 ms (+ .2ms)
+test_select()          0.622 vs.  1.042 ms (+ .4ms)
+test_select_merlin()  38.561 vs. 39.239 ms (+ .7ms)
+benchmark done:       41.361 vs. 42.265 ms (+ .9ms)
+</code></pre>
+
+<p>The was measured with all profiling options in the proxy disable. This
+is the setup you would use the load balancing, fail-over, ...</p>
+
+<h4>Delay Adaptive Balancing</h4>
+
+<p><strong>partially implemented</strong> The state of the slaves is checked every few seconds to track the availability and the delay of the slaves. If the slave is unreachable or far behind it is taken out of the proxy-pool.</p>
+
+<p>There are two ways to check the delay of the slave: </p>
+
+<ol>
+<li>check SHOW SLAVE STATUS for <code>Seconds_behind_master</code></li>
+<li>send a ping into the replication tree</li>
+</ol>
+
+<p>The ping is a UPDATE against a MEMORY table on the master and a SELECT on the slave to see if the ID is known:</p>
+
+<pre>
+master> CREATE TABLE ping ( id INT ) ENGINE=MEMORY;
+master> UPDATE ping SET @id := id = id+1;
+master> SELECT @id;
+</pre>
+
+<p>As we use connection-vars we can do this without running into a race-condition. On the slave we check for:</p>
+
+<pre>
+slave> SELECT id FROM ping WHERE id >= ?;
+</pre>
+
+<p>This is an simple check if the slave is up to date or not. If the update is executed it the end of each transaction we can track the progress of the replication based on the transaction level instead of byte-level (<code>master_bin_log_pos</code>) or time-level (<code>seconds_behind_master</code>).</p>
+
+<p>Thanks to the statement injection we can inject this into the normal stream of operations transparent for the application. We try to keep it free of side-effects.</p>
+
+<h4>LUA</h4>
+
+<p>As a small side note: all the above features are implemented through a embedded <a href="http://lua.org/">lua</a> engine.</p>
+
+<h3>Connection Pool</h3>
+
+<p><strong>not implemented yet</strong>. Load Balancing isn't implemented yet, but will allow to all applications to utilize a connection pool which is maintained by the mysql-proxy. It will reduce the setup time for connections a bit.</p>
+
+<p>The normal connection setup is:</p>
+
+<ol>
+<li>client connects to server</li>
+<li>server sends hand-shake</li>
+<li>client sends auth packet</li>
+<li>servers sends OK or ERR</li>
+</ol>
+
+<p>with the connection pooling the connections between proxy and server are kept alive and are only reset when a client disconnects.</p>
+
+<p>The proxy keeps a small pool of connections open and the initial hand-shake is answered without talking to the server. Depending on various factors we might be able to shadow the cost of a connection-setup.</p>
+
+<h4>Statement Load Balancing</h4>
+
+<p>Based on the connection pool we can use a single MySQL connection can multiplex multiple client connections against it. As long as the client is only using stateless SQL statements we can send the queries across any of the available connections we have active in the pool. This has the neat benefit that we can maintain a lot more connections to the client than we use to the server.</p>
+
+<p>As soon as the client uses statements like:</p>
+
+<ul>
+<li><code>SET @var = 1;</code></li>
+<li><code>SHOW SESSION STATUS</code></li>
+<li><code>FLUSH ...</code></li>
+<li><code>LOCK ...</code></li>
+<li><code>BEGIN</code></li>
+<li><p><code>CREATE|DROP TEMPORARY TABLE ...</code></p>
+
+<p>... and similar the connection gets a state and we can't use it for balancing any more. As automatic detection of such statements is tricky and will fail any we will add a command-line option we just gives the option to the user to allow multiplexing of client connections.</p></li>
+</ul>
+
+<p>We will maintain transactions and LOCKs, but all other statements should just not be used in multiplexing mode.</p>
+
+<h3>XA Transaction Manager</h3>
+
+<p><strong>not implemented yet</strong> The proxy could change transactions in the way they commit against a server. For HA reasons you might set up two masters which both get the same statements at the same time without using the mysql internal replication.</p>
+
+<p>By replacing the <code>BEGIN</code> with a <code>XA START "trx_name"</code> and the <code>COMMIT</code> by a <code>XA END ...</code>, <code>XA PREPARE ..</code> and <code>XA COMMIT</code> we can use the two-phase commit support by innodb to commit a transaction against two or more databases. </p>
+
+<p>This is giving the application synchronous replication for free.</p>
+
+<h3>Change Management</h3>
+
+<p>The proxy can also operate in a reverse mode where it receives the statement as a replication client. It allows the proxy to track all statements which cause a change to the DB objects in the server.</p>
+
+<p><img src="http://jan.kneschke.de/assets/2007/3/26/mysql-proxy-types-repclient.png" alt="replication client"/></p>
+
+<p>For now it is filtering:</p>
+
+<ul>
+<li>CREATE|ALTER|DROP TABLE</li>
+<li>CREATE|DROP INDEX</li>
+<li>CREATE|ALTER|DROP DATABASE</li>
+</ul>
+
+<p>including time-stamp and user-name (if available). Base on this information you can track changes on your DB-objects, versionize the schema automaticly and build a DDL-diff.</p>
+
+<pre>
+$ mysql-proxy  --repclient-port=3306
+</pre>
+
+<p>For now you need a account:</p>
+
+<pre><code>CREATE USER repl@127.0.0.1;
+GRANT SUPER ON *.* TO repl@127.0.0.1;
+</code></pre>
+
+<p>Username <code>repl</code>, No password. The password-scramling isn't implemented yet.</p>
+
+<pre>
+$ ./agent/src/network-mysqld --mode=reverse
+reading binlog from: binlog-file: hostname-bin.000009, binlog-pos: 366
+(DDL) thread-id = 2, exec_time = 0, error-code = 0000
+  QUERY: drop table t1
+(DDL) thread-id = 2, exec_time = 0, error-code = 0000
+  QUERY: create table t1 ( id int not null )
+(DDL) thread-id = 2, exec_time = 0, error-code = 0000
+  QUERY: alter table t1 add primary key (id)
+</pre>
+
+<h3>Replication Off-Loading</h3>
+
+<p><strong>not implemented yet</strong>. Similar to a MySQL server with <code>blackhole</code> is default storage engine a proxy can forward the binlog to multiple mysqld-slave with a lot less load than a full mysql-server.</p>
+
+<p><img src="http://jan.kneschke.de/assets/2007/3/26/mysql-proxy-types-rep-lb.png" alt="replication off-loading"/></p></div>
+
+<ul>
+
+  <li><a href="/projects/mysql" title="Playing with MySQL">Playing with MySQL</a></li>
+
+  <li><a href="/projects/mysql/order-by-rand" title="ORDER BY RAND()">ORDER BY RAND()</a></li>
+
+  <li><a href="/projects/mysql/groupwise-max" title="groupwise max">groupwise max</a></li>
+
+  <li><a href="/projects/mysql/analyzing-complex-queries" title="Analyzing complex queries">Analyzing complex queries</a></li>
+
+  <li><a href="/projects/mysql/sp" title="Trees in SQL">Trees in SQL</a></li>
+
+  <li><a class="selected" href="/projects/mysql/mysql-proxy" title="MySQL Proxy">MySQL Proxy</a></li>
+
+  <li><a href="/projects/mysql/mysql-protocol" title="MySQL Protocol">MySQL Protocol</a></li>
+
+  <li><a href="/projects/mysql/udf" title="UDF">UDF</a></li>
+
+  <li><a href="/projects/mysql/sql-parser-in-rage-l" title="SQL parser in rage(l)">SQL parser in rage(l)</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-0-5-0-released" title="MySQL Proxy 0.5.0 released">MySQL Proxy 0.5.0 released</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-learns-r-w-splitting" title="MySQL Proxy learns R/W Splitting">MySQL Proxy learns R/W Splitting</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-and-a-global-transaction-id" title="MySQL Proxy and a Global Transaction ID">MySQL Proxy and a Global Transaction ID</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-query-stats" title="MySQL Proxy: Query Stats">MySQL Proxy: Query Stats</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-tracking-parallel-queries" title="MySQL Proxy: Tracking Parallel Queries">MySQL Proxy: Tracking Parallel Queries</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-0-6-0-released" title="MySQL Proxy: 0.6.0 released">MySQL Proxy: 0.6.0 released</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-tape-h-h-hest-recorder" title="MySQL Proxy: tape^H^H^Hest recorder">MySQL Proxy: tape^H^H^Hest recorder</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-a-university-session" title="MySQL Proxy: a University Session">MySQL Proxy: a University Session</a></li>
+
+  <li><a href="/projects/mysql/wormhole-index-reads" title="wormhole: index reads">wormhole: index reads</a></li>
+
+  <li><a href="/projects/mysql/wormhole-table-discovery" title="wormhole: table discovery">wormhole: table discovery</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-adaptive-slow-query-log" title="MySQL Proxy: Adaptive Slow Query Log">MySQL Proxy: Adaptive Slow Query Log</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-reverse-mode-source" title="MySQL Proxy, reverse mode + source">MySQL Proxy, reverse mode + source</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-more-r-w-splitting" title="MySQL Proxy: more R/W splitting">MySQL Proxy: more R/W splitting</a></li>
+
+  <li><a href="/projects/mysql/wormhole-storage-engine" title="wormhole Storage Engine">wormhole Storage Engine</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-das-modul" title="MySQL Proxy: Das Modul">MySQL Proxy: Das Modul</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-reducing-latency" title="MySQL Proxy: Reducing Latency">MySQL Proxy: Reducing Latency</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-a-chassis-and-a-mysql-server" title="MySQL Proxy: a chassis and a MySQL-server">MySQL Proxy: a chassis and a MySQL-server</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-0-6-1-released" title="MySQL Proxy: 0.6.1 released">MySQL Proxy: 0.6.1 released</a></li>
+
+  <li><a href="/projects/mysql/cmake-or-how-to-write-portable-code" title="CMake or how to write portable code">CMake or how to write portable code</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-commit-obfuscator" title="MySQL Proxy: COMMIT obfuscator">MySQL Proxy: COMMIT obfuscator</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-rollbacked-transactions" title="MySQL Proxy: rollbacked transactions">MySQL Proxy: rollbacked transactions</a></li>
+
+  <li><a href="/projects/mysql/bo-handage-for-mysql" title="Bo^Handage for MySQL">Bo^Handage for MySQL</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-replicating-into-memcache" title="MySQL Proxy: replicating into memcache">MySQL Proxy: replicating into memcache</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-rbr-to-sbr-decoding" title="MySQL Proxy: RBR to SBR decoding">MySQL Proxy: RBR to SBR decoding</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-merging-resultsets" title="MySQL Proxy: merging resultsets">MySQL Proxy: merging resultsets</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-debug-plugin" title="MySQL Proxy: debug plugin">MySQL Proxy: debug plugin</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-what-should-be-on-the-road-map" title="MySQL Proxy: what should be on the road-map">MySQL Proxy: what should be on the road-map</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-0-7-0-and-the-way-ahead" title="MySQL Proxy: 0.7.0 and the way ahead">MySQL Proxy: 0.7.0 and the way ahead</a></li>
+
+  <li><a href="/projects/mysql/mysql-internals-screens-or-frm-files" title="MySQL Internals: screens (or .frm files)">MySQL Internals: screens (or .frm files)</a></li>
+
+  <li><a href="/projects/mysql/async-mysql-queries-with-c-api" title="Async MySQL Queries with C-API">Async MySQL Queries with C-API</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-public-repo-moved-to-launchpad" title="MySQL Proxy: public repo moved to launchpad">MySQL Proxy: public repo moved to launchpad</a></li>
+
+  <li><a href="/projects/mysql/gdb-auto-stacktrace" title="GDB: auto-stacktrace">GDB: auto-stacktrace</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-from-0-6-1-to-0-7-0" title="MySQL Proxy: from 0.6.1 to 0.7.0">MySQL Proxy: from 0.6.1 to 0.7.0</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-lua-classes" title="MySQL Proxy: Lua classes">MySQL Proxy: Lua classes</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-address-is-now-dst-src-name" title="MySQL Proxy: .address is now .dst|src.name ">MySQL Proxy: .address is now .dst|src.name </a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-yet-another-mysql-shell" title="MySQL Proxy: yet another mysql shell">MySQL Proxy: yet another mysql shell</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-a-shell-with-auto-show-warnings" title="MySQL Proxy: a shell with auto-SHOW WARNINGS">MySQL Proxy: a shell with auto-SHOW WARNINGS</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-a-shell-with-auto-explain" title="MySQL Proxy: a shell with auto-EXPLAIN">MySQL Proxy: a shell with auto-EXPLAIN</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-an-architecture-overview" title="MySQL Proxy: an architecture overview">MySQL Proxy: an architecture overview</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-playing-with-binlogs" title="MySQL Proxy: playing with binlogs">MySQL Proxy: playing with binlogs</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-0-7-0-released" title="MySQL Proxy: 0.7.0 released">MySQL Proxy: 0.7.0 released</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-meets-binlogs-sneak-peek-ii" title="MySQL Proxy meets: binlogs - sneak peek II">MySQL Proxy meets: binlogs - sneak peek II</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-meets-binlogs-sneak-peek-i" title="MySQL Proxy: meets binlogs - sneak peek I">MySQL Proxy: meets binlogs - sneak peek I</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-meets-binlog-the-examples" title="MySQL Proxy meets: binlog - the examples">MySQL Proxy meets: binlog - the examples</a></li>
+
+  <li><a href="/projects/mysql/druckbetankung" title="Druckbetankung">Druckbetankung</a></li>
+
+  <li><a href="/projects/mysql/replicate-from-mysql-into-memcache" title="Replicate from MySQL into memcache">Replicate from MySQL into memcache</a></li>
+
+  <li><a href="/projects/mysql/mysqls-hidden-loader-interface" title="MySQLs hidden Loader Interface">MySQLs hidden Loader Interface</a></li>
+
+  <li><a href="/projects/mysql/binlog-storage-engine-mysql-proxy-edition" title="Binlog Storage Engine - MySQL Proxy Edition">Binlog Storage Engine - MySQL Proxy Edition</a></li>
+
+  <li><a href="/projects/mysql/wormhole-se-joins" title="Wormhole SE: JOINs">Wormhole SE: JOINs</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-hackathon-2009" title="MySQL Proxy: Hackathon 2009">MySQL Proxy: Hackathon 2009</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-roles" title="MySQL Proxy: Roles">MySQL Proxy: Roles</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-profiling-0-8" title="MySQL Proxy: profiling 0.8">MySQL Proxy: profiling 0.8</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-froscon-2009" title="MySQL Proxy: FrosCon 2009">MySQL Proxy: FrosCon 2009</a></li>
+
+  <li><a href="/projects/mysql/mysql-proxy-0-8-0-release" title="MySQL Proxy: 0.8.0 released">MySQL Proxy: 0.8.0 released</a></li>
+
+</ul>
+
+
+    </div>
+    <div id="sidebar">
+      <h2>Search</h2>
+      <form method="get" id="sform" action="/search">
+        <label for="q">Search:</label>
+				<input type="text" id="q" value="" name="q" size="15" />
+			</form>
+      
+        <h2>Pages</h2>
+        <ul>
+          <li><a href="/projects" title="projects">projects</a></li><li><a class="selected" href="/projects/mysql" title="mysql">mysql</a></li><li><a href="/about" title="about">about</a></li>
+        </ul>
+      
+
+      <div id="twitter_div">
+<h2 class="sidebar-title">Twitter Updates</h2>
+<ul id="twitter_update_list"></ul>
+<a href="http://twitter.com/weigon" id="twitter-link" style="display:block;text-align:right;">follow me on Twitter</a>
+</div>
+<script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
+<script type="text/javascript" src="http://twitter.com/statuses/user_timeline/weigon.json?callback=twitterCallback2&amp;count=5"></script>
+    </div>
+    <div>
+<script type="text/javascript"><!--
+google_ad_client = "pub-1033490626111478";
+/* 120x240, created 4/2/09 */
+google_ad_slot = "7061730480";
+google_ad_width = 120;
+google_ad_height = 240;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+    </div>
+  </div>
+  <div id="footer">~jk is proudly using the <a href="http://ifelse.co.uk/simpla">Simpla theme</a> originally designed by <a href="http://ifelse.co.uk">Phu</a>. Powered by <a href="http://mephistoblog.com/">Mephisto</a></div>
+</body>
+</html>
