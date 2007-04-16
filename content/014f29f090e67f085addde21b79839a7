@@ -1,0 +1,297 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="/styles.css">
+<title>Pen</title>
+</head>
+
+<!-- header.html -->
+<!--body background="/img/grbg.png" link="#0000EE" vlink="#551a8b" alink="#ff0000" text="#000000" bgcolor="#ffffff"-->
+<body>
+<center>
+[an error occurred while processing this directive]
+</center>
+<!-- Outer table -->
+<table width="100%" border=0 cellpadding=0 cellspacing=5>
+<tr>
+<td width=16>
+</td>
+<td>
+<a href="http://siag.nu/shohei/">
+<!-- img src="/shohei/img/shohei2.jpg" border=0 alt="Shohei" -->
+</a>
+<hr size=1 noshade>
+
+<!-- Inner table -->
+<table width="100%">
+<tr>
+<td valign=top width=130>
+<!-- leftstuff.html -->
+<a href="/"><b>Siag Office</b></a><p>
+<a href="/shohei/"><b>Shohei Mail</b></a><p>
+<a href="/webresolve/"><b>Webresolve</b></a><p>
+<a href="/pen/"><b>Pen</b></a><p>
+<a href="/dwatch/"><b>Dwatch</b></a><p>
+<a href="/xmagick/"><b>XMagick</b></a><p>
+<a href="/myhtml/"><b>Myhtml</b></a><p>
+<a href="/libsdb/"><b>Simple Database Library</b></a><p>
+<a href="/sdbsiod/"><b>Sdbsiod</b></a><p>
+<a href="/mod_log_sdb/"><b>mod_log_sdb</b></a><p>
+<a href="/proftpd/mod_sql_sdb/"><b>mod_sql_sdb</b></a><p>
+<a href="/sdbgrey/"><b>Sdbgrey</b></a><p>
+<a href="/urck/"><b>Ulric's Router Construction Kit</b></a><p>
+<a href="/neXtaw/"><b>neXtaw</b></a><p>
+<a href="/mowitz/"><b>Mowitz</b></a><p>
+<a href="/kylie/"><b>Kylie</b></a><p>
+<a href="/o3read/"><b>O3read</b></a><p>
+<a href="/ucron/"><b>Ucron</b></a><p>
+<a href="/parsecgi/"><b>Parsecgi</b></a><p>
+<a href="http://mrbig.365-24.se/"><b>Mr Big</b></a><p>
+<hr size=1 noshade>
+<a href="/ulric/">Ulric's stuff</a><p>
+
+</td>
+<td valign=top width=8 bgcolor="#cccccc">
+&nbsp;
+</td>
+<td valign=top bgcolor="white">
+
+
+<h1>Pen</h1>
+
+This is pen, a load balancer for "simple" tcp based protocols such as
+http or smtp. It allows several servers to appear as one to the
+outside and automatically detects servers that are down and distributes
+clients among the available servers. This gives high availability and
+scalable performance.
+<p>
+<center>
+[an error occurred while processing this directive]
+</center>
+<p>
+The load balancing algorithm keeps track of clients and will try to
+send them back to the server they visited the last time. The client
+table has a number of slots (default 2048, settable through command-line
+arguments). When the table is full, the least recently used one will
+be thrown out to make room for the new one.
+<p>
+This is superior to a simple round-robin algorithm, which sends a client
+that connects repeatedly to different servers. Doing so breaks
+applications that maintain state between connections in the server,
+including most modern web applications.
+<p>
+When pen detects that a server is unavailable, it scans for another
+starting with the server after the most recently used one. That way
+we get load balancing and "fair" failover for free.
+<p>
+Correctly configured, pen can ensure that a server farm is always
+available, even when individual servers are brought down for maintenance
+or reconfiguration. The final single point of failure, pen itself,
+can be eliminated by running pen on several servers, using vrrp to
+decide which is active.
+<br>
+<a href="vrrpd-linux.shtml">Description of redundancy using vrrpd on Linux</a>
+<br>
+<a href="vrrpd-linux2.shtml">The Ultimate Cheapskate Cluster</a>
+
+<p>
+<a href="ChangeLog">Change log</a>
+<p>
+
+There is a mailing list: pen@siag.nu. Send mail to
+<a href="mailto:majordomo@siag.nu">majordomo@siag.nu</a>
+with the message body:
+<pre>
+subscribe pen
+</pre>
+<a href="http://siag.nu/hypermail/pen/">Mailing list archive</a>
+
+<h3>Penlogd</h3>
+
+A side-effect of the load-balancing is that several logfiles are produced,
+and all accesses seem to come from the load balancer. The program
+penlogd solves this problem by merging pen's log file with the ones
+produced by the web servers. See penlogd(1) and penlog(1) for details.
+
+<!-- This is obsolete
+A side-effect of the load-balancing is that several logfiles are produced,
+and all accesses seem to come from the load balancer. The program
+mergelogs solves this problem by merging pen's log file with the ones
+produced by the web servers. See mergelogs(1) for details.
+-->
+
+<h3>Webstats</h3>
+
+Pen emits statistics when it receives a USR1 signal, but the output
+can be hard to interpret. The cgi script <a href="pen.png">webstats</a>
+can be used in conjunction with the -w option to pen to get statistics
+in HTML format instead.
+<p>
+<b>New:</b> <a href="penstats.html">Take a look here</a> to see what
+the latest Pen status is here at siag.nu. This is not "live" data, but
+generated from this cron job every 10 minutes:
+
+<pre>
+2,12,22,32,42,52 * * * *        kill -USR1 `cat /var/run/pen.pid`
+</pre>
+
+Note that there are usually few active connections. This is because of the
+way the web works: the client connects, the server sends data, the
+client disconnects. The whole transaction is over in seconds.
+
+<h3>Portability</h3>
+This load balancer is known to work on FreeBSD, Linux, HP-UX and Solaris.
+Other
+Unixes should work as well, possibly requiring trivial changes.
+Success stories or problem reports are welcome.
+<p>
+<a href="pen-on-nt.png">It runs on Windows, too.</a>
+<br>
+<a href="darwin.jpg">And on MacOS X.</a>
+
+<p>
+<h2>Installation</h2>
+Type:
+<pre>
+	./configure
+        make
+        make install
+</pre>
+By default the programs are installed in /usr/local/bin. This can
+be changed like this example:
+<pre>
+        ./configure --prefix=/usr
+</pre>
+to install into /usr/bin instead.
+
+<p>
+<a href="http://siag.nu/pub/pen/">Download source</a>
+<p>
+<a href="startscripts.shtml">Contributed start scripts</a>
+
+<h2>Links</h2>
+<a href="http://www.vmware.com/vmtn/appliances/directory/300">Hercules Load Balancer Virtual Appliance</a>, a VMware virtual machine based on Pen
+<p>
+<a href="http://tafe.unkelhaeusser.de/penbw/">Penbw</a>, Pen backend
+watcher, monitors and blacklists backends automatically in case
+of a failure
+<p>
+<a href="http://sunfreeware.com/">Pre-compiled packages for Solaris</a>
+<p>
+<a href="http://redundancy.redundancy.org/fbsd_lb.html">A redundant load-balancing firewall system, using FreeBSD</a>
+<p>
+<a href="http://dag.wieers.com/packages/pen/?protest=please">Red Hat RPMs courtesy of Dag Wieers</a>
+<p>
+<a href="http://zenloadbalancer.sourceforge.net/">Zen load balancer</a>, a load balancer appliance based on Pen.
+<p>
+<a href="http://freshmeat.net/projects/pen/">Freshmeat project page</a>
+
+
+<hr>
+<a href="/morestuff.html">More stuff</a>
+<img src="http://rollwurst.365-24.se/cgi-bin/rollwurst?http://siag.nu/pen/" alt="">
+<p>
+[an error occurred while processing this directive]
+<hr>
+
+<address>Ulric Eriksson - May 2008 - ulric@siag.nu</address>
+
+<!-- footstuff.shtml -->
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+</td>
+<td valign=top width=8 bgcolor="#cccccc">
+&nbsp;
+</td>
+<td valign=top width=130>
+<script type="text/javascript"><!--
+google_ad_client = "pub-6927829833036381";
+google_ad_width = 120;
+google_ad_height = 600;
+google_ad_format = "120x600_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+</td>
+</tr>
+</table>
+
+<hr size=1 noshade>
+
+<p>
+<table><tr><td>
+<a href="http://validator.w3.org/check/referer"><img border="0" src="/img/valid-html401.png" alt="Valid HTML 4.01!" height="31" width="88"></a>
+
+</td><td>
+<a href="http://www.netcraft.com/whats?host=siag.nu/"><img src="/img/powered.gif
+" width=90 height=53 border=0 alt="Powered By ...?"></a>
+
+</td><td>
+<!-- SiteSearch Google -->
+<form method="get" action="http://www.google.com/custom" target="google_window">
+<table border="0" bgcolor="#ffffff">
+<tr><td nowrap="nowrap" valign="top" align="left" height="32">
+<a href="http://www.google.com/">
+<img src="http://www.google.com/logos/Logo_25wht.gif" border="0" alt="Google" align="middle"></a>
+</td>
+<td nowrap="nowrap">
+<input type="hidden" name="domains" value="siag.nu">
+<label for="sbi" style="display: none">Enter your search terms</label>
+<input type="text" name="q" size="31" maxlength="255" value="" id="sbi">
+<label for="sbb" style="display: none">Submit search form</label>
+<input type="submit" name="sa" value="Search" id="sbb">
+</td></tr>
+<tr>
+<td>&nbsp;</td>
+<td nowrap="nowrap">
+<table>
+<tr>
+<td>
+<input type="radio" name="sitesearch" value="" checked id="ss0">
+<label for="ss0" title="Search the Web"><font size="-1" color="#000000">Web</font></label></td>
+<td>
+<input type="radio" name="sitesearch" value="siag.nu" id="ss1">
+<label for="ss1" title="Search siag.nu"><font size="-1" color="#000000">siag.nu</font></label></td>
+</tr>
+</table>
+<input type="hidden" name="client" value="pub-6927829833036381">
+<input type="hidden" name="forid" value="1">
+<input type="hidden" name="ie" value="ISO-8859-1">
+<input type="hidden" name="oe" value="ISO-8859-1">
+<input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFFFFF;LBGC:336699;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;FORID:1">
+<input type="hidden" name="hl" value="en">
+</td></tr></table>
+</form>
+<!-- SiteSearch Google -->
+
+</td></tr></table>
+</td>
+</tr>
+</table>
+
+</body>
+</html>
+
+
