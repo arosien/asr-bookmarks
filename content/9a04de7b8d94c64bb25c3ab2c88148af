@@ -1,0 +1,5749 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>La Blogothèque</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+<meta name="generator" content="SPIP 2.0.9 [13532]" />
+
+
+<link rel="shortcut icon" href="squelettes/favicon.ico" type="image/x-icon" />
+
+
+<link rel="alternate" type="application/rss+xml" title="Syndiquer tout le site" href="http://www.blogotheque.net/spip.php?page=backend" />
+
+<link rel="stylesheet" href="plugins/lecteur/player.css" type="text/css" media="projection, screen, tv" />
+
+<style type="text/css" media="screen">
+	@import url('squelettes/css/spip_style.css');
+	@import url('squelettes/css/base.css');
+	@import url('squelettes/css/home.css');
+	@import url('squelettes/css/radio.css');
+</style>
+
+
+<script type="text/javascript">
+<!-- Idea by:  Nic Wolfe (Nic@TimelapseProductions.com) -->
+<!-- Web URL:  http://fineline.xs.mw -->
+<!-- Begin
+function popUp(URL) {
+day = new Date();
+id = day.getTime();
+eval("page" + id + " = window.open(URL, 'Player', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=1,width=336,height=450');");
+}
+// End -->
+</script>
+
+
+
+
+<link rel="stylesheet" href="plugins/nuage/nuage.css" type="text/css" media="all" />
+
+<script src="prive/javascript/jquery.js" type="text/javascript"></script>
+
+<script src="prive/javascript/jquery.form.js" type="text/javascript"></script>
+
+<script src="prive/javascript/ajaxCallback.js" type="text/javascript"></script>
+<!-- insert_head -->
+<!-- Debut header du Couteau Suisse -->
+<script type="text/javascript"><!--
+var cs_prive=window.location.pathname.match(/\/ecrire\/$/)!=null;
+var cs_init=function(){
+if(!cs_prive)jQuery("a.spip_out,a.spip_url,a.spip_glossaire",this).attr("target","_blank")}
+if(typeof onAjaxLoad=='function')onAjaxLoad(cs_init);
+if(window.jQuery)jQuery(document).ready(function(){
+cs_init.apply(document)});
+
+// --></script>
+<!-- Fin header du Couteau Suisse -->
+
+<script type="text/javascript" src="plugins/lecteur/soundmanager/soundmanager2.js"></script><script type="text/javascript"><!--
+var musicplayerurl="plugins/lecteur/flash/eraplayer_playlist.swf";
+var image_play="plugins/lecteur/images/playl.gif";
+var image_pause="plugins/lecteur/images/pausel.gif";
+soundManager.url = "plugins/lecteur/soundmanager/soundmanager2.swf";
+soundManager.nullURL = "plugins/lecteur/soundmanager/null.mp3";
+var videoNullUrl = "plugins/lecteur/null.flv";
+var DIR_PLUGIN_PLAYER = "plugins/lecteur/";//--></script>
+<script type="text/javascript" src="plugins/lecteur/javascript/jscroller.js"></script>
+<script type="text/javascript" src="plugins/lecteur/player_enclosure.js"></script>
+<link rel="stylesheet" href="plugins/lecteur/player.css" type="text/css" media="projection, screen, tv" />
+
+
+<link rel="stylesheet" type="text/css" href="squelettes/css/sIFR-print.css" media="print" />
+<script type="text/javascript" src="squelettes/js/base.js"></script>
+<script type="text/javascript" src="squelettes/js/comments_pop_up.js"></script>
+<script type="text/javascript" src="squelettes/js/ufo.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+var FO = { movie:"squelettes/flash/bandeau_728x90.swf", width:"728", height:"90", majorversion:"8", build:"0" };
+UFO.create(FO, "ufoDemo");
+});
+</script>
+
+
+<script src="squelettes/js/jquery.cycle.js" type="text/javascript"></script>
+<script src="squelettes/js/jquery.easing.js" type="text/javascript"></script>
+<script type="text/javascript">
+sas_tmstp=Math.round(Math.random()*10000000000);sas_masterflag=1;
+function SmartAdServer(sas_pageid,sas_formatid,sas_target) {
+if (sas_masterflag==1) {sas_masterflag=0;sas_master='M';} else {sas_master='S';};
+document.write('<scr'+'ipt SRC="http://www.smartadserver.com/call/pubj/' + sas_pageid + '/' + sas_formatid + '/'+sas_master + '/' + sas_tmstp + '/' + escape(sas_target) + '?"></scr'+'ipt>');
+}
+
+// CARROUSEL
+carrouselHomePage = function(){
+	if (jQuery("#slideShow").length) {
+		jQuery("#slideShow").cycle({
+			fx: 'fade',
+			speed: 'fast',
+			timeout: 4000,
+			pager: '#navSlideShow',
+			pagerEvent: 'click',
+			pagerAnchorBuilder: function(idx, slide) {
+				return '#navSlideShow li:eq(' + (idx) + ') a';
+			}
+		});
+	}
+}
+
+// DOCUMENT READY CALLS
+jQuery(document).ready(function(){
+	carrouselHomePage();
+});
+
+</script>
+<script type="text/javascript">
+function fixHeightEachThreeElements() {
+  var mainContainer=$("#leftCol");
+  if ($(mainContainer).size() < 1) { return; }
+  $(mainContainer).each(
+    function() {
+      var heightBlockMax = "";
+	  var heightThemeBlockMax = "";
+      var heightPicMax = "";
+      var heightAbstractParagraphBlockMax = "";
+      var heightCreditsBlockMax = "";
+
+     /* Check Images */
+      var divPic = $(".type2 .picArchives");
+     /* Check Images */
+      var divTheme = $(".type2 .titleTheme");
+      /* Check H2 */
+      var divTarget= $(".type2 h2");
+      /* Count Nb lines */
+      var divTargetLines = Math.ceil(divTarget.size()/3);
+      /* Check divAbstractParagraph */
+      var divAbstractParagraph = $(".type2 .abstract");
+      /* Check Credits */
+      var divCredits= $(".type2 .credits");
+
+      for (var l=0; l<(divTargetLines); l++) {
+
+        	heightBlockMax=0;
+        	heightAbstractBlockMax = 0;
+        	heightAbstractParagraphBlockMax = 0;
+        	heightPicBlockMax = 0;
+        	heightThemeBlockMax = 0;
+        	heightCreditsBlockMax = 0;
+
+        var intCountDivToFix=(l!=divTargetLines-1)?(3*(l+1)):((3*(l+1))-((3*(l+1))-$(divTarget).size()));
+
+        for (var m=l*3; m<(intCountDivToFix); m++) {
+         	if ( $(divTarget[m]).height() > heightBlockMax ) heightBlockMax = $(divTarget[m]).height(); // $(divTarget[m]).get(0).offsetHeight;
+        	if ( $(divAbstractParagraph[m]).height() > heightAbstractParagraphBlockMax ) heightAbstractParagraphBlockMax = $(divAbstractParagraph[m]).height(); // $(divAbstractParagraph[m]).get(0).offsetHeight;
+        	if ( $(divPic[m]).height() > heightPicBlockMax ) heightPicBlockMax = $(divPic[m]).height(); // $(divPic[m]).get(0).offsetHeight;
+        	if ( $(divTheme[m]).height() > heightThemeBlockMax ) heightThemeBlockMax = $(divTheme[m]).height();
+        	if ( $(divCredits[m]).height() > heightCreditsBlockMax ) heightCreditsBlockMax = $(divCredits[m]).height(); // $(divCredits[m]).get(0).offsetHeight();
+        }
+
+        for (var n=l*3; n<(intCountDivToFix); n++) {
+         		$(divTarget[n]).css("height",heightBlockMax);
+        		$(divAbstractParagraph[n]).css("height",heightAbstractParagraphBlockMax);
+        		$(divPic[n]).css("height",heightPicBlockMax);
+        		$(divTheme[n]).css("height",heightThemeBlockMax);
+        		$(divCredits[n]).css("height",heightCreditsBlockMax);
+        }
+      }
+    }
+  );
+ }
+$(document).ready(fixHeightEachThreeElements)
+</script>
+
+ 
+  
+</head>
+
+<body>
+<div id="mainContainer">
+	<div id="mainHeader">
+    <div id="header">
+			<div id="logo"><a href="http://www.blogotheque.net">La Blogothèque</a></div>
+			
+			<div class="pub728x90">
+			<script type="text/javascript"> 
+			sas_pageid='5340/34293';      // Page : influence/blogotheque/rg 
+			sas_formatid=380;             // Format : Large Banner 728x90 728x90 
+			sas_target='';                // Targeting 
+			SmartAdServer(sas_pageid,sas_formatid,sas_target); 
+			</script>
+			</div><!-- pub728x90 -->
+			
+			<div id="nav">
+				<ul>
+					<li><a href="http://www.blogotheque.net/spip.php?page=bestof" class="bt01">BEST-OF</a></li>
+					<li><a href="http://www.blogotheque.net/spip.php?page=archives" class="bt02">ARCHIVES</a></li>
+					<li><a href="http://concertsaemporter.com/" class="bt03">CONCERT A EMPORTER</a></li>
+				</ul>
+				<!--
+<div class="formulaire_spip formulaire_recherche">
+<a name="formulaire_recherche" id="formulaire_recherche"></a>
+<form id="formSearch" action="" method="get"><div>
+	
+	
+	<p class="fieldSearch"><input type="text" class="forml" name="recherche" id="recherche" value="Rechercher" onfocus="this.value='';" /></p>
+	<p class="submit"><input type="image" class="submit" src="squelettes/img/search-bt-ok.gif" /></p>
+	<div class="clear"></div>
+</div>
+</form>
+</div>
+-->
+
+<div class="formulaire_spip formulaire_recherche" id="formulaire_recherche">
+<form id="formSearch" action="http://www.blogotheque.net/spip.php?page=recherche" method="get"><div>
+	<input name="page" value="recherche" type="hidden" />
+	
+	<p class="fieldSearch"><input type="text" class="form1" size="10" name="recherche" id="recherche" accesskey="4" /></p>
+	<p class="submit"><input type="image" class="submit" src="squelettes/img/search-bt-ok.gif" /></p>
+	<div class="clear"></div>
+</div></form>
+</div>
+			</div><!-- #nav -->
+		</div><!-- #header -->	
+		
+		<!--<div id="nav2">
+			<ul>
+				<li><a href="#" class="bt01">INSCRIPTION</a></li>
+				<li><a href="#" class="bt02">NEWSLETTER</a></li>
+				<li><a href="#" class="bt03">QUI NOUS SOMMES?</a></li>
+				<li><a href="#" class="bt04">PARTENAIRES</a></li>
+				<li><a href="#" class="bt05">TELECHARGEMENT</a></li>
+				<li><a href="#" class="bt06">GOODIES</a></li>
+			</ul>
+			<div class="clear"></div>
+		</div>--> <!--#nav2 -->  </div><!-- #mainHeader -->
+
+	
+
+	
+		
+		
+	
+	
+	
+	
+
+	<div id="leftCol">
+		<div class="miniNav CAE">
+			<div class="date">takeawayshows</div>
+			<div class="clear"></div>
+		</div><!-- .miniNav -->
+
+			      				      
+			      				      
+      				      
+	</div><!-- #leftCol -->
+
+
+		
+	<div id="rightCol">
+		<div id="keyWords">
+					
+			<h3><span><img src='local/cache-vignettes/L116xH22/a80183f6fc6eab70f74c96e77c9f42a9-eeee3.png' width='116' height='22' style='height:22px;width:116px;'  alt='LES MOTS CLES' /></span></h3>			
+			<ul class="nuage">
+	
+	
+	 <li>
+			<a rel="tag" href="+-A-ecouter-+?lang=fr" class="on" style="font-size: 1.9em;">A écouter</a>
+			<span class="frequence">(692/692)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-A-lire-+?lang=fr" class="on" style="font-size: 1.4em;">A lire</a>
+			<span class="frequence">(357/692)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-A-suivre-+?lang=fr" class="on" style="font-size: 1.1em;">A suivre...</a>
+			<span class="frequence">(149/692)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-A-voir-+?lang=fr" class="on" style="font-size: 1.3em;">A voir</a>
+			<span class="frequence">(331/692)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Annonce-+?lang=fr" class="on" style="font-size: 1.2em;">Annonce</a>
+			<span class="frequence">(228/692)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Business-+?lang=fr" class="on" style="font-size: 1.0em;">Business</a>
+			<span class="frequence">(89/692)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Concert-+?lang=fr" class="on" style="font-size: 1.1em;">Concert</a>
+			<span class="frequence">(175/692)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Concours-+?lang=fr" class="on" style="font-size: 0.9em;">Concours</a>
+			<span class="frequence">(53/692)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Decouverte-+?lang=fr" class="on" style="font-size: 1.1em;">Découverte</a>
+			<span class="frequence">(198/692)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Digression-+?lang=fr" class="on" style="font-size: 1.0em;">Digression</a>
+			<span class="frequence">(70/692)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Disque-+?lang=fr" class="on" style="font-size: 1.0em;">Disque</a>
+			<span class="frequence">(96/692)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Fun-+?lang=fr" class="on" style="font-size: 1.1em;">Fun</a>
+			<span class="frequence">(181/692)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-I-m-a-fan-+?lang=fr" class="on" style="font-size: 1.1em;">I&#8217;m a fan</a>
+			<span class="frequence">(150/692)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Interview-+?lang=fr" class="on" style="font-size: 0.9em;">Interview</a>
+			<span class="frequence">(45/692)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-La-vie-de-la-Blogotheque-+?lang=fr" class="on" style="font-size: 1.0em;">La vie de la Blogo</a>
+			<span class="frequence">(82/692)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-MP3-+?lang=fr" class="on" style="font-size: 1.3em;">MP3</a>
+			<span class="frequence">(296/692)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-P2P-Co-+?lang=fr" class="on" style="font-size: 1.0em;">P2P &amp; Co</a>
+			<span class="frequence">(80/692)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sortir-+?lang=fr" class="on" style="font-size: 1.0em;">Sortir</a>
+			<span class="frequence">(112/692)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sur-le-web-+?lang=fr" class="on" style="font-size: 1.1em;">Sur le web</a>
+			<span class="frequence">(171/692)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Une-histoire-+?lang=fr" class="on" style="font-size: 1.0em;">Une histoire</a>
+			<span class="frequence">(70/692)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Video-+?lang=fr" class="on" style="font-size: 1.1em;">Vidéo</a>
+			<span class="frequence">(180/692)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Weblog,37-+?lang=fr" class="on" style="font-size: 1.0em;">Weblog</a>
+			<span class="frequence">(72/692)</span>
+		</li>
+	
+</ul>			
+			<div class="clear"></div>
+		</div><!-- #keyWords -->
+		
+		<div id="artists">
+					
+			<h3><span><img src='local/cache-vignettes/L104xH22/047256fef6f99f6327613bebeee3c78c-4decf.png' width='104' height='22' style='height:22px;width:104px;'  alt='LES ARTISTES' /></span></h3>			
+			<ul class="nuage">
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-31-Knots-+?lang=fr" class="on" style="font-size: 1.0em;">31 Knots</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-A-Hawk-and-A-Hacksaw-+?lang=fr" class="on" style="font-size: 0.9em;">A Hawk and A Hacksaw</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-A-Silver-Mt-Zion,1108-+?lang=fr" class="on" style="font-size: 1.0em;">A Silver Mt. Zion</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Acid-House-Kings-+?lang=fr" class="on" style="font-size: 0.9em;">Acid House Kings</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Akron-Family-+?lang=fr" class="on" style="font-size: 1.0em;">Akron/Family</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Alain-Bashung-+?lang=fr" class="on" style="font-size: 1.0em;">Alain Bashung</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Alamo-Race-Track,941-+?lang=fr" class="on" style="font-size: 0.9em;">Alamo Race Track</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Alban-Dereyer-+?lang=fr" class="on" style="font-size: 1.0em;">Alban Dereyer</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Alela-Diane,1333-+?lang=fr" class="on" style="font-size: 1.0em;">Alela Diane</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Aloe-Blacc-+?lang=fr" class="on" style="font-size: 0.9em;">Aloe Blacc</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Amanda-Palmer-+?lang=fr" class="on" style="font-size: 0.9em;">Amanda Palmer</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Andrew-Bird,124-+?lang=fr" class="on" style="font-size: 1.3em;">Andrew Bird</a>
+			<span class="frequence">(24/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Animal-Collective-+?lang=fr" class="on" style="font-size: 1.1em;">Animal Collective</a>
+			<span class="frequence">(17/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Antony-the-Johnsons-+?lang=fr" class="on" style="font-size: 1.1em;">Antony and The Johnsons</a>
+			<span class="frequence">(17/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Arcade-Fire-+?lang=fr" class="on" style="font-size: 1.9em;">Arcade Fire</a>
+			<span class="frequence">(60/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Architecture-in-Helsinki-+?lang=fr" class="on" style="font-size: 1.1em;">Architecture in Helsinki</a>
+			<span class="frequence">(17/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Aretha-Franklin-+?lang=fr" class="on" style="font-size: 0.9em;">Aretha Franklin</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Arlt-+?lang=fr" class="on" style="font-size: 0.9em;">Arlt</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Arnaud-Fleurent-Didier-+?lang=fr" class="on" style="font-size: 0.9em;">Arnaud Fleurent-Didier</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Art-Brut-+?lang=fr" class="on" style="font-size: 0.9em;">Art Brut</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Atlas-Sound-+?lang=fr" class="on" style="font-size: 0.9em;">Atlas Sound</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Au-revoir-Simone-+?lang=fr" class="on" style="font-size: 0.9em;">Au revoir Simone</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Balmorhea-+?lang=fr" class="on" style="font-size: 0.9em;">Balmorhea </a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Battles-+?lang=fr" class="on" style="font-size: 1.0em;">Battles</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Beatles-+?lang=fr" class="on" style="font-size: 1.2em;">Beatles</a>
+			<span class="frequence">(18/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Beck-+?lang=fr" class="on" style="font-size: 1.0em;">Beck</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Beirut,666-+?lang=fr" class="on" style="font-size: 1.6em;">Beirut</a>
+			<span class="frequence">(44/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Belle-and-Sebastian-+?lang=fr" class="on" style="font-size: 0.9em;">Belle and Sebastian</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Ben-Folds-+?lang=fr" class="on" style="font-size: 0.9em;">Ben Folds</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Berg-Sans-Nipple-+?lang=fr" class="on" style="font-size: 0.9em;">Berg Sans Nipple</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Bertrand-Belin-+?lang=fr" class="on" style="font-size: 0.9em;">Bertrand Belin</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Big-Star-+?lang=fr" class="on" style="font-size: 1.0em;">Big Star</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Bjork-+?lang=fr" class="on" style="font-size: 1.0em;">Björk</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Bloc-Party-+?lang=fr" class="on" style="font-size: 1.0em;">Bloc Party</a>
+			<span class="frequence">(11/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Blonde-Redhead-+?lang=fr" class="on" style="font-size: 0.9em;">Blonde Redhead</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Blur-+?lang=fr" class="on" style="font-size: 0.9em;">Blur</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Bob-Dylan-+?lang=fr" class="on" style="font-size: 1.1em;">Bob Dylan</a>
+			<span class="frequence">(13/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-bodies-of-water-+?lang=fr" class="on" style="font-size: 1.0em;">bodies of water</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Bon-Iver-+?lang=fr" class="on" style="font-size: 1.4em;">Bon Iver</a>
+			<span class="frequence">(31/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Bonnie-Prince-Billy-+?lang=fr" class="on" style="font-size: 1.0em;">Bonnie Prince Billy</a>
+			<span class="frequence">(10/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Boris-+?lang=fr" class="on" style="font-size: 1.0em;">Boris</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Bowerbirds-+?lang=fr" class="on" style="font-size: 1.1em;">Bowerbirds</a>
+			<span class="frequence">(14/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Brian-Eno-+?lang=fr" class="on" style="font-size: 0.9em;">Brian Eno</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Brian-Wilson-+?lang=fr" class="on" style="font-size: 0.9em;">Brian Wilson</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Bright-Eyes-+?lang=fr" class="on" style="font-size: 1.0em;">Bright Eyes</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Broken-Social-Scene-+?lang=fr" class="on" style="font-size: 0.9em;">Broken Social Scene</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Burial-+?lang=fr" class="on" style="font-size: 0.9em;">Burial</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Buzzcocks-+?lang=fr" class="on" style="font-size: 0.9em;">Buzzcocks</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Caetano-Veloso-+?lang=fr" class="on" style="font-size: 1.0em;">Caetano Veloso</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Calexico-+?lang=fr" class="on" style="font-size: 0.9em;">Calexico</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Camille-+?lang=fr" class="on" style="font-size: 0.9em;">Camille</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-caribou-+?lang=fr" class="on" style="font-size: 1.0em;">caribou</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Casiotone-For-The-Painfully-Alone-+?lang=fr" class="on" style="font-size: 1.0em;">Casiotone For The Painfully Alone</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Cat-Power-+?lang=fr" class="on" style="font-size: 1.0em;">Cat Power</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Chris-Garneau-+?lang=fr" class="on" style="font-size: 1.0em;">Chris Garneau</a>
+			<span class="frequence">(11/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Clap-your-hands-say-yeah-+?lang=fr" class="on" style="font-size: 1.2em;">Clap your hands say yeah</a>
+			<span class="frequence">(20/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Clara-Clara-+?lang=fr" class="on" style="font-size: 0.9em;">Clara Clara</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Clogs-+?lang=fr" class="on" style="font-size: 0.9em;">Clogs</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Clues-+?lang=fr" class="on" style="font-size: 1.0em;">Clues</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Cocorosie-+?lang=fr" class="on" style="font-size: 0.9em;">Cocorosie</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-cocteau-twins-+?lang=fr" class="on" style="font-size: 0.9em;">cocteau twins</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Cold-War-Kids-+?lang=fr" class="on" style="font-size: 0.9em;">Cold War Kids</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Colleen-+?lang=fr" class="on" style="font-size: 1.0em;">Colleen</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Daft-Punk-+?lang=fr" class="on" style="font-size: 0.9em;">Daft Punk</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Darren-Hayman-+?lang=fr" class="on" style="font-size: 1.0em;">Darren Hayman</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-David-Bowie-+?lang=fr" class="on" style="font-size: 1.0em;">David Bowie</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-David-Byrne-+?lang=fr" class="on" style="font-size: 1.0em;">David Byrne</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Death-Cab-for-Cutie-+?lang=fr" class="on" style="font-size: 0.9em;">Death Cab for Cutie</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Deerhoof-+?lang=fr" class="on" style="font-size: 0.9em;">Deerhoof</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Delano-Orchestra-+?lang=fr" class="on" style="font-size: 1.0em;">Delano Orchestra</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Delta-Spirit-+?lang=fr" class="on" style="font-size: 0.9em;">Delta Spirit</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Departments-of-Eagles-+?lang=fr" class="on" style="font-size: 1.0em;">Department of Eagles</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Depeche-Mode-+?lang=fr" class="on" style="font-size: 0.9em;">Depeche Mode</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-dEUS-+?lang=fr" class="on" style="font-size: 1.0em;">dEUS</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Devendra-Banhart-+?lang=fr" class="on" style="font-size: 1.0em;">Devendra Banhart</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Devo-+?lang=fr" class="on" style="font-size: 0.9em;">Devo</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Dinosaur-Jr-+?lang=fr" class="on" style="font-size: 0.9em;">Dinosaur Jr</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Dirty-Projectors-+?lang=fr" class="on" style="font-size: 1.1em;">Dirty Projectors</a>
+			<span class="frequence">(12/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Diving-with-andy-+?lang=fr" class="on" style="font-size: 0.9em;">Diving with andy</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Dominique-A-+?lang=fr" class="on" style="font-size: 1.2em;">Dominique A</a>
+			<span class="frequence">(18/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Dondolo-+?lang=fr" class="on" style="font-size: 0.9em;">Dondolo</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Doveman-+?lang=fr" class="on" style="font-size: 1.0em;">Doveman</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Dr-Dog-+?lang=fr" class="on" style="font-size: 0.9em;">Dr Dog</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Dresden-Dolls,163-+?lang=fr" class="on" style="font-size: 1.0em;">Dresden Dolls</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Dusty-Springfield-+?lang=fr" class="on" style="font-size: 0.9em;">Dusty Springfield</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Eagle-Seagull-+?lang=fr" class="on" style="font-size: 1.0em;">Eagle Seagull</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Efterklang-+?lang=fr" class="on" style="font-size: 1.0em;">Efterklang</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Electric-Electric-+?lang=fr" class="on" style="font-size: 0.9em;">Electric Electric</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Elliott-Smith-+?lang=fr" class="on" style="font-size: 1.0em;">Elliott Smith</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Elvis-Costello-+?lang=fr" class="on" style="font-size: 0.9em;">Elvis Costello</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Elvis-Perkins-+?lang=fr" class="on" style="font-size: 1.0em;">Elvis Perkins</a>
+			<span class="frequence">(10/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Elysian-Fields-+?lang=fr" class="on" style="font-size: 0.9em;">Elysian Fields</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Emily-Jane-White-+?lang=fr" class="on" style="font-size: 1.1em;">Emily Jane White</a>
+			<span class="frequence">(12/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Eric-Matthews-+?lang=fr" class="on" style="font-size: 0.9em;">Eric Matthews</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Erica-Buettner-+?lang=fr" class="on" style="font-size: 0.9em;">Erica Buettner</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Espers-+?lang=fr" class="on" style="font-size: 1.0em;">Espers</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Essie-Jain-+?lang=fr" class="on" style="font-size: 1.0em;">Essie Jain</a>
+			<span class="frequence">(10/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Exsonvaldes-+?lang=fr" class="on" style="font-size: 0.9em;">Exsonvaldes</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Feist-+?lang=fr" class="on" style="font-size: 0.9em;">Feist</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Fever-Ray-+?lang=fr" class="on" style="font-size: 1.0em;">Fever Ray</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Final-Fantasy-+?lang=fr" class="on" style="font-size: 0.9em;">Final Fantasy</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Fiona-Apple-+?lang=fr" class="on" style="font-size: 0.9em;">Fiona Apple</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-First-Aid-Kit-+?lang=fr" class="on" style="font-size: 0.9em;">First Aid Kit</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Fleet-Foxes-+?lang=fr" class="on" style="font-size: 1.2em;">Fleet Foxes</a>
+			<span class="frequence">(18/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Florent-Marchet-+?lang=fr" class="on" style="font-size: 1.0em;">Florent Marchet</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Flotation-Toy-Warning-+?lang=fr" class="on" style="font-size: 1.0em;">Flotation Toy Warning</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Fog-+?lang=fr" class="on" style="font-size: 1.0em;">Fog</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Fool-s-Gold-+?lang=fr" class="on" style="font-size: 0.9em;">Fool&#8217;s Gold</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Forest-Fire-+?lang=fr" class="on" style="font-size: 0.9em;">Forest Fire</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Four-Tet-+?lang=fr" class="on" style="font-size: 1.0em;">Four Tet</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Francois-Virot-+?lang=fr" class="on" style="font-size: 1.1em;">François Virot</a>
+			<span class="frequence">(16/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Fuck-Buttons-+?lang=fr" class="on" style="font-size: 0.9em;">Fuck Buttons</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Gang-Gang-Dance-+?lang=fr" class="on" style="font-size: 0.9em;">Gang Gang Dance</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Get-well-soon-+?lang=fr" class="on" style="font-size: 1.0em;">Get well soon</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Gnarls-Barkley-+?lang=fr" class="on" style="font-size: 1.0em;">Gnarls Barkley</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Gorillaz-+?lang=fr" class="on" style="font-size: 0.9em;">Gorillaz</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Grizzly-Bear-+?lang=fr" class="on" style="font-size: 1.4em;">Grizzly Bear</a>
+			<span class="frequence">(33/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Guillemots-+?lang=fr" class="on" style="font-size: 1.0em;">Guillemots</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Half-Asleep-+?lang=fr" class="on" style="font-size: 1.0em;">Half Asleep</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Hank-Harry-+?lang=fr" class="on" style="font-size: 1.0em;">Hank Harry</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Harlem-Shakes-+?lang=fr" class="on" style="font-size: 0.9em;">Harlem Shakes</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Harry-Nillson-+?lang=fr" class="on" style="font-size: 1.0em;">Harry Nillson</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Hefner-+?lang=fr" class="on" style="font-size: 1.0em;">Hefner</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Herman-Dune-+?lang=fr" class="on" style="font-size: 1.3em;">Herman Düne</a>
+			<span class="frequence">(24/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Hjaltalin-+?lang=fr" class="on" style="font-size: 1.0em;">Hjaltalin</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Hold-Your-Horses-+?lang=fr" class="on" style="font-size: 1.0em;">Hold Your Horses</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-I-Love-You-But-I-ve-Chosen-+?lang=fr" class="on" style="font-size: 0.9em;">I Love You But I’ve Chosen Darkness</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-I-m-a-horse-Soy-un-caballo-+?lang=fr" class="on" style="font-size: 1.2em;">I&#8217;m a horse / Soy un caballo</a>
+			<span class="frequence">(18/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-I-m-from-Barcelona-+?lang=fr" class="on" style="font-size: 1.0em;">I&#8217;m from Barcelona</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Inlets-+?lang=fr" class="on" style="font-size: 1.0em;">Inlets</a>
+			<span class="frequence">(10/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Iron-and-Wine-+?lang=fr" class="on" style="font-size: 1.0em;">Iron and Wine</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Islands-+?lang=fr" class="on" style="font-size: 0.9em;">Islands</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Jamie-Lidell-+?lang=fr" class="on" style="font-size: 0.9em;">Jamie Lidell</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Jarvis-Cocker-+?lang=fr" class="on" style="font-size: 1.0em;">Jarvis Cocker</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Jason-Molina-+?lang=fr" class="on" style="font-size: 0.9em;">Jason Molina</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Jeff-Buckley-+?lang=fr" class="on" style="font-size: 1.0em;">Jeff Buckley</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Jeffrey-Lewis-+?lang=fr" class="on" style="font-size: 0.9em;">Jeffrey Lewis</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Jenny-Lewis-+?lang=fr" class="on" style="font-size: 0.9em;">Jenny Lewis</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Jens-Lekman-+?lang=fr" class="on" style="font-size: 1.1em;">Jens Lekman</a>
+			<span class="frequence">(17/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Jeremy-Warmsley-+?lang=fr" class="on" style="font-size: 1.0em;">Jeremy Warmsley</a>
+			<span class="frequence">(11/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Joanna-Newsom-+?lang=fr" class="on" style="font-size: 1.0em;">Joanna Newsom</a>
+			<span class="frequence">(10/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-John-Cale-+?lang=fr" class="on" style="font-size: 1.0em;">John Cale</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Johnny-Cash-+?lang=fr" class="on" style="font-size: 0.9em;">Johnny Cash</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Jonquil-+?lang=fr" class="on" style="font-size: 0.9em;">Jonquil</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Jose-Gonzalez-+?lang=fr" class="on" style="font-size: 1.0em;">José Gonzalez</a>
+			<span class="frequence">(10/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Joseph-Arthur-+?lang=fr" class="on" style="font-size: 0.9em;">Joseph Arthur</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Josh-Rouse-+?lang=fr" class="on" style="font-size: 1.0em;">Josh Rouse</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Joy-Division-+?lang=fr" class="on" style="font-size: 1.0em;">Joy Division</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-JP-Nataf-+?lang=fr" class="on" style="font-size: 1.0em;">JP Nataf</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Juana-Molina-+?lang=fr" class="on" style="font-size: 1.0em;">Juana Molina</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Julie-Doiron-+?lang=fr" class="on" style="font-size: 0.9em;">Julie Doiron</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Kanye-West-+?lang=fr" class="on" style="font-size: 0.9em;">Kanye West</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Katerine-+?lang=fr" class="on" style="font-size: 0.9em;">Katerine</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Keren-Ann-+?lang=fr" class="on" style="font-size: 0.9em;">Keren Ann</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Kill-the-Vultures-+?lang=fr" class="on" style="font-size: 0.9em;">Kill the Vultures</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Kings-of-Convenience-+?lang=fr" class="on" style="font-size: 1.0em;">Kings of Convenience</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Kocani-Orkestar-+?lang=fr" class="on" style="font-size: 1.0em;">Kocani Orkestar</a>
+			<span class="frequence">(11/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Kraftwerk-+?lang=fr" class="on" style="font-size: 0.9em;">Kraftwerk</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Lauter-+?lang=fr" class="on" style="font-size: 0.9em;">Lauter</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-LCD-Soundsystem-+?lang=fr" class="on" style="font-size: 0.9em;">LCD Soundsystem</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Leonard-Cohen-+?lang=fr" class="on" style="font-size: 0.9em;">Leonard Cohen</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Liars-+?lang=fr" class="on" style="font-size: 1.0em;">Liars</a>
+			<span class="frequence">(10/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Lilly-Allen-+?lang=fr" class="on" style="font-size: 0.9em;">Lilly Allen</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Low-+?lang=fr" class="on" style="font-size: 1.0em;">Low</a>
+			<span class="frequence">(11/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Luxury-Pond-+?lang=fr" class="on" style="font-size: 0.9em;">Luxury Pond</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Lykke-Li-+?lang=fr" class="on" style="font-size: 1.1em;">Lykke Li</a>
+			<span class="frequence">(12/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-M-Ward-+?lang=fr" class="on" style="font-size: 1.1em;">M.&nbsp;Ward</a>
+			<span class="frequence">(16/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Magnolia-Electric-Co-+?lang=fr" class="on" style="font-size: 1.0em;">Magnolia Electric Co.</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Malajube-+?lang=fr" class="on" style="font-size: 1.0em;">Malajube</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Man-Man-+?lang=fr" class="on" style="font-size: 1.1em;">Man Man</a>
+			<span class="frequence">(17/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Marcos-Valle-+?lang=fr" class="on" style="font-size: 0.9em;">Marcos Valle</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Marissa-Nadler-+?lang=fr" class="on" style="font-size: 1.1em;">Marissa Nadler</a>
+			<span class="frequence">(12/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Matamore-+?lang=fr" class="on" style="font-size: 1.1em;">Matamore</a>
+			<span class="frequence">(12/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Mates-of-State-+?lang=fr" class="on" style="font-size: 1.0em;">Mates of State</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Matt-Elliott-+?lang=fr" class="on" style="font-size: 1.0em;">Matt Elliott</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Menomena-+?lang=fr" class="on" style="font-size: 0.9em;">Menomena</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Micah-P-Hinson-+?lang=fr" class="on" style="font-size: 1.0em;">Micah P. Hinson</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Michael-Wookey-+?lang=fr" class="on" style="font-size: 0.9em;">Michael Wookey</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Midlake-+?lang=fr" class="on" style="font-size: 0.9em;">Midlake</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-mina-tindle-+?lang=fr" class="on" style="font-size: 1.0em;">mina tindle</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Mogwai-+?lang=fr" class="on" style="font-size: 1.0em;">Mogwai</a>
+			<span class="frequence">(10/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Mohammed-Jimmy-Mohammed-+?lang=fr" class="on" style="font-size: 0.9em;">Mohammed Jimmy Mohammed</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Mojave-3-+?lang=fr" class="on" style="font-size: 0.9em;">Mojave 3</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Mono-+?lang=fr" class="on" style="font-size: 0.9em;">Mono</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Morrissey-+?lang=fr" class="on" style="font-size: 0.9em;">Morrissey</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-My-Bloody-valentine-+?lang=fr" class="on" style="font-size: 1.0em;">My Bloody valentine</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-My-Brightest-Diamond-+?lang=fr" class="on" style="font-size: 1.0em;">My Brightest Diamond</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Neil-Young-+?lang=fr" class="on" style="font-size: 0.9em;">Neil Young</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Neutral-Milk-Hotel-+?lang=fr" class="on" style="font-size: 1.0em;">Neutral Milk Hotel</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-New-Order-+?lang=fr" class="on" style="font-size: 1.0em;">New Order</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Nick-Cave-+?lang=fr" class="on" style="font-size: 1.0em;">Nick Cave</a>
+			<span class="frequence">(11/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Nick-Drake-+?lang=fr" class="on" style="font-size: 0.9em;">Nick Drake</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Nina-Simone-+?lang=fr" class="on" style="font-size: 1.0em;">Nina Simone</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Noah-The-Whale-+?lang=fr" class="on" style="font-size: 1.0em;">Noah &amp; The Whale</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Noah-and-the-Whale-+?lang=fr" class="on" style="font-size: 1.1em;">Noah and the Whale</a>
+			<span class="frequence">(13/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Noir-Desir-+?lang=fr" class="on" style="font-size: 0.9em;">Noir Désir</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-norman-palm-+?lang=fr" class="on" style="font-size: 0.9em;">norman palm</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Of-Montreal-+?lang=fr" class="on" style="font-size: 0.9em;">Of Montreal</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Okkervil-River-+?lang=fr" class="on" style="font-size: 1.0em;">Okkervil River</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-oOmiaq-+?lang=fr" class="on" style="font-size: 1.0em;">oOmiaq</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Orouni-+?lang=fr" class="on" style="font-size: 0.9em;">Orouni</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-pascal-comelade-+?lang=fr" class="on" style="font-size: 0.9em;">pascal comelade</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Patrick-Watson-+?lang=fr" class="on" style="font-size: 1.0em;">Patrick Watson</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Patrick-Wolf-+?lang=fr" class="on" style="font-size: 1.0em;">Patrick Wolf</a>
+			<span class="frequence">(11/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Paul-McCartney-+?lang=fr" class="on" style="font-size: 0.9em;">Paul McCartney</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Pedro-Solers-+?lang=fr" class="on" style="font-size: 0.9em;">Pedro Soler</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Pernice-Brothers-+?lang=fr" class="on" style="font-size: 0.9em;">Pernice Brothers</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Peter-and-the-Wolf-+?lang=fr" class="on" style="font-size: 1.1em;">Peter and the Wolf</a>
+			<span class="frequence">(15/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Phoenix-+?lang=fr" class="on" style="font-size: 1.0em;">Phoenix</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Piers-Faccini-+?lang=fr" class="on" style="font-size: 1.0em;">Piers Faccini</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Pixies-+?lang=fr" class="on" style="font-size: 0.9em;">Pixies</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Plants-and-Animals-+?lang=fr" class="on" style="font-size: 1.0em;">Plants and Animals</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Portishead-+?lang=fr" class="on" style="font-size: 1.2em;">Portishead</a>
+			<span class="frequence">(22/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Radiohead-+?lang=fr" class="on" style="font-size: 1.4em;">Radiohead</a>
+			<span class="frequence">(31/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Ralfe-Band-+?lang=fr" class="on" style="font-size: 1.0em;">Ralfe Band</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Ramona-Cordova-+?lang=fr" class="on" style="font-size: 0.9em;">Ramona Cordova</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Raymondo-+?lang=fr" class="on" style="font-size: 1.0em;">Raymondo</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Red-House-Painters-+?lang=fr" class="on" style="font-size: 0.9em;">Red House Painters</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-REM-+?lang=fr" class="on" style="font-size: 1.0em;">REM</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Richard-Swift-+?lang=fr" class="on" style="font-size: 0.9em;">Richard Swift</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Robert-Wyatt-+?lang=fr" class="on" style="font-size: 1.0em;">Robert Wyatt</a>
+			<span class="frequence">(11/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Roken-is-Dodeljik,1839-+?lang=fr" class="on" style="font-size: 0.9em;">Roken is Dodeljik</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Ron-Sexsmith-+?lang=fr" class="on" style="font-size: 0.9em;">Ron Sexsmith</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Rufus-Wainwright-+?lang=fr" class="on" style="font-size: 1.0em;">Rufus Wainwright</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Samir-Barris-+?lang=fr" class="on" style="font-size: 0.9em;">Samir Barris</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sebastien-Martel-+?lang=fr" class="on" style="font-size: 0.9em;">Sébastien Martel</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sebastien-Tellier-+?lang=fr" class="on" style="font-size: 0.9em;">Sébastien Tellier</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Scott-Walker-+?lang=fr" class="on" style="font-size: 1.0em;">Scott Walker</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sebastien-Schuller,1421-+?lang=fr" class="on" style="font-size: 0.9em;">Sebastien Schuller</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sepia-Hours-+?lang=fr" class="on" style="font-size: 1.0em;">Sepia Hours</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Serge-Gainsbourg-+?lang=fr" class="on" style="font-size: 1.0em;">Serge Gainsbourg</a>
+			<span class="frequence">(10/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-sharon-jones-the-dap-kings-+?lang=fr" class="on" style="font-size: 0.9em;">sharon jones &amp; the dap-kings</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sharon-Van-Etten-+?lang=fr" class="on" style="font-size: 1.0em;">Sharon Van Etten</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Shearwater-+?lang=fr" class="on" style="font-size: 0.9em;">Shearwater</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sidi-Ali-+?lang=fr" class="on" style="font-size: 1.0em;">Sidi Ali</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sigur-Ros-+?lang=fr" class="on" style="font-size: 1.1em;">Sigur Ros</a>
+			<span class="frequence">(13/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Simon-Garfunkel-+?lang=fr" class="on" style="font-size: 0.9em;">Simon &amp; Garfunkel</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Slint-+?lang=fr" class="on" style="font-size: 1.0em;">Slint</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Slow-Club-+?lang=fr" class="on" style="font-size: 0.9em;">Slow Club</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Songs-Ohia-+?lang=fr" class="on" style="font-size: 0.9em;">Songs&nbsp;: Ohia</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sonic-Youth-+?lang=fr" class="on" style="font-size: 1.0em;">Sonic Youth</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sophie-Hunger-+?lang=fr" class="on" style="font-size: 0.9em;">Sophie Hunger</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Spain-+?lang=fr" class="on" style="font-size: 0.9em;">Spain</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sparklehorse-+?lang=fr" class="on" style="font-size: 1.0em;">Sparklehorse</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sparrow-House-+?lang=fr" class="on" style="font-size: 1.0em;">Sparrow House</a>
+			<span class="frequence">(10/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Spinto-Band-+?lang=fr" class="on" style="font-size: 1.0em;">Spinto Band</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Spoon-+?lang=fr" class="on" style="font-size: 1.1em;">Spoon</a>
+			<span class="frequence">(14/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-St-Vincent-+?lang=fr" class="on" style="font-size: 1.1em;">St Vincent</a>
+			<span class="frequence">(15/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Stephen-Malkmus-+?lang=fr" class="on" style="font-size: 1.0em;">Stephen Malkmus</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Stereolab-+?lang=fr" class="on" style="font-size: 0.9em;">Stereolab</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Suckers-+?lang=fr" class="on" style="font-size: 0.9em;">Suckers</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sufjan-Stevens-+?lang=fr" class="on" style="font-size: 1.5em;">Sufjan Stevens</a>
+			<span class="frequence">(38/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sunn-+?lang=fr" class="on" style="font-size: 1.0em;">Sunn 0)))</a>
+			<span class="frequence">(10/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Sunset-Rubdown-+?lang=fr" class="on" style="font-size: 1.0em;">Sunset Rubdown</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Swell-+?lang=fr" class="on" style="font-size: 0.9em;">Swell</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Talking-Heads-+?lang=fr" class="on" style="font-size: 0.9em;">Talking Heads</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Tap-Tap-+?lang=fr" class="on" style="font-size: 0.9em;">Tap Tap</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Teenage-Fanclub-+?lang=fr" class="on" style="font-size: 0.9em;">Teenage Fanclub</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Apartments-+?lang=fr" class="on" style="font-size: 0.9em;">The Apartments</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Beach-Boys-+?lang=fr" class="on" style="font-size: 1.1em;">The Beach Boys</a>
+			<span class="frequence">(14/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Beatles-+?lang=fr" class="on" style="font-size: 1.0em;">The Beatles</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Byrds-+?lang=fr" class="on" style="font-size: 0.9em;">The Byrds</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Cure-+?lang=fr" class="on" style="font-size: 0.9em;">The Cure</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Daredevil-Christopher-Wright-+?lang=fr" class="on" style="font-size: 0.9em;">The Daredevil Christopher Wright</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Dodos-+?lang=fr" class="on" style="font-size: 1.1em;">The Dodos</a>
+			<span class="frequence">(15/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Experimental-Tropic-Blues-Band-+?lang=fr" class="on" style="font-size: 0.9em;">The Experimental Tropic Blues Band</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Field-Mice-+?lang=fr" class="on" style="font-size: 0.9em;">The Field Mice</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Fiery-Furnaces-+?lang=fr" class="on" style="font-size: 1.0em;">The Fiery Furnaces</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-the-limes-+?lang=fr" class="on" style="font-size: 1.0em;">the limes</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Luyas-+?lang=fr" class="on" style="font-size: 0.9em;">The Luyas</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Mabuses-+?lang=fr" class="on" style="font-size: 0.9em;">The Mabuses</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Morning-Benders-+?lang=fr" class="on" style="font-size: 1.0em;">The Morning Benders</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-National-+?lang=fr" class="on" style="font-size: 1.5em;">The National</a>
+			<span class="frequence">(39/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Organ-+?lang=fr" class="on" style="font-size: 1.0em;">The Organ</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Pipettes-+?lang=fr" class="on" style="font-size: 0.9em;">The Pipettes</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Shins-+?lang=fr" class="on" style="font-size: 0.9em;">The Shins</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Smiths-+?lang=fr" class="on" style="font-size: 1.0em;">The Smiths</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Soft-Pack-+?lang=fr" class="on" style="font-size: 0.9em;">The Soft Pack</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Strokes-+?lang=fr" class="on" style="font-size: 0.9em;">The Strokes</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Temptations-+?lang=fr" class="on" style="font-size: 0.9em;">The Temptations</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Twilight-Sad-+?lang=fr" class="on" style="font-size: 1.0em;">The Twilight Sad</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Walkmen-+?lang=fr" class="on" style="font-size: 1.2em;">The Walkmen</a>
+			<span class="frequence">(19/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Wave-Pictures-+?lang=fr" class="on" style="font-size: 1.0em;">The Wave Pictures</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Wedding-Present-+?lang=fr" class="on" style="font-size: 0.9em;">The Wedding Present</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-White-Stripes-+?lang=fr" class="on" style="font-size: 0.9em;">The White Stripes</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-Winter-Family-+?lang=fr" class="on" style="font-size: 0.9em;">The Winter Family</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-The-XX-+?lang=fr" class="on" style="font-size: 1.0em;">The XX</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Thee-Stranded-Horse-+?lang=fr" class="on" style="font-size: 1.0em;">Thee Stranded Horse</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Thomas-Dybdahl-+?lang=fr" class="on" style="font-size: 0.9em;">Thomas Dybdahl</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Tim-Buckley-+?lang=fr" class="on" style="font-size: 0.9em;">Tim Buckley</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Tindersticks-+?lang=fr" class="on" style="font-size: 1.0em;">Tindersticks</a>
+			<span class="frequence">(11/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Tiny-Vipers-+?lang=fr" class="on" style="font-size: 0.9em;">Tiny Vipers</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Tobias-Froberg-+?lang=fr" class="on" style="font-size: 0.9em;">Tobias Froberg</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Tom-Brosseau-+?lang=fr" class="on" style="font-size: 0.9em;">Tom Brosseau</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Tom-Waits-+?lang=fr" class="on" style="font-size: 1.1em;">Tom Waits</a>
+			<span class="frequence">(15/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Tony-Allen-+?lang=fr" class="on" style="font-size: 0.9em;">Tony Allen</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Tortoise-+?lang=fr" class="on" style="font-size: 0.9em;">Tortoise</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Toy-Fight-+?lang=fr" class="on" style="font-size: 1.0em;">Toy Fight</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Troy-von-balthazar-+?lang=fr" class="on" style="font-size: 0.9em;">Troy von balthazar</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-TTC-+?lang=fr" class="on" style="font-size: 0.9em;">TTC</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Tunng-+?lang=fr" class="on" style="font-size: 1.0em;">Tunng</a>
+			<span class="frequence">(6/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-TV-on-the-radio-+?lang=fr" class="on" style="font-size: 0.9em;">TV on the radio</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-mot357-+?lang=fr" class="on" style="font-size: 0.9em;">U2</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-V-O-+?lang=fr" class="on" style="font-size: 1.1em;">V.O.</a>
+			<span class="frequence">(12/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Vampire-Weekend-+?lang=fr" class="on" style="font-size: 1.2em;">Vampire Weekend</a>
+			<span class="frequence">(20/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Vandaveer-+?lang=fr" class="on" style="font-size: 1.0em;">Vandaveer</a>
+			<span class="frequence">(11/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Velvet-Underground-+?lang=fr" class="on" style="font-size: 1.0em;">Velvet Underground</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Venus-+?lang=fr" class="on" style="font-size: 0.9em;">Venus</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Vic-Chesnutt-+?lang=fr" class="on" style="font-size: 1.1em;">Vic Chesnutt</a>
+			<span class="frequence">(17/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Voxtrot-+?lang=fr" class="on" style="font-size: 1.0em;">Voxtrot</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Wedding-Present-+?lang=fr" class="on" style="font-size: 1.0em;">Wedding Present</a>
+			<span class="frequence">(7/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Why-+?lang=fr" class="on" style="font-size: 0.9em;">Why&nbsp;?</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Wilco-+?lang=fr" class="on" style="font-size: 1.1em;">Wilco</a>
+			<span class="frequence">(14/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Will-Oldham-+?lang=fr" class="on" style="font-size: 0.9em;">Will Oldham</a>
+			<span class="frequence">(5/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Wolf-Parade-+?lang=fr" class="on" style="font-size: 1.0em;">Wolf Parade</a>
+			<span class="frequence">(9/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-WU-LYF-+?lang=fr" class="on" style="font-size: 0.9em;">WU LYF</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Xiu-Xiu-+?lang=fr" class="on" style="font-size: 1.0em;">Xiu Xiu</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Yeasayer-+?lang=fr" class="on" style="font-size: 1.0em;">Yeasayer</a>
+			<span class="frequence">(10/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Yo-La-Tengo-+?lang=fr" class="on" style="font-size: 1.1em;">Yo La Tengo</a>
+			<span class="frequence">(12/60)</span>
+		</li>
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Young-Marble-Giants-+?lang=fr" class="on" style="font-size: 1.0em;">Young Marble Giants</a>
+			<span class="frequence">(8/60)</span>
+		</li>
+	
+	
+	 <li>
+			<a rel="tag" href="+-Youngblood-Brass-Band-+?lang=fr" class="on" style="font-size: 0.9em;">Youngblood Brass Band</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 <li>
+			<a rel="tag" href="+-Zombies-+?lang=fr" class="on" style="font-size: 0.9em;">Zombies</a>
+			<span class="frequence">(4/60)</span>
+		</li>
+	
+	
+	
+	
+	
+</ul>
+			<div class="clear"></div>
+		</div><!-- #artists -->
+	
+	</div><!-- #rightCol -->
+	
+	<div class="clear"></div>
+				
+	<div id="mainFooter">
+		<a href="http://www.blogotheque.net/spip.php?page=liens">liens</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+		<a href="http://www.blogotheque.net/spip.php?page=contact">contact</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+		<a href="http://www.blogotheque.net/spip.php?page=about">à propos</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+		<a href="http://www.upian.com" target="_blank" style="margin-right:5px !important;"><img alt="design" src="squelettes/img/upian.gif" style="position:relative; top:2px; left:10px; display:inline !important; padding:0 !important;" /></a>
+		<a href="http://www.spip.net" target="_blank"><img alt="powered by" src="squelettes/img/spip.gif" style="position:relative; top:2px; left:10px; display:inline !important; padding:0 !important;" /></a>
+	</div><!-- #footer -->	
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-1171283-7";
+urchinTracker();
+</script>
+
+<!-- SPIP-CRON --><div style="background-image: url('http://www.blogotheque.net/spip.php?action=cron');"></div> 
+    	
+</div><!-- #mainContainer -->
+
+</body>
+</html>
