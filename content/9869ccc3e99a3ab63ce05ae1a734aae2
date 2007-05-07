@@ -1,0 +1,470 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+				<meta name="keywords" content="Research papers/Functional pearls" />
+		<link rel="shortcut icon" href="/favicon.ico" />
+		<link rel="search" type="application/opensearchdescription+xml" href="/haskellwiki/opensearch_desc.php" title="HaskellWiki (English)" />
+		<link title="Creative Commons" type="application/rdf+xml" href="/haskellwiki/index.php?title=Research_papers/Functional_pearls&amp;action=creativecommons" rel="meta" />
+		<link rel="copyright" href="/haskellwiki/HaskellWiki:Copyrights" />
+<link rel="alternate" type="application/rss+xml" title="HaskellWiki RSS Feed" href="http://www.haskell.org/haskellwiki/index.php?title=Special:Recentchanges&amp;feed=rss" />
+<link rel="alternate" type="application/atom+xml" title="HaskellWiki Atom Feed" href="http://www.haskell.org/haskellwiki/index.php?title=Special:Recentchanges&amp;feed=atom" />
+		<title>Research papers/Functional pearls - HaskellWiki</title>
+		<style type="text/css" media="screen, projection">/*<![CDATA[*/
+			@import "/wikistatic/skins//common/shared.css?116";
+			@import "/wikistatic/skins//hawiki/main.css?116";
+		/*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="/wikistatic/skins//common/commonPrint.css?116" />
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/wikistatic/skins//hawiki/IE50Fixes.css?116";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/wikistatic/skins//hawiki/IE55Fixes.css?116";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/wikistatic/skins//hawiki/IE60Fixes.css?116";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/wikistatic/skins//hawiki/IE70Fixes.css?116";</style><![endif]-->
+		<!--[if lte IE 7]><script type="text/javascript" src="/wikistatic/skins//hawiki/IEFixes.js?116"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+                                                <script type="text/javascript">
+                        var isMSIE55 = (window.showModalDialog && window.clipboardData && window.createPopup); /*alert("test: " + isMSIE55);*/</script>
+
+		<script type= "text/javascript">/*<![CDATA[*/
+var skin = "hawiki";
+var stylepath = "/wikistatic/skins/";
+var wgArticlePath = "/haskellwiki/$1";
+var wgScriptPath = "/haskellwiki";
+var wgScript = "/haskellwiki/index.php";
+var wgServer = "http://www.haskell.org";
+var wgCanonicalNamespace = "";
+var wgCanonicalSpecialPageName = false;
+var wgNamespaceNumber = 0;
+var wgPageName = "Research_papers/Functional_pearls";
+var wgTitle = "Research papers/Functional pearls";
+var wgAction = "view";
+var wgRestrictionEdit = [];
+var wgRestrictionMove = [];
+var wgArticleId = "2951";
+var wgIsArticle = true;
+var wgUserName = null;
+var wgUserGroups = null;
+var wgUserLanguage = "en";
+var wgContentLanguage = "en";
+var wgBreakFrames = false;
+var wgCurRevisionId = "36786";
+var wgVersion = "1.12.0";
+var wgEnableAPI = true;
+var wgEnableWriteAPI = false;
+/*]]>*/</script>
+
+		<script type="text/javascript" src="/wikistatic/skins//common/wikibits.js?116"><!-- wikibits js --></script>
+		<!-- Head Scripts -->
+		<script type="text/javascript" src="/wikistatic/skins//common/ajax.js?116"></script>
+		<script type="text/javascript" src="/haskellwiki/index.php?title=-&amp;action=raw&amp;gen=js&amp;useskin=hawiki"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/haskellwiki/index.php?title=MediaWiki:Common.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+@import "/haskellwiki/index.php?title=MediaWiki:Hawiki.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+@import "/haskellwiki/index.php?title=-&action=raw&gen=css&maxage=18000&useskin=hawiki";
+/*]]>*/</style>
+	</head>
+<body class="mediawiki ltr page-Research_papers_Functional_pearls ">
+   <div id="topbar" class="noprint">
+	<div class="portlet noprint" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul><li><a class="homebutton" href="/haskellwiki/Haskell">Home</a></li>
+				<li id="pt-login"><a href="/haskellwiki/index.php?title=Special:Userlogin&amp;returnto=Research_papers/Functional_pearls" title="You are encouraged to log in, it is not mandatory however. [o]" accesskey="o">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+        	  <div id="p-search">
+	    <div id="searchBody" class="pBody">
+	       <form action="/haskellwiki/index.php" id="searchform"><div>
+	          <input type='hidden' name="title" value=""/>
+	          <input id="searchInput" name="search" type="text" title="Search HaskellWiki [f]" accesskey="f" value="" />
+				<input type='submit' name="go" class="searchButton" id="searchGoButton"	value="Go" title="Go to a page with this exact name if exists" />&nbsp;
+				<input type='submit' name="fulltext" class="searchButton" id="mw-searchButton" value="Search" title="Search the pages for this text" />
+
+	         </div></form>
+	    </div>
+	  </div>
+   </div>
+	<div id="globalWrapper">
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(/wikistatic/haskellwiki_logo.png);" href="/haskellwiki/Haskell" title="Main Page"></a>
+	</div>
+	<div id="column-content">
+        <div id="notice-area" class="noprint">
+        <!-- ?php $this->data['sitenotice'] = 'This is a test instance.  Do not edit, your changes will be lost.'; ? -->
+			        </div>
+        <div id="content-wrapper">
+	<div id="p-cactions" class="portlet noprint">
+		<h5>Views</h5>
+		<div class="pBody">
+			<ul>
+	
+				 <li id="ca-nstab-main" class="selected"><a href="/haskellwiki/Research_papers/Functional_pearls" title="View the content page [c]" accesskey="c">Page</a></li>
+				 <li id="ca-talk" class="new"><a href="/haskellwiki/index.php?title=Talk:Research_papers/Functional_pearls&amp;action=edit" title="Discussion about the content page [t]" accesskey="t">Discussion</a></li>
+				 <li id="ca-viewsource"><a href="/haskellwiki/index.php?title=Research_papers/Functional_pearls&amp;action=edit" title="This page is protected. You can view its source. [e]" accesskey="e">View source</a></li>
+				 <li id="ca-history"><a href="/haskellwiki/index.php?title=Research_papers/Functional_pearls&amp;action=history" title="Past versions of this page. [h]" accesskey="h">History</a></li>			</ul>
+		</div>
+	</div>
+                        <div id="content">
+		<a name="top" id="top"></a>
+                        <h1 id="firstHeading" class="firstHeading">Research papers/Functional pearls</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From HaskellWiki</h3>
+			<div id="contentSub"><span class="subpages">&lt; <a href="/haskellwiki/Research_papers" title="Research papers">Research papers</a></span></div>
+			<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p>Functional pearls are elegant, instructive examples of functional programming. They are supposed to be fun, and they teach important programming techniques and fundamental design principles. They traditionally appear in <a href="http://journals.cambridge.org/action/displayJournal?jid=JFP" class="external text" title="http://journals.cambridge.org/action/displayJournal?jid=JFP" rel="nofollow">The Journal of Functional Programming</a>, and at <a href="http://www.icfpconference.org/index.html" class="external text" title="http://www.icfpconference.org/index.html" rel="nofollow">ICFP</a> and affiliated workshops.
+</p><p>The history of functional pearls is covered by:
+</p>
+<dl><dt><a href="http://icfp06.cs.uchicago.edu/bird-talk.pdf" class="external text" title="http://icfp06.cs.uchicago.edu/bird-talk.pdf" rel="nofollow">How to Write a Functional Pearl</a>
+</dt><dd>Richard Bird. ICFP 2006.
+</dd></dl>
+<dl><dt><a href="http://portal.acm.org/ft_gateway.cfm?id=1159832&amp;type=pdf&amp;coll=&amp;dl=ACM&amp;CFID=15151515&amp;CFTOKEN=6184618" class="external text" title="http://portal.acm.org/ft_gateway.cfm?id=1159832&amp;type=pdf&amp;coll=&amp;dl=ACM&amp;CFID=15151515&amp;CFTOKEN=6184618" rel="nofollow">Fifteen years of functional pearls</a>
+</dt><dd>Richard Bird. ICFP 2006.
+</dd></dl>
+<dl><dt><a href="http://spivey.oriel.ox.ac.uk/mike/firstpearl.pdf" class="external text" title="http://spivey.oriel.ox.ac.uk/mike/firstpearl.pdf" rel="nofollow">Strachey's functional pearl, forty years on</a>
+</dt><dd>Mike Spivey, 2006.
+</dd></dl>
+<dl><dt><a href="http://www.brics.dk/RS/07/14/index.html" class="external text" title="http://www.brics.dk/RS/07/14/index.html" rel="nofollow">On Barron and Strachey's Cartesian Product Function</a>
+</dt><dd> Olivier Danvy and Michael Spivey, July 2007
+</dd></dl>
+<p>There have been many functional pearls in JFP, and some others at
+ICFP and the Haskell Workshop. There is also a collection of them in
+<a href="http://web2.comlab.ox.ac.uk/oucl/publications/books/fop/" class="external text" title="http://web2.comlab.ox.ac.uk/oucl/publications/books/fop/" rel="nofollow">The Fun of Programming</a>.
+</p><p>The pearls tend to concentrate on:
+</p>
+<ul><li> Examples of program calculation and proof
+</li><li> Neat presentations of new or old data structures
+</li><li> Interesting applications and techniques
+</li></ul>
+<p>Some advice on writing pearls for JFP is available in this <a href="http://www.comlab.ox.ac.uk/people/Jeremy.Gibbons/pearls/" class="external text" title="http://www.comlab.ox.ac.uk/people/Jeremy.Gibbons/pearls/" rel="nofollow">editorial</a>.
+</p>
+<a name="Online"></a><h3> <span class="mw-headline">1  Online </span></h3>
+<p>Functional pearls online:
+</p>
+<dl><dt><a href="http://research.microsoft.com/en-us/people/dimitris/every-bit-counts.pdf" class="external text" title="http://research.microsoft.com/en-us/people/dimitris/every-bit-counts.pdf" rel="nofollow">Every Bit Counts</a>
+</dt><dd>Dimitrios Vytiniotis, Andrew Kennedy. 2010.
+</dd></dl>
+<dl><dt><a href="http://www.iai.uni-bonn.de/~jv/icfp10.pdf" class="external text" title="http://www.iai.uni-bonn.de/~jv/icfp10.pdf" rel="nofollow">Combining Syntactic and Semantic Bidirectionalization</a>
+</dt><dd>Janis Voigtländer, Zhenjiang Hu, Kazutaka Matsuda, Meng Wang. 2010.
+</dd></dl>
+<dl><dt><a href="http://wwwtcs.inf.tu-dresden.de/~voigt/icfp09.pdf" class="external text" title="http://wwwtcs.inf.tu-dresden.de/~voigt/icfp09.pdf" rel="nofollow">Free Theorems Involving Type Constructor Classes</a>
+</dt><dd>Janis Voigtländer. 2009.
+</dd></dl>
+<dl><dt><a href="http://www.cs.kent.ac.uk/pubs/2009/2847/content.pdf" class="external text" title="http://www.cs.kent.ac.uk/pubs/2009/2847/content.pdf" rel="nofollow">Linear, Bounded, Functional Pretty-Printing</a>
+</dt><dd>S. Doaitse Sweirstra, Olaf Chitil. 2009.
+</dd></dl>
+<dl><dt><a href="http://wwwtcs.inf.tu-dresden.de/~voigt/popl09-2.pdf" class="external text" title="http://wwwtcs.inf.tu-dresden.de/~voigt/popl09-2.pdf" rel="nofollow">Bidirectionalization for Free!</a>
+</dt><dd>Janis Voigtländer. 2009.
+</dd></dl>
+<dl><dt><a href="ftp://ftp.diku.dk/diku/semantics/papers/D-582.pdf" class="external text" title="ftp://ftp.diku.dk/diku/semantics/papers/D-582.pdf" rel="nofollow">Generic Discrimination: Sorting and Partitioning Unshared Data in Linear Time</a>
+</dt><dd>Fritz Henglein. 2008
+</dd></dl>
+<dl><dt><a href="http://wwwtcs.inf.tu-dresden.de/~voigt/popl202-voigtlaender.pdf" class="external text" title="http://wwwtcs.inf.tu-dresden.de/~voigt/popl202-voigtlaender.pdf" rel="nofollow">Much Ado about Two: A Pearl on Parallel Prefix Computation</a>
+</dt><dd>Janis Voigtländer. 2008.
+</dd></dl>
+<dl><dt><a href="http://strictlypositive.org/CJ.pdf" class="external text" title="http://strictlypositive.org/CJ.pdf" rel="nofollow">Clowns to the Left of me, Jokers to the Right: Dissecting Data Structures</a></dt><dd> Conor McBride. 2008.
+</dd></dl>
+<dl><dt><a href="http://www.ccs.neu.edu/home/dherman/research/papers/icfp07-great-escape.pdf" class="external text" title="http://www.ccs.neu.edu/home/dherman/research/papers/icfp07-great-escape.pdf" rel="nofollow">Functional Pearl: The Great Escape: Or how to jump the border without getting caught</a>
+</dt><dd>David Herman. 2007.
+</dd></dl>
+<dl><dt><a href="https://www.cs.indiana.edu/~adamsmd/papers/scrap_your_zippers/ScrapYourZippers-2007.pdf" class="external text" title="https://www.cs.indiana.edu/~adamsmd/papers/scrap_your_zippers/ScrapYourZippers-2007.pdf" rel="nofollow">Scrap Your Zippers</a>
+</dt><dd>Michael Adams. 2007. Superseded by the <a href="https://www.cs.indiana.edu/~adamsmd/papers/scrap_your_zippers/ScrapYourZippers-2010.pdf" class="external text" title="https://www.cs.indiana.edu/~adamsmd/papers/scrap_your_zippers/ScrapYourZippers-2010.pdf" rel="nofollow">WGP 2010 version</a>.
+</dd></dl>
+<dl><dt><a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.105.4086" class="external text" title="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.105.4086" rel="nofollow">A type-correct, stack-safe, provably correct expression compiler in Epigram</a>
+</dt><dd>James McKinna and Joel Wright. 2006.
+</dd></dl>
+<dl><dt><a href="http://www.soi.city.ac.uk/~ross/papers/Applicative.pdf" class="external text" title="http://www.soi.city.ac.uk/~ross/papers/Applicative.pdf" rel="nofollow">Applicative Programming with Effects</a>
+</dt><dd>Conor McBride and Ross Paterson. 2006.
+</dd></dl>
+<dl><dt><a href="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/publications/rationals.pdf" class="external text" title="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/publications/rationals.pdf" rel="nofollow">Enumerating the rationals</a>
+</dt><dd>Jeremy Gibbons, David Lester and Richard Bird. 2006.
+</dd></dl>
+<dl><dt><a href="http://www.cs.tufts.edu/~nr/comp150fp/archive/richard-bird/sudoku.pdf" class="external text" title="http://www.cs.tufts.edu/~nr/comp150fp/archive/richard-bird/sudoku.pdf" rel="nofollow">A program to solve Sudoku</a>
+</dt><dd>Richard Bird. 2006. (slides <a href="http://icfp06.cs.uchicago.edu/bird-talk.pdf" class="external text" title="http://icfp06.cs.uchicago.edu/bird-talk.pdf" rel="nofollow">appear here</a>, a Literate Haskell implementation by Graham Hutton based on this can be found <a href="http://www.cs.nott.ac.uk/~gmh/sudoku.lhs" class="external text" title="http://www.cs.nott.ac.uk/~gmh/sudoku.lhs" rel="nofollow">here</a>).
+</dd></dl>
+<dl><dt><a href="http://web.engr.oregonstate.edu/~erwig/papers/PFP_JFP06.pdf" class="external text" title="http://web.engr.oregonstate.edu/~erwig/papers/PFP_JFP06.pdf" rel="nofollow">Probabilistic functional programming in Haskell</a>
+</dt><dd>Martin Erwig and Steve Kollmansberger. 2006. 
+</dd></dl>
+<dl><dt><a href="http://cms.brookes.ac.uk/staff/SharonCurtis/publications/marbles.ps.gz" class="external text" title="http://cms.brookes.ac.uk/staff/SharonCurtis/publications/marbles.ps.gz" rel="nofollow">Marble mingling</a>
+</dt><dd>Sharon Curtis. 2006.
+</dd></dl>
+<dl><dt><a href="http://wiki.di.uminho.pt/twiki/pub/Personal/Xana/WebHome/report.pdf" class="external text" title="http://wiki.di.uminho.pt/twiki/pub/Personal/Xana/WebHome/report.pdf" rel="nofollow">Strong Types for Relational Databases</a>
+</dt><dd>Alexandra Silva, Joost Visser. 2006. (Haskell Workshop)
+</dd></dl>
+<dl><dt><a href="http://okmij.org/ftp/papers/LogicT.pdf" class="external text" title="http://okmij.org/ftp/papers/LogicT.pdf" rel="nofollow">Backtracking, interleaving, and terminating monad transformers</a>
+</dt><dd>Oleg Kiselyov, Chung-chieh Shan, Daniel P. Friedman, Amr Sabry. 2005. 
+</dd></dl>
+<dl><dt><a href="http://homepages.inf.ed.ac.uk/jcheney/publications/cheney05icfp.pdf" class="external text" title="http://homepages.inf.ed.ac.uk/jcheney/publications/cheney05icfp.pdf" rel="nofollow">Scrap your Nameplate</a>
+</dt><dd>James Cheney. 2005.
+</dd></dl>
+<dl><dt><a href="http://research.microsoft.com/~akenn/fun/picklercombinators.pdf" class="external text" title="http://research.microsoft.com/~akenn/fun/picklercombinators.pdf" rel="nofollow">Pickler Combinators</a>
+</dt><dd>Andrew Kennedy. 2004.
+</dd></dl>
+<dl><dt><a href="http://web.cecs.pdx.edu/~mpj/pubs/composing-fractals.pdf" class="external text" title="http://web.cecs.pdx.edu/~mpj/pubs/composing-fractals.pdf" rel="nofollow">Composing fractals</a>
+</dt><dd>Mark P. Jones. 2004.
+</dd></dl>
+<dl><dt><a href="http://www.cs.dartmouth.edu/~doug/nfa.ps.gz" class="external text" title="http://www.cs.dartmouth.edu/~doug/nfa.ps.gz" rel="nofollow">Enumerating the strings of regular languages</a>
+</dt><dd>M. Douglas McIlroy. 2004.
+</dd></dl>
+<dl><dt><a href="http://pauillac.inria.fr/~maranget/enum/pearl.ps" class="external text" title="http://pauillac.inria.fr/~maranget/enum/pearl.ps" rel="nofollow">Functional satisfaction</a>
+</dt><dd>Luc Maranget. 2004. (<a href="http://pauillac.inria.fr/~maranget/enum/index.html" class="external text" title="http://pauillac.inria.fr/~maranget/enum/index.html" rel="nofollow">More info</a>).
+</dd></dl>
+<dl><dt><a href="http://portal.acm.org/ft_gateway.cfm?id=1017481&amp;type=pdf&amp;coll=&amp;dl=ACM&amp;CFID=15151515&amp;CFTOKEN=6184618" class="external text" title="http://portal.acm.org/ft_gateway.cfm?id=1017481&amp;type=pdf&amp;coll=&amp;dl=ACM&amp;CFID=15151515&amp;CFTOKEN=6184618" rel="nofollow">Implicit configurations--or, type classes reflect the values of types</a>
+</dt><dd>Oleg Kiselyov, Chung-chieh Shan. 2004.  (<a href="http://www.cs.rutgers.edu/~ccshan/prepose/p1214-kiselyov.pdf" class="external text" title="http://www.cs.rutgers.edu/~ccshan/prepose/p1214-kiselyov.pdf" rel="nofollow">also here</a>)
+</dd></dl>
+<dl><dt><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.23.145&amp;rep=rep1&amp;type=ps" class="external text" title="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.23.145&amp;rep=rep1&amp;type=ps" rel="nofollow">Global variables in Haskell</a>
+</dt><dd>John Hughes. 2004. (<a href="http://journals.cambridge.org/action/displayAbstract?fromPage=online&amp;aid=241773" class="external text" title="http://journals.cambridge.org/action/displayAbstract?fromPage=online&amp;aid=241773" rel="nofollow">JFP</a>)
+</dd></dl>
+<dl><dt><a href="http://portal.acm.org/ft_gateway.cfm?id=1017477&amp;type=pdf&amp;coll=&amp;dl=ACM&amp;CFID=15151515&amp;CFTOKEN=6184618" class="external text" title="http://portal.acm.org/ft_gateway.cfm?id=1017477&amp;type=pdf&amp;coll=&amp;dl=ACM&amp;CFID=15151515&amp;CFTOKEN=6184618" rel="nofollow">I am not a number -- I am a free variable</a>
+</dt><dd>Conor McBride, James McKinna. 2004. 
+</dd></dl>
+<dl><dt><a href="http://www.informatik.uni-bonn.de/~ralf/hw2001/2.ps.gz" class="external text" title="http://www.informatik.uni-bonn.de/~ralf/hw2001/2.ps.gz" rel="nofollow">Inverting the Burrows Wheeler transform</a>
+</dt><dd>Richard Bird and Shin-Cheng Mu. 2004. (<a href="http://web.comlab.ox.ac.uk/people/Richard.Bird/online/BirdMu2004Inverting.pdf" class="external text" title="http://web.comlab.ox.ac.uk/people/Richard.Bird/online/BirdMu2004Inverting.pdf" rel="nofollow">Also here</a>).
+</dd></dl>
+<dl><dt><a href="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/wg21/meeting56/loeh-paper.pdf" class="external text" title="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/wg21/meeting56/loeh-paper.pdf" rel="nofollow">Parsing permutation phrases</a>
+</dt><dd>Arthur Baars, Andres Loh and S. Doaitse Swierstra. 2004.
+</dd></dl>
+<dl><dt><a href="http://web.cecs.pdx.edu/~antoy/homepage/publications/inject/paper.pdf" class="external text" title="http://web.cecs.pdx.edu/~antoy/homepage/publications/inject/paper.pdf" rel="nofollow">Concurrent distinct choices</a>
+</dt><dd>Sergio Antoy and Michael Hanus. 2004. 
+</dd></dl>
+<dl><dt><a href="http://www.ling.gu.se/~peb/pubs/Ljunglof-2004b.pdf" class="external text" title="http://www.ling.gu.se/~peb/pubs/Ljunglof-2004b.pdf" rel="nofollow">Functional chart parsing of context-free grammars</a>
+</dt><dd>Peter Ljunglf. 2004.
+</dd></dl>
+<dl><dt><a href="http://www.seas.upenn.edu/~sweirich/papers/cast/cast.pdf" class="external text" title="http://www.seas.upenn.edu/~sweirich/papers/cast/cast.pdf" rel="nofollow">Type-Safe Cast</a>
+</dt><dd>Stephanie Weirich. 2004.
+</dd></dl>
+<dl><dt><a href="http://research.microsoft.com/~akenn/fun/picklercombinators.pdf" class="external text" title="http://research.microsoft.com/~akenn/fun/picklercombinators.pdf" rel="nofollow">Pickler Combinators</a>
+</dt><dd>Andrew J. Kennedy. 2004.
+</dd></dl>
+<dl><dt><a href="http://www.cs.chalmers.se/~koen/pubs/jfp04-parser.ps" class="external text" title="http://www.cs.chalmers.se/~koen/pubs/jfp04-parser.ps" rel="nofollow">Parallel Parsing Processes</a>
+</dt><dd>Koen Claessen. 2004.
+</dd></dl>
+<dl><dt><a href="http://www.informatik.uni-bonn.de/~ralf/hw2001/1.pdf" class="external text" title="http://www.informatik.uni-bonn.de/~ralf/hw2001/1.pdf" rel="nofollow">Derivation of a logarithmic time carry lookahead addition circuit</a>
+</dt><dd>John O'Donnell and Gudula Runger. 2004. (<a href="http://portal.acm.org/citation.cfm?coll=GUIDE&amp;dl=GUIDE&amp;id=1030343" class="external text" title="http://portal.acm.org/citation.cfm?coll=GUIDE&amp;dl=GUIDE&amp;id=1030343" rel="nofollow">ACM</a>) (<a href="http://journals.cambridge.org/action/displayAbstract?aid=254717" class="external text" title="http://journals.cambridge.org/action/displayAbstract?aid=254717" rel="nofollow">JFP</a>) (<a href="http://www.informatik.uni-bonn.de/~ralf/hw2001/1.html" class="external text" title="http://www.informatik.uni-bonn.de/~ralf/hw2001/1.html" rel="nofollow">Homepage</a>).  
+</dd></dl>
+<dl><dt><a href="http://www.lri.fr/~filliatr/ftp/publis/kr-fp.ps.gz" class="external text" title="http://www.lri.fr/~filliatr/ftp/publis/kr-fp.ps.gz" rel="nofollow">Producing all ideals of a forest, functionally</a>
+</dt><dd>Jean-Christophe Fillitre and Franois Pottier. 2003.
+</dd></dl>
+<dl><dt><a href="http://www.informatik.uni-bonn.de/~ralf/publications/HW2003.pdf" class="external text" title="http://www.informatik.uni-bonn.de/~ralf/publications/HW2003.pdf" rel="nofollow">Trouble shared is trouble halved</a>
+</dt><dd>Richard Bird, Ralf Hinze. 2003
+</dd></dl>
+<dl><dt><a href="http://www.informatik.uni-bonn.de/~ralf/publications/Format.ps.gz" class="external text" title="http://www.informatik.uni-bonn.de/~ralf/publications/Format.ps.gz" rel="nofollow">Formatting: a class act</a>
+</dt><dd>Ralf Hinze. 2003.
+</dd></dl>
+<dl><dt><a href="http://www.informatik.uni-bonn.de/~ralf/publications/SearchTree.ps.gz" class="external text" title="http://www.informatik.uni-bonn.de/~ralf/publications/SearchTree.ps.gz" rel="nofollow">A fresh look at binary search trees</a>
+</dt><dd>Ralf Hinze. 2002.
+</dd></dl>
+<dl><dt><a href="http://www.cs.nott.ac.uk/~gmh/countdown.pdf" class="external text" title="http://www.cs.nott.ac.uk/~gmh/countdown.pdf" rel="nofollow">The countdown problem</a>
+</dt><dd>Graham Hutton. 2002. 
+</dd></dl>
+<dl><dt><a href="http://pdos.csail.mit.edu/papers/packrat-parsing:icfp02.pdf" class="external text" title="http://pdos.csail.mit.edu/papers/packrat-parsing:icfp02.pdf" rel="nofollow">Packrat parsing: simple, powerful, lazy, linear time, functional pearl</a>
+</dt><dd>Bryan Ford. 2002.
+</dd></dl>
+<dl><dt><a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.8.3014" class="external text" title="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.8.3014" rel="nofollow">Monads for Incremental Computing</a>
+</dt><dd>Magnus Carlsson. 2002.
+</dd></dl>
+<dl><dt><a href="http://www.cs.nott.ac.uk/~gmh/wgp01/hinze-paper.pdf" class="external text" title="http://www.cs.nott.ac.uk/~gmh/wgp01/hinze-paper.pdf" rel="nofollow">Haskell does it with class: Functorial unparsing</a>
+</dt><dd>Ralf Hinze. 2001.
+</dd></dl>
+<p><br />
+</p>
+<dl><dt><a href="http://eprints.ouls.ox.ac.uk/archive/00000863/01/bird_2001_11_3.pdf" class="external text" title="http://eprints.ouls.ox.ac.uk/archive/00000863/01/bird_2001_11_3.pdf" rel="nofollow">Unfolding pointer algorithms</a>
+</dt><dd>Richard Bird. 2001.
+</dd></dl>
+<dl><dt><a href="http://eprints.ouls.ox.ac.uk/archive/00000862/01/bird_2001.pdf" class="external text" title="http://eprints.ouls.ox.ac.uk/archive/00000862/01/bird_2001.pdf" rel="nofollow">Maximum marking problems</a>
+</dt><dd>Richard Bird. 2001. 
+</dd></dl>
+<dl><dt><a href="http://www.informatik.uni-bonn.de/~ralf/publications/TheWeb.ps.gz" class="external text" title="http://www.informatik.uni-bonn.de/~ralf/publications/TheWeb.ps.gz" rel="nofollow">Weaving a web</a>
+</dt><dd>Ralf Hinze and Johan Jeuring. 2001. 
+</dd></dl>
+<dl><dt><a href="http://www.brics.dk/RS/01/16/BRICS-RS-01-16.pdf" class="external text" title="http://www.brics.dk/RS/01/16/BRICS-RS-01-16.pdf" rel="nofollow">Normalization by evaluation with typed abstract syntax</a>
+</dt><dd>Olivier Danvy, Morten Rhiger and Kristoffer H. Rose. 2001. 
+</dd></dl>
+<dl><dt><a href="http://www.brics.dk/RS/01/10/BRICS-RS-01-10.ps.gz" class="external text" title="http://www.brics.dk/RS/01/10/BRICS-RS-01-10.ps.gz" rel="nofollow">Do we need dependent types?</a>
+</dt><dd>Daniel Fridlender and Mia Indrika. 2001.
+</dd></dl>
+<dl><dt><a href="http://www.informatik.uni-bonn.de/~ralf/publications/IAI-TR-99-4.ps.gz" class="external text" title="http://www.informatik.uni-bonn.de/~ralf/publications/IAI-TR-99-4.ps.gz" rel="nofollow">Perfect trees and bit-reversal permutations</a>
+</dt><dd>Ralf Hinze. 2000.
+</dd></dl>
+<dl><dt><a href="http://spivey.oriel.ox.ac.uk/mike/bfs/bfs.ps" class="external text" title="http://spivey.oriel.ox.ac.uk/mike/bfs/bfs.ps" rel="nofollow">Combinators for breadth-first search</a>
+</dt><dd>Michael Spivey. 2000 
+</dd></dl>
+<dl><dt><a href="http://www.eecs.usma.edu/webs/people/okasaki/icfp00.ps" class="external text" title="http://www.eecs.usma.edu/webs/people/okasaki/icfp00.ps" rel="nofollow">Breadth-First Numbering: Lessons from a Small Exercise in Algorithm Design</a>
+</dt><dd>Chris Okasaki. 2000.
+</dd></dl>
+<dl><dt><a href="http://www.informatik.uni-bonn.de/~ralf/publications/ICFP00.ps.gz" class="external text" title="http://www.informatik.uni-bonn.de/~ralf/publications/ICFP00.ps.gz" rel="nofollow">Deriving Backtracking Monad Transformers</a>
+</dt><dd>Ralf Hinze. 2000.
+</dd></dl>
+<dl><dt><a href="http://www.cis.upenn.edu/~bcpierce/papers/rsr.ps" class="external text" title="http://www.cis.upenn.edu/~bcpierce/papers/rsr.ps" rel="nofollow">Recursive subtyping revealed</a>
+</dt><dd>Vladimir Gapeyev, Michael Y. Levin, Benjamin C. Pierce. 2000.
+</dd></dl>
+<dl><dt><a href="http://research.microsoft.com/Users/simonpj/Papers/financial-contracts/contracts-icfp.ps.gz" class="external text" title="http://research.microsoft.com/Users/simonpj/Papers/financial-contracts/contracts-icfp.ps.gz" rel="nofollow">Composing contracts: an adventure in financial engineering</a>
+</dt><dd>Simon Peyton Jones, Jean-Marc Eber, Julian Seward. 2000.
+</dd></dl>
+<dl><dt><a href="http://www.cs.chalmers.se/~koen/pubs/jfp99-monad.ps" class="external text" title="http://www.cs.chalmers.se/~koen/pubs/jfp99-monad.ps" rel="nofollow">A poor man's concurrency monad</a>
+</dt><dd>Koen Claessen. 1999. 
+</dd></dl>
+<dl><dt><a href="http://www.informatik.uni-bonn.de/~ralf/publications/BinomialHeaps.ps.gz" class="external text" title="http://www.informatik.uni-bonn.de/~ralf/publications/BinomialHeaps.ps.gz" rel="nofollow">Explaining binomial heaps</a>
+</dt><dd>Ralf Hinze. 1999. 
+</dd></dl>
+<dl><dt><a href="http://www.cs.dartmouth.edu/~doug/pearl.ps.gz" class="external text" title="http://www.cs.dartmouth.edu/~doug/pearl.ps.gz" rel="nofollow">Power series, power serious</a>
+</dt><dd>M. Douglas McIlroy. 1999. 
+</dd></dl>
+<dl><dt><a href="http://www.eecs.usma.edu/webs/people/okasaki/jfp99.ps" class="external text" title="http://www.eecs.usma.edu/webs/people/okasaki/jfp99.ps" rel="nofollow">Red-black trees in a functional setting</a>
+</dt><dd>Chris Okasaki. 1999. 
+</dd></dl>
+<dl><dt><a href="http://www.cs.cmu.edu/~rwh/papers/regexp/jfp.ps" class="external text" title="http://www.cs.cmu.edu/~rwh/papers/regexp/jfp.ps" rel="nofollow">Proof-directed debugging</a>
+</dt><dd>Robert Harper. 1999. (see also <a href="http://ropas.snu.ac.kr/~kwang/paper/06-jfp-yi.pdf" class="external text" title="http://ropas.snu.ac.kr/~kwang/paper/06-jfp-yi.pdf" rel="nofollow">Proof-directed debugging: revisited for a first-order version</a>).
+</dd></dl>
+<dl><dt><a href="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/publications/radix.ps.gz" class="external text" title="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/publications/radix.ps.gz" rel="nofollow">A pointless derivation of radix sort</a>
+</dt><dd>Jeremy Gibbons. 1999.
+</dd></dl>
+<dl><dt><a href="http://www.cs.nott.ac.uk/~gmh/pearl.pdf" class="external text" title="http://www.cs.nott.ac.uk/~gmh/pearl.pdf" rel="nofollow">Monadic parsing in Haskell</a>
+</dt><dd>Graham Hutton and Erik Meijer . 1998.
+</dd></dl>
+<dl><dt><a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.49.6891" class="external text" title="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.49.6891" rel="nofollow">Polytypic unification</a>
+</dt><dd>Patrik Jansson and Johan Jeuring. 1998. 
+</dd></dl>
+<dl><dt><a href="http://web.engr.oregonstate.edu/~erwig/papers/Diet_JFP98.pdf" class="external text" title="http://web.engr.oregonstate.edu/~erwig/papers/Diet_JFP98.pdf" rel="nofollow">Diets for fat sets</a>
+</dt><dd>Martin Erwig. 1998. 
+</dd></dl>
+<dl><dt><a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.48.1673" class="external text" title="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.48.1673" rel="nofollow">Even higher-order functions for parsing or Why would anyone ever want to use a sixth-order function?</a>
+</dt><dd>Chris Okasaki. 1998.
+</dd></dl>
+<dl><dt><a href="http://www.st.cs.uni-saarland.de/edu/seminare/2005/advanced-fp/docs/huet-zipper.pdf" class="external text" title="http://www.st.cs.uni-saarland.de/edu/seminare/2005/advanced-fp/docs/huet-zipper.pdf" rel="nofollow">The Zipper</a>
+</dt><dd>Gerard Huet. 1997. (See also <a href="http://en.wikibooks.org/wiki/Haskell/Zippers" class="external text" title="http://en.wikibooks.org/wiki/Haskell/Zippers" rel="nofollow">The Haskell Wikibook</a>).
+</dd></dl>
+<dl><dt><a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.55.7096" class="external text" title="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.55.7096" rel="nofollow">Lazy wheel sieves and spirals of primes</a>
+</dt><dd>Colin Runciman. 1997. 
+</dd></dl>
+<dl><dt><a href="http://www.eecs.usma.edu/webs/people/okasaki/jfp97.ps" class="external text" title="http://www.eecs.usma.edu/webs/people/okasaki/jfp97.ps" rel="nofollow">Three algorithms on Braun trees</a>
+</dt><dd>Chris Okasaki. 1997. 
+</dd></dl>
+<dl><dt><a href="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/publications/thirdht.ps.gz" class="external text" title="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/publications/thirdht.ps.gz" rel="nofollow">The Third Homomorphism Theorem</a>
+</dt><dd>Jeremy Gibbons. 1996.
+</dd></dl>
+<dl><dt><a href="http://www.cs.nott.ac.uk/~gmh/basics.pdf" class="external text" title="http://www.cs.nott.ac.uk/~gmh/basics.pdf" rel="nofollow">Back to Basics: Deriving Representation Changers Functionally</a>.
+</dt><dd>Graham Hutton, Erik Meijer. 1996.
+</dd></dl>
+<dl><dt><a href="http://research.microsoft.com/~akenn/fun/DrawingTrees.pdf" class="external text" title="http://research.microsoft.com/~akenn/fun/DrawingTrees.pdf" rel="nofollow">Drawing Trees</a>
+</dt><dd>Andrew J. Kennedy. 1996.
+</dd></dl>
+<dl><dt><a href="http://research.microsoft.com/~nick/newtrans.pdf" class="external text" title="http://research.microsoft.com/~nick/newtrans.pdf" rel="nofollow">Undoing Dynamic Typing</a>
+</dt><dd>Nick Benton. 2008.
+</dd></dl>
+<dl><dt><a href="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/publications/drawing.ps.gz" class="external text" title="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/publications/drawing.ps.gz" rel="nofollow">Deriving Tidy Drawings of Trees</a>
+</dt><dd>Jeremy Gibbons. 1996. (See also <a href="http://www.cs.auckland.ac.nz/CDMTCS//researchreports/003drawing.pdf" class="external text" title="http://www.cs.auckland.ac.nz/CDMTCS//researchreports/003drawing.pdf" rel="nofollow">the research report</a>).
+</dd></dl>
+<dl><dt><a href="http://groups.csail.mit.edu/mac/users/adams/BB/" class="external text" title="http://groups.csail.mit.edu/mac/users/adams/BB/" rel="nofollow">Efficient Sets - A Balancing Act</a>
+</dt><dd>Stephen Adams. 1993. (<a href="http://hackage.haskell.org/packages/archive/containers/latest/doc/html/Data-Set.html" class="external text" title="http://hackage.haskell.org/packages/archive/containers/latest/doc/html/Data-Set.html" rel="nofollow">Data.Set</a>).
+</dd></dl>
+<a name="Potential_Pearls"></a><h3> <span class="mw-headline">2  Potential Pearls </span></h3>
+<p>Unpublished pearls.
+</p>
+<dl><dt><a href="http://www.informatik.uni-bonn.de/~ralf/publications/Quote.pdf" class="external text" title="http://www.informatik.uni-bonn.de/~ralf/publications/Quote.pdf" rel="nofollow">Typed Quote/AntiQuote</a>
+</dt><dd>Ralf Hinze. Unpublished work in progress.
+</dd></dl>
+<dl><dt><a href="http://www.cs.nott.ac.uk/~txa/publ/alpha-draft.pdf" class="external text" title="http://www.cs.nott.ac.uk/~txa/publ/alpha-draft.pdf" rel="nofollow">&alpha;-conversion is easy</a>
+</dt><dd>Thorsten Altenkirch. Unpublished draft.
+</dd></dl>
+<a name="Offline"></a><h3> <span class="mw-headline">3  Offline </span></h3>
+<p>These appear not to be available online, unfortunately. If you know where they live, please link, and move into the 'online' section!
+</p>
+<dl><dt><a href="http://www.icfpconference.org/icfp2008/accepted/4.html" class="external text" title="http://www.icfpconference.org/icfp2008/accepted/4.html" rel="nofollow">Functional Pearl: Streams and Unique Fixed Points</a>
+</dt><dd>Ralf Hinze, ICFP 2008
+</dd></dl>
+<dl><dt><a href="http://journals.cambridge.org/action/displayAbstract?aid=254707" class="external text" title="http://journals.cambridge.org/action/displayAbstract?aid=254707" rel="nofollow">Linear lambda calculus and PTIME-completeness</a>
+</dt><dd>Harry G. Mairson. 2004. 
+</dd></dl>
+<dl><dt><a href="http://journals.cambridge.org/action/displayAbstract?aid=254723" class="external text" title="http://journals.cambridge.org/action/displayAbstract?aid=254723" rel="nofollow">Calculating the Sieve of Eratosthenes</a>
+</dt><dd>Lambert Meertens. Journal of Functional Programming, 14(6):759-763, 2004. (<a href="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/wg21/meeting57/meertens-sieve.pdf" class="external text" title="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/wg21/meeting57/meertens-sieve.pdf" rel="nofollow">slides</a>)
+</dd></dl>
+<dl><dt><a href="http://www.cs.kent.ac.uk/pubs/2001/1293/index.html" class="external text" title="http://www.cs.kent.ac.uk/pubs/2001/1293/index.html" rel="nofollow">Red-black trees with types</a>
+</dt><dd>Stefan Kahrs. 2001. (<a href="http://journals.cambridge.org/action/displayAbstract?aid=83905" class="external text" title="http://journals.cambridge.org/action/displayAbstract?aid=83905" rel="nofollow">JFP</a>) (<a href="http://www.cs.kent.ac.uk/people/staff/smk/redblack/rb.html" class="external text" title="http://www.cs.kent.ac.uk/people/staff/smk/redblack/rb.html" rel="nofollow">Code!</a>)
+</dd></dl>
+<dl><dt>On generating unique names
+</dt><dd>Lennart Augustsson, M Rittri, D Synek. 1994. (<a href="http://www.cs.chalmers.se/~rittri/#publications" class="external text" title="http://www.cs.chalmers.se/~rittri/#publications" rel="nofollow">Rittri's homepage</a>)
+</dd></dl>
+<dl><dt>A Symmetric Set of Efficient List Operations.
+</dt><dd>Rob R. Hoogerwoord, 1992. (<a href="https://venus.tue.nl/ep-cgi/ep_publ.opl?taal=NL&amp;fac_id=92&amp;rn=19840694" class="external text" title="https://venus.tue.nl/ep-cgi/ep_publ.opl?taal=NL&amp;fac_id=92&amp;rn=19840694" rel="nofollow">Hoogerwoord's homepage</a>).
+</dd></dl>
+<dl><dt><a href="http://journals.cambridge.org/action/displayAbstract?fromPage=online&amp;aid=335124" class="external text" title="http://journals.cambridge.org/action/displayAbstract?fromPage=online&amp;aid=335124" rel="nofollow">Finding celebrities: A lesson in functional programming</a>
+</dt><dd>Richard Bird and Sharon Curtis. 2006. (<a href="http://cms.brookes.ac.uk/staff/SharonCurtis/publications/index.html#celebrities" class="external text" title="http://cms.brookes.ac.uk/staff/SharonCurtis/publications/index.html#celebrities" rel="nofollow">See also</a>).
+</dd></dl>
+<dl><dt><a href="http://journals.cambridge.org/action/displayAbstract?aid=254705" class="external text" title="http://journals.cambridge.org/action/displayAbstract?aid=254705" rel="nofollow">On tiling a chessboard</a>
+</dt><dd>Richard Bird. 2004. (<a href="http://portal.acm.org/citation.cfm?id=1030333.1030336" class="external text" title="http://portal.acm.org/citation.cfm?id=1030333.1030336" rel="nofollow">ACM</a>) 
+</dd></dl>
+<dl><dt><a href="http://journals.cambridge.org/action/displayAbstract?fromPage=online&amp;aid=44141" class="external text" title="http://journals.cambridge.org/action/displayAbstract?fromPage=online&amp;aid=44141" rel="nofollow">Meertens number</a>
+</dt><dd>Richard Bird. 1998.
+</dd></dl>
+<dl><dt><a href="http://journals.cambridge.org/action/displayAbstract?aid=44091" class="external text" title="http://journals.cambridge.org/action/displayAbstract?aid=44091" rel="nofollow">On merging and selection</a>
+</dt><dd>Richard Bird. 1997. (See also <a href="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/publications/merging.ps.gz" class="external text" title="http://web.comlab.ox.ac.uk/people/Jeremy.Gibbons/publications/merging.ps.gz" rel="nofollow">More on Merging and Selection</a>).
+</dd></dl>
+<dl><dt><a href="http://journals.cambridge.org/action/displayAbstract?aid=44107" class="external text" title="http://journals.cambridge.org/action/displayAbstract?aid=44107" rel="nofollow">On building trees with minimum height</a>
+</dt><dd>Richard Bird. 1997.  (<a href="http://web.comlab.ox.ac.uk/people/Richard.Bird/publications-bib.html#Bird97:OnBuilding" class="external text" title="http://web.comlab.ox.ac.uk/people/Richard.Bird/publications-bib.html#Bird97:OnBuilding" rel="nofollow">Bib</a>).
+</dd></dl>
+<dl><dt>The Last Tail. 
+</dt><dd>Richard Bird. 1993. (<a href="http://web.comlab.ox.ac.uk/people/Richard.Bird/publications-bib.html#Bird93:Last" class="external text" title="http://web.comlab.ox.ac.uk/people/Richard.Bird/publications-bib.html#Bird93:Last" rel="nofollow">Bib</a>).
+</dd></dl>
+<dl><dt>Two Greedy Algorithms
+</dt><dd>Richard Bird, 1992. (<a href="http://web.comlab.ox.ac.uk/oucl/work/richard.bird/publications-bib.html#Bird92:Two" class="external text" title="http://web.comlab.ox.ac.uk/oucl/work/richard.bird/publications-bib.html#Bird92:Two" rel="nofollow">Bib</a>).
+</dd></dl>
+<dl><dt>On Removing Duplicates
+</dt><dd>Richard Bird. 1991. (<a href="http://web.comlab.ox.ac.uk/oucl/work/richard.bird/publications-bib.html#DBLP:journals/jfp/Bird91a" class="external text" title="http://web.comlab.ox.ac.uk/oucl/work/richard.bird/publications-bib.html#DBLP:journals/jfp/Bird91a" rel="nofollow">Bib</a>).
+</dd></dl>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 4/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:2951-0!1!0!1!en!2!edit=0 and timestamp 20101216230436 -->
+<div class="printfooter">
+Retrieved from "<a href="http://www.haskell.org/haskellwiki/Research_papers/Functional_pearls">http://www.haskell.org/haskellwiki/Research_papers/Functional_pearls</a>"</div>
+			<p class='catlinks'><a href="/haskellwiki/Special:Categories" title="Special:Categories">Categories</a>: <span dir='ltr'><a href="/haskellwiki/Category:Research" title="Category:Research">Research</a></span> | <span dir='ltr'><a href="/haskellwiki/Category:Tutorials" title="Category:Tutorials">Tutorials</a></span></p>			<!-- end content -->
+						<div class="visualClear"></div>
+		</div>
+	</div>
+		</div></div>
+		<div id="column-one">
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+	<div class='generated-sidebar portlet' id='p-navigation'>
+		<h5>Navigation</h5>
+		<div class='pBody'>
+			<ul>
+				<li id="n-mainpage"><a href="/haskellwiki/Haskell" title="Visit the Main Page [z]" accesskey="z">Haskell</a></li>
+				<li id="n-portal"><a href="/haskellwiki/HaskellWiki:Community" title="About the project, what you can do, where to find things">Wiki community</a></li>
+				<li id="n-recentchanges"><a href="/haskellwiki/Special:Recentchanges" title="The list of recent changes in the wiki. [r]" accesskey="r">Recent changes</a></li>
+				<li id="n-randompage"><a href="/haskellwiki/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="/haskellwiki/Special:Whatlinkshere/Research_papers/Functional_pearls" title="List of all wiki pages that link here [j]" accesskey="j">What links here</a></li>
+				<li id="t-recentchangeslinked"><a href="/haskellwiki/Special:Recentchangeslinked/Research_papers/Functional_pearls" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li>
+<li id="t-upload"><a href="/haskellwiki/Special:Upload" title="Upload files [u]" accesskey="u">Upload file</a></li>
+<li id="t-specialpages"><a href="/haskellwiki/Special:Specialpages" title="List of all special pages [q]" accesskey="q">Special pages</a></li>
+				<li id="t-print"><a href="/haskellwiki/index.php?title=Research_papers/Functional_pearls&amp;printable=yes" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li>				<li id="t-permalink"><a href="/haskellwiki/index.php?title=Research_papers/Functional_pearls&amp;oldid=36786" title="Permanent link to this version of the page">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="/wikistatic/skins//common/images/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" /></a></div>
+			<ul id="f-list">
+					<li id="lastmod"> This page was last modified 01:28, 17 September 2010.</li>
+					<li id="viewcount">This page has been accessed 38,808 times.</li>
+					<li id="copyright">Recent content is available under <a href="/haskellwiki/HaskellWiki:Copyrights" title="HaskellWiki:Copyrights">a simple permissive license</a>.</li>
+					<li id="privacy"><a href="/haskellwiki/HaskellWiki:Privacy_policy" title="HaskellWiki:Privacy policy">Privacy policy</a></li>
+					<li id="about"><a href="/haskellwiki/HaskellWiki:About" title="HaskellWiki:About">About HaskellWiki</a></li>
+					<li id="disclaimer"><a href="/haskellwiki/HaskellWiki:General_disclaimer" title="HaskellWiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+</div>
+
+		<script type="text/javascript">if (window.runOnloadHook) runOnloadHook();</script>
+<!-- Served in 0.104 secs. --></body></html>
