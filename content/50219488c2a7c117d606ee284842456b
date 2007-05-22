@@ -1,0 +1,524 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <link rel="Stylesheet" type="text/css" href="/css/style.css" >
+  <title>snippetsEmu - An attempt to emulate TextMate's snippet expansion : vim online</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="KEYWORDS" content="Vim, Vi IMproved, text editor, home, documentation, tips, scripts, news">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/vim_shortcut.ico">
+</head>
+
+<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" bgcolor="#ffffff"> 
+
+<!-- HEADER, SPONSOR IMAGE, VIM IMAGE AND BOOK AD -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bordercolor="red">
+  <tr>
+    <td colspan="4" class="lightbg"><img src="/images/spacer.gif" width="1" height="5" alt=""></td>
+  </tr>
+  <tr>
+  <td class="lightbg">&nbsp;&nbsp;&nbsp;</td>
+  <td class="lightbg" align="left"><a href="/sponsor/index.php"><img src="/images/sponsorvim.gif" alt="sponsor Vim development" border="0"></a></td>
+    <td class="lightbg" align="center"><a href="/index.php"><img src="/images/vim_header.gif" border="0" alt="Vim logo"></a></td>
+    <td class="lightbg" align="right"><a href="http://iccf-holland.org/click5.html"><img src="/images/buyhelplearn.gif" alt="Vim Book Ad" border="0"></a></td>
+  </tr>
+  <tr>
+    <td colspan="4" class="lightbg"><img src="/images/spacer.gif" width="1" height="5" alt=""></td>
+  </tr>
+  <tr>
+    <td colspan="4" class="darkbg"><img src="/images/spacer.gif" width="1" height="10" alt=""></td>
+  </tr>
+</table>
+<!-- THE PAGE BODY: BETWEEN HEADER AND FOOTER -->
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <col width="180">
+  <col width="1">
+
+  <tr valign="top">
+    <td class="sidebar">
+      <table width="180" cellpadding="4" cellspacing="0" border="0">
+        <tr valign="top">
+          <td class="sidebar">
+
+<!-- INCLUDE THE PAGE NAVIGATION -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bordercolor="red">
+    <tr>
+        <td><small>not logged in (<a href="/login.php">login</a>)</small></td>
+    </tr>
+    <tr><td>
+<small>&nbsp;</small>
+<form action="http://www.google.com/cse" id="cse-search-box">
+  <div>
+    <input type="hidden" name="cx" value="partner-pub-3005259998294962:bvyni59kjr1" />
+    <input type="hidden" name="ie" value="ISO-8859-1" />
+    <input type="text" name="q" size="20" />
+    <br>
+    <input type="submit" name="sa" value="Search" />
+  </div>
+</form>
+<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
+    </td></tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="1"></td>
+    </tr>
+    <tr>
+        <td class="darkbg"><img src="/images/spacer.gif" alt='' border="0" height="3"></td>
+    </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="2"></td>
+    </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/index.php">Home</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/search.php">Advanced search</a></td>
+        </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="7"></td>
+    </tr>
+    <tr>
+        <td class="checker"><img src="/images/spacer.gif" alt='' border="0" height="1"></td>
+    </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="7"></td>
+    </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/about.php">About Vim</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/community.php">Community</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/news/news.php">News</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/sponsor/index.php">Sponsoring</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/trivia.php">Trivia</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/docs.php">Documentation</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/download.php">Download</a></td>
+        </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="7"></td>
+    </tr>
+    <tr>
+        <td class="checker"><img src="/images/spacer.gif" alt='' border="0" height="1"></td>
+    </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="7"></td>
+    </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/scripts/index.php">Scripts</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/tips/index.php">Tips</a></td>
+        </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/account/index.php">My Account</a></td>
+        </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="7"></td>
+    </tr>
+    <tr>
+        <td class="checker"><img src="/images/spacer.gif" alt='' border="0" height="1"></td>
+    </tr>
+    <tr>
+        <td><img src="/images/spacer.gif" alt="" border="0" width="1" height="7"></td>
+    </tr>
+        <tr>
+            <td class="sidebarheader"><a href="/huh.php">Site Help</a></td>
+        </tr>
+</table>
+
+            <table width="172" cellpadding="0" cellspacing="0" border="0">
+              <tr><td><img src="/images/spacer.gif" alt="" border="0" width="1" height="8"></td></tr>
+              <tr><td class="darkbg"><img src="/images/spacer.gif" width="1" height="3" alt=""></td></tr>
+            </table>
+            <br>
+
+<!-- INCLUDE THE PAGE SIDEBAR TEXT -->
+&nbsp;
+
+          </td>
+        </tr>
+      </table>
+    </td>
+
+    <td class="darkbg"><img src="/images/spacer.gif" width="1" height="1" border="0" alt=""><br></td>
+    <td>
+      <table width="100%" cellpadding="10" cellspacing="0" border="0" bordercolor="red">
+        <tr>
+          <td valign="top">
+
+<span class="txth1">snippetsEmu : An attempt to emulate TextMate's snippet expansion</span> 
+
+<br>
+<br>
+
+<!-- karma table -->
+<table cellpadding="4" cellspacing="0" border="1" bordercolor="#000066">
+<tr>
+  <td class="lightbg"><b>&nbsp;script karma&nbsp;</b></td>
+  <td>
+    Rating <b>2073/596</b>,
+    Downloaded by 22818  </td>
+  <td class="lightbg">
+  <b>&nbsp;Comments, bugs, improvements&nbsp;</b>
+  </td>
+  <td>
+    <a href="http://vim.wikia.com/wiki/Script:1318">Vim wiki</a>
+  </td>  
+</tr>
+</table>
+<p>
+
+<table cellspacing="0" cellpadding="0" border="0">
+<tr><td class="prompt">created by</td></tr>
+<tr><td><a href="/account/profile.php?user_id=8005">Felix Ingram</a></td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td class="prompt">script type</td></tr>
+<tr><td>utility</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td class="prompt">description</td></tr>
+<tr><td>***** IMPORTANT *****<br>The plugin has now been split into two separate vimballs. The plugin itself and the bundles. This was done because bundles were updated a lot more often than the plugin itself.<br><br>Previous users of the plugin should delete the old file when upgrading to 1.0. The name of the file changed in 0.6 and so you'll end up with two versions when unpacking the file. Remove the old version &quot;snippetEmu.vim&quot; from the plugin directory. The new version is called &quot;snippetsEmu.vim&quot;. Note the extra 's'<br><br><br>Homepage: <a target="_blank" href="http://slipperysnippets.blogspot.com/">http://slipperysnippets.blogspot.com/</A><br>Issue tracker: <a target="_blank" href="http://code.google.com/p/snippetsemu/issues/list">http://code.google.com/p/snippetsemu/issues/list</A><br><br>Please email me bugs or create them in the issue tracker.<br><br>This file contains some simple functions that attempt to emulate some of the behaviour of 'Snippets' from the OS X editor TextMate, in particular the variable bouncing and replacement behaviour.<br><br>DIVING IN:<br><br>Install the plugin, start a new perl file (as an example) and type the following in insert mode:<br><br>for&lt;tab&gt;&lt;tab&gt;&lt;tab&gt;&lt;tab&gt;<br><br>You'll see the text expand and the jumping in action. Try the same again but this time type a new value for 'var' once it is selected. I.e.<br><br>for&lt;tab&gt;test&lt;tab&gt;&lt;tab&gt;&lt;tab&gt;<br><br>Notice how all the 'var's are replaced with 'test'.<br><br>Check out the bundles and the docs for more examples of what can be done.<br><br>*IMPORTANT*<br><br>If you have any questions, suggestions, problems or criticisms about the plugin then please, please email me and I will do the best to help.</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td class="prompt">install details</td></tr>
+<tr><td>Firstly create an 'after/ftplugin' directory in your vim home (e.g. ~/.vim/after/ftplugin under unix or vimfiles/after/ftplugin under Windows). This is required as Vimball sometimes does not create it for some reason.<br><br>Download the plugin vimball (and the bundle vimball if you would like the default snippets).<br><br>Now open the Vimball(s) with Vim and follow the instructions (source the vimball to install everything). Vimball should create the help tags. Do a :helptags on your doc directory if it hasn't.<br><br>Enjoy</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+
+<!-- rating table -->
+<form name="rating">
+<input type="hidden" name="script_id" value="1318">
+<table cellpadding="4" cellspacing="0" border="1" bordercolor="#000066">
+<tr>
+  <td class="lightbg"><b>rate this script</b></td>
+  <td valign="middle">
+    <input type="radio" name="rating" value="life_changing">Life Changing
+    <input type="radio" name="rating" value="helpful">Helpful
+    <input type="radio" name="rating" value="unfulfilling">Unfulfilling&nbsp;
+    <input type="submit" value="rate">
+  </td>
+</tr>
+</table>
+</form>
+<span class="txth2">script versions</span> (<a href="add_script_version.php?script_id=1318">upload new version</a>)
+<p>
+Click on the package to download.
+<p>
+
+<table cellspacing="2" cellpadding="4" border="0" width="100%">
+<tr class='tableheader'>
+        <th valign="top">package</th>
+    <th valign="top">script version</th>
+    <th valign="top">date</th>
+    <th valign="top">Vim version</th>
+    <th valign="top">user</th>
+    <th valign="top">release notes</th>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=8450">snippy_plugin.vba</a></td>
+    <td class="rowodd" valign="top" nowrap><b>1.2.3</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2008-03-13</i></td>
+    <td class="rowodd" valign="top" nowrap>7.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Fixed jumping bug which caused problems with tags between two named tags being missed out. (really, really uploaded new version)</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=8443">snippy_bundles.vba</a></td>
+    <td class="roweven" valign="top" nowrap><b>1.2</b></td>
+    <td class="roweven" valign="top" nowrap><i>2008-03-13</i></td>
+    <td class="roweven" valign="top" nowrap>7.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">Small fix to php bundle. 'php' trigger is now 'phpp'. Previous version could too easily cause conflicts when using the 'incl' snippet.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=8386">snippy_bundles.vba</a></td>
+    <td class="rowodd" valign="top" nowrap><b>1.1</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2008-03-03</i></td>
+    <td class="rowodd" valign="top" nowrap>7.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Updates to the C and HTML bundles</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=8348">snippy_bundles.vba</a></td>
+    <td class="roweven" valign="top" nowrap><b>1.0</b></td>
+    <td class="roweven" valign="top" nowrap><i>2008-02-25</i></td>
+    <td class="roweven" valign="top" nowrap>7.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">Filetype plugins for snippetsEmu</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=8347">snippy_plugin.vba</a></td>
+    <td class="rowodd" valign="top" nowrap><b>1.2.2</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2008-02-25</i></td>
+    <td class="rowodd" valign="top" nowrap>7.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Bug fix to plugin. Annoying window jumping sorted out. Bundles are now in a separate vimball.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=7735">snippetsemu1.2.1.vba</a></td>
+    <td class="roweven" valign="top" nowrap><b>1.2.1</b></td>
+    <td class="roweven" valign="top" nowrap><i>2007-09-30</i></td>
+    <td class="roweven" valign="top" nowrap>7.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">VBA file now has unix fileformat, so things should be working better. Vimball has also added fold markers, which aren't backwards compatible, so I've removed them as well.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=7732">snippetsemu1.2.vba</a></td>
+    <td class="rowodd" valign="top" nowrap><b>1.2</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2007-09-30</i></td>
+    <td class="rowodd" valign="top" nowrap>7.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Finally released new version. Big change: No more messing with iskeyword. Other stuff - Commands with autocomplete, new commands for creating snippets, updated bundles. Be sure to read the docs to see what's available.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=6951">snippetsemu1_1.vba</a></td>
+    <td class="roweven" valign="top" nowrap><b>1.1</b></td>
+    <td class="roweven" valign="top" nowrap><i>2007-04-05</i></td>
+    <td class="roweven" valign="top" nowrap>7.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">New version contains several bug fixes, reverts start and end tags to more 'friendly' settings and tries to address indenting issues. Snippets must now define their own 'local' indenting. Make sure you create the after/ftplugin directories as described in the installation instructions.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=6561">SnippetsEmu_1.0.1.vba</a></td>
+    <td class="rowodd" valign="top" nowrap><b>1.0.1</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2006-12-29</i></td>
+    <td class="rowodd" valign="top" nowrap>7.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Even more super 1.0.1 version with Unix line endings on the Vimball so things install properly on *nix.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=6558">SnippetsEmu_1.0.vba</a></td>
+    <td class="roweven" valign="top" nowrap><b>1.0</b></td>
+    <td class="roweven" valign="top" nowrap><i>2006-12-28</i></td>
+    <td class="roweven" valign="top" nowrap>7.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">Super new 1.0 version with many new features and improvements. New bundles also included.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=6477">snippetsEmu0.6.1.vba</a></td>
+    <td class="rowodd" valign="top" nowrap><b>0.6.1</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2006-11-28</i></td>
+    <td class="rowodd" valign="top" nowrap>7.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Quick fix changes the line endings for the VBA to UNIX which should hopefully stop some problems people are having</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=6468">snippetsEmu0.6.vba</a></td>
+    <td class="roweven" valign="top" nowrap><b>0.6</b></td>
+    <td class="roweven" valign="top" nowrap><i>2006-11-25</i></td>
+    <td class="roweven" valign="top" nowrap>7.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">Bugs fixes as per usual but this new version includes a set of snippets bundles for use with various filetypes. Plugin is now a VimBall so everything is in one file.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=6108">snippetEmu0.5.6.vim</a></td>
+    <td class="rowodd" valign="top" nowrap><b>0.5.6</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2006-08-29</i></td>
+    <td class="rowodd" valign="top" nowrap>7.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Fixed several bugs from the last version including random bug which prevented snippets from starting with 's'.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=6068">snippetEmu0.5.5.vim</a></td>
+    <td class="roweven" valign="top" nowrap><b>0.5.5</b></td>
+    <td class="roweven" valign="top" nowrap><i>2006-08-14</i></td>
+    <td class="roweven" valign="top" nowrap>7.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">Fixed various bugs: s:search_str not being defined or being buffer specific and command tag execution not working with two tags on the same line.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=5987">snippetEmu0.5.4.vim</a></td>
+    <td class="rowodd" valign="top" nowrap><b>0.5.4</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2006-07-25</i></td>
+    <td class="rowodd" valign="top" nowrap>7.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">TextMate compatibile mode now works under linux.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=5944">snippetEmu0.5.3.vim</a></td>
+    <td class="roweven" valign="top" nowrap><b>0.5.3</b></td>
+    <td class="roweven" valign="top" nowrap><i>2006-07-12</i></td>
+    <td class="roweven" valign="top" nowrap>7.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">Bug fixes. Things are a lot better behaved. Edge cases should (should) work a lot better now. Highly recommended upgrade.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=5916">snippetEmu0.5.2.vim</a></td>
+    <td class="rowodd" valign="top" nowrap><b>0.5.2</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2006-07-04</i></td>
+    <td class="rowodd" valign="top" nowrap>7.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Minor bug fix. Textmate compatible mode did not allow quotes in expansions. Fixed</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=5912">snippetEmu0.5.1.vim</a></td>
+    <td class="roweven" valign="top" nowrap><b>0.5.1</b></td>
+    <td class="roweven" valign="top" nowrap><i>2006-07-03</i></td>
+    <td class="roweven" valign="top" nowrap>7.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">This new version adds some bug fixes to the last release and adds the new functionality of being able to define multicharacter start and end tags. It is now easier to define tags which work across multiple languages.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=5907">snippetEmu0.5.0.vim</a></td>
+    <td class="rowodd" valign="top" nowrap><b>0.5.0</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2006-07-01</i></td>
+    <td class="rowodd" valign="top" nowrap>7.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">This new version adds TextMate style expansions: snippets are not expanded automatically. The user must press Tab for a snippet to be expanded. Tabbing will jump between tags or insert a &lt;Tab&gt; if no tags are active. <br><br>The tag syntax has changed. Default values are not supported anymore: use the tag's name instead. Commands can now be added in the first tag and unnamed tags can include commands. <br><br>This is a test release: please send bug reports.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=4977">snippetEmu.vim</a></td>
+    <td class="roweven" valign="top" nowrap><b>0.3.6</b></td>
+    <td class="roweven" valign="top" nowrap><i>2006-01-16</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">Minor bug fix.&nbsp;&nbsp;Replacement values modified by commands would be passed to future commands in their modified form, rather than with the original replacement value.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=4969">snippetEmu.vim</a></td>
+    <td class="rowodd" valign="top" nowrap><b>0.3.5</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2006-01-14</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Fundamental change to the way the new commands feature works.&nbsp;&nbsp;The command is now 'executed' and the result placed in the variable @z.&nbsp;&nbsp;The intention is for the command to be a function call rather than a standard command.&nbsp;&nbsp;I.e. using substitute() rather than :s///.&nbsp;&nbsp;The value to be replaced is available to the function in @z (previous values of the variable are kept and restored once the command has been executed).&nbsp;&nbsp;See the updated docs for examples.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=4962">snippetEmu.vim</a></td>
+    <td class="roweven" valign="top" nowrap><b>0.3.1</b></td>
+    <td class="roweven" valign="top" nowrap><i>2006-01-12</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">Bug fix - Non-greedy matching is now done on the command searching.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=4959">snippetEmu.vim</a></td>
+    <td class="rowodd" valign="top" nowrap><b>0.3</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2006-01-11</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">New version allows commands to be included in named tags.&nbsp;&nbsp;Experimental version - does not appear to break older functionality, however.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=4947">snippetEmu.vim</a></td>
+    <td class="roweven" valign="top" nowrap><b>0.2.5</b></td>
+    <td class="roweven" valign="top" nowrap><i>2006-01-05</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">Tag delimiters can now be set with autocommands to allow for different filetypes.&nbsp;&nbsp;I.e. '&lt;' and '&gt;' for programming and '@' for HTML.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=4946">snippetEmu.vim</a></td>
+    <td class="rowodd" valign="top" nowrap><b>0.2.4</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2006-01-05</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Fixed a bug where certain tags were not recognised</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=4940">snippetEmu.vim</a></td>
+    <td class="roweven" valign="top" nowrap><b>0.2.3</b></td>
+    <td class="roweven" valign="top" nowrap><i>2006-01-04</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">Now works with autoindenting</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=4480">snippetEmu.vim</a></td>
+    <td class="rowodd" valign="top" nowrap><b>0.2.2</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2005-08-09</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">Better behaved.&nbsp;&nbsp;Couple of bug fixes.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=4479">snippetEmu.vim</a></td>
+    <td class="roweven" valign="top" nowrap><b>0.2.1</b></td>
+    <td class="roweven" valign="top" nowrap><i>2005-08-09</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">Added check for the default key combo so that the user's settings aren't clobbered.</td>
+</tr>
+<tr>
+        <td class="rowodd" valign="top" nowrap><a href="download_script.php?src_id=4471">snippetEmu.vim</a></td>
+    <td class="rowodd" valign="top" nowrap><b>0.2</b></td>
+    <td class="rowodd" valign="top" nowrap><i>2005-08-08</i></td>
+    <td class="rowodd" valign="top" nowrap>6.0</td>
+    <td class="rowodd" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="rowodd" valign="top" width="2000">I've given this a full point release as it's a major rewrite.&nbsp;&nbsp;Start and end tags can now be defined and default values can also be used.</td>
+</tr>
+<tr>
+        <td class="roweven" valign="top" nowrap><a href="download_script.php?src_id=4444">snippetEmu.vim</a></td>
+    <td class="roweven" valign="top" nowrap><b>0.1</b></td>
+    <td class="roweven" valign="top" nowrap><i>2005-07-26</i></td>
+    <td class="roweven" valign="top" nowrap>6.0</td>
+    <td class="roweven" valign="top"><i><a href="/account/profile.php?user_id=8005">Felix Ingram</a></i></td>
+    <td class="roweven" valign="top" width="2000">Initial upload</td>
+</tr>
+</table>
+<!-- finish off the framework -->
+          </td>
+        </tr>
+      </table>
+    </td>
+
+  </tr>
+</table>
+
+<!-- END OF THE PAGE BODY: BETWEEN HEADER AND FOOTER -->
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bordercolor="red">
+  <tr><td colspan="4"><img src="/images/spacer.gif" width="1" height="5" alt=""></td></tr>
+  <tr><td colspan="4" bgcolor="#000000"><img src="/images/spacer.gif" height="2" width="1" alt=""></td></tr>
+  <tr><td colspan="4"><img src="/images/spacer.gif" width="1" height="5" alt=""></td></tr>
+  <tr>
+    <td><img src="/images/spacer.gif" width="5" height="1" alt=""></td>
+
+    <td align="left" valign="top"><small>
+      If you have questions or remarks about this site, visit the
+      <a href="http://vimonline.sf.net">vimonline development</a> pages.
+      Please use this site responsibly.
+      <br> 
+      
+      Questions about <a href="http://www.vim.org/about.php">Vim</a> should go
+      to the <a href="http://www.vim.org/maillist.php">maillist</a>.
+      Help Bram <a href="http://iccf-holland.org/">help Uganda</a>.
+      </small>
+	&nbsp;
+	&nbsp;
+
+	<!-- Start of StatCounter Code -->
+	<script type="text/javascript" language="javascript">
+	var sc_project=1417324; 
+	var sc_invisible=1; 
+	var sc_partition=11; 
+	var sc_security="d41633bc"; 
+	</script>
+
+	<script type="text/javascript" language="javascript" src="http://www.statcounter.com/counter/counter.js"></script><noscript><a href="http://www.statcounter.com/" target="_blank"><img  src="http://c12.statcounter.com/counter.php?sc_project=1417324&java=0&security=d41633bc&invisible=0" alt="free tracking" border="0"></a> </noscript>
+	<!-- End of StatCounter Code -->
+          </td>
+
+    <td align="right" valign="top">
+      		<a href="http://sourceforge.net/projects/vim" rel="nofollow"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=8&type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a>
+    </td>
+
+    <td><img src="/images/spacer.gif" width="5" height="1" alt=""></td>
+  </tr>
+
+    
+  <tr><td colspan="4"><img src="/images/spacer.gif" width="1" height="5" alt=""></td>
+  
+  </tr>
+</table>
+
+</body>
+</html>
+
