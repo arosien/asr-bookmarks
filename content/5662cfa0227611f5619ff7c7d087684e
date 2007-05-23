@@ -1,0 +1,330 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>~jk  lua </title>
+  <meta name="generator" content="Mephisto" />
+  <link href="/stylesheets/main.css" rel="stylesheet" type="text/css" />
+  <link href="/feed/atom.xml" rel="alternate" title="Articles for Home" type="application/atom+xml" />
+  <link href="/javascripts/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="/javascripts/prettify/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+
+  <div id="wrap">
+    <div id="header"><h1><a href="/">~jk</a></h1>
+      <p class="description">/home/jan.kneschke/</p>
+    </div>
+    <div id="content">
+      
+  <h2>lua</h2>
+<div class="entry"><h2>lua + FastCGI</h2>
+
+<p>I was looking for a FastCGI backend for <a href="http://www.lua.org/">lua</a> to have a asynchronous brother for
+<a href="http://trac.lighttpd.net/trac/wiki/Docs:ModMagnet">mod-magnet</a> in <a href="http://www.lighttpd.net/">lighttpd</a>.</p>
+
+<p>Same as mod-magnet this embedding of lua is not meant to replace Frameworks like Rails or Spring, nor
+do I want to write average PHP application in it. I use this magnet to write small scripts (for this
+project it was 140 lines of lua) which is going to be executed at least 500 times a second.</p>
+
+<p>That is a range where the setup-cost for a request matters. I don't want to load the session, nor do I want
+cleanup the whole environment for each request. I need a way to store connections to the database over
+multiple requests and I have to cache content from the database in the application.</p>
+
+<p>I needed:</p>
+
+<ul>
+<li>a byte-code cache</li>
+<li>a global environment to store the db-connection and a content-cache</li>
+<li><a href="http://www.keplerproject.org/luasql/">SQL</a>, <a href="http://www.keplerproject.org/luafilesystem/">FileSystem</a>, ... functions</li>
+</ul>
+
+<p>Based in my work on mod-magnet I wrote:</p>
+
+<ul>
+<li>a FastCGI wrapper for lua-scripts</li>
+</ul>
+
+<p>To compile the magnet you need fastcgi and lua5.1 installed:</p>
+
+<pre>
+$ wget <a href="http://jan.kneschke.de/assets/2007/3/5/magnet.c">http://jan.kneschke.de/assets/2007/3/5/magnet.c</a>
+$ gcc -Wall -O2 -g -o magnet magnet.c -lfcgi -llua -lm -ldl
+</pre>
+
+<p>A simple config for lighttpd starts the script-environment:</p>
+
+<pre>
+  fastcgi.server = ( ".lua" =>
+    (( "socket" => "/tmp/lua.socket",
+       "bin-path" => "/usr/local/bin/magnet",
+       "max-procs" => 8 ))
+  )
+</pre>
+
+<p>All script with the extension .lua will now be loaded and cache into the magnet. If the script
+changed between the requests it will be reloaded automaticly.</p>
+
+<h1>Request Setup Costs</h1>
+
+<p>A short benchmark on my rusty development machine:</p>
+
+<ul>
+<li>AMD Duron(tm) Processor, 1.3GHz</li>
+<li>640Mb</li>
+<li>...</li>
+</ul>
+
+<p>should be enough to show the difference in the setup costs per request.</p>
+
+<ul>
+<li>both times it is FastCGI,</li>
+<li>both times a byte-code cache is used,</li>
+<li>both times the same byte-sequence is sent</li>
+</ul>
+
+<p>On lua side we use the magnet from above:</p>
+
+<pre>
+$ cat 123.lua
+header = {
+        ["Content-Type"] = "text/html",
+        ["Status"] = "200"
+}
+
+function cgi_send_response(cnt)
+        local o = ""
+
+        header["Content-Length"] = string.len(cnt)
+
+        for k, v in pairs(header) do
+                o = o .. k .. ": " .. v .. "\r\n"
+        end
+        o = o .. "\r\n"
+        print(o .. cnt)
+end
+
+cgi_send_response("123")
+
+$ ab -n 10000 -c 8 -k http://127.0.0.1:1445/123.lua
+...
+Time taken for tests:   14.400517 seconds
+...
+Requests per second:    694.42 [#/sec] (mean)
+Time per request:       11.520 [ms] (mean)
+Time per request:       1.440 [ms] (mean, across all concurrent requests)
+Transfer rate:          101.32 [Kbytes/sec] received
+</pre>
+
+<p>On PHP side it is:</p>
+
+<ul>
+<li><a href="http://php.net/">PHP 5.1.4</a></li>
+<li><a href="http://xcache.lighttpd.net/">XCache 1.0.x</a></li>
+</ul>
+
+<p>The PHP was compiled with only the necessary extensions, to minimize the setup
+costs for each request in PHP itself.</p>
+
+<pre>
+$ cat 123.php
+&lt;?php
+print "123";
+?>
+$ ab -n 10000 -c 8 -k http://127.0.0.1:1025/123.php
+...
+Time taken for tests:   29.783971 seconds
+...
+Requests per second:    335.75 [#/sec] (mean)
+Time per request:       23.827 [ms] (mean)
+Time per request:       2.978 [ms] (mean, across all concurrent requests)
+Transfer rate:          57.21 [Kbytes/sec] received
+</pre>
+
+<p>Ruby plays in the same league as lua:</p>
+
+<pre>
+$ cat 123.rb
+require 'fcgi';
+FCGI.each { |request|
+        request.out.print "Content-Type: text/html\r\n\r\nHello, World!\n";
+        request.finish
+}
+
+$ ab -n 10000 -c 8 -k http://127.0.0.1:1446/123.rb
+...
+Time taken for tests:   15.751145 seconds
+...
+Requests per second:    634.87 [#/sec] (mean)
+Time per request:       12.601 [ms] (mean)
+Time per request:       1.575 [ms] (mean, across all concurrent requests)
+Transfer rate:          101.52 [Kbytes/sec] received
+
+</pre>
+
+<h2>Conclusion</h2>
+
+<p>Use Ruby, Python, ... (or this lua-magnet) if you have to maintain a very low response
+times (below 1ms). As soon as you need the comfort of PHP ($<em>GET[], $</em>FILES[], ...) you
+have to live with the extra overhead.</p>
+
+<h1>Byte-Code cache</h1>
+
+<p>As the cache itself is part of the lua environment you can take a look at its content
+with a lua-script:</p>
+
+<pre>
+
+header = {
+        ["Content-Type"] = "text/html",
+        ["Status"] = "200"
+}
+
+function cgi_send_response(cnt)
+        local o = ""
+
+        header["Content-Length"] = string.len(cnt)
+
+        for k, v in pairs(header) do
+                o = o .. k .. ": " .. v .. "\r\n"
+        end
+        o = o .. "\r\n"
+        print(o .. cnt)
+end
+
+o = [[&lt;table border="1">
+&lt;tr>&lt;th width="50%">script-name&lt;/th>
+&lt;th width="20%">mtime&lt;/th>&lt;th width="20%">hits&lt;/th>&lt;/tr>
+]]
+
+for k, v in pairs(magnet.cache) do
+        o = o .. string.format([[
+                &lt;tr>&lt;td>%s&lt;/td>
+                &lt;td align="right">%s&lt;/td>
+                &lt;td align="right">%d&lt;/td>&lt;/tr>]],
+                k, os.date("%c", v.mtime), v.hits)
+end
+o = o .. "&lt;/table>"
+
+cgi_send_response(o)
+</pre>
+
+<p>Which generates this output:</p>
+
+<table border="1" width="100%">
+<tr><th>script-name</th><th width="30%">mtime</th><th width="20%">hits</th></tr>
+<tr><td>.../pages/cache-admin.lua</td><td align="right">Thu Oct  5 20:28:21 2006</td><td align="right">4</td></tr></table>
+
+<h1>a global environment</h1>
+
+<p>I need a global storage which doesn't get cleaned up between script-runs. Instead of
+re-opening the connection to MySQL between script-runs I wanted to cache it. As
+querying the database also costs cpu-cycles I wanted to cache the results for one second
+if the same input data is requested again.</p>
+
+<p>Coming from a PHP world you would solve the first issue with <code>mysql_pconnect()</code> and the second
+with a shm-segment or a session.</p>
+
+<pre>
+-- create our own area
+prefix = "mysqlcache."
+mysqlenv_ndx = prefix .. "mysqlenv"
+mysqlcon_ndx = prefix .. "mysqlcon"
+content_ndx = prefix .. "content"
+
+-- create a db-connection if we don't have one up and running
+if (not _G[mysqlenv_ndx] or not _G[mysqlcon_ndx]) then
+  env = assert(luasql.mysql())
+  con = assert(env.connect())
+
+  _G[mysqlenv_ndx] = env
+  _G[mysqlcon_ndx] = con
+else
+  env = _G[mysqlenv_ndx]
+  con = _G[mysqlcon_ndx]
+end
+
+-- get the content-cache
+content = {}
+if (not _G[content_ndx]) then
+  _G[content_ndx] = content
+else
+  content = _G[content_ndx]
+end
+
+-- real code ...
+</pre>
+
+<p>If you want, you can think about the <code>_G[]</code> as <code>$_SESSION[]</code> in PHP. Just that it is shared
+between all scripts, all users and can store living objects like DB-connections. We are using
+the prefix here to split the global-lua-env between different scripts.</p></div>
+
+<ul>
+
+  <li><a href="/projects" title="Projects">Projects</a></li>
+
+  <li><a href="/projects/building-sigar" title="building sigar">building sigar</a></li>
+
+  <li><a href="/projects/flv-streaming" title="flv streaming">flv streaming</a></li>
+
+  <li><a href="/projects/modlogan" title="modlogan">modlogan</a></li>
+
+  <li><a class="selected" href="/projects/lua" title="lua">lua</a></li>
+
+  <li><a href="/projects/php-shell" title="php shell">php shell</a></li>
+
+  <li><a href="/projects/pxtools" title="pxtools">pxtools</a></li>
+
+  <li><a href="/projects/typesafe-objects-in-php" title="typesafe objects in PHP">typesafe objects in PHP</a></li>
+
+  <li><a href="/projects/profiling-lua-with-kcachegrind" title="Profiling Lua with KCacheGrind">Profiling Lua with KCacheGrind</a></li>
+
+  <li><a href="/projects/how-to-write-a-good-build-system" title="How to write a good build system ?">How to write a good build system ?</a></li>
+
+  <li><a href="/projects/ip-to-location-writing-a-efficient-scanner" title="IP to location: writing a efficient scanner">IP to location: writing a efficient scanner</a></li>
+
+  <li><a href="/projects/lua-using-lpeg-for-sql-indenting" title="Lua: Using LPEG for SQL Indenting">Lua: Using LPEG for SQL Indenting</a></li>
+
+</ul>
+
+
+    </div>
+    <div id="sidebar">
+      <h2>Search</h2>
+      <form method="get" id="sform" action="/search">
+        <label for="q">Search:</label>
+				<input type="text" id="q" value="" name="q" size="15" />
+			</form>
+      
+        <h2>Pages</h2>
+        <ul>
+          <li><a class="selected" href="/projects" title="projects">projects</a></li><li><a href="/projects/mysql" title="mysql">mysql</a></li><li><a href="/about" title="about">about</a></li>
+        </ul>
+      
+
+      <div id="twitter_div">
+<h2 class="sidebar-title">Twitter Updates</h2>
+<ul id="twitter_update_list"></ul>
+<a href="http://twitter.com/weigon" id="twitter-link" style="display:block;text-align:right;">follow me on Twitter</a>
+</div>
+<script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
+<script type="text/javascript" src="http://twitter.com/statuses/user_timeline/weigon.json?callback=twitterCallback2&amp;count=5"></script>
+    </div>
+    <div>
+<script type="text/javascript"><!--
+google_ad_client = "pub-1033490626111478";
+/* 120x240, created 4/2/09 */
+google_ad_slot = "7061730480";
+google_ad_width = 120;
+google_ad_height = 240;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+    </div>
+  </div>
+  <div id="footer">~jk is proudly using the <a href="http://ifelse.co.uk/simpla">Simpla theme</a> originally designed by <a href="http://ifelse.co.uk">Phu</a>. Powered by <a href="http://mephistoblog.com/">Mephisto</a></div>
+</body>
+</html>
