@@ -1,0 +1,675 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="/stylesheets/master.css" type="text/css" media="screen" charset="utf-8" />
+  <script type="text/javascript" charset="utf-8" src="/javascripts/mephisto/prototype.js"></script>
+  <title>The Secret to Memcached - Too-biased</title>
+  <script type="text/javascript" charset="utf-8" src="http://multitrack.heroku.com/track.js"></script>
+  
+  <link rel="openid.server" href="https://www.myopenid.com/server" />
+  <link rel="openid.delegate" href="https://tobi.myopenid.com/" />
+
+  
+
+  <link href="/feed/atom.xml" rel="alternate" type="application/atom+xml" />
+  
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8045703-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</head>
+
+<body class="fixed">
+
+<div id="wrapper"><div id="w2"><div id="w3" class="clearfix">
+
+<div id="header" class="clearfix">
+  <div id="logo" class="editable">
+
+    <h1><a href="/">Too-biased</a></h1>
+    <h2>Tobias L&uuml;tke's thoughts  / </h2>
+  </div>
+  <div id="search"></div>
+</div>
+
+<div id="content">
+<div id="maincol"><div id="mc2">
+
+<div class="post">
+ <div class="post-title"><h1><a href="/2007/5/22/the-secret-to-memcached" title="The Secret to Memcached">The Secret to Memcached</a></h1></div>
+
+ <p class="auth">
+  Posted by <strong>tobi</strong> &mdash; 11:50 AM
+  <span class="typo_date">
+  <em>May <span>22</span> </em>
+  </span>
+ </p>
+
+
+ <div class="post-body">
+  <p><a href="http://www.danga.com/memcached/">Memcached</a> has long been the answer to most questions containing the word scale. 
+There are some spectacular memcached installations out there. Facebook is said to <a href="http://lists.danga.com/pipermail/memcached/2007-May/004098.html">run a 200 server</a> with 3TB of memory 
+solely for servicing memcached; <a href="http://shopify.com">Shopify</a>, twitter, digg, Slashdot and just about every other public facing application 
+depends on it. Facebook&#8217;s installation is said to deliver a 99% cache hit rate while servicing tens of thousands of 
+requests a second.</p>
+
+
+	<p>There are many ways to use this elaborate hash table and many ways which are more trouble then they are worth.
+In our experience the key to use memcached effectively is to ask it for the exact thing you want, but i&#8217;m getting ahead of
+myself.</p>
+
+
+	<p>A common pattern to using memcached is the following</p>
+
+
+<pre><code>
+class Product &lt; AR:B
+
+  def load(id)
+    Cache.get(key, self) || Cache.set(key, find(id))
+  end
+
+  def after_save; Cache.expire(key); end
+  def after_destroy; Cache.expire(key); end
+
+  def key
+   "#{table_name}/#{id}" 
+  end
+end
+</code></pre>
+
+	<p>The issue is that this model only caches on a per object basis. But the real database load comes usually from loading
+collections. Storing a collection in memcached is harder because you have to start tracking the objects in the collection somewhere
+so that you can efficiently expire the collection once one of its items is changed. And that way, he knew, lay madness.</p>
+
+
+	<p>In Shopify&#8217;s case, what we really need, is to cache all the required data to render a given public <span class="caps">URL</span>. 
+Two requests to the same <span class="caps">URL</span> should always yield a cache hit given all input parameters being equal. 
+In code this could look something like this:</p>
+
+
+<pre><code>
+cache params.values.sort.to_s do
+  ... load all data ...
+end
+</code></pre>
+
+	<p>Of course you have to keep track of all the keys you store in memcached now. A database table will do nicely here.</p>
+
+
+<pre><code>
+class CacheKey &lt; AR:B
+  def after_destroy; Cache.expire(key); end
+end
+</code></pre>
+
+<pre><code>
+cache key = params.values.sort.to_s do
+  ... load all data ...
+  CacheKey.create :key =&gt; key
+end
+</code></pre>
+
+<pre><code>
+CacheKey.destroy_all # Sweep cache
+</code></pre>
+
+	<p>So far so good.</p>
+
+
+	<p>This has been the traditional approach and has worked somewhat. 
+I&#8217;m here to offer a better solution here though:</p>
+
+
+	<p><strong>Ask for the thing you need, be specific:</strong> The complexity to the above solution comes from the simple fact 
+that we formulated our question to memcached too vague. Ask yourself what you really require from memcached and then ask it for exactly that. 
+Consider this: When a product is updated all current urls should be invalidated because they are outdated. Shopify allows 
+the designers to reference a product from any page in the system so we have to run a full sweep. 
+Without informing memcached that its caches are stale it will continue to deliver this stale data
+and customers will continue to see the old version of the product. A clear miss-understanding between shopify and memcached.</p>
+
+
+	<p>The solution is simple: 
+At the beginning of each request we load a shop object which we pick depending on the incoming host name. 
+We use the fact that we always load this shop model anyways and add versioning to it. 
+This version column is incremented every time we want to sweep all caches.</p>
+
+
+	<p>Now we add the version number to the cache keys:</p>
+
+
+<pre><code>
+cache shop.version + params.values.sort.to_s  do
+  ... load all data ...
+end
+</code></pre>
+
+	<p>this means that we will never get an outdated version from the caches because we ask them for a very specific thing. After 
+the version number is increased in the database all incoming requests will miss the caches but will be re-cached quickly.</p>
+
+
+	<p>Memcached will automatically get rid of the stale keys once space is needed, least recently used keys are discarded first
+so there is no need for manual cleanup.</p>
+
+
+	<p>In Shopify we use this technology as a way to do Page caching. We keep the rendered <span class="caps">HTML</span>, HTTP return status code and Content-Type in 
+memcached and use all the differentiating input variables as keys such as content of the shopping cart. We keep the <span class="caps">HTML</span> because
+this saves our server cluster valuable bandwidth by avoiding loading and compiling the liquid templates from the <span class="caps">NFS</span> server.
+Requests for cached documents are now rendered in sub 10ms regions.</p>
+
+
+	<p>To summarize Shopify asks memcached politely to: &#8220;Hand over version 55 of the index html for www.snowdevil.com the way it would look like with one Draft 151cm snowboard in the cart&#8221;. 
+A very specific question for which there is only one valid answer, the exact data we want, stale data can never 
+be returned because everything which would make it stale will increase the version number.</p>
+
+
+	<p>Quick remark. When you use memcached in ruby make absolutly sure that you use <a href="http://seattlerb.rubyforge.org/memcache-client">memcache-client</a> as it&#8217;s the fastest and most used ruby implementation of the protocol.</p>
+ </div>
+
+<script src="http://feeds.feedburner.com/~s/too-biased/xml?i=http://blog.leetsoft.com/2007/5/22/the-secret-to-memcached" type="text/javascript" charset="utf-8"></script>
+
+
+</div>
+
+<h3>Comments</h3>
+<ul class="comments">
+  
+  <li id="comment_4052" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://blog.innerewut.de">Jonathan</a></span> 
+       <span class="date">22 May 12:05</span>
+    </p>
+     <p>I assume you wanted to recomment memcache-client (http://seattlerb.rubyforge.org/memcache-client) and not Ruby-MemCache?</p>
+  </li>
+  
+  <li id="comment_4053" class="comment admin">
+    <p class="meta">
+       <span class="author"><a href="http://blog.leetsoft.com">Tobi</a></span> 
+       <span class="date">22 May 12:15</span>
+    </p>
+     <p>Oh thanks for catching this.</p>
+  </li>
+  
+  <li id="comment_4054" class="comment ">
+    <p class="meta">
+       <span class="author"><span>Martin</span></span> 
+       <span class="date">22 May 14:21</span>
+    </p>
+     <p>Why not just make a service based webapplication so that you can scale horizontal and vertical and get rid of premature stuff like cache.</p>
+  </li>
+  
+  <li id="comment_4055" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://michael.bacarella.com/">Michael B</a></span> 
+       <span class="date">22 May 14:32</span>
+    </p>
+     <p>Connect to your <span class="caps">RDBMS</span>.  Run</p>
+
+
+	<pre><code>SELECT * FROM account WHERE id = blah;</code></pre>
+
+
+	<p>Great.  Now immediately run it again.  The second time around it probably finished much faster.  Why?  Because your <span class="caps">RDBMS</span> does the same exact caching that memcached offers.</p>
+
+
+	<p>The success of memcached has always baffled me because it&#8217;s offering redundant functionality.  Perhaps it isn&#8217;t so much the function as it is the presentation: conceptually it&#8217;s much easier to understand and measure, so it&#8217;s more comfortable for developers.</p>
+
+
+	<p>If you can properly tune MySQL&#8217;s caches and set up replication you should never need memcached.</p>
+  </li>
+  
+  <li id="comment_4056" class="comment admin">
+    <p class="meta">
+       <span class="author"><a href="http://blog.leetsoft.com">tobi</a></span> 
+       <span class="date">22 May 14:38</span>
+    </p>
+     <p>Using mysql&#8217;s querycache and memcached is not an either/or proposition. Querycache can do enough caching to get most successful web applications through their first year of operation. Its no replacement for memcached however for various reasons:</p>
+
+
+	<ol>
+	<li>It only caches data acquisition, no computation or disk accesses can be avoided by it</li>
+		<li>Every update or insert to the database flushes the entire cache for the table. Do you think facebook would serve with 99% cache hits if all the caches would be flushed every time someone pokes someone else?</li>
+	</ol>
+
+
+	<p>When building a big web application you layer caches on caches. Ideally the top cache (browser local cache) can service the entire request such as it happens on google.com. if that fails the next best thing is blazingly fast memcached. Failing that we have to aquire and compute some data which is hopefully cached. If that fails the database gets the data from its cache or from disk. If that fails than the database files are probably cached by the operating system. And finally we move the physical read head of the disk to fetch the database off permanent storage.</p>
+  </li>
+  
+  <li id="comment_4057" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://marsorange.com">Mars</a></span> 
+       <span class="date">22 May 15:25</span>
+    </p>
+     <p>This is a very nice method of composing cache keys with a content version id.</p>
+
+
+	<p>I recently found a similar answer with Rail&#8217;s fragment cache, that creating cache keys using parameters that affect the response permits very granular caching.</p>
+
+
+	<p>Specifically, I used the the logged-in username &#38; request hostname to increase specificity of cached fragments.</p>
+  </li>
+  
+  <li id="comment_4058" class="comment ">
+    <p class="meta">
+       <span class="author"><span>JGiles</span></span> 
+       <span class="date">22 May 17:11</span>
+    </p>
+     <p>Interesting. What we really need is a layer over the DB to store serialized objects (at least for ruby) such that loading from the DB doesn&#8217;t take so damn long.</p>
+
+
+	<p>That&#8217;s where 90% of my <span class="caps">CPU</span> overhead is going right now.</p>
+
+
+	<p>Memcached is one way to do that, but I&#8217;d like to see something that can consume <span class="caps">SQL</span> and spit out objects, instantiating from the DB if needed, but caching otherwise. Using cache keys is moving somewhat backwards, compared to the power of <span class="caps">SQL</span> and <span class="caps">RDBMS</span>.</p>
+  </li>
+  
+  <li id="comment_4059" class="comment ">
+    <p class="meta">
+       <span class="author"><span>Nate</span></span> 
+       <span class="date">22 May 18:45</span>
+    </p>
+     <p>Looking at shopify specifically, stuff like cart state isn&#8217;t carried along in params, as far as I can see. (Thank god; that&#8217;d make the shop behave strangely)</p>
+
+
+	<p>So, wouldn&#8217;t caching on shop.version + params.values.sort.to_s not work for page caching with cart contents?</p>
+
+
+	<p>Or would adding things to a cart increment shop.version?</p>
+  </li>
+  
+  <li id="comment_4060" class="comment admin">
+    <p class="meta">
+       <span class="author"><a href="http://blog.leetsoft.com">tobi</a></span> 
+       <span class="date">22 May 20:53</span>
+    </p>
+     <p>This is correct. In shopify&#8217;s case we use shop.version, request.host, request.path, request.format, cart.items.collect(&#38;:item_id), cart.items.collect(&#38;:qty) as namespace. Cart comes from the session.</p>
+  </li>
+  
+  <li id="comment_4061" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://www.koziarski.net/">Michael Koziarski</a></span> 
+       <span class="date">22 May 21:09</span>
+    </p>
+     <p>Nice write up tobi.   Have you considered extracting a plugin which gives a &#8216;cache&#8217; method to handle both memcache caching, and etags?  Seems like you could build something very interesting here&#8230;</p>
+  </li>
+  
+  <li id="comment_4062" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://www.bencurtis.com">Benjamin Curtis</a></span> 
+       <span class="date">22 May 23:08</span>
+    </p>
+     <p>Michael,</p>
+
+
+	<p>The action_cache plugin might be of interest to you:</p>
+
+
+	<p>http://agilewebdevelopment.com/plugins/action_cache</p>
+  </li>
+  
+  <li id="comment_4063" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://trig.com">Albert Ramstedt</a></span> 
+       <span class="date">23 May 02:46</span>
+    </p>
+     <p>We use memcached a lot in our apps, and at our shop, a guy made a libmemcache wrapper c extension. It is faster than the memcache-client. It is listed on rubyforge under adocca-plugins and is called caffeine.</p>
+
+
+	<p>Also, we use a somewhat other approach to cache to implicitly cache relationships through AR magic, and explicitly cache finders like Model.find_by_username_and_age() or so, and then only cache the id responses, and fetch them thru memcache with another call. Our approach builds on CachedModel that robot-coop built.</p>
+
+
+	<p>A third note is that we use namespace caching a lot, so we can cache a lot of different data, and just sweep them with a namespace sweep. There is some memcache overhead involved, but it makes the cache invalidation a <span class="caps">LOT</span> simpler. We have implemented namespaces in our version of memcache-client (AdoccaMemcache) and in caffeine.</p>
+
+
+	<p>See here: http://rubyforge.org/projects/adocca-plugins/</p>
+  </li>
+  
+  <li id="comment_4065" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://carlos.bueno.org">Carlos Bueno</a></span> 
+       <span class="date">23 May 09:41</span>
+    </p>
+     <p>@JGiles: put a wrapper on your <span class="caps">SQL</span> layer that uses the <span class="caps">SQL</span> statements (or its <span class="caps">SHA</span> hash) as the key to memcache. That is roughly what MySQL&#8217;s query cache does. On a miss, run the query.</p>
+
+
+	<p>But you will run into the problem of cache expiration. MySQL4 punts on it by invalidating all caches on a table when that table is changed.</p>
+  </li>
+  
+  <li id="comment_4066" class="comment ">
+    <p class="meta">
+       <span class="author"><span>Morten</span></span> 
+       <span class="date">23 May 12:20</span>
+    </p>
+     <p>Tobi, is it correctly understood that you now serve the full responses directly from the controller using the stored <span class="caps">HTTP</span> return code + content type + <span class="caps">HTML</span> and return rather than using &#8216;render&#8217; at all?</p>
+  </li>
+  
+  <li id="comment_4067" class="comment admin">
+    <p class="meta">
+       <span class="author"><a href="http://blog.leetsoft.com">tobias Luetke</a></span> 
+       <span class="date">23 May 12:58</span>
+    </p>
+     <p>This is correct morten. We save the overhead of loading a liquid file over <span class="caps">NFS</span>, compiling it and then rendering it. This is the principal reason and is pretty specific to shopify.</p>
+  </li>
+  
+  <li id="comment_4068" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://michael.bacarella.com/">Michael B</a></span> 
+       <span class="date">23 May 13:43</span>
+    </p>
+     <p>&#8220;Using mysql’s querycache and memcached is not an either/or proposition.&#8221;</p>
+
+
+	<p>In my earlier message I never once said MySQL querycache, nor did I imply it.  In fact, I run with it disabled.</p>
+
+
+	<p>Repeated queries will still benefit from a number of caches within the <span class="caps">RDBMS</span>, even without an explicit querycache in effect.</p>
+  </li>
+  
+  <li id="comment_4069" class="comment ">
+    <p class="meta">
+       <span class="author"><span>Gaurav</span></span> 
+       <span class="date">23 May 14:25</span>
+    </p>
+     <p>Has anyone used the C library for memcached. I tried it a couple of weeks ago and it seemed unripe. e.g. statistics structure between C libmemcached and memcached code base had a difference in one element. Some other weirdness also popped up e.g. no more than 13,000 inserts could succeed during bootup and those entries timed out after sometime.</p>
+  </li>
+  
+  <li id="comment_4070" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://pbwiki.com">Nathan Schmidt</a></span> 
+       <span class="date">23 May 14:59</span>
+    </p>
+     <p>@Michael B, Memcached is particularly useful in two situations. First, when your cache footprint is larger than the physical <span class="caps">RAM</span> of your backing store (db, filesystem, whatever) so you need to spread the load across multiple physical machines. Facebook has multiple TB of  network-addressable <span class="caps">RAM</span> using memcached, and there&#8217;s just not practical way to pool MySQL or whatever other <span class="caps">RDBMS</span> to exploit that kind of low-latency storage. The second scenario is when stale data is ok for the sake of efficiency. On Digg for example, it&#8217;s probably ok for the displayed number of diggs or comments to be +/- the actual value. No point doing a &#8216;select count(*) from comments where story_id=1234&#8217; for every page load of every story on the front page. Better to just store a snapshot of ground truth for 30 seconds or whatever. That&#8217;s the kind of optimization a <span class="caps">RDBMS</span> simply can&#8217;t do, but is simple with memcached.</p>
+
+
+	<p>@Gaurav, they&#8217;re supposed to time out and fall off the end of the pool, unless you specify otherwise when starting the daemon.</p>
+  </li>
+  
+  <li id="comment_4071" class="comment ">
+    <p class="meta">
+       <span class="author"><span>bob</span></span> 
+       <span class="date">23 May 15:17</span>
+    </p>
+     <p>We are testing with the <span class="caps">APR</span> version of the C client (http://www.outoforder.cc/projects/libs/apr_memcache/
+) we have found it to work much better than the danga client.</p>
+
+
+	<p>On the issue of letting the db cache it, we always start there and when stuff slows down we move it to the cache.  Since we&#8217;re talking multiple terabyte databases on some pretty heavy iron (and fast disk) we recognize the limitations of db caches.  This is mysql level stuff although we have that in various places too.</p>
+
+
+	<p>Our db vendor (informix) even supports inmemory tables but you have to take into account the message overhead to the db and that fact that the db can do other stuff when you hit memcached.</p>
+
+
+	<p>again, it works for us and is worth the effort.</p>
+  </li>
+  
+  <li id="comment_4072" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://www.antigamer.com">PENIX</a></span> 
+       <span class="date">23 May 16:28</span>
+    </p>
+     <p>Are there any major open source projects that rely on memcache? I know Drupal has a module for it.</p>
+  </li>
+  
+  <li id="comment_4073" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://www.freshblurbs.com">irakli</a></span> 
+       <span class="date">23 May 17:03</span>
+    </p>
+     <p>In our experience memcache client is bloody slow when used from <span class="caps">PHP</span>, serialization/deserialization speed is so horrific that you are way better off just hitting MySQL, granted that you have it reasonably tuned with query_cache on, reasonable denormalization and alike.</p>
+  </li>
+  
+  <li id="comment_4074" class="comment ">
+    <p class="meta">
+       <span class="author"><span>anon</span></span> 
+       <span class="date">23 May 21:06</span>
+    </p>
+     <p><span class="caps">PENIX</span>: Livejournal is an obvious example.</p>
+  </li>
+  
+  <li id="comment_4075" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://www.indianpad.com">Indianpad</a></span> 
+       <span class="date">24 May 15:50</span>
+    </p>
+     <p>If you have only one server and want to alleviate load on mysql then memcache will be slower than other solutions such as apc which also has user-cache similar to memcache&#8230;</p>
+  </li>
+  
+  <li id="comment_4079" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://firstratesoup.com">Reuben</a></span> 
+       <span class="date">26 May 11:29</span>
+    </p>
+     <p>If anyone is interested in another architecture that does this well, check out <span class="caps">IBM</span>&#8217;s DynaCache. It implements this concept fairly well for WebSphere based apps.</p>
+  </li>
+  
+  <li id="comment_4087" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://kypmeiyyus.com">kypmeiyyus</a></span> 
+       <span class="date">28 May 15:39</span>
+    </p>
+     <p>Hello! Good Site! Thanks you! dkgptwuhmgpyy</p>
+  </li>
+  
+  <li id="comment_4088" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://girlsanus.thumblogger.com">Artorios</a></span> 
+       <span class="date">28 May 21:48</span>
+    </p>
+     <p>Excellent blog.</p>
+  </li>
+  
+  <li id="comment_4089" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://othxgsniumj.com">yjjzkxhajb</a></span> 
+       <span class="date">29 May 04:45</span>
+    </p>
+     <p><a href="http:" />auoyeqq</a></p>
+  </li>
+  
+  <li id="comment_4090" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://qtztgyqt.com">srbhacynjw</a></span> 
+       <span class="date">29 May 05:41</span>
+    </p>
+     
+  </li>
+  
+  <li id="comment_4091" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://nbcbxwul.com">rljcjlcjlw</a></span> 
+       <span class="date">29 May 05:42</span>
+    </p>
+     <p>http://vwgmejleqf.com</p>
+  </li>
+  
+  <li id="comment_4093" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://jmarley.com">Jacob Marley</a></span> 
+       <span class="date">02 Jun 04:06</span>
+    </p>
+     <p>This is a test</p>
+  </li>
+  
+  <li id="comment_4104" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://www.webmasterwords.com">Stuart</a></span> 
+       <span class="date">06 Jun 12:41</span>
+    </p>
+     <p>Thanks, thats by far the most friendly guide to memcached that i&#8217;ve read.</p>
+  </li>
+  
+  <li id="comment_4125" class="comment ">
+    <p class="meta">
+       <span class="author"><a href="http://blog.overlay.tv">Tyler</a></span> 
+       <span class="date">18 Jun 14:58</span>
+    </p>
+     <p>Thanks for your comments on our experimental Intelligent Fragment Cache Plugin Tobi (http://blog.overlay.tv/articles/2007/06/16/intelligent_fragment_cache). I actually stumbled across your post a few weeks ago and thought it was great but I couldn&#8217;t see how we could use that approach unless I&#8217;m missing something.</p>
+
+
+	<p>I think your solution lends itself very nicely to your problem but doesn&#8217;t map as nicely to an application like ours where many pages are based on the latest information aggregated across multiple authors (I guess it would be across multiple stores in your case).</p>
+
+
+	<p>Let&#8217;s say I had a page that allowed me query movie reviews in the system in different ways like the most recent, most popular, top rated, etc. and the result sets were paged.</p>
+
+
+	<p>You recommend that I ask myself what I really want from memcache and then ask for exactly that. On that hypothetical page I would want the most recently added movie reviews added in the last 30 minutes by any user and a teaser on the side showing the top 10 review posters and another showing the 5 most popular movies. Correct me if I wrong, but I think your approach needs me to perform all three queries in the controller every time the page is accessed in order to get the version numbers for each of the objects to construct a key. Would the key look something like this?</p>
+
+
+<pre><code>
+/reviews/recent/review12_1, review542_3, review123_1, review29_2, review50_6, review81_2, review85_2, review100_3, review71_5,user200_2,user,716_4,user552_2,user297_1,user98_2,user100_1,user,413_2,user225_5,user729_4,user89_1,review55_1,movie31_2,movie,58_1,movie120_5,movie166_3,movie492_6
+</code></pre>
+
+	<p>And if I add a new teaser, do I need to add the object id&#8217;s and versions for its contents to the cache key as well? Do I understand correctly?</p>
+
+
+	<p>We want our pages to run as fast as possible and we&#8217;d rather not query the database if we don&#8217;t have to. Our solution is actually not that complicated at all once the plug-in is installed (although the plug-in itself is a little complicated). Once installed, all you have to do differently is to add</p>
+
+
+<pre><code>
+acts_as_intelligent_fragment_cache_model 
+</code></pre>
+
+	<p>to a model and:</p>
+
+
+<pre><code>
+&lt;% cache("/reviews/#{@review.id}_right_panel", {:expiry =&gt; 86400} %&gt;
+   stuff
+&lt;% end %&gt;
+</code></pre>
+
+	<p>to a view and the model starts being monitored for changes. Of course you can get fancier but that handles the basics.</p>
+  </li>
+  
+</ul>
+
+
+<p class="meta">
+<strong>Commenting are now closed&hellip;</strong>
+</p>  
+
+
+</div></div>
+
+<div id="subcol">
+  <div class="bt"><div></div></div>
+
+  <div id="sc2">
+
+
+  <div class="sidebar-node">
+      <ul>        
+      <li><a href="http://www.text-link-ads.com/?ref=20722">Buy links here</a></li>
+     </ul>
+  </div>
+
+  <div class="sidebar-node">
+      <h3>About</h3>
+      <div style="padding:1em; color: #7D000A" >        
+         <strong>Tobias L&uuml;tke</strong> is cofounder and CEO of <a href="http://www.shopify.com">Shopify</a>, alumni of the Ruby on Rails core team and a startup advisor. Tobi wrote popular open source software such as ActiveMerchant, Liquid, Delayed::Job, Typo etc.
+     </div>
+  </div>
+
+  
+  <div class="sidebar-node" style="margin-bottom: 3em">
+   <h3>Popular posts</h3>
+   <div style="padding: 0 5px">
+   <script type="text/javascript" src="http://www.aiderss.com/widget/top_content/YEAR/3235">
+   </script>
+   </div>
+   </div>
+
+  
+
+
+
+  <div class="sidebar-node">
+    <h3>Categories</h3>
+    <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/code">Code</a></li>
+    
+      <li><a href="/rails">Rails</a></li>
+    
+      <li><a href="/gallery">Gallery</a></li>
+    
+      <li><a href="/about">about</a></li>
+    
+      <li><a href="/testing">Testing</a></li>
+    
+      <li><a href="/test">test</a></li>
+    
+      <li><a href="/talks">Talks</a></li>
+    
+      <li><a href="/comedy">Comedy</a></li>
+    
+      <li><a href="/excellence-in-advertisement">Excellence in Advertisement</a></li>
+    
+      <li><a href="/search">Search</a></li>
+      <li><a href="/archives">Archives</a></li>      
+    </ul>
+  </div>
+
+  <div class="sidebar-node">
+    <h3>Projects and Libraries</h3>
+    <ul>
+      <li><a href="http://www.shopify.com" title="Shopify Online store">Shopify - Online store</a></li>
+      <li><a href="http://www.liquidmarkup.org" title="Liquid">Liquid</a></li>
+      <li><a href="http://www.activemerchant.org" title="Active Merchant">Active Merchant</a></li>
+   </ul>
+   </div>
+
+  <div class="sidebar-node">
+    <h3>Friends</h3>
+    <ul>
+    <li><a href="http://www.startupottawa.com/">Ottawa Startup</a></li>
+    <li><a href="http://www.danielweinand.com">Daniel Weinand</a></li>    
+    <li><a href="http://codyfauser.com">Cody Fauser</a></li>    
+    <li><a href="http://andrewgeddes.com">Andrew Geddes</a>
+    </ul>
+  </div>
+
+   <div class="sidebar-node-centered">
+   <a href="http://feeds.feedburner.com/too-biased/xml"><img src="http://feeds.feedburner.com/~fc/too-biased/xml?bg=E1D5B6&amp;fg=8A000A&amp;anim=0" height="26" width="88" style="border:0" alt="" /></a>
+    </div>
+
+   <div class="sidebar-node">  
+    <h3>Syndicate</h3>
+    <ul>
+     <li><a href="/feed/atom.xml"><img src="/images/feed-icon-12x12.gif" alt="" /> Articles</a></li> 
+   </ul>
+  </div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+<div id="subfoot">
+  <div class="bb"><div></div></div>
+</div>
+
+<div id="footer">
+  <p>
+    All rights reserved.
+  </p>
+
+</div>
+
+
+</div></div></div>
+
+</body></html>
