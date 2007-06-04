@@ -1,0 +1,105 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+        <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <link rel="icon" href="http://www.itasoftware.com/favicon.ico" type="image/x-icon"/>
+        <title>Matrix - ITA Software</title>
+        
+        
+
+        <link href="/js/ita/themes/matrix/matrix.css?0.7.20101104" rel="stylesheet" type="text/css" />
+        
+
+        <script type="text/javascript">
+            var itaLocale = "en-us";
+            djConfig = {
+                isDebug: false,
+                locale: itaLocale || "en",
+                cacheBust: "v0.7.20101104"
+            };
+        </script>
+
+    </head> 
+    <body class="matrix">
+        <div id="centered">
+            <div id="head">
+                <div class="itaRelative">
+                    <a href="http://www.itasoftware.com" class="dijitInline logo">
+                        <img class="dijitInline logo" src="/images/italogo_small.gif"/>
+                    </a>
+                    <a href="/search.htm" class="dijitInline itaSiteTitle">
+                        Matrix Airfare Search
+                    </a>
+                    <ul id="userlinks">
+                        <li class="userlink dijitInline"><div id="localeSelect"></div></li>
+                        <li class="userlink dijitInline">
+                            <a class="dijitReset dijitInline itaHelpLink" href="/view/help">Help</a>
+                        </li>
+                        <li class="userlink dijitInline"><a class="dijitReset dijitInline itaCommentsLink" href="javascript:void(0)" onClick="ita.form.dialogs.CommentDialog.openDialog()" id="commentsLink"></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="contentwrapper">
+                <div id="pageContentNode">
+                </div>
+                <div class="clearer">
+                </div>
+                <div id="footer" style="text-align: center" class="itaGreyText">
+                    Legal notice: Search results provided are the property of ITA Software, Inc. and may be protected by trademark, copyright, patent and other laws.  Any use of the search results is governed by our <a target="_blank" href="http://www.itasoftware.com/policies/terms.php">Terms of Use Policy</a>
+                    and End&ndash;User License. <span id="dmcaNotice" style="display:none">If you believe your copyright or proprietary ownership of event listings has been violated by publication on this site, please let us know by following the instructions included within our <a target="_blank" href="http://www.itasoftware.com/terms-of-use/dmcacopyrightnotice.html">DMCA information page</a>.</span>
+                    &copy; 1999&ndash;2010 ITA Software, Inc. <span style="white-space:nowrap">(version 0.7.20101104)</span>
+                            <br/><br/>
+        <div>iPhone is a trademark of Apple Inc., registered in the U.S. and other countries. App Store is a service mark of Apple Inc.</div>
+        <div>Android is a trademark of Google Inc. Use of this trademark is subject to <a href="http://www.google.com/permissions" target="_blank">Google Permissions</a>.</div>
+
+                </div>
+            </div>
+        </div>
+               
+ 
+        <script type="text/javascript" src="/js/dojo/dojo.js?0.7.20101104" charset="utf-8"></script>
+
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+        <script type="text/javascript">
+            dojo.registerModulePath("sites", "/js/sites");
+            dojo.setObject("ita.baseUrl", "");
+            dojo.setObject("ita.needleServiceBaseUrl", "http://widget.needle.itasoftware.com/widget/");
+            dojo.setObject("ita.needleWidgetBaseUrl", "http://widget.needle.itasoftware.com/widget/");
+            dojo.setObject("ita.config.instantSearchUrl", "http://is:80");
+            dojo.setObject("ita.versionString", "0.7.20101104");
+            dojo.setObject("ita.config.geoServiceUrl", "http://matrix.itasoftware.com:80/geosearch");
+            dojo.addOnLoad(function(){
+                dojo.require("dijit.dijit");
+                dojo.require("sites.matrix.site"); 
+                
+                var messages = ita.getMessageBundle();
+                dojo.byId("commentsLink").innerHTML = messages.link_feedback;
+                
+                new ita.common.i18n.LocaleSelect({}, "localeSelect");
+                
+                dojo.require("sites.matrix.pages.SearchPage");
+                var widget = new sites.matrix.pages.SearchPage(null, "pageContentNode");
+                widget.startup();
+
+            });
+        </script>
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-17851840-1']);
+          _gaq.push(['_trackPageview']);
+        
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        
+        </script>
+    </body>
+</html>
