@@ -1,0 +1,431 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML><HEAD><TITLE>AP4R Wiki: GettingStarted</TITLE>
+<META NAME='KEYWORDS' CONTENT='Getting, Started'/>
+<LINK REL="stylesheet" HREF="wiki.css">
+</HEAD><BODY BGCOLOR="white">
+<div class=wikiheader><h1><a href="wiki.pl?back=GettingStarted">GettingStarted</a></h1><a href="wiki.pl?HomePage" class=wikipagelink>HomePage</a> | <a href="wiki.pl?RecentChanges" class=wikipagelink>RecentChanges</a> | <a href="wiki.pl?action=editprefs">Preferences</a><br>
+<hr class=wikilineheader></div><div class=wikitext><dl><dt> </dt><dd>1. <a href="wiki.pl?GettingStarted#What_is_AP4R">What is AP4R ?</a></dd>
+<dt> </dt><dd><dl><dt> </dt><dd>1.1. <a href="wiki.pl?GettingStarted#Features">Features</a></dd>
+<dt> </dt><dd>1.2. <a href="wiki.pl?GettingStarted#Typical_process_flow">Typical process flow</a></dd>
+<dt> </dt><dd></dd></dl>
+
+2. <a href="wiki.pl?GettingStarted#System_image_with_load_balance">System image with load balance</a></dd>
+<dt> </dt><dd>3. <a href="wiki.pl?GettingStarted#Installation">Installation</a></dd>
+<dt> </dt><dd>4. <a href="wiki.pl?GettingStarted#Configuration">Configuration</a></dd>
+<dt> </dt><dd><dl><dt> </dt><dd>4.1. <a href="wiki.pl?GettingStarted#Working_directory">Working directory</a></dd>
+<dt> </dt><dd>4.2. <a href="wiki.pl?GettingStarted#Message_Persistence">Message Persistence</a></dd>
+<dt> </dt><dd>4.3. <a href="wiki.pl?GettingStarted#Configuration_file">Configuration file</a></dd>
+<dt> </dt><dd></dd></dl>
+
+5. <a href="wiki.pl?GettingStarted#Monitoring">Monitoring</a></dd>
+<dt> </dt><dd>6. <a href="wiki.pl?GettingStarted#Sample_HelloWorld">Sample - HelloWorld -</a></dd>
+<dt> </dt><dd>7. <a href="wiki.pl?GettingStarted#Future_Plan">Future Plan</a></dd>
+<dt> </dt><dd>8. <a href="wiki.pl?GettingStarted#References">References</a></dd>
+<dt> </dt><dd></dd></dl>
+
+
+<p>
+<H2><a name="What_is_AP4R"></a>1. What is AP4R ?</H2>
+
+<p>
+AP4R, Asynchronous Processing for Ruby, is the implementation of reliable asynchronous message processing. It provides message queuing, and message dispatching.
+<p>
+Using asynchronous processing, we can cut down turn-around-time of web applications by queuing, or can utilize more machine power by load-balancing.
+<p>
+Also AP4R nicely ties with your Ruby on Rails applications.
+See Hello World sample application from rubyforge.
+<p>
+<p>
+<H3><a name="Features"></a>1.1. Features</H3>
+
+<p>
+<OL >
+<li> Business logics can be implemented as simple Web applications, or ruby code, whether it's called asynchronously or synchronously.
+<li> Asynchronous messaging is reliable by RDBMS persistence (now MySQL only) or file persistence, under the favor of reliable-msg.
+<li> Load balancing over multiple AP4R processes on single/multiple server(s) is supported.
+<li> Asynchronous logics are called via various protocols, such as XML-RPC, SOAP, HTTP POST, and more.
+</OL>
+<p>
+<H3><a name="Typical_process_flow"></a>1.2. Typical process flow</H3>
+
+<p>
+<OL >
+<li> A client(e.g. a web browser) makes a request to a web server (Apache, Lighttpd, etc...).
+<li> A rails application (a synchronous logic) is executed on mongrel via mod_proxy or something.
+<li> At the last of the synchronous logic, message(s) are put to AP4R (AP4R provides a helper).
+<li> Once the synchronous logic is done, the clients receives a response immediately.
+<li> AP4R queues the message, and requests it to the web server asynchronously.
+<li> An asynchronous logic, implemented as usual rails action, is executed.
+</OL>
+<p>
+<H2><a name="System_image_with_load_balance"></a>2. System image with load balance</H2>
+
+<p>
+TODO: attach image
+<p>
+<p>
+<H2><a name="Installation"></a>3. Installation</H2>
+
+<p>
+<UL >
+<li> Use RubyGems command.
+</UL><PRE>
+  % sudo gem install ap4r --include-dependencies
+</PRE><UL>
+<UL >
+<li> <b>IMPORTANT!</b> As of version 1.1.0 reliable-msg gem disregards configuration options and uses internal hardcoded values only. This bug is fixed in gem's CVS, but it's not released. Here's the patch you need to apply:
+</UL>
+</UL>
+<p>
+<pre>
+--- reliable-msg-1.1.0/lib/reliable-msg/cli.rb  2007-08-22 20:31:35.000000000 +0300
++++ reliable-msg-1.1.0-patched/lib/reliable-msg/cli.rb  2007-08-22 20:30:11.000000000 +0300
+@@ -209,7 +209,7 @@
+                     exit
+                 end
+                 drb = Config::DEFAULT_DRB
+-                drb.merge(config.drb) if config.drb
++                drb = drb.merge(config.drb) if config.drb
+                 drb_uri = "druby://localhost:#{drb['port']}"
+             else
+                 drb_uri = Queue::DEFAULT_DRB_URI
+diff -wur reliable-msg-1.1.0/lib/reliable-msg/queue-manager.rb reliable-msg-1.1.0-patched/lib/reliable-msg/queue-manager.rb
+--- reliable-msg-1.1.0/lib/reliable-msg/queue-manager.rb        2007-08-22 20:31:35.000000000 +0300
++++ reliable-msg-1.1.0-patched/lib/reliable-msg/queue-manager.rb        2007-08-22 20:30:11.000000000 +0300
+@@ -233,7 +233,7 @@
+ 
+                     # Get the DRb URI from the configuration, or use the default. Create a DRb server.
+                     drb = Config::DEFAULT_DRB
+-                    drb.merge(@config.drb) if @config.drb
++                    drb = drb.merge(@config.drb) if @config.drb
+                     drb_uri = "druby://localhost:#{drb['port']}"
+                     @drb_server = DRb::DRbServer.new drb_uri, self, :tcp_acl=&gt;ACL.new(drb["acl"].split(" "), ACL::ALLOW_DENY)
+                     @logger.info format(INFO_ACCEPTING_DRB, drb_uri)
+</pre>
+<p>
+<UL >
+<li> Rails plugin (if it's necessary)
+<UL >
+<li> x.y.z is AP4R's version.
+</UL>
+</UL><PRE>
+  % ruby script/plugin install svn://rubyforge.org/var/svn/ap4r/tags/ap4r-x.y.z/samples/HelloWorld/vendor/plugins/ap4r
+</PRE>
+<p>
+<UL >
+<li> Notes
+<UL >
+<li> AP4R depends on mongrel (from ver.0.3.2), so select proper flavor of mongrel, e.g. select mswin32 if you use windows.
+<li> Try <tt>--http-proxy</tt> (or <tt>-p</tt>) option or <tt>http_proxy</tt> environment variable, if you are behind HTTP proxy.
+</UL>
+</UL>
+<p>
+<H2><a name="Configuration"></a>4. Configuration</H2>
+
+<p>
+<H3><a name="Working_directory"></a>4.1. Working directory</H3>
+
+<p>
+Create your working directory (ex. my_ap4r) wherever you want.
+<p>
+<PRE >
+  % ap4r_setup my_ap4r
+  % cd my_ap4r
+</PRE>
+<p>
+<UL >
+<li> Notes
+<UL >
+<li> The ap4r_setup script is created in "GEM PATH"/bin when install the ap4r gem. "GEM PATH" in your environment is included in the result of command "gem environment".
+</UL>
+</UL>
+<p>
+<UL >
+<UL >
+<li> If you have error such as <tt>"undefined method `gem'"</tt>, please update RubyGems by
+</UL>
+</UL><PRE>
+  % sudo gem update --system
+</PRE>
+<p>
+Its structure is as follows.
+<p>
+<PRE >
+  my_ap4r
+   +-- config
+   +-- log
+   +-- public
+   +-- script
+   +-- tmp
+</PRE>
+<p>
+<H3><a name="Message_Persistence"></a>4.2. Message Persistence</H3>
+
+AP4R uses
+<a href="HTTP://trac.labnotes.org/cgi-bin/trac.cgi/wiki/Ruby/ReliableMessaging">[reliable-msg]</a>
+for message persistence. 
+It enables disk or RDBMS persistence.
+See references for details of reliable-msg.
+Install MySQL if you choose MySQL persistence.
+We recommend to install MySQL/Ruby library to connect to MySQL.
+For convinience, Ruby/MySQL bundled in the ActiveRecord gem can be used.
+<p>
+Create tables in your database.
+(Second one is for using topics via reliable-msg. AP4R doesn't support topic now, but it's necessary for server start.)
+<p>
+1. Create a file mysql.sql, put in this
+<pre>
+  CREATE DATABASE ap4r;
+  use ap4r;
+  CREATE TABLE `reliable_msg_queues` (
+    `id` varchar(255) NOT NULL default '',
+    `queue` varchar(255) NOT NULL default '',
+    `headers` text NOT NULL,
+    `object` blob NOT NULL,
+    PRIMARY KEY  (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=binary;
+  
+  CREATE TABLE `reliable_msg_topics` (                                                               
+    `topic` varchar(255) NOT NULL default '',                                                        
+    `headers` text NOT NULL,                                                                         
+    `object` blob NOT NULL,                                                                          
+    PRIMARY KEY  (`topic`)                                                                           
+  ) ENGINE=InnoDB DEFAULT CHARSET=binary;
+</pre>
+2. insert it: mysql -uUSERNAME -pPASSWORD &lt; mysql.sql
+<H3><a name="Configuration_file"></a>4.3. Configuration file</H3>
+
+<p>
+A command ap4r_setup have created a template configuration file (<tt>my_ap4r/config/queues.cfg</tt>).
+<p>
+<PRE >
+  --- 
+  store: 
+    type: mysql
+    host: localhost
+    database: ap4r
+    username: ap4r
+    password: ap4r
+  drb: 
+    host: 
+    port: 6438
+    acl: allow 127.0.0.1 allow 10.0.0.0/8
+  dispatchers:
+    -
+      targets: queue.*
+      threads: 1
+  #carriers:
+  #  - 
+  #    source_uri: druby://another.host.local:6438
+  #    threads: 1
+</PRE>
+<p>
+queues.cfg has four parts.
+<p>
+<UL >
+<li> persistent role (<tt>store:</tt> )
+<UL >
+<li> Set database or file information, such as <tt>mysql</tt>, <tt>disk</tt>.
+</UL>
+</UL>
+<p>
+<UL >
+<li> message listener (<tt>drb:</tt>)
+<UL >
+<li> Set IP, and port number which are used by clients.
+<li> <tt>acl</tt> = access control list, exmaple below.
+</UL>
+</UL><PRE>
+          <tt>allow 127.0.0.1 allow 10.0.0.0/8 deny 192.168.0.1</tt>
+</PRE><UL>
+<li> asynchronous process invokers (<tt>dispatchers:</tt>)
+<UL >
+<li> Dispatchers handle messages in queues specified by <tt>targets</tt>,
+<li> with as many threads as specified by <tt>threads</tt>.
+<li> Each thread waits (is blocked) until the invocation returns.
+</UL>
+<li> message routing (<tt>carriers:</tt>)  # EXPERIMENTAL
+<UL >
+<li> Carriers get messages from an AP4R server specified by <tt>source_uri</tt>,
+<li> with as many threads as specified by <tt>threads</tt>,
+<li> and put messages to a local AP4R server.
+</UL>
+</UL>
+<p>
+<p>
+<H2><a name="Monitoring"></a>5. Monitoring</H2>
+
+<p>
+Future plan: connections with monitoring tools such as Cacti and ZABBIX.
+<p>
+<UL >
+<li> Cacti
+<UL >
+<li> <a href="http://www.cacti.net/">http://www.cacti.net/</a>
+</UL>
+<li> ZABBIX
+<UL >
+<li> <a href="http://www.zabbix.org/">http://www.zabbix.org/</a>
+</UL>
+</UL>
+<p>
+<p>
+<H2><a name="Sample_HelloWorld"></a>6. Sample - HelloWorld -</H2>
+
+<p>
+There is an asynchronous application sample with file persistence, 
+where a synchronous logic outputs "Hello" to a file, and an asynchronous logic appends "World".
+<p>
+Once the synchronous logic has done, a client (a web browser) displays response, and 
+there is only "Hello" in a file.
+<p>
+Since the asynchronous logic sleeps ten seconds and appends to the file,
+wait briefly and you can see whole "HelloWorld" in the file
+<p>
+If you have some torouble, please read <a href="wiki.pl?FAQ" class=wikipagelink>FAQ</a> or let us know by following developer ML
+<p>
+<p>
+<UL >
+<li> Install Ruby, Rails and AP4R and configure AP4R in reference above sections
+<UL >
+<li> No need for MySQL.
+</UL>
+</UL>
+<p>
+<UL >
+<li> Make sample application available
+<UL >
+<li> If you have an SVN client,
+</UL>
+</UL><PRE>
+    % svn co svn://rubyforge.org/var/svn/ap4r/tags/ap4r-0.3.2/samples [some directory]
+</PRE><UL>
+<UL >
+<li> Unless
+<UL >
+<li> download the sample from RubyForge
+<UL >
+<li> <a href="http://rubyforge.org/frs/?group_id=1765">http://rubyforge.org/frs/?group_id=1765</a>
+<li> filename: HelloWorld-x.y.z.tar.gz
+</UL>
+<li> and extract to an appropricate directory(ex. HelloWorld ).
+<UL >
+<li> There are app/, components/,... directories under HelloWorld.
+</UL>
+</UL>
+</UL>
+</UL>
+<p>
+<UL >
+<UL >
+<li> If you use SAF (Stored and forward) mode,
+<UL >
+<li> install Sqlite3,
+<UL >
+<li> <a href="http://www.sqlite.org/download.html">http://www.sqlite.org/download.html</a>
+</UL>
+<li> and gem install sqlite3-ruby binding.
+</UL>
+</UL>
+</UL><PRE>
+    % sudo gem install sqlite3-ruby
+</PRE><UL>
+<UL >
+<UL >
+<li> SAF is the techinich to ensure atomicness of application data CRUD and message creation.
+<li> With SAF, at-least-once QoS<a href="wiki.pl?action=edit&id=QoS" class=wikipageedit>?</a> between (message) producer and channel is achieved.
+</UL>
+</UL>
+</UL>
+<p>
+<UL >
+<li> Start WEBRick (or Mongrel).
+<UL >
+<li> In a command line
+</UL>
+</UL><PRE>
+    % cd HelloWorld
+    % ruby script\server
+</PRE><UL>
+<UL >
+<li> If you see Welcome screen at <a href="http://localhost:3000">http://localhost:3000</a>, it's ok.
+</UL>
+<li> Start AP4R.
+<UL >
+<li> In another command line,
+<li> start AP4R with specifying the configuraion file.
+</UL>
+</UL><PRE>
+    % cd my_ap4r
+    % ruby script/mongrel_ap4r start -A config/queues_disk.cfg
+</PRE><UL>
+<li> Execute a synchronous logic.
+<UL >
+<li> push button "HTTP POST" or others.
+<li> Look at the file content section, we can confirm a word "Hello" written by synchronous logic.
+<li> Wait ten seconds,
+<li> and look at the file content section again, there must be a word "World" written by asynchronous logic.
+<UL >
+<li> If not, try hitting shift-reload.  Your browser's cache might be getting in the way.
+</UL>
+</UL>
+</UL>
+<p>
+<UL >
+<li> Think of application to your real application
+<UL >
+<li> This mechanism can work in general applications.
+<li> An order acceptance logic instead of printing "Hello".
+<li> Asynchronous logic of auto shipping order or accounting instead of appending "World". 
+</UL>
+</UL>
+<p>
+<p>
+<H2><a name="Future_Plan"></a>7. Future Plan</H2>
+
+<UL >
+<li> add protocols to invoke asynchronous logics
+<li> only-once QoS
+<li> DLQ recovery
+<li> flow volume control, load balancing
+<li> 7x24 support (e.g. rolling database tables)
+<li> monitoring (e.g. thread status, web frontend)
+<li> Coordination with Ruby on Rails, such as development/testing lifecycle support.
+</UL>
+<p>
+<H2><a name="References"></a>8. References</H2>
+
+<p>
+<UL >
+<li> Ruby Homepage
+<UL >
+<li> <a href="http://www.ruby-lang.org/">http://www.ruby-lang.org/</a>
+</UL>
+<li> Ruby on Rails tutorial
+<UL >
+<li> <a href="http://www.onlamp.com/pub/a/onlamp/2005/01/20/rails.html">http://www.onlamp.com/pub/a/onlamp/2005/01/20/rails.html</a>
+</UL>
+<li> MySQL tutorial
+<UL >
+<li> <a href="http://dev.mysql.com/doc/refman/5.0/en/index.html">http://dev.mysql.com/doc/refman/5.0/en/index.html</a>
+</UL>
+<li> reliable-msg
+<UL >
+<li> <a href="http://trac.labnotes.org/cgi-bin/trac.cgi/wiki/Ruby/ReliableMessaging">http://trac.labnotes.org/cgi-bin/trac.cgi/wiki/Ruby/ReliableMessaging</a>
+</UL>
+</UL>
+</div><hr class=wikilinefooter>
+<div class=wikifooter><form method="post" action="wiki.pl" enctype="application/x-www-form-urlencoded">
+<a href="wiki.pl?HomePage" class=wikipagelink>HomePage</a> | <a href="wiki.pl?RecentChanges" class=wikipagelink>RecentChanges</a> | <a href="wiki.pl?action=editprefs">Preferences</a><br>
+<a href="wiki.pl?action=edit&id=GettingStarted" class=wikipageedit>Edit text of this page</a> | <a href="wiki.pl?action=history&id=GettingStarted">View other revisions</a><br>Last edited January 30, 2008 5:19 am by p54BD283D.dip0.t-ipconnect.de <a href="wiki.pl?action=browse&diff=1&id=GettingStarted">(diff)</a><br>Search: <input type="text" name="search"  size="20" /><input type="hidden" name="dosearch" value="1"  /></form><div class="note">AP4R is licensed under the MIT license, copyright &copy;
+2007 by Future Architect, Inc.<br /></div>
+<script src="http://www.google-analytics.com/ga.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+    var pageTracker = _gat._getTracker("UA-2626535-1");
+    pageTracker._initData();
+    pageTracker._trackPageview();
+</script>
+</div>
+</body>
+</html>
