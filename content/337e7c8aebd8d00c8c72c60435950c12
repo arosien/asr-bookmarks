@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<title>ImageScience</title>
+<style type="text/css">
+body {
+  font-family: Optima, Trebuchet, "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+  background-color: white;
+  color: black;
+  margin: 1em;
+}
+h1, h2, h3, h4, h5 { color: green; }
+#tagline { text-align: center; font-size: 1.25em; color: #009; }
+</style>
+<body>
+
+<img style="float:right" height=193 width=205 src="imagescience_logo_small.png">
+
+<h1>ImageScience</h1>
+
+<div id="tagline">Hate RMagic? Get Science! <em>Image</em>Science!</div>
+
+<p>ImageScience is a clean and happy Ruby library that generates thumbnails -- and kicks the living crap out of RMagick. Oh, and it doesn't leak memory like a sieve. :)</p>
+
+<h2>Features:</h2>
+
+<ul>
+<li>Small and Clean! 194 <em>glorious</em> lines of graphics manipulation magi... errr, SCIENCE!</li>
+<li>Supports both square and proportional thumbnails.</li>
+<li>Pretty much any graphics format you could want. No really.</li>
+</ul>
+
+<h2>Synopsis:</h2>
+
+<pre><code>    ImageScience.with_image(file) do |img|
+      img.cropped_thumbnail(100) do |thumb|
+        thumb.save "#{file}_cropped.png"
+      end
+
+      img.thumbnail(100) do |thumb|
+        thumb.save "#{file}_thumb.png"
+      end
+
+      img.resize(100, 150) do |img2|
+        img2.save "#{file}_resize.png"
+      end
+    end
+</code></pre>
+
+<h2>Requirements:</h2>
+
+<ul>
+<li><a href="http://sf.net/projects/freeimage">FreeImage</a></li>
+<li><a href="http://rubyforge.org/projects/rubyinline">RubyInline</a></li>
+</ul>
+
+<h2>Installing:</h2>
+
+<ol>
+<li>Download and install FreeImage. See notes below.</li>
+<li><code>sudo gem install -y image_science</code></li>
+</ol>
+
+<h3>FreeImage Build Issues</h3>
+
+<p>Unfortunately there are minor issues with the makefiles in FreeImage. Until I get commit bits or get the issues resolved, I will try to keep detailed notes here. I'll keep updating them over time.</p>
+
+<h4>Getting Started:</h4>
+
+<pre><code>    cvs -z3 -d:pserver:anonymous@freeimage.cvs.sourceforge.net:/cvsroot/freeimage login
+    # hit return at password prompt
+    cvs -z3 -d:pserver:anonymous@freeimage.cvs.sourceforge.net:/cvsroot/freeimage co -D 2007-01-01 -P FreeImage
+    cd FreeImage
+</code></pre>
+
+<h4>For Mac OS X / Darwin:</h4>
+
+<em>(you can now ignore getting started above if you have <a href="http://www.macports.org/">MacPorts</a>)</em>
+
+<pre><code>    sudo port selfupdate
+    sudo port install freeimage</code></pre>
+
+<p><strong>NOTE:</strong> OSX builds a fat binary, so you need to have the 10.3.9 and 10.4 SDK's installed, preferably from xcode 2.3. They are in the "cross-compiling" section of the xcode install options.
+
+<p><strong>NOTE:</strong> OSX needs to be using gcc 4.x:
+
+<pre><code>    gcc_select 4.0</code></pre>
+
+This mostly affects PPC / 10.4 users.
+
+<h4>For 64-bit Systems:</h4>
+
+<p>Use <code>2007-02-11</code> instead of the date above on the <code>cvs co</code>. Especially if you see:
+
+<pre><code>/usr/bin/ld: ./Source/FreeImage/BitmapAccess.o: relocation R_X86_64_32S against
+`a local symbol' can not be used when making a shared object;
+recompile with -fPIC</code></pre>
+
+<p>or:
+
+<pre>Source/Metadata/Exif.cpp:498: error: cast from 'BYTE*' to 'DWORD' loses precision
+make[1]: *** [Source/Metadata/Exif.o] Error 1</pre>
+
+Special Thanks to <a href="http://matt.blogs.it/">Matt Mower</a> and <a href="http://carmelyne.com/2007/7/27/freeimage-on-my-slice">Carmelyne</a>.
+
+<h4>For ubuntu/debian:</h4>
+
+<pre><code>    aptitude install libfreeimage3 libfreeimage3-dev</code></pre>
+
+If you see:
+
+<pre><code>    /usr/bin/ld: cannot find -lstdc++
+    collect2: ld returned 1 exit status</code></pre>
+
+Then ubuntu/debian decided it was a good idea not to symlink the versioned libc++.so to the unversioned one... you know, the one everyone actually <em>links to</em>. You can usually fix it via:
+
+    <pre><code>    % sudo ln -s libc++.so.* libc++.so</code></pre>
+
+in the appropriate directory.
+
+<h4>For RedHat Enterprise Linux 4:</h4>
+
+<pre><code>    make
+    PATH=$PATH:/usr/sbin sudo make install</code></pre>
+
+<p>Also, court3nay points out that the default SELinux setup will complain at runtime when image_science tries to load FreeImage. Try <a href="http://forum.caboo.se/forums/14/topics/22">this suggestion</a> to enable it.
+
+<h4>Solaris</h4>
+
+<p>Hugh notes that he had to change <code>Source/FreeImage.h</code> from <code>#include &lt;stdint.h&gt;</code> to <code>#include &lt;inttypes.h&gt;</code>.</p>
+
+<h4>For (all?) other Platforms:</h4>
+
+<pre><code>    make
+    sudo make install
+</code></pre>
+
+<p>If that doesn't work, please <A HREF="http://rubyforge.org/tracker/?atid=5921&group_id=1513&func=browse">file a bug</A> and I'll try to help you figure it out and get some notes up here.</p>
