@@ -1,0 +1,1111 @@
+<HTML>
+<HEAD>
+  <META NAME="GENERATOR" CONTENT="Adobe PageMill 3.0 Win">
+  <TITLE>Web Caching with Consistent Hashing</TITLE>
+  <META NAME="description" CONTENT="Web Caching with Consistent Hashing">
+  <META NAME="keywords" CONTENT="paper2">
+  <META NAME="resource-type" CONTENT="document">
+  <META NAME="distribution" CONTENT="global">
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+  <LINK REL="next" HREF="node1.html">
+</HEAD>
+<BODY BGCOLOR="#ffffff">
+
+<P><!--SELECTION--><!--/SELECTION--><A NAME="TopOfPage"></A></P>
+
+<H1><CENTER><bold>Web Caching with Consistent Hashing</bold></CENTER></H1>
+
+<P>&nbsp;</P>
+
+<P>&nbsp;</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<P>by <A HREF="http://theory.lcs.mit.edu/~karger/">David Karger</A>,
+<A HREF="mailto:asherman@mit.edu">Alex Sherman </A>,</P>
+
+<P>Andy Berkheimer, Bill Bogstad, Rizwan Dhanidina</P>
+
+<P>Ken Iwamoto, Brian Kim, Luke Matkins, Yoav Yerushalmi.</P>
+
+<P><A HREF="http://www.lcs.mit.edu/">MIT Laboratory for Computer
+Science</A>. <HR ALIGN=LEFT></P>
+
+<H3>Abstract:</H3>
+
+<DIV>
+
+<P>A key performance measure for the World Wide Web is the speed
+with which content is served to users. As traffic on the Web increases,
+users are faced with increasing delays and failures in data delivery.
+Web caching is one of the key strategies that has been explored
+to improve performance.</P>
+
+<P>An important issue in many caching systems is how to decide
+what is cached where at any given time. Solutions have included
+multicast queries and directory schemes.</P>
+
+<P>In this paper, we offer a new web caching strategy based on
+<EM>consistent hashing.</EM> Consistent hashing provides an alternative
+to multicast and directory schemes, and has several other advantages
+in load balancing and fault tolerance. Its performance was analyzed
+theoretically in previous work; in this paper we describe the
+implementation of a consistent-hashing based system and experiments
+that support our thesis that it can provide performance improvements.
+</DIV></P>
+
+<P>&nbsp;</P>
+
+<H3>Keywords:</H3>
+
+<P>Caching Hashing Consistent</P>
+
+<P>&nbsp;</P>
+
+<P><HR ALIGN=LEFT><!--Table of Child-Links--><A NAME="CHILD_LINKS"></A>&nbsp;</P>
+
+<UL>
+  <LI><A HREF="#intro">Introduction</A>
+  <UL>
+    <LI><A HREF="#wcaching">Web Caching</A>
+    <LI><A HREF="#relwork">Related Work</A>
+    <LI><A HREF="#ourwork">Our Work</A>
+    <LI><A HREF="#paperview">Paper Overview</A>
+  </UL>
+  <LI><A HREF="#chash1">Consistent Hashing</A>
+  <UL>
+    <LI><A HREF="#needs">Needs</A>
+    <LI><A HREF="#chash2">Consistent Hashing</A>
+    <LI><A HREF="#analysis">Analysis</A>
+    <LI><A HREF="#implementation">Implementation Results</A>
+  </UL>
+  <LI><A HREF="#system">Our System</A>
+  <UL>
+    <LI><A HREF="#caches">Caches</A>
+    <LI><A HREF="#mapping">Mapping to caches</A>
+    <LI><A HREF="#dns">DNS servers</A>
+    <UL>
+      <LI><A HREF="#discussion">Discussion of DNS</A>
+    </UL>
+  </UL>
+  <LI><A HREF="#tests">Tests</A>
+  <UL>
+    <LI><A HREF="#setup">Test Setup</A>
+    <LI><A HREF="#driver">Test Driver</A>
+    <LI><A HREF="#results">Results</A>
+  </UL>
+  <LI><A HREF="#extensions">Extensions</A>
+  <UL>
+    <LI><A HREF="#locality">Locality</A>
+    <LI><A HREF="#balancing">Advanced Load Balancing - Hot Pages</A>
+    <LI><A HREF="#tolerance">Fault Tolerance</A>
+  </UL>
+  <LI><A HREF="#conclusion">Conclusion</A>
+  <LI><A HREF="#ack">Acknowledgments</A>
+  <LI><A HREF="#biblio">Bibliography</A>
+</UL>
+
+<HR ALIGN=LEFT>
+
+<H2><A NAME="intro"></A>1 Introduction</H2>
+
+<P>As the World Wide Web becomes a dominant medium for information
+distribution, mechanisms for delivering web traffic efficiently
+and reliably are needed. However, today's data delivery methods
+are prone to unpredictable delays and frequent failures. Two main
+of these delays and failures are congested networks and swamped
+servers. Date travels slowly through congested networks. Swamped
+servers (facing more simultaneous requests than their resources
+can support) will either refuse to serve certain requests or will
+serve them very slowly. Network congestion and server swamping
+are common because network and server infrastructure expansions
+has not kept pace with the tremendous growth in Internet use.</P>
+
+<P>Servers and networks can become swamped unexpectedly and without
+any prior notice. For example, a site mentioned as the ``cool
+site of the day'' on the evening news may have to deal with a
+ten thousand fold increase in traffic during the next day. Thus,
+planning ahead is of limited benefit; the best schemes for handling
+load will adapt to changing circumstances.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="wcaching"></A>1.1 Web Caching</H3>
+
+<P>Caching has been employed to improve the efficiency and reliability
+of data delivery over the Internet. A nearby cache can serve a
+(cached) page quickly even if the originating server is swamped
+or the network path to it is congested. While this argument provides
+the self-interested user with the motivation to exploit caches,
+it is worth noting that using widespread use of caches also engenders
+a general good: if requests are intercepted by nearby caches,
+then fewer go to the source server, reducing load on the server
+and network traffic to the benefit of all users.</P>
+
+<P>The most obvious approach, of providing a group of users with
+a single, shared caching machine, has several drawbacks. If the
+caching machine fails, all users are cut off from the Web. Even
+while running, a single cache is limited in the number of users
+it can serve, and may become a bottleneck during periods of intense
+use. Finally, two important limits arise on the hit rate a single
+cache can achieve. First, since the amount of storage available
+is limited, the cache will suffer ``false misses'' when requests
+are repeated for objects which it was forced to evict for lack
+of space. Second, the limit on the number of users that the cache
+can serve works against the desire to aggregate requests from
+as many users as possible for caching purposes: typically, the
+more user requests are aggregated together, the better the hit
+rate becomes as one user requests objects already requested by
+other users.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="relwork"></A>1.2 Related Work</H3>
+
+<P><A NAME="sec:related"></A>&nbsp;</P>
+
+<P>To achieve fault tolerance, scalability, and aggregation of
+larger numbers of requests (which improves hit rates) several
+groups&nbsp;[<A HREF="#harvest">2</A>,<A HREF="#malpani">7</A>,<A
+HREF="#crispy">5</A>,<A HREF="#bloomfilter">4</A>] have proposed
+using systems of several <EM>cooperating caches.</EM> These systems
+all share certain common properties. Every client selects one
+<EM>primary</EM> cache in the system. A request from the client
+goes to its primary cache. If the primary cache misses, instead
+of going directly to the content server, it tries to locate the
+requested resource in other cooperating caches. If it succeeds,
+a slow fetch of the resource from the content server is replaced
+by a fetch of the resource from a (presumably closer) cooperating
+cache. Thus, the other cooperating caches serve as a ``second
+level cache'' to reduce the cost of misses in the primary cache.</P>
+
+<P>The systems differ in precisely how data is located in the
+case of a primary cache miss. Some schemes broadcast a query to
+all other caches using multicast&nbsp;[<A HREF="#malpani">7</A>]
+or UDP broadcasts&nbsp;[<A HREF="#harvest">2</A>]. Besides consuming
+excess bandwidth with broadcast queries, the primary cache must
+wait for <EM>all</EM> cooperating caches to report misses before
+it contacts the content server; this can slow down performance
+on second-level cache misses. Other schemes use directories, either
+centralized&nbsp;[<A HREF="#crispy">5</A>] or repeatedly broadcast
+to support local queries&nbsp;[<A HREF="#bloomfilter">4</A>].
+Directory queries or transmissions also consume bandwidth, and
+centralized directories can become new points of failure in the
+system&nbsp;[<A HREF="#crispy">5</A>].</P>
+
+<P>Another problem with all these systems is the duplication of
+data among caches. Any cache might be queried for any piece of
+data, which will cause it to store a copy. On a second-level hit,
+network bandwidth and time are wasted copying the data to another
+cache. Worse, these copies evict other pages that can be requested,
+reducing the number of cache hits. If cooperating caches are all
+``near'' each other, one might hope to effect a larger cache (with
+fewer false misses) by storing each object only at one or a few
+machines&nbsp;[<A HREF="#cooperate">9</A>]. <HR ALIGN=LEFT></P>
+
+<H3><A NAME="ourwork"></A>1.3 Our Work</H3>
+
+<P>In this paper we suggest an approach that does away with all
+inter-cache communication, yet allows caches to behave together
+in one coherent system. Cache Resolver, the distributed web caching
+system that we developed, eliminates inter-cache communication
+on a miss by letting clients decide for themselves which cache
+has the required data. Instead of contacting a primary cache that,
+on a miss, locates the desired resource in another cache, a user's
+browser directly contacts the one cache that should contain the
+required resource. Browsers make their decision with help of a
+hash function that maps resources (or URLs) to a dynamically changing
+set of available caches.</P>
+
+<P>Hashing provides several benefits over broadcast- and directory-based
+schemes. A machine can locally compute exactly which cache should
+contain a given object. A unicast suffices to get the object or
+determine that it is not cached, decreasing network usage compared
+to other schemes. It also discovers misses faster than multicast
+schemes that must wait for all caches to respond. It avoids the
+maintenance and query overhead associated with directory based
+schemes. It does not create new points of failure for the system--indeed,
+our scheme exhibits substantial reliability properties that we
+will discuss later.</P>
+
+<P>Although the above advantages seem enough to motivate a hash-based
+solution, we also explored another aspect: it lets us push the
+page-location task down to the individual clients. A directory-based
+location scheme involves too much overhead to involve every browser,
+but a hash-based scheme is easy to implement at the browser level.
+Thus, prior schemes assumed that each client always contacted
+one fixed primary cache which, on a miss, contacted other caches
+to see if they had the page. We let the browser decide directly
+which cache to contact. This removes the need for an intermediary
+cache, thus improving response time. Furthermore, since all clients
+contact the same cache for a given page, our caching system suffers
+only one miss per page, regardless of the number of cooperating
+caches, rather than one (primary-cache-) miss per cache per page.
+This reduces the miss rate. The miss rate is further reduced because
+we avoid making redundant copies of a page; this leaves more space
+for other pages to be kept in the cache and hit.</P>
+
+<P>While a hash-based scheme has several attractive properties,
+non-trivial issues must be considered to implement it properly.
+A theoretical paper developed a tool called <EM>consistent hashing</EM>
+to address some of these issues&nbsp;[<A HREF="#ch">6</A>]. This
+is the basis of our current implementation work.</P>
+
+<P>A similar proposal for the <EM>Cache Array Routing Protocol
+(CARP)</EM> appeared in an Internet Draft&nbsp;[<A HREF="#naivehash">3</A>].
+CARP is used in the Microsoft Proxy Cache&nbsp;[<A HREF="#microsoft">8</A>].
+CARP shares many of the intuitions of our approach, though it
+has not been justified theoretically as in&nbsp;[<A HREF="#ch">6</A>].
+An important difference between our proposal and that of CARP
+is how our hash function is implemented. Current browsers do not
+have all the functionality needed to support such a scheme. CARP
+places all consistent hashing responsibility on the browser, which
+creates some drawbacks we will discuss later. We instead make
+unusual (but correct) use of the Domain Name System (DNS) to support
+the browsers' use of hash functions. With modification to browsers,
+consistent hashing could be implemented entirely inside them without
+recourse to DNS; however, the DNS approach exhibits some benefits
+which may make it the correct one for the long term.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="paperview"></A>1.4 Paper Overview</H3>
+
+<P><A NAME="SECTION00014000000000000000"></A></P>
+
+<P>In Section 2 of the paper, we describe consistent hashing in
+more detail. In Section 3, we describe the implementation of our
+web caching system that uses consistent hashing. We compare our
+system to other web caching system in Section 4. We mention other
+positive aspects of our web caching system, such as fault tolerance
+and load balancing, in Section 5. We conclude in section 6.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H2><A NAME="chash1"></A>2 Consistent Hashing</H2>
+
+<P><A NAME="SECTION00020000000000000000"></A></P>
+
+<P>Our system is based on <EM>consistent hashing</EM>, a scheme
+developed in a previous theoretical paper&nbsp;[<A HREF="#ch">6</A>].
+Here, we motivate consistent hashing and describe its simple implementation.
+After outlining its theoretical justification, we describe experiments
+showing that it also works well in practice.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="needs"></A>2.1 Needs</H3>
+
+<P><A NAME="SECTION00021000000000000000"></A>The goal of our system
+is to let any client perform a local computation that maps a URL
+to the particular cache that contains it. Hashing is a commonly
+used tool for this purpose. For example, given a set of 23 caches
+numbered <!-- MATH: $0,\ldots,22$ --><IMG SRC="img2.gif" WIDTH="75"
+HEIGHT="33" ALIGN="MIDDLE" BORDER="0" ALT="$0,\ldots,22$" NATURALSIZEFLAG="0">,
+we might hash URL <I>u</I> to cache <!-- MATH: $h(u)=7u+4 \bmod 23$ --><IMG 
+SRC="img3.gif" WIDTH="183" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ALT="$h(u)=7u+4 \bmod 23$" NATURALSIZEFLAG="0"> (we can think
+of the URL <I>u</I> as a bit-string which represents a large number).
+A common intuition about hash functions is that they tend to distribute
+their inputs ``randomly'' among the possible locations. Such a
+random distribution will intuitively be even, meaning that no
+one cache becomes responsible for handling a disproportionate
+share of requested pages. This load-balancing feature of hashing
+is highly desirable in our application, since a disproportionately
+loaded cache will become the bottleneck for the entire system.</P>
+
+<P>Unfortunately, standard hashing has several drawbacks when
+applied to a caching system. Perhaps the most obvious is that
+caching machines will come up and go down over time. Consider
+what happens when a 24<SUP><I>th</I></SUP> cache is added to the
+system just described. A natural change is to begin using the
+hash function <!-- MATH: $h'(u) = 7u+4 \bmod 24$ --><IMG SRC="img4.gif"
+WIDTH="188" HEIGHT="37" ALIGN="MIDDLE" BORDER="0" ALT="$h'(u) = 7u+4 \bmod 24$"
+NATURALSIZEFLAG="0">. Unfortunately, under such a change, essentially
+<EM>every</EM> URL is remapped to a new cache. This has the effect
+of flushing all those URLs from the caching system: if our system
+looks for a URL in the new location, the fact that it is cached
+in the old is useless--we get a miss. This problem is exacerbated
+by the fact that information propagates through the Internet asynchronously.
+At any one time, different clients will have different information
+about what caches are up or down. We refer to the set of caches
+that a given machine knows about as its <EM>view</EM>, and observe
+that at any time, many different views will pervade the system.
+This has two potential drawbacks. If each view causes a URL to
+map to a different cache, we will soon find that each URL is stored
+in all caches--precisely the problem we were trying to avoid.
+Furthermore, with these multiple views in place it becomes difficult
+to argue that all caches will receive the same amount of load--the
+different views could steer to much load to one cache, even if
+each view in isolation appears to balance load appropriately.</P>
+
+<P>Thus, it is critical for our hash function to map items <EM>consistently</EM>:
+regardless of the existence of multiple, changing views of the
+system, each item should be mapped to only a small number of machines,
+and in such a way that all machines get roughly the same load
+of items.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="chash2"></A>2.2 Consistent Hashing</H3>
+
+<P><A NAME="SECTION00022000000000000000"></A></P>
+
+<P>A simple-to-implement <EM>consistent hash function</EM>&nbsp;[<A
+HREF="#ch">6</A>] satisfies the needs described in the previous
+section. Choose some standard <EM>base</EM> hash function that
+maps strings to the number range <!-- MATH: $[0,\ldots,M]$ --><IMG 
+SRC="img5.gif" WIDTH="86" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ALT="$[0,\ldots,M]$" NATURALSIZEFLAG="0">. Dividing by <I>M</I>,
+think of it as a hash function that maps to the range [0,1], which
+can in turn be thought of as the <A HREF="#foot1">unit circle.[*]</A>
+Each URL is thus mapped to a point on the unit circle. At the
+same time, map every <EM>cache</EM> in the system to a point on
+the unit circle. Now assign each URL to the first cache whose
+point it encounters moving clockwise from the URL's point. An
+example is shown in Figure&nbsp;<A HREF="#figure1">1</A>.</P>
+
+<P><CENTER><A NAME="fig:example3"></A>&nbsp;<A NAME="figure1"></A>
+<TABLE WIDTH="50%" BORDER="0" CELLSPACING="2" CELLPADDING="0">
+  <CAPTION ALIGN="TOP"><STRONG>Figure 1:</STRONG> (i) Both URLs and caches are mapped
+
+to points on a circle using a standard hash function. A URL is
+
+assigned to the closest cache going clockwise around the circle.
+
+Items 1, 2, and 3 are mapped to cache <I>A</I>. Items 4, and 5
+
+are mapped to cache <I>B</I>. (ii) When a new cache is added the
+
+only URLs that are reassigned are those closest to the new cache
+
+going clockwise around the circle. In this case when we add the
+
+new cache only items 1 and 2 move to the new cache <I>C</I>. Items
+
+do not move between previously existing caches.</CAPTION>
+   
+  <TR>
+    <TD>
+    <!-- MATH: $\includegraphics[width=4.5in]{chash}$ --><IMG SRC="img6.gif"
+    WIDTH="515" HEIGHT="258" ALIGN="BOTTOM" BORDER="0" ALT="\includegraphics[width=4.5in]{chash}"
+    NATURALSIZEFLAG="0">
+</TD>
+  </TR> 
+</TABLE></CENTER></P>
+
+<P>Consistent hashing is easy to implement. All the ``cache points''
+can be stored in a binary tree, and the clockwise successor to
+a URL's point can be found (after hashing the URL point) via a
+single search in the binary tree. This supports consistent hashing
+to <I>n</I> caches in <IMG SRC="img7.gif" WIDTH="73" HEIGHT="37"
+ALIGN="MIDDLE" BORDER="0" ALT="$O(\log n)$" NATURALSIZEFLAG="0">
+time; an alternative implementation&nbsp;[<A HREF="#ch">6</A>]
+that breaks the circle into equal-length intervals and ``groups''
+the cache points according to interval can improve this lookup
+to constant time, regardless of the number of caches. It should
+be noted that the scheme proposed in CARP&nbsp;[<A HREF="#naivehash">3</A>,<A
+HREF="#microsoft">8</A>] takes time linear in the number of caches,
+and is thus much less scalable to large numbers of caches.</P>
+
+<P>For technical reasons detailed in&nbsp;[<A HREF="#ch">6</A>],
+it is quite important to make a small number of <EM>copies</EM>
+of each cache point--that is, to map several copies of each cache
+to different ``random'' points on the unit circle. This produces
+a more uniform distribution of URLs to caches.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="analysis"></A>2.3 Analysis</H3>
+
+<P><A NAME="SECTION00023000000000000000"></A></P>
+
+<P>We now explain why the consistent hashing scheme just described
+will have the properties we desire. This is an intuitive summary
+of formal arguments&nbsp;[<A HREF="#ch">6</A>].</P>
+
+<P>Our argument draws from the intuition that the base hash function
+will map both URLs and cache points ``randomly'' to the unit circle.
+Consider what happens when we add a new cache <I>c</I> to the
+system. This cache is mapped into the unit circle, and ``steals''
+certain URLs from other caches. Which URLs are stolen? Those that
+lie near <I>c</I> on the circle. But by our intuition, URLs are
+random on the circle. Thus few of them are likely to be near <I>c</I>,
+meaning that few will be stolen. Observing that URLs which are
+not stolen by the new cache do not move, we deduce our first desired
+property: when we add a new cache, few URLs change. Thus most
+of the cached items persist as hits in the modified system.</P>
+
+<P>A similar argument applies to the problem of multiple views.
+A cache will get stuck with an item only if it is the closest
+cache to the item in <EM>some</EM> view. But if the cache is far
+from the item, then (by the intuition about random placement of
+caches) it becomes quite likely that in <EM>every</EM> view, some
+cache is closer. This prevents the cache from being stuck with
+the item. It follows that only caches close to an item will have
+to hold it. But the intuition about random placement of caches
+tells us that only a few caches end up near any one item. In other
+words, even when there are many caches, only a few caches are
+ever responsible for any one item.</P>
+
+<P>The intuitions are formalized in the following theorem of&nbsp;[<A
+HREF="#ch">6</A>]. The theorem refers to a <EM>good</EM> base
+hash function (the one used to map URLs and caches to the unit
+circle). In&nbsp;[<A HREF="#ch">6</A>] it is shown that a random
+<EM>universal hash function</EM> constructed according to certain
+principles is good. In practice, standard hash functions that
+mix well (eg MD5) will most likely suffice.</P>
+
+<P>&nbsp;</P>
+
+<P><DIV><B>Theorem 2.1</B> ([<A HREF="#ch">6</A>]) &nbsp; Consider
+a system with <I>m</I> caching machines and <I>c</I> clients,
+each with a view of an arbitrary set of half the caching machines.
+If <!-- MATH: $\Omega(\log m)$ --><IMG SRC="img8.gif" WIDTH="77"
+HEIGHT="37" ALIGN="MIDDLE" BORDER="0" ALT="$\Omega(\log m)$" 
+NATURALSIZEFLAG="0"> copies of each caching machine are made and
+the copies and URLs are mapped to the unit circle using a good
+basic hash function, then the following properties hold:</P>
+
+<DL>
+  <DT><STRONG>Balance:</STRONG>
+  <DD>in any one view, URLs are distributed uniformly over the
+  caching machines in the view.
+  <DT><STRONG>Load:</STRONG>
+  <DD>Over all the views, no machines gets more than <IMG SRC="img9.gif"
+  WIDTH="69" HEIGHT="37" ALIGN="MIDDLE" BORDER="0" ALT="$O(\log
+c)$" NATURALSIZEFLAG="0"> times the average number of URLs.
+  <DT><STRONG>Spread:</STRONG>
+  <DD>No URL is stored in more than <IMG SRC="img9.gif" WIDTH="69"
+  HEIGHT="37" ALIGN="MIDDLE" BORDER="0" ALT="$O(\log
+c)$" NATURALSIZEFLAG="0"> caches.
+</DL>
+
+</DIV>
+
+<P>&nbsp;</P>
+
+<P>Consistent hashing is therefore a good hashing scheme to use
+in the dynamically changing and uncertain domain of the Internet.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="implementation"></A>2.4 Implementation Results</H3>
+
+<P><A NAME="SECTION00024000000000000000"></A>We list a few brief
+statistics that demonstrate the usefulness of Consistent Hashing.
+First, consistent hashing is a relatively fast operation. For
+our testing environment, we set up a cache view using 100 caches
+and created 1000 copies of each cache on the unit circle. We timed
+the dynamic step of consistent hashing on a Pentium II 266MHz
+chip. (The dynamic step includes URL string evaluation, base hash
+function evaluation, and traversing a binary tree). On average
+each call to the hash function took 20 microseconds. This is about
+0.1% of the total time necessary to transmit a 20KB file from
+a local cache over 10Mbit Ethernet. The value of 20 microseconds
+can be significantly reduced if we use a bucket array in the underlying
+cache view representation as opposed to the regular binary tree
+currently used by our implementation.</P>
+
+<P>We also took some measurements to show that consistent hashing
+balances well among the caches, as its low load property stipulates.
+We used a week's worth of logs from the theory.lcs.mit.edu web
+server. During that period of time, a total of 26,804 unique URL
+requests were made. We ran these unique URLs through our hash
+function with a varying number of caches to see how well it would
+distribute the files among the caches.</P>
+
+<P><CENTER><TABLE CELLPADDING="3" BORDER="1" CELLSPACING="2">
+  <TR>
+    <TD ALIGN="RIGHT">
+    caches</TD> 
+    <TD ALIGN="RIGHT">
+    Avg entries in cache</TD> 
+    <TD ALIGN="RIGHT">
+    Std Dev</TD> 
+    <TD ALIGN="RIGHT">
+    Std Dev as % of mean</TD> 
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+    3</TD> 
+    <TD ALIGN="RIGHT">
+    8934</TD> 
+    <TD ALIGN="RIGHT">
+    246</TD> 
+    <TD ALIGN="RIGHT">
+    2.7</TD> 
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+    5</TD> 
+    <TD ALIGN="RIGHT">
+    5360</TD> 
+    <TD ALIGN="RIGHT">
+    173</TD> 
+    <TD ALIGN="RIGHT">
+    3.2</TD> 
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+    8</TD> 
+    <TD ALIGN="RIGHT">
+    3350</TD> 
+    <TD ALIGN="RIGHT">
+    112</TD> 
+    <TD ALIGN="RIGHT">
+    3.4</TD> 
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+    10</TD> 
+    <TD ALIGN="RIGHT">
+    2680</TD> 
+    <TD ALIGN="RIGHT">
+    68</TD> 
+    <TD ALIGN="RIGHT">
+    2.6</TD> 
+  </TR>
+</TABLE></CENTER></P>
+
+<P>The above data shows that the standard deviation of the number
+of entries is quite low: around 3% of the mean. These numbers
+improve when the data set is larger.</P>
+
+<P>In a second experiment, we mapped 1500 names to caches using
+multiple views, involving 80 machines of which 5 were variably
+up or down in each view. The total number of (item,cache) paire
+rose to 1877, only a <IMG SRC="img10.gif" WIDTH="39" HEIGHT="37"
+ALIGN="MIDDLE" BORDER="0" ALT="$25\%$" NATURALSIZEFLAG="0"> increase
+on the base number.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H2><A NAME="system"></A>3 Our System</H2>
+
+<P><A NAME="SECTION00030000000000000000"></A>&nbsp; <A NAME="sec:system"></A>&nbsp;</P>
+
+<P>As outlined above, the system we aim to implement seemed simple:
+a few standard, non-interacting web caches combined with some
+hashing logic on the browsers. But when we began to implement
+our system, we quickly discovered that current browsers are not
+flexible enough to support consistent hashing unaided. Thus, in
+order to build a system compatible with current browser, we made
+extensive use of the Domain Name System (DNS) to support consistent
+hashing. Our web caching system, called the Cache Resolver, consists
+of three major components: the actual cache machines for storing
+the content, users' browsers that direct requests toward <EM>virtual
+caches</EM>, and the domain name servers (also known as resolution
+units) that use consistent hashing to resolve the virtual caches
+into specific physical addresses of the cache machines.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="caches"></A>3.1 Caches</H3>
+
+<P><A NAME="SECTION00031000000000000000"></A></P>
+
+<P>We installed a distribution of the Squid proxy cache package.
+A proxy cache replies with the data if it has a valid copy stored.
+Otherwise, it fetches the data from the original web server and
+stores a copy as well. Squid uses an LRU replacement strategy.
+For load-balancing and fail-over purposes that will be discussed
+later, we run additional software on the same physical machines
+as the caches that monitors the squid process. When queried by
+other units of our system, this software replies with the status
+(dead or alive) and load information of the cache. When the squid
+is alive, the load represents the byte transfer rate at which
+the cache serves its web requests over the last 30 second interval
+of service.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="mapping"></A>3.2 Mapping to Caches</H3>
+
+<P>To implement browsers' consistent hashing, our first hope was
+to exploit the <EM>autoconfiguration function</EM> present in
+most commonly used browsers (Netscape 2.0x and higher and Internet
+Explorer 3.01 and higher). Users can specify a function written
+in JavaScript that will be invoked on every request and will select
+a list of proxy caches to be contacted based on the URL string
+being requested. The browser contacts the proxy caches in the
+order listed until it contacts one that responds with the data.</P>
+
+<P>Unfortunately, autoconfiguration is too limited to support
+consistent hashing. The fundamental problem is that the autoconfiguration
+script is downloaded once, manually. Should the set of proxy caches
+change the mapping function would become incorrect.</P>
+
+<P>In order to get around this problem, we decided to use DNS.
+We could set up our own DNS servers, and modify them to support
+consistent hashing. This consistent hashing could be ``propagated''
+to browsers during name resolution. More precisely, we wrote an
+autoconfigure script that performs a <EM>standard</EM> hash of
+the input URL to a range of 1000 names that we call <EM>virtual
+caches</EM>. We then used DNS to map the 1000 virtual cache names
+onto actual cache IP addresses via consistent hashing.</P>
+
+<P>In our testing, we discovered that some versions of the browsers
+under some operating systems will not reinvoke DNS even if they
+contain an expired resolution of a virtual name. If the cache
+identified by that resolution goes down, the browser will fail
+to load the page. To ameliorate this problem, our script actually
+returns a list of names (here, five names) instead of just one
+to make up for the problem of ``broken'' browsers. By returning
+a list, we allow these broken browsers a few more chances to achieve
+a working resolution of a physical name. The last value on the
+list that returned is ``DIRECT'' which is understood by the browser
+as an instruction to connect directly to the content server if
+all the other names fail.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="dns"></A>3.3 DNS Servers</H3>
+
+<P><A NAME="SECTION00033000000000000000"></A>&nbsp;<A NAME="DNS"></A>&nbsp;</P>
+
+<P>The primary function of our DNS system is to resolve the virtual
+names generated by the users' Java Script function to the actual
+physical IP addresses of the caches. We use a number of DNS servers
+each running a copy of unmodified BIND 8.0 distribution, an implementation
+of DNS protocol. BIND reads the mappings of virtual names to IP
+addresses from a <EM>records</EM> file, that is being updated
+dynamically by another program, called ``dnshelper''. Dnshelper
+monitors the set of caches, and runs consistent hashing to map
+all of the 1000 virtual names (see section&nbsp;<A HREF="#mapping">3.2</A>)
+to the range of only the live cache machines. If the set of available
+caches changes, ``dnshelper'' signals BIND to reload the <EM>records</EM>
+file that contains new mappings.</P>
+
+<P>The large number of virtual caches means that each will receive
+only a tiny fraction of the total system load. Consistent Hashing
+guarantees that the number of virtual names assigned to each cache
+will be evenly distributed among the caches. These two facts together
+ensure that page load is uniformly distributed over caches. We
+describe more advanced load balancing strategies with consistent
+hashing in section&nbsp; <A HREF="#balancing">5.2</A>.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="discussion"></A>Discussion of DNS</H3>
+
+<P><A NAME="SECTION00033100000000000000"></A></P>
+
+<P>Our use of DNS does in some sense violate our plan to place
+cache location functionality inside the browsers. However, it
+can be defended on several fronts. DNS is a standard tool for
+locating objects, and we are using it in that capacity instead
+of going to the effort of implementing our own protocol. Note
+that on any page request, a typical non-caching browser will perform
+a DNS resolution to find the page's server. We are simply replacing
+that resolution with one to identify a cache. Such a DNS resolution
+typically goes to a nearby DNS resolver, so should not add substantial
+latency to the page request. While our system now becomes dependent
+on proper functioning of DNS, any failure of DNS will likely bring
+the user's browsing to an end anyway, so we haven't really added
+a failure point to the system.</P>
+
+<P>A second argument regarding DNS is that the per-request lookups
+can be done away with if our system proves itself. DNS is used
+only to create a mapping from a set of 1000 names to IP addresses.
+With minor modifications to browsers, such a mapping can easily
+be stored at the browser. Indeed, current browsers already maintain
+a cache of roughly 10 DNS entries; all we would have to do is
+raise this to 1000. Thanks to the properties of consistent hashing,
+the entries don't even need to be particularly up to date. Thus,
+a browser can be very lazy about updating its map, dropping a
+particular cache if it fails to respond, and lazily downloading
+updated lists of available caches when it happens to open a connection
+to a cache.</P>
+
+<P>Although we <EM>could</EM> get rid of DNS, at present we see
+no reason to do so. In our experiments, DNS resolution never noticeably
+affected the performance of our system.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H2><A NAME="tests"></A>4 Tests</H2>
+
+<P><A NAME="SECTION00040000000000000000"></A>&nbsp; <A NAME="sec:testing"></A>&nbsp;</P>
+
+<P>We implemented our web caching system because we believed that
+our design warranted a better performance than the existing web
+caching system we studied. In this paper we compare our Cache
+Resolver against two such systems: the Harvest System and the
+CRISP described in Section&nbsp;<A HREF="#relwork">1.2</A>. We
+demonstrate results that corroborate our hypothesis.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="setup"></A>4.1 Test Setup</H3>
+
+<P><A NAME="SECTION00041000000000000000"></A></P>
+
+<P>To test our system, we used a network of seven machines connected
+to one 100Mb switch. Three of the machines ran Squid, the proxy
+cache program. Another machine was designated as a web server
+and was placed on a 10Mb link in order to make data transfer with
+the web server costly. Another machine ran a copy of BIND and
+was the designated domain name server using Consistent Hashing
+to resolve names from a virtual space of 1000 names and the three
+proxy caches. The sixth machine was used to run the test driver.
+The last machine was used either as a directory for the CRISP
+test or a parent cache in the Harvest System test.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="driver"></A>4.2 Test Driver</H3>
+
+<P><A NAME="SECTION00042000000000000000"></A></P>
+
+<P>For the test driver, we used Surge&nbsp;[<A HREF="#surge">1</A>],
+a web load generating tool developed at Boston University. The
+designers of Surge studied web traffic and developed their generator
+to simulate a proper distribution of object request sizes and
+frequencies. Prior to the test, Surge generates a database of
+files to be copied to the web server. We generated a database
+of 1500 files of varying sizes with a total size of 34MB. Surge
+also generates a sequence of requests that it goes through during
+the test, where each file could be requested more than once. The
+number of clients each running a specified number of threads is
+specified to Surge as an argument. Surge then simulates those
+clients that together go through a request schedule that Surge
+creates. Each request represents an object with a number of embedded
+web files that may overlap among several objects and different
+files may be requested different number of times. The detailed
+mathematical distribution model used by Surge to simulate a web
+server load is described in&nbsp;[<A HREF="#surge">1</A>]. We
+modified Surge to run in two separate modes: <EM>Common Mode</EM>
+and <EM>Cache Resolver Mode</EM>. Common Mode represents a common
+cache setup where a set of users always use one local cache and
+when a miss occurs, that cache either fetches the data from another
+cache or from the primary content server. For the Common Mode,
+we run Surge with three clients, where each client talks to its
+own proxy cache. (A client in Surge runs many threads and represents
+a whole set of users). The Cache Resolver Mode was designed to
+test our system. In this mode, each of the three clients execute
+a simple hash function similar to the autoconfiguration function
+utilized by our users. That function takes the URL requested as
+input and returns a set of virtual names. Surge clients proceed
+to resolve the names in that set to IP addresses through our DNS
+unit.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="results"></A>4.3 Results</H3>
+
+<P><A NAME="SECTION00043000000000000000"></A></P>
+
+<P>We ran tests to compare the Cache Resolver with the Common
+Mode under various proxy cache configurations. We then analyzed
+proxy cache logs to compare miss rates for different test runs.
+We expected to see lower miss rates for the Cache Resolver Mode
+for two reasons. First of all, the Cache Resolver Mode assigns
+data to specific caches. Also, in these tests we varied cache
+capacities from 9MB to 36MB. Since the total database is 34MB,
+caches with smaller sizes will have higher miss rates, because
+data could be forced out of caches with LRU. In each test we ran,
+caches were cleared from previous data storage. The three caches
+were equal in their capacities for each test. Capacities took
+on values of 9, 12, 18, 24, 30 and 36 MB for different tests.
+In the first set of tests we did not configure proxy caches to
+communicate among one another. They simply fetched data from the
+origin server on a miss. For this basic configuration, figure&nbsp;<A
+HREF="#figure2">2</A> shows higher miss rate displayed by the
+Common Mode than the Cache Resolver Mode. The difference in the
+miss rates is even higher with smaller cache capacities, where
+the data duplication of the Common Mode has even worse effect.</P>
+
+<P><BR>
+</P>
+
+<P><CENTER><A NAME="fig:cachemodes"></A>&nbsp;<A NAME="fig:delta"></A>&nbsp;<A
+NAME="figure2"></A>&nbsp; <TABLE WIDTH="50%" BORDER="0" CELLSPACING="2"
+CELLPADDING="0">
+  <CAPTION ALIGN="TOP"><STRONG>Figure 2:</STRONG> Common Mode vs Cache Resolver Mode.
+
+X-axis represents cache sizes in MB of all the caches used in
+
+the test and Y-axis is the cache miss rate (above) and average
+
+latency in milliseconds (below)</CAPTION>
+   
+  <TR>
+    <TD>
+    <!-- MATH: $\includegraphics[width=2.75in]{misses2}$ --><IMG 
+    SRC="img11.gif" WIDTH="308" HEIGHT="223" ALIGN="BOTTOM" BORDER="0"
+    ALT="\includegraphics[width=2.75in]{misses2}" NATURALSIZEFLAG="0">
+    <!-- MATH: $\includegraphics[width=2.75in]{times1}$ --><IMG 
+    SRC="img12.gif" WIDTH="308" HEIGHT="223" ALIGN="BOTTOM" BORDER="0"
+    ALT="\includegraphics[width=2.75in]{times1}" NATURALSIZEFLAG="0"></TD>
+  </TR> 
+</TABLE></CENTER></P>
+
+<P><BR>
+</P>
+
+<P>We also used our setup to test three other common cache system
+configurations. We tested Sibling Configuration, where all three
+caches were set up as siblings and use multicast protocol to check
+for data in other caches on a miss. We tested a Hierarchy Configuration,
+where we added another cache as a parent to the siblings in the
+style of the Harvest approach. Finally, we tested a CRISP configuration
+where a central directory was set up to be queried by all the
+caches on a miss. For each system, we measured the primary cache
+miss rate (the miss rate at the first cache queried by users)
+and system miss rate (the miss rate of the whole cache system,
+when no cache had the required data). Figure&nbsp;<A HREF="#figure3">3</A>
+shows that the primary cache miss rate for all three configurations
+resembles the miss rate of the Common Cache Mode displayed in
+Figure&nbsp;<A HREF="#figure2">2</A>, and the system miss rate
+for all of the configurations is almost as good as the Cache Resolver
+Mode's miss rate. For these three systems, there is a penalty
+associated with the primary cache miss, namely, additional inter-cache
+communication to check who has the data and inter-cache data transfer.
+In addition, each inter-cache data transfer results in data duplication
+which leaves less room in the cache's disk and, most importantly,
+RAM for fast user service. When the user is left to decide which
+cache to turn to via a hash function, the penalties associated
+with extra communication in the critical loop is avoided.</P>
+
+<P><BR>
+</P>
+
+<P><CENTER><A NAME="fig:plotall"></A>&nbsp;<A NAME="figure3"></A>&nbsp;
+<TABLE WIDTH="50%" BORDER="0" CELLSPACING="2" CELLPADDING="0">
+  <CAPTION ALIGN="TOP"><STRONG>Figure 3:</STRONG> Miss rates and latencies of three additional
+
+configurations</CAPTION>
+   
+  <TR>
+    <TD>
+    <P><CENTER><!-- MATH: $\includegraphics[width=2.7in]{plotAll}$ --><IMG 
+    SRC="img13.gif" WIDTH="302" HEIGHT="217" ALIGN="BOTTOM" BORDER="0"
+    ALT="\includegraphics[width=2.7in]{plotAll}" NATURALSIZEFLAG="0">
+    <!-- MATH: $\includegraphics[width=2.7in]{times2}$ --><IMG SRC="img14.gif"
+    WIDTH="302" HEIGHT="219" ALIGN="BOTTOM" BORDER="0" ALT="\includegraphics[width=2.7in]{times2}"
+    NATURALSIZEFLAG="0"></CENTER></TD>
+  </TR>
+</TABLE></CENTER></P>
+
+<P><BR>
+</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H2><A NAME="extensions"></A>5 Extensions</H2>
+
+<P><A NAME="SECTION00050000000000000000"></A>In this section,
+we discuss extensions to our basic system that provide locality
+to users, load balancing and fault tolerance.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="locality"></A>5.1 Locality</H3>
+
+<P><A NAME="SECTION00051000000000000000"></A></P>
+
+<P>Regardless of caching scheme, user latency is greatly influenced
+by the proximity of the cache servers. Our system ensures that
+users are always served by the caches in their physically local
+regions. Our caches are split among geographical regions and the
+users are served only from the caches in their region. We place
+the knowledge of determining the user's geographical region inside
+the JavaScript function in the users' browsers. The JavaScript
+function is customizable: when users download it, they are given
+a choice of regions. The virtual names generated by the JavaScript
+function take on the following form: A456.ProxyCache3.com, where
+'456' is the hash of the URL and '3' represents the variable geographical
+region.</P>
+
+<P>We then split our DNS system into a two-layer hierarchy. The
+top layer DNS servers resolve for the part of the name that contains
+geographical information and direct the user's DNS resolver to
+a set of bottom layer DNS servers that correspond to the user's
+geographical region. The bottom layer DNS servers are placed physically
+in a specific geographical region of caches and they resolve virtual
+names in terms of IP addresses of only those caches.</P>
+
+<P>When resolving the name such as A456.ProxyCache3.com, the User's
+DNS resolver is first directed to a top layer DNS that can resolve
+the second part of the name: 'proxyCache3' and then that DNS directs
+it to a set of bottom layer DNS servers that resolve the first
+part of the name: 'A456'. The bottom layer DNS resolves in terms
+of its geographically local servers, which are also local to the
+user.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H3><A NAME="balancing"></A>5.2 Advanced Load Balancing - Hot
+Pages</H3>
+
+<P><A NAME="SECTION00052000000000000000"></A>&nbsp; <A NAME="#balancing"></A>&nbsp;</P>
+
+<P>We have mentioned in section 2 that we achieve load balancing
+among our servers since each server in a local region is assigned
+to the same fraction of virtual names. This is probably a good
+approximation when most items are requested with the same frequency.
+However, there is a number of items on the World Wide Web that
+are very popular, and others that are not. Items that are popular,
+such as the CNN front page, for example, will be requested with
+far greater frequency than most other items. Such ``hot'' items
+will cause a high load on the cache servers that are responsible
+for caching these items. Such servers can easily get swamped with
+requests, and either die or start servicing users very slowly.</P>
+
+<P>In order to handle this situation, ideally we would want to
+know which resources are hot and make sure that the hot resources
+are served by a larger set of caches. This decision would need
+to take place at our bottom layer DNS servers that ultimately
+determine the mapping between virtual names and IP addresses.
+The solution is to map a ``hot'' virtual name to a list of IP
+addresses instead of just one. By default, when configured to
+return a list, BIND DNS round robins through the list, so only
+a fraction of the users will get a specific IP address when querying
+DNS for that virtual name. Thus the load from that ``hot'' virtual
+name will be spread among the IP addresses on the list returned
+by BIND DNS.</P>
+
+<P>Unfortunately, it is not trivial to establish which virtual
+names are hot and which are not. However, we do get some indication
+from the load measure on each cache. Since the DNS servers know
+the mapping from virtual names to IP addresses we can establish
+which set of virtual names responsible for a high load on a particular
+cache. That set includes one or more hot virtual names. Because,
+we want to prevent servers from being swamped we take an aggressive
+step by spreading all of the virtual names mapped to a hot server
+to all of the caches in the region. (Meaning that immediately
+we map each virtual name in the set to the list of all cache IP
+addresses in the region so that load caused by this virtual name
+is spread to the entire region) Then, we slowly reduce the size
+of the mapping by subtracting from it one IP address at a time.
+If at any point, a reduction step causes the load on the server
+to increase again, we reverse the reduction and reduce from a
+different subset of the spread names. In this way, we soon reach
+a balance with some virtual names mapped to variable size lists
+of caches. <HR ALIGN=LEFT></P>
+
+<H3><A NAME="tolerance"></A>5.3 Fault Tolerance</H3>
+
+<P><A NAME="SECTION00053000000000000000"></A></P>
+
+<P>In addition to efficient cache management and load balancing,
+our system demonstrates a very high level of fault tolerance.
+First of all, since the physical IP addresses are abstracted from
+the user through virtual names, users are protected from failures
+of individual caches. Browsers are not required to time out on
+attempting connecting to those machines, as the virtual names
+will resolve to alternative IP addresses. In addition, our system
+is free of single points of failure such as the centralized directory
+of the CRISP. If the centralized directory fails, the CRISP system
+breaks and the cache machines start acting as individual caches.
+In our system, there are no units solely responsible for critical
+tasks such as the centralized directory of CRISP, or a primary
+cache that serves as system entry point for a group of users.
+In the Cache Resolver, as long as some DNS machines function,
+the virtual names will be resolved, and as long as some caches
+in a region are alive, the virtual names can be resolved in terms
+of their IP addresses.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H2><A NAME="conclusion"></A>6 Conclusion</H2>
+
+<P><A NAME="SECTION00060000000000000000"></A></P>
+
+<P>In section&nbsp;<A HREF="#tests">4</A>, we compared our system
+to other cache systems. We demonstrated that when the user is
+responsible for knowing which cache has the appropriate data,
+significant penalties in the critical loop of a user request can
+be avoided. This knowledge can be provided to the user with a
+hash function. Since it is likely that users of a large network,
+such as the Internet, may have inconsistent views of live caches,
+we suggest the use of a Consistent Hash function which balances
+data quite well despite conflicting user views. Additionally,
+we have described implementation of our system that uses Consistent
+Hash function in order to show that it is quite practical to integrate
+such a system into the World Wide Web. Our systems handles locality
+issues, balances load among caches, and possesses a high level
+of fault tolerance that is absent from other web caching systems.
+In conclusion, we believe that through the efficient use of caches,
+consistent hashing can significantly improve the efficiency of
+the World Wide Web.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H2><A NAME="ack"></A>7 Acknowledgments</H2>
+
+<P><A NAME="SECTION00070000000000000000"></A></P>
+
+<P>We would like to thank Frans Kaashoek for his help and advice.</P>
+
+<P><HR ALIGN=LEFT></P>
+
+<H2><A NAME="biblio"></A>8 Bibliography</H2>
+
+<P><A NAME="surge"></A>[1] Paul Barford and Mark Crovella. Generating
+Representative Web Workloads for Network and Server Performance
+Evaluation. In <I>Sigmetrics </I>, 1997.</P>
+
+<P>&nbsp;</P>
+
+<P><A NAME="harvest"></A>[2] Anawat Chankhunthod, Peter Danzig,
+Chuck Neerdaels, Michael Schwartz and Kurt Worrell. A Hierarchical
+Internet Object Cache. In <I>USENIX</I>, 1996.</P>
+
+<P>&nbsp;</P>
+
+<P><A NAME="naivehash"></A>[3] J. Cohen, N. Phadnis, V. Valloppillil
+and K. W. Ross. Cache Array Routing Protocol v 1.0. <A HREF="http://www.ietf.org/internet-drafts/draft-vinod-carp-v1-03.txt">http://www.ietf.org/internet-drafts/draft-vinod-carp-v1-03.txt
+</A>, September 1997.</P>
+
+<P>&nbsp;</P>
+
+<P><A NAME="bloomfilter"></A>[4] L. Fan, P. Cao, J. Almeida and
+A. Z. Broder. Summary Cache: a Scalable Wide-Area Web-cache Sharing
+Protocol. Technical Report 1361, Computer Science Department,
+University of Wisconsin, February, 1998.</P>
+
+<P>&nbsp;</P>
+
+<P><A NAME="crispy"></A>[5] Syam A. Gadde, Jeff Chase and Michael
+Rabinovich. A Taste of Crispy Squid. In <I>Workshop on Internet
+Server Performance </I>, June 1998. <A HREF="http://www.cs.duke.edu/ari/cisi/crisp/">http://www.cs.duke.edu/ari/cisi/crisp/.</A></P>
+
+<P>&nbsp;</P>
+
+<P><A NAME="ch"></A>[6] David Karger, Eric Lehman, Tom Leighton,
+Matthew Levine, Daniel Lewin and Rina Panigrahy. Consistent hashing
+and random trees: Distributed cachine protocols for relieving
+hot spots on the World Wide Web. In <I>Proceedings of the Twenty-Ninth
+Annual ACM Symposium on Theory of Computing, pages 654-663 </I>,
+1997.</P>
+
+<P>&nbsp;</P>
+
+<P><A NAME="malpani"></A>[7] Radhika Malpani, Jacob Lorch and
+David Berger. Making World Wide Web Caching Servers Cooperate.
+In <I>Fourth International World Wide Web Conference, pages 107-110
+</I>, 1995.</P>
+
+<P>&nbsp;</P>
+
+<P><A NAME="microsoft"></A>[8] Microsoft Proxy Server. White paper.
+<A HREF="http://www.microsoft.com/proxy/guide/CarpWP.asp">http://www.microsoft.com/proxy/guide/CarpWP.asp</A></P>
+
+<P>&nbsp;</P>
+
+<P><A NAME="cooperate"></A>[9] Ph.Yu and E. A. MaxNair. Performance
+Study of a Collaborative Method for Hierarchical Caching in Proxy
+Servers. Technical Report RC 21026, IBM T. J. Watsin Research
+Center, 1997.</P>
+
+<P>&nbsp;</P>
+
+<P><HR ALIGN=LEFT><A NAME="foot1"></A><bold> Unit Circle: </bold>
+For convenience, we will refer to a circle with unit circumference
+as a unit circle. Usually unit circle denotes a circle with a
+radius of one.
+
+</BODY>
+</HTML>
