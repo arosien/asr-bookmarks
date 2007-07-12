@@ -1,0 +1,204 @@
+<!-- This document was AUTOMATICALLY GENERATED from wix source -->
+<!--    it is probably not a wise idea to edit it directly     -->
+
+<html>
+<head>
+
+<style>
+ h1, h2, h3, h4 { font-family: 'Trebuchet MS', arial, verdana, sans-serif; width: 100% }
+ h1 { font-size: 20pt; border-top: black 1px solid; }
+ h2 { font-size: 16pt; border-top: silver 1px solid; }
+ h3 { font-size: 12pt; }
+ TH, TD, P, LI, DIV, SPAN {
+     font-family: verdana, arial, sans-serif;
+     font-size: 12px;  
+     text-decoration:none; 
+ }
+ LI { margin-top: 5px; }
+ body { color: #333333; }
+ blockquote { font-style: italic; width: 100% }
+ div.warn { border: 1px solid #f44; border-top: 5px solid #f44; background-color: #fbb; color: white; }
+ td.warn { color: black; }
+ div.announce { border: 1px solid green; background-color: #bfb; color: white; }
+ td.announce { color: black; }
+ div.footer {
+   color: gray;
+   border-top: 1px solid silver;
+   font-size: 10px;
+ }
+ table.blockquote { margin: 5px; border: 1px #e6ddcb solid; background-color: #fbf2e0; width: 100% }
+ a:link { text-decoration: none; color: blue; border-bottom:1px dotted; }
+ a:visited { text-decoration: none; color: purple; border-bottom:1px dotted; }
+ a:active { text-decoration: none; color: red; border-bottom:1px solid; }
+ a:hover { text-decoration: none; border-bottom:1px solid; }
+ table.footer { border-top: silver solid 1px; }
+ span.signature { color: #bbb;  }
+ .signature a:link { color: #aaf;  }
+ .signature a:visited { color: #faa;  }
+ .signature a:hover { color: blue; border-bottom: 1px solid blue;  }
+ span.highlight { background: yellow; color: black; padding: 3px }
+ div.pre {
+     text-align: left;
+     font-family: monospace;
+     border-style: none;
+     border-width: 2px 2px 2px 2px;
+     border-color: #6666aa;
+     color: #FFFFFF;
+     background-color: #333333;
+     margin-right: 25px;
+     margin-left: 25px;
+     padding: 10px;
+  }
+</style>
+</head>
+<body>
+<script> jsMath = { showFontWarnings: false } </script>
+<script src='/jsmath/easy/load.js'></script>
+<span id='tex2math_off'></span>
+<NOSCRIPT> <DIV STYLE='color:#CC0000; text-align:center'> <B>Warning: <A HREF='http://www.math.union.edu/locate/jsMath'>jsMath</A> requires JavaScript to process the mathematics on this page.<BR> If your browser supports JavaScript, be sure it is enabled.</B> </DIV> <HR> </NOSCRIPT>
+<center><table><tr><td width=600>
+
+<h1>
+NestedVM
+</h1>
+
+<p>
+<b>Binary translation for Java</b>
+</p>
+
+<h2>
+Welcome
+</h2>
+
+<p>
+NestedVM provides binary translation for Java Bytecode. This is done by having GCC compile to a MIPS binary which is then translated to a Java class file. Hence any application written in C, C++, Fortran, or any other language supported by GCC can be run in 100% pure Java with no source changes.
+</p>
+
+<p>
+NestedVM was created by <a href='http://www.brianweb.net/'>Brian Alliet</a> and <a href='http://www.megacz.com/'>Adam Megacz</a>.
+</p>
+
+<p>
+<a href='http://www.zentus.com/'>David Crawshaw</a> has also made significant contributions.
+</p>
+
+<p>
+NestedVM is Open Source, released under the Apache 2.0 license.
+</p>
+
+<h2>
+News
+</h2>
+
+<ul>
+
+<li>
+
+<p>
+<font color=green><tt>2009-08-09</tt>: New snapshot posted</font>
+</p>
+
+</li>
+
+<li>
+
+<p>
+<tt>2009-06-07</tt>: New snapshot posted, move to git
+</p>
+
+</li>
+
+<li>
+
+<p>
+<tt>2009-01-03</tt>: New snapshot posted
+</p>
+
+</li>
+
+<li>
+
+<p>
+<tt>2007-01-12</tt>: Support for <tt>fsync()</tt>
+</p>
+
+</li>
+
+<li>
+
+<p>
+<tt>2006-12-16</tt>: Now using GCC 3.3.6 to compile out of the box on Ubuntu 6.10
+</p>
+
+</li>
+
+</ul>
+
+<h2>
+Download
+</h2>
+
+<p>
+
+<div class=warn>
+<table border=0 cellpadding=5px>
+<tr><td valign=top><image src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAREAYAAACN1FD9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAABIAAAASABGyWs+AAAACXZwQWcAAAAUAAAAEQDeTN6UAAAD/ElEQVRIx8WUbUyVZRjHf+chxDi8yZcDa0mKh/wSuNE5eNYHZBiRwoespayEkdgx22hmjB1glTlenDYlMccAX1cbCDFlg+aQ1JGEazGWpixdbbweDucctPF2PNxXX3pw00gL09+X59m1+77+v+d+nueCBRJ+ECAs78dnAPp2nLEDtMdpPwMYZhfaf8GU1gLsixwdBRDRr7lRAHmxT0zs+UKAuKmhXgDfGleAYZVhlXynC/Z1AYyeX+IFiLjw+MwWAxDQuBqgNVsX+iNta/nWcnV0vD+9Ir1CndDre68AfDH42PzW2QDW79UFxkxh6WHp8o5a5lznXCfJ/nPX867nSYArO7AssEyOjOwE8GfGZwC84Pu3edrDLgzKAFj06q7DAPt/1evBK4szizMlpXy4tqO2g/MHa9sm2ibwP23M78zvFE0rBAg4U24DqFpieAqA6kd+cjuiAAqu6Sfn/n55/fJ6CZOc6YHpATmkNWgNWoOIZtSMmlFE1d9ae2utvDt21ZRiSpHV+r43LwFkBT4ysehigKgDvxcC3P5QD5qxNtU11anj8hfhg+GD4YMixipjlbFK5pjyHok8Enn3m7yyG2DAEdIFYLy9YMHDLoBjK/WA8fhkb7JXtcqMnJbT4tJFYlpiWmJaRKJio2KjYu8KSp9KUAly2ZtpSbWkql/0PrsuAJR3/2cx65cA1qujRgBV6HpWy9fy5dydOz2JPYlqQO4hwZ/gT/CLmB1mh9kh93Enq2tP1x7V4wo0pBnS5KehVwBmPjA7AcxtDy2mBQIYPmk/B/CDb26MxGw5teWU+krmIdWaak21iiR2JHYkdsi83G7KtmRb1HG9b+PHAK2lJAEQ9EDBt88C5BybGyOLQgtCC8SugkesI1axzRd8Mvdk7slckeoN1RuqN8wvODsyVDNUIxaXP0SFKHlfz8l4GSDTfd+B6Tdh5QChhUUvAlR8o9eDI4qSipLkJcOEqdvUzaX5HmzSNGmaNMFN+037TTvgxInzb96QKTovOo/LRmuJr8QnFr3+2esAB/IX9wAEjd+3cfc+gD2euTFSv2zzss0SIdnTG6c3SqU8AFulrdJWKRJSElISUiLia/Y1+5r/YcNHM9tntku1e2KFZ4VHAvXcwnyAksY5MfNvAOYdQ+8BzHytL5warDtRd2I2QjWNh46HqjR11LvGu0aVqUOei56LYlD7PRWeCmlWpe4p95R87h66Yb9hV+7+o71BvUHKoWyjjlGHSlbPOTc5N6kkFTqybWSbeksxfHb4rGqd9Q3nDOdI5lRHTXtNu6rWc/vfAJjoXHoNYOl6Q70CaFEpYwAZhof+m/5nvv0UoDFLW/UagCXuSQvdSzwAiTv/BGXg1AxNKyCeAAAAAElFTkSuQmCC'></td>
+<td class=warn>
+Note that NestedVM uses GCC 3.3.6, which will not compile under GCC 4.1 or later. </td></tr></table></div>
+
+</p>
+
+<p>
+
+<div class=pre style='white-space:nowrap'>git&nbsp;clone&nbsp;http://nestedvm.ibex.org/nestedvm.git/
+</div>
+
+</p>
+
+<p>
+With a <a href='http://git.megacz.com/?p=nestedvm.git;a=summary'>gitweb interface</a>
+</p>
+
+<p>
+Or, grab a snapshot here: <a href='dist/nestedvm-2009-08-09.tgz'>nestedvm-2009-08-09.tgz</a>
+</p>
+
+<h2>
+Documentation
+</h2>
+
+<ul>
+
+<li>
+
+<p>
+<a href='http://www.cs.rit.edu/~bja8464/NestedVM.pdf'><img style='vertical-align: text-bottom;' border=0  src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAK3RFWHRDcmVhdGlvbiBUaW1lAFRodSA2IE5vdiAyMDAzIDE1OjMwOjAwIC0wMDAwSwt8PwAAAAd0SU1FB9MLBg8fD1x8/t4AAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAEZ0FNQQAAsY8L/GEFAAAAQlBMVEX///9zc3Nra2uEhITGxsaUlJScnJx7e3uMjIz////39/fv7+/n5+fe3t69vb1jY2OlpaXW1ta1tbVaWlqtra3Ozs5w48BYAAAAAXRSTlMAQObYZgAAAIdJREFUeNpNz1ESBBEMBNCRwSCJMOT+V10WW9vKz6uOiusa0R137ShxjImwHsnSMCbEX6dPiIje+SUKC6hav8CbAQlZD/RmJ1Tdz6oTwETMfAByK0hT1kgH7E1phFfjdvS2JlJpN8RAyEHMhgJgaexJTBPyA1JiGoD0BXgg2H8wcFs3/jDvPB+sOwir+o6iKQAAAABJRU5ErkJggg=='>&nbsp;Presentation (slides)</a>
+</p>
+
+</li>
+
+<li>
+
+<p>
+<a href='http://www.megacz.com/research/papers/nestedvm.ivme04.pdf'><img style='vertical-align: text-bottom;' border=0  src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAK3RFWHRDcmVhdGlvbiBUaW1lAFRodSA2IE5vdiAyMDAzIDE1OjMwOjAwIC0wMDAwSwt8PwAAAAd0SU1FB9MLBg8fD1x8/t4AAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAEZ0FNQQAAsY8L/GEFAAAAQlBMVEX///9zc3Nra2uEhITGxsaUlJScnJx7e3uMjIz////39/fv7+/n5+fe3t69vb1jY2OlpaXW1ta1tbVaWlqtra3Ozs5w48BYAAAAAXRSTlMAQObYZgAAAIdJREFUeNpNz1ESBBEMBNCRwSCJMOT+V10WW9vKz6uOiusa0R137ShxjImwHsnSMCbEX6dPiIje+SUKC6hav8CbAQlZD/RmJ1Tdz6oTwETMfAByK0hT1kgH7E1phFfjdvS2JlJpN8RAyEHMhgJgaexJTBPyA1JiGoD0BXgg2H8wcFs3/jDvPB+sOwir+o6iKQAAAABJRU5ErkJggg=='>&nbsp;IVME&apos;04 Paper</a>
+</p>
+
+</li>
+
+</ul>
+
+<h2>
+Support
+</h2>
+
+<p>
+Brian Alliet has some information <a href='http://wiki.brianweb.net/NestedVM/NestedVM'>here</a>
+</p>
+
+<p>
+<a href='https://lists.hcoop.net/listinfo/nestedvm/'>Mailing List</a> and <a href='http://news.gmane.org/gmane.comp.java.nestedvm'>Gmane link</a>
+</p>
+<br><br>
+<table width=100% class=footer><tr><td align=left><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAMAAADHVLbdAAAALHRFWHRDcmVhdGlvbiBUaW1lAEZyaSAxOSBTZXAgMjAwMyAxODozOTozMiAtMDAwME2jAt8AAAAHdElNRQfTCRMRKABXeznMAAAACXBIWXMAAAsSAAALEgHS3X78AAAABGdBTUEAALGPC/xhBQAAACRQTFRF////AAAA7+/v3t7ezs7OtbW1ra2tlJSUnJycEBAQKSkphISEbGtEogAAAAF0Uk5TAEDm2GYAAABLSURBVHjanY1BEsAgCAMDKm31//81qB3l6h4Y4mYQQNvAmXNv7W/gytcTRj6pppQHNWoW6JWS13Ix86yrO7MEPkDWuWLPK/7hoYEOxksDsk8eppEAAAAASUVORK5CYII='></td><td align=right><span class='signature'>rendered from <a href=http://www.megacz.com/software/wix>W<span style='vertical-align:-20%'>I</span>X</a></span></div></td></tr></table>
+</td></tr></table></center>
+</body></html>
