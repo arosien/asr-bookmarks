@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <title>index [NekoVM]</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta name="generator" content="DokuWiki Release 2005-09-22e" />
+  <link rel="start" href="/" />
+  <link rel="contents" href="/index?do=index" title="" />
+  <link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php" />
+  <link rel="alternate" type="application/rss+xml" title="Current Namespace" href="/feed.php?mode=list&amp;ns=" />
+  <link rel="alternate" type="text/html" title="Plain HTML" href="/index?do=export_html" />
+  <link rel="alternate" type="text/plain" title="Wiki Markup" href="/index?do=export_raw" />
+  <link rel="stylesheet" media="screen" type="text/css" href="/lib/styles/style.css" />
+  <meta name="date" content="2006-07-21T03:21:46+0200" />
+  <meta name="robots" content="index,follow" />
+  <script language="javascript" type="text/javascript" charset="utf-8">
+    var alertText   = 'Please enter the text you want to format.\nIt will be appended to the end of the document.'
+    var notSavedYet = 'Unsaved changes will be lost.\nReally continue?'
+    var DOKU_BASE   = '/'
+  </script>
+  <script language="javascript" type="text/javascript" charset="utf-8" src="/lib/scripts/script.js"></script>
+  <script language="javascript" type="text/javascript" charset="utf-8" src="/lib/scripts/tw-sack.js"></script>
+  <script language="javascript" type="text/javascript" charset="utf-8" src="/lib/scripts/ajax.js"></script>
+  <script language="javascript" type="text/javascript" charset="utf-8" src="/lib/scripts/domLib.js"></script>
+  <script language="javascript" type="text/javascript" charset="utf-8" src="/lib/scripts/domTT.js"></script>
+  <link rel="stylesheet" type="text/css" href="/lib/plugins/plugin/style.css" />
+
+  <link rel="shortcut icon" href="/lib/images/favicon.ico" />
+  <link rel="stylesheet" media="screen" type="text/css" href="/lib/tpl/neko/main.css"/>
+
+</head>
+
+<body>
+
+<div class="center">
+  
+  <div class="siteHeader">
+     <div class="siteBanner">
+       <div class="bannerContent">
+         <ul class="siteMenu">
+           <li><a href="/index">home</a></li>
+           <li><a href="/news">news</a></li>
+	   <li><a href="/download">downloads</a></li>
+	   <li><a href="/doc">documentation</a></li>
+	   <li><a href="/faq">FAQ</a></li>
+	 </ul>
+       </div>
+<!--       <div class="bannerContent">
+                <div class="breadcrumbs">
+        &gt; <span class="curid"><a href="/index" onclick="return svchk()" onkeypress="return svchk()" class="breadcrumbs" title="index">index</a></span>        </div>
+               </div>
+-->
+     </div>  
+  </div>
+
+    
+  <div class="siteBox">
+  <div class="siteContent">
+    <form action="/" accept-charset="utf-8" class="search" name="search" onsubmit="return svchk()"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch_in" accesskey="f" name="id" class="edit" onkeyup="ajax_qsearch.call('qsearch_in','qsearch_out')" /><input type="submit" value="Search" class="button" /><div id="qsearch_out" class="ajax_qsearch" onclick="this.style.display='none'"></div></form>    <div class="toc">
+<div class="tocheader"> <script type="text/javascript">showTocToggle("+","-")</script>Table of Contents</div>
+<div id="tocinside">
+<ul class="toc">
+<li class="level1"><span class="li"><a href="#the_neko_programming_language" class="toc">The Neko Programming Language</a></span></li>
+<li class="level1"><span class="li"><a href="#the_neko_virtual_machine" class="toc">The Neko Virtual Machine</a></span></li>
+<li class="level1"><span class="li"><a href="#mod_neko" class="toc">Mod_neko</a></span></li>
+<li class="level1"><span class="li"><a href="#about" class="toc">About</a></span></li>
+</ul>
+</div>
+</div>
+
+<a name="the_neko_programming_language"></a><h1>The Neko Programming Language</h1>
+<div class="level1">
+
+<p>
+ Neko is a high-level dynamically typed programming language which can also be used as an embedded scripting language. It has been designed to provide a common runtime for several different languages. Neko is not only very easy to learn and use, but also has the flexibility of being able to extend the language with C libraries. You can even write generators from your own language to Neko and then use the Neko Runtime to compile, run, and access existing libraries.
+</p>
+
+<p>
+If you need to add a scripting language to your application, Neko provides one of the best tradeoffs available between simplicity, extensibility and speed.
+</p>
+
+<p>
+Neko allows the language designer to focus on design whilst reusing a fast and well constructed runtime, as well as existing libraries for accessing filesystem, network, databases, xml...
+</p>
+
+<p>
+See <a href="/specs" class="wikilink1" title="specs" onclick="return svchk()" onkeypress="return svchk()">Neko Specifications...</a>
+</p>
+
+</div>
+
+<a name="the_neko_virtual_machine"></a><h1>The Neko Virtual Machine</h1>
+<div class="level1">
+
+<p>
+ Neko has a compiler and virtual machine. The Virtual Machine is both very lightweight and extremely well optimised so that it can run very quickly. The VM can be easily embedded into any application and your libraries are directly accessable using the C foreign function interface.
+</p>
+
+<p>
+The compiler converts a source .neko file into a bytecode .n file that can be executed with the Virtual Machine. Although the compiler is written in Neko itself, it is still very fast. You can use the compiler as standalone commandline executable separated from the VM, or as a Neko library to perform compile-and-run for interactive languages.
+</p>
+
+<p>
+See <a href="/doc/vm" class="wikilink1" title="doc:vm" onclick="return svchk()" onkeypress="return svchk()">NekoVM Documentation...</a>
+</p>
+
+</div>
+
+<a name="mod_neko"></a><h1>Mod_neko</h1>
+<div class="level1">
+
+<p>
+ Neko comes with several libraries. One of these is mod_neko, which embeds the Neko Virtual Machine into the Apache web server, so you can use Neko to generate webpages. This website is actually generated using Neko. 
+</p>
+
+<p>
+See <a href="/doc/mod_neko" class="wikilink1" title="doc:mod_neko" onclick="return svchk()" onkeypress="return svchk()">Introduction to mod_neko...</a>
+</p>
+
+</div>
+
+<a name="about"></a><h1>About</h1>
+<div class="level1">
+
+<p>
+ Neko is developed as part of the Research and Development effort for better languages at Motion-Twin. You can contact Neko author Nicolas Cannasse (ncannasse@motion-twin.com) for more information. Neko is free software and the full source code is available under the GNU Lesser General Public License (<acronym title="GNU Lesser General Public License">LGPL</acronym>). You&rsquo;re also welcome to join the <a href="/ml" class="wikilink1" title="ml" onclick="return svchk()" onkeypress="return svchk()">mailing list</a> 
+</p>
+
+</div>
+
+<!-- cachefile /data/dokuwiki.nekovm/data/cache/6/6011c8a9bba67e26e2a58ff4bbb2da52.xhtml used -->
+
+     <div class="adminlinks">
+     <form class="button" method="post" action="/index" onsubmit="return svchk()"><input type="hidden" name="do" value="edit" /><input type="hidden" name="rev" value="" /><input type="submit" value="Show pagesource" class="button" title="ALT+V" accesskey="v" /></form>     <form class="button" method="get" action="/index" onsubmit="return svchk()"><input type="hidden" name="do" value="revisions" /><input type="submit" value="Old revisions" class="button" title="ALT+O" accesskey="o" /></form>          <form class="button" method="get" action="/" onsubmit="return svchk()"><input type="hidden" name="do" value="recent" /><input type="submit" value="Recent changes" class="button" title="ALT+R" accesskey="r" /></form>          <form class="button" method="get" action="/index" onsubmit="return svchk()"><input type="hidden" name="do" value="login" /><input type="submit" value="Login" class="button" /></form>     <form class="button" method="get" action="/index" onsubmit="return svchk()"><input type="hidden" name="do" value="index" /><input type="submit" value="Index" class="button" title="ALT+X" accesskey="x" /></form>     </div>
+  </div>
+  </div>
+
+  <div class="corpo">
+       &copy;2005 <a href="http://www.motion-twin.com">Motion-Twin</a> - Powered by Dokuwiki.
+  </div>
+	 
+
+  <div id="scroll"></div>
+
+</div>
+
+<img src="/lib/exe/indexer.php?id=index&amp;1292618567" width="1" height="1" alt=""  />
+</body>
+</html>
