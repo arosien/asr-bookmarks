@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:addthis="http://www.addthis.com/help/api-spec" xml:lang="en-US">
+ <head>  
+  <title>yEd - Graph Editor</title>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-language" content="en-US"/>
+  <meta http-equiv="language" content="en"/>
+  <meta http-equiv="reply-to" content="webmaster@yWorks.com"/>
+  <meta name="description" content=""/>
+  <meta name="keywords" content="Java, library, toolkit, class package, diagramming, layout, diagram, chart, flow chart, organization chart, network, graph, visualization, yWorks, yFiles, software, algorithms, algorithm, UML"/>
+  <meta name="author" content="yWorks, the diagramming company"/>
+  <meta name="audience" content="all"/>
+  <meta name="classification" content="software"/>
+  <meta name="copyright" content="Copyright &copy; 2000-2010 yWorks. All Rights Reserved."/>
+  <meta name="distribution" content="global"/>
+  <meta name="page-topic" content="yWorks home page"/>
+  <meta name="page-type" content="eCommerce, self-promotion"/>
+  <meta name="publisher" content="yWorks, http://www.yWorks.com"/>
+  <meta name="rating" content="Safe For Kids"/>
+  
+  <link rel="pingback" href="http://www.yworks.com/pingback"/>
+
+  <link rel="stylesheet" type="text/css" href="../design2.css" media="screen"/>
+  <link rel="stylesheet" type="text/css" href="../print2.css" media="print"/>
+  <script type="text/javascript" src="../script.js"></script>
+  
+  <!--[if lte IE 7]>
+  <style>
+  #header {
+    width: 828px;
+    margin-bottom: 9px; /* 22px */
+  }
+  </style>
+  <![endif]-->
+  
+ </head>
+ <body onload="init('2');">
+  <div id="header">
+   <a href="http://www.yworks.com/en/index.html"><img src="../img2/logo_subtitle.gif" alt="the diagramming company" class="subtitle" height="70px" width="211px" /></a><img alt="" src="../img/logo_line.gif" class="spacer" height="70px" width="484px" /><a href="http://www.yworks.com/en/index.html"><img src="../img/logo.gif" alt="yWorks" height="70px" width="133px" /></a>
+  </div>
+  <div id="topnav">
+   <!-- Images must be updated -->
+   <div id="topnavitems"><a href="http://www.yworks.com/en/index.html"><img src="../img2/navi_home.gif" alt="" id="home" class="current" height="18px" width="76px"/></a><a href="products.html"><img src="../img2/navi_products_over.gif" alt="Products" id="products" class="down" height="18px" width="58px" /></a><a href="services.html"><img src="../img2/navi_services.gif" alt="Services" id="services" height="18px" width="54px" /></a><a href="downloads.html#yEd"><img src="../img2/navi_downloads.gif" alt="Downloads" id="downloads" height="18px" width="70px" /></a><a href="news.html"><img src="../img2/navi_news.gif" alt="News" id="news" height="18px" width="36px" /></a><a href="company.html"><img src="../img2/navi_company.gif" alt="Company" id="company" height="18px" width="60px" /></a><a href="contact.html"><img src="../img2/navi_contact.gif" alt="Contact" id="contact" height="18px" width="50px" /></a></div>
+  </div>
+  <table id="container" cellpadding="0" cellspacing="0">
+   <tr>
+    <td class="menustyle">&nbsp;</td>
+    <td style="height:10px;" colspan="2"></td>
+   </tr>
+   <tr>
+    <td id="menu" valign="top" rowspan="2">
+     <ul>
+<li id="yfiles"><a href="products_yfiles_about.html">yFiles for Java</a></li>
+<li id="yfiles_dotnetplatform"><a href="products_yfiles_dotnetplatform_about.html">yFiles for .NET</a></li>
+<li id="yfiles_web"><a href="products_yfiles_web_about.html">yFiles Web 2.0</a></li>
+<li id="yed"><a href="products_yed_about.html" class="expanded">yEd</a><ul>
+<li><a id="yed_features" href="products_yed_applicationfeatures.html">Features</a></li>
+<li><a id="yed_download" href="products_yed_download.html">Download</a></li>
+<li><a id="yed_support" href="products_yed_helpresources.html">Support</a></li>
+<li id="yed_gallery"><a href="products_yed_gallery.html">Gallery</a></li>
+</ul></li>
+<li id="graphity"><a href="products_graphity_about.html">Graphity</a></li>
+<li id="yguard"><a href="products_yguard_about.html">yGuard</a></li>
+<li id="ydoc"><a href="products_ydoc.html">yDoc</a></li>
+</ul>
+     <div class="separated">
+            <ul>
+<li id="demos"><a href="products_yfiles_practicalinfo_demos.html">Demos</a></li>
+<li id="documentation"><a href="products_yfiles_practicalinfo_documentation.html">Documentation</a></li>
+<li id="gallery"><a href="products_yfiles_practicalinfo_gallery.html">Gallery</a></li>
+<li id="references"><a href="company_references.html">References</a></li>
+</ul>
+           </div>
+     <img alt="" src="../img/0.gif" height="1px" width="120px"/>
+    </td>
+    <td id="linepane" valign="top" align="right">
+    <img src="../img/linie2_v.gif" alt="" width="2px" height="90px" />
+     <img src="../img/linie1.gif" alt="" width="20px" height="2px" />
+    </td>
+    <td id="contentpane" valign="top">
+     <div id="content">
+     
+
+
+
+<style type="text/css">
+ul.sans {
+  list-style-type: none;
+  margin: 4px 0px 4px 20px;
+  padding: 0px;
+}
+
+div.spacer {
+ margin-top:18px;
+}
+
+div.imagecaption {
+    width:160px;
+	text-align:center; 
+	margin-top:4px;
+	font-weight:bold;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+</style>
+
+
+<p align="center">
+<img src="../img/product_logos/yed_logo.gif" alt="yEd"/>
+</p>
+
+
+<h1>yEd Graph Editor</h1>
+
+<p>
+yEd is a powerful diagram editor that can be used to quickly and effectively generate 
+high-quality drawings of diagrams. 
+<br/>
+Create your diagrams manually or import your external data for analysis and auto-magically 
+arrange even large data sets by just pressing a button.
+</p>
+<p style="margin:10px;">
+<div style="float:left;margin-left:100px;">
+<a href="products_yed_download.html"><img src="../img/download-large.png" alt="Download yEd" title="Download yEd 3.6.1.1" /></a>
+</div>
+<div style="float:right;margin-right:100px;">
+<a href="/products/yed/demo/yed.jnlp"><img src="../img/launch-large.png"" alt="Launch yEd Web Start" title="Launch yEd Web Start" /></a>
+</div>
+</p>
+<div style="clear:both;"></div>
+<p style="margin:10px;"></p>
+<p>
+yEd is freely available and runs on all major platforms: Windows, Unix/Linux, and 
+Mac OS. 
+The latest release is version 3.6.1.1
+</p>
+
+<h2 class="section">Key Features</h2>
+
+<div style="height:10px;"></div>
+
+<div style="clear:both" /><div style="float:left;width: 48%;height:150px;">
+<img src="../img/yed/import.png" class="frame" alt=""/>
+<div style="text-align:center; margin-top:4px">
+<b>Import</b> your own data for analysis: 
+<br/>
+Excel&reg; spreadsheet (.xls) or XML
+</div>
+
+</div><div style="float:right; width: 48%;height:150px;">
+<img src="../img/yed/ui.png" class="frame" alt=""/>
+<div style="text-align:center; margin-top:4px">
+Create your diagrams <b>with ease</b> using an intuitive user interface.  
+</div>
+
+</div><div style="clear:both;" />
+<div style="clear:both" /><div style="float:left;width: 48%;height:150px;"><div>
+<img src="../img/yed/layoutstyles.png" class="frame" alt=""/>
+<div style="text-align:center; margin-top:4px">
+<b>Auto-magically arrange</b> your diagram elements
+</div>
+</div>
+
+</div><div style="float:right; width: 48%;height:150px;">
+<img src="../img/yed/export.png" class="frame" alt=""/>
+<div style="text-align:center; margin-top:4px">
+<b>Export</b> your diagram to
+bitmap or vector graphics: PNG, JPG, SVG, PDF, SWF, ...
+</div>
+
+</div><div style="clear:both;" />
+
+<div class="spacer" />
+<div style="text-align:center">
+<a href="products_yed_applicationfeatures.html">Find out more about yEd's application features &raquo;</a>
+</div>
+
+<h2 class="section">Supported Diagrams</h2>
+
+<div class="spacer" />
+
+<table style="width:100%;border-collapse:collapse;" class="diagrams">
+<tr>
+	<td style="width:33%;text-align:left">
+		<a href="../img/yed/bpmn.png" onclick="var ivc = new ImageViewerContainer(); ivc.openContainer('../img/yed/bpmn.graphml', 'yed2'); return false;"><img class="frame" src="../img/yed/thumb_bpmn.png" alt="" title="Gallery of supported diagrams"/></a>		<div class="imagecaption" style="float:left;">BPMN Diagrams</div>
+  	</td>
+  	
+  	<td style="width:33%;text-align:center">
+		<a href="../img/yed/flowchart.png" onclick="var ivc = new ImageViewerContainer(); ivc.openContainer('../img/yed/flowchart.graphml', 'yed2'); return false;"><img class="frame" src="../img/yed/thumb_flowchart.png" alt="" title="Gallery of supported diagrams"/></a>		<div class="imagecaption">Flowcharts</div>
+  	</td>
+  	
+  	<td style="width:33%;text-align:right">
+		<a href="../img/yed/familytree.png" onclick="var ivc = new ImageViewerContainer(); ivc.openContainer('../img/yed/familytree.graphml', 'yed2'); return false;"><img class="frame" src="../img/yed/thumb_familytree.png" alt="" title="Gallery of supported diagrams"/></a>		<div class="imagecaption" style="float:right;">Family Trees</div>
+  	</td>
+</tr>
+<tr><td colspan="3">&nbsp;</td></tr>
+<tr>
+	<td style="width:33%;text-align:left">
+		<a href="../img/yed/semantic.png" onclick="var ivc = new ImageViewerContainer(); ivc.openContainer('../img/yed/semantic.graphml', 'yed2'); return false;"><img class="frame" src="../img/yed/thumb_semantic.png" alt="" title="Gallery of supported diagrams"/></a>		<div class="imagecaption" style="float:left;">Semantic Networks</div>
+  	</td>
+  	
+  	<td style="width:33%;text-align:center">
+		<a href="../img/yed/social.png" onclick="var ivc = new ImageViewerContainer(); ivc.openContainer('../img/yed/social.graphml', 'yed2'); return false;"><img class="frame" src="../img/yed/thumb_social.png" alt="" title="Gallery of supported diagrams"/></a>		<div class="imagecaption">Social Networks</div>
+  	</td>
+  	
+  	<td style="width:33%;text-align:right">
+		<a href="../img/yed/uml.png" onclick="var ivc = new ImageViewerContainer(); ivc.openContainer('../img/yed/uml.graphml', 'yed2'); return false;"><img class="frame" src="../img/yed/thumb_uml.png" alt="" title="Gallery of supported diagrams"/></a>		<div class="imagecaption" style="float:right;">UML Class Diagrams</div>
+  	</td>
+</tr>
+</table>
+
+<div class="spacer" />
+
+<p>
+yEd supports a lot of additional diagram types: organization charts, mind maps,
+swimlane diagrams, and many more.
+</p>
+
+<div style="text-align:center">
+<a href="products_yed_gallery.html">See more diagrams from yEd users in the yEd gallery &raquo;</a>
+</div>
+
+<h2 class="section">Contribute!</h2>
+
+<div style="float:right;margin-left:5px;border: 1px solid #F0F0F0;padding:5px;" >
+<a href="products_yed_contribution.html"><img src="../img/yed/shirt-icon.png" alt="Win a yEd T-Shirt!" title="Win a yEd T-Shirt!"/></a>
+</div>
+
+<p>
+In order to illustrate the diversity of diagrams yEd can help you with, we are looking
+for diagrams that you have created.
+</p>
+<p>
+We plan to publish <a href="products_yed_gallery.html">contributed diagrams in a gallery</a>
+hosted on our website. 
+To make this worth the effort, each contributor of a diagram that will make it into 
+the gallery will receive a <a href="products_yed_contribution.html">free yEd T-shirt</a>
+in return!
+<a href="products_yed_contribution.html">Contribute now!</a>
+</p>
+
+<div class="spacer" />
+
+
+<!-- AddThis Button BEGIN -->
+<script type="text/javascript">
+var addthis_share = {
+  templates: {
+    twitter: 'Check out the yEd Graph Editor: {{url}}; it\'s not only awesome, it\'s also free!'
+  }
+};
+var addthis_config = {
+  services_exclude: 'print',
+  ui_language: 'en'
+};
+
+</script>
+<div class="addthis_toolbox addthis_default_style" 
+     addthis:url="http://www.yworks.com/yed" 
+     addthis:title="yEd Graph Editor" 
+     addthis:description="Free diagram editor">
+<a href="http://www.addthis.com/bookmark.php?v=250&amp;username=xa-4bcf1a210a94006c" 
+   class="addthis_button_compact">Share</a>
+<span class="addthis_separator">|</span>
+<a class="addthis_button_facebook"></a>
+<a class="addthis_button_myspace"></a>
+<a class="addthis_button_google"></a>
+<a class="addthis_button_twitter"></a>
+<a class="addthis_button_email"></a>
+
+<div style="float:right">
+<a href="mailto:yed@yWorks.com">Contact us</a>
+</div>
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4bcf1a210a94006c"></script>
+<!-- AddThis Button END -->
+     </div>
+    </td>
+   </tr>
+   <tr>
+    <td valign="top" colspan="2" class="copyright">
+     <div id="footnote">
+     <span style="float:left; width:40%">COPYRIGHT &copy; 2010 yWorks &middot; ALL RIGHTS RESERVED</span>
+     <span class="links" style="float:right; width:50%">
+     <a href="company_legal_imprint.html#Imprint">imprint</a> | <a href="company_legal_termsofuse.html">terms of use</a> | <a href="company_legal_privacy.html">privacy policy</a> | 
+     <a href="http://www.yworks.com/de/products_yed_about.html">
+     <img src="../img/de.gif" alt="German website" title="Switch to German version" height="10px" width="15px"/>
+     </a>
+     </span>
+     </div>
+  	</td>
+   </tr>
+  </table>
+  
+  <script type="text/javascript">
+  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script type="text/javascript">
+  var pageTracker = _gat._getTracker("UA-312499-1");
+  pageTracker._initData();
+  pageTracker._trackPageview();
+  </script>
+  
+ </body>
+</html>
