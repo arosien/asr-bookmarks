@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Raw Thought: Aaron Swartz's Weblog</title>
+  <link href="oldstyle.css" rel="stylesheet" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.aaronsw.com/weblog/index.xml" />
+</head><body>
+  <h1 class="fronttitle"><a class="hilite" href="./" title="by Aaron Swartz">Raw Thought</a></h1>	
+  <p class="byline" style="text-align: left; padding-left: 1em; margin-top: 0; margin-bottom: 0">by <a href="/">Aaron Swartz</a></p>
+<table class="main"><tr>
+  <td class="content">
+
+<h2 class="posttitle"><a rel="bookmark" href="preservation">Outline of a Digital Preservation System</a></h2>
+<p>I hate losing data. Don&#8217;t you wish there was some way to store stuff so that it will be available forever, so that your websites could live on even after you die? But it&#8217;s a tricky problem. There are a number of things you have to worry about:</p>
+
+<ul>
+<li><p>Hardware failure. The disk you had your data on died and you can&#8217;t get data off it anymore. Or, even worse, your data has been silently corrupted.</p></li>
+<li><p>Hardware skew. Your disks are still good, but they&#8217;re ancient and obscure and no one has drivers for them anymore. (I have some old IBM tapes that I can&#8217;t read because the devices are so obscure.)</p></li>
+<li><p>Filesystem skew. You can read the raw devices but the data was stored on it using a striping technology no modern operating systems implement, with a filesystem which stopped being supported after its lead developer was arrested for murder, and then encoded with a higher-level file distribution system that used erasure coding to spread data across multiple machines.</p></li>
+<li><p>Format skew. Your documents may be stored in an obscure format that nobody has a reader for anymore.</p></li>
+<li><p>Institutional failure. The people in charge of making sure all the other problems get addressed die or move on.</p></li>
+</ul>
+
+<p>There&#8217;s a basic outline to the skew problems: use the simplest, most popular choice possible and then move to a replacement as it shows signs of going permanently extinct. It seems unlikely to me that ASCII text on a Unix file system in a JBOD configuration will ever completely die off, but if it does you&#8217;ll be safe for a long time before you&#8217;ll have to move things over.</p>
+
+<p>Similarly, for the failure problems you want: a) to choose reliable material, b) to implement constant sanity checks, and c) have several layers of backups if the sanity checks don&#8217;t get executed or fail.</p>
+
+<p>OK, so let&#8217;s get to a specific outline. You have a bunch of standard files (mostly ASCII derivatives, maybe PDFs) in a standard file system (UFS?) mounted read-only (with hardware-level write-prevention) from a bunch of standard SATA disks (no RAID or anything like that) on some machines running a modern Unix. You can serve these files up using bog-standard HTTP (or any other file transfer protocol that can be mapped to the model of a Unix file system). The file names (less a prefix for mounting the drive) are designed to be globally unique. The best way to do this is probably to combine a date and a DNS name (ala <code>tag:</code>). So you could imagine this file to be at:</p>
+
+<pre><code>/hdd7/2002/www.aaronsw.com/weblog/preservation.html
+</code></pre>
+
+<p>Alongside the files, for each drive you have a manifest that lists the date the file was added to the preservation system followed by the globally-unique filename and two hashes: a fast hash (probably CRC32) and a standard secure hash (probably SHA1). As a background process, you (nightly? weekly?&#8212;depends on how long it takes, I guess) go through each file and compare its fast hash against the one listed in the manifest. If the comparison fails, you go offline and sound the alarm.</p>
+
+<p>Going offline isn&#8217;t so bad, because you have at least two other replicas in different geographic locations under different political regimes. Any request traffic can go to them instead while you restore your system.</p>
+
+<p>For safety, you should probably toss the whole drive and get it restored from one of the replica sites.</p>
+
+<p>The manifest from each system at each site is replicated on a series of index servers (at least one at each site). The index servers run a simple HTTP redirector that maps from the secure hash or the globally unique filename to a box storing the file, using a table they generate from the manifests.</p>
+
+<p>If bandwidth isn&#8217;t an issue, the index server should proxy the data instead of redirecting you to preserve URLs. If it is an issue, you should probably try to reset the DNS name to any server which has failed to point to another redirector. So you can imagine the stable URL being:</p>
+
+<pre><code>http://preservation.example.org/2002/www.aaronsw.com/weblog/preservation.html
+</code></pre>
+
+<p>and that redirecting to:</p>
+
+<pre><code>http://27.preservation.example.org/hdd7/2002/www.aaronsw.com/weblog/preservation.html
+</code></pre>
+
+<p>which serves the file. When 27 fails (i.e. is no longer serving all the data it was previously serving), it&#8217;s given a new number and the DNS <code>A</code> record for 27.web.resource.org is changed to point to the index servers. The index servers strip off any hdd prefix (such prefixes are prohibited at the root of the global namespace) and serve the request as they do a request for the stable URL.</p>
+
+<p>The index servers also have a manifest of the manifests (with similar regular verification procedures). Each data server regularly publishes a file with the date and the secure hash of the manifest that its regular check was compared against. The index servers regularly request this file from each of the data servers and take offline any servers whose manifest hash doesn&#8217;t match the one in their manifest of manifests.</p>
+
+<p>Finally, a master manifest is generated by combining all of the manifests, sorting by date, and removing duplicates. (If in this process you find two different hashes for the same file, go   offline and sound the alarm.) At the end of every day during which files were added to the collection, the system verifies that the secure hash of all the files up through yesterday is the same as it was yesterday and then makes sure the index servers all agree on the new hash. If there is consensus, the hash of this new master manifest is calculated and very widely published (perhaps including a classified ad in the largest newspaper in each country). You should always be able to work backward from this widely-published hash to a correct state of the entire system. And since all of the manifests are public, anyone with a recent newspaper and some time on their hands should be able to verify the accuracy of their data.</p>
+
+<p>Now this protects against accidental day-to-day hardware failure, but you also want to protect against long-tail catastrophic failures. You should use hetrogenous systems to avoid simultaneous hardware failure or software vulnerability, there should be no one with physical or electronic access to all the systems, as much as possible you should not be able to delete data without physical access, and the locations should be physically secure. Does it make sense to make an alternate copy (i.e. paper with bytes written in OCR-A or something?) in case of an EMP blast or something like that? Thinking about how to protect against these obscure failures seems like the trickiest part.</p>
+
+<p>This system should be fairly simple to implement and operate (I can&#8217;t imagine it being more than a couple pages of Python code) but even so you need someone to implement and operate it.</p>
+
+<p>Recall that we have at least three sites in three political jurisdictions. Each site should be operated by an independent organization in that political jurisdiction. Each board should be governed by respected community members with an interest in preservation. Each board should have at least five seats and move quickly to fill any vacancies. An engineer would supervise the systems, an executive director would supervise the engineer, the board would supervise the executive director, and the public would supervise the board.</p>
+
+<p>There are some basic fixed costs for operating such a system. One should calculate the high-end estimate for such costs along with high-end estimates of their growth rate and low-end estimates of the riskless interest rate and set up an endowment in that amount. The endowment would be distributed evenly to each board who would invest it in riskless securities (probably in banks whose deposits are ensured by their political systems).</p>
+
+<p>Whenever someone wants to add something to the collection, you use the same procedure to figure out what to charge them, calculating the high-end cost of maintaining that much more data, and add that fee to the endowments (split evenly as before).</p>
+
+<p>What would the rough cost of such a system be? Perhaps the board and other basic administrative functions would cost $100,000 a year, and the same for an executive director and an engineer. That would be $300,000 a year. Assuming a riskless real interest rate of 1%, a perpetuity for that amount would cost $30 million. Thus the cost for three such institutions would be around $100 million. Expensive, but not unmanageable. (For comparison, the Internet Archive has an annual budget of $10-15M, so this whole project could be funded until the end of time for about what 6-10 years of the Archive costs.)</p>
+
+<p>Storage costs are trickier because the cost of storage and so on falls so rapidly, but a very conservative estimate would be around $2000 a gigabyte. Again, expensive but not unmanageable. For the price of a laptop, you could have a gigabyte of data preserved for  perpetuity.</p>
+
+<p>These are both very high-end estimates. I imagine that were someone to try operating such a system it would quickly become apparent that it could be done for much less. Indeed, I suspect a Mad Archivist could set up such a system using only hobbyist levels of money. You can recruit board members in your free time, setting up the paperwork would be a little annoying but not too expensive, and to get started you&#8217;d just need three servers. (I&#8217;ll volunteer to write the Python code.) You could then build up the endowment through the interest money left over after your lower-than-expected annual costs. (If annual interest payments ever got truly excessive, the money could go to reducing the accession costs for new material.)</p>
+
+<p>Any Mad Archivists around?</p>
+
+<p>[Thanks to Brewster Kahle and the Internet Archive for inspiring many of the technical details of this scheme.]</p>
+
+
+<p class="posted"><a href="preservation">October 18, 2010</a></p>
+<h2 class="posttitle"><a rel="bookmark" href="bruteforce">When Brute Force Fails</a></h2>
+<p>Liberals don&#8217;t like talking about crime. The classic answer&#8212;fixing the root causes of crime&#8212;now seems hopelessly ambitious. And our natural sympathy for the millions ground down by an out-of-control prison system and a pointless war on drugs doesn&#8217;t play well with voters, especially when most criminals can&#8217;t vote. The general belief seems to be that the problem of crime has been solved&#8212;after all, crime levels have dropped dramatically since the law-and-order 80s&#8212;and that the real problem now is not too much crime, but too much punishment. If voters don&#8217;t agree, it&#8217;s because TV news continues to obsess over violent crime even as actual occurrences of it have cratered, leaving behind a population who wants to do even more to crack down on an army of bad guys who don&#8217;t really exist. The smartest liberal position on crime seems to be changing the subject and talking about white-collar crime instead (which, as recent economic news has made clear, is a real epidemic).</p>
+
+<p>Mark Kleiman, in his brilliant new book, <em>When Brute Force Fails</em>, takes a different view. Crime, aside from drug crimes (where his work persuasively argues that &#8220;the abuse of illicit drugs is a human tragedy but not a major threat to the social order&#8221;), is serious. (Presumably this only applies to classic violent crimes; it&#8217;s obvious this logic doesn&#8217;t work for violations of copyright law and civil disobedience.) Even where there&#8217;s a small amount of actual crime, it&#8217;s possible that&#8217;s just because people are wasting so much time preventing it. There&#8217;s a serious social cost to having to remember to lock our doors and carry our keys around all the time, let alone the money we waste on burglar alarms and car-tracking services and all the rest.</p>
+
+<p>While I find the methodology he uses to show it wildly problematic<sup id="fnref:fn1"><a href="#fn:fn1" rel="footnote">1</a></sup>, I agree with his point that crime really sucks. Even if a burglar only causes $400 worth of damage, I&#8217;d pay far more than $400 to prevent a burglary &#8212; the loss of privacy, the sense of violation, the disruption of my normal order, the distraction of having to deal with police and repairmen and insurance agents, etc. all add up to make burglary a nightmare well above the direct economic damage it causes.</p>
+
+<p>Such things are a frustration for white suburbanites, but for poor people stuck in the ghetto, they&#8217;re a nightmare. Crime is yet another disadvantage and a particularly noxious one at that. Even aside from all the other indignities suffered by the poor, just imagining life in a crime-ridden neighborhood is enough to make your skin crawl.</p>
+
+<p>But, Kleiman insists, we also have to count the harm to the criminals! Going through lengthy court proceedings, spending years in abusive prisons, having to deal with officious parole officers and the loss of liberty they cause are all serious costs and we can&#8217;t wave them away just because they happen to the bad guys. Law enforcement isn&#8217;t a zero-sum game: both criminals and victims can benefit from less punishment.<sup id="fnref:fnr"><a href="#fn:fnr" rel="footnote">2</a></sup></p>
+
+<p>So there&#8217;s the question: How can we have less crime with less punishment? The first thing to notice is that low-crime is an equilibrium state: if nobody is committing any crimes, all anti-crime resources can be focused on anyone who decides to break the law, making it irrational for them to even try. But high-crime is also an equilibrium (assuming reasonable levels of punishment): if everyone is breaking the law, the police can&#8217;t possibly stop all of them, so it&#8217;s not so risky to keep on breaking the law.</p>
+
+<p>To reduce both crime and punishment, you just need to tip the society from one equilibrium to the other. And, Kleiman argues, we can do that with a technique he calls &#8220;dynamic concentration.&#8221; Imagine there are three robbers (Alice, Bob, and Carol) and one policeman (Eve). Eve can only stop one robber at a crime, so if more than one person is committing a burglary at the same time, she decides to be fair and switch around who she arrests &#8212; sometimes she nabs Alice, sometimes Bob, sometimes Carol.</p>
+
+<p>The problem is that the robbers know this and they know it means they only have a 1/3 chance of getting caught. A guaranteed arrest is bad news, but a 1/3 chance of getting arrested isn&#8217;t worth quitting over. So the robbers keep on robbing and the cop keeps failing to keep up with them.</p>
+
+<p>But now imagine Eve adopts a new policy: dynamic concentration. Instead of randomly deciding who to go after, she goes after people in alphabetical order. So if Alice is committing a crime, Eve always goes after her first if she&#8217;s committing a crime &#8212; otherwise Bob, and then Carol. Now Alice knows that if she robs someone, she&#8217;s guaranteed to get caught (instead of just having a one-third chance), so she decides to sit this one out. You might think this would just lead Bob to step into the breach, but now that Alice is out, Eve can turn her focus to Bob instead. So Bob also decides to call it quits. That just leaves Carol, who Eve now gets to watch like a hawk, and so Carol also gives up the game. And there you have it: dynamic concentration stops all the crime without adding any more police.</p>
+
+<p>Obviously things aren&#8217;t so clean in the real world, but I think this is the first game-theoretic argument I&#8217;ve read that seems to have some real force. Kleiman backs it up with some messier simulations and some real-life examples. Unfortunately, most are stories about cracking down on drugs or other unserious crimes like squeegee men, but the general point seems to work.</p>
+
+<p>For twenty years, High Point, North Carolina had tried to fight the crack dealing in the city&#8217;s African-American West End neighborhood. Any viewer of <em>The Wire</em> can guess the results: as soon as they made a case against one drug dealer, another would jump in to take his place. So with the help of crime scholar David Kennedy, they tried a new approach. First, they spent months building trust between the police and the community to build consensus that the drug trade was something worth stopping. Then they pushed extra resources into the neighborhood and started putting together cases against the dealers &#8212; but didn&#8217;t make any arrests. Only when they had a case against every known dealer did they act.</p>
+
+<p>Even then they didn&#8217;t make arrests. They visited the dealer&#8217;s homes with a neighborhood leader, who told them that the neighborhood had decided they had to go straight. Meanwhile a cop presented them with the legal case against them. The pair asked the dealer to quit and offered whatever services&#8212;tattoo removal, job training&#8212;would help them do that. Ten of the thirteen dealers took them up on the offer, leaving plenty of room for the justice system to lock up the remaining three, plus the one new dealer who tried to take over their old business. Five years later, the market is still closed, and the police have been able to direct their resources to pull the same trick on the other drug markets. Crime is down, and arrests are down too. Dynamic concentration works, with the city&#8217;s different drug markets standing in for Alice, Carol, and Bob. (The other examples&#8212;especially Hawaii&#8217;s HOPE program&#8212;are even more interesting, but take longer to tell.)</p>
+
+<p>Dynamic concentration isn&#8217;t a panacea. Obviously it only works where the costs of monitoring are much less than the costs of enforcement. But this still leaves lots of opportunities and clever selection of the population to concentrate on can significantly decrease the cost of monitoring.</p>
+
+<p>While the big idea of dynamic concentration is at the center of the book, it&#8217;s not one of those one-trick monographs where the author lays out one good idea and then spends the rest of the book repeating it. Instead, the book ranges over the whole theory and practice crime control in America and nearly every page is filled with interesting facts and a new perspective.</p>
+
+<p>And in a brilliant final chapter, he turns his lens on himself and asks what could go wrong with his proposals. For an intellectual, the level of humility and self-criticism involved is truly impressive. (He confesses to probably all of the complaints that you&#8217;re thinking about raising right now.)</p>
+
+<p>For anyone interested in policy analysis, this book should be a classic. It shows how simple tools (calculating the scale of the problem, modeling it with game theory, and calculating the costs of a solution) can have radical implications.</p>
+
+<ul>
+<li><a href="http://books.theinfo.org/go/0691142084">Buy the book</a></li>
+</ul>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:fn1">
+<p>Kleiman uses surveys asking people how much they would pay to achieve a ten percent reduction in a crime. Aside from all the usual problems with such willingness-to-pay metrics, this seems like a particularly meaningless question. I don&#8217;t have a good sense of what the crime rate is, let alone what a 10% decrease in it would look like. I can&#8217;t possibly assign a sensible monetary value to something so abstract. It&#8217;d be better to ask people what they&#8217;d pay to prevent one crime, assuming the crime rate is low enough that <a href="http://yalepress.yale.edu/yupbooks/book.asp?isbn=9780300120905">Karelis-type effects</a> don&#8217;t come into play.&#160;<a href="#fnref:fn1" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn:fnr">
+<p>Since a rational criminal would by definition be better off committing the crime, this mainly comes up in cases of information asymmetry. Unlike in playground games of Cops and Robbers, real police are better off warning the criminals away from doing crime than tricking them into doing it and then sneaking up and catching them.&#160;<a href="#fnref:fnr" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+
+
+<p class="posted"><a href="bruteforce">October 18, 2010</a></p>
+<h2 class="posttitle"><a rel="bookmark" href="waitingforsuperman">The Real Problem with <em>Waiting for &#8220;Superman&#8221;</em></a></h2>
+<p>[<a href="http://www.huffingtonpost.com/aaron-swartz/the-real-problem-with-wai_b_748748.html">crossposted at HuffPo</a>]</p>
+
+<p><em>Waiting for &#8220;Superman&#8221;</em>, in case you haven&#8217;t heard, is the hot new film from <em>Inconvenient Truth</em> director Davis Guggenheim. While his last film capitalized on liberal guilt over destroying our planet (and maybe voting for Ralph Nader?), <em>&#8220;Superman&#8221;</em> (yes, the film is weirdly insistent on those unnecessary quotation marks) is for people who feel bad about sending their kids to private school while poor kids wallow in the slums.</p>
+
+<p>&#8220;Teaching should be easy,&#8221; Guggenheim declares as we watch a cartoon teacher rip open his students&#8217; skulls and pour what looks like blue Spaghetti-O&#8217;s inside. (When he closes the skulls the kids sprout wings and fly out the open classroom window.) This is about as close as the film gets to depicting actual teaching. (I checked with the friend who paid for my ticket and he confirmed this scene was meant seriously, though thankfully not literally.)</p>
+
+<p>Despite repeatedly insisting poor kids just need better teachers, the film never says what it is that better teachers actually do. Instead it highlights the voices of American Express pitchman Geoffrey Canada and Bill Gates, whose obsessions with higher standardized test scores have led their schools to cancel recess and art in favor of more hours of scripted memorization. Why bother with art if teaching is just about filling kids&#8217; heads with pre-determined facts?</p>
+
+<p>The real crisis in American education isn&#8217;t teachers&#8217; unions preventing incompetent teachers from getting fired (as awful as that may be), it&#8217;s the single-minded focus on standardized test scores that underlies everything from Bush&#8217;s No Child Left Behind to Obama&#8217;s Race to the Top to the charter schools lionized in the film. Real education is about genuine understanding and the ability to figure things out on your own; not about making sure every 7th grader has memorized all the facts some bureaucrats have put in the 7th grade curriculum.</p>
+
+<p>This would be obvious if the film dared to show real teaching in the schools it lauds. Instead of the rich engagement you imagine from progressive private schools, you find teachers who read from assigned scripts while enforcing a regime of zero-tolerance discipline. They&#8217;re nightmarish gulags where children&#8217;s innate creativity is beaten out of them and replaced with martial order. Because standardized behavior is what makes you do well on standardized tests.</p>
+
+<p>Film is the perfect medium for showing what this life is like. Seeing terrified kids up on the big screen, you can&#8217;t help but empathize with them. So we never see it. Instead, the film hides behind charts and graphs and interviews. &#8220;When you see a great teacher, you are seeing a work of art,&#8221; Geoffrey Canada tells us, but this is something Guggenheim would rather tell than show.</p>
+
+<p>The film has other flaws. It insists all of America&#8217;s problems would be solved if only poor kids would memorize more: Pittsburgh is falling apart not because of deindustrialization, but because its schools are filled with bad teachers. American inequality isn&#8217;t caused by decades of Reaganite tax cuts and deregulation, but because of too many failing schools. Our trade deficit isn&#8217;t a result of structural economic factors but simply because Chinese kids get a better education. Make no mistake, I desperately want every kid to go to a school they love, but it seems far-fetched to claim this would solve all our country&#8217;s other problems. At the end of the day, we have an economy that works for the rich by cheating the poor and unequal schools are the result of that, not the cause.</p>
+
+<p>I&#8217;m glad a talented filmmaker has decided to draw attention to the horrible inequities in our nation&#8217;s schools. But I&#8217;m terrified that the solutions put forth by its proponents will only make things worse. We know what happens when we fire teachers who don&#8217;t do enough to raise their students&#8217; test scores, or when we adopt more stringent requirements for classroom curriculum: we squeeze out what little genuine education these schools have left. And that&#8217;s something we should really feel guilty about.</p>
+
+
+<p class="posted"><a href="waitingforsuperman">October  8, 2010</a></p>
+<h2 class="posttitle"><a rel="bookmark" href="percentagefallacy2">Rethinking Hyperbolic Discounting (or, The Percentage Fallacy, Continued)</a></h2>
+<p>In a famous experiment, some people are asked to choose between $100 today or $120 tomorrow. Many choose the first. Meanwhile, some people are asked to choose between $100 sixty days from now or $120 sixty-one days from now. Almost everyone choose the laster. The puzzle is this: why are people willing to sacrifice $20 to avoid waiting a day right now but not in the future?</p>
+
+<p>The standard explanation is hyperbolic discounting: humans tend to weigh immediate effects much more strongly than distant ones. But I think the actual psychological effect at work here is just <a href="http://www.aaronsw.com/weblog/percentagefallacy">the percentage fallacy</a>. If I ask for the money now, I may have to wait 60 seconds. But if I get it tomorrow I have to wait 143900%more. By contrast, waiting 61 days is only 1.6% worse than waiting 6 days. Why not wait an extra 2% when you get 16% more money for it?</p>
+
+<p>Has anyone done a test confirming the percentage fallacy? A good test would be to show people treat the $100 vs. $120 tradeoff as equivalent to the $1000 to $1200 tradeoff.</p>
+
+
+<p class="posted"><a href="percentagefallacy2">October  7, 2010</a></p>
+<h2 class="posttitle"><a rel="bookmark" href="campaigners">Campaigners, Please!</a></h2>
+<p>So I&#8217;m looking to hire a campaigner for my online progressive group. What does a campaigner do? Well, the basic process looks like this:</p>
+
+<ol>
+<li><p>Read the news and look for a political fight that might interest people.</p></li>
+<li><p>Think of a way that ordinary people can get involved.</p></li>
+<li><p>Write an email briefly explaining the issue and persuading people to take action on it.</p></li>
+<li><p>Channel those actions into a wider impact, e.g. by informing the press, delivering petitions, running ads, etc.</p></li>
+</ol>
+
+<p>People who might be a good fit for this include political bloggers, who have a lot of experience with 1 and 3, and people who have run campaigns on local issues, giving them experience with 2 and 4. It&#8217;s also helpful if you have experience with web design and HTML.</p>
+
+<p>But the most important thing is just being creative and persuasive and passionate about the issues. Every campaign is different and each one has to be run differently to seize people&#8217;s attention. Someone who can think outside the box and try something new each time is going to be more successful than someone who&#8217;s an expert at the standard way of doing things.</p>
+
+<p>Having done it myself, nothing competes with the thrill of running a campaign. Instead of just getting upset about the news, you get to do something about it. You get to rally people to action, explain the story to the media, and really get into a fight with the bad guys. And every once in a while you actually win a victory that improves the lives of millions of people. It&#8217;s ridiculously exciting, fun, and rewarding.</p>
+
+<p>If you&#8217;re interested, send a resume and a short note persuading me to take some action to <a href="&#x6d;&#97;i&#x6c;&#116;o&#x3a;&#109;&#101;&#x40;&#97;&#97;&#x72;&#111;&#110;&#x73;&#x77;&#46;&#x63;&#x6f;&#109;">&#109;&#101;&#x40;&#97;&#97;&#x72;&#111;&#110;&#x73;&#x77;&#46;&#x63;&#x6f;&#109;</a> with &#8220;campaigner&#8221; in the subject.</p>
+
+
+<p class="posted"><a href="campaigners">August  4, 2010</a></p>
+<h2 class="posttitle"><a rel="bookmark" href="knowkeynes">You Don&#8217;t Know John (Maynard Keynes)</a></h2>
+<p>From the right, <a href="http://www.becker-posner-blog.com/2009/11/how-to-increase-employment--becker.html">Gary Becker writes</a>:</p>
+
+<blockquote>
+  <p>Keynes and many earlier economists emphasized that unemployment rises
+  during recessions because nominal wage rates tend to be inflexible in
+  the downward direction.</p>
+</blockquote>
+
+<p>From the left, <a href="http://yglesias.thinkprogress.org/2010/07/stimulus-and-the-welfare-state/">Matt Yglesias writes</a>:</p>
+
+<blockquote>
+  <p>&#8230;the Keynesian prescription is not only for the government to run deficits in response to recessions, but to run surpluses in expansions. Thus, the Clinton administration&#8217;s fiscal policies were arguably &#8220;Keynesian&#8221; but the Reagan and (especially) George W Bush administrations were implementing an agenda that flew in the face of Keynes&#8217; ideas much more clearly than anything Angela Merkel&#8217;s ever done.</p>
+</blockquote>
+
+<p>Neither of these are true at all. Pretty much the very first thing Keynes says in the general theory is that downwardly-inflexible nominal wage rates (sticky wages) are a <em>good</em> thing. And he spends a large part of chapter 8 denouncing the practice of saving surpluses (sinking funds).</p>
+
+<p>So where do they get this stuff? While these aren&#8217;t the views of Keynes, both these views are held by the so-called &#8220;New Keynesians&#8221; &#8212; people like Paul Krugman and Greg Mankiw, who have tried to shoehorn a moderate version of Keynes into classical economics. These proponents are rather more prominent than more traditional Keynesians like Jamie Galbraith, so political commentators hear their view and assume it&#8217;s a faithful representation of Keynes&#8217; own.</p>
+
+<p>Perhaps Keynes was wrong &#8212; after all, we shouldn&#8217;t slavishly follow the scribblings of some defunct economist. But if so, we should tell the truth and admit we&#8217;re disagreeing with Keynes, not expounding his ideas. (Both Yglesias and Becker have not run a correction, despite my emails.) Furthermore, we should actually engage with Keynes&#8217; argument.</p>
+
+<p>On sticky wages, Keynes says that if nominal wages could fall, then nominal costs would fall, which would mean that nominal prices would fall, which means that real wages would end up staying the same.<sup id="fnref:q1"><a href="#fn:q1" rel="footnote">1</a></sup> But, even worse, if there was no stickiness at all, nothing would stop nominal wages from falling further and further until eventually everyone was paid zero.<sup id="fnref:q2"><a href="#fn:q2" rel="footnote">2</a></sup> I have never heard the New Keynesians respond to this argument.</p>
+
+<p>On the question of surpluses, Keynes criticizes them as a pointless reduction of aggregate demand. They create unemployment because they take money out of circulation for no real purpose. It&#8217;s just supposed to sit around until a &#8220;rainy day&#8221; when the economy isn&#8217;t doing so well. But when that rainy day comes, the reason the economy isn&#8217;t doing well is because people are out of work. If that&#8217;s true, you can simply print more money to get them back to work without any ill effects. (Printing money only causes inflation at full employment.) You don&#8217;t get any benefit from having taken the money out of circulation earlier.<sup id="fnref:q3"><a href="#fn:q3" rel="footnote">3</a></sup></p>
+
+<p>Both these seem like strong arguments to me. Perhaps that&#8217;s why it&#8217;s easier to pretend they don&#8217;t exist.</p>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:q1">
+<p><a href="http://www.marxists.org/reference/subject/economics/keynes/general-theory/ch02.htm">Chapter 2</a>:</p>
+
+<blockquote>
+  <p>&#8230;if money-wages change, one would have expected the classical school to argue that prices would change in almost the same proportion, leaving the real wage and the level of unemployment practically the same as before, any small gain or loss to labour being at the expense or profit of other elements of marginal cost which have been left unaltered.</p>
+</blockquote>
+
+<p><a href="#fnref:q1" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn:q2">
+<p><a href="http://www.marxists.org/reference/subject/economics/keynes/general-theory/ch21.htm">Chapter 21</a>:</p>
+
+<blockquote>
+  <p>If, on the contrary, money-wages were to fall without limit whenever there was a tendency for less than full employment, the asymmetry would, indeed, disappear. But in that case there would be no resting-place below full employment until either the rate of interest was incapable of falling further or wages were zero. In fact we must have some factor, the value of which in terms of money is, if not fixed, at least sticky, to give us any stability of values in a monetary system.</p>
+</blockquote>
+
+<p><a href="#fnref:q2" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn:q3">
+<p><a href="http://www.marxists.org/reference/subject/economics/keynes/general-theory/ch08.htm">Chapter 8</a>:</p>
+
+<blockquote>
+  <p>We must also take account of the effect on the aggregate propensity to consume of Government sinking funds for the discharge of debt paid for out of ordinary taxation. For these represent a species of corporate saving, so that a policy of substantial sinking funds must be regarded in given circumstances as reducing the propensity to consume. It is for this reason that a change-over from a policy of Government borrowing to the opposite policy of providing sinking funds (or <em>vice versa</em>) is capable of causing a severe contraction (or marked expansion) of effective demand.</p>
+  
+  <p>[&#8230;]</p>
+  
+  <p>Or again, in Great Britain at the present time (1935) [thanks to] the principles of &#8220;sound&#8221; finance [sinking funds are so large] that even if private individuals were ready to spend the whole of their net incomes it would be a severe task to restore full employment&#8230;The sinking funds of local authorities now stand &#8230; at an annual figure of more than half the amount which these authorities are spending on the whole of their new developments. [footnote giving the amounts] Yet it is not certain that the Ministry of Health are aware, when they insist on stiff sinking funds by local authorities, how much they may be aggravating the problem of unemployment.</p>
+</blockquote>
+
+<p><a href="#fnref:q3" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+
+
+<p class="posted"><a href="knowkeynes">July 27, 2010</a></p>
+<h2 class="posttitle"><a rel="bookmark" href="parfit1">The Perils of Parfit 1: Credible Commitments</a></h2>
+<p>On the advice of several people, I started reading Derek Parfit&#8217;s <em>Reasons and Persons</em>. I haven&#8217;t gotten very far, but it seems to me to be a horribly muddled book, wrong on just about every point. So perhaps this will be an ongoing series where I debunk the book in sequence. I apologize to my readers if these posts seem obvious and not very interesting. That&#8217;s because I think the situations Parfit discusses are actually quite simple and it&#8217;s only his muddled terminology that makes them seem tricky.</p>
+
+<p>Let&#8217;s clarify Parfit&#8217;s discussion of self-defeating theories, which really comes down to a discussion about credible commitments. For simplicity, imagine there is no interest or inflation and your only goal in life is to maximize how much money you have. Thus an act is rational iff it contributes to that goal.</p>
+
+<p>Case 1: There are two buttons. SUBTRACT removes $1000 from your bank account, ADD adds $5000 to your bank account. Obviously it is rational to press ADD and irrational to press SUBTRACT.</p>
+
+<p>Case 2: There is one button, BOTH, which does both at the same time. Obviously it is rational to press BOTH, since it results in a net gain of $4000.</p>
+
+<p>Case 3: There is a different button, DELAY, which adds $5000 to your bank account today and then removes $1000 in exactly one week. (DELAY is a weird button &#8212; to prevent you from using it twice at the same time, it stays down for the whole week and only pops back up once the $1000 is removed.) Obviously it is rational to press DELAY since it too results in a net gain of $4000.</p>
+
+<p>Case 4: There are two buttons: DELAY, which is the same as before, and EVADE, which changes your bank account number so that none of the other buttons work. You can only press each button once and they have no other consequences. It is rational to press DELAY and then EVADE, for a net gain of $5000.</p>
+
+<p>When is it rational to press EVADE? Only when you don&#8217;t expect to be able to press DELAY ever again. (EVADE gains you at most $1000, while DELAY gains you at least $4000.) If you could press DELAY twice, would it be rational to hit EVADE after the first press? Of course not, it&#8217;d cost you at least $4000. But Parfit seems to suggest one is acting rationally irrationally by not pressing it. The notion seems nonsensical.</p>
+
+<p>Case 5: Same two buttons, except after you press the DELAY button it engages a little impenetrable metal cover that physically prevents you from pressing EVADE. It&#8217;s rational to press DELAY. Then it&#8217;s rational to press EVADE, but that&#8217;s kind of irrelevant, because it&#8217;s also impossible.</p>
+
+<p>Case 6: Same as 5, except it injects you with a serum that prevents you from pressing EVADE. Again, it&#8217;s rational to press DELAY and then rational but impossible to press EVADE.</p>
+
+<p>I don&#8217;t see a big difference between these two cases, but Parfit seems to think the difference is vital.</p>
+
+<p>Perhaps it&#8217;s the fact that another person is involved that leads to the complications?</p>
+
+<p>Case 7: Same as 4, except the $1000 goes into Bob&#8217;s account and only Bob can press DELAY. Bob has the same notion of rationality as you and thus will only press DELAY if he believes you will not press EVADE. You could promise not to press it, but it would be irrational for you to keep that promise so Bob rightly does not believe it. However, it would be rational for you to engage the impenetrable cover or take the serum that prevents you from pressing EVADE.</p>
+
+<p>There is no rational irrationality. Your goal of maximizing your money is not self-defeating. This all seems like the most obvious, unarguable stuff in the world. So I don&#8217;t see why Parfit is so confused about it.</p>
+
+
+<p class="posted"><a href="parfit1">July  1, 2010</a></p>
+<h2 class="posttitle"><a rel="bookmark" href="deforganizing">Management, Organizing, Mobilizing</a></h2>
+<p><em>Management</em> is art of getting people who work for you to accomplish things. It&#8217;s a subtle and fascinating art, the applied version of my great intellectual love, sociology. It&#8217;s usually practiced badly, but even when done badly it can accomplish incredible things. One person can only do so much on their own&#8212;their time, their powers, their creativity are all limited. But even an incompetent manager, who uses only a fraction of the powers of her employees, is capable of accomplishing tasks far beyond the range of any single person.</p>
+
+<p><em>Organizing</em> is the art of getting people who don&#8217;t work for you to accomplish things. Many of the underlying concepts are the same but the execution is vastly more difficult. You don&#8217;t really get to pick your people. The people you get don&#8217;t simply follow instructions, they must be persuaded and cajoled and made to understand your vision. But when it works, they accomplish great things you never would have allowed them to try.</p>
+
+<p>Organizing has many forms. The obvious one is where you take a batch of volunteers and try to shape them into a manageable force. The best are selected, developed, promoted, and taught to do the same. It is like traditional management in reverse: instead of starting with the top of a hierarchy and building down through hiring, you start with a bunch of people at the bottom and try to build them up through training and promotion.</p>
+
+<p>But organizing also means finding other leaders, people embedded in management structures (organizations) of their own, and using them toward a common goal. Sometimes this means explicit direction of their efforts, as in a coalition, where you get the heads of various groups to all work on a common project, or sometimes it&#8217;s simply having them lend their name or knowledge to the cause. A great organizer of this sort develops rich networks they can quickly call upon in need. (Journalists can be good organizers in this sense, developing connections with sources and experts they can leverage to create a story.)</p>
+
+<p>Organizing is most prevalent in my own field of politics, where the work I tend to do is often called &#8220;online organizing.&#8221; This term usually means the kind of stuff you see on the MoveOn mailing list: emails asking you to call your senator, host a house party, attend a vigil &#8212; but mostly tell your friends and give us money. Since I got into this business, cranky old-timers have been yelling at me that organizing people over the Internet is impossible, that you have to organize people face-to-face. This struck me as a ridiculous claim (and still does), but I think I now see the truth these critics are reacting to.</p>
+
+<p>Online organizing is a huge misnomer. Sending emails to millions isn&#8217;t organizing, any more than writing company wide memos is managing. It does not teach people new skills or persuade them of a larger vision or get them to continue the work themselves. It takes people where they are and gives them small things they can do from there.</p>
+
+<p>Mobilizing can be done thru any medium. The folks who knock on your door to ask for your vote (or donation) are face-to-face mobilizers. You can do the same by telephone or television (call now to contribute!). It is, however, a one-way relationship. You are simply a number on a list.</p>
+
+<p>But this doesn&#8217;t mean online organizing is impossible, just that it isn&#8217;t often done. Obviously it&#8217;s much harder than mere mobilization&#8212;and much more complicated&#8212;but it&#8217;s much more rewarding as well. It is what makes for a successful open source project, or a thriving online community. The problem is one of scale &#8212; and that&#8217;s true when it&#8217;s done through any medium. IAF and ACORN never had five million members. Still, this seems to be the genuinely important question: whether the scaling power of the Internet allows for a revolution in the scale of real organizing. I don&#8217;t know, but the first step toward answering it is being clear about what it means.</p>
+
+
+<p class="posted"><a href="deforganizing">June 29, 2010</a></p>
+<h2 class="posttitle"><a rel="bookmark" href="proxyreform">Brought to You by the Letter S</a></h2>
+<p>When you&#8217;re writing laws, changing the smallest details can have huge effects. But I&#8217;ve never seen anything as big as what happened this week, when the White House gutted an entire section of financial regulation by removing the letter <code>s</code>.</p>
+
+<p>Right now, shareholders of big companies vote to decide who will be on the board of directors by filling out a mail-in ballot called a proxy card. But currently the corporation&#8217;s CEO gets to decide who&#8217;s on the card! The result is a board hand-picked by the CEO &#8212; and they return the favor by providing CEOs with exorbitant salaries.</p>
+
+<p>The current financial regulation bill &#8212; in a provision passed by both the House and Senate &#8212; would change that by allowing shareholders with 5% of the stock to come together and propose additional names for the ballot. But the White House is trying to gut this proposal at the last minute, and they&#8217;ve done it in an incredibly sneaky way &#8212; they removed the letter <code>s</code> from the end of the word shareholders.</p>
+
+<p>Now instead of shareholders whose stock adds up to 3% coming together, you have to be a single shareholder with 5% of the stock all by yourself. And for most big companies, there just isn&#8217;t anyone like that. Take GE, for example &#8212; its biggest shareholder only owns about 3.4% of the company.</p>
+
+<p>So by removing a single letter, they managed to make this provision completely useless.</p>
+
+<p>The White House is being barraged by major CEOs begging them to keep fighting for this provision &#8212; after all, no CEO wants to see their lavish salaries cut! As Barney Frank put it, &#8220;I think there are some people in the White House who think, &#8216;Well, we&#8217;re fighting the financial institutions, but why fight with some of the others, you know, the other corporations?&#8217;&#8221; Apparently they&#8217;re so scared of a fight, they&#8217;re willing to gut a provision passed by both the House and Senate.</p>
+
+<p>If you&#8217;re interested in fighting for real corporate reform, please sign our petition to the White House:</p>
+
+<blockquote>
+  <p>&#8220;Stop lobbying against shareholder power in corporate decision-making &#8212; and against protections that would finally rein in CEO pay. That&#8217;s not change we can believe in.&#8221;</p>
+</blockquote>
+
+<p><strong>Add your name:</strong></p>
+
+<form method="POST" action="http://act.boldprogressives.org/act/" accept-charset="utf-8"> 
+  <input type="hidden" name="utf8" value="&#x2714;"> 
+  <input type="hidden" name="page" value="petition_jarrettwallst"> 
+  <input type="hidden" name="lists" value="1" />
+  <input type="hidden" name="source" value="asw" /> 
+<table><tr>
+    <td><input id="id_first_name" name="first_name" type="text" size="20" /></td> 
+    <td><input id="id_last_name" name="last_name" type="text" size="20" /></td> 
+    <td><input id="id_email" name="email" type="text" size="20" /></td> 
+    <td><input id="id_zip" name="zip" type="text" size="5" /></td>
+    <td><p><button type="submit">Sign</button></td>
+  </tr><tr>
+    <td>first name</td>
+    <td>last name</td>
+    <td>email</td>
+    <td>zip</td>
+    <td></td>
+    </tr>
+</table>
+</form>
+
+
+<p class="posted"><a href="proxyreform">June 21, 2010</a></p>
+<h2 class="posttitle"><a rel="bookmark" href="toystory3pol">The Political Philosophy of Toy Story 3</a></h2>
+<p>[<strong>SPOILER WARNING:</strong> This is pretty much all spoilers, so please seem the movie before reading. It&#8217;s a really, really good movie &#8212; probably the best Disney film. So you should totally see it. First.]</p>
+
+<p><strong>UPDATE:</strong> I missed a bunch the first time I saw the movie; this version has been amended to include the subthemes about immigration and socialization.</p>
+
+<p>The film begins with Woody trying to defend a crumbling system of communism (presumably the Soviet Union). Toys have a duty to their owners, he argues. The owner is a personified totalitarian state (Stalin?) &#8212; he decides what the toys do and the toys are not permitted to escape. For some reason (false consciousness?), the other toys instinctively agree with this but find the notion hard to sustain when their owner makes clear he doesn&#8217;t want them anymore (massive unemployment).</p>
+
+<p>The last straw is when, through a comic mishap, they get the misimpression their owner is trying to throw them away. They feel this existential threat releases them from their duty of loyalty.<sup id="fnref:fn1"><a href="#fn:fn1" rel="footnote">1</a></sup> The state&#8217;s one duty to its citizens is to keep them alive; if it can&#8217;t do that, the system falls apart. Note, however, that it&#8217;s only the misimpression that removes the duty. When they learn (from Mrs. Potato Head) that they were mistaken and Andy only planned to put them in the attic, they rush to return to him. The attic won&#8217;t actually kill them and so doesn&#8217;t remove the duty.</p>
+
+<p>Communism having collapsed, the toys emigrate to Sunnyside (the US, that nation of immigrants), which leader Lotso depicts as a libertarian paradise. In his introductory he speech, he touts the joys of self-ownership and interacting with children through the market (new children are constantly replacing old ones, maximizing the efficiency of the toys), as well as the improved material comforts his system brings (the repair depot, the dream house). The toys are enchanted.</p>
+
+<p>However, they quickly realize libertarian paradise is actually a far worse nightmare than communism. Lotso explains that immigrants have to work their way up, starting by doing the painful, backbreaking jobs that the current population (all former immigrants themselves) won&#8217;t do. There are a couple exceptions: Barbie is taken as a (Russian) mail-order bride and the entrepreneurial Buzz is chosen for promotion to the managerial class and resocialized so he won&#8217;t sympathize with his old comrades.<sup id="fnref:fni"><a href="#fn:fni" rel="footnote">2</a></sup></p>
+
+<p>Sunnside&#8217;s supposed freedom is actually slavery, complete with military discipline (via the reset Buzz) and a panopticon prison (via the monkey and symbolized by the treehouse). Their days are spent in torturous labor from which there is no real escape. Lotso has used his freedom to accumulate all the power for himself and does not allow any for anyone else.</p>
+
+<p>Meanwhile, Woody is adopted by Bonnie&#8217;s benevolent dictatorship. People are given a second chance there &#8212; they can adopt new names, new identities, and spend their days doing improv. They do work under Bonnie&#8217;s direction, but they do so voluntarily, and are free to leave if she becomes a tyrant. As Andy makes clear at the end of the film, it is Bonnie who owes a duty to the toys, not vice versa.</p>
+
+<p>Back at Sunnyside, the toys overthrow Lotso&#8217;s capitalist domination by working together, harnessing the collective power of the working class and using the managerial class (i.e. Ken and Bookworm) against itself (via deception and torture!). But their success eventually persuades some members of the managerial class to become their allies (e.g. Ken, despite having been tortured<sup id="fnref:fn3"><a href="#fn:fn3" rel="footnote">3</a></sup>, and ultimately Lotso&#8217;s right-hand toy, Big Baby) and at a key moment they together overthrow the capitalist Lotso, as Barbie gives a rousing speech nailing the key flaw with libertarianism: &#8220;authority should derive from the consent of the governed, not the threat of force.&#8221;</p>
+
+<p>However, the new revolutionaries also leave, preventing them from installing themselves as a new dictatorship of the proletariat. And in a final act betraying that he is finally beginning to question communism, Woody asks Andy (surely his first request of the state in his entire life!) that his comrades be given to Bonnie. Andy agrees, and takes the extra step of giving Woody to Bonnie as well, finally dissolving his duties to the state.</p>
+
+<p>Meanwhile, Ken and Barbie now lead Sunnyside, making it a &#8220;fun and groovy&#8221; socialist utopia. (Its actual day-to-day operation is, of course, left vague, but there is apparently lots of dancing in the streets.) Having risen up and overthrown Lotso, the toys can now operate on the basis of mutual equality. A happy ending for everyone.</p>
+
+<div class="footnotes">
+<hr />
+<ol>
+
+<li id="fn:fn1">
+<p>The same seems to apply to the Green Army Men who leave earlier, but only because they (pretty reasonably) believe they&#8217;re going to get thrown away even when other toys just go to the attic.&#160;<a href="#fnref:fn1" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn:fni">
+<p>Very <em>Street Corner Society</em>, so another possible reading is that they&#8217;re fleeing fascist Italy.&#160;<a href="#fnref:fni" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn:fn3">
+<p>Perhaps Ken realizes that he will get to lead a Lotso-less Sunnsyside?&#160;<a href="#fnref:fn3" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+
+
+<p class="posted"><a href="toystory3pol">June 20, 2010</a></p>
+<h2 class="posttitle"><a rel="bookmark" href="soundsmart">That Sounds Smart</a></h2>
+<p>How do you tell if what someone is saying is smart? Most people&#8217;s first instinct is to think that things they can&#8217;t understand must be smart. After all, to say such things they must have learned them and aren&#8217;t people who have learned more about something generally smarter than people who haven&#8217;t? Thus the common phenomena of people trusting jargon-laden statements.</p>
+
+<p>One problem with this method is simply that jargon can be faked. It&#8217;s not too hard to make up a bunch of longish words that sound complicated. And if you don&#8217;t understand them, you&#8217;ll have a hard time telling whether they&#8217;re real or made up.</p>
+
+<p>But the more serious problem is that this method is exactly backwards. Smart people actually say things that are very simple and easy to understand. And the smarter they are, the more clear what they say is. It&#8217;s stupid people who say things that are hard to understand.</p>
+
+<p>Part of this is because stupid people say things that aren&#8217;t true, things that aren&#8217;t true don&#8217;t make sense, and things that don&#8217;t make sense are hard to understand. But you can also look at it from the other end: if you genuinely understand something &#8212; really, truly understand it &#8212; then it doesn&#8217;t seem complicated and you can explain it rather simply.</p>
+
+<p>But the larger consequence is that if you&#8217;re smart the world doesn&#8217;t seem very complicated. This might seem obvious, but the obvious thought is rather different. The obvious thought is: The world doesn&#8217;t seem complicated to smart people. But this isn&#8217;t what smart people actually think. They think the world isn&#8217;t complicated, period.</p>
+
+<p>This is because when they try to explain part of the world they understand to someone, they explain it clearly, and, as a result, that person now understands it. This is proof that it&#8217;s not just uncomplicated for them, it&#8217;s uncomplicated for everyone.</p>
+
+<p>But, I suspect, for most people the world is a strange and mysterious place, governed by principles they do not understand, which affect them severely but cannot be controlled, only coped with as best as possible. This is certainly how most people regard their computers.</p>
+
+<p>By contrast, when I listen to smart people some part of the world I only dimly understood or never considered becomes immediately clear. Even if I don&#8217;t agree, I never have any trouble understanding. Listening to them, is like breathing pure oxygen and I cannot get enough.</p>
+
+<p>This means the tradeoff between being expert and being popular doesn&#8217;t actually exist. People who truly understand their subject should have no trouble writing for a popular audience. And, in fact, their writing will probably better than that of the professional popularizers.</p>
+
+<p>A good example of this was the early days of the blog Freakonomics. It had two writers, a successful economist and a popular journalist. The two had worked together on the bestselling book of the same name, with the general assumption that it was the journalist who had made the economist&#8217;s work clear. But reading their individual posts on the blog, you could see it was the reverse: the economist was a much clearer writer than the journalist.</p>
+
+<p>Another result is that you find the really smart things in unexpected and undervalued places. Smart writing won&#8217;t be in formal and difficult-to-understand journal articles, but in the profanity-laced angry rants you&#8217;ll find on someone&#8217;s blog. That&#8217;s where the smart people are, even if everybody else just thinks they&#8217;re dumb.</p>
+
+
+<p class="posted"><a href="soundsmart">June 18, 2010</a></p>
+<h2 class="posttitle"><a rel="bookmark" href="pcccjob">How to Get a Job Like Mine</a></h2>
+<p>[<a rel="nofollow" href="http://pc.de/pages/pcccjob-be">Беларуская</a>]</p>
+
+<p>Apparently a lot of people have gotten the mistaken impression from my blog that I sit around and think about abstract philosophy all day. Well, I guess I do kind of do that, but my day job is actually much more exciting. I&#8217;m a cofounder of <a href="http://boldprogressives.org/">the Progressive Change Campaign Committee</a> (BoldProgressives.org) and I spend my days experimenting with new ways to get progressive policies enacted and progressive politicians elected.</p>
+
+<p>Like a lot of people, I grew up feeling frustrated with the world &#8212; extremes of wealth and poverty, insane and bloody wars, outdated intellectual monopoly laws, big corporations run amok. But I had no idea what to do about it. Writing just felt like preaching to the choir, marching in the streets felt like the protest of the powerless, working with people on the ground just didn&#8217;t seem to scale.</p>
+
+<p>But when my friend Larry Lessig decided to run for Congress, I begun to see that there was something I could do. During the short-lived campaign, we were besieged with offers of help from consultants, software companies, and services firms. Their technology was invariably outdated and incompetent (the leading tools are built on SQL Server), uncoordinated and poorly-designed. The advice they gave was horrendous, their incompetence bordered on sabotage, and the prices they charged would bankrupt us.</p>
+
+<p>We started the Progressive Change Campaign Committee in January 2009 with the notion that we could fix all that. We would help filter the good consultants from the bad, write up best practices and conduct experiments to learn what works. Along the way, we got pulled into issue campaigns as well &#8212; at first <a href="http://fixcnbc.com/">going after CNBC for their terrible coverage of the economic crisis</a>, then spending most of the last year <a href="http://whipcongress.com/">getting Congress to pass a public option in the health care bill</a>. Along the way, we&#8217;ve gotten over 400,000 members and raised over a million dollars for our various tactics. Not bad for our first year!</p>
+
+<p>But now, as the 2010 campaigns ramp up, we&#8217;re getting back to our original mission. We&#8217;ve been working with campaigns to help them find talented staff, competent consultants, and money-saving techniques. But we also need some talented programmers to build the next generation of campaign tools. We&#8217;ve got some really exciting ideas, but we need your help.</p>
+
+<p>So here&#8217;s the ask: <strong>Want to work with me on building some amazing tools for some amazing campaigns?</strong> If so, just send me an email at <a href="mailto:aaron@boldprogressives.org">aaron@boldprogressives.org</a> or <a href="http://act.boldprogressives.org/cms/sign/app_senprogrammer/">just fill out this form</a>.</p>
+
+<p>Then, tell your friends. Your country needs you.</p>
+
+
+<p class="posted"><a href="pcccjob">April  7, 2010</a></p>
+
+<p><em>Want more?</em> Check <a href="archive">the archives</a>.</p>
+
+</td><td><div class="sidebar">
+<div id="container">
+    <h2>links</h2>
+</div>
+
+<script type="text/javascript" 
+        src="http://feeds.delicious.com/v1/json/aaronsw?count=5"></script>
+
+<script type="text/javascript"> 
+    function showImage(img){ return (function(){ img.style.display='inline'; }) }
+    var r_url = /(https?:\/\/[^) ]+)/g
+
+    var c = document.getElementById('container')
+    for (var i=0, post; post = Delicious.posts[i]; i++) {
+        out = '<p' + '><a' + ' href="' + post.u + '">' + post.d + '</a' + '><br />'
+        if (post.n) { 
+          post.n = post.n.replace(r_url, '<a href="$1">link</a>')
+          out += post.n + '<br />'
+        }
+
+        for (var j=0, tag; tag = post.t[j]; j++) {
+            out += '&nbsp;&nbsp;<a style="color: #aaa" href="http://delicious.com/aaronsw/' + tag + '">' + tag + '</a>  '
+        }
+        c.innerHTML += out + '</p>'
+    }
+</script>
+
+<p class="box"><a href="http://www.aaronsw.com/weblog/links">More...</a></p> 
+
+<h2>quotes</h2>    
+<script type="text/javascript" src="mainquotes.js"></script>
+<p class="box"><a href="http://qblog.aaronsw.com/">More...</a></p>
+
+<h2>tweets</h2>
+<div id="tweet_container"></div>
+<script type="text/javascript"><!--
+function twitter_publish(tweets) { 
+  c = document.getElementById('tweet_container');
+  for (tweet in tweets) { 
+    tweet = tweets[tweet];
+    if (tweet.text) { 
+      tweet.text = tweet.text.replace(r_url, '<a href="$1">link</a>')
+      out += tweet.text + '<br />'
+    }
+    c.innerHTML += '<p>' + tweet.text + '</p>'
+  }
+}
+//--></script>
+<script type="text/javascript" src="http://twitter.com/statuses/user_timeline.json?screen_name=aaronsw&amp;callback=twitter_publish&amp;count=15"></script>
+<p class="box"><a href="http://twitter.com/aaronsw">More...</a></p>
+
+<div id="flickr">
+<h2>photos</h2>
+</div>
+
+<script>
+function jsonFlickrFeed(doc) {
+  lst = doc.items;
+  c = document.getElementById('flickr');
+  for (var i=0, post; i < 3; i++) {
+    post = lst[i];
+    c.innerHTML += '<p><a style="border-bottom: none" href="' + post.link + '"><img src="' + post.media.m + '" title="' + post.title + '"/></a></p>'
+  }
+}
+</script>
+<script src="http://api.flickr.com/services/feeds/photos_public.gne?id=99833927@N00&amp;format=json"></script>
+
+<p class="box"><a href="http://www.flickr.com/photos/aaronsw/">More...</a></p> 
+
+<h2>thinkers</h2>
+<p><a href="http://www.mindhacks.com/">Vaughan Bell</a></p>
+
+<p><a href="http://krugman.blogs.nytimes.com/">Paul Krugman</a></p>
+
+<p><a href="http://leninology.blogspot.com/">Richard Seymour</a></p>
+
+<p><a href="http://yglesias.thinkprogress.org/">Matt Yglesias</a></p>
+
+<p><a href="http://ezraklein.com/">Ezra Klein</a></p>
+
+<p><a href="http://crookedtimber.org/">Crooked Timber</a></p> 
+
+<p><a href="http://bactra.org/weblog/">Cosma Shalizi</a> (<a href="http://delicious.com/cshalizi">links</a>)</p>
+
+<p><a href="http://www.steamthing.com/">Caleb Crain</a></p>
+
+<p><a href="http://www.rollingstone.com/politics/taibbiblog/blog/83512">Matt Taibbi</a></p>
+
+<p><a href="http://henwood.blogspace.com/">Doug Henwood</a></p>
+
+<p><a href="http://d-squareddigest.blogspot.com/">Daniel Davies</a> (<a href="http://commentisfree.guardian.co.uk/daniel_davies/">more Daniel Davies</a>)</p>
+
+<p><a href="http://www.artsjournal.com/quickstudy/">Scott McLemee</a></p>
+
+<p><a href="http://blog.sethroberts.net/">Seth Roberts</a></p>
+
+<p><a href="http://daringfireball.net/">John Gruber</a></p>
+
+<p><a href="http://3quarksdaily.com/">3QD</a></p>
+
+<p><a href="http://www.themonkeycage.org/">Political Science</a></p>
+
+<p><a href="http://sciencethatmatters.com/">Science</a></p>
+
+<p><a href="http://www.fair.org/">FAIR</a></p>
+
+<p><a href="http://jeremyfreese.blogspot.com/">Jeremy Freese</a></p>
+
+<p><a href="http://whimsley.typepad.com/">Tom Slee</a></p>
+
+<p><a href="http://www.plover.com/blog/">Mark-Jason Dominus</a></p>
+
+<p><a href="http://keithgessen.tumblr.com/">Keith Gessen</a></p>
+
+<p><a href="http://timlambert.org/">Tim Lambert</a></p>
+
+<p><a href="http://edwardtufte.com/">Edward Tufte</a></p>
+
+<p><a href="http://vitanuova.loyalty.org/">Seth Schoen</a></p>
+
+<p><a href="http://beatthepress.blogspot.com/">Dean Baker</a></p>
+
+<p><a href="http://delong.typepad.com/">Brad DeLong</a></p>
+
+<p><a href="http://www.tinyrevolution.com/mt/">Jonathan Schwarz</a></p>
+
+<p><a href="http://www.chomsky.info/whatsnew.htm">Noam Chomsky</a></p>
+
+<p><a href="http://harpers.org/">Harper's</a></p>
+
+<p><a href="http://www.will.uiuc.edu/am/mediamatters/">Robert McChesney</a></p>
+
+<p class="box"><a href="http://www.aaronsw.com/weblog/index.xml">RSS</a></p>
+
+<p class="box"><a href="http://www.amazon.com/gp/cdp/member-reviews/A3CNKIV16YN14Z/">Book reviews.</a></p>
+
+</div></td></tr>
+</table>
+</body>
+</html>
