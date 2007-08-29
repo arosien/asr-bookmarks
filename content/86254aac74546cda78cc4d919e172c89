@@ -1,0 +1,846 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head>
+<meta http-equiv="content-type" content="text/html; charset=">
+<link rel="stylesheet" href="http://sec.yimg.com/us.yimg.com/lib/s/ysch_gl_070104.css" type="text/css">
+<link rel="stylesheet" href="http://sec.yimg.com/us.yimg.com/lib/s/ysch_adv_041201.css" type="text/css">
+<style>
+<!--
+#ygtb {background:#a8cefa; padding: 5px 10px; text-align: left; margin: 15px 0;font-size:135%;}
+h2 {font-size:100%;color:#0072BC;border:1px solid #0072bc; border-width: 0 0 1px;margin: 0 10px 10px;}
+#yschfx {width:750px;text-align: left; margin: 0 auto; border: 1px solid #fff;}
+#ygma {padding-bottom: 3px;margin: 0 3px;}
+#ygma img {float: left;margin-right:30px}
+#ygnav {display: block; text-align: right;margin-top: 4px;white-space: nowrap;border-bottom:1px solid #999;padding-bottom:5px;}
+
+.yschst td {padding:6px 30px 6px 0;width:50%;}
+.yschst .yschthmb {border-color:#0072BC;margin:0 15px 10px 0;}
+.yschst a, li a {color:#0072BC}
+ul {margin-top:0;padding-top:0;}
+#yschft {text-align:center;padding:20px 0}
+
+fieldset {border:0px solid #fff;}
+legend {display:none;}
+input {vertical-align:middle;}
+
+#yschmain {text-align:left;}
+#yschmain p {margin: 10px 1em 20px;}
+#yschmain form {margin-left:2em;}
+#yschmain label {display:inline-block;width:17.4em;}
+#yschmain div {margin-bottom:15px;}
+#yschmain em {font:italic 85% arial;}
+#yschmain .red {color:red;}
+
+/* hack time for non-IE \*/
+html>body #yschmain fieldset {display:table;}
+html>body #yschmain div {display:table-row;}
+html>body #yschmain label {display:table-cell;padding-bottom:20px;}
+
+/* hide from nn4 */ /*/*/
+li {margin:0 0 10px;}
+body {font:small arial,helvetica,sans-serif;margin: 3px 10px;text-align:center;}
+body,table {font:x-small;}
+table {font-size:inherit;}
+html>body{font-size:83%}
+small {font-size:78%;}
+p, .yschst {margin:0 10px 20px}
+#yschmain div input {width:30em;}
+#yschmain div.yschact {display:block !important;}
+#yschmain div.yschact input {width:auto;margin-left:33.5%;}
+ /* end hide */
+
+/* nn4 only */ /*/*/ /*/
+p, div, td,h2, ul {font:small arial;}
+li {display:block;margin-top:10px;}
+h2 {font-weight:bold; margin:-10px 0}
+#yschfx {text-align:center;}
+#ygtb {border:1px none #fff;font:bold 22px arial;margin:-10px 0}
+.yschst .yschthmb {margin:0;}
+small, #yschft {font:72% arial;}
+/* end nn4 only */
+
+#yschdoc p {margin-top: 1.2em}
+#yschdoc ul li {margin: 0; padding: 0}
+#yschdoc p {text-align: left; border: none; padding: 0; margin: 1em 10px}
+#yschdoc h3 {margin: 2em 0 0 10px; padding: 0; font-size: 1em;}
+
+-->
+    </style>
+<title>Yahoo! Search</title>
+</head>
+        <body style="margin-top:10px;">
+        <div id=yschfx>
+
+        <div id=ygma><a href='http://search.yahoo.com'><img border=0' alt='Yahoo! Search' src='http://l.yimg.com/a/i/brand/purplelogo/sea/searchsrp/uk.gif'/></a><div><a href="http://www.yahoo.com/">Yahoo!</a>  - <a href="http://search.yahoo.com">Search Home</a>  - <a href="http://help.yahoo.com/help/us/ysearch/">Help</a></div></div>
+        <h1 id=ygtb>Media RSS Module - RSS 2.0 Module</h1>
+        
+
+
+<div id=yschdoc>
+<em>"Media RSS" Specification Version 1.5.0</em><p>
+An RSS module that supplements the &lt;enclosure&gt element capabilities of RSS 2.0 to allow for more robust media syndication.</p>
+<h2>Change Notes</h2>
+  <p>12/01/2004 - Created</p>
+<p>02/21/2005 - Major consolidation of all requested changes: [1.0.0]</p>
+<ul>
+<li>Added &lt;media:group&gt; element for grouping &lt;media:content&gt; objects.</li><li>Added <em>framerate</em>, <em>height</em>, <em>width</em> attributes to media:content.</li><li>Added additional type of <em>expression</em> for continuous streams.</li>
+<li>Added &lt;media:adult&gt; element to distinguish content of an adult nature.</li><li>Added &lt;media:title&gt; element.</li><li>Modified to have a <em>url</em> attribute for better module consistency.</li><li>Added <em>scheme</em> attribute to &lt;media:category&gt; to allow specifying categorization scheme.</li><li>Added <em>label</em> attribute to &lt;media:category&gt; for a human readable label.</li><li>Added &lt;media:hash&gt; element for media binary hashing.</li><li>Added &lt;media:player&gt; element and removed <em>playerUrl</em> attributes from &lt;media:content&gt;.</li><li>Overhaul of &lt;media:people&gt; to become &lt;media:credit&gt;.</li><li>Added <em>type</em> attribute to &lt;media:text&gt; to distinguish formatting of text.</li><li>Improved descriptions of various elements and attributes.</li>
+</ul>
+
+<p>08/22/2005  - Improved global syndication capabilities: [1.1.0]</p>
+<ul>
+<li>Corrected spelling mistakes.</li>
+<li>Add <em>lang</em> attributes to media:text and media:content.</li>
+<li>Deprecated &lt;media:adult&gt;, and added &lt;media:rating&gt; as a replacement.</li><li>Modified &lt;media:credit&gt; to give more flexibility to represent things other than people or companies.</li><li>Added &lt;media:description&gt; element.</li><li>Added <em>medium</em> attribute to &lt;media:content&gt; to explicitly determine what type of media is expressed.</li><li>Added <em>channels</em>, <em>samplingrate</em> attributes to &lt;media:content&gt;.</li><li>Added &lt;media:restriction&gt; element.</li><li>Added &lt;media:keywords&gt; element.</li><li>Added a &quot;Best Practices&quot; section to encourage use of the Feed History module, and Dublin Core's expiration capability.</li>
+<li>Add time code information to &lt;media:thumbnail&gt; and &lt;media:text&gt;.</li></ul>
+
+
+<p>10/22/2005 - Minor improvements: [1.1.1]</p>
+
+
+<ul>
+<li>Added capability for elements to appear at the &lt;channel&gt; level.</li><li>Flushed out &lt;media:restriction&gt; to allow explicit global relationships to be expressed.</li></ul>
+
+
+<p>03/12/2008 - Namespace corrections: [1.1.2]</p>
+
+
+<ul>
+<li>Added trailing slash to namespace</li>
+</ul>
+
+
+<!-- mrss new spec -->
+
+<p>09/09/2009 - Added a few more elements: [1.5.0]</p>
+
+
+<ul>
+<li>Added &lt;media:community&gt; element for adding community content like ratings, tags etc. </li><li>Added &lt;media:comments&gt; element for adding user comments. </li><li>Added &lt;media:embed&gt; element for adding player specific embed code. </li><li>Added &lt;media:responses&gt; element for adding media responses to a particular media object. </li><li>Added &lt;media:backLinks&gt; element for adding links pointing to a media object.  </li><li>Added &lt;media:status&gt; element for maintaining the state of a feed - whether the feed is still active, or it has been removed/blocked by the publisher. </li><li>Added &lt;media:license&gt; element for specifying the licensing information of a media object. </li><li>Added &lt;media:price&gt; element for specifying the pricing information of a media object. </li><li>Added &lt;media:subTitle&gt; element for specifying the subtitles of a media object. </li><li>Added &lt;media:peerLink&gt; element for specifying the P2P link to a media object. </li><li>Added &lt;media:location&gt; element for specifying variuos locations conforming to geoRSS. </li><li>Added &lt;media:rights&gt; element for specifying the rights information about a media object. </li><li>Added &lt;media:scenes&gt; element for including scene specific information from a media object. </li><li>Added option for allowing/denying sharing of a media object in &lt;media:restriction&gt; element. </li></ul>
+
+
+<h2>Namespace declaration</h2>
+<p>The namespace for Media RSS is defined to be: <a href='http://search.yahoo.com/mrss/'>http://search.yahoo.com/mrss/</a></p><p>For example:</p>
+<p>&lt;rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"&gt;</p>
+<p>NOTE: There is a trailing slash in the namespace, although there has been confusion around this in earlier versions.</p>
+
+
+<h2>Description</h2>
+<p>"Media RSS" is a new RSS module that supplements the enclosure capabilities of RSS 2.0. RSS enclosures are already being used to syndicate audio files and images. Media RSS extends enclosures to handle other media types, such as short films or TV, as well as provide additional metadata with the media. Media RSS enables content publishers and bloggers to syndicate multimedia content such as TV and video clips, movies, images, and audio. </p>
+
+
+
+<h2>Primary Elements</h2>
+<p><strong>&lt;media:group&gt;</strong></p>
+<p>&lt;media:group&gt; is a sub-element of &lt;item&gt;. It allows grouping of &lt;media:content&gt; elements that are effectively the same content, yet different representations. &nbsp; For instance: the same song recorded in both the WAV and MP3 format.
+It's an optional element that must only be used for this purpose.</p>
+<p> <strong>&lt;media:content&gt;</strong></p>
+<p>&lt;media:content&gt; is a sub-element of either &lt;item&gt; or &lt;media:group&gt;.&nbsp;Media objects that are not the same content should not be included in the same &lt;media:group&gt; element. &nbsp;The sequence of these items implies the order of presentation.
+While many of the attributes appear to be audio/video specific, this element can be used to publish any type of media. 
+It contains 14 attributes, most of which are optional.</p>
+<pre> 
+        &lt;media:content 
+               url="http://www.foo.com/movie.mov" 
+               fileSize="12216320" 
+               type="video/quicktime"
+               medium="video"
+               isDefault="true" 
+               expression="full" 
+               bitrate=&quot;128&quot; 
+               framerate="25"
+               samplingrate="44.1"
+               channels="2"
+               duration=&quot;185&quot; 
+               height="200"
+               width="300" 
+               lang="en" /&gt;</pre>
+
+<p><em>url</em> should specify the direct url to the media object. If not included, a &lt;media:player&gt; element must be specified.</p><p><em>fileSize</em> is the number of bytes of the media object. It is an optional attribute.</p>
+<p><em>type</em> is the standard MIME type of the object. It is an optional attribute.</p>
+<p><em>medium</em> is the type of object (image | audio | video | document | executable). While this attribute can at times seem redundant if <em>type</em> is supplied, it is included because it simplifies decision making on the reader side, as well as flushes out any ambiguities between MIME type and object type. It is an optional attribute.</p> 
+
+
+<p><em>isDefault</em> determines if this is the default object that should be used for the &lt;media:group&gt;.  There should only be one default object per &lt;media:group&gt;.  It is an optional attribute.</p>
+
+<p><em>expression</em> determines if the object is a sample or the full version of the object, or even if it is a continuous stream (sample | full | nonstop).  
+Default value is 'full'.  
+It is an optional attribute. </p>
+<p><em>bitrate</em> is the kilobits per second rate of media.  It is an optional attribute.</p>
+<p><em>framerate</em> is the number of frames per second for the media object.  It is an optional attribute.</p>
+<p><em>samplingrate</em> is the number of samples per second taken to create the media object. It is expressed in thousands of samples per second (kHz). It is an optional attribute.</p>
+<p><em>channels</em> is number of audio channels in the media object. It is an optional attribute.
+<p><em>duration</em> is the number of seconds the media object plays.   It is an optional attribute.</p>
+
+<p><em>height</em> is the height of the media object.  It is an optional attribute.</p>
+<p><em>width</em> is the width of the media object.  It is an optional attribute.</p>
+
+<p><em>lang</em> is the primary language encapsulated in the media object. Language codes possible are detailed in RFC 3066. This attribute is used similar to the <em>xml:lang</em> attribute detailed in the XML 1.0 Specification (Third Edition).  It is an optional attribute.</p>
+        
+        <p> These optional attributes, along with the optional elements below, contain the primary metadata entries needed to index and organize media content.
+            Additional supported attributes for describing images, audio, and video may be added in future revisions of this document.</p>
+<p><strong>Note:</strong> 
+While both &lt;media:content&gt; and &lt;media:group&gt; have no limitations on the number of times they can appear, the general nature of RSS should be preserved: an &lt;item&gt; represents a "story". Simply stated, this is similar to the blog style of syndication.
+ However, if one is using this module to strictly publish media, there should be one &lt;item&gt; element for each media object/group. This is to allow for proper attribution for the origination of the media content through the &lt;link&gt; element.  It also allows the full benefit of the other RSS elements to be realized.</p>
+            
+            
+    <h2>Optional Elements</h2>
+        <p> The following elements are optional and may appear as sub-elements of &lt;channel&gt;, &lt;item&gt;, &lt;media:content&gt; and/or &lt;media:group&gt;.
+
+
+<p>
+When an element appears at a shallow level, such as &lt;channel&gt; or &lt;item&gt;, it means that the element should be applied to every media object within its scope.</p>
+
+
+<p>
+Duplicated elements appearing at deeper levels of the document tree have higher priority over other levels.
+
+ For example, &lt;media:content&gt; level elements are favored over &lt;item&gt; level elements. 
+ The priority level is listed from strongest to weakest: &lt;media:content&gt;, &lt;media:group&gt;, &lt;item&gt;, &lt;channel&gt;.</p>
+
+
+
+
+<p> <strong>&lt;media:adult&gt;</strong></p>
+<p>[NOTE: This is deprecated, and has been replaced with the more flexible &lt;media:rating&gt;]</p>
+<p> <strong>&lt;media:rating&gt;</strong></p>
+
+
+<p>This allows the permissible audience to be declared. If this element is not included, it assumes that no restrictions are necessary. It has one optional attribute. </p>
+
+<pre>
+               &lt;media:rating scheme="urn:simple"&gt;adult&lt;/media:rating&gt;
+               &lt;media:rating scheme="urn:icra"&gt;r (cz 1 lz 1 nz 1 oz 1 vz 1)&lt;/media:rating&gt;
+               &lt;media:rating scheme="urn:mpaa"&gt;pg&lt;/media:rating&gt;
+               &lt;media:rating scheme="urn:v-chip"&gt;tv-y7-fv&lt;/media:rating&gt;</pre>
+
+
+<p><em>scheme</em> is the URI that identifies the rating scheme. It is an optional attribute. If this attribute is not included, the default scheme is urn:simple (adult | nonadult).</p> 
+
+<p> <strong>&lt;media:title&gt;</strong></p>
+<p>The title of the particular media object.  It has 1 optional attribute.</p>
+<pre>        &lt;media:title type=&quot;plain&quot;&gt;The Judy's - The Moo Song&lt;/media:title&gt;</pre>
+<p><em>type</em> specifies the type of text embedded. Possible values are either 'plain' or 'html'. Default value is 'plain'. All html must be entity-encoded. It is an optional attribute. </p>
+<p><strong>&lt;media:description&gt;</strong></p>
+<p>Short description describing the media object typically a sentence in length. It has 1 optional attribute.</p>
+<pre>        &lt;media:description type="plain"&gt;This was some really bizarre band I listened to as a young lad.&lt;/media:description&gt;</pre>
+<p><em>type</em> specifies the type of text embedded. Possible values are either 'plain' or 'html'. Default value is 'plain'. All html must be entity-encoded. It is an optional attribute.</p><p><strong>&lt;media:keywords&gt;</strong></p>
+<p>Highly relevant keywords describing the media object with typically a maximum of ten words. The keywords and phrases should be comma delimited.</p>
+<pre>        &lt;media:keywords&gt;kitty, cat, big dog, yarn, fluffy&lt;/media:keywords&gt;</pre>
+
+
+
+
+
+<p><strong>&lt;media:thumbnail&gt;</strong></p>
+
+
+<p>Allows particular images to be used as representative images for the media object. If multiple thumbnails are included, and time coding is not at play, it is assumed that the images are in order of importance. It has 1 required attribute and 3 optional attributes.</p>
+
+
+
+
+
+         <pre>        &lt;media:thumbnail url="http://www.foo.com/keyframe.jpg" width="75" height="50" time="12:05:01.123" /&gt;</pre>
+<p><em>url</em> specifies the url of the thumbnail. It is a required attribute.</p>        <p> <em>height</em> specifies the height of the thumbnail. It is an optional attribute.</p>
+        <p> <em>width</em> specifies the width of the thumbnail. It is an optional attribute.</p>
+
+
+<p><em>time</em>
+specifies the time offset in relation to the media object. Typically this is used when creating multiple keyframes within a single video. The format for this attribute should be in the DSM-CC's Normal Play Time (NTP) as used in RTSP [<a href="http://www.ietf.org/rfc/rfc2326.txt">RFC 2326 3.6 Normal Play Time</a>]. It is an optional attribute. </p>
+
+<p><strong>Notes:</strong></p>
+<p>NTP has a second or subsecond resolution. It is specified as H:M:S.h (npt-hhmmss) or S.h (npt-sec), where H=hours, M=minutes, S=second and h=fractions of a second.</p>
+<p>A possible alternative to NTP would be SMPTE. It is believed that NTP is simpler and easier to use.</p>
+
+
+
+
+        <p> <strong>&lt;media:category&gt;</strong></p>
+        <p> Allows a taxonomy to be set that gives an indication of the type of media content, and its particular contents.  
+It has 2 optional attributes.  </p>
+<pre>
+        &lt;media:category scheme="http://search.yahoo.com/mrss/category_
+        schema"&gt;music/artist/album/song&lt;/media:category&gt;
+
+        &lt;media:category scheme="http://dmoz.org" label="Ace Ventura - Pet 
+        Detective"&gt;Arts/Movies/Titles/A/Ace_Ventura_Series/Ace_Ventura_
+        -_Pet_Detective&lt;/media:category&gt;
+
+        &lt;media:category scheme="urn:flickr:tags"&gt;ycantpark 
+        mobile&lt;/media:category&gt;</pre>
+
+<p><em>scheme</em> is the URI that identifies the categorization scheme. It is an optional attribute. If this attribute is not included, the default scheme is 'http://search.yahoo.com/mrss/category_schema'.</p> 
+
+<p><em>label</em> is the human readable label that can be displayed in end user applications.  It is an optional attribute.</p>
+
+
+
+<p> <strong>&lt;media:hash&gt;</strong></p>
+
+<p> This is the hash of the binary media file. It can appear multiple times as long as each instance is a different <em>algo</em>. It has 1 optional attribute.</p><p></p>
+
+<pre>        &lt;media:hash algo="md5"&gt;dfdec888b72151965a34b4b59031290a&lt;/media:hash&gt;</pre>
+
+<p><em>algo</em> indicates the algorithm used to create the hash. Possible values are 'md5' and 'sha-1'. Default value is 'md5'. It is an optional attribute. </p>
+
+<p> <strong>&lt;media:player&gt;</strong></p>
+<p>Allows the media object to be accessed through a web browser media player console. 
+ This element is required only if a direct media <em>url</em> attribute is not specified in the &lt;media:content&gt; element.  It has 1 required attribute, and 2 optional attributes.</p>
+<pre>        &lt;media:player url="http://www.foo.com/player?id=1111" height="200" width="400" /&gt;</pre>
+<p><em>url</em> is the url of the player console that plays the media.  It is a required attribute.</p>
+<p><em>height</em> is the height of the browser window that the <em>url</em> should be opened in.   It is an optional attribute.</p>
+<p><em>width</em> is the width of the browser window that the <em>url</em> should be opened in.  It is an optional attribute.</p>
+
+<p> <strong>&lt;media:credit&gt;</strong></p>
+<p>Notable entity and the contribution to the creation of the media object. Current entities can include people, companies, locations, etc. Specific entities can have multiple roles, and several entities can have the same role. 
+ These should appear as distinct &lt;media:credit&gt; elements. 
+ It has 2 optional attributes.</p>
+<pre>
+        &lt;media:credit role="producer" scheme="urn:ebu"&gt;entity name&lt;/media:credit&gt;
+	&lt;media:credit role="owner" scheme="urn:yvs"&gt;copyright holder of the entity&lt;/media:credit&gt;
+</pre>
+<p>role specifies the role the entity played. Must be lowercase.  It is an optional attribute.</p>
+
+<p><em>scheme</em> is the URI that identifies the role scheme.  It is an optional attribute and possible values for this attribute are ( urn:ebu | urn:yvs ) . The default scheme is 'urn:ebu'. The list of roles supported under urn:ebu scheme can be found at: <a href='http://www.ebu.ch/en/technical/metadata/speci fications/role_codes.php'>European Broadcasting Union Role Codes</a>. The roles supported under urn:yvs scheme are ( uploader | owner ) .</p> </p>
+
+
+<p>Example roles:</p>
+<pre>
+        actor
+        anchor person
+        author
+        choreographer
+        composer
+        conductor
+        director
+        editor
+        graphic designer     
+        grip
+        illustrator
+        lyricist
+        music arranger
+        music group
+        musician
+        orchestra
+        performer
+        photographer
+        producer
+        reporter
+        vocalist
+</pre>
+<p>Additional roles: <a href='http://www.ebu.ch/en/technical/metadata/specifications/role_codes.php'>European Broadcasting Union Role Codes</a></p>
+
+
+<p><strong>&lt;media:copyright&gt;</strong></p>
+<p>Copyright information for media object.  It has 1 optional attribute.</p>
+<pre>        &lt;media:copyright url="http://blah.com/additional-info.html"&gt;2005 FooBar Media&lt;/media:copyright&gt;</pre>
+<p><em>url</em> is the url for a terms of use page or additional copyright information. If the media is operating under a Creative Commons license, the Creative Commons module should be used instead. It is an optional attribute.</p>
+
+
+
+
+<p> <strong>&lt;media:text&gt;</strong></p>
+<p>Allows the inclusion of a text transcript, closed captioning, or lyrics of the media content. Many of these elements are permitted to provide a time series of text. In such cases, it is encouraged, but not required, that the elements be grouped by language and appear in time sequence order based on the <em>start</em> time. Elements can have overlapping <em>start</em> and <em>end</em> times. It has 4 optional attributes.</p><pre>        &lt;media:text type="plain" lang="en" start="00:00:03.000" 
+        end="00:00:10.000"&gt; Oh, say, can you see&lt;/media:text&gt;
+        &lt;media:text type="plain" lang="en" start="00:00:10.000" 
+        end="00:00:17.000"&gt;By the dawn's early light&lt;/media:text&gt;
+</pre>
+<p><em>type</em> specifies the type of text embedded. Possible values are either 'plain' or 'html'. Default value is 'plain'. All html must be entity-encoded. It is an optional attribute. </p>
+
+
+
+
+
+
+<p><em>lang</em> is the primary language encapsulated in the media object. Language codes possible are detailed in RFC 3066. This attribute is used similar to the xml:lang attribute detailed in the XML 1.0 Specification (Third Edition). It is an optional attribute.</p>
+
+<p><em>start</em> specifies the start time offset that the text starts being relevant to the media object. An example of this would be for closed captioning. 
+ It uses the NTP time code format (see: the time attribute used in &lt;media:thumbnail&gt;).  &nbsp; It is an optional attribute.</p>
+
+<p><em>end</em> specifies the end time that the text is relevant. 
+If this attribute is not provided, and a <em>start</em> time is used, it is expected that the end time is either the end of the clip or the start of the next &lt;media:text&gt; element. </p>
+
+<p><strong>&lt;media:restriction&gt; </strong></p>
+
+<p>Allows restrictions to be placed on the aggregator rendering the media in the feed. Currently, restrictions are based on distributor (uri) ,country codes  and sharing of a media object. This element is purely informational and no obligation can be assumed or implied. 
+Only one &lt;media:restriction&gt; element of the same <em>type</em> can be applied to a media object - all others will be ignored.&nbsp;Entities in this element should be space separated. To allow the producer to explicitly declare his/her intentions, two literals are reserved: 'all', 'none'. These literals can only be used once. This element has 1 required attribute, and 1 optional attribute (with strict requirements for its exclusion).</p>
+
+<pre>        &lt;media:restriction relationship="allow" type="country"&gt;au us&lt;/media:restriction&gt;</pre>
+<p><em>relationship</em> indicates the type of relationship that the restriction represents (allow | deny). In the example above, the media object should only be syndicated in Australia and the United States. It is a required attribute.</p>
+
+<p><strong>Note:</strong> If the &quot;allow&quot; element is empty and the type is relationship is &quot;allow&quot;, it is assumed that the empty list means &quot;allow nobody&quot; and the media should not be syndicated.</p>
+<p>A more explicit method would be:</p>
+
+<pre>        &lt;media:restriction relationship="allow" type="country"&gt;au us&lt;/media:restriction&gt;</pre>
+
+<p><em>type</em> specifies the type of restriction (country | uri | sharing ) that the media can be syndicated. It is an optional attribute; however can only be excluded when using one of the literal values "all" or "none". </p>
+
+<p>&quot;country&quot; allows restrictions to be placed based on country code. [<a href="http://www.iso.org/iso/en/prods-services/iso3166ma/index.html">ISO 3166</a>]</p>
+<p>&quot;uri&quot; allows restrictions based on URI. Examples: urn:apple, http://images.google.com, urn:yahoo, etc. </p>
+
+	
+<p>&quot;sharing&quot; allows restriction on sharing. <em>deny</em> means content cannot be shared - e.g. via embed tags. If the sharing type is not present, the default functionality is to allow sharing. e. g.  </p>
+
+<pre>        &lt;media:restriction type="sharing" relationship="deny" /&gt;</pre>
+
+
+<p><strong>&lt;media:community&gt; </strong></p>
+
+<p>This elements stands for the community related content. This allows inclusion of the user perception about a media object in the form of view count, ratings and tags.</p>
+
+<p><pre>   
+   &lt;media:community&gt;
+		&lt;media:starRating average="3.5" count="20" min="1" max="10"/&gt;
+		&lt;media:statistics views="5" favorites="5"/&gt;
+		&lt;media:tags&gt;news: 5, abc:3, reuters &lt;/media:tags&gt;
+   &lt;/media:community&gt;</pre></p>
+
+<p><i>starRating</i> This element specifies the rating related information about a media object. Valid attributes are &quot;average&quot;, &quot;count&quot;, &quot;min&quot; and &quot;max&quot;.</p>
+
+<p><i>statistics</i> This element specifies various statistics about a media object like the view count and the favorite count. Valid attributes are &quot;views&quot; and &quot;favorites&quot;. </p>
+
+<p><i>tags</i> This element contains user generated tags separated by commas in the decreasing order of each tag's weight. Each tag can be assigned an integer weight in &lt;tag_name&gt;:&lt;weight&gt; format. It's upto the provider to choose the way weight is determined for a tag, for example, number of occurence can be one way to decide weight of a particular tag. Default weight is 1.</p>
+
+
+
+	  
+<p><strong>&lt;media:comments&gt; </strong></p>
+
+<p>Allows inclusion of all the comments media object has received. </p>
+
+<p><pre>     &lt;media:comments&gt;
+                &lt;media:comment&gt;comment1&lt;/media:comment&gt;
+        	&lt;media:comment&gt;comment2&lt;/media:comment&gt;
+        	&lt;media:comment&gt;comment3&lt;/media:comment&gt;
+     &lt;/media:comments&gt;</pre></p>
+
+
+
+
+<p><strong>&lt;media:embed&gt; </strong></p>
+
+<p>Sometimes player specific embed code is needed for a player to play any video. &lt;media:embed&gt; allows inclusion of such information in the form of key value pairs. </p>
+
+<p><pre>     &lt;media:embed url="http://d.yimg.com/static.video.yahoo.com/yep/YV_YEP.swf?ver=2.2.2" width="512" height="323" &gt;
+                &lt;media:param name="type"&gt;application/x-shockwave-flash&lt;/media:param&gt;
+                &lt;media:param name="width"&gt;512&lt;/media:param&gt;
+                &lt;media:param name="height"&gt;323&lt;/media:param&gt;
+                &lt;media:param name="allowFullScreen"&gt;true&lt;/media:param&gt;
+                &lt;media:param name="flashVars"&gt;id=7809705&amp;vid=2666306&amp;lang=en-us&amp;intl=us&amp;thumbUrl=http%3A//us.i1.yimg.com/us.yimg.com/i/us/sch/cn/video06/2666306_rndf1e4205b_19.jpg&lt;/media:param&gt;
+     &lt;/media:embed&gt;</pre></p>
+
+
+
+
+<p><strong>&lt;media:responses&gt; </strong></p>
+
+<p>Allows inclusion of a list of all media responses a media object has received. </p>
+   
+<p><pre>     &lt;media:responses&gt;
+                &lt;media:response&gt;response1&lt;/media:response&gt;
+                &lt;media:response&gt;response2&lt;/media:response&gt;
+                &lt;media:response&gt;response3&lt;/media:response&gt;
+     &lt;/media:responses&gt;</pre></p>
+
+
+<p><strong>&lt;media:backLinks&gt; </strong></p>
+
+<p>Allows inclusion of all the urls pointing to a media object. </p>
+   
+<p><pre>     &lt;media:backLinks&gt;
+                &lt;media:backLink&gt;www.backLink1.com&lt;/media:backLink&gt;
+                &lt;media:backLink&gt;www.backLink2.com&lt;/media:backLink&gt;
+                &lt;media:backLink&gt;www.backLink3.com&lt;/media:backLink&gt;
+     &lt;/media:backLinks&gt;</pre></p>
+
+
+
+
+
+<p><strong>&lt;media:status&gt; </strong></p>
+
+<p>Optional tag to specify the status of a media object - whether it's still active or it has been blocked/deleted. </p>
+
+<p><pre>     &lt;media:status state="blocked" reason="http://www.reasonforblocking.com"/&gt;</pre></p>
+
+<p><i>state</i> can have values &quot;active&quot;, &quot;blocked&quot; or &quot;deleted&quot;. &quot;active&quot; means a media object is active in the system, &quot;blocked&quot; means a media object is blocked by the publisher, &quot;deleted&quot; means a media object has been deleted by the publisher.</p>
+
+<p><i>reason</i> is a reason explaining why a media object has been blocked/deleted. It can be plain text or a url. </p>
+
+
+<p><strong>&lt;media:price&gt; </strong></p>
+
+<p>Optional tag to include pricing information about a media object. If this tag is not present, the media object is supposed to be free. One media object can have multiple instances of this tag for including different pricing structures. The presence of this tag would mean that media object is not free.</p>
+<p><pre>     
+	     &lt;media:price type="rent" price="19.99" currency="EUR"/&gt;
+             &lt;media:price type="package" info="http://www.dummy.jp/package_info.html" price="19.99" currency="EUR"/&gt;
+             &lt;media:price type="subscription" info="http://www.dummy.jp/subscription_info" price="19.99" currency="EUR"/&gt;</pre></p>
+
+
+<p><i>type</i> Valid values are - &quot;rent&quot;, &quot;purchase&quot;, &quot;package&quot; or &quot;subscription&quot;.If nothing is specified, then the media is free.</p>
+
+<p><i>info</i> if the type is "package" or "subscription", then info is a url ponting to package or subscription information. This is an optional attribute. </p>
+
+<p><i>price</i> is the price of the media object. This is an optional attribute. </p>
+
+
+<p> <i>currency</i> - use [<a href="http://en.wikipedia.org/wiki/ISO_4217">ISO 4217</a>] for currency codes. This is an optional attribute.</p>
+
+
+
+
+<p><strong>&lt;media:license&gt; </strong></p>
+
+<p>Optional link to specify the machine readable license associated with the content. </p>
+
+<p><pre>     &lt;media:license type="text/html" href="http://creativecommons.org/licenses/by/3.0/us/"&gt; Creative Commons Attribution 3.0 United States License
+     &lt;/media:license&gt;</pre></p>
+
+
+
+<p><strong>&lt;media:subTitle&gt; </strong></p>
+
+
+<p>Optional element for subtitle/CC link. It contains <i>type</i> and <i>language</i> attributes. Language is based on RFC 3066. There can be more than one such tag per media element e.g. one per language. Please refer to <a href="http://www.w3.org/AudioVideo/TT"> Timed Text spec - W3C</a> for more information on <em>Timed Text</em> and <em>Real Time Subtitling</em>. </p>
+<p><pre> 
+        &lt;media:subTitle type="application/smil" lang="en-us"  href="http://www.example.org/subtitle.smil"  /&gt;</pre></p>
+ 
+
+
+
+<p><strong>&lt;media:peerLink&gt;</strong></p>
+
+<p>Optional element for P2P link. </p>
+
+<pre>
+        &lt;media:peerLink type="application/x-bittorrent " href="http://www.example.org/sampleFile.torrent"  /&gt;
+</pre>
+
+<p>For a valid mRSS item, at least one of the following links is required:</p>
+
+<ul>
+<li><em>media:content</em></p></li>
+<li><em>media:player</em></li>
+<li><em>media:peerLink</em></li>
+</ul>
+
+
+<p><strong>&lt;media:location&gt;</strong></p>
+
+<p> Optional element to specify geographical information about various locations captured in the content of a media object. The format conforms to <a href="http://www.georss.org/">geoRSS</a>.</p>
+
+<pre>
+
+  &lt;media:location description="My house" start="00:01" end="01:00"&gt;
+       &lt;georss:where&gt;
+       &lt;gml:Point&gt;
+         &lt;gml:pos&gt;35.669998 139.770004&lt;/gml:pos&gt;
+       &lt;/gml:Point&gt;
+       &lt;/georss:where&gt;
+      &lt;/media:location&gt;
+</pre>
+
+<p><em>description</em> description of the place whose location is being specified. </p>  
+
+<p><em>start</em> time at which the reference to a particular location starts in the media object. </p> 
+<p><em>end</em> time at which the reference to a particular location ends in the media object. </p> 
+
+
+
+
+<p><strong>&lt;media:rights&gt;</strong></p>
+
+<p> Optional element to specify the rights information of a media object. </p>
+
+<pre>
+    &lt;media:rights status="userCreated" /&gt;
+    &lt;media:rights status="official" /&gt;
+</pre>
+
+<p><em>status</em> is the status of the media object saying whether a media object has been created by the publisher or they have rights to circulate it. Supported values are "userCreated"  and "official".</p>
+
+
+
+
+<p><strong>&lt;media:scenes&gt;</strong></p>
+<p> Optional element to specify various scenes within a media object. It can have multiple child &lt;media:scene&gt; elements, where each &lt;media:scene&gt; element contains information about a particular scene. &lt;media:scene&gt; has optional sub-elements as "sceneTitle","sceneDescription", "sceneStartTime" and "sceneEndTime", which contains title, description, start and end time of a particular scene in the media respectively. </p>
+
+<pre>
+    &lt;media:scenes&gt;
+        &lt;media:scene&gt;
+            &lt;sceneTitle&gt;sceneTitle1&lt;/sceneTitle&gt;
+            &lt;sceneDescription&gt;sceneDesc1&lt;/sceneDescription&gt;
+            &lt;sceneStartTime&gt;00:15&lt;/sceneStartTime&gt;
+            &lt;sceneEndTime&gt;00:45&lt;/sceneEndTime&gt;
+        &lt;/media:scene&gt;
+        &lt;media:scene&gt;
+            &lt;sceneTitle&gt;sceneTitle2&lt;/sceneTitle&gt;
+            &lt;sceneDescription&gt;sceneDesc2&lt;/sceneDescription&gt;
+            &lt;sceneStartTime&gt;00:57&lt;/sceneStartTime&gt;
+            &lt;sceneEndTime&gt;01:45&lt;/sceneEndTime&gt;
+        &lt;/media:scene&gt;
+    &lt;/media:scenes&gt;
+</pre>
+
+
+
+
+<h2>Best Practices</h2>
+
+<p> The following are encouraged &quot;best practices&quot; when using Media RSS:</p><ul> 
+
+<li><a href="http://www.ietf.org/internet-drafts/draft-nottingham-atompub-feed-history-04.txt">Feed History Specification</a></li>
+</ul>
+
+<p>If your feed is not an &quot;incremental&quot; in the traditional RSS sense, but rather an entire snapshot of all media available, please take note of the &lt;fh:incremental&gt; element. This element when set to &quot;false&quot; correctly informs the RSS reader that the current feed replaces the previously fetched feed.</p>
+
+<p>If you prefer to syndicate media more along the lines of traditional RSS, this specification also allows you to daisy chain multiple feeds together to compose a history of media that is available on your site.</p>
+<ul>
+
+<li><a href="http://web.resource.org/rss/1.0/modules/dcterms/#valid">Expirations Using Dublin Core</a></li>
+</ul>
+
+
+<p>To the best of your ability, media that is scheduled to expire after a given time should be duly noted through Dublin Core's &lt;dcterms:valid&gt; element. </p>
+
+
+<h2>Examples</h2>
+
+
+<ol>
+
+<li>A recently created movie, using the RSS 2.0 &lt;enclosure&gt; element and without the use of the Media RSS module.<pre>&lt;rss version="2.0"&gt;
+&lt;channel&gt;
+&lt;title&gt;Title of page&lt;/title&gt;
+&lt;link&gt;http://www.foo.com&lt;/link&gt;
+&lt;description&gt;Description of page&lt;/description&gt;
+    &lt;item&gt;
+        &lt;title&gt;Story about something&lt;/title&gt;
+        &lt;link&gt;http://www.foo.com/item1.htm&lt;/link&gt;
+        &lt;enclosure url="http://www.foo.com/file.mov" 
+        length="320000" type="video/quicktime"/&gt;
+    &lt;/item&gt;
+&lt;/channel&gt;
+&lt;/rss&gt;</pre>
+</li>
+
+
+
+<li>A movie review with a trailer, using a Creative Commons license.
+
+
+
+<pre>&lt;rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"
+xmlns:creativeCommons="http://backend.userland.com/creativeCommonsRssModule"&gt;
+&lt;channel&gt;
+&lt;title&gt;My Movie Review Site&lt;/title&gt;
+&lt;link&gt;http://www.foo.com&lt;/link&gt;
+&lt;description&gt;I review movies.&lt;/description&gt;
+    &lt;item&gt;
+        &lt;title&gt;Movie Title: Is this a good movie?&lt;/title&gt;
+        &lt;link&gt;http://www.foo.com/item1.htm&lt;/link&gt;
+        &lt;media:content url="http://www.foo.com/trailer.mov" 
+        fileSize="12216320" type="video/quicktime" expression="sample"/&gt;
+        &lt;creativeCommons:license&gt;
+        http://www.creativecommons.org/licenses/by-nc/1.0
+        &lt;/creativeCommons:license&gt;
+        &lt;media:rating&gt;nonadult&lt;/media:rating&gt;
+    &lt;/item&gt;
+&lt;/channel&gt;
+&lt;/rss&gt;</pre>
+</li>
+
+
+<li>A music video with a link to a player window, and additional metadata about the video, including expiration date.
+
+<pre>&lt;rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"
+xmlns:dcterms="http://purl.org/dc/terms/"&gt;
+&lt;channel&gt;
+&lt;title&gt;Music Videos 101&lt;/title&gt;
+&lt;link&gt;http://www.foo.com&lt;/link&gt;
+&lt;description&gt;Discussions of great videos&lt;/description&gt;
+    &lt;item&gt;
+        &lt;title&gt;The latest video from an artist&lt;/title&gt;
+        &lt;link&gt;http://www.foo.com/item1.htm&lt;/link&gt;
+        &lt;media:content url="http://www.foo.com/movie.mov" fileSize="12216320" 
+        type="video/quicktime" expression="full"&gt;
+        &lt;media:player url="http://www.foo.com/player?id=1111" 
+        height="200" width="400"/&gt;
+        &lt;media:hash algo="md5"&gt;dfdec888b72151965a34b4b59031290a&lt;/media:hash&gt;
+        &lt;media:credit role="producer"&gt;producer's name&lt;/media:credit&gt;
+        &lt;media:credit role="artist"&gt;artist's name&lt;/media:credit&gt;
+        &lt;media:category scheme="http://blah.com/scheme"&gt;music/artist 
+        name/album/song&lt;/media:category&gt;
+        &lt;media:text type="plain"&gt;
+        Oh, say, can you see, by the dawn's early light
+        &lt;/media:text&gt;
+        &lt;media:rating&gt;nonadult&lt;/media:rating&gt;
+        &lt;dcterms:valid&gt;
+            start=2002-10-13T09:00+01:00;
+            end=2002-10-17T17:00+01:00;
+            scheme=W3C-DTF
+        &lt;/dcterms:valid&gt;
+        &lt;/media:content&gt;
+    &lt;/item&gt;
+&lt;/channel&gt;
+&lt;/rss&gt;</pre>
+</li>
+
+
+
+
+<li>Several different songs that relate to the same topic.
+
+<pre>&lt;rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"&gt;
+&lt;channel&gt;
+&lt;title&gt;Song Site&lt;/title&gt;
+&lt;link&gt;http://www.foo.com&lt;/link&gt;
+&lt;description&gt;Discussion on different songs&lt;/description&gt;
+    &lt;item&gt;
+        &lt;title&gt;These songs make me think about blah&lt;/title&gt;
+        &lt;link&gt;http://www.foo.com/item1.htm&lt;/link&gt;
+        &lt;media:content url="http://www.foo.com/band1-song1.mp3" 
+        fileSize="1000" type="audio/mpeg" expression="full"&gt;
+        &lt;media:credit role="musician"&gt;member of band1&lt;/media:credit&gt;
+        &lt;media:category&gt;music/band1/album/song&lt;/media:category&gt;
+        &lt;media:rating&gt;nonadult&lt;/media:rating&gt;
+        &lt;/media:content&gt;
+        &lt;media:content url="http://www.foo.com/band2-song1.mp3" 
+        fileSize="2000" type="audio/mpeg" expression="full"&gt;
+        &lt;media:credit role="musician"&gt;member of band2&lt;/media:credit&gt;
+        &lt;media:category&gt;music/band2/album/song&lt;/media:category&gt;
+        &lt;media:rating&gt;nonadult&lt;/media:rating&gt;
+        &lt;/media:content&gt;
+        &lt;media:content url="http://www.foo.com/band3-song1.mp3" 
+        fileSize="1500" type="audio/mpeg" expression="full"&gt;
+        &lt;media:credit role="musician"&gt;member of band3&lt;/media:credit&gt;
+        &lt;media:category&gt;music/band3/album/song&lt;/media:category&gt;
+        &lt;media:rating&gt;nonadult&lt;/media:rating&gt;
+        &lt;/media:content&gt;
+    &lt;/item&gt;
+&lt;/channel&gt;
+&lt;/rss&gt;</pre>
+
+</li>
+
+<li>Same song with multiple files at different bitrates and encodings. (Bittorrent example as well)
+
+<pre>&lt;rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"&gt;
+&lt;channel&gt;
+&lt;title&gt;Song Site&lt;/title&gt;
+&lt;link&gt;http://www.foo.com&lt;/link&gt;
+&lt;description&gt;Songs galore at different bitrates&lt;/description&gt;
+    &lt;item&gt;
+        &lt;title&gt;Cool song by an artist&lt;/title&gt;
+        &lt;link&gt;http://www.foo.com/item1.htm&lt;/link&gt;
+        &lt;media:group&gt;
+            &lt;media:content url="http://www.foo.com/song64kbps.mp3" 
+            fileSize="1000" bitrate="64" type="audio/mpeg" 
+            isDefault="true" expression="full"/&gt;
+            &lt;media:content url="http://www.foo.com/song128kbps.mp3" 
+            fileSize="2000" bitrate="128" type="audio/mpeg" 
+            expression="full"/&gt;
+            &lt;media:content url="http://www.foo.com/song256kbps.mp3" 
+            fileSize="4000" bitrate="256" type="audio/mpeg" 
+            expression="full"/&gt;
+            &lt;media:content url="http://www.foo.com/song512kbps.mp3.torrent" 
+            fileSize="8000" type="application/x-bittorrent;enclosed=audio/mpeg" 
+            expression="full"/&gt;
+            &lt;media:content url="http://www.foo.com/song.wav" 
+            fileSize="16000" type="audio/x-wav" expression="full"/&gt;
+            &lt;media:credit role="musician"&gt;band member 1&lt;/media:credit&gt;
+            &lt;media:credit role="musician"&gt;band member 2&lt;/media:credit&gt;
+            &lt;media:category&gt;music/artist name/album/song&lt;/media:category&gt;
+            &lt;media:rating&gt;nonadult&lt;/media:rating&gt;
+        &lt;/media:group&gt;
+    &lt;/item&gt;
+&lt;/channel&gt;
+&lt;/rss&gt;</pre>
+</li>
+
+
+<li>Example using all the new elements added mRSS version 1.5.0.  
+
+<pre>&lt;rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"&gt;
+&lt;channel&gt;
+&lt;title&gt;Song Site&lt;/title&gt;
+&lt;description&gt;mRSS example with new fields added in v1.5.0&lt;/description&gt;
+
+	&lt;item&gt;
+                &lt;link&gt;http://www.foo.com&lt;/link&gt;
+                &lt;pubDate&gt;Mon, 27 Aug 2001 16:08:56 PST&lt;/pubDate&gt;
+                &lt;media:content url="http://www.foo.com/video.mov" fileSize="2000" bitrate="128" type="video/quicktime" expression="full"/&gt;
+                &lt;media:community&gt;
+                    &lt;media:starRating average="3.5" count="20" min="1" max="10"/&gt;
+                    &lt;media:statistics views="5" favorites="5"/&gt;
+                    &lt;media:tags&gt;news: 5, abc:3&lt;/media:tags&gt;
+                &lt;/media:community&gt;
+                &lt;media:comments&gt;
+                    &lt;media:comment&gt;comment1&lt;/media:comment&gt;
+                    &lt;media:comment&gt;comment2&lt;/media:comment&gt;
+                &lt;/media:comments&gt;
+                &lt;media:embed url="http://www.foo.com/player.swf" width="512" height="323" &gt;
+                    &lt;media:param name="type"&gt;application/x-shockwave-flash&lt;/media:param&gt;
+                    &lt;media:param name="width"&gt;512&lt;/media:param&gt;
+                    &lt;media:param name="height"&gt;323&lt;/media:param&gt;
+                    &lt;media:param name="allowFullScreen"&gt;true&lt;/media:param&gt;
+                    &lt;media:param name="flashVars"&gt;id=12345&vid=678912i&amp;lang=en-us&intl=us&thumbUrl=http://www.foo.com/thumbnail.jpg&lt;/media:param&gt;
+                &lt;/media:embed&gt;
+                &lt;media:responses&gt;
+                  &lt;media:response&gt;www.response1.com&lt;/media:response&gt;
+                  &lt;media:response&gt;www.response2.com&lt;/media:response&gt;
+                &lt;/media:responses&gt;
+                &lt;media:backLinks&gt;
+                  &lt;media:backLink&gt;www.backLink1.com&lt;/media:backLink&gt;
+                  &lt;media:backLink&gt;www.backLink2.com&lt;/media:backLink&gt;
+                &lt;/media:backLinks&gt;
+                &lt;media:status state="active"/&gt;
+                &lt;media:price type="rent" price="19.99" currency="EUR" /&gt;
+                &lt;media:license type="text/html" href="http://www.licensehost.com/license"&gt; Sample license for a video &lt;/media:license&gt;
+                &lt;media:subTitle type="application/smil" lang="en-us"  href="http://www.foo.org/subtitle.smil"  /&gt;
+                &lt;media:peerLink type="application/x-bittorrent " href="http://www.foo.org/sampleFile.torrent"  /&gt;
+                &lt;media:location description="My house" start="00:01" end="01:00"&gt;
+                   &lt;georss:where&gt;
+                       &lt;gml:Point&gt;
+                         &lt;gml:pos&gt;35.669998 139.770004&lt;/gml:pos&gt;
+                       &lt;/gml:Point&gt;
+                   &lt;/georss:where&gt;
+                &lt;/media:location&gt;
+                &lt;media:restriction type="sharing" relationship="deny" /&gt;
+                &lt;media:scenes&gt;
+                    &lt;media:scene&gt;
+                        &lt;sceneTitle&gt;sceneTitle1&lt;/sceneTitle&gt;
+                        &lt;sceneDescription&gt;sceneDesc1&lt;/sceneDescription&gt;
+                        &lt;sceneStartTime&gt;00:15&lt;/sceneStartTime&gt;
+                        &lt;sceneEndTime&gt;00:45&lt;/sceneEndTime&gt;
+                    &lt;/media:scene&gt;
+                &lt;/media:scenes&gt;
+    &lt;/item&gt;
+&lt;/channel&gt;
+&lt;/rss&gt;</pre>
+
+</li>
+
+
+</ol>
+
+<h2>Acknowledgements</h2>
+<p>Thank you to everyone who has contributed to this specification, and to all those that sent suggestions and corrections.
+The Yahoo! Group "<a href="http://groups.yahoo.com/group/rss-media/">rss-media</a>" has been instrumental in helping transform the initial Media RSS proposal into a working specification.&nbsp;While there have been many helpful individuals from this community, special thanks go to Danny Ayers, Marc Canter, Lucas Gonze, Vadim Zaliva, Greg Smith, Robert Sayre, Suzan Foster, Erwin van Hunen, Greg Gershman, Jennifer Kolar, Bill Kearney, and Andreas Haugstrup Pedersen.</p>
+
+<p>On the Yahoo! team: David Hall, John Thrall, Eckart Walther, Jeremy Zawodny, Andy Volk, Bradley Horowitz, Akash Pai, Manish Sharma, Sapna Chandiramani, Bernard Lamers and Nilesh Gattani.</p>
+
+<p>On the Google team: David Marwood and Peter Chane.</p>
+</div>
+		 	
+        <div id=yschft>
+<hr>
+<p><center><font face=arial size=-2>
+Copyright &copy; 2010 Yahoo! All rights reserved. 
+<a href="http://info.yahoo.com/privacy/us/yahoo/search/details.html">Privacy</a> /
+<a href="http://info.yahoo.com/legal/us/yahoo/utos/utos-173.html">Legal</a> -
+<a href="http://search.yahoo.com/info/submit.html">Submit Your Site</a>
+</font></center></p>
+</div>
+        </div>
+        </body>
+        </html>
+        <!-- fnd06.video.search.sp1.yahoo.com uncompressed Fri Dec 17 20:40:58 UTC 2010 -->
