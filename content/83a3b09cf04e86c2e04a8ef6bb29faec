@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+<title>lwqueue: Lightweight cross-language message queue system</title>
+
+<link rel="stylesheet" href="http://www.petercooper.co.uk/styles-site.css" type="text/css" />
+<link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.petercooper.co.uk/index.rdf" />
+
+<link rel="start" href="http://www.petercooper.co.uk/" title="Home" />
+<link rel="prev" href="http://www.petercooper.co.uk/archives/001235.html" title="Four UK Rails jobs" />
+
+<link rel="next" href="http://www.petercooper.co.uk/archives/001256.html" title="Michelin route finder / Michelin maps" />
+
+
+<script type="text/javascript" language="javascript">
+<!--
+
+function OpenTrackback (c) {
+    window.open(c,
+                    'trackback',
+                    'width=480,height=480,scrollbars=yes,status=yes');
+}
+
+var HOST = 'www.petercooper.co.uk';
+
+// Copyright (c) 1996-1997 Athenia Associates.
+// http://www.webreference.com/js/
+// License is granted if and only if this entire
+// copyright notice is included. By Tomer Shiran.
+
+function setCookie (name, value, expires, path, domain, secure) {
+    var curCookie = name + "=" + escape(value) + ((expires) ? "; expires=" + expires.toGMTString() : "") + ((path) ? "; path=" + path : "") + ((domain) ? "; domain=" + domain : "") + ((secure) ? "; secure" : "");
+    document.cookie = curCookie;
+}
+
+function getCookie (name) {
+    var prefix = name + '=';
+    var c = document.cookie;
+    var nullstring = '';
+    var cookieStartIndex = c.indexOf(prefix);
+    if (cookieStartIndex == -1)
+        return nullstring;
+    var cookieEndIndex = c.indexOf(";", cookieStartIndex + prefix.length);
+    if (cookieEndIndex == -1)
+        cookieEndIndex = c.length;
+    return unescape(c.substring(cookieStartIndex + prefix.length, cookieEndIndex));
+}
+
+function deleteCookie (name, path, domain) {
+    if (getCookie(name))
+        document.cookie = name + "=" + ((path) ? "; path=" + path : "") + ((domain) ? "; domain=" + domain : "") + "; expires=Thu, 01-Jan-70 00:00:01 GMT";
+}
+
+function fixDate (date) {
+    var base = new Date(0);
+    var skew = base.getTime();
+    if (skew > 0)
+        date.setTime(date.getTime() - skew);
+}
+
+function rememberMe (f) {
+    var now = new Date();
+    fixDate(now);
+    now.setTime(now.getTime() + 365 * 24 * 60 * 60 * 1000);
+    setCookie('mtcmtauth', f.author.value, now, '', HOST, '');
+    setCookie('mtcmtmail', f.email.value, now, '', HOST, '');
+    setCookie('mtcmthome', f.url.value, now, '', HOST, '');
+}
+
+function forgetMe (f) {
+    deleteCookie('mtcmtmail', '', HOST);
+    deleteCookie('mtcmthome', '', HOST);
+    deleteCookie('mtcmtauth', '', HOST);
+    f.email.value = '';
+    f.author.value = '';
+    f.url.value = '';
+}
+
+//-->
+</script>
+
+
+
+</head>
+
+<body class="individual">
+
+<div id="right-post">
+<table border="0"><tr>
+<td width=66% valign="top">
+<h1><a href="http://www.petercooper.co.uk/" accesskey="1">Peter Cooper : Weblog of a UK Web 2.0 and Ruby on Rails consultant</a></h1>
+
+<strong><em>Who?</em></strong> I'm Peter Cooper, an English serial entrepreneur and Web 2.0 and Ruby on Rails consultant.  I write about RSS, Perl, Ruby On Rails, SQL, business, finance, <a href="/">and a lot more on my front page.</a><br /><br /><a href="http://www.petercooper.co.uk/index.rdf">Subscribe to the RSS feed</a> and <a href="mailto:pinner060301@petercooper.co.uk">send me e-mail!</a>
+</td>
+<td width=25%><div class="side2">Recent Posts</div>
+
+<table>
+<tr><td>&raquo;</td><td><a href="http://www.petercooper.co.uk/archives/001282.html">Slashdot, Digg, etc, high traffic protection with mod_rewrite</a></td></tr>
+<tr><td>&raquo;</td><td><a href="http://www.petercooper.co.uk/archives/001281.html">Asus PW191 Review: A cool new TFT monitor</a></td></tr>
+<tr><td>&raquo;</td><td><a href="http://www.petercooper.co.uk/archives/001280.html">Milton Keynes</a></td></tr>
+
+<tr><td><strong>&gt;</strong></td><td><strong><a href="archives.html" style="font-size: 0.9em">Full archive</a></strong></td></tr>
+</table>
+</td></tr></table>
+<div style="background-color: #eee; margin-bottom: 0.5em"><small><b>Other Posts</b></small><br /><table width=100%><tr><td align=left><a href="http://www.petercooper.co.uk/archives/001235.html">&laquo; Four UK Rails jobs</a></td><td align=right><a href="http://www.petercooper.co.uk/archives/001256.html">Michelin route finder / Michelin maps &raquo;</a></td>
+</tr></table></div>
+</div>
+
+
+<div id="left">
+<h2 class="title">lwqueue: Lightweight cross-language message queue system</h2>
+<br />
+<script type="text/javascript"><!--
+google_ad_client = "pub-6699214427597032";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text";
+google_ad_channel ="2679495668";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "003377";
+google_color_url = "DDDDE4";
+google_color_text = "333333";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+	
+<div class="post-body">
+<p>
+<strong>Requirement:</strong> As part of FeedDigest development, I needed a reliable, fast queueing service. I looked at <a href="http://www.amazon.com/gp/browse.html/002-8302996-0790431?node=13584001">Amazon Simple Queue Service</a>, but the lack of control, coupled with the slow speed ruled it out immediately. I decided to roll my own after looking at alternatives / workarounds like <a href="http://www.spread.org/">Spread</a>, hacking memcached, and even Jabber! All I wanted was something that I could use from Perl, Ruby, or Python and be able to push and pop items onto and off of a 'queue' from any network connected machine. It had to be capable of several hundred operations a second and, preferably, be language agnostic with serialization. The challenge was set.
+</p><p>
+<strong>Result?</strong> With that, I'm proud to release lwqueue.<strong> lwqueue is a lightweight, language agnostic TCP based message queue system with Perl, Ruby, and Python client libraries.</strong> I initially tried using a native HTTP daemon, but it was too slow and wouldn't scale into hundreds of operations per second. Writing something that worked at the TCP level demanded thought, but turned out okay. You can now have separate scripts / programs across multiple servers doing things like:
+</p>
+
+<h2 style="font-size: 24px; background-color: #ff0">(January 2009): WHOA WHOA WHOA. Don't download this! It's old, crusty, no longer under development! Feel free to look at it but I advise you don't use it unless you're cool with administering it and dealing with any problems alone.</h2>
+
+<p>
+<em>queue.push('test') - Ruby and Python
+<br />$queue-&gt;push('test'); - Perl</em>
+</p><p>
+And..
+</p><p>
+<em>queue.pop - Ruby and Python
+<br />$queue-&gt;pop() - Perl</em>
+</p><p>
+You can push and pop plain text, hashes, arrays, and possibly other objects (I haven't tested much on that front yet). It's all network operable, the main queue daemon is simple and lightweight, and it's fast (over 1000 ops a second on my local machine, less if over the net!). Basically, a bit like memcached for queues. It has no ACL beyond IP approval / rejection and setting a port (like memcached), and is as lightweight as I needed for the task.
+</p><p>
+More info is below the fold (basically the README file), but you can <a href="http://www.petercooper.co.uk/media/lwqueue-0.2.tar.gz">download lwqueue and its client libraries here</a> now in .tar.gz format for use on OS X or Linux. Use at your own risk! It's not perfect.
+</p>
+<!-- technorati tags start --><p style="text-align:right;font-size:10px;">Technorati Tags: <a href="http://www.technorati.com/tag/lwqueue" rel="tag">lwqueue</a>, <a href="http://www.technorati.com/tag/messaging" rel="tag">messaging</a>, <a href="http://www.technorati.com/tag/perl" rel="tag">perl</a>, <a href="http://www.technorati.com/tag/python" rel="tag">python</a>, <a href="http://www.technorati.com/tag/rails" rel="tag">rails</a>, <a href="http://www.technorati.com/tag/ruby" rel="tag">ruby</a></p><!-- technorati tags end -->
+<br clear="both" /><script type="text/javascript"><!--
+google_ad_client = "pub-6699214427597032";
+google_ad_width = 728;
+google_ad_height = 15;
+google_ad_format = "728x15_0ads_al";
+google_ad_channel ="2354546350";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "003377";
+google_color_url = "DDDDE4";
+google_color_text = "333333";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><br /><a name="more"></a><p>
+lwqueue
+</p><p>
+SUMMARY
+<br />High performance, light weight queue daemon using TCP for speed.
+</p><p>
+VERSION
+<br />See ./lwqueue for details
+</p><p>
+AUTHOR
+<br />Peter Cooper
+<br />lwqueue@petercooper.co.uk
+<br />http://www.petercooper.co.uk/
+</p><p>
+DESCRIPTION
+<br />A light-weight pre-forked TCP based queue daemon.
+</p><p>
+Basically, it supports an "unlimited" number of queues with unique names,
+<br />on to which you can push and pop data. Push to the end, pop from the front.
+<br />Ideal for queueing systems, and ideal for cross application data transfer
+<br />where a queue is suited. Supplied libraries are (mostly) language agnostic,
+<br />and let you push simple data structures between Perl, Ruby, and Python. Ideal
+<br />to push data from, say, a Rails app to a backend Perl script (a mailer,
+<br />perhaps!)
+</p><p>
+If you're still confused, it's like Amazon Simple Queue but without the HTTP
+<br />overhead (which I tried initially, and it was slow as molasses).
+</p><p>
+Runs at well over 1000 ops a second on my local machine, but network
+<br />performance is obviously less, but depends on bandwidth available, network
+<br />setup, latency, etc. benchmark.pl (and to a lesser extent benchmark.rb) can
+<br />be used to speed test.
+</p><p>
+Use simple clients to do initial tests locally before getting advanced.
+</p><p>
+See ./lwqueue for more details.
+</p><p>
+LIBRARIES
+<br />Comes with Perl, Ruby, and Python client libraries which are all easy to use.
+<br />Most have only an initializer, and push and pop methods.
+</p><p>
+client-simple.pl, client-simple.py, and client-simple.rb are simple examples
+<br />of how to use these routines to interface with lwqueue.
+</p><p>
+JSON serialization used for cross language support, which means extra modules
+<br />or libraries are required. For Ruby, rubygems and ruby-json gem required. For
+<br />Perl, "JSON" module required. For Python, simplejson required. These can be
+<br />overriden with native serialization methods if you want to though, but I need
+<br />cross language support :)
+</p><p>
+LICENSE
+<br />Use for any legal purpose, attribution in source or documentation required.
+<br />E-mail appreciated.
+</p><p>
+HELP?
+<br />My Python knowledge is as close to zero as it gets, so if you can make it
+<br />support larger item sizes and, well, just do anything you can with the Python
+<br />stuff, I'd really appreciate it and mix your work into the next version.
+<br />Ditto for all other languages, as I am no hardcore hacker.
+</p><p>
+DISCLAIMER
+<br />You use this code under the condition that use of this code is entirely at
+<br />your own risk! I, or anyone who supplies this code, has no responsibility
+<br />for what it does on your system. Please read the source code to make sure you
+<br />are comfortable with it!
+</p><br /></div>
+
+	
+	<div class="post-footer">March 30, 2006 | Posted by peter | <a href="http://www.petercooper.co.uk/archives/001236.html">Comments (6)</a></div>
+
+<div id="comments">
+
+<div class="comments-head"><a name="comments"></a>Comments</div>
+
+<div class="comments-body">
+<p>Äâåñòè ðóáëåé ñïàñóò îòöà Ðóññêîé Äåìîêðàòèè ?</p>
+<span class="comments-post">Posted by: <a href="http://">AMITRIPTYLINE</a> at April 17, 2006 02:47 PM</span>
+</div>
+<div class="comments-body">
+<p>Here ?</p>
+<span class="comments-post">Posted by: <a href="http://">ARICEPT</a> at April 21, 2006 07:40 AM</span>
+</div>
+<div class="comments-body">
+<p>Here ?</p>
+<span class="comments-post">Posted by: <a href="http://">ARICEPT</a> at April 21, 2006 06:32 PM</span>
+</div>
+<div class="comments-body">
+<p>Ãðóçèòå àïåëüñèíû áî÷êàìè</p>
+<span class="comments-post">Posted by: <a href="http://">ATIVAN</a> at April 22, 2006 09:26 AM</span>
+</div>
+<div class="comments-body">
+<p>Êîìàíäîâàòü ïàðàäîì áóäó ÿ</p>
+<span class="comments-post">Posted by: <a href="http://">AUGMENTIN</a> at April 22, 2006 02:26 PM</span>
+</div>
+<div class="comments-body">
+<p>Óãó</p>
+<span class="comments-post">Posted by: <a href="http://">BACTRIM</a> at April 25, 2006 08:16 AM</span>
+</div>
+
+
+
+<div class="comments-head">Post a comment</div>
+
+<div class="comments-body">
+<form method="post" action="http://www.petercooper.co.uk/m/mt-comments.cgi" name="comments_form" onsubmit="if (this.bakecookie[0].checked) rememberMe(this)">
+<input type="hidden" name="static" value="1" />
+<input type="hidden" name="entry_id" value="1236" />
+
+<div style="width:180px; padding-right:15px; margin-right:15px; float:left; text-align:left; border-right:1px dotted #bbb;">
+	<label for="author">Name:</label><br />
+	<input tabindex="1" id="author" name="author" /><br /><br />
+
+	<label for="email">Email:</label><br />
+	<input tabindex="2" id="email" name="email" /><br /><br />
+
+	<label for="url">URL:</label><br />
+	<input tabindex="3" id="url" name="url" /><br /><br />
+</div>
+
+Remember personal info?<br />
+<input type="radio" id="bakecookie" name="bakecookie" /><label for="bakecookie">Yes</label><input type="radio" id="forget" name="bakecookie" onclick="forgetMe(this.form)" value="Forget Info" style="margin-left: 15px;" /><label for="forget">No</label><br style="clear: both;" />
+
+<label for="text">Comments:</label><br />
+<textarea tabindex="4" id="text" name="text" rows="10" cols="50"></textarea><br /><br />
+
+<!-- input type="submit" name="preview" value="&nbsp;Preview&nbsp;" / -->
+<input style="font-weight: bold;" type="submit" name="post" value="&nbsp;Post&nbsp;" /><br /><br />
+
+</form>
+
+<script type="text/javascript" language="javascript">
+<!--
+document.comments_form.email.value = getCookie("mtcmtmail");
+document.comments_form.author.value = getCookie("mtcmtauth");
+document.comments_form.url.value = getCookie("mtcmthome");
+if (getCookie("mtcmtauth")) {
+    document.comments_form.bakecookie[0].checked = true;
+} else {
+    document.comments_form.bakecookie[1].checked = true;
+}
+//-->
+</script>
+</div>
+
+
+
+<p><b><big><a href="/">Return to the blog homepage.</a></big></b></p>
+
+
+</div>
+
+
+</body>
+</html>
