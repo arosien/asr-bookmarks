@@ -1,0 +1,799 @@
+<HEAD>
+  <TITLE> 
+    An Intuitive Explanation of Fourier Theory 
+  </TITLE>
+
+</HEAD>
+
+<BODY BGCOLOR=#FFFFFF TEXT=#000000>
+  
+<!-- Start of StatCounter Code -->
+<script type="text/javascript" language="javascript">
+var sc_project=2485951; 
+var sc_invisible=1; 
+var sc_partition=24; 
+var sc_security="c04335da"; 
+</script>
+
+<script type="text/javascript" language="javascript"
+src="http://www.statcounter.com/counter/counter.js"></script><noscript><a
+href="http://www.statcounter.com/" target="_blank"><img
+src="http://c25.statcounter.com/counter.php?sc_project=2485951&amp;java=0&amp;security=c04335da&amp;invisible=0"
+alt="blog counter" border="0"></a> </noscript>
+<!-- End of StatCounter Code -->
+
+
+<H1><CENTER>
+An Intuitive Explanation of Fourier Theory
+</CENTER></H1>
+
+<H3><CENTER>
+  <A HREF ="http://cns-alumni.bu.edu/~slehar/">
+  Steven Lehar</A>
+</CENTER></H3>
+<H4><CENTER>
+  slehar@cns.bu.edu
+</CENTER></H4>
+
+<P>
+Fourier theory is pretty complicated mathematically. But there are
+some beautifully simple holistic concepts behind Fourier theory which
+are relatively easy to explain intuitively. There are other sites on
+the web that can give you the mathematical formulation of the Fourier
+transform. I will present only the basic intuitive insights here, as
+applied to spatial imagery.
+</P>
+
+<BLOCKQUOTE>
+<H4><A HREF="#basic">Basic Principles:</A> How space is represented by frequency</H4>
+<H4><A HREF="#harmonics">Higher Harmonics:</A> "Ringing" effects</H4>
+<H4><A HREF="#analog">An Analog Analogy:</A> The Optical Fourier Transform</H4>
+<H4><A HREF="#filtering">Fourier Filtering:</A> Image Processing using
+Fourier Transforms</H4>
+</BLOCKQUOTE>
+
+<HR>
+<A NAME="basic">
+<H4>Basic Principles</H4>
+
+<P>
+Fourier theory states that any signal, in our case visual images, can
+be expressed as a sum of a series of sinusoids. In the case of
+imagery, these are sinusoidal variations in brightness across the
+image. For example the sinusoidal pattern shown below can be captured
+in a single Fouier term that encodes 1: the spatial frequency, 2: the
+magnitude (positive or negative), and 3: the phase.</P>
+
+<CENTER>
+<IMG SRC="sin1.gif" BORDER=1>
+</CENTER>
+
+<P>These three values capture all of the information in the sinusoidal
+image. The <I>spatial frequency</I> is the frequency across space (the
+x-axis in this case) with which the brightness modulates. For example
+the image below shows another sinusoid with a higher spatial
+frequency.
+</P>
+
+<CENTER>
+<IMG SRC="sin3.gif" BORDER=1>
+</CENTER>
+
+<P> The magnitude of the sinusoid corresponds to its contrast, or the
+difference between the darkest and brightest peaks of the image. A
+negative magnitude represents a contrast-reversal, i.e. the brights
+become dark, and vice-versa. The phase represents how the wave is
+shifted relative to the origin, in this case it represents how much
+the sinusoid is shifted left or right.
+</P>
+
+<P>
+A Fourier transform encodes not just a single sinusoid, but a whole
+series of sinusoids through a range of spatial frequencies from zero
+(i.e. no modulation, i.e. the average brightness of the whole image)
+all the way up to the "nyquist frequency", i.e. the highest spatial
+frequency that can be encoded in the digital image, which is related
+to the resolution, or size of the pixels. The Fourier transform
+encodes all of the spatial frequencies present in an image
+simultaneously as follows. A signal containing only a single spatial
+frequency of frequency <I>f</I> is plotted as a single peak at point
+<I>f</I> along the spatial frequency axis, the height of that peak
+corresponding to the amplitude, or contrast of that sinusoidal signal.
+</P>
+
+<CENTER>
+<IMG SRC="fourier1.gif" BORDER=1>
+</CENTER>
+
+<P>
+There is also a "DC term" corresponding to zero frequency, that
+represents the average brightness across the whole image. A zero DC
+term would mean an image with average brightness of zero, which would
+mean the sinusoid alternated between positive and negative values in
+the brightness image. But since there is no such thing as a negative
+brightness, all real images have a positive DC term, as shown here
+too.
+</P>
+
+<P>
+Actually, for mathematical reasons beyond the scope of this tutorial,
+the Fourier transform also plots a mirror-image of the spatial
+frequency plot reflected across the origin, with spatial frequency
+increasing in both directions from the origin. For mathematical
+reasons beyond the scope of this explanation, these two plots are
+always mirror-image reflections of each other, with identical peaks at
+<I>f</I> and <I>-f</I> as shown below.
+</P>
+
+<CENTER>
+<IMG SRC="fourier2.gif" BORDER=1>
+</CENTER>
+
+<P> What I have shown is actually the Fourier transform of a single
+scan line of the sinusoidal image, which is a one-dimensional
+signal. A full two-dimensional Fourier transform performs a 1-D
+transform on every scan-line or row of the image, and another 1-D
+transform on every column of the image, producing a 2-D Fourier
+transform of the same size as the original image.
+</P>
+
+<P>
+The image below shows a sinusoidal brightness image, and its
+two-dimensional Fourier transform, presented here also as a brightness
+image. Every pixel of the Fourier image is a spatial frequency value,
+the magnitude of that value is encoded by the brightness of the
+pixel. In this case there is a bright pixel at the very center - this
+is the DC term, flanked by two bright pixels either side of the
+center, that encode the sinusoidal pattern. The brighter the peaks in
+the Fourier image, the higher the contrast in the brightness
+image. Since there is only one Fourier component in this simple image,
+all other values in the Fourier image are zero, depicted as black.
+</P>
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+       <CENTER>
+        <B>Brightness Image</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Fourier transform</B>
+       </CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="sin3.gif" BORDER=1>
+      </TD>
+      <TD>
+	<IMG SRC="sin3real.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+
+<P>
+Here is another sinusoidal brightness image, this time with a lower
+spatial frequency, together with it's two-dimensional Fourier
+transform showing three peaks as before, except this time the peaks
+representing the sinusoid are closer to the central DC term,
+indicating a lower spatial frequency.
+</P>
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+       <CENTER>
+        <B>Brightness Image</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Fourier transform</B>
+       </CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="sin1.gif" BORDER=1>
+      </TD>
+      <TD>
+	<IMG SRC="sin1real.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+
+<P> The significant point is that the Fourier image encodes exactly
+the same information as the brightness image, except expressed in
+terms of amplitude as a function of spatial frequency, rather than
+brightness as a function of spatial displacement. An inverse Fourier
+transform of the Fourier image produces an exact pixel-for-pixel
+replica of the original brightness image.  </P>
+
+<P>
+The orientation of the sinusoid correlates with the orientation of the
+peaks in the Fourier image relative to the central DC point. In this
+case a tilted sinusoidal pattern creates a tilted pair of peaks in the
+Fourier image.
+</P>
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+       <CENTER>
+        <B>Brightness Image</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Fourier transform</B>
+       </CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="sin3a.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sin3areal.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+ 
+<P>
+Different Fourier coefficients combine additively to produce
+combination patterns. For example the sinusoidal image shown below is
+computed as the sum of the tilted sinusoid shown above, and the
+vertical sinusoid of lower spatial frequency shown above that.
+</P>
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+       <CENTER>
+        <B>Brightness Image</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Fourier transform</B>
+       </CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="sin3b.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sin3breal.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+
+<P>
+The brightness and the Fourier images are completely interchangable,
+because they contain exactly the same information. The combined
+brightness image shown above could have been produced by a
+pixel-for-pixel adding of the two brightness images, or by a
+pixel-for-pixel addition of the corresponding Fourier transforms,
+followed by an inverse transform to go back to the brightness
+domain. Either way the result would be exactly identical.
+</P>
+
+<P>
+<A HREF="#top">Back to top</A>
+</P>
+<HR>
+<A NAME="harmonics">
+<H4>Higher Harmonics and "Ringing" effects</H4>
+
+<P>The basis set for the Fourier transform is the smooth sinusoidal
+function, which is optimized for expressing smooth rounded shapes. But
+the Fourier transform can actually represent any shape, even harsh
+rectilinear shapes with sharp boundaries, which are the most difficult
+to express in the Fourier code, because they need so many higher order
+terms, or higher harmonics. How these "square wave" functions are
+expressed as smooth sinusoids will be demonstrated by example.
+</P>
+
+<P> The figure below shows four sinusoidal brightness images of
+spatial frequency 1, 3, 5, and 7. The first one, of frequency 1, is
+the fundamental, and the others are higher harmonics on that
+fundamental, because they are integer multiples of the fundamental
+frequency. These are in fact the "odd harmonics" on the fundamental,
+and each one exhibits a bright vertical band through the center of the
+image. The Fourier transform for each of these patterns is shown
+below.</P>
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+        <CENTER>1</CENTER>
+      </TD>
+      <TD>
+        <CENTER>3</CENTER>
+      </TD>
+      <TD>
+        <CENTER>5</CENTER>
+      </TD>
+      <TD>
+        <CENTER>7</CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="sin1.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sin3.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sin5.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sin7.gif" BORDER=1>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="sin1real.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sin3real.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sin5real.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sin7real.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+ 
+<P>
+The next table shows the result of progressively adding higher
+harmonics to the fundamental. Note how the central vertical band gets
+sharper and stronger with each additional higher harmonic, while the
+background drops down towards a uniform dark field. Note also how the
+higher harmonics produce peaks in the Fourier images that spread
+outward from the fundamental, defining a periodic pattern in frequency
+space. 
+</P> 
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+        <CENTER>1</CENTER>
+      </TD>
+      <TD>
+        <CENTER>1+3</CENTER>
+      </TD>
+      <TD>
+        <CENTER>1+3+5</CENTER>
+      </TD>
+      <TD>
+        <CENTER>1+3+5+7</CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="sin1.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sinsum13.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sinsum135.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sinsum1357.gif" BORDER=1>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="sin1real.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sinsum13real.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sinsum135real.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="sinsum1357real.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+ 
+<P>
+
+The images below show what would happen if this process were continued
+all the way out to the Nyquist frequency - it would produce a thin
+vertical stripe in the brightness image, with sharp boundaries, i.e. a
+"square wave" in brightness along the x dimension. The Fourier
+transform of this image exhibits an "infinite" series of harmonics or
+higher order terms, although these do not actually go out to infinity
+due to the finite resolution of the original image. This is how the
+Fourier transform encodes sharp square-wave type features as the sum
+of a series of smooth sinusoids.</P>
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+       <CENTER>
+        <B>Brightness Image</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Fourier transform</B>
+       </CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="stripe.gif" BORDER=1>
+      </TD>
+      <TD>
+	<IMG SRC="stripereal.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+ 
+</BODY>
+
+<P>
+<A HREF="#top">Back to top</A>
+</P>
+<HR>
+<A NAME="analog">
+<H4>The Optical Fourier Transform</H4>
+
+<P> A great intuitive advance can be made in understanding the
+principles of the Fourier transform once you learn that a simple lens
+can perform a Fourier transform in real-time as follows. Place an
+image, for example a slide transparency, at the focal length of the
+lens, and illuminate that slide with coherent light, like a colimated
+laser beam. At the other focus of the lens place a frosted glass
+screen. Thats it! The lens will automatically perform a Fourier
+transform on the input image, and project it onto the frosted glass
+screen. For example if the input image is a sinusoidal grating, as
+shown below, the resultant Fourier image will have a bright spot at the
+center, the DC term, with two flanking peaks on either side, whose
+distance from the center will vary with the spatial frequency of the
+sinusoid.  </P>
+
+<CENTER>
+<IMG SRC="fourier3.gif">
+</CENTER>
+
+<P>
+We can now see the holistic principle behind the Fourier
+transform. Every point on the input image radiates an expanding cone
+of rays towards the lens, but since the image is at the focus of the
+lens, those rays will be refracted into a parallel beam that
+illuminates the entire image at the ground-glass screen. In other
+words, every point of the input image is spread uniformly over the
+Fourier image, where constructive and destructive interference will
+automatically produce the proper Fourier representation. 
+</P>
+
+<CENTER>
+<IMG SRC="fourier4.gif">
+</CENTER>
+
+<P>
+Conversely, parallel rays from the entire input image are focused onto
+the single central point of the Fourier image, where it defines the
+central DC term by the average brightness of the input image.
+</P>
+
+<CENTER>
+<IMG SRC="fourier5.gif">
+</CENTER>
+
+<P>
+Note that the optical Fourier transformer automatically operates in
+the reverse direction also, where it performs an inverse Fourier transform,
+converting the Fourier representation back into a spatial brightness
+image. Mathematically the forward and inverse transforms are identical
+except for a minus sign that reverses the direction of the
+computation.
+</P>
+
+
+<P>
+<A HREF="#top">Back to top</A>
+</P>
+<HR>
+<A NAME="filtering">
+<H4>Fourier Filtering</H4>
+
+<P>I will now show how the Fourier transform can be used to perform
+filtering operations to adjust the spatial frequency content of an
+image. We begin with an input image shown below, and perform a Fourier
+transform on it, then we do an inverse transform to reconstruct the
+original image. This reconstructed image is identical,
+pixel-for-pixel, with the original brightness image.
+</P>
+
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+       <CENTER>
+        <B>Brightness Image</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Fourier Transform</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Inverse Transformed</B>
+       </CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="lehar.gif" BORDER=1>
+      </TD>
+      <TD>
+	<IMG SRC="leharreal.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="lehar.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+
+<P>
+I will now demonstrate how we can manipulate the transformed image to
+adjust its spatial frequency content, and then perform an inverse
+transform to produce the Fourier filtered image. We begin with a
+low-pass filter, i.e. a filter that allows the low spatial-frequency
+components to pass through, but cuts off the high spatial
+frequencies. Since the low frequency components are found near the
+central DC point, all we have to do is define a radius around the
+DC point, and zero-out every point in the Fourier image that is beyond
+that radius. In other words the low-pass filtered transform is
+identical to the central portion of the Fourier transform, with the
+rest of the Fourier image set to zero. An inverse Fourier transform
+applied to this low-pass filtered image produces the inverse
+transformed image shown below.
+</P>
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+       <CENTER>
+        <B>Low-Pass Filtered</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Inverse Transformed</B>
+       </CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+	<IMG SRC="real-lp.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="filt-lp.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+
+<P>
+We see that the low-pass filtered image is blurred, preserving the low
+frequency broad smooth regions of dark and bright, but losing the
+sharp contours and crisp edges. Mathematically, low-pass filtering is
+equivalent to an optical blurring function.
+</P>
+
+<P>
+Next we try the converse, high-pass filtering, where we use the same
+spatial frequency threshold to define a radius in the Fourier
+image. All spatial frequency components that fall within that radius
+are eliminated, preserving only the higher spatial frequency
+components. After performing the inverse transform on this image we
+see the effect of high-pass filtering, which is to preserve all of the
+sharp crisp edges from the original, but it loses the larger regions
+of dark and bright.
+</P>
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+       <CENTER>
+        <B>High-Pass Filtered</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Inverse Transformed</B>
+       </CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="real-hp.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="filt-hp.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+ 
+<P>
+If the low-pass filtered inverse-transformed image is added
+pixel-for-pixel to the high-pass inverse-transformed image, this would
+exactly restore the original unfiltered image. These images are
+complementary therefore, each one encodes the information which is
+missing from the other.
+</P>
+
+<P>
+Next we will demonstrate a band-pass filtering that preserves only
+those spatial frequencies that fall within a band, greater than a low
+cut-off, but less than a higher cut-off.
+</P>
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+       <CENTER>
+        <B>Band-Pass Filtered</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Inverse Transformed</B>
+       </CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="real-bp1.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="filt-bp1.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+
+<P>
+The next simulation is the same as above, except with a narrower band
+of spatial frequencies.
+</P>
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+       <CENTER>
+        <B>Band-Pass Filtered</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Inverse Transformed</B>
+       </CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="real-bp2.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="filt-bp2.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+
+<P>
+The next simulation shows band-pass filtering about a higher
+spatial-frequency band,
+</P>
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+       <CENTER>
+        <B>Band-Pass Filtered</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Inverse Transformed</B>
+       </CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="real-bp3.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="filt-bp3.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+
+<P>
+and finally the same as above except again using a narrower
+spatial-frequency band.
+</P>
+
+<CENTER>
+  <TABLE>
+    <TR>
+      <TD>
+       <CENTER>
+        <B>Band-Pass Filtered</B>
+       </CENTER>
+      </TD>
+      <TD>
+       <CENTER>
+        <B>Inverse Transformed</B>
+       </CENTER>
+      </TD>
+    </TR>
+    <TR>
+      <TD>
+        <IMG SRC="real-bp4.gif" BORDER=1>
+      </TD>
+      <TD>
+        <IMG SRC="filt-bp4.gif" BORDER=1>
+      </TD>
+    </TR>
+  </TABLE>
+</CENTER>
+
+<P>
+These computer simulations demonstrate that the Fourier representation
+encodes image information in a holistic distributed manner that allows 
+manipulation of the global information content of the image by spatial
+manipulations of the transformed image.
+</P>
+
+
+<P>
+<A HREF="#top">Back to top</A>
+</P>
+<HR>
+
+</BODY>
+
+
+
+
