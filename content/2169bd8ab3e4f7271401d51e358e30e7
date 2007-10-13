@@ -1,0 +1,612 @@
+<html>
+
+<head>
+<title>The Universe of Discourse : The square of the Catalan sequence</title>
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="http://blog.plover.com/index.rss" />
+<link rel="alternate" type="application/atom+xml" title="Atom" href="http://blog.plover.com/index.atom" />
+
+<style>
+pre {
+  overflow: auto;
+  background-color: #e4f0e4;
+  border-top:  1px #d0d0d0 solid;
+  border-left: 1px #d0d0d0 solid;
+  padding: .6em 0;
+}
+
+pre.digression  {
+  background-color: #ffdddd;
+}
+
+blockquote {
+  border-top:  1px #d0d0d0 solid;
+  border-left: 1px #d0d0d0 solid;
+  padding: 3px;
+  background-color: #f5f5dc;
+}
+
+.emph {
+  color: purple;
+  font-weight: bolder;
+}
+
+.bookbox table          { margin-left:    0.5em; 
+                          margin-bottom:  0.5em;
+}
+
+body,td           { font-family: Verdana,Geneva,Arial,Sans-serif; 
+                    font-size: 12px; color: #222222; }
+a                 { color: #000066 }
+.sidebar a        { color: #000000 }
+.pagetitle        { font-family: Verdana,Geneva,Arial,Sans-serif; 
+                    font-size: 18px; font-weight: bold; color: #336699; }
+.dateheader       { font-family: Verdana,Geneva,Arial,Sans-serif; 
+                    font-size: 14px; font-weight: bold; color: #336699; }
+.storytitle       { font-family: Verdana,Geneva,Arial,Sans-serif; 
+                    font-size: 16px; font-weight: bold; color: #336699; }
+h2       { font-size: 14px; font-weight: bold; color: #996699;
+           font-family: Verdana,Geneva,Arial,Sans-serif;  }
+h3       { font-size: 12px; color: #996699;
+           font-family: Verdana,Geneva,Arial,Sans-serif;  }
+.menuitem         { font-size: 9px; }
+.menuitem a        { font-size: 9px; text-decoration: none }
+.toc     { font-size: 10px; }
+</style>
+
+<link rel='shortcut icon' href='/plover.ico' type="image/x-icon" />
+</head>
+
+<body bgcolor="#ffffff">
+
+<!-- Start of StatCounter Code -->
+<script type="text/javascript">
+sc_project=3591028; 
+sc_invisible=1; 
+sc_partition=42; 
+sc_security="0c11f688"; 
+</script>
+
+<script type="text/javascript"
+src="http://www.statcounter.com/counter/counter_xhtml.js"></script><noscript><div
+class="statcounter"><a href="http://www.statcounter.com/"
+target="_blank"><img class="statcounter"
+src="http://c43.statcounter.com/3591028/0/0c11f688/1/" alt="counter
+statistics" ></a></div></noscript>
+<!-- End of StatCounter Code -->
+
+<!-- Google analytics thing -->
+<script src="http://www.google-analytics.com/urchin.js"
+type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-1377963-1";
+urchinTracker();
+</script>
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+ <tr>
+  <!-- main title -->
+  <td colspan="6"><span class="pagetitle"><font size="+2"><a
+  style="text-decoration: none" href="http://blog.plover.com/">The Universe of Discourse</a></font></span></td>
+ </tr>
+
+ <tr>
+  <td colspan="6" bgcolor="#000000" height="1" ></td>
+ </tr>
+ 
+ <tr valign="top">
+  <td bgcolor="#6699cc"><nobr>&nbsp; &nbsp; </nobr>
+
+  <!-- left column -->
+  <td class=sidebar bgcolor="#6699cc">
+
+   <p>
+   <br />
+   <a href="http://en.wikipedia.org/wiki/Mark_Dominus">Mark Dominus</a> (<a href="http://en.wikipedia.org/wiki/Mark_Dominus">&#38518;&#25935;&#20462;</a>)<br />
+   <a href="mailto:mjd@plover.com">mjd@plover.com</a> <br />
+   </p>
+
+   <p>
+   <img width=100 height=100 src="http://pic.blog.plover.com/TOP.jpg"><br />
+   </p>
+
+   <p>
+   <a href="http://blog.plover.com/index.rss">RSS</a>
+   <a href="http://blog.plover.com/index.atom">Atom</a>   </p>
+
+<p><form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="image"
+src="http://pic.blog.plover.com/buttons/giveme-money.png"
+border="0" name="submit" alt="Give me money">
+<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+">
+</form>
+</p>
+
+   <p><a href="http://blog.plover.com/">12 recent entries</a><br>
+ <a href="http://blog.plover.com/misc/git-talk.html"><span class=menuitem>Linus Torvalds' Greatest Invention</span></a>&nbsp;/ <a href="http://blog.plover.com/IT/chartjunk.html"><span class=menuitem>Chartjunk</span></a>&nbsp;/ <a href="http://blog.plover.com/brain/immortality.html"><span class=menuitem>The coming singularity</span></a>&nbsp;/ <a href="http://blog.plover.com/prog/perl/dummy-module.html"><span class=menuitem>A dummy generator for mock objects</span></a>&nbsp;/ <a href="http://blog.plover.com/prog/haskell/monad-terminology.html"><span class=menuitem>Monad terminology problem</span></a>&nbsp;/ <a href="http://blog.plover.com/prog/haskell/probmonad-refs.html"><span class=menuitem>A short bibliography of probability monads</span></a>&nbsp;/ <a href="http://blog.plover.com/prog/haskell/probmonad.html"><span class=menuitem>A monad for probability and provenance</span></a>&nbsp;/ <a href="http://blog.plover.com/prog/burritos.html"><span class=menuitem>Monads are like burritos</span></a>&nbsp;/ <a href="http://blog.plover.com/math/Gdl.html"><span class=menuitem>Another short explanation of G&ouml;del's theorem</span></a>&nbsp;/ <a href="http://blog.plover.com/math/Gdl-Smullyan.html"><span class=menuitem>World's shortest explanation of G&ouml;del's theorem</span></a>&nbsp;/ <a href="http://blog.plover.com/tech/fail-open.html"><span class=menuitem>On failing open</span></a>&nbsp;/ <a href="http://blog.plover.com/book/and-all-that.html"><span class=menuitem>You think you're All That, but you're not!</span></a>
+</p>
+
+
+   <p>Archive:<br><table>
+<tr><td><a href="http://blog.plover.com/2010/">2010</a>:
+<td><a href="http://blog.plover.com/2010/01/">J</a>FMAMJ
+<tr><td>&nbsp;<td>J<a href="http://blog.plover.com/2010/08/">A</a><a href="http://blog.plover.com/2010/09/">S</a><a href="http://blog.plover.com/2010/10/">O</a><a href="http://blog.plover.com/2010/11/">N</a>
+<tr><td><a href="http://blog.plover.com/2009/">2009</a>:
+<td><a href="http://blog.plover.com/2009/01/">J</a><a href="http://blog.plover.com/2009/02/">F</a><a href="http://blog.plover.com/2009/03/">M</a>A<a href="http://blog.plover.com/2009/05/">M</a><a href="http://blog.plover.com/2009/06/">J</a>
+<tr><td>&nbsp;<td><a href="http://blog.plover.com/2009/07/">J</a>A<a href="http://blog.plover.com/2009/09/">S</a>ON<a href="http://blog.plover.com/2009/12/">D</a>
+<tr><td><a href="http://blog.plover.com/2008/">2008</a>:
+<td><a href="http://blog.plover.com/2008/01/">J</a><a href="http://blog.plover.com/2008/02/">F</a><a href="http://blog.plover.com/2008/03/">M</a><a href="http://blog.plover.com/2008/04/">A</a><a href="http://blog.plover.com/2008/05/">M</a><a href="http://blog.plover.com/2008/06/">J</a>
+<tr><td>&nbsp;<td><a href="http://blog.plover.com/2008/07/">J</a>A<a href="http://blog.plover.com/2008/09/">S</a><a href="http://blog.plover.com/2008/10/">O</a><a href="http://blog.plover.com/2008/11/">N</a>D
+<tr><td><a href="http://blog.plover.com/2007/">2007</a>:
+<td><a href="http://blog.plover.com/2007/01/">J</a><a href="http://blog.plover.com/2007/02/">F</a><a href="http://blog.plover.com/2007/03/">M</a><a href="http://blog.plover.com/2007/04/">A</a><a href="http://blog.plover.com/2007/05/">M</a><a href="http://blog.plover.com/2007/06/">J</a>
+<tr><td>&nbsp;<td><a href="http://blog.plover.com/2007/07/">J</a><a href="http://blog.plover.com/2007/08/">A</a><a href="http://blog.plover.com/2007/09/">S</a><a href="http://blog.plover.com/2007/10/">O</a><a href="http://blog.plover.com/2007/11/">N</a><a href="http://blog.plover.com/2007/12/">D</a>
+<tr><td><a href="http://blog.plover.com/2006/">2006</a>:
+<td><a href="http://blog.plover.com/2006/01/">J</a><a href="http://blog.plover.com/2006/02/">F</a><a
+href="http://blog.plover.com/2006/03/">M</a><a href="http://blog.plover.com/2006/04/">A</a><a
+href="http://blog.plover.com/2006/05/">M</a><a href="http://blog.plover.com/2006/06/">J</a>
+<tr><td>&nbsp;<td> <a href="http://blog.plover.com/2006/07/">J</a>A<a
+href="http://blog.plover.com/2006/09/">S</a><a
+href="http://blog.plover.com/2006/10/">O</a><a
+href="http://blog.plover.com/2006/11/">N</a><a
+href="http://blog.plover.com/2006/12/">D</a>
+<tr><td><a href="http://blog.plover.com/2005/">2005</a>: <td><a
+href="http://blog.plover.com/2005/10/">O</a><a href="http://blog.plover.com/2005/11/">N</a><a
+href="http://blog.plover.com/2005/12/">D</a>
+</table>
+<br>
+</p>
+
+
+
+<!--
+
+   <p>
+     <a href="http://blog.plover.com/math/">mathematics</a>
+     <a href="http://blog.plover.com/book/">books</a>
+     <a href="http://blog.plover.com/physics/">physics</a>
+     <a href="http://blog.plover.com/calendar/">calendar</a>
+     <a href="http://blog.plover.com/oops/">mistakes</a>
+     <a href="http://blog.plover.com/bio/">biology</a>
+   </p>
+-->
+
+   <p>
+   <img alt="" src="http://pic.blog.plover.com/buttons/mjd-universe.png"
+   border="0" vspace=1 /></a>
+   <a href="http://hop.perl.plover.com/"><img alt="Higher-Order Perl"
+   src="http://pic.blog.plover.com/buttons/HOP-BUTTON.png" border="0" vspace=1 /></a>
+   <a href="http://www.blosxom.com/"><img alt="Blosxom"
+   src="http://pic.blog.plover.com/buttons/blosxom-sux.png" border="0" vspace=1 /></a>
+   </p>
+
+<!--  <a href="http://www.blosxom.com/"><img alt="Blosxom" rc="http://www.blosxom.com/images/pb_blosxom.gif" border="1" hspace="3" vspace="3" /></a>-->
+   </p>
+
+<!--  <p>  </p> -->
+
+<!--  <p><a href="http://technorati.com/claim/hzrgjnktrw">Technorati Profile</a></p> -->
+
+  <p><span style="font-size: 9px; background-color: #ccccff; padding: 2px;">Comments disabled</span></p>
+  </td>
+
+  <td bgcolor="#6699cc"><nobr>&nbsp; &nbsp; </nobr></td>
+
+  <td bgcolor="#f3f3f3"><nobr>&nbsp; &nbsp; </nobr></td> 
+
+  <!-- main blog entry column -->
+  <td bgcolor="#f3f3f3" width="100%"> 
+
+   <br />
+
+<span class="dateheader">Fri, 12 Oct 2007</span>
+<p>
+<a class="storytitle" name="catalan-squared">The square of the Catalan sequence</a>
+<br />
+
+Yesterday I went to a talk by Val Tannen about his work on "<a
+href="http://db.cis.upenn.edu/seminar/31-May-07-1.txt">provenance
+semirings</a>".<p>
+
+The idea is that when you calculate derived data in a database, such
+as a view or a selection, you can simultaneously calculate exactly
+which input tuples contributed to each output tuple's presence in the
+output.  Each input tuple is annotated with an identifier that says
+who was responsible for putting it there, and the output annotations
+are polynomials in these identifiers.  (<a
+href="http://db.cis.upenn.edu/DL/07/pods07.pdf">The complete paper is
+here</a>.)<p>
+
+A simple example may make this a bit clearer.  Suppose we have the
+following table <i>R</i>:
+
+<table align=center>
+<tr><td colspan=2 align=center><i>R</i>
+<tr><td>a <td>a
+<tr><td>a <td>b
+<tr><td>a <td>c
+<tr><td>b <td>c
+<tr><td>c <td>e
+<tr><td>d <td>e
+</table>
+
+We'll write <i>R</i>(<i>p</i>, <i>q</i>) when the tuple (<i>p</i>,
+<i>q</i>) appears in this table.  Now consider the join of <i>R</i>
+with itself.  That is, consider the relation <i>S</i> where
+<i>S</i>(<i>x</i>, <i>z</i>) is true whenever both <i>R</i>(<i>x</i>,
+<i>y</i>) and <i>R</i>(<i>y</i>, <i>z</i>) are true:<p>
+
+<table align=center>
+<tr><td colspan=2 align=center><i>S</i>
+<tr><td>a <td>a
+<tr><td>a <td>b
+<tr><td>a <td>c
+<tr><td>a <td>e
+<tr><td>b <td>e
+</table>
+
+Now suppose you discover that the <i>R</i>(a, b)
+information is untrustworthy.  What tuples of <i>S</i> are
+untrustworthy?<p>
+
+If you annotate the tuples of <i>R</i> with identifiers like this:<p>
+
+<table align=center>
+<tr><td colspan=2 align=center><i>R</i><td>&nbsp;
+<tr><td>a <td>a <td><b>u</b>
+<tr><td>a <td>b <td><b>v</b>
+<tr><td>a <td>c <td><b>w</b>
+<tr><td>b <td>c <td><b>x</b>
+<tr><td>c <td>e <td><b>y</b>
+<tr><td>d <td>e <td><b>z</b>
+</table>
+
+then the algorithm in the paper calculates polynomials for the tuples
+of <i>S</i> like this:
+
+<table align=center>
+<tr><td colspan=2 align=center><i>S</i><td>&nbsp;
+<tr><td>a <td>a <td><b>u</b><sup>2</sup>
+<tr><td>a <td>b <td><b>uv</b>
+<tr><td>a <td>c <td><b>uw</b> + <b>xv</b>
+<tr><td>a <td>e <td><b>wy</b>
+<tr><td>b <td>e <td><b>xy</b>
+</table>
+
+If you decide that <i>R</i>(a, b) is no good, you assign
+the value 0 to <b>v</b>, which reduces the <i>S</i> table to:<p>
+
+<table align=center>
+<tr><td colspan=2 align=center><i>S</i><td>&nbsp;
+<tr><td>a <td>a <td><b>u</b><sup>2</sup>
+<tr><td>a <td>b <td>0
+<tr><td>a <td>c <td><b>uw</b>
+<tr><td>a <td>e <td><b>wy</b>
+<tr><td>b <td>e <td><b>xy</b>
+</table>
+
+So we see that tuple <i>S</i>(a, b) is no good any more,
+but <i>S</i>(a, c) is still okay, because it can be
+derived from <b>u</b> and <b>w</b>, which we still trust.<p>
+
+This assignment of polynomials generalizes a lot of earlier work on
+tuple annotation.  For example, suppose each tuple in <i>R</i> is annotated with a
+probability of being correct.  You can propagate the probabilities 
+to <i>S</i> just by substituting the appropriate numbers for the
+variables in the polynomials.  Or suppose each tuple in <i>R</i> might
+appear multiple times and is annotated with the number of times it
+appears.  Then ditto.<p>
+
+If your queries are recursive, then the polynomials might be
+infinite.  For example, suppose you are calculating the transitive
+closure <i>T</i> of relation <i>R</i>.  This is like the previous
+example, except that instead of having 
+<i>S</i>(<i>x</i>, <i>z</i>) = <i>R</i>(<i>x</i>, <i>y</i>) and
+<i>R</i>(<i>y</i>, <i>z</i>), we have
+
+<i>T</i>(<i>x</i>, <i>z</i>) = <i>R</i>(<i>x</i>, <i>z</i>) or
+(<i>T</i>(<i>x</i>, <i>y</i>) and <i>R</i>(<i>y</i>, <i>z</i>)).  This
+is a recursive equation, so we need to do a fixpoint solution for it,
+using certain well-known techniques.  The result in this example is:<p>
+
+<table align=center>
+<tr><td colspan=2 align=center><i>T</i><td>&nbsp;
+<tr><td>a <td>a <td><b>u</b><sup>+</sup>
+<tr><td>a <td>b <td><b>u</b><sup>*</sup><b>v</b>
+<tr><td>a <td>c <td><b>u</b><sup>*</sup>(<b>vx</b>+<b>w</b>)
+<tr><td>a <td>e <td><b>u</b><sup>*</sup>(<b>vx</b>+<b>w</b>)<b>y</b>
+<tr><td>b <td>c <td><b>x</b>
+<tr><td>b <td>e <td><b>xy</b>
+<tr><td>d <td>e <td><b>z</b>
+</table>
+
+In such a case there might be an infinite number of paths through
+<i>R</i> to derive the provenance of a certain tuple of <i>T</i>.  In
+this example, 
+<i>R</i> contains a loop, namely <i>R</i>(a, a), so there are an
+infinite number of derivations of some of the tuples in <i>T</i>, because you can go around the loop as
+many times as you like.
+<b>u</b><sup>+</sup> here is an abbreviation for the infinite polynomial
+<i>u</i> + <i>u</i><sup>2</sup> + <i>u</i><sup>3</sup> + ...;
+<b>u</b><sup>*</sup> here is an abbreviation for
+1 + <b>u</b><sup>+</sup>.<p>
+
+<table align=right cellspacing=0 style="margin-left: 1em;">
+<tr>
+<td style='border-width: thin; border-color: blue; border-style: solid none none solid; padding: 0 6px;' bgcolor='white' valign=center rowspan=1><font size='+2'>1</font>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: solid solid none none'>a
+<tr>
+<td style='border-width: thin; border-color: blue; border-style: solid none none solid; padding: 0 6px;' bgcolor='#eeeeee' valign=center rowspan=1><font size='+2'>2</font>
+  <td bgcolor='#eeeeee' style='border-width: thin; border-color: blue; border-style: solid solid none none'>(a + b)
+<tr>
+<td style='border-width: thin; border-color: blue; border-style: solid none none solid; padding: 0 6px;' bgcolor='white' valign=center rowspan=2><font size='+2'>3</font>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: solid solid none none'>((a + b) + c)
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>(a + (b + c))
+<tr>
+<td style='border-width: thin; border-color: blue; border-style: solid none none solid; padding: 0 6px;' bgcolor='#eeeeee' valign=center rowspan=5><font size='+2'>4</font>
+  <td bgcolor='#eeeeee' style='border-width: thin; border-color: blue; border-style: solid solid none none'>(((a + b) + c) + d)
+<tr>
+  <td bgcolor='#eeeeee' style='border-width: thin; border-color: blue; border-style: none solid none none'>((a + (b + c)) + d)
+<tr>
+  <td bgcolor='#eeeeee' style='border-width: thin; border-color: blue; border-style: none solid none none'>((a + b) + (c + d))
+<tr>
+  <td bgcolor='#eeeeee' style='border-width: thin; border-color: blue; border-style: none solid none none'>(a + ((b + c) + d))
+<tr>
+  <td bgcolor='#eeeeee' style='border-width: thin; border-color: blue; border-style: none solid none none'>(a + (b + (c + d)))
+<tr>
+<td style='border-width: thin; border-color: blue; border-style: solid none solid solid; padding: 0 6px;' bgcolor='white' valign=center rowspan=14><font size='+2'>5</font>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: solid solid none none'>((((a + b) + c) + d) + e)
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>(((a + (b + c)) + d) + e)
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>(((a + b) + (c + d)) + e)
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>(((a + b) + c) + (d + e))
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>((a + ((b + c) + d)) + e)
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>((a + (b + (c + d))) + e)
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>((a + (b + c)) + (d + e))
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>((a + b) + ((c + d) + e))
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>((a + b) + (c + (d + e)))
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>(a + (((b + c) + d) + e))
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>(a + ((b + (c + d)) + e))
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>(a + ((b + c) + (d + e)))
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid none none'>(a + (b + ((c + d) + e)))
+<tr>
+  <td bgcolor='white' style='border-width: thin; border-color: blue; border-style: none solid solid none'>(a + (b + (c + (d + e))))
+</table>
+
+In one example in the paper, the method produces a recursive relation
+of the form
+<i>V</i> = <b>s</b> + <i>V</i><sup>2</sup>, which can be solved by
+the same well-known techniques to come up with an (infinite) polynomial for
+<i>V</i>, namely <i>V</i> = 1 + <b>s</b> 
++ 2<b>s</b><sup>2</sup>
++ 5<b>s</b><sup>3</sup>
++ 14<b>s</b><sup>4</sup>
++ ... .  Mathematicians will recognize the sequence 1, 1, 2, 5, 14,
+... as the <a
+href="http://en.wikipedia.org/wiki/Catalan_number">Catalan
+numbers</a>, which come up almost as often as the better-known
+Fibonacci numbers.  For example, the Catalan numbers count the number
+of binary trees with <i>n</i> nodes; they also count the number of
+ways of parenthesizing an expression with <i>n</i> terms, as shown in
+the table at right.<p>
+
+Anyway, in his talk, Val referred to the sequence as "bizarre", and
+I had to jump in to point out that it was not at all bizarre, it was
+the Catalan numbers, which are just what you would expect from a
+relation like <i>V</i> = <b>s</b> + <i>V</i><sup>2</sup>, blah blah,
+and he cut me off, because of course he knows all about the Catalan
+numbers.  He only called them bizarre as a rhetorical flourish, meant
+to echo the presumed puzzlement of the undergraduates in the room.<p>
+
+(I
+never know how much of what kind of math to expect from computer
+science professors.  Sometimes they know things I don't expect at all,
+and sometimes they don't know things that I expect everyone to know.<p>
+
+<a name="ENIAC">
+(Once I was discussing the algorithm used by ENIAC for computing
+square roots with a professor, and the professor told me that at the
+beginning of the program there was a loop, which accumulated a total,
+each time accumulating the contents of a register that was incremented
+by 2 each time through the loop, and he did not know what was going on
+there.  I instantly guessed that what was happening was that the
+register contained the numbers 1, 3, 5, 7, ..., incremented by 2 each
+time, and so the accumulator contained the totals 1, 4, 9, 16, 25,
+..., and so the loop was calculating an initial estimate of the size
+of the square root.  If you count the number of increment-by-2's, then
+when the accumulator exceeds the radicand, the count contains the
+integer part of the root.</a><p>
+
+(This was indeed what was going on, and the professor
+seemed to think it was a surprising insight.  I am not relating this
+boastfully, because I truly don't think it was a particularly inspired
+guess. <p>
+
+(Now that I think about it, maybe the answer here is that
+computer science professors know more about math than I expect, and
+less about computation.)<p>
+
+Anyway, I digress, and the whole article up to now was not really what
+I wanted to discuss anyway.  What I wanted to discuss was that when I
+started blathering about Catalan numbers, Val said that if I knew so
+much about Catalan numbers, I should calculate the coefficient of the
+<i>x</i><sup>59</sup> term in <i>V</i><sup>2</sup>, which also
+appeared as one of the annotations in his example.<p>
+
+So that's the puzzle, what is the coefficient of the <i>x</i><sup>59</sup> term in
+<i>V</i><sup>2</sup>, where 
+<i>V</i> = 1 + <i>s</i> 
++ 2<i>s</i><sup>2</sup>
++ 5<i>s</i><sup>3</sup>
++ 14<i>s</i><sup>4</sup> 
++ ... ?<p>
+
+After I had thought about this for a couple of minutes, I realized
+that it was going to be much simpler than it first appeared, for two reasons.<p>
+
+The first thing that occurred to me was that the definition of
+multiplication of polynomials is that the coefficient of the
+<i>x</i><sup><i>n</i></sup> term in the product of <i>A</i> and
+<i>B</i> is
+&Sigma;<i>a</i><sub><i>i</i></sub><i>b</i><sub><i>n</i>-<i>i</i></sub>.
+When <i>A</i>=<i>B</i>, this reduces to
+&Sigma;<i>a</i><sub><i>i</i></sub><i>a</i><sub><i>n</i>-<i>i</i></sub>.
+Now, it just so happens that the Catalan numbers obey the relation
+<i>c</i><sub><i>n</i>+1</sub>&nbsp;=&nbsp;&Sigma
+<i>c</i><sub><i>i</i></sub><i>c</i><sub><i>n</i>-<i>i</i></sub>, which
+is exactly the same form.  
+Since the coefficients of 
+<i>V</i> are the <i>c</i><sub><i>i</i></sub>, the coefficients of 
+<i>V</i><sup>2</sup> are going to have the form
+&Sigma;<i>c</i><sub><i>i</i></sub><i>c</i><sub><i>n</i>-<i>i</i></sub>,
+which is just the
+Catalan numbers again, but shifted up by one
+place.<p>
+
+The next thing I thought was that the Catalan numbers have a pretty
+simple generating function <i>f</i>(<i>x</i>).  This just means that
+you pretend that the sequence <i>V</i> is a Taylor series, and figure
+out what function it is the Taylor series of, and use that as a
+shorthand for the whole series, ignoring all questions of convergence
+and other such analytic fusspottery.  If <i>V</i> is the Taylor series for 
+<i>f</i>(<i>x</i>), then
+<i>V</i><sup>2</sup> is the Taylor series for 
+<i>f</i>(<i>x</i>)<sup>2</sup>.  And if <i>f</i> has a compact
+representation, say as sin(<i>x</i>) or something, it might be much
+easier to square than the original <i>V</i> was.  Since I knew in this
+case that the generating function <i>is</i> simple, this seemed
+likely to win.
+In fact the generating function
+of <i>V</i> is not sin(<i>x</i>) but
+(1-&radic;(1-4<i>x</i>))/2<i>x</i>.
+When you square 
+this, you get almost the same thing back, which matches my prediction
+from the previous paragraph.  This would have given me the right
+answer, but before I actually finished that
+calculation, I had an "oho" moment.<p>
+
+The generating function is known to satisfy the relation
+<i>f</i>(<i>x</i>) = 1 + <i>x</i><i>f</i>(<i>x</i>)<sup>2</sup>.
+This relation is where the (1-&radic;(1-4<i>x</i>))/2<i>x</i> thing comes from
+in the first place; it is the function that satisfies that relation.
+(You 
+can see this relation prefigured in the equation that Val had, with 
+<i>V</i> = <b>s</b> + <i>V</i><sup>2</sup>.  There the notation is a
+bit different, though.)
+We can just rearrange the terms here, putting the 
+<i>f</i>(<i>x</i>)<sup>2</sup> by itself, and get
+<i>f</i>(<i>x</i>)<sup>2</sup> = (<i>f</i>(<i>x</i>)-1)/<i>x</i>.<p>
+
+Now we are pretty much done, because <i>f</i>(<i>x</i>) = 
+<i>V</i> = 1 + <i>x</i> 
++ 2<i>x</i><sup>2</sup>
++ 5<i>x</i><sup>3</sup>
++ 14<i>x</i><sup>4</sup> 
++ ... , so 
+<i>f</i>(<i>x</i>)-1 = 
+<i>x</i> 
++ 2<i>x</i><sup>2</sup>
++ 5<i>x</i><sup>3</sup>
++ 14<i>x</i><sup>4</sup> 
++ ..., and
+(<i>f</i>(<i>x</i>)-1)/<i>x</i> = 
+1
++ 2<i>x</i>
++ 5<i>x</i><sup>2</sup>
++ 14<i>x</i><sup>3</sup> 
++ ... .  Lo and behold, the terms are the Catalan numbers again.<p>
+
+So the answer is that the coefficient of the <i>x</i><sup>59</sup>
+term is just <i>c</i>(60), calculation of which is left as an exercise
+for the reader.<p>
+
+I don't know what the point of all that was, but I thought it was fun
+how the hairy-looking problem seemed likely to be simple when I looked at
+it a little more carefully, and then how it <i>did</i> turn out to be
+quite simple.<p>
+
+This blog has had a recurring dialogue between subtle technique and
+the sawed-off shotgun method, and I often favor the sawed-off shotgun
+method.  Often programmers' big problem is that they are very clever
+and learned, and so they want to be clever and learned all the time,
+even when being a knucklehead would work better. But I think this
+example provides some balance, because it shows a big win for the
+clever, learned method, which does produce a lot more
+understanding.<p>
+
+<div class="bookbox"><table align=right width="14%" bgcolor="#ffffdd" border=1><tr><td align=center>
+<font size="-1">Order</font><br>
+<cite><font size="-1">Higher-Order Perl</font></cite><br>
+<A HREF="http://www.powells.com/partner/29575/biblio/1558607013"><IMG SRC="http://www.powells.com/cgi-bin/imageDB.cgi?isbn=1558607013" BORDER="0" ALIGN="center" ALT="Higher-Order Perl"  ></a><BR>
+<A HREF="http://www.powells.com/partner/29575/biblio/1558607013"><font size="-1">with kickback</font></a><br>
+<A HREF="http://www.powells.com/biblio/1558607013"><font size="-1">no kickback</font></a>
+</td></tr></table></div>
+Then again, it really doesn't take long to whip up a program to
+multiply infinite polynomials.  I did it in <a href="http://hop.perl.plover.com/chap06.html">chapter 6 of
+<cite>Higher-Order Perl</cite></a>, and here it is again in Haskell:<p>
+
+<pre>
+        data Poly a = P [a] deriving Show
+
+        instance (Eq a) =&gt; Eq (Poly a) 
+                where (P x) == (P y) = (x == y)
+
+        polySum x [] = x
+        polySum [] y = y
+        polySum (x:xs) (y:ys) = (x+y) : (polySum xs ys)
+
+        polyTimes  [] _ = []
+        polyTimes  _ [] = []
+        polyTimes  (x:xs) (y:ys) = (x*y) : more
+                          where
+                            more = (polySum (polySum (map (x *) ys) (map (* y) xs))
+                                    (0 : (polyTimes xs ys)))
+
+        instance (Num a) =&gt; Num (Poly a) 
+          where (P x) + (P y) = P (polySum x y)
+                (P x) * (P y) = P (polyTimes x y)
+
+</pre>
+</p>
+
+<br clear=all>
+<p align="right">
+<i>[<a href="http://blog.plover.com/math">Other articles in category /math</a>] 
+<a href="http://blog.plover.com/math/catalan-squared.html">permanent link</a></i>
+</p>
+
+<br />
+
+  </td>
+
+  <td bgcolor="#f3f3f3"><nobr>&nbsp; &nbsp;</nobr>
+
+ </tr>
+
+ <tr>
+
+  <td colspan="6" bgcolor="#000000" height="1"></td> 
+
+ </tr>
+
+</table>
+
+</body>
+
+</html>
+
