@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<title>AT&T Labs Research - Hancock Project</title>
+<link rev="made" href="mailto:kfisher@research.att.com">
+<base href="http://www.research.att.com/">
+</head>
+<body bgcolor="#ffffff" leftmargin=0 topmargin=0 marginheight=0 marginwidth=0 link="#339999" vlink="#888888"> 
+<!-- user content -->
+<br>
+<table border="0" cellpadding="1" cellspacing="0" width="800" align="center" bgcolor="#C3BDAE" >
+<tr><td>
+<table border="0" cellpadding="10" cellspacing="0" width="100%" align="center" bgcolor="#FFFFFF">
+<tr>
+<td>
+
+<h1>Hancock</h1>
+<p>
+Hancock is a C-based domain-specific language designed to make it easy
+to read, write, and maintain programs that manipulate large amounts of
+relatively uniform data.  Because Hancock is embedded in C, it
+inherits all the functionality of C. Valid C programs are also valid
+Hancock programs, and Hancock programs can use libraries written for
+C.  But Hancock is more than C.  In addition to C constructs, Hancock
+provides domain-specific forms to facilitate large-scale data
+processing.
+<p>
+
+For a given data-processing task, Hancock may be suitable if: 
+<ul>
+<li> The task requires a small number of linear passes over a
+relatively uniform data source.
+<li> The task requires storing persistent information.
+</ul>
+<p>
+
+
+<h2>New in Version 2.0 </h2>
+Hancock 2.0 adds the notion of parameterization for Hancock's
+directory, map, pickle, and stream types. This mechanism reduces 
+the number of distinct types that a programmer must specify without
+sacrificing the data safety gained from Hancock's static and dynamic
+type checking. Parameterization can also help with processing
+variable-width data.  <p>
+
+Hancock 2.0 maps are always keyed by values of type long long.
+Such maps use a new mechanism for conveying the legal range
+of keys and for tuning their on-disk representations. 
+
+Hancock 2.0 introduces a new type, called generative streams, for
+streams that do not have a physical representation. 
+
+Finally, Hancock 2.0 comes with a small library of stream
+types, which facilitate iterating over various combinations of maps.
+ <p>
+
+<h2> Version 2.0.1 </h2>
+Version 2.0.1 fixes a performance bug introduced in Hancock 2.0 and
+a few other minor bugs.
+
+<h2> Version 2.0.2 </h2>
+Hancock 2.0.2 updates the Hancock 2.0.1 release to work with current operating systems and C libraries.
+
+<h2> Obtaining Hancock </h2>
+Hancock 
+<a href="http://www.research.att.com/~kfisher/hancock/release.php">
+distributions and installation instructions</a>
+are available.
+
+
+<!--
+<h3> Hancock version 1.1 </h3>
+A new release of Hancock is now available.  Version 1.1 changes
+the representation of maps to improve performance, adds a new
+type, called <em> pickles</em>, to permit users to define
+their own persistent data structures, and fixes bugs.
+
+<h3>Installation</h3>
+Hancock 1.1 is available in the following forms:
+<ul>
+<li> Source code:  
+        <a HREF="http://www.research.att.com/projects/hancock/distribution/README.src.txt">
+         Installation instructions.</a> 
+        <a HREF="http://www.research.att.com/projects/hancock/distribution/download-src.html">
+         Download distribution.</a>
+
+<li> x86-Linux binary:
+        <a HREF="http://www.research.att.com/projects/hancock/distribution/README.bin.txt">
+         Installation instructions.</a>
+        <a HREF="http://www.research.att.com/projects/hancock/distribution/download-x86-linux.html">
+         Download distribution.</a>
+<li> SGI-Irix binary:
+        <a HREF="http://www.research.att.com/projects/hancock/distribution/README.bin.txt">
+         Installation instructions.</a>
+        <a HREF="http://www.research.att.com/projects/hancock/distribution/download-mipseb-irix.html">
+         Download distribution.</a>
+<li> Sparc-Solaris binary:
+        <a HREF="http://www.research.att.com/projects/hancock/distribution/README.bin.txt">
+         Installation instructions.</a>
+        <a HREF="http://www.research.att.com/projects/hancock/distribution/download-sparc-solaris.html">
+         Download distribution.</a>
+<li> Sparc-SunOS binary:
+        <a HREF="http://www.research.att.com/projects/hancock/distribution/README.bin.txt">
+         Installation instructions.</a>
+        <a HREF="http://www.research.att.com/projects/hancock/distribution/download-sparc-sunos.html">
+         Download distribution.</a>
+</ul>
+
+
+
+Trouble-shooting note for source release: SMLNJ may be downloaded from the
+<a
+HREF="http://smlnj.sourceforge.net/install/index.html">
+SMLNJ installation notes page.</a>
+<br>
+
+<p>
+<p>
+
+<h3>Licensing</h3>
+Hancock is available for non-commerical purposes under the following
+<a href="http://www.research.att.com/projects/hancock/distribution/LICENSE.html">license</a>.  Please read the license carefully.
+<p>
+-->
+
+<h3>Documentation and papers</h3>
+<ul>
+<li type="disc">
+<A HREF="~kfisher/hancock/manual.pdf">Hancock Manual</a><br>
+(<a href="~kfisher/hancock/manual.ps"> ps</a>)
+(<a href="~kfisher/hancock/manual.pdf"> pdf</a>)
+<br>
+K.Fisher, K.Hogstedt, A.Rogers, and F.Smith.<br>
+<p>
+
+
+<li type="disc">
+<A HREF="~kfisher/hancock/journal.pdf">Hancock: A Language for Analyzing Transactional Data Streams</a><br>
+(<a href="~kfisher/hancock/journal.ps"> ps</a>)
+(<a href="~kfisher/hancock/journal.pdf"> pdf</a>)
+<br>
+K.Fisher, K.Hogstedt, A.Rogers, and F.Smith.<br>
+In <I>ACM Transactions on Programming Languages and Systems</I> 26, 2 (March 2004), 263-300.
+<p>
+
+
+<li type="disc">
+<A HREF="~kfisher/hancock/dbpl2001.pdf">An Application-Specific Database</a><br>
+K.Fisher, C.Goodall, K.Hogstedt, and A.Rogers<br>
+In <I>Proceedings of the Eighth Biennial Workshop on Data Bases and Programming Languages</I>, 2001 <br>
+<p>
+
+
+
+<li type="disc">
+<A HREF="~kfisher/hancock/kdd.pdf">
+Hancock: A Language for Extracting Signatures from Data Streams</a><br>
+(<a href="~kfisher/files/kdd-abs.txt">
+Abstract</a>)
+(<a href="~kfisher/hancock/kdd.ps"> ps</a>)
+(<a href="~kfisher/hancock/kdd.pdf"> pdf</a>)
+<br>
+C.Cortes, K.Fisher, D.Pregibon, A.Rogers, and F.Smith.<br>
+In <I>Proceedings of the Sixth International Conference
+                  on Knowledge Discovery and Data Mining</I>, 2000, pages 9-17.  <br>
+<a href="~kfisher/hancock/kdd-slides.pdf">
+Conference slides</a>
+(<a href="~kfisher/hancock/kdd-slides.ps"> ps</a>)
+(<a href="~kfisher/hancock/kdd-slides.pdf"> pdf</a>).
+<br>
+<p>
+
+<!--
+<li type="disc">
+<A HREF="http://www.research.att.com/~kfisher/hancock/tutorial-slides.ps">
+Programming in Hancock</a>
+(<a href="http://www.research.att.com/~kfisher/hancock/tutorial-slides.pdf">
+pdf</a>)
+<br>
+Slides from a tutorial on how to use Hancock.
+June 12, 2000.
+<br>
+<p>
+--->
+
+<li type="disc"><A HREF="~kfisher/files/dsl.ps">
+                Hancock: A Language for Processing Very Large-Scale Data</a><br>
+                (<a href="~kfisher/files/dsl-abs.txt">Abstract</a>)
+                (<a href="~kfisher/files/dsl.ps"> ps</a>)
+                (<a href="~kfisher/files/dsl.pdf"> pdf</a>)<br>
+                D.Bonachea, K.Fisher, A.Rogers, and F.Smith.<br>
+                In <I>USENIX 2nd Conference on Domain-Specific Languages</I>,<br>
+                1999, pages 163-176.</li>
+</ul>
+
+
+<h3>People</h3>
+<ul>
+<li type="disc"><a HREF="http://www.research.att.com/info/kfisher">Kathleen Fisher</a></li>
+<li type="disc"><a HREF="http://www.research.att.com/info/karin">Karin Hogstedt</a></li>
+<li type="disc"><a HREF="http://www.cs.uchicago.edu/people/amr">Anne Rogers</a></li>
+<li type="disc"><a HREF="http://www.cs.cornell.edu/Info/People/fms/fms.html">Fred Smith</a></li>
+</ul>
+
+<h3>Affiliates</h3>
+<ul>
+<li type="disc"><a HREF="http://www.research.att.com/info/corinna">Corinna Cortes</a></li>
+<li type="disc"><a HREF="http://www.research.att.com/info/daryl">Daryl Pregibon</a></li>
+<li type="disc"><a HREF="http://www.cs.berkeley.edu/~bonachea">Dan Bonachea</a></li>
+</ul>
+
+<h4>Inquiries</h4>
+Please send inquiries to: <a href="mailto:hancock@research.att.com">hancock@research.att.com</a>.
+
+</td></tr>
+</table>
+</td></tr>
+</table>
+
+
+<!-- /user content --> </td> </tr> <tr> <td></td> <td align="center"> 
+
+
+</body>
+</html>
