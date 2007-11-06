@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>The Boyer-Moore Fast String Searching Algorithm</TITLE>
+</HEAD>
+<BODY TEXT="#FFFFFF" 
+      BGCOLOR="#1C86EE"
+      LINK ="#54FF9F"
+      VLINK="#00FFFF"
+      ALINK="#FF0000"
+      "fixed">
+<H1>The Boyer-Moore Fast String Searching Algorithm</H1>
+
+This algorithm, which Bob Boyer and I invented in about 1975, is the
+basis of the fastest known ways to find one string of characters in another.
+How might you look for the following pattern in the text below?
+<PRE>
+pattern: EXAMPLE
+   text: HERE IS A SIMPLE EXAMPLE
+</PRE>
+We can show you the <A HREF="kpm-example.html">Knuth-Pratt-Morris</A> algorithm
+and we can show you the <A HREF="fstrpos-example.html">Boyer-Moore</A> algorithm.
+
+<P>
+Our algorithm has the peculiar property that, roughly speaking, the longer
+the pattern is, the faster the algorithm goes.  Furthermore, the algorithm is
+``sublinear'' in the sense that it generally looks at fewer characters than
+it passes.
+
+The algorithm is described in
+<UL>
+<LI><A HREF="../../publications/fstrpos.pdf">A Fast String Searching
+Algorithm</A>, with R.S. Boyer. <I>Communications of the Association for
+Computing Machinery</I>, <B>20</B>(10), 1977, pp. 762-772.
+</UL>
+
+The classic Boyer-Moore algorithm suffers from the phenomenon that it tends
+not to work so efficiently on small alphabets like DNA.  The skip distance
+tends to stop growing with the pattern length because substrings re-occur
+frequently.  By remembering more of what has already been matched, one can
+get larger skips through the text.  One can even arrange ``perfect memory''
+and thus look at each character at most once, whereas the Boyer-Moore
+algorithm, while linear, may inspect a character from the text multiple times.
+This idea of remembering more has been explored in the literature by others.
+It suffers from the need for very large tables or state machines.
+
+<P>
+
+However, in 2007, Matyas Sustik and I thought of an apparently new variation
+that gives very good performance on small alphabets and has a small table.
+The algorithm is described in UTCS Tech Report TR-07-62, ``<A
+HREF="../../publications/sustik-moore.pdf">String Searching over Small
+Alphabets</A>.''
+
+
+<P>
+[<A HREF="../index.html">Best Ideas</A>]
+[<A HREF="../../publications/index.html">Publications</A>]
+[<A HREF="../../research/index.html">Research</A>]
+[<A HREF="../../welcome.html">Home</A>]<BR>
+
+</BODY>
+</HTML>
