@@ -1,0 +1,945 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+  <link rel="stylesheet" href="http://st.pimg.net/tucs/style.css" type="text/css" />
+<link rel="stylesheet" href="http://st.pimg.net/tucs/print.css" type="text/css" media="print" />
+  <link rel="alternate" type="application/rss+xml" title="RSS 1.0" href="http://search.cpan.org/uploads.rdf" />
+  <link rel="search" href="http://st.pimg.net/tucs/opensearch.xml" type="application/opensearchdescription+xml" title="SearchCPAN" />
+  <title>&#97;&#99;&#107; - search.cpan.org</title>
+ <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3528438-1']);
+    _gaq.push(["_setCustomVar",2,"Distribution","ack",3]);
+    _gaq.push(["_setCustomVar",5,"Release","ack-1.94",3]);
+    _gaq.push(["_setCustomVar",4,"Document","ack",3]);
+    _gaq.push(["_setCustomVar",1,"Author","PETDANCE",3]);
+    _gaq.push(['_trackPageview']);
+  </script>
+ </head>
+ <body id="cpansearch">
+<center><div class="logo"><a href="/"><img src="http://st.pimg.net/tucs/img/cpan_banner.png" alt="CPAN"></a></div></center>
+<div class="menubar">
+ <a href="/">Home</a>
+&middot; <a href="/author/">Authors</a>
+&middot; <a href="/recent">Recent</a>
+&middot; <a href="http://log.perl.org/cpansearch/">News</a>
+&middot; <a href="/mirror">Mirrors</a>
+&middot; <a href="/faq.html">FAQ</a>
+&middot; <a href="/feedback">Feedback</a>
+</div>
+<form method="get" action="/search" name="f" class="searchbox">
+<input type="text" name="query" value="" size="35">
+<br>in <select name="mode">
+ <option value="all">All</option>
+ <option value="module" >Modules</option>
+ <option value="dist" >Distributions</option>
+ <option value="author" >Authors</option>
+</select>&nbsp;<input type="submit" value="CPAN Search">
+</form>
+
+
+ <a name="_top"></a>
+  <div class=path>
+<div id=permalink class="noprint"><a href="/perldoc?ack">permalink</a></div>
+  <a href="/~petdance/">&#65;&#110;&#100;&#121; &#76;&#101;&#115;&#116;&#101;&#114;</a> &gt;
+  <a href="/~petdance/ack/">&#97;&#99;&#107;</a> &gt;
+  &#97;&#99;&#107;
+ </div>
+
+<div class="noprint" style="float:right;align:left;width:19ex">
+<a href="http://hexten.net/cpan-faces/"><img src="http://www.gravatar.com/avatar.php?gravatar_id=8077a0584e451732420d43f5d0b3bd31&rating=G&size=80&default=http%3A%2F%2Fst.pimg.net%2Ftucs%2Fimg%2Fwho.png" width=80 height=80 
+style="float:right"
+/></a>
+<br style="clear:both"/>
+<p style="text-align:right">Download:<br/> <a href="/CPAN/authors/id/P/PE/PETDANCE/ack-1.94.tar.gz">ack-1.94.tar.gz</a></p>
+<p style="text-align:right"><a href="http://www.annocpan.org/~PETDANCE/ack-1.94/ack">Annotate this POD
+</a></p>
+     <p style="text-align:right"><a href="&#104;&#116;&#116;&#112;://&#98;&#101;&#116;&#116;&#101;&#114;&#116;&#104;&#97;&#110;&#103;&#114;&#101;&#112;.&#99;&#111;&#109;/">Website</a></p>
+     <p style="text-align:right"><a href="&#104;&#116;&#116;&#112;://&#103;&#105;&#116;&#104;&#117;&#98;.&#99;&#111;&#109;/&#112;&#101;&#116;&#100;&#97;&#110;&#99;&#101;/&#97;&#99;&#107;">View/Report&nbsp;Bugs</a></p>
+</div>
+<span class="noprint">
+  <a href="/src/PETDANCE/ack-1.94/ack">Source</a> &nbsp;
+</span>
+<a name="___top"></a>
+<div class=pod>
+<div class=toc>
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#FILE_SELECTION'>FILE SELECTION</a>
+  <li class='indexItem indexItem1'><a href='#DIRECTORY_SELECTION'>DIRECTORY SELECTION</a>
+  <li class='indexItem indexItem1'><a href='#WHEN_TO_USE_GREP'>WHEN TO USE GREP</a>
+  <li class='indexItem indexItem1'><a href='#OPTIONS'>OPTIONS</a>
+  <li class='indexItem indexItem1'><a href='#THE_.ackrc_FILE'>THE .ackrc FILE</a>
+  <li class='indexItem indexItem1'><a href='#Defining_your_own_types'>Defining your own types</a>
+  <li class='indexItem indexItem1'><a href='#ENVIRONMENT_VARIABLES'>ENVIRONMENT VARIABLES</a>
+  <li class='indexItem indexItem1'><a href='#ACK_&#38;_OTHER_TOOLS'>ACK &#38; OTHER TOOLS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#Vim_integration'>Vim integration</a>
+    <li class='indexItem indexItem2'><a href='#Emacs_integration'>Emacs integration</a>
+    <li class='indexItem indexItem2'><a href='#TextMate_integration'>TextMate integration</a>
+    <li class='indexItem indexItem2'><a href='#Shell_and_Return_Code'>Shell and Return Code</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#DEBUGGING_ACK_PROBLEMS'>DEBUGGING ACK PROBLEMS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#Use_--noenv'>Use --noenv</a>
+    <li class='indexItem indexItem2'><a href='#Use_-f_to_see_what_files_you&#39;re_scanning'>Use -f to see what files you&#39;re scanning</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#TIPS'>TIPS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#Use_the_.ackrc_file.'>Use the .ackrc file.</a>
+    <li class='indexItem indexItem2'><a href='#Use_-f_for_working_with_big_codesets'>Use -f for working with big codesets</a>
+    <li class='indexItem indexItem2'><a href='#Use_-Q_when_in_doubt_about_metacharacters'>Use -Q when in doubt about metacharacters</a>
+    <li class='indexItem indexItem2'><a href='#Use_ack_to_watch_log_files'>Use ack to watch log files</a>
+    <li class='indexItem indexItem2'><a href='#Share_your_knowledge'>Share your knowledge</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#FAQ'>FAQ</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#Why_isn&#39;t_ack_finding_a_match_in_(some_file)?'>Why isn&#39;t ack finding a match in (some file)?</a>
+    <li class='indexItem indexItem2'><a href='#Why_does_ack_ignore_unknown_files_by_default?'>Why does ack ignore unknown files by default?</a>
+    <li class='indexItem indexItem2'><a href='#Wouldn&#39;t_it_be_great_if_ack_did_search_&#38;_replace?'>Wouldn&#39;t it be great if ack did search &#38; replace?</a>
+    <li class='indexItem indexItem2'><a href='#Can_you_make_ack_recognize_.xyz_files?'>Can you make ack recognize .xyz files?</a>
+    <li class='indexItem indexItem2'><a href='#There&#39;s_already_a_program/package_called_ack.'>There&#39;s already a program/package called ack.</a>
+    <li class='indexItem indexItem2'><a href='#Why_is_it_called_ack_if_it&#39;s_called_ack-grep?'>Why is it called ack if it&#39;s called ack-grep?</a>
+    <li class='indexItem indexItem2'><a href='#What_does_ack_mean?'>What does ack mean?</a>
+    <li class='indexItem indexItem2'><a href='#Can_I_do_multi-line_regexes?'>Can I do multi-line regexes?</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#BUGS'>BUGS</a>
+  <li class='indexItem indexItem1'><a href='#ENHANCEMENTS'>ENHANCEMENTS</a>
+  <li class='indexItem indexItem1'><a href='#SUPPORT'>SUPPORT</a>
+  <li class='indexItem indexItem1'><a href='#ACKNOWLEDGEMENTS'>ACKNOWLEDGEMENTS</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_&#38;_LICENSE'>COPYRIGHT &#38; LICENSE</a>
+</ul>
+</div>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>ack - grep-like text finder</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<pre>    ack [options] PATTERN [FILE...]
+    ack -f [options] [DIRECTORY...]</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>Ack is designed as a replacement for 99% of the uses of <em>grep</em>.</p>
+
+<p>Ack searches the named input FILEs (or standard input if no files are named, or the file name - is given) for lines containing a match to the given PATTERN. By default, ack prints the matching lines.</p>
+
+<p>Ack can also list files that would be searched, without actually searching them, to let you take advantage of ack&#39;s file-type filtering capabilities.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FILE_SELECTION"
+>FILE SELECTION <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p><i>ack</i> is intelligent about the files it searches. It knows about certain file types, based on both the extension on the file and, in some cases, the contents of the file. These selections can be made with the <b>--type</b> option.</p>
+
+<p>With no file selections, <i>ack</i> only searches files of types that it recognizes. If you have a file called <em>foo.wango</em>, and <i>ack</i> doesn&#39;t know what a .wango file is, <i>ack</i> won&#39;t search it.</p>
+
+<p>The <b>-a</b> option tells <i>ack</i> to select all files, regardless of type.</p>
+
+<p>Some files will never be selected by <i>ack</i>, even with <b>-a</b>, including:</p>
+
+<ul>
+<li>Backup files: Files matching <em>#*#</em> or ending with <em>~</em>.</li>
+
+<li>Coredumps: Files matching <em>core.\d+</em></li>
+</ul>
+
+<p>However, <i>ack</i> always searches the files given on the command line, no matter what type. Furthermore, by specifying the <b>-u</b> option all files will be searched.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DIRECTORY_SELECTION"
+>DIRECTORY SELECTION <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p><i>ack</i> descends through the directory tree of the starting directories specified. However, it will ignore the shadow directories used by many version control systems, and the build directories used by the Perl MakeMaker system. You may add or remove a directory from this list with the <b>--[no]ignore-dir</b> option. The option may be repeated to add/remove multiple directories from the ignore list.</p>
+
+<p>For a complete list of directories that do not get searched, run <em>ack --help</em>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="WHEN_TO_USE_GREP"
+>WHEN TO USE GREP <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p><i>ack</i> trumps <i>grep</i> as an everyday tool 99% of the time, but don&#39;t throw <i>grep</i> away, because there are times you&#39;ll still need it.</p>
+
+<p>E.g., searching through huge files looking for regexes that can be expressed with <i>grep</i> syntax should be quicker with <i>grep</i>.</p>
+
+<p>If your script or parent program uses <i>grep</i> <code>--quiet</code> or <code>--silent</code> or needs exit 2 on IO error, use <i>grep</i>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="OPTIONS"
+>OPTIONS <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<dl>
+<dt><a name='a'></a><a name="-a,_--all"
+><b>-a</b>, <b>--all</b></a></dt>
+
+<dd>
+<p>Operate on all files, regardless of type (but still skip directories like <em>blib</em>, <em>CVS</em>, etc.)</p>
+
+<dt><a name='A'></a><a name="-A_NUM,_--after-context=NUM"
+><b>-A <i>NUM</i></b>, <b>--after-context=<i>NUM</i></b></a></dt>
+
+<dd>
+<p>Print <i>NUM</i> lines of trailing context after matching lines.</p>
+
+<dt><a name='B'></a><a name="-B_NUM,_--before-context=NUM"
+><b>-B <i>NUM</i></b>, <b>--before-context=<i>NUM</i></b></a></dt>
+
+<dd>
+<p>Print <i>NUM</i> lines of leading context before matching lines.</p>
+
+<dt><a name='C'></a><a name="-C_[NUM],_--context[=NUM]"
+><b>-C [<i>NUM</i>]</b>, <b>--context[=<i>NUM</i>]</b></a></dt>
+
+<dd>
+<p>Print <i>NUM</i> lines (default 2) of context around matching lines.</p>
+
+<dt><a name='c'></a><a name="-c,_--count"
+><b>-c</b>, <b>--count</b></a></dt>
+
+<dd>
+<p>Suppress normal output; instead print a count of matching lines for each input file. If <b>-l</b> is in effect, it will only show the number of lines for each file that has lines matching. Without <b>-l</b>, some line counts may be zeroes.</p>
+
+<p>If combined with <b>-h</b> (<b>--no-filename</b>) ack outputs only one total count.</p>
+
+<dt><a name='color'></a><a name="--color,_--nocolor"
+><b>--color</b>, <b>--nocolor</b></a></dt>
+
+<dd>
+<p><b>--color</b> highlights the matching text. <b>--nocolor</b> supresses the color. This is on by default unless the output is redirected.</p>
+
+<p>On Windows, this option is off by default unless the <a href="/perldoc?Win32%3A%3AConsole%3A%3AANSI" class="podlinkpod"
+>Win32::Console::ANSI</a> module is installed or the <code>ACK_PAGER_COLOR</code> environment variable is used.</p>
+
+<dt><a name='color'></a><a name="--color-filename=color"
+><b>--color-filename=<i>color</i></b></a></dt>
+
+<dd>
+<p>Sets the color to be used for filenames.</p>
+
+<dt><a name='color'></a><a name="--color-match=color"
+><b>--color-match=<i>color</i></b></a></dt>
+
+<dd>
+<p>Sets the color to be used for matches.</p>
+
+<dt><a name='color'></a><a name="--color-lineno=color"
+><b>--color-lineno=<i>color</i></b></a></dt>
+
+<dd>
+<p>Sets the color to be used for line numbers.</p>
+
+<dt><a name='column'></a><a name="--column"
+><b>--column</b></a></dt>
+
+<dd>
+<p>Show the column number of the first match. This is helpful for editors that can place your cursor at a given position.</p>
+
+<dt><a name='env'></a><a name="--env,_--noenv"
+><b>--env</b>, <b>--noenv</b></a></dt>
+
+<dd>
+<p><b>--noenv</b> disables all environment processing. No <em>.ackrc</em> is read and all environment variables are ignored. By default, <em>ack</em> considers <em>.ackrc</em> and settings in the environment.</p>
+
+<dt><a name='flush'></a><a name="--flush"
+><b>--flush</b></a></dt>
+
+<dd>
+<p><b>--flush</b> flushes output immediately. This is off by default unless ack is running interactively (when output goes to a pipe or file).</p>
+
+<dt><a name='f'></a><a name="-f"
+><b>-f</b></a></dt>
+
+<dd>
+<p>Only print the files that would be searched, without actually doing any searching. PATTERN must not be specified, or it will be taken as a path to search.</p>
+
+<dt><a name='follow'></a><a name="--follow,_--nofollow"
+><b>--follow</b>, <b>--nofollow</b></a></dt>
+
+<dd>
+<p>Follow or don&#39;t follow symlinks, other than whatever starting files or directories were specified on the command line.</p>
+
+<p>This is off by default.</p>
+
+<dt><a name='G'></a><a name="-G_REGEX"
+><b>-G <i>REGEX</i></b></a></dt>
+
+<dd>
+<p>Only paths matching <i>REGEX</i> are included in the search. The entire path and filename are matched against <i>REGEX</i>, and <i>REGEX</i> is a Perl regular expression, not a shell glob.</p>
+
+<p>The options <b>-i</b>, <b>-w</b>, <b>-v</b>, and <b>-Q</b> do not apply to this <i>REGEX</i>.</p>
+
+<dt><a name='g'></a><a name="-g_REGEX"
+><b>-g <i>REGEX</i></b></a></dt>
+
+<dd>
+<p>Print files where the relative path + filename matches <i>REGEX</i>. This option is a convenience shortcut for <b>-f</b> <b>-G <i>REGEX</i></b>.</p>
+
+<p>The options <b>-i</b>, <b>-w</b>, <b>-v</b>, and <b>-Q</b> do not apply to this <i>REGEX</i>.</p>
+
+<dt><a name='group'></a><a name="--group,_--nogroup"
+><b>--group</b>, <b>--nogroup</b></a></dt>
+
+<dd>
+<p><b>--group</b> groups matches by file name with. This is the default when used interactively.</p>
+
+<p><b>--nogroup</b> prints one result per line, like grep. This is the default when output is redirected.</p>
+
+<dt><a name='H'></a><a name="-H,_--with-filename"
+><b>-H</b>, <b>--with-filename</b></a></dt>
+
+<dd>
+<p>Print the filename for each match.</p>
+
+<dt><a name='h'></a><a name="-h,_--no-filename"
+><b>-h</b>, <b>--no-filename</b></a></dt>
+
+<dd>
+<p>Suppress the prefixing of filenames on output when multiple files are searched.</p>
+
+<dt><a name='help'></a><a name="--help"
+><b>--help</b></a></dt>
+
+<dd>
+<p>Print a short help statement.</p>
+
+<dt><a name='i'></a><a name="-i,_--ignore-case"
+><b>-i</b>, <b>--ignore-case</b></a></dt>
+
+<dd>
+<p>Ignore case in the search strings.</p>
+
+<p>This applies only to the PATTERN, not to the regexes given for the <b>-g</b> and <b>-G</b> options.</p>
+
+<dt><a name='no'></a><a name="--[no]ignore-dir=DIRNAME"
+><b>--[no]ignore-dir=<i>DIRNAME</i></b></a></dt>
+
+<dd>
+<p>Ignore directory (as CVS, .svn, etc are ignored). May be used multiple times to ignore multiple directories. For example, mason users may wish to include <b>--ignore-dir=data</b>. The <b>--noignore-dir</b> option allows users to search directories which would normally be ignored (perhaps to research the contents of <em>.svn/props</em> directories).</p>
+
+<p>The <i>DIRNAME</i> must always be a simple directory name. Nested directories like <em>foo/bar</em> are NOT supported. You would need to specify <b>--ignore-dir=foo</b> and then no files from any foo directory are taken into account by ack unless given explicitly on the command line.</p>
+
+<dt><a name='line'></a><a name="--line=NUM"
+><b>--line=<i>NUM</i></b></a></dt>
+
+<dd>
+<p>Only print line <i>NUM</i> of each file. Multiple lines can be given with multiple <b>--line</b> options or as a comma separated list (<b>--line=3,5,7</b>). <b>--line=4-7</b> also works. The lines are always output in ascending order, no matter the order given on the command line.</p>
+
+<dt><a name='l'></a><a name="-l,_--files-with-matches"
+><b>-l</b>, <b>--files-with-matches</b></a></dt>
+
+<dd>
+<p>Only print the filenames of matching files, instead of the matching text.</p>
+
+<dt><a name='L'></a><a name="-L,_--files-without-matches"
+><b>-L</b>, <b>--files-without-matches</b></a></dt>
+
+<dd>
+<p>Only print the filenames of files that do <i>NOT</i> match. This is equivalent to specifying <b>-l</b> and <b>-v</b>.</p>
+
+<dt><a name='match'></a><a name="--match_REGEX"
+><b>--match <i>REGEX</i></b></a></dt>
+
+<dd>
+<p>Specify the <i>REGEX</i> explicitly. This is helpful if you don&#39;t want to put the regex as your first argument, e.g. when executing multiple searches over the same set of files.</p>
+
+<pre>    # search for foo and bar in given files
+    ack file1 t/file* --match foo
+    ack file1 t/file* --match bar</pre>
+
+<dt><a name='m'></a><a name="-m=NUM,_--max-count=NUM"
+><b>-m=<i>NUM</i></b>, <b>--max-count=<i>NUM</i></b></a></dt>
+
+<dd>
+<p>Stop reading a file after <i>NUM</i> matches.</p>
+
+<dt><a name='man'></a><a name="--man"
+><b>--man</b></a></dt>
+
+<dd>
+<p>Print this manual page.</p>
+
+<dt><a name='n'></a><a name="-n,_--no-recurse"
+><b>-n</b>, <b>--no-recurse</b></a></dt>
+
+<dd>
+<p>No descending into subdirectories.</p>
+
+<dt><a name='o'></a><a name="-o"
+><b>-o</b></a></dt>
+
+<dd>
+<p>Show only the part of each line matching PATTERN (turns off text highlighting)</p>
+
+<dt><a name='output'></a><a name="--output=expr"
+><b>--output=<i>expr</i></b></a></dt>
+
+<dd>
+<p>Output the evaluation of <i>expr</i> for each line (turns off text highlighting)</p>
+
+<dt><a name='pager'></a><a name="--pager=program"
+><b>--pager=<i>program</i></b></a></dt>
+
+<dd>
+<p>Direct ack&#39;s output through <i>program</i>. This can also be specified via the <code>ACK_PAGER</code> and <code>ACK_PAGER_COLOR</code> environment variables.</p>
+
+<p>Using --pager does not suppress grouping and coloring like piping output on the command-line does.</p>
+
+<dt><a name='passthru'></a><a name="--passthru"
+><b>--passthru</b></a></dt>
+
+<dd>
+<p>Prints all lines, whether or not they match the expression. Highlighting will still work, though, so it can be used to highlight matches while still seeing the entire file, as in:</p>
+
+<pre>    # Watch a log file, and highlight a certain IP address
+    $ tail -f ~/access.log | ack --passthru 123.45.67.89</pre>
+
+<dt><a name='print0'></a><a name="--print0"
+><b>--print0</b></a></dt>
+
+<dd>
+<p>Only works in conjunction with -f, -g, -l or -c (filename output). The filenames are output separated with a null byte instead of the usual newline. This is helpful when dealing with filenames that contain whitespace, e.g.</p>
+
+<pre>    # remove all files of type html
+    ack -f --html --print0 | xargs -0 rm -f</pre>
+
+<dt><a name='Q'></a><a name="-Q,_--literal"
+><b>-Q</b>, <b>--literal</b></a></dt>
+
+<dd>
+<p>Quote all metacharacters in PATTERN, it is treated as a literal.</p>
+
+<p>This applies only to the PATTERN, not to the regexes given for the <b>-g</b> and <b>-G</b> options.</p>
+
+<dt><a name='r'></a><a name="-r,_-R,_--recurse"
+><b>-r</b>, <b>-R</b>, <b>--recurse</b></a></dt>
+
+<dd>
+<p>Recurse into sub-directories. This is the default and just here for compatibility with grep. You can also use it for turning <b>--no-recurse</b> off.</p>
+
+<dt><a name='smart'></a><a name="--smart-case,_--no-smart-case"
+><b>--smart-case</b>, <b>--no-smart-case</b></a></dt>
+
+<dd>
+<p>Ignore case in the search strings if PATTERN contains no uppercase characters. This is similar to <code>smartcase</code> in vim. This option is off by default.</p>
+
+<p><b>-i</b> always overrides this option.</p>
+
+<p>This applies only to the PATTERN, not to the regexes given for the <b>-g</b> and <b>-G</b> options.</p>
+
+<dt><a name='sort'></a><a name="--sort-files"
+><b>--sort-files</b></a></dt>
+
+<dd>
+<p>Sorts the found files lexically. Use this if you want your file listings to be deterministic between runs of <i>ack</i>.</p>
+
+<dt><a name='show'></a><a name="--show-types"
+><b>--show-types</b></a></dt>
+
+<dd>
+<p>Outputs the filetypes that ack associates with each file.</p>
+
+<p>Works with <b>-f</b> and <b>-g</b> options.</p>
+
+<dt><a name='thpppt'></a><a name="--thpppt"
+><b>--thpppt</b></a></dt>
+
+<dd>
+<p>Display the all-important Bill The Cat logo. Note that the exact spelling of <b>--thpppppt</b> is not important. It&#39;s checked against a regular expression.</p>
+
+<dt><a name='type'></a><a name="--type=TYPE,_--type=noTYPE"
+><b>--type=TYPE</b>, <b>--type=noTYPE</b></a></dt>
+
+<dd>
+<p>Specify the types of files to include or exclude from a search. TYPE is a filetype, like <i>perl</i> or <i>xml</i>. <b>--type=perl</b> can also be specified as <b>--perl</b>, and <b>--type=noperl</b> can be done as <b>--noperl</b>.</p>
+
+<p>If a file is of both type &#34;foo&#34; and &#34;bar&#34;, specifying --foo and --nobar will exclude the file, because an exclusion takes precedence over an inclusion.</p>
+
+<p>Type specifications can be repeated and are ORed together.</p>
+
+<p>See <i>ack --help=types</i> for a list of valid types.</p>
+
+<dt><a name='type'></a><a name="--type-add_TYPE=.EXTENSION[,.EXT2[,...]]"
+><b>--type-add <i>TYPE</i>=<i>.EXTENSION</i>[,<i>.EXT2</i>[,...]]</b></a></dt>
+
+<dd>
+<p>Files with the given EXTENSION(s) are recognized as being of (the existing) type TYPE. See also <a href="#Defining_your_own_types" class="podlinkpod"
+>&#34;Defining your own types&#34;</a>.</p>
+
+<dt><a name='type'></a><a name="--type-set_TYPE=.EXTENSION[,.EXT2[,...]]"
+><b>--type-set <i>TYPE</i>=<i>.EXTENSION</i>[,<i>.EXT2</i>[,...]]</b></a></dt>
+
+<dd>
+<p>Files with the given EXTENSION(s) are recognized as being of type TYPE. This replaces an existing definition for type TYPE. See also <a href="#Defining_your_own_types" class="podlinkpod"
+>&#34;Defining your own types&#34;</a>.</p>
+
+<dt><a name='u'></a><a name="-u,_--unrestricted"
+><b>-u</b>, <b>--unrestricted</b></a></dt>
+
+<dd>
+<p>All files and directories (including blib/, core.*, ...) are searched, nothing is skipped. When both <b>-u</b> and <b>--ignore-dir</b> are used, the <b>--ignore-dir</b> option has no effect.</p>
+
+<dt><a name='v'></a><a name="-v,_--invert-match"
+><b>-v</b>, <b>--invert-match</b></a></dt>
+
+<dd>
+<p>Invert match: select non-matching lines</p>
+
+<p>This applies only to the PATTERN, not to the regexes given for the <b>-g</b> and <b>-G</b> options.</p>
+
+<dt><a name='version'></a><a name="--version"
+><b>--version</b></a></dt>
+
+<dd>
+<p>Display version and copyright information.</p>
+
+<dt><a name='w'></a><a name="-w,_--word-regexp"
+><b>-w</b>, <b>--word-regexp</b></a></dt>
+
+<dd>
+<p>Force PATTERN to match only whole words. The PATTERN is wrapped with <code>\b</code> metacharacters.</p>
+
+<p>This applies only to the PATTERN, not to the regexes given for the <b>-g</b> and <b>-G</b> options.</p>
+
+<dt><a name='1'></a><a name="-1"
+><b>-1</b></a></dt>
+
+<dd>
+<p>Stops after reporting first match of any kind. This is different from <b>--max-count=1</b> or <b>-m1</b>, where only one match per file is shown. Also, <b>-1</b> works with <b>-f</b> and <b>-g</b>, where <b>-m</b> does not.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="THE_.ackrc_FILE"
+>THE .ackrc FILE <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>The <em>.ackrc</em> file contains command-line options that are prepended to the command line before processing. Multiple options may live on multiple lines. Lines beginning with a # are ignored. A <em>.ackrc</em> might look like this:</p>
+
+<pre>    # Always sort the files
+    --sort-files
+
+    # Always color, even if piping to a another program
+    --color
+
+    # Use &#34;less -r&#34; as my pager
+    --pager=less -r</pre>
+
+<p>Note that arguments with spaces in them do not need to be quoted, as they are not interpreted by the shell. Basically, each <i>line</i> in the <em>.ackrc</em> file is interpreted as one element of <code>@ARGV</code>.</p>
+
+<p><em>ack</em> looks in your home directory for the <em>.ackrc</em>. You can specify another location with the <em>ACKRC</em> variable, below.</p>
+
+<p>If <b>--noenv</b> is specified on the command line, the <em>.ackrc</em> file is ignored.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="Defining_your_own_types"
+>Defining your own types <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>ack allows you to define your own types in addition to the predefined types. This is done with command line options that are best put into an <em>.ackrc</em> file - then you do not have to define your types over and over again. In the following examples the options will always be shown on one command line so that they can be easily copy &#38; pasted.</p>
+
+<p><i>ack --perl foo</i> searches for foo in all perl files. <i>ack --help=types</i> tells you, that perl files are files ending in .pl, .pm, .pod or .t. So what if you would like to include .xs files as well when searching for --perl files? <i>ack --type-add perl=.xs --perl foo</i> does this for you. <b>--type-add</b> appends additional extensions to an existing type.</p>
+
+<p>If you want to define a new type, or completely redefine an existing type, then use <b>--type-set</b>. <i>ack --type-set eiffel=.e,.eiffel</i> defines the type <i>eiffel</i> to include files with the extensions .e or .eiffel. So to search for all eiffel files containing the word Bertrand use <i>ack --type-set eiffel=.e,.eiffel --eiffel Bertrand</i>. As usual, you can also write <b>--type=eiffel</b> instead of <b>--eiffel</b>. Negation also works, so <b>--noeiffel</b> excludes all eiffel files from a search. Redefining also works: <i>ack --type-set cc=.c,.h</i> and <i>.xs</i> files no longer belong to the type <i>cc</i>.</p>
+
+<p>When defining your own types in the <em>.ackrc</em> file you have to use the following:</p>
+
+<pre>  --type-set=eiffel=.e,.eiffel</pre>
+
+<p>or writing on separate lines</p>
+
+<pre>  --type-set
+  eiffel=.e,.eiffel</pre>
+
+<p>The following does <b>NOT</b> work in the <em>.ackrc</em> file:</p>
+
+<pre>  --type-set eiffel=.e,.eiffel</pre>
+
+<p>In order to see all currently defined types, use <i>--help types</i>, e.g. <i>ack --type-set backup=.bak --type-add perl=.perl --help types</i></p>
+
+<p>Restrictions:</p>
+
+<ul>
+<li>The types &#39;skipped&#39;, &#39;make&#39;, &#39;binary&#39; and &#39;text&#39; are considered &#34;builtin&#34; and cannot be altered.</li>
+
+<li>The shebang line recognition of the types &#39;perl&#39;, &#39;ruby&#39;, &#39;php&#39;, &#39;python&#39;, &#39;shell&#39; and &#39;xml&#39; cannot be redefined by <i>--type-set</i>, it is always active. However, the shebang line is only examined for files where the extension is not recognised. Therefore it is possible to say <i>ack --type-set perl=.perl --type-set foo=.pl,.pm,.pod,.t --perl --nofoo</i> and only find your shiny new <i>.perl</i> files (and all files with unrecognized extension and perl on the shebang line).</li>
+</ul>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="ENVIRONMENT_VARIABLES"
+>ENVIRONMENT VARIABLES <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>For commonly-used ack options, environment variables can make life much easier. These variables are ignored if <b>--noenv</b> is specified on the command line.</p>
+
+<dl>
+<dt><a name="ACKRC"
+>ACKRC</a></dt>
+
+<dd>
+<p>Specifies the location of the <em>.ackrc</em> file. If this file doesn&#39;t exist, <em>ack</em> looks in the default location.</p>
+
+<dt><a name="ACK_OPTIONS"
+>ACK_OPTIONS</a></dt>
+
+<dd>
+<p>This variable specifies default options to be placed in front of any explicit options on the command line.</p>
+
+<dt><a name="ACK_COLOR_FILENAME"
+>ACK_COLOR_FILENAME</a></dt>
+
+<dd>
+<p>Specifies the color of the filename when it&#39;s printed in <b>--group</b> mode. By default, it&#39;s &#34;bold green&#34;.</p>
+
+<p>The recognized attributes are clear, reset, dark, bold, underline, underscore, blink, reverse, concealed black, red, green, yellow, blue, magenta, on_black, on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan, and on_white. Case is not significant. Underline and underscore are equivalent, as are clear and reset. The color alone sets the foreground color, and on_color sets the background color.</p>
+
+<p>This option can also be set with <b>--color-filename</b>.</p>
+
+<dt><a name="ACK_COLOR_MATCH"
+>ACK_COLOR_MATCH</a></dt>
+
+<dd>
+<p>Specifies the color of the matching text when printed in <b>--color</b> mode. By default, it&#39;s &#34;black on_yellow&#34;.</p>
+
+<p>This option can also be set with <b>--color-match</b>.</p>
+
+<p>See <b>ACK_COLOR_FILENAME</b> for the color specifications.</p>
+
+<dt><a name="ACK_COLOR_LINENO"
+>ACK_COLOR_LINENO</a></dt>
+
+<dd>
+<p>Specifies the color of the line number when printed in <b>--color</b> mode. By default, it&#39;s &#34;bold yellow&#34;.</p>
+
+<p>This option can also be set with <b>--color-lineno</b>.</p>
+
+<p>See <b>ACK_COLOR_FILENAME</b> for the color specifications.</p>
+
+<dt><a name="ACK_PAGER"
+>ACK_PAGER</a></dt>
+
+<dd>
+<p>Specifies a pager program, such as <code>more</code>, <code>less</code> or <code>most</code>, to which ack will send its output.</p>
+
+<p>Using <code>ACK_PAGER</code> does not suppress grouping and coloring like piping output on the command-line does, except that on Windows ack will assume that <code>ACK_PAGER</code> does not support color.</p>
+
+<p><code>ACK_PAGER_COLOR</code> overrides <code>ACK_PAGER</code> if both are specified.</p>
+
+<dt><a name="ACK_PAGER_COLOR"
+>ACK_PAGER_COLOR</a></dt>
+
+<dd>
+<p>Specifies a pager program that understands ANSI color sequences. Using <code>ACK_PAGER_COLOR</code> does not suppress grouping and coloring like piping output on the command-line does.</p>
+
+<p>If you are not on Windows, you never need to use <code>ACK_PAGER_COLOR</code>.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="ACK_&#38;_OTHER_TOOLS"
+>ACK &#38; OTHER TOOLS <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Vim_integration"
+>Vim integration</a></h2>
+
+<p><em>ack</em> integrates easily with the Vim text editor. Set this in your <em>.vimrc</em> to use <em>ack</em> instead of <em>grep</em>:</p>
+
+<pre>    set grepprg=ack\ -a</pre>
+
+<p>That examples uses <code>-a</code> to search through all files, but you may use other default flags. Now you can search with <em>ack</em> and easily step through the results in Vim:</p>
+
+<pre>  :grep Dumper perllib</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Emacs_integration"
+>Emacs integration</a></h2>
+
+<p>Phil Jackson put together an <em>ack.el</em> extension that &#34;provides a simple compilation mode ... has the ability to guess what files you want to search for based on the major-mode.&#34;</p>
+
+<p><a href="http://www.shellarchive.co.uk/content/emacs.html" class="podlinkurl"
+>http://www.shellarchive.co.uk/content/emacs.html</a></p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="TextMate_integration"
+>TextMate integration</a></h2>
+
+<p>Pedro Melo is a TextMate user who writes &#34;I spend my day mostly inside TextMate, and the built-in find-in-project sucks with large projects. So I hacked a TextMate command that was using find + grep to use ack. The result is the Search in Project with ack, and you can find it here: <a href="http://www.simplicidade.org/notes/archives/2008/03/search_in_proje.html" class="podlinkurl"
+>http://www.simplicidade.org/notes/archives/2008/03/search_in_proje.html</a>&#34;</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Shell_and_Return_Code"
+>Shell and Return Code</a></h2>
+
+<p>For greater compatibility with <i>grep</i>, <i>ack</i> in normal use returns shell return or exit code of 0 only if something is found and 1 if no match is found.</p>
+
+<p>(Shell exit code 1 is <code>$?=256</code> in perl with <code>system</code> or backticks.)</p>
+
+<p>The <i>grep</i> code 2 for errors is not used.</p>
+
+<p>If <code>-f</code> or <code>-g</code> are specified, then 0 is returned if at least one file is found. If no files are found, then 1 is returned.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DEBUGGING_ACK_PROBLEMS"
+>DEBUGGING ACK PROBLEMS <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>If ack gives you output you&#39;re not expecting, start with a few simple steps.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Use_--noenv"
+>Use <b>--noenv</b></a></h2>
+
+<p>Your environment variables and <em>.ackrc</em> may be doing things you&#39;re not expecting, or forgotten you specified. Use <b>--noenv</b> to ignore your environment and <em>.ackrc</em>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Use_-f_to_see_what_files_you&#39;re_scanning"
+>Use <b>-f</b> to see what files you&#39;re scanning</a></h2>
+
+<p>The reason I created <b>-f</b> in the first place was as a debugging tool. If ack is not finding matches you think it should find, run <em>ack -f</em> to see what files are being checked.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="TIPS"
+>TIPS <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Use_the_.ackrc_file."
+>Use the <em>.ackrc</em> file.</a></h2>
+
+<p>The <em>.ackrc</em> is the place to put all your options you use most of the time but don&#39;t want to remember. Put all your --type-add and --type-set definitions in it. If you like --smart-case, set it there, too. I also set --sort-files there.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Use_-f_for_working_with_big_codesets"
+>Use <em>-f</em> for working with big codesets</a></h2>
+
+<p>Ack does more than search files. <code>ack -f --perl</code> will create a list of all the Perl files in a tree, ideal for sending into <em>xargs</em>. For example:</p>
+
+<pre>    # Change all &#34;this&#34; to &#34;that&#34; in all Perl files in a tree.
+    ack -f --perl | xargs perl -p -i -e&#39;s/this/that/g&#39;</pre>
+
+<p>or if you prefer:</p>
+
+<pre>    perl -p -i -e&#39;s/this/thatg/&#39; $(ack -f --perl)</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Use_-Q_when_in_doubt_about_metacharacters"
+>Use <em>-Q</em> when in doubt about metacharacters</a></h2>
+
+<p>If you&#39;re searching for something with a regular expression metacharacter, most often a period in a filename or IP address, add the -Q to avoid false positives without all the backslashing. See the following example for more...</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Use_ack_to_watch_log_files"
+>Use ack to watch log files</a></h2>
+
+<p>Here&#39;s one I used the other day to find trouble spots for a website visitor. The user had a problem loading <em>troublesome.gif</em>, so I took the access log and scanned it with ack twice.</p>
+
+<pre>    ack -Q aa.bb.cc.dd /path/to/access.log | ack -Q -B5 troublesome.gif</pre>
+
+<p>The first ack finds only the lines in the Apache log for the given IP. The second finds the match on my troublesome GIF, and shows the previous five lines from the log in each case.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Share_your_knowledge"
+>Share your knowledge</a></h2>
+
+<p>Join the ack-users mailing list. Send me your tips and I may add them here.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FAQ"
+>FAQ <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Why_isn&#39;t_ack_finding_a_match_in_(some_file)?"
+>Why isn&#39;t ack finding a match in (some file)?</a></h2>
+
+<p>Probably because it&#39;s of a type that ack doesn&#39;t recognize. ack&#39;s searching behavior is driven by filetype. <b>If ack doesn&#39;t know what kind of file it is, ack ignores the file.</b></p>
+
+<p>Use the <code>-f</code> switch to see a list of files that ack will search for you.</p>
+
+<p>If you want ack to search files that it doesn&#39;t recognize, use the <code>-a</code> switch.</p>
+
+<p>If you want ack to search every file, even ones that it always ignores like coredumps and backup files, use the <code>-u</code> switch.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Why_does_ack_ignore_unknown_files_by_default?"
+>Why does ack ignore unknown files by default?</a></h2>
+
+<p>ack is designed by a programmer, for programmers, for searching large trees of code. Most codebases have a lot files in them which aren&#39;t source files (like compiled object files, source control metadata, etc), and grep wastes a lot of time searching through all of those as well and returning matches from those files.</p>
+
+<p>That&#39;s why ack&#39;s behavior of not searching things it doesn&#39;t recognize is one of its greatest strengths: the speed you get from only searching the things that you want to be looking at.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Wouldn&#39;t_it_be_great_if_ack_did_search_&#38;_replace?"
+>Wouldn&#39;t it be great if <em>ack</em> did search &#38; replace?</a></h2>
+
+<p>No, ack will always be read-only. Perl has a perfectly good way to do search &#38; replace in files, using the <code>-i</code>, <code>-p</code> and <code>-n</code> switches.</p>
+
+<p>You can certainly use ack to select your files to update. For example, to change all &#34;foo&#34; to &#34;bar&#34; in all PHP files, you can do this from the Unix shell:</p>
+
+<pre>    $ perl -i -p -e&#39;s/foo/bar/g&#39; $(ack -f --php)</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Can_you_make_ack_recognize_.xyz_files?"
+>Can you make ack recognize <em>.xyz</em> files?</a></h2>
+
+<p>That&#39;s an enhancement. Please see the section in the manual about enhancements.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="There&#39;s_already_a_program/package_called_ack."
+>There&#39;s already a program/package called ack.</a></h2>
+
+<p>Yes, I know.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Why_is_it_called_ack_if_it&#39;s_called_ack-grep?"
+>Why is it called ack if it&#39;s called ack-grep?</a></h2>
+
+<p>The name of the program is &#34;ack&#34;. Some packagers have called it &#34;ack-grep&#34; when creating packages because there&#39;s already a package out there called &#34;ack&#34; that has nothing to do with this ack.</p>
+
+<p>I suggest you make a symlink named <em>ack</em> that points to <em>ack-grep</em> because one of the crucial benefits of ack is having a name that&#39;s so short and simple to type.</p>
+
+<p>To do that, run this with <em>sudo</em> or as root:</p>
+
+<pre>   ln -s /usr/bin/ack-grep /usr/bin/ack</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="What_does_ack_mean?"
+>What does <em>ack</em> mean?</a></h2>
+
+<p>Nothing. I wanted a name that was easy to type and that you could pronounce as a single syllable.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Can_I_do_multi-line_regexes?"
+>Can I do multi-line regexes?</a></h2>
+
+<p>No, ack does not support regexes that match multiple lines. Doing so would require reading in the entire file at a time.</p>
+
+<p>If you want to see lines near your match, use the <code>--A</code>, <code>--B</code> and <code>--C</code> switches for displaying context.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>Andy Lester, <code>&#60;andy at petdance.com&#62;</code></p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="BUGS"
+>BUGS <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>Please report any bugs or feature requests to the issues list at Github: <a href="http://github.com/petdance/ack/issues" class="podlinkurl"
+>http://github.com/petdance/ack/issues</a></p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="ENHANCEMENTS"
+>ENHANCEMENTS <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>All enhancement requests MUST first be posted to the ack-users mailing list at <a href="http://groups.google.com/group/ack-users" class="podlinkurl"
+>http://groups.google.com/group/ack-users</a>. I will not consider a request without it first getting seen by other ack users. This includes requests for new filetypes.</p>
+
+<p>There is a list of enhancements I want to make to <em>ack</em> in the ack issues list at Github: <a href="http://github.com/petdance/ack/issues" class="podlinkurl"
+>http://github.com/petdance/ack/issues</a></p>
+
+<p>Patches are always welcome, but patches with tests get the most attention.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SUPPORT"
+>SUPPORT <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>Support for and information about <em>ack</em> can be found at:</p>
+
+<ul>
+<li>The ack homepage
+<p><a href="http://betterthangrep.com/" class="podlinkurl"
+>http://betterthangrep.com/</a></p>
+</li>
+
+<li>The ack issues list at Github
+<p><a href="http://github.com/petdance/ack/issues" class="podlinkurl"
+>http://github.com/petdance/ack/issues</a></p>
+</li>
+
+<li>AnnoCPAN: Annotated CPAN documentation
+<p><a href="http://annocpan.org/dist/ack" class="podlinkurl"
+>http://annocpan.org/dist/ack</a></p>
+</li>
+
+<li>CPAN Ratings
+<p><a href="http://cpanratings.perl.org/d/ack" class="podlinkurl"
+>http://cpanratings.perl.org/d/ack</a></p>
+</li>
+
+<li>Search CPAN
+<p><a href="http://search.cpan.org/dist/ack" class="podlinkurl"
+>http://search.cpan.org/dist/ack</a></p>
+</li>
+
+<li>Git source repository
+<p><a href="http://github.com/petdance/ack" class="podlinkurl"
+>http://github.com/petdance/ack</a></p>
+</li>
+</ul>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="ACKNOWLEDGEMENTS"
+>ACKNOWLEDGEMENTS <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>How appropriate to have <i>ack</i>nowledgements!</p>
+
+<p>Thanks to everyone who has contributed to ack in any way, including Nick Hooey, Bo Borgerson, Mark Szymanski, Marq Schneider, Packy Anderson, JR Boyens, Dan Sully, Ryan Niebur, Kent Fredric, Mike Morearty, Ingmar Vanhassel, Eric Van Dewoestine, Sitaram Chamarty, Adam James, Richard Carlsson, Pedro Melo, AJ Schuster, Phil Jackson, Michael Schwern, Jan Dubois, Christopher J. Madsen, Matthew Wickline, David Dyck, Jason Porritt, Jjgod Jiang, Thomas Klausner, Uri Guttman, Peter Lewis, Kevin Riggle, Ori Avtalion, Torsten Blix, Nigel Metheringham, G&#225;bor Szab&#243;, Tod Hagan, Michael Hendricks, &#198;var Arnfj&#246;r&#240; Bjarmason, Piers Cawley, Stephen Steneker, Elias Lutfallah, Mark Leighton Fisher, Matt Diephouse, Christian Jaeger, Bill Sully, Bill Ricker, David Golden, Nilson Santos F. Jr, Elliot Shank, Merijn Broeren, Uwe Voelker, Rick Scott, Ask Bj&#248;rn Hansen, Jerry Gay, Will Coleda, Mike O&#39;Regan, Slaven Rezi&#263;, Mark Stosberg, David Alan Pisoni, Adriano Ferreira, James Keenan, Leland Johnson, Ricardo Signes and Pete Krawczyk.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_&#38;_LICENSE"
+>COPYRIGHT &#38; LICENSE <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>Copyright 2005-2010 Andy Lester.</p>
+
+<p>This program is free software; you can redistribute it and/or modify it under the terms of the Artistic License v2.0.</p>
+
+</div>
+
+
+<div class="footer"><div class="cpanstats">63261 Uploads, 21563 Distributions
+88634 Modules, 8658 Uploaders
+</div>
+hosted by <a href="http://www.yellowbot.com">YellowBot</a><br/>
+<a href="http://www.yellowbot.com"><img alt="do. tag. write. share." src="http://st.pimg.net/tucs/img/yellowbot_logo.gif"></a>
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript" src="http://ipv4.v6test.develooper.com/cdn/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ipv4.v6test.develooper.com/js/v1/v6test.js"></script>
+
+<script type="text/javascript">
+   // v6.target = '';
+   if (!v6.target) { v6.only_once = true }
+   v6.site = '7A0D89A6-2B82-11DF-B9DA-F61CBD13F020';
+   v6.api_server = 'http://ipv4.v6test.develooper.com';
+   try {
+     v6.test();
+   } catch(err) {}
+</script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("a[href^=http:]").click(function(){
+      var href = $(this).attr('href');
+      var m = href.match('\/\/([^\/:]+)');
+      _gaq.push(['_trackEvent','External',m[1],'Document']);
+    });
+    $("a[href^=/CPAN/]").click(function(){
+      var href = $(this).attr('href');
+      _gaq.push(['_trackEvent','Download',href,'Document']);
+    });
+  });
+</script>
+<!-- Fri Dec 17 20:38:33 2010 GMT (0.128774166107178) @cpansearch1 -->
+ </body>
+</html>
