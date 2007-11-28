@@ -1,0 +1,107 @@
+<html><head><title>Timepedia Chronoscope</title>
+<link rel="stylesheet" href="http://api.timepedia.org/widget/Chronoscope.css" type="text/css" title="Default">
+ <style>
+  .chrono { margin-bottom: 20px; }
+
+ </style>
+    <script type="text/javascript" src="unratedata.js"></script>
+    <script type="text/javascript">
+        function onChronoscopeLoaded(chrono)
+        {
+            var data = [unratedata];
+            chronoscope.Chronoscope.setFontBookRendering(true);
+            chronoscope.Chronoscope.setErrorReporting(true);
+            chronoscope.Chronoscope.createTimeseriesChartById("simpledemo", data, 760, 400, function(view)
+            {
+                view.getChart().redraw();
+            });
+         }  
+    </script>
+    <script type="text/javascript" src="http://api.timepedia.org/widget/chronoscope.js"></script>
+<!-- base page example -->
+<!--  header -->
+<link rel="stylesheet" type="text/css" href="/s/reset.css"></link>
+<link rel="stylesheet" type="text/css" href="/s/site.css"></link>
+</head>
+<body>
+<div id="hd">
+<a id="logo" href="/"><img src="/i/timepedia-logo.gif" border="0" /></a>
+ <ul class="nav">
+  <li><a href="/chronoscope" title="Chronoscope">Chronoscope</a></li>
+  <li><a href="http://timepedia.blogspot.com" title="Timepedia Blog">Blog</a></li>
+ </ul>
+</div>
+<!-- /header -->
+
+
+
+
+<div id="sub-hd">
+<h2 class="section"><a href="/chronoscope/"><img src="/i/chronoscope.gif" alt="Chronoscope"/></a></h2>
+   <ul class="nav">
+    <li><a href="/chronoscope/demo" title="Demo">Demo</a></li> 
+<!--    <li><a href="/chronoscope/gallery" title="Gallery">Gallery</a></li> -->
+    <li><a href="/chronoscope/docs" title="Documentation">Documentation</a></li>
+    <li><a href="/chronoscope/developers" title="Developers">Developers</a></li>
+<!--    <li><a href="/chronoscope/buy" title="Store">Buy</a></lu> -->
+   </ul>
+</div>
+
+<!-- content -->
+<div id="simpledemo" class="chronoscope">Loading Chronoscope Data...</div>
+<div id="bd">
+  <dl>
+	<dt>Easy.</dt>
+	 <dd>Use the Chronoscope <a href="/chronoscope/docs/widget/">widget</a> and HTML <a href="/chronoscope/docs/microformats/">microformats</a> on any web page</dd>
+	 
+<!--    <dt>Stylish.</dt>
+	 <dd>Control the look and feel of Chronoscope charts with CSS <a href="/chronoscope/docs/gss/">style sheets</a></a> -->
+
+    <dt>Massive.</dt>
+	 <dd>Easily handles tens of thousands of data points (we've even used it on millions)</dd>
+
+    <dt>Bookmark it. Share it with friends.</dt>
+     <dd>Even after panning and zooming to your unique view of the data, you can bookmark exactly that point of view for later or send your perspective to others</dd>
+
+    <dt>Keep notes. Add comments.</dt>
+     <dd>Attach map-style pinpoint markers and highlighted, commented overlays to data points or ranges</dd>
+
+    <dt>Use your keyboard.</dt>
+	 <dd>Fly with your arrow keys</dd>
+	 <dd>Jump left or right a screen with <code>page up</code> and <code>page down</code></dd>
+	 <dd>Zoom out with your <code>home</code> key, zoom in with your <code>enter</code> or <code>return</code> key</dd>
+	 <dd>Move your focus right or left with <code>tab</code> and <code>shift+tab</code></dd>
+	 <dd>press the <code>shift</code> then click and drag your mouse to highlight a region of the chart</dd>
+
+    <dt>Versatile.</dt>
+     <dd>There's a <a href="/chronoscope/docs/js/">Javascript</a> API</dd>
+	 <dd>a <a href="/chronoscope/docs/gviz/">Google Visualization API</a></dd>
+	 <dd>Try it as a <a href="/chronoscope/docs/gadget">Google Gadget</a> on Google Spreadsheets, iGoogle, or Open Social</dd> 
+
+  </dl>
+
+
+
+</div>
+
+<!-- content -->
+
+<!-- footer -->
+<div id="ft">
+<ul class="nav">
+ <li><a href="/" title="Home">Home</a></li>
+ <li><a href="/about" title="About">About</a></li>
+ <li><a href="http://timepedia.blogspot.com" title="Blog">Blog</a></li>
+ <li><a href="/contact" title="Contact Us">Contact Us</a></li>
+
+</ul>
+<span id="copyright">&copy; Timepedia</span>
+</div>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"> </script>
+<script type="text/javascript">_uacct = "UA-1960763-1"; urchinTracker();</script>
+</body>
+</html>
+<!-- /footer -->
+
+
