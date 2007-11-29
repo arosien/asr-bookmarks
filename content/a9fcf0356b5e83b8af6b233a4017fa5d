@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Naked Alphabet</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+
+
+<body>
+<script language="Javascript">
+var getFFVersion=navigator.userAgent.substring(navigator.userAgent.indexOf("Firefox")).split("/")[1]
+//extra height in px to add to iframe in FireFox 1.0+ browsers
+var FFextraHeight=parseFloat(getFFVersion)>=0.1? 16 : 0
+
+function dyniframesize(iframename) {
+var pTar = null;
+if (document.getElementById){
+pTar = document.getElementById(iframename);
+}
+else{
+eval('pTar = ' + iframename + ';');
+}
+if (pTar && !window.opera){
+//begin resizing iframe
+pTar.style.display="block"
+
+if (pTar.contentDocument && pTar.contentDocument.body.offsetHeight){
+//ns6 syntax 
+pTar.height = pTar.contentDocument.body.offsetHeight+FFextraHeight;
+}
+else if (pTar.Document && pTar.Document.body.scrollHeight){
+//ie5+ syntax
+pTar.height = pTar.Document.body.scrollHeight;
+}
+}
+}
+</script>
+
+<div class="content">
+
+<iframe src="banner.html" name="topFrame" scrolling="No" id="topFrame" marginwidth="0" marginheight="0" frameborder="0"  width="100%" height="100">
+</iframe>
+<iframe src="main.html" name="mainFrame" scrolling="no" id="mainFrame" marginwidth="0" marginheight="0" frameborder="0" width="100%" height = "800" > 
+</iframe>
+<iframe src="footer.html" name="bottomFrame" scrolling="No" id="bottomFrame" marginwidth="0" marginheight="0" frameborder="0" width="100%" height="20">
+</iframe>
+</div>
+
+</body>
+
+</html>
