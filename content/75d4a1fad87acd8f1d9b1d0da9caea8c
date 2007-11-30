@@ -1,0 +1,1501 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>jcole&#8217;s weblog: Jeremy Cole&#8217;s take on life.  &raquo; Blog Archive   &raquo; On efficiently geo-referencing IPs with MaxMind GeoIP and MySQL GIS</title>
+
+<meta name="generator" content="WordPress 3.0" /> <!-- leave this for stats -->
+
+<link rel="stylesheet" href="http://jcole.us/blog/wp-content/themes/jcole/style.css" type="text/css" media="screen" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://jcole.us/blog/feed/" />
+<link rel="alternate" type="text/xml" title="RSS .92" href="http://jcole.us/blog/feed/rss/" />
+<link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="http://jcole.us/blog/feed/atom/" />
+<link rel="pingback" href="http://jcole.us/blog/xmlrpc.php" />
+
+<style type="text/css" media="screen">
+/*	To accomodate differing install paths of WordPress, images are referred only here,
+	and not in the wp-layout.css file. If you prefer to use only CSS for colors and what
+	not, then go right ahead and delete the following lines, and the image files. */
+		
+	body { background: url("http://jcole.us/blog/wp-content/themes/jcole/images/kubrickbgcolor.jpg"); }	
+	#page { background: url("http://jcole.us/blog/wp-content/themes/jcole/images/kubrickbgwide.jpg") repeat-y top; border: none; } 
+	#header { background: url("http://jcole.us/blog/wp-content/themes/jcole/images/headers/sunset-hwy1.jpg") no-repeat bottom center; }
+	#footer { background: url("http://jcole.us/blog/wp-content/themes/jcole/images/kubrickfooter.jpg") no-repeat bottom; border: none;}
+
+/*	Because the template is slightly different, size-wise, with images, this needs to be set here
+	If you don't want to use the template's images, you can also delete the following two lines. */
+		
+	#header 	{ margin: 0 !important; margin: 0 0 0 1px; padding: 1px; height: 198px; width: 758px; }
+	#headerimg 	{ margin: 7px 9px 0; height: 192px; width: 740px; } 
+
+/* 	To ease the insertion of a personal header image, I have done it in such a way,
+	that you simply drop in an image called 'personalheader.jpg' into your /images/
+	directory. Dimensions should be at least 760px x 200px. Anything above that will
+	get cropped off of the image. */
+	/*
+	#headerimg { background: url('http://jcole.us/blog/wp-content/themes/jcole/images/personalheader.jpg') no-repeat top;}
+	*/
+</style>
+
+	<link rel='archives' title='November 2010' href='http://jcole.us/blog/archives/2010/11/' />
+	<link rel='archives' title='October 2010' href='http://jcole.us/blog/archives/2010/10/' />
+	<link rel='archives' title='September 2010' href='http://jcole.us/blog/archives/2010/09/' />
+	<link rel='archives' title='August 2010' href='http://jcole.us/blog/archives/2010/08/' />
+	<link rel='archives' title='July 2010' href='http://jcole.us/blog/archives/2010/07/' />
+	<link rel='archives' title='May 2009' href='http://jcole.us/blog/archives/2009/05/' />
+	<link rel='archives' title='April 2009' href='http://jcole.us/blog/archives/2009/04/' />
+	<link rel='archives' title='October 2008' href='http://jcole.us/blog/archives/2008/10/' />
+	<link rel='archives' title='July 2008' href='http://jcole.us/blog/archives/2008/07/' />
+	<link rel='archives' title='May 2008' href='http://jcole.us/blog/archives/2008/05/' />
+	<link rel='archives' title='April 2008' href='http://jcole.us/blog/archives/2008/04/' />
+	<link rel='archives' title='January 2008' href='http://jcole.us/blog/archives/2008/01/' />
+	<link rel='archives' title='November 2007' href='http://jcole.us/blog/archives/2007/11/' />
+	<link rel='archives' title='October 2007' href='http://jcole.us/blog/archives/2007/10/' />
+	<link rel='archives' title='September 2007' href='http://jcole.us/blog/archives/2007/09/' />
+	<link rel='archives' title='August 2007' href='http://jcole.us/blog/archives/2007/08/' />
+	<link rel='archives' title='July 2007' href='http://jcole.us/blog/archives/2007/07/' />
+	<link rel='archives' title='June 2007' href='http://jcole.us/blog/archives/2007/06/' />
+	<link rel='archives' title='May 2007' href='http://jcole.us/blog/archives/2007/05/' />
+	<link rel='archives' title='April 2007' href='http://jcole.us/blog/archives/2007/04/' />
+	<link rel='archives' title='March 2007' href='http://jcole.us/blog/archives/2007/03/' />
+	<link rel='archives' title='February 2007' href='http://jcole.us/blog/archives/2007/02/' />
+	<link rel='archives' title='January 2007' href='http://jcole.us/blog/archives/2007/01/' />
+	<link rel='archives' title='October 2006' href='http://jcole.us/blog/archives/2006/10/' />
+	<link rel='archives' title='September 2006' href='http://jcole.us/blog/archives/2006/09/' />
+	<link rel='archives' title='August 2006' href='http://jcole.us/blog/archives/2006/08/' />
+	<link rel='archives' title='June 2006' href='http://jcole.us/blog/archives/2006/06/' />
+	<link rel='archives' title='May 2006' href='http://jcole.us/blog/archives/2006/05/' />
+	<link rel='archives' title='April 2006' href='http://jcole.us/blog/archives/2006/04/' />
+	<link rel='archives' title='March 2006' href='http://jcole.us/blog/archives/2006/03/' />
+	<link rel='archives' title='February 2006' href='http://jcole.us/blog/archives/2006/02/' />
+	<link rel='archives' title='January 2006' href='http://jcole.us/blog/archives/2006/01/' />
+	<link rel='archives' title='December 2005' href='http://jcole.us/blog/archives/2005/12/' />
+	<link rel='archives' title='November 2005' href='http://jcole.us/blog/archives/2005/11/' />
+	<link rel='archives' title='October 2005' href='http://jcole.us/blog/archives/2005/10/' />
+	<link rel='archives' title='September 2005' href='http://jcole.us/blog/archives/2005/09/' />
+	<link rel='archives' title='August 2005' href='http://jcole.us/blog/archives/2005/08/' />
+	<link rel='archives' title='July 2005' href='http://jcole.us/blog/archives/2005/07/' />
+	<link rel='archives' title='June 2005' href='http://jcole.us/blog/archives/2005/06/' />
+	<link rel='archives' title='May 2005' href='http://jcole.us/blog/archives/2005/05/' />
+	<link rel='archives' title='April 2005' href='http://jcole.us/blog/archives/2005/04/' />
+	<link rel='archives' title='March 2005' href='http://jcole.us/blog/archives/2005/03/' />
+	<link rel='archives' title='February 2005' href='http://jcole.us/blog/archives/2005/02/' />
+	<link rel='archives' title='January 2005' href='http://jcole.us/blog/archives/2005/01/' />
+	<link rel='archives' title='December 2004' href='http://jcole.us/blog/archives/2004/12/' />
+	<link rel='archives' title='November 2004' href='http://jcole.us/blog/archives/2004/11/' />
+	<link rel='archives' title='October 2004' href='http://jcole.us/blog/archives/2004/10/' />
+	<link rel='archives' title='September 2004' href='http://jcole.us/blog/archives/2004/09/' />
+	<link rel='archives' title='August 2004' href='http://jcole.us/blog/archives/2004/08/' />
+	<link rel='archives' title='July 2004' href='http://jcole.us/blog/archives/2004/07/' />
+	<link rel='archives' title='June 2004' href='http://jcole.us/blog/archives/2004/06/' />
+	<link rel='archives' title='November 2003' href='http://jcole.us/blog/archives/2003/11/' />
+	<link rel='archives' title='September 2003' href='http://jcole.us/blog/archives/2003/09/' />
+	<link rel='archives' title='August 2003' href='http://jcole.us/blog/archives/2003/08/' />
+	<link rel='archives' title='June 2003' href='http://jcole.us/blog/archives/2003/06/' />
+	<link rel='archives' title='April 2003' href='http://jcole.us/blog/archives/2003/04/' />
+	<link rel='archives' title='February 2003' href='http://jcole.us/blog/archives/2003/02/' />
+	<link rel='archives' title='January 2003' href='http://jcole.us/blog/archives/2003/01/' />
+
+<link rel="alternate" type="application/rss+xml" title="jcole&#039;s weblog &raquo; On efficiently geo-referencing IPs with MaxMind GeoIP and MySQL GIS Comments Feed" href="http://jcole.us/blog/archives/2007/11/24/on-efficiently-geo-referencing-ips-with-maxmind-geoip-and-mysql-gis/feed/" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://jcole.us/blog/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://jcole.us/blog/wp-includes/wlwmanifest.xml" /> 
+<link rel='index' title='jcole&#8217;s weblog' href='http://jcole.us/blog/' />
+<link rel='start' title='New Blog Software' href='http://jcole.us/blog/archives/2004/08/18/new-blog-software/' />
+<link rel='prev' title='On Hiring a MySQL DBA/Architect' href='http://jcole.us/blog/archives/2007/10/29/on-hiring-a-mysql-dba-architect/' />
+<link rel='next' title='Proven Scaling goes global' href='http://jcole.us/blog/archives/2007/11/29/proven-scaling-goes-global/' />
+<meta name="generator" content="WordPress 3.0" />
+<link rel='canonical' href='http://jcole.us/blog/archives/2007/11/24/on-efficiently-geo-referencing-ips-with-maxmind-geoip-and-mysql-gis/' />
+<link rel='shortlink' href='http://jcole.us/blog/?p=378' />
+</head>
+<body>
+
+<div id="page">
+
+
+<div id="header">
+	<div id="headerimg">
+		<h1><a href="http://jcole.us/blog">jcole&#8217;s weblog</a></h1>
+		<div class="description">Jeremy Cole&#8217;s take on life.</div>
+		<div class="caption">Sunset on the Pacific Ocean, Highway 1, California
+</div>
+	</div>
+</div>
+<hr />
+
+	<div id="content" class="widecolumn">
+				
+  	
+		<div class="navigation">
+			<div class="alignleft">&laquo; <a href="http://jcole.us/blog/archives/2007/10/29/on-hiring-a-mysql-dba-architect/" rel="prev">On Hiring a MySQL DBA/Architect</a></div>
+			<div class="alignright"><a href="http://jcole.us/blog/archives/2007/11/29/proven-scaling-goes-global/" rel="next">Proven Scaling goes global</a> &raquo;</div>
+		</div>
+	
+		<div class="post" id="post-378">
+			<h2><a href="http://jcole.us/blog/archives/2007/11/24/on-efficiently-geo-referencing-ips-with-maxmind-geoip-and-mysql-gis/" rel="bookmark" title="Permanent Link: On efficiently geo-referencing IPs with MaxMind GeoIP and MySQL GIS">On efficiently geo-referencing IPs with MaxMind GeoIP and MySQL GIS</a></h2>
+	
+			<div class="entry">
+				<p>Geo-referencing IPs is, in a nutshell, converting an IP address, perhaps from an incoming web visitor, a log file, a data file, or some other place, into the name of some entity owning that IP address.  There are a lot of reasons you may want to geo-reference IP addresses to country, city, etc., such as in simple ad targeting systems, geographic load balancing, web analytics, and many more applications.</p>
+<p>This is a very common task, but I have never actually seen it done efficiently in MySQL in the wild.  There is a lot of questionable advice <a href="http://www.google.com/search?q=maxmind+geoip+mysql">on forums, blogs, and other sites</a> out there on this topic.  After working with a <a href="http://www.provenscaling.com/">Proven Scaling</a> customer, I recently did some thinking and some performance testing on this problem, so I thought I would publish some hard data and advice for everyone.</p>
+<p>Unfortunately, R-tree (spatial) indexes have not been added to InnoDB yet, so the tricks in this entry only work efficiently with MyISAM tables (although they should work with InnoDB, they will perform poorly).  This is actually OK for the most part, as the geo-referencing functionality most people need doesn&#8217;t really need transactional support, and since the data tables are basically read-only (monthly replacements are published), the likelyhood of corruption in MyISAM due to any server failures isn&#8217;t very high.</p>
+<h3>The data provided by MaxMind</h3>
+<p><a href="http://www.maxmind.com/">MaxMind</a> is a great company that produces <a href="http://www.maxmind.com/app/ip-location">several geo-referencing databases</a>.  They release both a commercial (for-pay, but affordable) product called <a href="http://www.maxmind.com/app/country">GeoIP</a>, and a free version of the same databases, called <a href="http://www.maxmind.com/app/geolitecountry">GeoLite</a>.  The most popular of their databases that I&#8217;ve seen used is GeoLite Country.  This allows you look up nearly any IP and find out which country (hopefully) its user resides in.  The free GeoLite versions are normally good enough, at about 98% accurate, but the for-pay GeoIP versions in theory are more accurate.  In this article I will refer to both GeoIP and GeoLite as &#8220;GeoIP&#8221; for simplicity.</p>
+<p>GeoIP Country is available as a CSV file containing the following fields:</p>
+<ul>
+<li><strong>ip from, ip to (text)</strong> &mdash; The start and end IP addresses as text in dotted-quad human readable format, e.g. &#8220;3.0.0.0&#8243;.  This is a handy way for a human to read an IP address, but a very inefficient way for a computer to store and handle IP addresses.</li>
+<li><strong>ip from, ip to (integer)</strong> &mdash; The same start and end IP addresses as 32-bit integers<sup>1</sup>, e.g. 50331648.</li>
+<li><strong>country code</strong> &mdash; The 2-letter ISO country code for the country to which this IP address has been assigned, or in some cases other strings, such as &#8220;A2&#8243; meaning &#8220;Satellite Provider&#8221;.</li>
+<li><strong>country name</strong> &mdash; The full country name of the same.  This is redundant with the country code if you have a lookup table of country codes (including MaxMind&#8217;s non-ISO codes), or if you make one from the GeoIP data.</li>
+</ul>
+<h3>A simple way to search for an IP</h3>
+<p>Once the data has been loaded into MySQL (which will be explained in depth later), there will be a  have a table with a range (a lower and upper bound), and some metadata about that range.  For example, one row from the GeoIP data (without the redundant columns) looks like:</p>
+<table width="80%" border="1">
+<thead>
+<td>ip_from</td>
+<td>ip_to</td>
+<td>country_code</td>
+</thead>
+<tr>
+<td>50331648</td>
+<td>68257567</td>
+<td>US</td>
+</tr>
+</table>
+<p>The natural thing that would come to mind (and in fact the solution <a href="http://www.maxmind.com/app/csv">offered by MaxMind themselves</a><sup>2</sup>) is <tt>BETWEEN</tt>.  A simple query to search for the IP 4.2.2.1 would be:</p>
+<blockquote><pre>
+SELECT country_code
+FROM ip_country
+WHERE INET_ATON("4.2.2.1") BETWEEN ip_from AND ip_to
+</pre>
+</blockquote>
+<p>Unfortunately, while simple and natural, this construct is extremely inefficient, and can&#8217;t effectively use indexes (although it <strong>can</strong> use them, it isn&#8217;t efficient).  The reason for this is that it&#8217;s an open-ended range, and it is impossible to close the range by adding anything to the query.  In fact I haven&#8217;t been able to meaningfully improve on the performance at all.</p>
+<h3>A much better solution</h3>
+<p>While it probably isn&#8217;t the first thing that would come to mind, <a href="http://dev.mysql.com/doc/refman/5.0/en/spatial-extensions.html">MySQL&#8217;s GIS support</a> is actually perfect for this task.  Geo-referencing an IP address to a country boils down to &#8220;find which range or ranges this item belongs to&#8221;, and this can be done quite efficiently using <a href="http://dev.mysql.com/doc/refman/5.0/en/creating-spatial-indexes.html">spatial R-tree indexes</a> in MySQL&#8217;s GIS implementation.</p>
+<p>The way this works is that each IP range of (<tt>ip_from</tt>, <tt>ip_to</tt>) is represented as a rectangular <a href="http://dev.mysql.com/doc/refman/5.0/en/gis-class-polygon.html">polygon</a> from (<tt>ip_from</tt>, -1) to (<tt>ip_to</tt>, +1) as illustrated here:</p>
+<p><center><br />
+<img src="http://jcole.us/blog/files/geoip/illustration_ip_poly.png"/><br />
+</center></p>
+<p>In SQL/GIS terms, each IP range is represented by a 5-point rectangular <tt>POLYGON</tt> like this one, representing the IP range of 3.0.0.0 &ndash; 4.17.135.31:</p>
+<blockquote><pre>
+POLYGON((
+  50331648 -1,
+  68257567 -1,
+  68257567  1,
+  50331648  1,
+  50331648 -1
+))
+</pre>
+</blockquote>
+<p>The search IP address can be represented as a <a href="http://dev.mysql.com/doc/refman/5.0/en/gis-class-point.html">point</a> of (<tt>ip</tt>, 0), and that point with have a relationship with at least one of the polygons (provided it&#8217;s a valid IP and part of the GeoIP database) as illustrated here:</p>
+<p><center><br />
+<img src="http://jcole.us/blog/files/geoip/illustration_ip_search.png"/><br />
+</center></p>
+<p>It is then possible to search these polygons for a specific point representing an IP address using <a href="http://dev.mysql.com/doc/refman/5.0/en/relations-on-geometry-mbr.html">the GIS spatial relationship function <tt>MBRCONTAINS</tt></a> and <a href="http://dev.mysql.com/doc/refman/5.0/en/gis-mysql-specific-functions.html"><tt>POINT</tt></a><sup>3</sup> to search for &#8220;which polygon contains this point&#8221; like this:</p>
+<blockquote><pre>
+SELECT country_code
+FROM ip_country
+WHERE MBRCONTAINS(ip_poly, POINTFROMWKB(POINT(INET_ATON('4.2.2.1'), 0)))
+</pre>
+</blockquote>
+<p>Pretty cool huh?  I will show how to load the data and get started, then take look at how it performs in the real world, and compare the raw numbers between the two methods.</p>
+<h3>Loading the data and preparing for work</h3>
+<p>First, a table must be created to hold the data.  A <tt>POLYGON</tt> field will be used to store the IP range.  Technically, at this point the <tt>ip_from</tt> and <tt>ip_to</tt> fields are unnecessary, but given the complexity of extracting the IPs from the <tt>POLYGON</tt> field using MySQL functions, they will be kept anyway.  This schema can be used to hold the data<sup>4</sup>:</p>
+<blockquote><pre>
+CREATE TABLE ip_country
+(
+  id           INT UNSIGNED  NOT NULL auto_increment,
+  ip_poly      POLYGON       NOT NULL,
+  ip_from      INT UNSIGNED  NOT NULL,
+  ip_to        INT UNSIGNED  NOT NULL,
+  country_code CHAR(2)       NOT NULL,
+  PRIMARY KEY (id),
+  SPATIAL INDEX (ip_poly)
+);
+</pre>
+</blockquote>
+<p>After the table has been created, the GeoIP data must be loaded into it from the CSV file, <tt>GeoIPCountryWhois.csv</tt>, downloaded from MaxMind.  The <tt>LOAD DATA</tt> command can be used to do this like so:</p>
+<blockquote><pre>
+LOAD DATA LOCAL INFILE "GeoIPCountryWhois.csv"
+INTO TABLE ip_country
+FIELDS
+  TERMINATED BY ","
+  ENCLOSED BY "\""
+LINES
+  TERMINATED BY "\n"
+(
+  @ip_from_string, @ip_to_string,
+  @ip_from, @ip_to,
+  @country_code, @country_string
+)
+SET
+  id      := NULL,
+  ip_from := @ip_from,
+  ip_to   := @ip_to,
+  ip_poly := GEOMFROMWKB(POLYGON(LINESTRING(
+    /* clockwise, 4 points and back to 0 */
+    POINT(@ip_from, -1), /* 0, top left */
+    POINT(@ip_to,   -1), /* 1, top right */
+    POINT(@ip_to,    1), /* 2, bottom right */
+    POINT(@ip_from,  1), /* 3, bottom left */
+    POINT(@ip_from, -1)  /* 0, back to start */
+  ))),
+  country_code := @country_code
+;
+</pre>
+</blockquote>
+<p>During the load process, the <tt>ip_from_string</tt>, <tt>ip_to_string</tt>, and <tt>country_string</tt> fields are thrown away, as they are redundant.  A few GIS functions are used to build the <tt>POLYGON</tt> for <tt>ip_poly</tt> from the <tt>ip_from</tt> and <tt>ip_to</tt> fields on-the-fly.  On my test machine it takes about 5 seconds to load the 96,641 rows in this month&#8217;s CSV file.</p>
+<p>At this point the data is loaded, and everything is ready to go to use the above SQL query to search for IPs.  Try a few out to see if they seem to make sense!</p>
+<h3>Performance: The test setup</h3>
+<p>In order to really test things, a bigger load testing framework will be needed, as well as a few machines to generate load.  In my tests, the machine being tested, <tt>kamet</tt>, is a <a href="http://support.dell.com/support/edocs/systems/pe2950/en/index.htm">Dell PowerEdge 2950</a> with Dual Dual Core Xeon 5050 @ 3.00Ghz, and 4GB RAM.  We have four test clients, <tt>makalu{0-3}</tt>, which are <a href="http://www.apple.com/macmini/">Apple Mac Mini</a> with 1.66Ghz Intel CPUs and 512MB RAM.  The machines are all connected with a <a href="http://www.netgear.com/Products/Switches/UnmanagedSwitches/JGS524.aspx">Netgear JGS524NA</a> 24-port GigE switch.  For the purposes of this test, the disk configuration is not important.  On the software side, the server is running <a href="http://www.centos.org/">CentOS</a> 4.5 with kernel 2.6.9-55.0.2.ELsmp.  <a href="http://grinder.sf.net/">The Grinder</a> 3.0b32 is used as a load generation tool with a <a href="http://jcole.us/blog/files/geoip/mysql-geoip.py">custom Jython script</a> and <a href="http://dev.mysql.com/downloads/connector/j/5.1.html">Connector/J</a> 5.1.5 to connect to <a href="http://www.mysql.com/">MySQL</a> 5.0.45.</p>
+<p>There are a few interesting metrics that I tested for:</p>
+<ul>
+<li>The latency and queries per second with a single client repeatedly querying.</li>
+<li>Does the number of queries handled increase as the number of clients increases?</li>
+<li>Is latency and overall performance adversely affected by many clients?</li>
+</ul>
+<p>The test consisted of an IP search using the two different methods, and varying the number of clients between 1 and 16 in the following configurations:</p>
+<table width="80%" border=1>
+<thead>
+<td>Clients</td>
+<td>Machines</td>
+<td>Threads</td>
+</thead>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1</td>
+<td>4</td>
+</tr>
+<tr>
+<td>8</td>
+<td>2</td>
+<td>4</td>
+</tr>
+<tr>
+<td>16</td>
+<td>4</td>
+<td>4</td>
+</tr>
+</table>
+<p>Each test finds the country code for a random dotted-quad format IP address passed in as a string.</p>
+<h3>How does it perform?  How does it compare?</h3>
+<p>There are a few metrics for determining the performance of these searches.  If you tried the <tt>BETWEEN</tt> version of this query, you may have noticed that, in terms of human time, it doesn&#8217;t take very long anyway: I pretty consistently got <tt>1 row in set (0.00 sec)</tt>.  But don&#8217;t let that fool you.</p>
+<p><strong>It&#8217;s clear that GIS wins hands down.</strong></p>
+<p>First, a look at raw performance in terms of queries per second.</p>
+<p>Using <tt>BETWEEN</tt>, we max out at 264q/s with 16 clients:</p>
+<p><img src="http://jcole.us/blog/files/geoip/perf_queries_using_between.png"/></p>
+<p>Using <tt>MBRCONTAINS</tt>, we max out at 17600q/s with 16 clients, and it appears that it&#8217;s the test <em>clients</em> that are maxed out, not the server:</p>
+<p><img src="http://jcole.us/blog/files/geoip/perf_queries_using_mbrcontains.png"/></p>
+<p>Next, a look at latency of the individual responses.</p>
+<p>Using <tt>BETWEEN</tt>, we start out with a single client at 15.5ms per request, which is not very good, but still imperceptible to a human.  But with 16 clients, the latency has jumped to 60ms, which is longer than many web shops allocate to completely construct a response.  As the number of test clients increases, the latency gets much worse, because the query is so dependent on CPU:</p>
+<p><img src="http://jcole.us/blog/files/geoip/perf_latency_using_between.png"/></p>
+<p>Using <tt>MBRCONTAINS</tt>, we start out with a single client at 0.333ms per request, and even with 16 clients, we are well under 1ms at 0.743ms:</p>
+<p><img src="http://jcole.us/blog/files/geoip/perf_latency_using_mbrcontains.png"/></p>
+<h3>Conclusion</h3>
+<p>Definitely consider using MySQL GIS whenever you need to search for a point within a set of ranges.  Performance is fantastic, and it&#8217;s relatively easy to use.  Even if you are an all-InnoDB shop, as most of our customers are (and we would recommend), it may very well be worth it to use MyISAM specifically for this purpose.</p>
+<h3>Update 1: Another way to do it, and a look at performance</h3>
+<p><a href="http://andy.wordpress.com/">Andy Skelton</a> and <a href="http://nb.niichavo.org/">Nikolay Bachiyski</a> left a comment below suggesting another way this could be done:</p>
+<blockquote><pre>
+SELECT country_code
+FROM ip_country
+WHERE ip_to >= INET_ATON('%s')
+ORDER BY ip_to ASC
+LIMIT 1
+</pre>
+</blockquote>
+<p>This version of the query doesn&#8217;t act <em>exactly</em> the same as the other two &mdash; if your search IP is not part of any range, it will return the next highest range.  You will have to check whether ip_from is &lt;= your IP within your own code.  It may be possible to do this in MySQL directly, but I haven&#8217;t found a way that doesn&#8217;t kill the performance.</p>
+<p>Andy&#8217;s version actually performs quite well &mdash; slightly faster and more scalable than <tt>MBRCONTAINS</tt>.  I added two new performance testing configurations to better show the differences between the two:</p>
+<table width="80%" border=1>
+<thead>
+<td>Clients</td>
+<td>Machines</td>
+<td>Threads</td>
+</thead>
+<tr>
+<td>32</td>
+<td>4</td>
+<td>8</td>
+</tr>
+<tr>
+<td>64</td>
+<td>4</td>
+<td>16</td>
+</tr>
+</table>
+<p>Here&#8217;s a performance comparison of <tt>MBRCONTAINS</tt> vs. Andy&#8217;s Method:</p>
+<p>Latency (ms) &mdash; Lower is better:</p>
+<p><img src="http://jcole.us/blog/files/geoip/perf_latency_mbrcontains_vs_andy.png"/></p>
+<p>Queries per second &mdash; Higher is better:</p>
+<p><img src="http://jcole.us/blog/files/geoip/perf_queries_mbrcontains_vs_andy.png"/></p>
+<p>Once I get some more time to dig into this, I will look at why exactly <tt>BETWEEN</tt> is so slow.  I&#8217;ve also run into an interesting possible bug in MySQL: If you add a <tt>LIMIT 1</tt> to the <tt>BETWEEN</tt> version of the query, performance goes completely to hell.  Huh?</p>
+<p>Thanks for the feedback, Andy and Nikolay.</p>
+<h3>Footnotes</h3>
+<p><sup>1</sup> MySQL provides the <tt>INET_ATON()</tt> and <tt>INET_NTOA()</tt> functions for converting back and forth between dotted-quad strings (<tt>CHAR(15)</tt>) and 32-bit integers (<tt>INT UNSIGNED</tt>).  You can also use the equivalent functions, if they exist, if your favorite programming language so that you can just feed an integer to MySQL.  I haven&#8217;t tested the (positive) performance implications of doing that.</p>
+<p><sup>2</sup> Although, strangely they offer a different solution specifically for MySQL using <tt>&lt;=</tt> and <tt>&gt;=</tt> operators instead of <tt>BETWEEN</tt>.  I don&#8217;t find that that difference has any effect on MySQL.  Maybe it was for a <strong>really old</strong> version of MySQL that didn&#8217;t have <tt>BETWEEN</tt>?</p>
+<p><sup>3</sup> Pet peeve: Why does MySQL require you to pass the output of its own <tt>POLYGON</tt>, <tt>LINESTRING</tt>, <tt>POINT</tt>, etc., functions through <tt>GEOMFROMWKB</tt> in order to use them?  It makes life suck that little bit more than necessary.</p>
+<p><sup>4</sup> Note that if you&#8217;re looking to play around with the <tt>BETWEEN</tt> version of things, you will want to add some indexes on <tt>ip_from</tt> and <tt>ip_to</tt>.  I would recommend <tt>INDEX (ip_from, ip_to)</tt> and <tt>INDEX (ip_to, ip_from)</tt> as those two seemed to perform the best that I could find (given its poor efficiency to start with).</p>
+	
+				
+<script type="text/javascript"><!--
+google_ad_client = "pub-7354715452290341";
+google_alternate_ad_url = "http://jcole.us/ads/";
+google_ad_width = 468;
+google_ad_height = 60;
+google_ad_format = "468x60_as";
+google_ad_type = "text_image";
+google_ad_channel ="7730850061";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+<br>
+<br>
+<!-- SiteSearch Google -->
+<form method="get" action="http://www.google.com/custom" target="_top">
+<table border="0" bgcolor="#ffffff">
+<tr><td nowrap="nowrap" valign="top" align="left" height="32">
+<a href="http://www.google.com/">
+<img src="http://www.google.com/logos/Logo_25wht.gif" border="0" alt="Google" align="middle"></img></a>
+</td>
+<td nowrap="nowrap">
+<input type="hidden" name="domains" value="jcole.us"></input>
+<input type="text" name="q" size="45" maxlength="255" value=""></input>
+<input type="submit" name="sa" value="Search"></input>
+</td></tr>
+<tr>
+<td>&nbsp;</td>
+<td nowrap="nowrap">
+<table>
+<tr>
+<td>
+<input type="radio" name="sitesearch" value="" checked="checked"></input>
+<font size="-1" color="#000000">Search the Web</font>
+</td>
+<td>
+<input type="radio" name="sitesearch" value="jcole.us"></input>
+<font size="-1" color="#000000">Search only jcole.us</font>
+</td>
+</tr>
+</table>
+<input type="hidden" name="client" value="pub-7354715452290341"></input>
+<input type="hidden" name="forid" value="1"></input>
+<input type="hidden" name="channel" value="2749293309"></input>
+<input type="hidden" name="ie" value="ISO-8859-1"></input>
+<input type="hidden" name="oe" value="ISO-8859-1"></input>
+<input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFFFFF;LBGC:336699;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;FORID:1;"></input>
+<input type="hidden" name="hl" value="en"></input>
+</td></tr></table>
+</form>
+<!-- SiteSearch Google -->
+
+				<p class="postmetadata alt">
+					<small>
+						This entry was posted
+						 
+						on Saturday, November 24th, 2007 at 05:07:24						and is filed under <a href="http://jcole.us/blog/archives/category/gis-and-cartography/" title="View all posts in GIS and Cartography" rel="category tag">GIS and Cartography</a>, <a href="http://jcole.us/blog/archives/category/mysql/" title="View all posts in MySQL" rel="category tag">MySQL</a>, <a href="http://jcole.us/blog/archives/category/mysql/mysql-tips/" title="View all posts in MySQL Tips" rel="category tag">MySQL Tips</a>, <a href="http://jcole.us/blog/archives/category/technology/" title="View all posts in Technology" rel="category tag">Technology</a>.
+						You can follow any responses to this entry through the <a href='http://jcole.us/blog/archives/2007/11/24/on-efficiently-geo-referencing-ips-with-maxmind-geoip-and-mysql-gis/feed/'>RSS 2.0</a> feed. 
+						
+													You can <a href="#respond">leave a response</a>, or <a href="http://jcole.us/blog/archives/2007/11/24/on-efficiently-geo-referencing-ips-with-maxmind-geoip-and-mysql-gis/trackback/" rel="trackback">trackback</a> from your own site.
+						
+												
+					</small>
+				</p>
+	
+			</div>
+		</div>
+		
+	
+<!-- You can start editing here. -->
+
+	<h3 id="comments">60 Responses to &#8220;On efficiently geo-referencing IPs with MaxMind GeoIP and MySQL GIS&#8221;</h3> 
+
+	<ol class="commentlist">
+
+	
+		<li class="alt" id="comment-1146536">
+			<cite><a href='http://www.dbrunas.com.ar/article.php/20071124113155763' rel='external nofollow' class='url'>DbRunas - On efficiently geo-referencing IPs with MaxMind GeoIP and MySQL GIS</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1146536" title="">November 24th, 2007 at 09:32:48</a></small>
+
+			<p>[...] On efficiently geo-referencing IPs with MaxMind GeoIP and MySQL GIS [...]</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1146634">
+			<cite>Mark Robson</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1146634" title="">November 24th, 2007 at 10:54:30</a></small>
+
+			<p>In fact another way of doing it is to use a conventional index on ip_from and then just do:</p>
+<p>SELECT * FROM ipcountry WHERE ipfrom</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1146645">
+			<cite><a href='http://bartomedia.blogspot.com' rel='external nofollow' class='url'>Baromedia</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1146645" title="">November 24th, 2007 at 11:30:10</a></small>
+
+			<p>Hi Jeremy,</p>
+<p>Thats a well research and written post that has tought me a lot about speed and efficiency regarding GeoIP lookups in MySQL and will inspire me to further create documented and researched material for educational purposes.<br />
+I have written an article  about how to install the Maxmind GeoIP Country database you can read at <a href="http://bartomedia.blogspot.com/2007/11/maxmind-geoip-setup-tutorial-using.html" rel="nofollow">Maxmind GeoIP setup tutorial using phpMyAdmin</a>.</p>
+<p>Kind Regards</p>
+<p>Bart</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1146677">
+			<cite><a href='http://jcole.us/' rel='external nofollow' class='url'>Jeremy Cole</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1146677" title="">November 24th, 2007 at 12:53:14</a></small>
+
+			<p>Hi Mark,</p>
+<p>I&#8217;m not sure I follow.  What do you mean?  Do keep in mind we&#8217;re looking for an IP (x) within a range (m &#8211; n).  Neither m nor n is necessarily x itself.</p>
+<p>Regards,</p>
+<p>Jeremy</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1146755">
+			<cite><a href='http://nb.niichavo.org/' rel='external nofollow' class='url'>Nikolay Bachiyski</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1146755" title="">November 24th, 2007 at 15:26:48</a></small>
+
+			<p>While trying to improve the <code>BETWEEN</code> query performance, a colleague of mine &mdash; <a href="http://andy.wordpress.com/" rel="nofollow">Andy Skelton</a> &mdash; devised a very simple and fast query:</p>
+<blockquote><p>SELECT country_code<br />
+FROM ip_country<br />
+WHERE ip_to &gt;= INET_ATON(&#8217;4.2.2.1&#8242;)<br />
+ORDER BY ip_to ASC LIMIT 1</p></blockquote>
+<p>Of course this tricks works only if we have contiguous intervals, which cover all the IPs. Luckily most of the geoip databases conform to this rule.</p>
+<p>My simple tests showed that Andy&#8217;s query is slightly faster than yours, but you may feed it into your benchmarks, so that we can see if there&#8217;s any substantial difference.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1146758">
+			<cite><a href='http://andy.wordpress.com/' rel='external nofollow' class='url'>Andy Skelton</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1146758" title="">November 24th, 2007 at 15:39:32</a></small>
+
+			<p>I don&#8217;t know the first thing about GIS but I have found an efficient solution and put it to use &#8220;in the wild&#8221;&#8212;on WordPress.com.</p>
+<p>Possibly similar to the solution from Mark, whose comment I assume was cut off due to an unescaped HTML entity, we typically get results from a 4,900,000-row MyISAM table in under 0.5ms using this query:</p>
+<p><code>SELECT * FROM ip2location WHERE 123456789 &lt;= ip_to LIMIT 1</code></p>
+<p>All we had to do was add an index on ip_to and verify that there are no overlapping ranges in our table. We can quickly compare against ip_from in software so there is no need for a double-range query.</p>
+<p>Until I discovered this simple query, our ip2location table was useless in production. Now we use it all the time. It doesn&#8217;t even need its own server; it coexists on a server with dozens of other busy tables.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1146827">
+			<cite><a href='http://jcole.us/' rel='external nofollow' class='url'>Jeremy Cole</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1146827" title="">November 24th, 2007 at 18:19:38</a></small>
+
+			<p>Hi Andy,</p>
+<p>This is pretty interesting.  I&#8217;ll be updating the post shortly with your additions and the performance of that version of the query.</p>
+<p>Regards,</p>
+<p>Jeremy</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1147097">
+			<cite>Tom Allender</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1147097" title="">November 25th, 2007 at 04:31:27</a></small>
+
+			<p>Andy Skelton said:</p>
+<blockquote><p>SELECT * FROM ip2location WHERE 123456789 </p>
+<p>Do you not need an ORDER BY there? Or do you ALTER TABLE ip2location ORDER BY ip_to?</p></blockquote>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1147805">
+			<cite>Mark Robson</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1147805" title="">November 25th, 2007 at 08:38:43</a></small>
+
+			<p>My post originally said </p>
+<p>SELECT * FROM ipcountry WHERE ipfrom &lt; 123456789 LIMIT 1</p>
+<p>But yes, it seems to have been cut off. </p>
+<p>My experiments suggested that this was very good. It wouldn&#8217;t work with overlapping ranges, but nor would any other algorithm. It would be straightforward to check that there were no overlapping ranges.</p>
+<p>You would have to check the row returned to make sure the IP was really within it (this check is simple and efficient). If the IP wasn&#8217;t in the range of the returned row however, you could be sure it was nowhere else either (i.e. not found)</p>
+<p>Mark</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1147838">
+			<cite>Mark Robson</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1147838" title="">November 25th, 2007 at 08:50:55</a></small>
+
+			<p>Further correction:</p>
+<p>Should have said WHERE ipfrom &lt;= 123456789 ORDER BY ipfrom DESC LIMIT 1</p>
+<p>The &#8220;ORDER BY ipfrom DESC&#8221; is essential. You&#8217;re finding the highest ipfrom which is less than or equal to the one you&#8217;re checking. This means you will find the range which the IP is in, if any, in a simple query using a conventional index.</p>
+<p>Mark</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1148479">
+			<cite><a href='http://andy.wordpress.com/' rel='external nofollow' class='url'>Andy Skelton</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1148479" title="">November 25th, 2007 at 11:28:48</a></small>
+
+			<p>The index on ip_to lets us get away without any ORDER BY because the index is naturally scanned in ascending order. That&#8217;s also why I didn&#8217;t use ip_from.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1148502">
+			<cite><a href='http://jcole.us/' rel='external nofollow' class='url'>Jeremy Cole</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1148502" title="">November 25th, 2007 at 11:34:42</a></small>
+
+			<p>Hi Andy,</p>
+<p>You could actually do the same trick with either ip_from or ip_to, as MySQL is capable of scanning in either direction.  I wouldn&#8217;t leave the ORDER BY out; as long as MySQL does what you expect (and it should) the ORDER BY is a no-op.  If an optimizer change is made at some point, the entire intent of your query can change without the ORDER BY, and that would be Bad(tm) &#8212; you would start getting random rows back (but still 1) instead of the one you want.</p>
+<p>At least for me, getting back the wrong row &#8220;sometimes&#8221; is bad enough, the possibility of the behaviour changing on upgrade and completely breaking doesn&#8217;t make me comfortable at all. <img src='http://jcole.us/blog/wp-includes/images/smilies/icon_smile.gif' alt=':)' class='wp-smiley' /> </p>
+<p>Regards,</p>
+<p>Jeremy</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1148539">
+			<cite><a href='http://andy.wordpress.com/' rel='external nofollow' class='url'>Andy Skelton</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1148539" title="">November 25th, 2007 at 11:43:51</a></small>
+
+			<p>Nikolay&#8217;s version with ORDER BY is what we use in production because we haven&#8217;t observed any difference in performance when adding ORDER BY, nor accuracy, nor EXPLAIN SELECT. It is as you said. Better safe.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1148837">
+			<cite><a href='http://nb.niichavo.org/' rel='external nofollow' class='url'>Nikolay Bachiyski</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1148837" title="">November 25th, 2007 at 14:34:10</a></small>
+
+			<p>Jeremy,</p>
+<p>I forgot to mention that the GeoLite Country database actually contains lots of gaps. In order to make sure the query gives the correct result I wrote a <a href="http://nb.niichavo.org/files/code/maxmind-geolite-fillgaps.pl" rel="nofollow">simple perl script</a>, which takes the csv file and fills in the gaps with dummy rows. Now if the entry doesn&#8217;t exists you will get &#8220;-&#8221; instead of the next IP&#8217;s country.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1151792">
+			<cite><a href='http://lonesysadmin.net/2007/11/27/links-for-2007-11-27/' rel='external nofollow' class='url'>links for 2007-11-27 : Bob Plankers, The Lone Sysadmin</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1151792" title="">November 26th, 2007 at 23:17:57</a></small>
+
+			<p>[...] jcole’s weblog » On efficiently geo-referencing IPs with MaxMind GeoIP and MySQL GIS [...]</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1154981">
+			<cite><a href='http://www.allprog.fr/programmation/geolocalisation-mysql-gis-a-la-rescousse/' rel='external nofollow' class='url'>Geolocalisation : MySQL GIS à la rescousse</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1154981" title="">November 28th, 2007 at 12:49:50</a></small>
+
+			<p>[...] &nbsp;On efficiently geo-referencing IPs with MaxMind GeoIP and MySQL GIS (0 visite) [...]</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1158384">
+			<cite><a href='http://www.callum-macdonald.com/' rel='external nofollow' class='url'>Callum</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1158384" title="">November 30th, 2007 at 10:05:45</a></small>
+
+			<p>Forgive me if this is a stupid question, but how does = perform in comparison to BETWEEN?</p>
+<p><code>SELECT country_code<br />
+FROM ip_country<br />
+WHERE ip_to &gt;= INET_ATON(’4.2.2.1′) AND ip_from </p>
+<p>I'm not a MySQL expert by any means, but could the performance gain be the </code><code>LIMIT 1</code>? Perhaps after finding the first result, MySQL can stop scanning the rest of the table. If that is the case, I&#8217;m guessing the &gt;= AND</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1158411">
+			<cite>Joaquim</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1158411" title="">November 30th, 2007 at 10:19:39</a></small>
+
+			<p>¿have you tried the binary file version that maxmind provides? It has a optimized format for this especific search, and libraries to open it in varius languages (java, .net, ruby and more.)</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1158721">
+			<cite><a href='http://jcole.us/' rel='external nofollow' class='url'>Jeremy Cole</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1158721" title="">November 30th, 2007 at 12:57:24</a></small>
+
+			<p>Joaquim,</p>
+<p>No, I haven&#8217;t done any performance testing on MaxMind&#8217;s solution yet.  It would be interesting to do so.</p>
+<p>Regards,</p>
+<p>Jeremy</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1159734">
+			<cite><a href='http://donghaima.wordpress.com/2007/12/01/links-for-2007-12-01/' rel='external nofollow' class='url'>links for 2007-12-01 &laquo; Donghai Ma</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1159734" title="">November 30th, 2007 at 21:17:27</a></small>
+
+			<p>[...] On efficiently geo-referencing IPs with MaxMind GeoIP and MySQL GIS (tags: blog geography network gis geoip performance database) [...]</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1159887">
+			<cite>hk</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1159887" title="">November 30th, 2007 at 22:27:15</a></small>
+
+			<p>I had to insert a slash into your SQL to make it work:</p>
+<p>LINES<br />
+TERMINATED BY &#8220;\n&#8221;</p>
+<p>Or it errored out with &#8220;Cannot get geometry object&#8221; etc. Worked fine after that change.</p>
+<p>Thanks for the great article.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1160122">
+			<cite><a href='http://fukamachi.org/wp/2007/12/01/dead-simple-ip-from-country-in-rails/' rel='external nofollow' class='url'>Sho Fukamachi Online &raquo; Blog Archive &raquo; Dead simple IP to Country in Rails</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1160122" title="">December 1st, 2007 at 00:55:45</a></small>
+
+			<p>[...] these instructions to get MaxMind&#8217;s GeoLite IPCountry table into your [...]</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1160247">
+			<cite><a href='http://jcole.us/' rel='external nofollow' class='url'>Jeremy Cole</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1160247" title="">December 1st, 2007 at 01:54:36</a></small>
+
+			<p>Hi hk,</p>
+<p>Ack, you&#8217;re quite right.  I guess WordPress escaped/changed it somewhere, as it was &#8220;\n&#8221; in the edit box.  Changing it to &#8220;\\n&#8221; corrected it in display.  Thanks for the note!  Nobody else caught that. <img src='http://jcole.us/blog/wp-includes/images/smilies/icon_smile.gif' alt=':)' class='wp-smiley' /> </p>
+<p>Regards,</p>
+<p>Jeremy</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1160407">
+			<cite><a href='http://web2announcer.com/go/2285079' rel='external nofollow' class='url'>Web 2.0 Announcer</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1160407" title="">December 1st, 2007 at 03:20:32</a></small>
+
+			<p><strong>jcole?s weblog: Jeremy Cole?s take on life. » Blog Archive » On efficiently geo-referencing IPs with MaxMind GeoIP and MySQL GIS&#8230;</strong></p>
+<p>[...][...]&#8230;</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1160519">
+			<cite><a href='http://pbwiki.com' rel='external nofollow' class='url'>Nathan Schmidt</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1160519" title="">December 1st, 2007 at 04:03:31</a></small>
+
+			<p>Seconded on Joaquim&#8217;s hint about using the binary file version of MaxMind&#8217;s product &#8211; it&#8217;s quite compact and really the right way to do things if you&#8217;ve got a very large number of queries to run &#8212; and this is important &#8212; at page view time, when latency as opposed to aggregate throughput is a factor. When post-processing for stats you should of course use whatever is closest to your input dataset. We use the binary file api in php at PBwiki for a number of things, and page content can vary based on nation of origin. There are many use cases where an RDBMS shines and this isn&#8217;t really one of them.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1162138">
+			<cite><a href='http://letterblock.com/' rel='external nofollow' class='url'>Joshua Paine</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1162138" title="">December 1st, 2007 at 20:33:04</a></small>
+
+			<p>This should do the in-range check in the query cheaply (but I haven&#8217;t tested at all):</p>
+<p>select * from (SELECT * FROM ip2location WHERE 123456789 = ip_from;</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1162169">
+			<cite><a href='http://jcole.us/' rel='external nofollow' class='url'>Jeremy Cole</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1162169" title="">December 1st, 2007 at 20:51:13</a></small>
+
+			<p>Joshua,</p>
+<p>Did your post get truncated?  I don&#8217;t think I get it.</p>
+<p>Regards,</p>
+<p>Jeremy</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1164483">
+			<cite><a href='http://franck.breizhdev.net/blog/2007/12/04/links-for-2007-12-03/' rel='external nofollow' class='url'>links for 2007-12-03 at but i forgot my pen</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1164483" title="">December 3rd, 2007 at 15:21:00</a></small>
+
+			<p>[...] jcole’s weblog: Jeremy Cole’s take on life. » Blog Archive » On efficiently geo-referencing IP&#8230; (tags: mysql geoip database) [...]</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1168072">
+			<cite><a href='http://www.falsepositives.com/index.php/2007/12/04/weird-wonderful-web-links-for-a-cold-december/' rel='external nofollow' class='url'>Weird Wonderful Web Links for a cold December | False Positives</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1168072" title="">December 4th, 2007 at 18:37:39</a></small>
+
+			<p>[...] On efficiently geo-referencing IPs with MaxMind GeoIP and MySQL GIS &#8211; [...]</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1192078">
+			<cite><a href='http://andy.wordpress.com/2007/12/16/fast-mysql-range-queries-on-maxmind-geoip-tables/' rel='external nofollow' class='url'>Fast MySQL Range Queries on MaxMind GeoIP Tables &laquo; Andy Skelton</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1192078" title="">December 16th, 2007 at 03:48:08</a></small>
+
+			<p>[...] MySQL Range Queries on MaxMind GeoIP&nbsp;Tables  A few weeks ago I read Jeremy Cole&#8217;s post on querying MaxMind GeoIP tables but I didn&#8217;t know what all that geometric magic was about so I dropped a comment about how we [...]</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1237045">
+			<cite><a href='http://www.ip2location.com' rel='external nofollow' class='url'>Tim</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1237045" title="">January 9th, 2008 at 06:01:53</a></small>
+
+			<p>We are using IP2Location instead of Maxmind.</p>
+<p>You can find similar SQL syntax from their FAQs.</p>
+<p><a href="http://www.ip2location.com/faqs-ip-country.aspx" rel="nofollow">http://www.ip2location.com/faqs-ip-country.aspx</a></p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1239489">
+			<cite><a href='http://various.com' rel='external nofollow' class='url'>Jon</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1239489" title="">January 10th, 2008 at 12:54:44</a></small>
+
+			<p>So I tried the original example out of curiosity but I found many issues with accuracy and such.  So I looked at it and changed it around a bit and this is what I came up with.</p>
+<p>Import like this:</p>
+<p>TRUNCATE ip_country;<br />
+LOAD DATA LOCAL INFILE &#8220;GeoIPCity.csv&#8221;<br />
+INTO TABLE ip_country<br />
+FIELDS<br />
+  TERMINATED BY &#8220;,&#8221;<br />
+  ENCLOSED BY &#8220;\&#8221;"<br />
+LINES<br />
+  TERMINATED BY &#8220;\n&#8221;<br />
+IGNORE 1 LINES<br />
+(<br />
+@startIpNum,@endIpNum,@country,@region,<br />
+@city,@postalCode,@latitude,@longitude,<br />
+@dmaCode,@areaCode<br />
+)<br />
+SET<br />
+  id      := NULL,<br />
+  ip_from := INET_ATON(@startIpNum),<br />
+  ip_to   := INET_ATON(@endIpNum),<br />
+  ip_poly := GEOMFROMWKB(POLYGON(LINESTRING(<br />
+    /* clockwise, 4 points and back to 0 */<br />
+    POINT(INET_ATON(@startIpNum), -1), /* 0, top left */<br />
+    POINT(INET_ATON(@endIpNum),   -1), /* 1, top right */<br />
+    POINT(INET_ATON(@endIpNum),    1), /* 2, bottom right */<br />
+    POINT(INET_ATON(@startIpNum),  1), /* 3, bottom left */<br />
+    POINT(INET_ATON(@startIpNum), -1)  /* 0, back to start */<br />
+  ))),<br />
+  country_code := @country,<br />
+  city         := @city,<br />
+  zipcode      := @postalCode,<br />
+  lat          := @latitude,<br />
+  lon          := @longitude,<br />
+  areacode     := @areaCode<br />
+;</p>
+<p>Then use it like this:</p>
+<p>SELECT city,country_code FROM ip_country WHERE MBRCONTAINS(ip_poly, POINTFROMWKB(POINT(INET_ATON(&#8217;12.199.160.34&#8242;), 0)));</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1239497">
+			<cite><a href='http://various.com' rel='external nofollow' class='url'>Jon</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1239497" title="">January 10th, 2008 at 12:58:12</a></small>
+
+			<p>I forgot to mention, that while this was rather fast assuming you already have a connection pool or something similar, when you get to an installation like ours (1500+ servers) the time taken to create a MySQL connection, run the query and return the recordset turned out to be longer than the time to use the binary file locally.</p>
+<p>I had figured it would be close to on par if not faster.  But because of the way Linux caches files on local file systems it&#8217;s faster to use the binary file for us.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1288870">
+			<cite><a href='http://www.watchmouse.com' rel='external nofollow' class='url'>Stan van de Burgt</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1288870" title="">February 6th, 2008 at 02:13:32</a></small>
+
+			<p>Another *very* fast solution is to use a hash based on the class B network of the IP address your looking for.</p>
+<p>First add a hash field &#8216;bucket&#8217; and create a key for it:</p>
+<p>  ALTER TABLE ip_country ADD bucket smallint unsigned NOT NULL AFTER ip_to;<br />
+  ALTER TABLE ip_country ADD KEY bucket(bucket);</p>
+<p>Then fill the hash (this took 90 seconds on my development machine):</p>
+<p>  UPDATE ip_country SET bucket=ip_from &gt;&gt;16;</p>
+<p>This sets the new field to the first 16 bits of the IP address of the ip_from field.<br />
+And from now on add the following to the WHERE clause of every query. Here $ip is the dotted notation of the IP address your are looking for.</p>
+<p>  &#8230; AND bucket=INET_ATON($ip)&gt;&gt;16</p>
+<p>Example:</p>
+<p>  SELECT * FROM ip_country<br />
+  WHERE bucket=INET_ATON(&#8217;72.14.207.99&#8242;)&gt;&gt;16<br />
+    AND INET_ATON(&#8217;72.14.207.99&#8242;) BETWEEN ip_from AND ip_to;</p>
+<p>Adding the extra condition brought down the time from 3-5 seconds to 0.0 <img src='http://jcole.us/blog/wp-includes/images/smilies/icon_smile.gif' alt=':)' class='wp-smiley' /> </p>
+<p>Would be great if you could run the performance tests on this one too, so we can see some stats on this one.</p>
+<p>- Stan</p>
+<p>PS: The geo data (lat / long) in these databases is *really* bad.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1290363">
+			<cite>Andrew Droffner</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1290363" title="">February 6th, 2008 at 15:40:49</a></small>
+
+			<p>Converting IP Addresses to Integer Database Fields: Endian Match<br />
+=====================================================</p>
+<p>There is a SQL/GIS POLYGON example, representing the IP range of [3.0.0.0; 4.17.135.31]. The unsigned integer versions are 50331648 &amp; 68257567 respectively on an Intel architecture. This is confusing, since the &#8220;network&#8221; architecture is the opposite.</p>
+<p>In order to store IP addresses in INTEGER database fields on Intel (x86), you *must* get the endianness right. See inet_aton(), ntohl(), etc.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1292841">
+			<cite>Andrew Droffner</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1292841" title="">February 7th, 2008 at 12:38:39</a></small>
+
+			<p>Why does this use a POLYGON (rectangle) rather than  a LINESTRING? An IP Address range is a line-segment. </p>
+<p>I&#8217;d expect a 1D point on a line-segment to be an easier calculation than an MBR around a 2D point. Is the MBR/R-Tree solution relly any faster than a GIS LINESTRING?</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1303186">
+			<cite>Andrew McLetchie</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1303186" title="">February 11th, 2008 at 16:06:34</a></small>
+
+			<p>Nothing to add, just want to say how much I appreciate this thread!!  I am analyzing large volumes of data on people *trying* to access our site, but getting turned away b/c no access.  We want to profile them geographically, and my big, fat Sun MySQL server was dragging.</p>
+<p>After I converted into polygonal data, I was able to process, using only a dual-core MacBook Pro, almost 6 million IP addresses to identify country of origin in 5 minutes!!</p>
+<p>Thanks y&#8217;all!</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1341373">
+			<cite>Dave K</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1341373" title="">February 26th, 2008 at 14:15:36</a></small>
+
+			<p>This is a very helpful thread. We are using a database from IP2Location (www.ip2location.com). Some of the approaches discussed in this thread assume that the IP ranges in the database are not overlapping. Has anyone confirmed that this is actually the case (either for IP2Location or any other IP database)? Thanks.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1347372">
+			<cite>Dave K</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1347372" title="">February 28th, 2008 at 11:07:40</a></small>
+
+			<p>Well, I have tried some of the suggestions in this tread but the results were not what I expected. Here are my results:</p>
+<p>QUERY 1</p>
+<p>This was my initial query, which I am trying to optimize.</p>
+<p>mysql&gt; select SQL_NO_CACHE * from IP_TO_LOCATION where 1234567890 between IP_FROM and IP_TO LIMIT 1;<br />
+1 row in set (1.62 sec)</p>
+<p>________________</p>
+<p>QUERY 2</p>
+<p>This is my first attempt at optimizing the query. However, this did not work so well&#8230; see the results below. Can anyone explain why this is the case? Based on this thread, I would not have expected the ORDER BY clause to be a performance hit.</p>
+<p>mysql&gt; select SQL_NO_CACHE * from IP_TO_LOCATION where IP_TO &gt;= 1234567890 order by IP_TO asc LIMIT 1;<br />
+1 row in set (3.84 sec)</p>
+<p>________________</p>
+<p>QUERY 3</p>
+<p>Removing the ORDER BY improved performance. Now the performance is slightly better then the initial query&#8230;but still not as fast as I was expecting. Again, can anyone help explain what is happening here and why I a not seeing they type of performance suggested by the comments on this thread?</p>
+<p>mysql&gt; select SQL_NO_CACHE * from IP_TO_LOCATION where IP_TO &gt;= 1234567890 LIMIT 1;<br />
+1 row in set (1.52 sec)</p>
+<p>Note: In the example queries above, the 1234567890 is a placeholder for the actual IP address used in these queries.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1381662">
+			<cite>Kim</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1381662" title="">March 11th, 2008 at 02:51:50</a></small>
+
+			<p>Useful thread indeed. I got lots of valued information from it.<br />
+Similar to Andrew McLetchie, our company wanted to profile people visiting our website and I was the guy to make a solution for it. After some research I found this blog and it gave me a few ideas.</p>
+<p>I ended up using the free data from MaxMind (they update it monthly), but I used all their free products (country, city, region and timezone) instead of just their Country or City data. When doing that there were of course duplicates, but other then that no major problems.<br />
+I combined it all into a single database giving me access to not only look-up IPs but also to reverse look-up based on one or more of the information stored.<br />
+Data is found usually within 0.1sec.</p>
+<p>Thus we can find users who are in a certain timezone, country, city or region. Pretty neat.</p>
+<p>When MaxMind updates their data I only have to download the new csv files, load up my installation script and about 15-30mins later (when run on my laptop) the database is updated.<br />
+I made it so easy to install, that its ready to be published for any to use (sorry, not my call). Written in PHP5 to MySQL5.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1400975">
+			<cite><a href='http://bbshowcase.org' rel='external nofollow' class='url'>_ck_</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1400975" title="">March 17th, 2008 at 10:57:40</a></small>
+
+			<p>I&#8217;ve actually used this technique for a couple years now after realizing not only does it speed up the search but reduces the db table to just over 1mb which can be cached far better (and dropping the unneeded columns)</p>
+<p>However I discovered it&#8217;s a little more accurate and gives better &#8220;missing&#8221; results if you do it backwards using the ENDING column and descend &#8211; searching backwards essentially. MySQL does it just as fast, and if not found, the next lower result is better.</p>
+<p>I&#8217;d had to manually patch the maxmind ranges about two dozen times now. The free db has several holes and inaccuracies, especially with ISPs like AOL.  It also lists EU for several spots that should be more country specific. We should group together to share the patches for holes.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1470533">
+			<cite><a href='http://hive2.com' rel='external nofollow' class='url'>Yannick</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1470533" title="">April 15th, 2008 at 09:21:16</a></small>
+
+			<p>@ Dave K.</p>
+<p>Query 2: You need an index(key) on field IP_TO</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1489370">
+			<cite><a href='http://dbentrance.com/' rel='external nofollow' class='url'>Tod Landis</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1489370" title="">April 23rd, 2008 at 14:08:42</a></small>
+
+			<p>Thank you for the great thread.  We have a GPLed tool you can use to make plots of GeoIP data called Entrance.  We were at the MySQL Conference and I was wowed by the world map Jonathan Schwartz used to show MySQL and Solaris downloads in his keynote.  So I came home and added something similar to Entrance.</p>
+<p>Its based on world map images by David Pape (which probably what the Sun guys used).    Once you have lat, long calculated you do this:</p>
+<p>PLOT EarthChart<br />
+    x, very small filled yellow  circle<br />
+  WITH<br />
+    gray gridlines<br />
+SELECT lon, lat<br />
+   from ACCESS_IPS;</p>
+<p>The details are on my page:  <a href="http://todlandis.com/" rel="nofollow">http://todlandis.com/</a> and the Entrance downloads are on <a href="http://dbentrance.com/" rel="nofollow">http://dbentrance.com/</a>  To get EarthCharts you&#8217;ll need version 1.2.70 or greater, and either the GPL or IDE version.</p>
+<p>To get a black background do this:<br />
+PLOT EarthChart<br />
+    x, very small filled yellow  circle<br />
+  WITH<br />
+    gray gridlines<br />
+    no bitmap<br />
+    background black<br />
+SELECT lon, lat<br />
+   FROM ACCESS_IPS;</p>
+<p>&#8230; then you can flip between them with Window | Go back&#8230; Window | Go forward.  </p>
+<p>The black background is pretty handy to have.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1524038">
+			<cite><a href='http://www.bronchos.pl' rel='external nofollow' class='url'>Michal Szewczyk</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1524038" title="">May 6th, 2008 at 03:04:21</a></small>
+
+			<p>Previou post was truncated, seemc to be the &lt; problem&#8230;</p>
+<p>SELECT SQL_NO_CACHE country_code FROM ip_country WHERE  INET_ATON(&#8220;4.2.2.1&#8243;)&gt;=ip_from AND INET_ATON(&#8220;4.2.2.2&#8243;)&lt;=ip_to;</p>
+<p>with primary key on (ip_from, ip_to).</p>
+<p>It gives the same result (queryTime = 0.0003 s) for me as Andy&#8217;s method and it wont&#8217;t give you incorrect results when ip not in range.</p>
+<p>It&#8217;s also much faster than BETWEEN condition.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1578376">
+			<cite><a href='http://www.santasoft.com' rel='external nofollow' class='url'>Paul Hirsch</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578376" title="">August 18th, 2008 at 12:24:31</a></small>
+
+			<p>Curious to know if anyone has tried these out with myisampack&#8217;ed tables.  while the country database isn&#8217;t too big, I wonder what affect this has with the city database &#8211; quite a bit larger and the overlapping numbers again.  </p>
+<p>On another note (slightly off-topic):  have any of you guys tried out the apache mod_geoip API way of doing things?  Just installed it (pretty painless) and it works pretty darn quickly.  Haven&#8217;t done any serious load testing with it, but with that API its pretty easy and PHP gives you variables through $_SERVER you can use (heck just about any language you use with Apache)&#8230;  Food for thought to save a little pain and database wear and tear.  No 30 min. data build, etc, etc, etc.  Once installed (took me about 5 minutes, maybe less) you just have to download once a month their compressed data file and (perhaps) restart apache.  There may be a better way to update it than that, and it surely can be automated.  Food for thought&#8230;.</p>
+<p><a href="http://www.maxmind.com/app/mod_geoip" rel="nofollow">http://www.maxmind.com/app/mod_geoip</a></p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1578455">
+			<cite><a href='http://winmutt.com' rel='external nofollow' class='url'>Rolf</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578455" title="">October 1st, 2008 at 10:34:43</a></small>
+
+			<p>It gives the same result (queryTime = 0.0003 s) for me as Andy’s method and it wont’t give you incorrect results when ip not in range.</p>
+<p>Per query it may be faster but when doing an updte on a table with 977k rows, this took 25seconds. Using BETWEEN ran for over 12 hours before I stopped it, I let the primary key method run for several minutes. Spatial Indexing FTW</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1578467">
+			<cite><a href='http://www.spoffle.com/technical/geotarget-database-setup/' rel='external nofollow' class='url'>GeoTarget database setup</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578467" title="">October 16th, 2008 at 03:38:22</a></small>
+
+			<p>[...] format and querying is not very efficient at all, and there are two excellent posts (here and here) which I intend to one day impliment myself, but for now the above method works fine for low to [...]</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1578544">
+			<cite><a href='http://www.nanolinksolutions.com/' rel='external nofollow' class='url'>Perry M</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578544" title="">December 8th, 2008 at 19:08:55</a></small>
+
+			<p>I’ve tried to expand on Andy’s method above with regards to having to check the ip_from at the software level.</p>
+<p>I haven’t exactly benchmarked this yet, but it seems as though it would not hurt performance. Basically I needed a reliable way to do the test for ip_from &lt;= result_row to determine if the IP was in the range that was returned. With PHP being loosely typed and lack of support for unsigned int’s I tried to return a Boolean value from MySQL to check for instead of doing a mildly more complex comparison at the software level.</p>
+<p>[CODE]<br />
+SELECT country_code, ip_from, IF(INET_ATON(%s)&gt;=ip_from,1,0) AS bool_inrange<br />
+FROM ip_country<br />
+WHERE ip_to &gt;= INET_ATON(’%s’)<br />
+ORDER BY ip_to ASC<br />
+LIMIT 1;<br />
+[/CODE]</p>
+<p>This allows me to simply check if ($result_array['bool_inrange']) { … }<br />
+instead of having to worry about the signed/unsigned oddities; additionally, it ensures all LONG numbers are in correct endianness by using MySQL’s INET_ATON.</p>
+<p>In short, you still need to check at the software level against the ‘bool_inrange’, but this should make it easier for some languages and require less code to do those checks at the software/app level.</p>
+<p>[This is a correction post due to the blog assuming a &lt; and &gt; combination in a post is an HTML element, heh.]</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1578712">
+			<cite>Chris</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578712" title="">August 10th, 2009 at 06:27:05</a></small>
+
+			<p>Hi,</p>
+<p>I need to work out the country name for 3 million IPs stored in a table called ips.  I have already converted these to their integer forms.  When I try to run the following query:</p>
+<p>SELECT * FROM IP2Country, ips<br />
+WHERE ip &gt;= ip_start AND ip &lt;= ip_end<br />
+ORDER BY ip_start ASC<br />
+LIMIT 1</p>
+<p>It just says it is executing for ages and never finishes.  Does anyone have any idea how I am going to manage this?  3million is just the tip of the iceberg as I have 182 million to convert in total.</p>
+<p>Cheers</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1578713">
+			<cite><a href='http://www.GameGape.com' rel='external nofollow' class='url'>GameGape.com</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578713" title="">August 18th, 2009 at 09:53:07</a></small>
+
+			<p>Thanks for the amazing MySQL tune article.<br />
+Here is my benchmark:<br />
+#1 : Traditional way:<br />
+SELECT a.ip, b.code FROM tbl_online AS a<br />
+	INNER JOIN tbl_ip  AS b<br />
+		ON INET_ATON(a.ip) BETWEEN b.ipfrom AND b.ipto<br />
+		GROUP BY a.ip ORDER BY a.time DESC<br />
+&#8212;&gt; 14.6 seconds</p>
+<p>#2 : Using polygon:<br />
+SELECT a.ip, b.code FROM tbl_online AS a<br />
+	INNER JOIN tbl_ip  AS b<br />
+		ON MBRCONTAINS(polygon, POINTFROMWKB(POINT(INET_ATON(a.ip), 0)))<br />
+		GROUP BY a.ip ORDER BY a.time DESC<br />
+&#8212;&gt; 0.0028 second</p>
+<p>Someone said: &#8220;when you upgrade the hardware, the speed will be multiply by 10, but when you OPTIMIZE your code, the speed will be multiply by 1,000&#8243;<br />
+That&#8217;s exactly TRUE.</p>
+<p>Thanks again for the tip !!!</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1578727">
+			<cite>Cezar VANT</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578727" title="">December 5th, 2009 at 00:22:55</a></small>
+
+			<p>Thanks a lot Jeremy for this thread. I&#8217;m using MaxMind GeoIP stucture to find visitors location in my project and your spatial method is amazing.</p>
+<p>Cezar</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1578729">
+			<cite>Sam</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578729" title="">December 28th, 2009 at 17:05:47</a></small>
+
+			<p>How about this:<br />
+SELECT if(ip_from = INET_ATON(&#8216;%s&#8217;)<br />
+ORDER BY ip_to ASC<br />
+LIMIT 1</p>
+<p>select and check in one query&#8230;</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1578730">
+			<cite>Sam</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578730" title="">December 28th, 2009 at 17:09:56</a></small>
+
+			<p>How about this:<br />
+SELECT if(ip_from = INET_ATON(&#8216;%s&#8217;)<br />
+ORDER BY ip_to ASC<br />
+LIMIT 1</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1578731">
+			<cite>Sam</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578731" title="">December 28th, 2009 at 17:10:27</a></small>
+
+			<p>SELECT if(ip_from  = INET_ATON(&#8216;%s&#8217;)<br />
+ORDER BY ip_to ASC<br />
+LIMIT 1</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1578747">
+			<cite>Ilja</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578747" title="">April 14th, 2010 at 02:04:49</a></small>
+
+			<p>This is the way i query the ip-table:</p>
+<p>SET @qip = INET_ATON(&#8220;213.128.135.37&#8243;);<br />
+SELECT @qip as ip, a.*, g.* FROM (<br />
+( SELECT i1.start, i1.end, i1.loc<br />
+    FROM geo_ip i1<br />
+    WHERE i1.start &gt;= @qip<br />
+    ORDER BY i1.start ASC LIMIT 1 )<br />
+UNION ALL<br />
+( SELECT i2.start, i2.end, i2.loc<br />
+    FROM geo_ip i2<br />
+    WHERE i2.start = a.start AND @qip &lt;= a.end;</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1578748">
+			<cite>Ilja</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578748" title="">April 14th, 2010 at 02:06:32</a></small>
+
+			<p>[CODE]</p>
+<p>SET @qip = INET_ATON(&#8220;213.128.135.37&#8243;);<br />
+SELECT @qip as ip, a.*, g.* FROM (<br />
+( SELECT i1.start, i1.end, i1.loc<br />
+    FROM geo_ip i1<br />
+    WHERE i1.start &gt;= @qip<br />
+    ORDER BY i1.start ASC LIMIT 1 )<br />
+UNION ALL<br />
+( SELECT i2.start, i2.end, i2.loc<br />
+    FROM geo_ip i2<br />
+    WHERE i2.start = a.start AND @qip &lt;= a.end;</p>
+<p>[/CODE]</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1578749">
+			<cite>Ilja</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578749" title="">April 14th, 2010 at 02:07:58</a></small>
+
+			<p>please ignore my posts, since they are not displayed correctly</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1578909">
+			<cite>joao</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578909" title="">September 21st, 2010 at 13:31:20</a></small>
+
+			<p>Try the following and you will be amazed as I was.</p>
+<p>Add a primary index to (ip_to, country), assuming your table has 3 fields (ip_from, ip_to, country), and execute the following query:</p>
+<p>SELECT country FROM ip2country WHERE 123456789 BETWEEN `ip_from` AND `ip_to` LIMIT 1;</p>
+<p>Note that the index has to be on ip_to and not on ip_from&#8230; and by adding country to the same index mysql will use the &#8220;Using index&#8221; optimization.</p>
+<p>The other trick is to add the LIMIT 1 together with BETWEEN!</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="alt" id="comment-1578910">
+			<cite>joao</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578910" title="">September 21st, 2010 at 13:36:28</a></small>
+
+			<p>My bad, in order to use the &#8220;Using index&#8221; optimization the index has to be on all 3 fields (ip_to, ip_from, country)&#8230; or just (ip_to) if you don&#8217;t care about the optimization or are using MEMORY tables which don&#8217;t use that optimization anyway. Btw, in case you are using MEMORY tables make sure the index is of type &#8220;BTREE&#8221; and not &#8220;HASH&#8221; as that&#8217;s the default for memory tables.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+		<li class="" id="comment-1578911">
+			<cite><a href='http://joaoptm.wordpress.com/' rel='external nofollow' class='url'>joao</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-1578911" title="">September 22nd, 2010 at 06:00:20</a></small>
+
+			<p>I just posted a more detailed explanation on my blog.</p>
+
+                        <small></small>
+		</li>
+
+	
+	
+	</ol>
+
+ 
+
+
+<h3 id="respond">Leave a Reply</h3>
+
+
+<form action="http://jcole.us/blog/wp-comments-post.php" method="post" id="commentform">
+
+
+<p><input type="text" name="author" id="author" value="" size="22" tabindex="1" />
+<label for="author"><small>Name </small></label></p>
+
+<p><input type="text" name="email" id="email" value="" size="22" tabindex="2" />
+<label for="email"><small>Mail (will not be published) </small></label></p>
+
+<p><input type="text" name="url" id="url" value="" size="22" tabindex="3" />
+<label for="url"><small>Website</small></label></p>
+
+
+<!--<p><small><strong>XHTML:</strong> You can use these tags: &lt;a href=&quot;&quot; title=&quot;&quot;&gt; &lt;abbr title=&quot;&quot;&gt; &lt;acronym title=&quot;&quot;&gt; &lt;b&gt; &lt;blockquote cite=&quot;&quot;&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=&quot;&quot;&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=&quot;&quot;&gt; &lt;strike&gt; &lt;strong&gt; </small></p>-->
+
+<p><textarea name="comment" id="comment" cols="100%" rows="10" tabindex="4"></textarea></p>
+
+<p><input name="submit" type="submit" id="submit" tabindex="5" value="Submit Comment" />
+<input type="hidden" name="comment_post_ID" value="378" />
+</p>
+
+</form>
+
+
+
+	
+		
+	</div>
+
+
+<hr />
+<div id="footer">
+	<p>
+		Copyright &copy; 2003-2010, <a href="/blog/about-me/">Jeremy Cole</a> &lt;jeremy [at] jcole [dot] us&gt;<br />
+		Proudly powered by <a href="http://wordpress.org">WordPress</a>.
+		<br /><a href="feed:http://jcole.us/blog/feed/">Entries (RSS)</a>
+		and <a href="feed:http://jcole.us/blog/comments/feed/">Comments (RSS)</a>.
+		<!-- 13 queries. 0.491 seconds. -->
+	</p>
+</div>
+</div>
+
+<!-- Gorgeous design by Michael Heilemann - http://binarybonsai.com/kubrick/ -->
+
+		<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-524152-2";
+urchinTracker();
+</script>
+</body>
+</html>
