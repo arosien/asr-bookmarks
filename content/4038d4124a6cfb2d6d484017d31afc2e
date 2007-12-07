@@ -1,0 +1,1501 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+    <title>Programming CouchDB with Javascript  - plok</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="Powered-By" content="Serendipity v.1.3-beta1" />
+    <script src="http://www.apple.com/library/quicktime/scripts/ac_quicktime.js" language="JavaScript" type="text/javascript"></script>
+    <script src="http://www.apple.com/library/quicktime/scripts/qtp_library.js" language="JavaScript" type="text/javascript"></script>
+    <link href="http://www.apple.com/library/quicktime/stylesheets/qtp_library.css" rel="StyleSheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="http://jan.prima.de/plok/serendipity.css.php" />
+
+    <link rel="alternate"  type="application/rss+xml" title="plok RSS feed" href="http://jan.prima.de/plok/feeds/index.rss2" />
+    <link rel="alternate"  type="application/x.atom+xml"  title="plok Atom feed"  href="http://jan.prima.de/plok/feeds/atom.xml" />
+    <link rel="pingback" href="http://jan.prima.de/plok/comment.php?type=pingback&amp;entry_id=108" />
+<script src="/mint/?js" type="text/javascript"></script>
+
+<link rel="pingback" href="http://jan.prima.de/plok/serendipity_xmlrpc.php" />
+
+</head>
+
+	<body id="template" onload="">
+		<div id="page">
+
+    <h1>Programming CouchDB with Javascript</h1>
+
+		<div id="sidebar">
+			<p>
+				Hello, this is Jan Lehnardt and you're visiting my blog. Thanks for stopping by.
+			</p>
+			
+			<p>
+				<a href="/" alt="About">About me</a>
+			</p>
+
+			<p>
+				plok &mdash; It reads like a blog, but it sounds harder!
+			</p>
+
+
+			<p>
+				<span style="margin-left:.4em";>&uarr;</span> <a href="http://jan.prima.de/~jan/plok/index.php?serendipity%5Bsubpage%5D=archives&serendipity%5Bcustom_sortfield%5D=timestamp&serendipity%5Bcustom_sortorder%5D=desc&serendipity%5Bcustom_sortyears%5D=all&serendipity%5Bcustom_sortauthors%5D=all&submit=Go%21" alt="Archives" title="Archives">Archives</a>
+			</p>
+						<div>
+				&larr; <a href="/plok/" alt="Back Home" title="Back Home">Back Home</a>
+			</div>
+			
+			<div>
+						</div>
+			
+			<div>
+			<a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String' title='JS String .split'><img src='http://static.jsconf.us/promotejsh.gif' height='150' width='180' alt='JS String .split'/></a>
+
+			</div>
+
+
+
+		</div>
+
+		<div id="text">
+			<!-- CONTENT START -->
+
+	<div class="serendipity_content_message"></div>
+
+<!-- ENTRIES START -->
+    
+
+        <div class="serendipity_Entry_Date">
+                <h3 class="serendipity_date">Monday, December  3. 2007</h3>
+        
+        		      <!--  <h4 class="serendipity_title">Programming CouchDB with Javascript</h4>-->
+		
+
+        <div class="serendipity_entry serendipity_entry_author_Jan ">
+                        <span class="serendipity_entryIcon">
+                                                                                                                                        </span>
+            
+            <div class="serendipity_entry_body">
+                <p>To illustrate how easy and straightforward writing applications for CouchDB is, we are going to build a simple todo-list application in Javascript. You should be familiar with <a href="http://en.wikipedia.org/wiki/HTML" title="Wikipedia Entry: HTML">HTML</a> and <a href="http://en.wikipedia.org/wiki/Javascript" title="Wikipedia Entry: JavaScript">Javascript</a> and the <a href="http://en.wikipedia.org/wiki/DOM" title="Wikipedia Entry: Dom">DOM</a>. You do not need any <a href="http://en.wikipedia.org/wiki/Ajax" title="Wikipedia Entry: Ajax">Ajax</a> experience. Although we are going to use it, all will be abstracted away.</p>
+
+<p>The interface is quite plain, as is the functionality. This is only to demonstrate how to work with CouchDB and not meant as a real application. We could turn this into something nice with some spit &amp; polish.</p>
+
+<p><img src="http://jan.prima.de/todo1.png" alt="Say hello to our todo app"/></p>
+
+<h2 id="how_it_works">How it works</h2>
+
+<p>We take a top level view here, working our way from the user&#8217;s perspective down to the actual code. This ensures we do not screw up the application for the user by mapping its inner workings to the user&#8217;s model.</p>
+
+<p>When you open the app you are greeted with an empty input box and a list of todos (or no todos, in case you were working hard). You can type in a single-line todo item, hit enter and that line appears on top of the list. Finally, the input field gets reset and you can enter another item. To mark an item <em>done</em>, click the X next to it. It will disappear.</p>
+
+<p>Boy this looks trivial, but it captures the essence of a todo list. There are plenty of opportunities how to improve things, but let&#8217;s nail the basics first.</p>
+
+<h2 id="the_html_bones">The HTML Bones</h2>
+
+<p>Setting up the UI is quite simple. HTML boilerplate, a form with an input field and an empty list:</p>
+
+<pre><code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta http-equiv="Content-type" content="application/xhtml+xml; charset=utf-8"/&gt;
+    &lt;title&gt;My Todos&lt;/title&gt;
+
+  &lt;/head&gt;
+
+  &lt;body id="index"&gt;
+    &lt;form id="add" action=""&gt;
+      &lt;input type="text" name="todo" value="" id="todo"/&gt;
+    &lt;/form&gt;
+
+    &lt;ul id="todos"&gt;&lt;/ul&gt;
+
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Open this in your browser and it will look like the screenshot above sans todo items.</p>
+
+<h3 id="the_setup_interlude">The Setup Interlude</h3>
+
+<p>You might want to try things out as we go and follow along on your system. The easiest setup is highjacking CouchDB&#8217;s webserver to serve the application. This solves the immediate issue of browser security, where Ajax calls can only be made to the domain the code came from due to the <em><a href="http://en.wikipedia.org/wiki/Same_origin_policy" title="Same origin policy - Wikipedia, the free encyclopedia">same origin policy</a></em>.</p>
+
+<p>If you installed CouchDB with the instructions found in the <a href="http://couchdb.googlecode.com/svn/trunk/README" title="">README file</a>, the built in webserver&#8217;s document root is <code>/usr/local/share/couchdb/www/</code>. In there create a new directory and place all the files you are going to create in there. You can now access your todo app clone at <a href="http://localhost:5984/_utils/CouchDbToDo/"><code>http://localhost:5984/_utils/CouchDbToDo/</code></a>.</p>
+
+<h2 id="the_javascript_beef">The Javascript Beef</h2>
+
+<p>All the magic is happening here. We are not going to use one of the great Javascript frameworks to keep things generic. Moving things to <a href="http://www.jquery.com/">jQuery</a> took twenty minutes when I tried it and I assume with <a href="http://www.prototypejs.com/">prototype</a>, it would be similar.</p>
+
+<p>What we are going to use is <a href="http://couchdb.googlecode.com/svn/trunk/share/www/script/couch.js" title="CouchDB Javascript Library">CouchDB&#8217;s built in Javascript library</a>. It provides as an easy interface to CouchDB without having to worry about manually managing HTTP requests. It, in turn, is based on <a href="http://json.org/json.js" title="object.toJSON() reference implementation">Douglas Crockford&#8217;s <code>object.toJSON()</code> library</a> which we will include as well. We put both files next to our HTML file and add these two line to the <code>&lt;head&gt;</code>:</p>
+
+<pre><code>&lt;script src="../script/couch.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script src="../script/json.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>Now we are all set for writing some code. We start off with a convenience function. A shortcut for the ever-so-annoying-to-type <code>document.getElementById()</code>. Although Crockford advises against using <code>$()</code> for the alias, for the sake of ubiquity, we swim with the fishes.</p>
+
+<pre><code>&lt;script type="text/javascript" charset="utf-8"&gt;
+
+function $(e)
+{
+  return document.getElementById(e);
+}
+
+&lt;/script&gt;
+</code></pre>
+
+<p>Before going into actual storage, we work on the dynamic list population. That is, making input from the text field available in the list below it. We need two things for that: An event handler that gets called when a user hits enter in the field and a list insertion routine that does  the necessary DOM fiddling.</p>
+
+<p>First the event handler. We are using the <a href="http://en.wikipedia.org/wiki/Unobtrusive_JavaScript">unobtrusive Javascript method</a> here. It avoids polluting HTML markup with non-semantical <code>onSomething</code> attributes that include actual Javascript. We want our HTML nice and clean and concerns separated. </p>
+
+<p>To set up the event handler for the input field, we need another event handler to see when our HTML has been loaded and rendered, i.e. when it can be dabbled with. This is the window&#8217;s <code>onload</code> handler. We set it up as follows.</p>
+
+<pre><code>window.onload = function()
+{
+  //code
+}
+</code></pre>
+
+<p>I am aware that this is not the <a href="http://docs.jquery.com/Events/ready" title="Events/ready - jQuery JavaScript Library">ultimate solution</a>, but it will do for the sake of the demo. Now, to setup the <em>enter</em> event handler.</p>
+
+<pre><code>window.onload = function()
+{
+  // what to do when hitting enter in the input field
+  $("add").onsubmit = function()
+  {
+    var value = $("todo").value;
+    $("todo").value = ""; // reset input box
+    if(value) { // don't add empty todos
+      Couch_Todo.insert({text:value});
+    }
+
+    // don't submit the form
+    return false;
+  }
+
+  // focus the input field when the document loads
+  $("todo").focus();
+}
+</code></pre>
+
+<p>Heck, what is going on here?! <code>add</code> is the <code>id</code> of our form and we define a function to be run in case of its regular submission from the browser. We first capture the value of the input field directly followed by resetting said input field. This makes for a great user experience, things appear to happen instantaneously. In case the value is not an empty string (the user could have hit enter on the empty input field), we call a magic <code>Couch_Todo.insert()</code> function. Well, not so magic, we will explore in a just a second. For now, we just assume that this handles the list insertion. We finish the form submission event handler with a <code>return false;</code> statement to make sure the form does not actually gets sent. We do not want that.</p>
+
+<p>Bonus material: The <code>$("todo").focus();</code> line does exactly what the comment says (yay!). Reducing UI interaction is a good idea, so we focus the input field automatically. </p>
+
+<h3 id="architectural_interlude">Architectural Interlude</h3>
+
+<p>Now, what&#8217;s with <code>Couch_Todo.insert()</code>? We are creating a custom object that contains all our data and functions. This is Good Practice again, as it does not pollute the global Javascript namespace. For a standalone application, this is not a huge concern, but once we start integrating other code libraries or get integrated by someone else, it is a good idea to keep all related stuff in a single place that does not clash with others. Hence, we create the global object <code>Couch_Todo</code> as our main entry point for our functionality. Inside our inline <code>&lt;script&gt;</code>-tag, we define it, like this:</p>
+
+<pre><code>var Couch_Todo = 
+{
+  insert: function(todo)
+  {
+
+  }
+}
+</code></pre>
+
+<p>This a simple object that has a single method <code>insert()</code> that can be called by writing <code>Couch_Todo.insert()</code> and lo and behold, that is, what our event handler above does. Let&#8217;s move on.</p>
+
+<h3 id="insertion_blues">Insertion Blues</h3>
+
+<p>What the <code>insert()</code> method does is creating a new <code>&lt;li&gt;</code> element, putting the input field&#8217;s value in and stacking it onto the list in our UI. We use bit of DOM scripting here, but really, just a bit. </p>
+
+<pre><code>var Couch_Todo = 
+{
+  insert: function(todo)
+  {
+    // DOM-fu
+    var list_item = document.createElement("li");
+    list_item.innerHTML = todo.text;
+    $("todos").insertBefore(list_item, $("todos").firstChild);
+  }
+}
+</code></pre>
+
+<p>The fist line creates a new DOM object of the type <code>HTML li Element</code>. The seconds appends our item text. Note that we use another Javascript object here. In fact, you could have noticed it earlier, when we called <code>Couch_Todo.insert({text:value});</code>. So we have an object with a property <code>text</code> that carries our input fields value. Easy.</p>
+
+<p>Next we take the whole <code>&lt;li&gt;</code> element and use a combination of <code>insertBefore()</code> and <code>firstChild</code> to put it on top of our list. This illustration might make it more clear what is going on. If not, and you understand everything and this confuses you, ignore it.</p>
+
+<p><img src="http://jan.prima.de/todo2.png" alt="Reader-confusion-diagram" /></p>
+
+<p>We can now add new todo items to our list. But once we close the browser or reload our HTML, all is gone. We now need to make our input persistent. We need to save the todo items and we are storing them in CouchDB.</p>
+
+<h2 id="storing_data">Storing Data</h2>
+
+<p>There are two things we need in order to save data in CouchDB, first the CouchDB Javascript library that frees us from handling Ajax calls to CouchDB&#8217;s REST API ourselves, and second a new method <code>add()</code> for our <code>Couch_Todo</code> object.</p>
+
+<p>We already included the CouchDB Javascript library earlier, so we just need to start using it: <code>new CouchDB('todo')</code>. <code>todo</code> is the name of the database we&#8217;re going to use. You can choose any name here as long as it complies with CouchDB&#8217;s <a href="http://www.couchdbwiki.com/index.php?title=HTTP_Db_API#Naming_and_Addressing">naming conventions for naming databases</a>. The snippet above creates a new <code>CouchDB</code> object that we conveniently store in a property <code>db</code> of our <code>Couch_Todo</code> object</p>
+
+<pre><code>var Couch_Todo = 
+{
+  db: new CouchDB("todo"),
+  insert: function... // and so on
+}
+</code></pre>
+
+<p>We then add a our <code>add()</code> method that handles the actual saving of our todo item. It takes our todo object (the one that holds the input value) and first saves it into CouchDB, then calls <code>insert()</code> to add it to the list. So we are changing the flow a bit. In our event handler for the input field, we are no longer calling <code>insert()</code>. We now call <code>add()</code> which adds our item and calls <code>insert()</code> for us. </p>
+
+<pre><code>$("add").onsubmit = function()
+{
+  var value = $("todo").value;
+  $("todo").value = ""; // reset input box
+  if(value) { // don't add empty todos
+    Couch_Todo.add({text:value});
+  }
+  // don't submit the form
+  return false;
+}
+</code></pre>
+
+<p>Above is what our event handler looks like now. Note that we omitted a bit of the surrounding code for brevity. Below is the <code>add()</code> method. It is pretty simple.</p>
+
+<pre><code>add: function(todo)
+{
+  this.db.save(todo);
+  this.insert(todo);
+}
+</code></pre>
+
+<p>The <code>CouchDB</code> object has a method <code>save()</code> that we just pass in our todo object. The method goes and tries to create a new document in our <code>todo</code> database. A document is the central data structure in CouchDB. It is a lose collection of keys and values, just like our todo object. We assume success here and don&#8217;t care for potential errors. When data is saved into CouchDB, it gets assigned an <code>id</code> an identifier by which we can refer to that same data again later. <code>save()</code> puts this <code>id</code> into our todo object so we can use it later. And we will, stay tuned.</p>
+
+<p>You can now add todo items to the list <em>and</em> they get saved in CouchDB. To verify this, go to the CouchDB administration utility probably running at <a href="http://localhost:5984/_utils/"><code>[http://localhost:5984/_utils/</code></a> and see for yourself the contents of the todo database.</p>
+
+<p><img src="http://jan.prima.de/todo3.png" alt="The CouchDB Admin Utility"/></p>
+
+<p>But what happens when we reload our page? All the todo items are gone again. Slapping our forehead we realize that we do in fact save them, but we do not fetch them back when we are loading the page. Let us get to that.</p>
+
+<h2 id="couchdb_views">CouchDB Views</h2>
+
+<p>We first need a view. A view is like filter for all documents in a CouchDB database. We only have todo documents, but we could have more. So we want to make sure we only get todo documents. We also use a view to specify the data we want to get out of the document, when we <em>query the view</em>.</p>
+
+<p>Setting up a view is pretty straightforward. A view consists of a name (easy) and a Javascript function (easy as well). All <em>view functions</em> do have the same structure. </p>
+
+<pre><code>function(doc)
+{
+  map(null, doc);
+}
+</code></pre>
+
+<p>They receive a document object and call, for each object that should be in the view, a function called <code>map()</code>; Above is the easiest view function available. It calls <code>map()</code> for each document and just puts all documents into the view. You can, however, make some decisions based on the document, whether to include it or not.</p>
+
+<pre><code>function(doc)
+{
+  if("todo" == doc.type) {
+    map(null, doc);
+  }
+}
+</code></pre>
+
+<p>This only includes documents, that have a field <code>type</code> with the value <code>todo</code>.     Note that <code>type</code> is just an arbitrary name, you could easily ask for all documents with a field that has a certain length.</p>
+
+<pre><code>    function(doc)
+    {
+      if(doc.text.length &gt; 100) {
+        map(null, doc);
+      }
+    }
+</code></pre>
+
+<p>What is with the <code>null</code> parameter? A view&#8217;s <em>result</em> is sorted by a key. By default, this key is the document&#8217;s <em>id</em>. And by calling <code>map()</code> with null as the first parameter, we ask CouchDB to use the default key. We can submit our own keys as well, if we prefer. </p>
+
+<pre><code>function(doc)
+{
+  if("todo" == doc.type) {
+    map(doc.date, doc);
+  }
+}
+</code></pre>
+
+<p>Now we have a view that is sorted by the value of the <code>date</code> field in each document of the type <code>todo</code>. The view for our todo application looks similar to the first view I&#8217;ve shown above:</p>
+
+<pre><code>function(doc)
+{
+  map(null, {text:doc.text});
+}
+</code></pre>
+
+<p>Instead of <code>doc</code> as the second argument, which implies we are only interested in a document&#8217;s id (and revision), we are tell the view to save a Javascript object that should look familiar. Correct, we used that same structure to move the value of our input field to the list insertion method.</p>
+
+<p>We can write nice Javascript functions all day and CouchDB wouldn&#8217;t know about them. How to tell CouchDB to use our functions? How to <em>create a view?</em> We could go and solve that programatically, but we won&#8217;t. There&#8217;s a simpler way that uses less code. And less code is better in this case. Go to CouchDB&#8217;s administration utility (you might still have it open from verifying the todo items get saved). You see a list of databases, very likely only the <code>todo</code> database. Click on it. You then see a list of documents in the database. To create a view, click on the <em>Create Document…</em> button. You will get asked to name the new document. Call it &#8220;_design/todo&#8221;. After clicking <em>OK</em>, it will appear in the list of documents. Yes, views are just a special kind of documents. Next we need to tell CouchDB that this view is defined using Javascript, as CouchDB does not actually care which language you write the view functions in. Create a new field in the document and name it <code>language</code>. Its value shall be <code>"text/javascript"</code>. Do not forget to include the surrounding inch quotes. Now add another field <code>views</code> with the value <code>{"all":"function(doc) { map(null, {text:doc.text});}"}</code> Finally, save the document.</p>
+
+<p>That were quite a few words. Here&#8217;s a short movie demonstrating the whole procedure.</p>
+
+<p>
+<script type="text/javascript">
+<!--
+QT_WritePoster_XHTML('Click to Play', 'http://jan.prima.de/create_view_web/create_view_web-poster.jpg',
+        'http://jan.prima.de/create_view_web/create_view_web.mov',
+        '847', '442', '',
+        'controller', 'true',
+        'autoplay', 'true',
+        'bgcolor', 'black',
+        'scale', 'aspect');
+//-->
+</script>
+<noscript>
+<object width="847" height="442" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" codebase="http://www.apple.com/qtactivex/qtplugin.cab">
+    <param name="src" value="http://jan.prima.de/create_view_web/create_view_web-poster.jpg" />
+    <param name="href" value="http://jan.prima.de/create_view_web/create_view_web.mov" />
+    <param name="target" value="myself" />
+    <param name="controller" value="false" />
+    <param name="autoplay" value="false" />
+    <param name="scale" value="aspect" />
+    <embed width="847" height="442" type="video/quicktime" pluginspage="http://www.apple.com/quicktime/download/"
+        src="http://jan.prima.de/create_view_web/create_view_web-poster.jpg"
+        href="http://jan.prima.de/create_view_web/create_view_web.mov"
+        target="myself"
+        controller="false"
+        autoplay="false"
+        scale="aspect">
+    </embed>
+</object>
+</noscript>
+</p>
+
+<p>We now have a view that, when queried, gives us a list of Javascript objects that represent one of our todo items each. Cool.</p>
+
+<h2 id="loading_data">Loading Data</h2>
+
+<p>Now we can populate our todo list with the items we put in. They will load automatically, when our HTML page gets loaded. To bulk work here is done by a new method of our <code>Couch_Todo</code> object. The <code>load</code> function queries our new view, reads the results and invokes our <code>insert()</code> method to handle the DOM-magic we solved earlier. </p>
+
+<p>CouchDB&#8217;s Javascript library makes it conveniently easy to query a view:</p>
+
+<pre><code>var all_docs = this.db.view("todo/all");
+</code></pre>
+
+<p><code>all_docs</code> is now an array with all our todo items, ready at our disposal. We loop over it and insert each into our HTML list.</p>
+
+<pre><code>load: function()
+{
+  var all_docs = this.db.view("todo/all");
+
+  // in case there are no todos, don't go loopin'
+  if(all_docs &amp;&amp; all_docs.total_rows &gt; 0) {
+    for(var idx = 0; idx &lt; all_docs.total_rows; idx++) {
+      var todo = all_docs.rows[idx];
+      this.insert({
+        text:todo.value.text
+      });
+    }
+  }
+}
+</code></pre>
+
+<p>When we now load the todo application in our browser, we are going to see all the todos we put in earlier, new ones get saved and survive reloads. We are done.</p>
+
+<p>Are we?</p>
+
+<h2 id="spicing_up">Spicing Up</h2>
+
+<p>What we have is quite nice so far, but we can do better. We can&#8217;t delete todo items (once they are done e.g.). We might see, when we load saved todo items that they appear in random order. And when there are no todos, all we see is input field and that is not very instructive.</p>
+
+<h3 id="messages">Messages</h3>
+
+<p>The last point is the easiest. We want to show a message when there are no todo items. That is, either the first time a user opened our app or when when he finished all his tasks (remember, we are going to add deletion, too).</p>
+
+<p>First we prepare the necessary HTML code.</p>
+
+<pre><code>&lt;div id="empty"&gt;Enter todo items in the box above and hit enter.&lt;/div&gt;
+</code></pre>
+
+<p>We add this into our HTML, just before the closing <code>&lt;/body&gt;</code> tag. To handle its appearing or disappearing, we create a new method for <code>Couch_Todo</code> that we call <code>updateEmpty()</code>. It will check, if there are any todo items and show or hide our message accordingly. All we need to do is to call it, when we change the number of items.</p>
+
+<pre><code>updateEmpty: function()
+{
+  if(0 == $("todos").childNodes.length) {
+    var display = "block";
+  } else {
+    var display = "none";
+  }
+  $("empty").style.display = display; 
+}
+</code></pre>
+
+<p>These are a lot of lines for a little task. Yet they are easy to understand. Here is a slightly harder to read, but shorter version. </p>
+
+<pre><code>updateEmpty: function()
+{
+  $("empty").style.display = (0 == $("todos").childNodes.length)?"block":"none";
+}
+</code></pre>
+
+<p>Now, where are the places we change the number of todo items? For now, only when inserting them, either by loading them from CouchDB or by entering new ones. The <code>insert()</code> function now looks like this:</p>
+
+<pre><code>insert: function(todo)
+{
+  // DOM-fu
+  var list_item = document.createElement("li");
+  list_item.innerHTML = todo.text;
+  $("todos").insertBefore(list_item, $("todos").firstChild);
+  this.updateEmpty();
+}
+</code></pre>
+
+<p>Now, when first loading the application, we see our message. Once we add a new todo, the message disappears.</p>
+
+<h3 id="in_a_row">In a Row</h3>
+
+<p>We are now going to organise your todos. The ones we put on top will stay on top, after we reloaded our page. To do this, we save a timestamp (the number of seconds since a long time ago) along with our todo items and ask our view to sort by it. Views can do that. So we can make sure the newest todo stay always on top.</p>
+
+<p>First we expand our <code>add()</code> method. When creating a new view, we capture the time (gotcha!) and store it with the todo.</p>
+
+<pre><code>add: function(todo)
+{
+  todo.time = (new Date()).getTime();
+  this.db.save(todo);
+  this.insert(todo);
+},
+</code></pre>
+
+<p>All we need to do now is to update our view function. To do that, go back into the administration utility and add <code>doc.time</code> to the index of the view.
+
+<pre><code>function(doc)
+{
+  map(doc.time, {text:doc.text});
+}
+</code></pre>
+
+Now, the todo items we did put in so far will remain in their strange order but, all the new ones are going to be stacked on top of our list. To deal with our older items, we could go into the administration utility and add a timestamp manually.</p>
+
+<h3 id="deletion">Deletion</h3>
+
+<p>The last one is a bit more complex, but not that hard in the end. To be able to delete todo items, we need a UI element that triggers a deletion. We also need an event handler that executes the deletion and we need to pull some strings together for convenience.</p>
+
+<p>To keep it simple, we use a hyperlinked <code>X</code> that we append to our todo items. The link carries an inline <code>onClick</code> event handler that triggers our deletion. Yes, inline event handlers are generally a bad idea as noted above. In this situation it attributes for less code, so we do that. The event handler sends the <code>&lt;li&gt;</code> element our todo item consists of to our deletion routine. We add yet another method to <code>Couch_Todo</code>: <code>remove()</code>. It takes the aforementioned <code>&lt;li&gt;</code> element and removes it both from our CouchDB database and the todo list.</p>
+
+<p>To make this actually work, we need to take a few extra steps. To be able to delete a document from CouchDB we need its id and its revision. You can store multiple versions of the same document in CouchDB and you refer to them with the respective revision. To be able to delete it, you need the latest revision. We somehow need to keep track of the revision. In addition to displaying our todo items in the HTML list, we keep a dictionary of them in our <code>Couch_Todo</code> object so we can refer to them later. And to actually get back from an <code>&lt;li&gt;</code> element (the one that our deletion event handler sends along) to the actual todo object, we store the accompanying document id as an attribute into the <code>&lt;li&gt;</code> object. </p>
+
+<p>Now slowly, one step at a time. We add an empty dictionary to the <code>Couch_Todo</code> object where we can later put our todo objects.</p>
+
+<pre><code>var Couch_Todo = 
+{
+  _todos:{},
+  db: new CouchDB("todo"),
+
+  insert: function(todo)...
+
+}
+</code></pre>
+
+<p>In our insert function, we add two lines. One to store the object in our <code>_todos</code> array and the other to add the document id to the <code>&lt;li&gt;</code> element.</p>
+
+<pre><code>insert: function(todo)
+{
+  // DOM-fu
+  var list_item = document.createElement("li");
+  list_item.innerHTML = todo.text;
+  $("todos").insertBefore(list_item, $("todos").firstChild);
+
+  this.updateEmpty();
+
+  //new lines
+  this._todos[todo._id] = todo;
+  list_item.id = todo._id; 
+}
+</code></pre>
+
+<p>And finally, we add our UI target, the hyperlinked <code>X</code>.</p>
+
+<pre><code>insert: function(todo)
+{
+  // DOM-fu
+  var list_item = document.createElement("li");
+  list_item.innerHTML = todo.text + ' &lt;a href="#" onClick="Couch_Todo.remove(this.parentNode); return false;"&gt;X&lt;/a&gt;';
+  $("todos").insertBefore(list_item, $("todos").firstChild);
+
+  this.updateEmpty();
+
+  this._todos[todo._id] = todo; 
+  list_item.id = todo._id; 
+}
+</code></pre>
+
+<p>Enough with the preparations! Granted, they are not that tricky, but damn, we want to delete stuff here, now.</p>
+
+<pre><code>remove:function(li)
+{
+  var todo = this._todos[li.id];
+  this.db.deleteDoc(todo);
+  this._todos[li.id] = null;
+
+  $("todos").removeChild($(li.id));
+  this.updateEmpty();
+
+  // focus the input field
+  $("todo").focus();
+}
+</code></pre>
+
+<p>This should be pretty self explaining (if you made it to this point). As a bonus, after having deleted an item, we focus the input field again. We can start adding new items immediately. </p>
+
+<p>Now we are done for today. There is lots to do with this simple app. Visuals come to mind. Assignment of todos, distributed collaboration, search, reordering and all that. I may come back to that at a later time.</p>
+
+<p>If you don&#8217;t want to assemble the pieces yourself, here&#8217;s all the code sans external scripts and the view we created in CouchDB.</p>
+
+<pre><code>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot;
+    &quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xml:lang=&quot;en&quot;&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv=&quot;Content-type&quot; content=&quot;application/xhtml+xml; charset=utf-8&quot;/&gt;
+        &lt;title&gt;My Todos&lt;/title&gt;
+        &lt;script src=&quot;../script/couch.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;../script/json.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+
+        &lt;script type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;
+        function $(e)
+        {
+            return document.getElementById(e);
+        }
+
+        var Couch_Todo = 
+        {
+            _todos:{},
+            db: new CouchDB(&quot;todo&quot;),
+
+            insert: function(todo)
+            {
+                // DOM-fu
+                var list_item = document.createElement(&quot;li&quot;);
+                list_item.innerHTML = todo.text + ' &lt;a href=&quot;#&quot; onClick=&quot;Couch_Todo.remove(this.parentNode); return false;&quot;&gt;X&lt;/a&gt;';
+
+                $(&quot;todos&quot;).insertBefore(list_item, $(&quot;todos&quot;).firstChild);
+
+                this._todos[todo._id] = todo; // save todo object, so we can access the _rev when we want to delete.
+                list_item.id = todo._id; // save new id in DOM object
+
+                this.updateEmpty();
+            },
+
+            add: function(todo)
+            {
+                //automatically save time
+                todo.time = (new Date()).getTime();
+                this.db.save(todo);
+                this.insert(todo);
+            },
+
+            load:function()
+            {
+                var all_docs = this.db.view(&quot;todo/all&quot;);
+
+                if(all_docs &amp;&amp; all_docs.total_rows &gt; 0) {
+                    for(var idx = 0; idx &lt; all_docs.total_rows; idx++) {
+                        var todo = all_docs.rows[idx];
+                        this.insert({
+                            _id:todo.id,
+                            _rev:todo.value.rev,
+                            text:todo.value.text
+                        });
+                    }
+                }
+            },
+
+            remove:function(li)
+            {
+                var doc = this._todos[li.id];
+                this.db.deleteDoc(doc);
+                this._todos[li.id] = null;
+
+                $(&quot;todos&quot;).removeChild($(li.id));
+                this.updateEmpty();
+
+                // focus the input field
+                $(&quot;todo&quot;).focus();
+            },
+
+            updateEmpty: function()
+            {
+                //if there are no todos, show a message
+                $(&quot;empty&quot;).style.display = (0 == $(&quot;todos&quot;).childNodes.length)?&quot;block&quot;:&quot;none&quot;;
+            }
+        }    
+
+        window.onload = function()
+        {
+            // load saved todos
+            Couch_Todo.load();
+
+            // what to do when hitting enter in the input field
+            $(&quot;add&quot;).onsubmit = function()
+            {
+                var value = $(&quot;todo&quot;).value;
+                $(&quot;todo&quot;).value = &quot;&quot;; // reset input box
+                if(value) { // don't add empty todos
+                    Couch_Todo.add({text:value});
+                }
+
+                // don't submit the form
+                return false;
+            }
+
+            // focus the input field when the document loads
+            $(&quot;todo&quot;).focus();
+        }
+        &lt;/script&gt;
+    &lt;/head&gt; 
+
+    &lt;body id=&quot;index&quot;&gt;
+        &lt;form id=&quot;add&quot; action=&quot;&quot;&gt;
+                &lt;input type=&quot;text&quot; name=&quot;todo&quot; value=&quot;&quot; id=&quot;todo&quot;/&gt;
+        &lt;/form&gt;
+
+        &lt;ul id=&quot;todos&quot;&gt;&lt;/ul&gt;
+
+        &lt;div id=&quot;empty&quot;&gt;Enter todo items in the box above and hit enter.&lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+            </div>
+
+                      <div class='serendipity_entryFooter'>
+                Posted by <a href="http://jan.prima.de/plok/authors/1-Jan">Jan</a>
+
+ 
+                                                            | <a href="/plok/archives/108-Programming-CouchDB-with-Javascript.html#comments">Comments (30)</a>
+                                    
+                 
+                <br />View as PDF: <a href="http://jan.prima.de/plok/plugin/articlepdf_108">This entry</a> | <a href="http://jan.prima.de/plok/plugin/monthpdf_200712">This month</a> | <a href="http://jan.prima.de/plok/plugin/blogpdf">Full blog</a>
+            </div>
+        </div>
+
+        <!--
+        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                 xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
+                 xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <rdf:Description
+                 rdf:about="http://jan.prima.de/plok/feeds/ei_108.rdf"
+                 trackback:ping="http://jan.prima.de/plok/comment.php?type=trackback&amp;entry_id=108"
+                 dc:title="Programming CouchDB with Javascript"
+                 dc:identifier="http://jan.prima.de/plok/archives/108-Programming-CouchDB-with-Javascript.html" />
+        </rdf:RDF>
+        -->
+        
+
+                    
+            
+            
+            
+            
+	            
+                    <div class="serendipity_comments serendipity_section_comments">
+                <br />
+                <a id="comments"></a>
+                <div class="serendipity_commentsTitle">Comments</div>
+                <div class="serendipity_center">Display comments as
+                                    (<a href="/plok/index.php?url=archives/108-Programming-CouchDB-with-Javascript.html&amp;serendipity[cview]=linear#comments">Linear</a> | Threaded)
+                                </div>
+                <br />
+                        <a id="c1598"></a>
+    <div id="serendipity_comment_1598" class="serendipity_comment serendipity_comment_author_joel  comment_oddbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>Nice read.</p>
+
+<p>Expanding this to include an Edit feature would be fun too :)</p>
+
+<p>Thanks.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1598">#1</a>
+            <span class="comment_source_author">
+                            joel
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy5wdXJlcmF2ZS5jb20=&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy5wdXJlcmF2ZS5jb20=&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2007-12-03 20:07</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1598" onclick="document.getElementById('serendipity_replyTo').value='1598'; ">Reply</a>)
+                <div id="serendipity_replyform_1598"></div>
+                    </div>
+    </div>
+    <a id="c1599"></a>
+    <div id="serendipity_comment_1599" class="serendipity_comment serendipity_comment_author_Saj   comment_evenbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>Good one.. &quot;Edit&quot; needs be done..</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1599">#2</a>
+            <span class="comment_source_author">
+                            Saj
+                        </span>
+                        on
+            <span class="comment_source_date">2007-12-05 14:22</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1599" onclick="document.getElementById('serendipity_replyTo').value='1599'; ">Reply</a>)
+                <div id="serendipity_replyform_1599"></div>
+                    </div>
+    </div>
+    <a id="c1601"></a>
+    <div id="serendipity_comment_1601" class="serendipity_comment serendipity_comment_author_Paul-Smith  comment_oddbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>Minor typo: the port number in the URL near the top, http://localhost:5894/_utils/CouchDbToDo/, should be 5984.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1601">#3</a>
+            <span class="comment_source_author">
+                            Paul Smith
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy5wYXVsYWRhbXNtaXRoLmNvbS8=&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy5wYXVsYWRhbXNtaXRoLmNvbS8=&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2007-12-05 17:48</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1601" onclick="document.getElementById('serendipity_replyTo').value='1601'; ">Reply</a>)
+                <div id="serendipity_replyform_1601"></div>
+                    </div>
+    </div>
+    <a id="c1602"></a>
+    <div id="serendipity_comment_1602" class="serendipity_comment serendipity_comment_author_Jan serendipity_comment_author_self  comment_evenbox" style="padding-left: 20px">
+        <div class="serendipity_commentBody">
+                    <p>Good catch. Fixed, thanks!</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1602">#3.1</a>
+            <span class="comment_source_author">
+                            Jan
+                        </span>
+                        on
+            <span class="comment_source_date">2007-12-05 17:58</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1602" onclick="document.getElementById('serendipity_replyTo').value='1602'; ">Reply</a>)
+                <div id="serendipity_replyform_1602"></div>
+                    </div>
+    </div>
+    <a id="c1603"></a>
+    <div id="serendipity_comment_1603" class="serendipity_comment serendipity_comment_author_Paul-Smith  comment_oddbox" style="padding-left: 40px">
+        <div class="serendipity_commentBody">
+                    <p>Also, if you want to source the couch.js and json.js files, you should append &quot;../script/&quot; to each in the src attribute.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1603">#3.1.1</a>
+            <span class="comment_source_author">
+                            Paul Smith
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy5wYXVsYWRhbXNtaXRoLmNvbS8=&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy5wYXVsYWRhbXNtaXRoLmNvbS8=&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2007-12-05 18:06</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1603" onclick="document.getElementById('serendipity_replyTo').value='1603'; ">Reply</a>)
+                <div id="serendipity_replyform_1603"></div>
+                    </div>
+    </div>
+    <a id="c1604"></a>
+    <div id="serendipity_comment_1604" class="serendipity_comment serendipity_comment_author_Jan serendipity_comment_author_self  comment_evenbox" style="padding-left: 60px">
+        <div class="serendipity_commentBody">
+                    <p>Heh, good thinking! No need to have duplicate files around. Thanks again!</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1604">#3.1.1.1</a>
+            <span class="comment_source_author">
+                            Jan
+                        </span>
+                        on
+            <span class="comment_source_date">2007-12-05 18:08</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1604" onclick="document.getElementById('serendipity_replyTo').value='1604'; ">Reply</a>)
+                <div id="serendipity_replyform_1604"></div>
+                    </div>
+    </div>
+    <a id="c1615"></a>
+    <div id="serendipity_comment_1615" class="serendipity_comment serendipity_comment_author_Herman-Roelfs  comment_oddbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>Nice example, made CouchDB usage clearer to me. But the list in a browser will not be notified about changes initiated from another browser. Could you elaborate on such concurrent updates and how to keep the views in sync?
+Thanks, Herman</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1615">#4</a>
+            <span class="comment_source_author">
+                            Herman Roelfs
+                        </span>
+                        on
+            <span class="comment_source_date">2008-01-04 21:47</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1615" onclick="document.getElementById('serendipity_replyTo').value='1615'; ">Reply</a>)
+                <div id="serendipity_replyform_1615"></div>
+                    </div>
+    </div>
+    <a id="c1616"></a>
+    <div id="serendipity_comment_1616" class="serendipity_comment serendipity_comment_author_Jan serendipity_comment_author_self  comment_evenbox" style="padding-left: 20px">
+        <div class="serendipity_commentBody">
+                    <p>I&#8217;m planning a follow up item here and I&#8217;ll look into adding this, but I don&#8217;t want to promise anything at this point.</p>
+
+<p>But thanks for the suggestion!</p>
+
+<h2>Jan</h2>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1616">#4.1</a>
+            <span class="comment_source_author">
+                            Jan
+                        </span>
+                        on
+            <span class="comment_source_date">2008-01-06 11:46</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1616" onclick="document.getElementById('serendipity_replyTo').value='1616'; ">Reply</a>)
+                <div id="serendipity_replyform_1616"></div>
+                    </div>
+    </div>
+    <a id="c1630"></a>
+    <div id="serendipity_comment_1630" class="serendipity_comment serendipity_comment_author_Stefan  comment_oddbox" style="padding-left: 40px">
+        <div class="serendipity_commentBody">
+                    <p>Ok, the _rev seems to be stored inside the  _todos-object when created.
+But when I reload the page, the delete fails. I&#8217;m not that skilled in javascript .. where does it fail??</p>
+
+<p>This is really a great tutorial and it gives me a kickstart with CouchDb. Thanks a lot.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1630">#4.1.1</a>
+            <span class="comment_source_author">
+                            Stefan
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy52b2dlbC1uZXN0LmRl&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy52b2dlbC1uZXN0LmRl&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2008-02-11 20:00</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1630" onclick="document.getElementById('serendipity_replyTo').value='1630'; ">Reply</a>)
+                <div id="serendipity_replyform_1630"></div>
+                    </div>
+    </div>
+    <a id="c1631"></a>
+    <div id="serendipity_comment_1631" class="serendipity_comment serendipity_comment_author_Jan serendipity_comment_author_self  comment_evenbox" style="padding-left: 60px">
+        <div class="serendipity_commentBody">
+                    <p>@Stefan Do you get any error messages on the Javascript Console? Do you use Firefox if not, do. If yes, make sure to install Firebug for debugging JS.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1631">#4.1.1.1</a>
+            <span class="comment_source_author">
+                            Jan
+                        </span>
+                        on
+            <span class="comment_source_date">2008-02-11 20:07</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1631" onclick="document.getElementById('serendipity_replyTo').value='1631'; ">Reply</a>)
+                <div id="serendipity_replyform_1631"></div>
+                    </div>
+    </div>
+    <a id="c1632"></a>
+    <div id="serendipity_comment_1632" class="serendipity_comment serendipity_comment_author_Stefan  comment_oddbox" style="padding-left: 80px">
+        <div class="serendipity_commentBody">
+                    <p>When I breakpoint at line
+  this.db.deleteDoc(doc);</p>
+
+<p>and examine doc: <em>rev is already undefined and even &quot;all</em>docs&quot; doesn&#8217;t have the _rev attribute
+Is it possible that the view is not returning the _rev-element?</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1632">#4.1.1.1.1</a>
+            <span class="comment_source_author">
+                            Stefan
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy52b2dlbC1uZXN0LmRl&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy52b2dlbC1uZXN0LmRl&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2008-02-11 21:24</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1632" onclick="document.getElementById('serendipity_replyTo').value='1632'; ">Reply</a>)
+                <div id="serendipity_replyform_1632"></div>
+                    </div>
+    </div>
+    <a id="c1633"></a>
+    <div id="serendipity_comment_1633" class="serendipity_comment serendipity_comment_author_Jan serendipity_comment_author_self  comment_evenbox" style="padding-left: 100px">
+        <div class="serendipity_commentBody">
+                    <p>Indeed a good find here. Yes, unless you put it in, a normal view won&#8217;t contain the _rev attribute. I&#8217;ll need to clear that up. Thanks!</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1633">#4.1.1.1.1.1</a>
+            <span class="comment_source_author">
+                            Jan
+                        </span>
+                        on
+            <span class="comment_source_date">2008-02-11 21:43</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1633" onclick="document.getElementById('serendipity_replyTo').value='1633'; ">Reply</a>)
+                <div id="serendipity_replyform_1633"></div>
+                    </div>
+    </div>
+    <a id="c1643"></a>
+    <div id="serendipity_comment_1643" class="serendipity_comment serendipity_comment_author_Stefan  comment_oddbox" style="padding-left: 120px">
+        <div class="serendipity_commentBody">
+                    <p>Hi Jan,</p>
+
+<p>it works for me, when I use:</p>
+
+<p>this.insert({
+  <em>id:todo.id,
+  _rev:todo.value.</em>rev,<br />
+  text:todo.value.text<br />
+ });</p>
+
+<p>instead of 
+ this.insert({
+  _id:todo.id,
+  _rev:todo.value.rev,<br />
+  text:todo.value.text<br />
+ });</p>
+
+<p>In the &quot;load&quot;-function. Hmm, could be a little bit more consistent (but this means, that the &quot;normal&quot; view does include &quot;rev&quot; ehhh resp. &quot;_rev&quot; ;-)). But anyway. Very nice stuff.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1643">#4.1.1.1.1.1.1</a>
+            <span class="comment_source_author">
+                            Stefan
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy52b2dlbC1uZXN0LmRl&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy52b2dlbC1uZXN0LmRl&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2008-02-19 21:36</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1643" onclick="document.getElementById('serendipity_replyTo').value='1643'; ">Reply</a>)
+                <div id="serendipity_replyform_1643"></div>
+                    </div>
+    </div>
+    <a id="c1662"></a>
+    <div id="serendipity_comment_1662" class="serendipity_comment serendipity_comment_author_Cortland-Klein   comment_evenbox" style="padding-left: 60px">
+        <div class="serendipity_commentBody">
+                    <p>I&#8217;m also having this issue. The fix in #4.1.1.1.1.1 didn&#8217;t seem to show any difference between the before and after. Any thoughts as to why reloading breaks this?</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1662">#4.1.1.2</a>
+            <span class="comment_source_author">
+                            Cortland Klein
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3BpeGVsY29ydC5jb20=&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3BpeGVsY29ydC5jb20=&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2008-04-04 09:53</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1662" onclick="document.getElementById('serendipity_replyTo').value='1662'; ">Reply</a>)
+                <div id="serendipity_replyform_1662"></div>
+                    </div>
+    </div>
+    <a id="c1663"></a>
+    <div id="serendipity_comment_1663" class="serendipity_comment serendipity_comment_author_Jan serendipity_comment_author_self comment_oddbox" style="padding-left: 80px">
+        <div class="serendipity_commentBody">
+                    <p>Sorry, no time to investigate this at the moment.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1663">#4.1.1.2.1</a>
+            <span class="comment_source_author">
+                            Jan
+                        </span>
+                        on
+            <span class="comment_source_date">2008-04-04 11:29</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1663" onclick="document.getElementById('serendipity_replyTo').value='1663'; ">Reply</a>)
+                <div id="serendipity_replyform_1663"></div>
+                    </div>
+    </div>
+    <a id="c1665"></a>
+    <div id="serendipity_comment_1665" class="serendipity_comment serendipity_comment_author_Cortland-Klein   comment_evenbox" style="padding-left: 80px">
+        <div class="serendipity_commentBody">
+                    <p>I figured it out. There was a correction in that fix, but the problem was that the CouchDB server was not providing the _rev. This can be fixed by going into the CouchDB admin and updating _design/todo to become:</p>
+
+<pre><code>{
+   &amp;quot;all&amp;quot;: &amp;quot;function(doc) { map(null, {text:doc.text,rev:doc._rev});}&amp;quot;
+}
+</code></pre>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1665">#4.1.1.2.2</a>
+            <span class="comment_source_author">
+                            Cortland Klein
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3BpeGVsY29ydC5jb20=&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3BpeGVsY29ydC5jb20=&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2008-04-10 02:10</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1665" onclick="document.getElementById('serendipity_replyTo').value='1665'; ">Reply</a>)
+                <div id="serendipity_replyform_1665"></div>
+                    </div>
+    </div>
+    <a id="c1623"></a>
+    <div id="serendipity_comment_1623" class="serendipity_comment serendipity_comment_author_philip  comment_oddbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>Thats crazy but I like it just like a crazy girl is sexy.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1623">#5</a>
+            <span class="comment_source_author">
+                            philip
+                        </span>
+                        on
+            <span class="comment_source_date">2008-01-16 08:55</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1623" onclick="document.getElementById('serendipity_replyTo').value='1623'; ">Reply</a>)
+                <div id="serendipity_replyform_1623"></div>
+                    </div>
+    </div>
+    <a id="c1625"></a>
+    <div id="serendipity_comment_1625" class="serendipity_comment serendipity_comment_author_Pedro   comment_evenbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>Thanks for this detailed example.</p>
+
+<p>I get an error trying to delete items:</p>
+
+<p>DELETE http://lamp.local:5984/todo/DD8E21F2DE6121FE8AA16875171BFEF3?rev=undefined 412  couch.js (line 67)</p>
+
+<p>{&quot;error&quot;:&quot;conflict&quot;,&quot;reason&quot;:&quot;2185125934&quot;}</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1625">#6</a>
+            <span class="comment_source_author">
+                            Pedro
+                        </span>
+                        on
+            <span class="comment_source_date">2008-01-24 21:33</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1625" onclick="document.getElementById('serendipity_replyTo').value='1625'; ">Reply</a>)
+                <div id="serendipity_replyform_1625"></div>
+                    </div>
+    </div>
+    <a id="c1626"></a>
+    <div id="serendipity_comment_1626" class="serendipity_comment serendipity_comment_author_Jan serendipity_comment_author_self comment_oddbox" style="padding-left: 20px">
+        <div class="serendipity_commentBody">
+                    <p>You need to send the revision, too. See <a href="http://www.couchdbwiki.com/index.php?title=HTTP_Doc_API#DELETE">the docs</a></p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1626">#6.1</a>
+            <span class="comment_source_author">
+                            Jan
+                        </span>
+                        on
+            <span class="comment_source_date">2008-01-24 21:45</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1626" onclick="document.getElementById('serendipity_replyTo').value='1626'; ">Reply</a>)
+                <div id="serendipity_replyform_1626"></div>
+                    </div>
+    </div>
+    <a id="c1726"></a>
+    <div id="serendipity_comment_1726" class="serendipity_comment serendipity_comment_author_Samuel-Wan   comment_evenbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>I ran into errors with this tutorial and it took awhile to figure out that the views implementation has changed. For the first views example, &quot;_design/todo/all&quot;, the following changes will correct the outdated syntax:</p>
+
+<p>1) Use &quot;javascript&quot; instead of &quot;text/javascript&quot; for the language field.</p>
+
+<p>2) Define a nested &quot;map&quot; property inside the &quot;all&quot; property. Assign the function to the &quot;map&quot; property.</p>
+
+<p>3) Use emit(key, value) instead of amp(key, value) in the views function.</p>
+
+<p>{
+   &quot;all&quot;: {
+       &quot;map&quot;: &quot;function(doc) {emit(null, {text:doc.text});}&quot;
+   }
+}</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1726">#7</a>
+            <span class="comment_source_author">
+                            Samuel Wan
+                        </span>
+                        on
+            <span class="comment_source_date">2008-07-16 04:24</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1726" onclick="document.getElementById('serendipity_replyTo').value='1726'; ">Reply</a>)
+                <div id="serendipity_replyform_1726"></div>
+                    </div>
+    </div>
+    <a id="c1727"></a>
+    <div id="serendipity_comment_1727" class="serendipity_comment serendipity_comment_author_Jan serendipity_comment_author_self comment_oddbox" style="padding-left: 20px">
+        <div class="serendipity_commentBody">
+                    <p>Good call, see http://wiki.apache.org/couchdb/BreakingChanges for updates.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1727">#7.1</a>
+            <span class="comment_source_author">
+                            Jan
+                        </span>
+                        on
+            <span class="comment_source_date">2008-07-16 10:53</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1727" onclick="document.getElementById('serendipity_replyTo').value='1727'; ">Reply</a>)
+                <div id="serendipity_replyform_1727"></div>
+                    </div>
+    </div>
+    <a id="c1769"></a>
+    <div id="serendipity_comment_1769" class="serendipity_comment serendipity_comment_author_Jay   comment_evenbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>I was trying to create your sample but I thought in the video demo (at Rackspace) that the index.html page was actually stored in couchdb.
+Since couchdb &quot;stores documents&quot; tried creating an &quot;index.html&quot; document and creating a key &quot;contents&quot; with HTML values, however the Web interface didn&#8217;t think it was valid JSON (even when I put quotes, though I didn&#8217;t \ every line).</p>
+
+<p>Using the python couchdb module (and &quot;&quot;&quot; the string) I ended up with an error;</p>
+
+<p>httplib2.RelativeURIError: Only absolute URIs are allowed. uri = localhost:5984/sample_db/index.html</p>
+
+<p>So not sure it&#8217;s really a bug but I thought maybe it was something people would want to do&#8230;</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1769">#8</a>
+            <span class="comment_source_author">
+                            Jay
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL2Jsb2cudGhlY2FwYWNpdHkub3Jn&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL2Jsb2cudGhlY2FwYWNpdHkub3Jn&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2008-10-14 02:49</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1769" onclick="document.getElementById('serendipity_replyTo').value='1769'; ">Reply</a>)
+                <div id="serendipity_replyform_1769"></div>
+                    </div>
+    </div>
+    <a id="c1770"></a>
+    <div id="serendipity_comment_1770" class="serendipity_comment serendipity_comment_author_Jan serendipity_comment_author_self comment_oddbox" style="padding-left: 20px">
+        <div class="serendipity_commentBody">
+                    <p>You need to put a verbatim HTML file into an attachment to a document and point your browser to the attachment&#8217;s URL. E.g.:</p>
+
+<p>http://server/db/app/index.html where <code>app</code> is a document and has an attachment index.html.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1770">#8.1</a>
+            <span class="comment_source_author">
+                            Jan
+                        </span>
+                        on
+            <span class="comment_source_date">2008-10-14 12:09</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1770" onclick="document.getElementById('serendipity_replyTo').value='1770'; ">Reply</a>)
+                <div id="serendipity_replyform_1770"></div>
+                    </div>
+    </div>
+    <a id="c1771"></a>
+    <div id="serendipity_comment_1771" class="serendipity_comment serendipity_comment_author_Jay   comment_evenbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>Thanks Jan, I&#8217;d forgotten about attachments!</p>
+
+<p>I can&#8217;t quite figure out how to do what you said though. I created a DB and a Doc and then created a key &quot;_attachments&quot; but pasting in HTML doesn&#8217;t seem to work.</p>
+
+<p>There&#8217;s no &quot;upload attachment&quot; button or anything on the web interface so that was the best thought I had.</p>
+
+<p>Thanks again!</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1771">#9</a>
+            <span class="comment_source_author">
+                            Jay
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL2Jsb2cudGhlY2FwYWNpdHkub3Jn&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL2Jsb2cudGhlY2FwYWNpdHkub3Jn&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2008-10-14 14:33</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1771" onclick="document.getElementById('serendipity_replyTo').value='1771'; ">Reply</a>)
+                <div id="serendipity_replyform_1771"></div>
+                    </div>
+    </div>
+    <a id="c1773"></a>
+    <div id="serendipity_comment_1773" class="serendipity_comment serendipity_comment_author_Jan serendipity_comment_author_self comment_oddbox" style="padding-left: 20px">
+        <div class="serendipity_commentBody">
+                    <p>Get trunk. And check out http://incubator.apache.org/couchdb/community/lists.html fro general CouchDB support.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1773">#9.1</a>
+            <span class="comment_source_author">
+                            Jan
+                        </span>
+                        on
+            <span class="comment_source_date">2008-10-14 17:20</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1773" onclick="document.getElementById('serendipity_replyTo').value='1773'; ">Reply</a>)
+                <div id="serendipity_replyform_1773"></div>
+                    </div>
+    </div>
+    <a id="c1772"></a>
+    <div id="serendipity_comment_1772" class="serendipity_comment serendipity_comment_author_Jay   comment_evenbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>I created DB &quot;sample&quot; and document &quot;main&quot;
+Then added an &quot;_attachments&quot; field with a value of;</p>
+
+<p>{
+   &quot;index.html&quot;: {
+       &quot;content_type&quot; : &quot;application/xhtml+xml; charset=utf-8&quot;,
+       &quot;data&quot;: &quot;My Todos HI&quot;
+   }
+}</p>
+
+<p>Then went to; 
+http://192.168.1.99:5984/sample/main/index.html</p>
+
+<p>But got;
+{&quot;error&quot;:&quot;not_found&quot;,&quot;reason&quot;:&quot;missing&quot;}</p>
+
+<p>Interestingly;
+http://192.168.1.99:5984/sample/main/attachment_doc/index.html</p>
+
+<p>Yielded a stranger (and longer) error message.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1772">#10</a>
+            <span class="comment_source_author">
+                            Jay
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL2Jsb2cudGhlY2FwYWNpdHkub3Jn&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL2Jsb2cudGhlY2FwYWNpdHkub3Jn&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2008-10-14 15:12</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1772" onclick="document.getElementById('serendipity_replyTo').value='1772'; ">Reply</a>)
+                <div id="serendipity_replyform_1772"></div>
+                    </div>
+    </div>
+    <a id="c1806"></a>
+    <div id="serendipity_comment_1806" class="serendipity_comment serendipity_comment_author_Balint  comment_oddbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>Nice tutorial, CouchBD is pretty cool. One thing that might not be evident is that a &#8216;todo&#8217; database have to be created for the example to work.</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1806">#11</a>
+            <span class="comment_source_author">
+                            Balint
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL2J1Y2lvbnJhaWxzLmNvbQ==&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL2J1Y2lvbnJhaWxzLmNvbQ==&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2008-12-19 15:16</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1806" onclick="document.getElementById('serendipity_replyTo').value='1806'; ">Reply</a>)
+                <div id="serendipity_replyform_1806"></div>
+                    </div>
+    </div>
+    <a id="c1880"></a>
+    <div id="serendipity_comment_1880" class="serendipity_comment serendipity_comment_author_Yoni   comment_evenbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>Excellent tutorial Jan. Thanks man!</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1880">#12</a>
+            <span class="comment_source_author">
+                            Yoni
+                        </span>
+                        on
+            <span class="comment_source_date">2009-08-13 06:55</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1880" onclick="document.getElementById('serendipity_replyTo').value='1880'; ">Reply</a>)
+                <div id="serendipity_replyform_1880"></div>
+                    </div>
+    </div>
+    <a id="c1909"></a>
+    <div id="serendipity_comment_1909" class="serendipity_comment serendipity_comment_author_Tom  comment_oddbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>I learned a lot about views from this article Thanks</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1909">#13</a>
+            <span class="comment_source_author">
+                            Tom
+                        </span>
+                            (<a class="comment_source_url" href="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy53b3JrZmxvd3NwYWNlLmNvbQ==&amp;entry_id=108" title="http://jan.prima.de/plok/exit.php?url=aHR0cDovL3d3dy53b3JrZmxvd3NwYWNlLmNvbQ==&amp;amp;entry_id=108">Homepage</a>)
+                        on
+            <span class="comment_source_date">2009-11-06 15:08</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1909" onclick="document.getElementById('serendipity_replyTo').value='1909'; ">Reply</a>)
+                <div id="serendipity_replyform_1909"></div>
+                    </div>
+    </div>
+    <a id="c1910"></a>
+    <div id="serendipity_comment_1910" class="serendipity_comment serendipity_comment_author_Ken   comment_evenbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>I&#8217;ve updated the application as per the comments best I&#8217;ve figured.</p>
+
+<p>If I run the HTML from a home directory
+~/todo/todo.html
+I get the error</p>
+
+<p>Access to restricted URI denied&quot; code: &quot;1012
+[Break on this error] req.open(method, uri, false);</p>
+
+<p>I&#8217;ve used the full path to:
+/usr/local/share/couchdb/www/script/couch.js &amp; json2.js</p>
+
+<p>I&#8217;ve also tried running the html from an attachment in the database:</p>
+
+<p>[Tue, 17 Nov 2009 21:18:46 GMT] [info] [] 127.0.0.1 - - &#8216;GET&#8217; /usr/local/share/couchdb/www/script/json2.js 404</p>
+
+<p>[Tue, 17 Nov 2009 21:18:46 GMT] [debug] [] httpd 404 error response:
+ {&quot;error&quot;:&quot;not<em>found&quot;,&quot;reason&quot;:&quot;no</em>db_file&quot;}</p>
+
+<p>so, I&#8217;m likely missing something basic and obvious!</p>
+
+<p>I&#8217;m running version:
+{&quot;couchdb&quot;:&quot;Welcome&quot;,&quot;version&quot;:&quot;0.11.0b830254&quot;}</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1910">#14</a>
+            <span class="comment_source_author">
+                            Ken
+                        </span>
+                        on
+            <span class="comment_source_date">2009-11-17 22:43</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1910" onclick="document.getElementById('serendipity_replyTo').value='1910'; ">Reply</a>)
+                <div id="serendipity_replyform_1910"></div>
+                    </div>
+    </div>
+    <a id="c1926"></a>
+    <div id="serendipity_comment_1926" class="serendipity_comment serendipity_comment_author_Julian-Kelsey  comment_oddbox" style="padding-left: 0px">
+        <div class="serendipity_commentBody">
+                    <p>Looks like CouchDB has evolved and this tutorial now has a few bugs in it, (even with the bit rot it&#8217;s still a good first tutorial, I learned a lot figure out what was going wrong):</p>
+
+<p>First: you should include &quot;json2.js&quot; (rather than &quot;json.js&quot;)</p>
+
+<p>Second: the &quot;_design/todo&quot; document should have the language &quot;javascript&quot; (at least that&#8217;s what the view editor in CouchDB admin tool does)</p>
+
+<p>Third: the view &quot;all&quot; should refer to an object something like this &quot;all&quot;: { &quot;map&quot;: &quot;function(doc) { emit(doc.time, {text: doc.text, rev: doc._rev}); }&quot; }</p>
+
+                </div>
+        <div class="serendipity_comment_source">
+            <a class="comment_source_trace" href="#c1926">#15</a>
+            <span class="comment_source_author">
+                            Julian Kelsey
+                        </span>
+                        on
+            <span class="comment_source_date">2010-04-03 16:37</span>
+
+                                        (<a class="comment_reply" href="#serendipity_CommentForm" id="serendipity_reply_1926" onclick="document.getElementById('serendipity_replyTo').value='1926'; ">Reply</a>)
+                <div id="serendipity_replyform_1926"></div>
+                    </div>
+    </div>
+
+
+                                <a id="feedback"></a>
+
+                
+                
+                <br />
+                <div class="serendipity_section_commentform">
+	                <div class="serendipity_commentsTitle">Add Comment</div>
+	                <div id="serendipityCommentFormC" class="serendipityCommentForm">
+    <div id="serendipity_replyform_0"></div>
+    <a id="serendipity_CommentForm"></a>
+    <form id="serendipity_comment" action="/plok/index.php?url=archives/108-Programming-CouchDB-with-Javascript.html#feedback" method="post">
+    <div><input type="hidden" name="serendipity[entry_id]" value="108" /></div>
+    <table border="0" width="100%" cellpadding="3">
+        <tr>
+            <td class="serendipity_commentsLabel"><label for="serendipity_commentform_name">Name</label></td>
+            <td class="serendipity_commentsValue"><input type="text" id="serendipity_commentform_name" name="serendipity[name]" value="" size="30" /></td>
+        </tr>
+
+        <tr>
+            <td class="serendipity_commentsLabel"><label for="serendipity_commentform_email">Email</label></td>
+            <td class="serendipity_commentsValue"><input type="text" id="serendipity_commentform_email" name="serendipity[email]" value="" /></td>
+        </tr>
+
+        <tr>
+            <td class="serendipity_commentsLabel"><label for="serendipity_commentform_url">Homepage</label></td>
+            <td class="serendipity_commentsValue"><input type="text" id="serendipity_commentform_url" name="serendipity[url]" value="" /></td>
+        </tr>
+
+        <tr>
+            <td class="serendipity_commentsLabel"><label for="serendipity_replyTo">In reply to</label></td>
+            <td class="serendipity_commentsValue"><select id="serendipity_replyTo" onchange="" name="serendipity[replyTo]"><option value="0">[ Top level ]</option><option value="1598">#1: joel on 2007-12-03 20:07</option>
+<option value="1599">#2: Saj on 2007-12-05 14:22</option>
+<option value="1601">#3: Paul Smith on 2007-12-05 17:48</option>
+<option value="1602">&#160;&#160;#3.1: Jan on 2007-12-05 17:58</option>
+<option value="1603">&#160;&#160;&#160;&#160;#3.1.1: Paul Smith on 2007-12-05 18:06</option>
+<option value="1604">&#160;&#160;&#160;&#160;&#160;&#160;#3.1.1.1: Jan on 2007-12-05 18:08</option>
+<option value="1615">#4: Herman Roelfs on 2008-01-04 21:47</option>
+<option value="1616">&#160;&#160;#4.1: Jan on 2008-01-06 11:46</option>
+<option value="1630">&#160;&#160;&#160;&#160;#4.1.1: Stefan on 2008-02-11 20:00</option>
+<option value="1631">&#160;&#160;&#160;&#160;&#160;&#160;#4.1.1.1: Jan on 2008-02-11 20:07</option>
+<option value="1632">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;#4.1.1.1.1: Stefan on 2008-02-11 21:24</option>
+<option value="1633">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;#4.1.1.1.1.1: Jan on 2008-02-11 21:43</option>
+<option value="1643">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;#4.1.1.1.1.1.1: Stefan on 2008-02-19 21:36</option>
+<option value="1662">&#160;&#160;&#160;&#160;&#160;&#160;#4.1.1.2: Cortland Klein on 2008-04-04 09:53</option>
+<option value="1663">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;#4.1.1.2.1: Jan on 2008-04-04 11:29</option>
+<option value="1665">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;#4.1.1.2.2: Cortland Klein on 2008-04-10 02:10</option>
+<option value="1623">#5: philip on 2008-01-16 08:55</option>
+<option value="1625">#6: Pedro on 2008-01-24 21:33</option>
+<option value="1626">&#160;&#160;#6.1: Jan on 2008-01-24 21:45</option>
+<option value="1726">#7: Samuel Wan on 2008-07-16 04:24</option>
+<option value="1727">&#160;&#160;#7.1: Jan on 2008-07-16 10:53</option>
+<option value="1769">#8: Jay on 2008-10-14 02:49</option>
+<option value="1770">&#160;&#160;#8.1: Jan on 2008-10-14 12:09</option>
+<option value="1771">#9: Jay on 2008-10-14 14:33</option>
+<option value="1773">&#160;&#160;#9.1: Jan on 2008-10-14 17:20</option>
+<option value="1772">#10: Jay on 2008-10-14 15:12</option>
+<option value="1806">#11: Balint on 2008-12-19 15:16</option>
+<option value="1880">#12: Yoni on 2009-08-13 06:55</option>
+<option value="1909">#13: Tom on 2009-11-06 15:08</option>
+<option value="1910">#14: Ken on 2009-11-17 22:43</option>
+<option value="1926">#15: Julian Kelsey on 2010-04-03 16:37</option>
+</select></td>
+        </tr>
+
+        <tr>
+            <td class="serendipity_commentsLabel"><label for="serendipity_commentform_comment">Comment</label></td>
+            <td class="serendipity_commentsValue">
+                <textarea rows="10" cols="40" id="serendipity_commentform_comment" name="serendipity[comment]"></textarea><br />
+                <div class="serendipity_commentDirection serendipity_comment_spamblock">E-Mail addresses will not be displayed and will only be used for E-Mail notifications</div><input type="hidden" name="serendipity[token]" value="a2a7696404337b651969ac3ecf2f1cc6" /><div class="serendipity_commentDirection serendipity_comment_captcha"><br />To prevent automated Bots from commentspamming, please enter the string you see in the image below in the appropriate input box. Your comment will only be submitted if the strings match. Please ensure that your browser supports and accepts cookies, or your comment cannot be verified correctly.<br /><img src="http://jan.prima.de/plok/plugin/captcha_66de9808403314701a88afbf9c9de313" onclick="this.src=this.src + '1'" title="Enter the string you see here in the input box!" alt="CAPTCHA" class="captcha" /><br /><label for="captcha">Enter the string from the spam-prevention image above: </label><br /><input class="input_textbox" type="text" size="5" name="serendipity[captcha]" value="" id="captcha" /></div><div class="serendipity_commentDirection"><a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> format allowed</div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>&#160;</td>
+            <td class="serendipity_commentsLabel">
+                <input id="checkbox_remember" type="checkbox" name="serendipity[remember]"  /><label for="checkbox_remember">Remember Information? </label>
+                    <br />
+                <input id="checkbox_subscribe" type="checkbox" name="serendipity[subscribe]"  /><label for="checkbox_subscribe">Subscribe to this entry</label>
+                </td>
+       </tr>
+
+
+       <tr>
+            <td>&#160;</td>
+            <td><input type="submit" name="serendipity[submit]" value="Submit Comment" /> <input type="submit" id="serendipity_preview" name="serendipity[preview]" value="Preview" /></td>
+        </tr>
+    </table>
+    </form>
+</div>
+				</div>
+
+                            </div>
+        
+        
+            </div>
+    
+    <div class='serendipity_entryFooter' style="text-align: center">
+    
+    
+    
+    <br />View as PDF: <a href="http://jan.prima.de/plok/plugin/articlepdf_108">This entry</a> | <a href="http://jan.prima.de/plok/plugin/monthpdf_201012">This month</a> | <a href="http://jan.prima.de/plok/plugin/blogpdf">Full blog</a>
+    </div>
+<!-- ENTRIES END -->
+
+
+<!-- CONTENT END -->
+		</div>
+
+</div>
+  <div id="footer">
+                        &copy; Jan Lehnardt 1998&ndash;2008 under
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.0/" style="font-variant:small-caps;">ccanndw2.0l</a>.
+
+                </div>
+
+
+
+
+</body>
+</html>
