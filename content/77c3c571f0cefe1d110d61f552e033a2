@@ -1,0 +1,638 @@
+
+
+<html>
+<head>
+
+<title>The Unsigned Right Shift</title>
+<meta name="Description" content="	As you have just seen, the >> operator automatically fills the high-order bit with its previous contents each time a shift occurs. This preserves the sign of the value. However, sometimes this is undesirable. " />
+<meta name="Keywords" content="The Unsigned Right Shift" />
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta name="Distribution" content="Global" />
+<meta name="Robots" content="index,follow" />
+
+<link rel="stylesheet" href="images/Enlighten.css" type="text/css" />
+</head>
+
+<body leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 bgcolor="#69422C">
+
+<!-- wrap starts here -->
+<div id="wrap">
+
+	<div id="header">		
+		
+		<div id="logo-box">		
+			<!--<h1 id="logo"><a href="index.php" title="Java Samples">Samples</a></h1>	-->
+
+			<p align="center"><br/><a href="/index.php"><img src="/images/java-samples.jpg" alt="Java samples" border="0"/></a></p>
+			<!--<h2 id="slogan">Sharing is Fun</h2> -->
+	
+
+					
+		</div>				
+				
+		<div class="headerphoto">
+<form action="http://www.java-samples.com/search.php" id="cse-search-box">
+  <div>
+    <input type="hidden" name="cx" value="partner-pub-0422232599241478:t3h28ulc28c" />
+    <input type="hidden" name="cof" value="FORID:11" />
+    <input type="hidden" name="ie" value="ISO-8859-1" />
+    <input type="text" name="q" size="45" />
+    <input type="submit" name="sa" value="Search" />
+  </div>
+</form>
+<a href="http://qa.java-samples.com/questions/ask/"><img src="/images/ask-a-question-small.PNG" style="border: none;" /></a>
+
+
+		</div>
+	
+</div>
+
+
+	<div id="menu">
+		<ul>
+			<li><a href="/index.php" id="current">Home</a></li>
+<li><a href="http://qa.java-samples.com/questions/ask/">Ask a Question</a></li>
+<li><a href="/jobs.php">Jobs</a></li>
+			<li><a href="http://feeds.feedburner.com/JavaSamples" title="Subscribe to my feed" rel="alternate" type="application/rss+xml">Subscribe in a reader</a></li>
+<!--<a href="http://www.java-samples.com/cgi-bin/forum/YaBB.pl">Forum</a> -->
+			<li><a href="http://www.java-samples.com/submittutorial.php">Submit Tutorial</a></li>
+			<li><a href="http://www.java-samples.com/showtutoriallist.php?category=all&start=1">Latest Tutorials</a></li>
+			<li><a href="http://www.java-samples.com/sitemap.php">Sitemap</a></li>
+
+		</ul>	
+	</div>
+				
+	<!-- content-wrap starts here -->
+	<div id="content-wrap"><div id="content">				
+		
+
+	
+		<!-- main starts here -->
+		<div id="main">		
+		
+			<div class="post">
+
+				<h1><a href="showtutorial.php?tutorialid=60">The Unsigned Right Shift</a></h1>
+				
+				<p>By <a href="" rel="nofollow"> aathishankaran</a> Viewed: 55720 times  Emailed: 219 times  Printed: 230 times <!-- AddThis Button BEGIN --> 
+<script type="text/javascript">var addthis_pub="vilyams";</script>
+<a href="http://www.addthis.com/bookmark.php?v=20" onmouseover="return addthis_open(this, '', '[URL]', '[TITLE]')" onmouseout="addthis_close()" onclick="return addthis_sendto()"><img src="http://s7.addthis.com/static/btn/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/200/addthis_widget.js"></script>
+<!-- AddThis Button END -->
+</p>
+
+				<p>
+<br>
+<a href="foremailing.php?tutorialid=60"><img src="/images/mail.gif" width="143" height="20" border="0"></a>
+<a href="forprinting.php?tutorialid=60"><img src="/images/print.gif" width="181" height="30" border="0"></a>
+<br>
+<script type="text/javascript"><!--
+google_ad_client = "pub-0422232599241478";
+/* 336x280, new-java-tuttop created 12/6/08 */
+google_ad_slot = "2038559929";
+google_ad_width = 336;
+google_ad_height = 280;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</table><div style="color:000080;font-family:Arial;font-size:10pt">
+
+<p class="MsoNormal">The Unsigned Right Shift</p>
+<p class="MsoNormal">&nbsp;<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>As you have just seen, the &gt;&gt; operator automatically fills the
+high-order bit with its previous contents each time a shift occurs. This
+preserves the sign of the value. However, sometimes this is undesirable. For
+example, if you are shifting something that does not represent a numeric value,
+you may not want sign extension to take place. This situation is common when you
+are working with pixel-based values and graphics. In these cases you will
+generally want to shift a zero into the high-order bit no matter what its
+initial value was. This is known as an unsigned shift. To accomplish this, you
+will use java’s unsigned, shift-right operator,&gt;&gt;&gt;, which always
+shifts zeros into the high-order bit.</p>
+<p class="MsoNormal">&nbsp;<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>The following code fragment demonstrates the &gt;&gt;&gt;. Here, a is set
+to –1, which sets all 32 bits to 1 in binary. This value is then shifted right
+24 bits, filling the top 24 bits with zeros, ignoring normal sign extension.
+This sets a to 255.</p>
+<p class="MsoNormal">&nbsp;<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style="font-family:&quot;Courier New&quot;">int a = -1;<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>a = a &gt;&gt;&gt; 24;</span></p>
+<p class="MsoNormal">&nbsp;<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Here is the same operation in binary form to further illustrate what is
+happening:</p>
+<p class="MsoNormal">&nbsp;<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>11111111 11111111 11111111 11111111<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>-1 in binary as an int</p>
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>&gt;&gt;&gt;24</p>
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>00000000 00000000 00000000 00000000<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>255 in binary as an int</p>
+<p class="MsoNormal">&nbsp;<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>The &gt;&gt;&gt; operator is often not as useful as you might like, since
+it is only meaningful for 32- and 64-bit values. Remember, smaller values are
+automatically promoted to int in expressions. This means that sign-extension
+occurs and that the shift will take place on a 32-bit rather than on an 8- or
+16-bit value. That is, one might expect an unsigned right shift on a byte value
+to zero-fill beginning at bit 7. but this is not the case, since it is a 32-bit
+value that is actually being shifted. The following program demonstrates this
+effect:</p>
+<p class="MsoNormal">&nbsp;<span style="font-family:&quot;Courier New&quot;">//
+Unsigned shifting a byte value<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;">class
+ByteUShift {<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>static public void main(String args[]) {<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>char hex[] = {<o:p>
+</o:p>
+</span></p>
+<p class="MsoBodyTextIndent">&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+‘0’, ‘1’, ‘2’, ‘3’, ‘4’, ‘5’, ‘6’, ‘7’, ‘8’,
+‘9’, ‘a’, ‘b’, ‘c’, ‘d’, ‘e’, ‘f’</p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp; </span>};<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp; </span>byte b =
+(byte) 0xf1;<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp; </span>byte c =
+(byte) (b &gt;&gt; 4);<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp; </span>byte d =
+(byte) (b &gt;&gt; &gt; 4);<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp; </span>byte e =
+(byte) ((b &amp; 0xff) &gt;&gt; 4);<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;">&nbsp;<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>System.out.println(“<span style="mso-tab-count:
+1">&nbsp;&nbsp;&nbsp;&nbsp; </span>b = 0x” + hex [ (b &gt;&gt; 4) &amp; 0x0f]
++ hex [b &amp; 0x0f]);<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>System.out.println(“<span style="mso-tab-count:
+1">&nbsp;&nbsp;&nbsp;&nbsp; </span>b &gt;&gt; 4 = 0x” + hex [ (c &gt;&gt; 4)
+&amp; 0x0f] + hex [c &amp; 0x0f]);<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>System.out.println(“<span style="mso-tab-count:
+1">&nbsp;&nbsp;&nbsp;&nbsp; </span>b &gt;&gt;&gt;4 = 0x” + hex [ (d &gt;&gt;
+4) &amp; 0x0f] + hex [d &amp; 0x0f]);<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>System.out.println(“<span style="mso-tab-count:
+1">&nbsp;&nbsp;&nbsp;&nbsp; </span>(b&amp;0xff) &gt;&gt; 4<span style="mso-spacerun: yes">&nbsp;
+</span>= 0x” + hex [ (e &gt;&gt; 4) &amp; 0x0f] + hex [e &amp; 0x0f]);<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;">&nbsp;<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;
+</span>}<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;">}<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal">&nbsp;<o:p>
+</o:p>
+</p>
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>the following output of this program shows how the<span style="mso-spacerun: yes">&nbsp;
+</span>&gt;&gt;&gt; operator appears to do nothing when dealing with bytes. The
+variable b is set to an arbitrary negative byte value for this demonstration.
+Then c is assigned the byte value of b shifted right by four, which is 0xff
+because of the expected sign extension. Then d is assigned the byte value of b
+is unsigned shifted right by four, which you might have expected to be 0x0f, but
+is actually 0xff because of the sign extension that happened when b was promoted
+to int before the shift. The last expression sets e to the byte value of b
+masked to 8 bits using the AND operator, then the unsigned shift right operator
+was not used for d, since the state of the sign bit after the AND was known.</p>
+<p class="MsoNormal">&nbsp;<o:p>
+</o:p>
+</p>
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>b = 0xf1 <o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>b &gt;&gt; 4 = 0xff<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal" style="text-indent:.5in"><span style="font-family:&quot;Courier New&quot;"><span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>b &gt;&gt;&gt; 4 = 0xff<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;"><span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>(b &amp; 0xff) &gt;&gt; 4 = 0x0f<o:p>
+</o:p>
+</span></p>
+<p class="MsoNormal">&nbsp;</p>
+
+
+<br><p>
+<b>If this tutorial doesn't answer your question, and you have a specific question, just ask an expert here. Post your question to get a direct answer.</b><br>
+<a href="http://qa.java-samples.com/questions/ask/"><img src="/images/ask-a-question-long.PNG" style="border:0"></a>
+</p>
+<br>
+<a href="foremailing.php?tutorialid=60"><img src="/images/mail.gif" width="143" height="20" border="0"></a>
+<a href="forprinting.php?tutorialid=60"><img src="/images/print.gif" width="181" height="30" border="0"></a>
+<br>
+<table>
+<tr><td>
+<div id="relatedlinks_container_div"></div>
+<script language=javascript defer>
+  var escFun = window.encodeURIComponent ? window.encodeURIComponent : escape;
+  var relatedlinks_js = document.createElement("script");
+  relatedlinks_js.setAttribute("charset", "utf-8");
+  relatedlinks_js.src = "http://relatedlinks.googlelabs.com/client/client.js?url=" +
+      escFun(document.URL) + "&referrer=" + escFun(document.referrer) +
+      "&relatedlinks_id=10583_6930591721676362907&title=" + escFun(document.title);
+  document.getElementsByTagName("head")[0].appendChild(relatedlinks_js);
+</script>
+</td><td>
+<script type="text/javascript"><!--
+google_ad_client = "pub-0422232599241478";
+google_ad_width = 336;
+google_ad_height = 280;
+google_ad_format = "336x280_as";
+google_ad_type = "text";
+//2007-09-01: java-samples-tut-bottom
+google_ad_channel = "9680502742";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "003366";
+google_color_text = "000080";
+google_color_url = "008000";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</td></tr>
+</table>
+<br>
+<script type="text/javascript"><!--
+google_ad_client = "pub-0422232599241478";
+/* java top adunit 728x15, created 4/10/09 */
+google_ad_slot = "9970225838";
+google_ad_width = 728;
+google_ad_height = 15;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+				</p>
+
+				
+				<p class="post-footer align-right">					
+				
+				<!-- AddThis Button BEGIN -->
+<script type="text/javascript">var addthis_pub="vilyams";</script>
+<a href="http://www.addthis.com/bookmark.php?v=20" onmouseover="return addthis_open(this, '', '[URL]', '[TITLE]')" onmouseout="addthis_close()" onclick="return addthis_sendto()"><img src="http://s7.addthis.com/static/btn/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/200/addthis_widget.js"></script>
+<!-- AddThis Button END -->
+ <span class="date">2007-02-06</span>	
+				<br>
+				<br>
+
+				</p>
+
+<h1>Comments(1)</h1>
+					<br>
+					<table><TR><TD valign="top" >1. </td><td><code>the correct 255's binary representation is:<br />
+00000000 00000000 00000000 11111111<br />
+<br />
+Nice post, Thank you very much!!<br><br> By: <a rel="nofollow" href="">SD.Plox</a> at 2008-12-30 17:51:39</code><br><br><a href="showcomment.php?commentid=33728">Show Comment</a><br><br></TD></TR></table>
+<p>
+<form name='comment' action='addopinion.php' method="post">
+    Your name (required):<br>
+  <input class="form" id="AuthorName" size="50" name="AuthorName"><br>
+   <br> Your email(required, will not be shown to the public):<br>
+  <input class="form" id="AuthorEmail" size="50" name="AuthorEmail"><br>
+   <br>    Your sites URL (optional):<br>
+  <input class="form" id="AuthorURL" size="50" value="http://www.java-samples.com" name="AuthorURL"><br>
+   <br>    Your comments:<br>
+  <textarea name="AuthorComments" rows="8" cols="39"></textarea><br><br>
+<table>
+<tr>
+<td>
+   Enter Code: <br><input name="password" size="6" />
+</td><td>        <a href="http://captchas.net"><img
+            style="border: none; vertical-align: bottom"
+            id="captchas.net" src="http://image.captchas.net/?client=mindyaco&random=&alphabet=abcdefghkmnopqrstuvwxyz" width="240" height="80"
+            alt="The Captcha image" /></a>
+        <script type="text/javascript">
+          <!--
+          function captchas_image_error (image)
+          {
+            if (!image.timeout) return true;
+            image.src = image.src.replace (/^http:\/\/image\.captchas\.net/,
+                                           'http://image.backup.captchas.net');
+            return captchas_image_loaded (image);
+          }
+
+          function captchas_image_loaded (image)
+          {
+            if (!image.timeout) return true;
+            window.clearTimeout (image.timeout);
+            image.timeout = false;
+            return true;
+          }
+
+          var image = document.getElementById ('captchas.net');
+          image.onerror = function() {return captchas_image_error (image);};
+          image.onload = function() {return captchas_image_loaded (image);};
+          image.timeout
+            = window.setTimeout(
+               "captchas_image_error (document.getElementById ('captchas.net'))",
+               10000);
+          image.src = image.src;
+          //-->
+        </script> <td>
+</td></tr></table>
+ <input type="hidden" name="tutorialid" value="60">
+ <input title="Add Your Comments" type="submit" alt="Add Your Comments" value="Add Your Comments">
+
+ </form>
+</p>
+			
+			</div>
+			
+		<h1>Latest Tutorials</h1>
+		<p>
+		<table><TR><TD nowrap>[2010-09-02]</td><td><b><a href="showtutorial.php?tutorialid=1214"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Steps in using verisign certificate with Glassfish appserver</font></a></b></TD></TR><TR><TD nowrap>[2010-08-02]</td><td><b><a href="showtutorial.php?tutorialid=1209"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">emulator 0 terminated while waiting for it to register!</font></a></b></TD></TR><TR><TD nowrap>[2010-08-02]</td><td><b><a href="showtutorial.php?tutorialid=1208"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Cannot run program "C:\Program Files\Java\jre6\bin\javac.exe": CreateProcess error=2, The system cannot find the file specified</font></a></b></TD></TR><TR><TD nowrap>[2010-08-01]</td><td><b><a href="showtutorial.php?tutorialid=1206"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Step by Step guide to setup freetts for Java</font></a></b></TD></TR><TR><TD nowrap>[2010-07-31]</td><td><b><a href="showtutorial.php?tutorialid=1205"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Speech Packages available for Java API</font></a></b></TD></TR><TR><TD nowrap>[2010-07-31]</td><td><b><a href="showtutorial.php?tutorialid=1204"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Tutorial on setting up freetts with maven</font></a></b></TD></TR><TR><TD nowrap>[2010-07-31]</td><td><b><a href="showtutorial.php?tutorialid=1203"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">package com.sun.speech.freetts does not exist.</font></a></b></TD></TR><TR><TD nowrap>[2010-07-31]</td><td><b><a href="showtutorial.php?tutorialid=1202"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Text to Speech conversion program in Java</font></a></b></TD></TR><TR><TD nowrap>[2010-07-31]</td><td><b><a href="showtutorial.php?tutorialid=1201"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">How to create wav file using freetts</font></a></b></TD></TR><TR><TD nowrap>[2010-07-31]</td><td><b><a href="showtutorial.php?tutorialid=1200"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">How to set the width of a Text element in JavaFX?</font></a></b></TD></TR><TR><TD nowrap>[2010-07-31]</td><td><b><a href="showtutorial.php?tutorialid=1199"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Major components of FxObjects in JavaFX</font></a></b></TD></TR><TR><TD nowrap>[2010-07-03]</td><td><b><a href="showtutorial.php?tutorialid=1188"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Using the AWS SDK for Java in Eclipse</font></a></b></TD></TR><TR><TD nowrap>[2010-07-03]</td><td><b><a href="showtutorial.php?tutorialid=1187"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Using the AWS SDK for Java</font></a></b></TD></TR><TR><TD nowrap>[2010-01-01]</td><td><b><a href="showtutorial.php?tutorialid=1178"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Converting properties using PropertyEditors and Other Spring features worth mentioning</font></a></b></TD></TR><TR><TD nowrap>[2010-01-01]</td><td><b><a href="showtutorial.php?tutorialid=1177"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">How to create an array and method in JSP</font></a></b></TD></TR></table>		</p>
+<a href="showtutoriallist.php?category=all&start=1"><font style="line-height:14px;font-size:14px" face="arial,sans-serif" color="#003366">More Latest News</a><!--<p>
+<br>
+<script type="text/javascript">
+google_ad_client = "pub-0422232599241478";
+google_ad_width = 468;
+google_ad_height = 60;
+google_ad_format = "468x60_as";
+google_ad_type = "image";
+google_ad_channel ="0141108993";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "000000";
+//</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</p>-->
+<p>
+<b>Most Viewed Articles</b> (in last 30 days) 
+<br><table><TR><TD><b><a href="showtutorial.php?tutorialid=234"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">How to use ArrayList  in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=235"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">How to use Iterator in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=152"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">XML and Java - Parsing XML using Java Tutorial</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=226"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Using substring( ) in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=225"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">indexOf( )  and lastIndexOf( ) in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=392"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">FileReader and FileWriter example program in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=22"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">How to Send SMS using Java Program (full code sample included)</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=306"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">wait(), notify() and notifyAll() in Java - A tutorial</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=369"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">HashMap example in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=220"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">compareTo( ) in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=236"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Using StringTokenizer in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=288"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Abstract classes in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=284"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Method Overloading (function overloading) in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=674"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Exception in thread "main" java.lang.NoClassDefFoundError: org/apache/commons/logging/LogFactory</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=287"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Method Overriding in Java</font></a></b></TD></TR></table>                                     
+<b>Most Emailed Articles</b> (in last 30 days)
+<br><table><TR><TD><b><a href="showtutorial.php?tutorialid=27"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Components of program</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=22"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">How to Send SMS using Java Program (full code sample included)</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=152"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">XML and Java - Parsing XML using Java Tutorial</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=234"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">How to use ArrayList  in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=26"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Why java is important to the Internet</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=392"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">FileReader and FileWriter example program in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=8"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Execute system commands in a Java Program</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=151"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Recursion in java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=284"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Method Overloading (function overloading) in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=287"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">Method Overriding in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=225"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">indexOf( )  and lastIndexOf( ) in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=235"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">How to use Iterator in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=369"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">HashMap example in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=220"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">compareTo( ) in Java</font></a></b></TD></TR><TR><TD><b><a href="showtutorial.php?tutorialid=2"><font style="line-height:14px;font-size:11px" face="arial,sans-serif" color="#003366">What is Java?</font></a></b></TD></TR></table></p>
+    
+         
+							
+		<!-- main ends here -->								
+		</div>	
+		
+
+
+				
+	<!-- content-wrap ends here -->		
+	</div>
+	
+					<!-- sidebar starts here -->
+<!-- sidebar starts here -->
+<div id="sidebar" >
+<iframe src="http://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Fpages%2FJava-Samplescom%2F153000734742282&amp;width=190&amp;colorscheme=light&amp;connections=15&amp;stream=false&amp;header=true&amp;height=450" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:190px; height:450px;" allowTransparency="true"></iframe><div class="sidebox">
+<h1 class="clear">Related Links</h1>
+<script type="text/javascript"><!--
+google_ad_client = "pub-0422232599241478";
+/* 160x600, created 6/15/10 js-vert-tutorial */
+google_ad_slot = "1555829429";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>	<div class="sidebox">	
+<h1 class="clear">Knowledgebase on</h1>
+<ul class="sidemenu">
+<li><a href="http://www.java-samples.com/trends/">Trends</a></li>
+<li><a href="http://www.java-samples.com/ajax/">AJAX</a></li>
+<li><a href="http://www.java-samples.com/asp.net/">ASP.net</a></li>
+<li><a href="http://www.java-samples.com/C/">C</a></li>
+<li><a href="http://www.java-samples.com/cocoa/">Cocoa</a></li>
+<li><a href="http://www.java-samples.com/C%2B%2B/">C++</a></li>
+<li><a href="http://www.java-samples.com/java/">Java</a></li>
+<li><a href="http://www.java-samples.com/javascript/">Javascript</a></li>
+<li><a href="http://www.java-samples.com/jsf/">JSF</a></li>
+<li><a href="http://www.java-samples.com/jsp/">JSP</a></li>
+<li><a href="http://www.java-samples.com/java-beans/">Java Beans</a></li>	
+<li><a href="http://www.java-samples.com/jdbc/">JDBC</a></li>
+<li><a href="http://www.java-samples.com/php/">PHP</a></li>
+<li><a href="http://www.java-samples.com/ruby/">Ruby</a></li>
+<li><a href="http://www.java-samples.com/vb.net/">VB.net</a></li>
+<li><a href="http://www.java-samples.com/struts/">Struts</a></li>	
+<li><a href="http://www.java-samples.com/j2me/">J2ME</a></li>
+<li><a href="http://www.java-samples.com/certification/">Certification</a></li>	
+<li><a href="http://www.java-samples.com/interview/">Interview</a></li>
+<li><a href="http://www.java-samples.com/sitemap.php">Site Map</a></li>
+<li><a href="mailto:williams@java-samples.com">Contact Us</a></li>
+<li><a href="http://qa.java-samples.com/">Forum</a></li>	
+</ul>	
+</div><div class="sidebox">	
+<h3>Related Jobs</h3>
+<p>			
+<script type="text/javascript">
+<!-- 
+var jobthread_widget_title = "Jobs";
+var jobthread_widget_outer_style = "background-color:#dddddd;border:1px solid #999999;width:160px;";
+var jobthread_widget_inner_style = "background-color:#ffffff;color:#666666;border:1px solid #999999;margin-left:10px;margin-right:10px;padding:10px 10px 2px 8px;font:11px Arial, Helvetica, Sans-serif;line-height:16px;";
+var jobthread_widget_title_style = "color:#313131;font-weight:bold;";
+var jobthread_widget_link_style = "color:#0464bb;font-size:11px;font-weight:normal;text-decoration:none;border:none;";
+var jobthread_widget_top_style = "padding-top:8px;";
+var jobthread_widget_bottom_style = "padding-bottom:4px;";
+//-->
+</script>
+<script type="text/javascript" src="http://syndication.jobthread.com/widget/?id=7e4ce8&num_jobs=5"></script>
+</p>
+				
+			</div><div class="sidebox">	
+<h3>Tutorial Archive</h3>
+<p>
+<a href="http://www.java-samples.com/showtitles.php?category=trends&start=1">Trends</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=AJAX&start=1">AJAX</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Asp&start=1">ASP.net</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=C&start=1">C</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Cocoa&start=1">Cocoa</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=C%2B%2B&start=1">C++</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Java&amp;start=1">Java</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Certification&start=1">Certification</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Interview&start=1">Interview</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=JSF&start=1">Javascript</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Javascript&start=1">JSF</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=JSP&amp;start=1">JSP</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Java Beans&amp;start=1">Java Beans</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=J2ME&amp;start=1">J2ME</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=JDBC&amp;start=1">JDBC</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=PHP&amp;start=1">PHP</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=ruby&amp;start=1">Ruby</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=VB.net&amp;start=1">VB.net</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=EJB&amp;start=1">EJB</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Struts&amp;start=1">Struts</a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Hibernate&amp;start=1">Hibernate</a>
+</p>
+</div>
+
+<div class="sidebox">
+<h3>Latest Tutorials on</h3>
+<p>
+<a href="http://www.java-samples.com/showtutoriallist.php?category=trends&start=1">Trends</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=AJAX&start=1">AJAX</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Asp&start=1">ASP.net</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=C&start=1">C</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Cocoa&start=1">Cocoa</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=C%2B%2B&start=1">C++</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Java&amp;start=1">Java</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Certification&start=1">Certification</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Interview&start=1">Interview</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Javascript&start=1">Javascript</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=JSF&start=1">JSF</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=JSP&amp;start=1">JSP</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Java Beans&amp;start=1">Java Beans</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=J2ME&amp;start=1">J2ME</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=JDBC&amp;start=1">JDBC</a>&nbsp; 
+<a href="http://www.java-samples.com/showtutoriallist.php?category=PHP&amp;start=1">PHP</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=ruby&amp;start=1">Ruby</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=VB.net&amp;start=1">VB.net</a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=EJB&amp;start=1">EJB</a>&nbsp; 
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Struts&amp;start=1">Struts</a>&nbsp; 
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Hibernate&amp;start=1">Hibernate</a>
+</p>
+</div>				<div class="sidebox">
+<h1>Get tutorials direct to your email:</h1>
+<form style="border:1px solid #ccc;padding:3px;text-align:center;" action="http://www.feedburner.com/fb/a/emailverify" method="post" target="popupwindow" onsubmit="window.open('http://www.feedburner.com/fb/a/emailverifySubmit?feedId=2433723', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true"><input type="text" style="width:140px" name="email"/><input type="hidden" value="http://feeds.feedburner.com/~e?ffid=2433723" name="url"/><input type="hidden" value="Java-Samples.com - Programming Tutorials, articles and code samples" name="title"/><input type="hidden" name="loc" value="en_US"/><input type="submit" value="Subscribe" />
+<!--<p>Delivered by <a href="http://www.feedburner.com" target="_blank">FeedBurner</a></p>-->
+</form>
+<br/>
+						<br/>
+</div>
+<div class="sidebox">	
+<script type="text/javascript">
+clicksor_enable_adhere = false;
+//default banner house ad url 
+clicksor_default_url = '';
+clicksor_banner_border = '#f9f9f9'; clicksor_banner_ad_bg = '#FFFFFF';
+clicksor_banner_link_color = '#aa0039'; clicksor_banner_text_color = '#666666';
+clicksor_banner_image_banner = true; clicksor_banner_text_banner = true;
+clicksor_layer_border_color = '';
+clicksor_layer_ad_bg = ''; clicksor_layer_ad_link_color = '';
+clicksor_layer_ad_text_color = ''; clicksor_text_link_bg = '';
+clicksor_text_link_color = ''; clicksor_enable_text_link = false;
+</script>
+<script type="text/javascript" src="http://ads.clicksor.com/showAd.php?nid=1&amp;pid=138812&amp;adtype=4&amp;sid=207601&amp;zone=13372"></script>
+<noscript><a href="http://www.yesadvertising.com">affiliate marketing</a></noscript>
+</div>
+			</div>
+
+
+	
+
+	</div>
+
+	<div id="footer">
+	<div><p>&copy; 2011 <strong>Java-samples.com</strong> 
+<p>&nbsp;</p><p>&nbsp;</p>
+<p><font color="#FFFFFF">Tutorial Archive: </font>
+<a href="http://www.java-samples.com/showtitles.php?category=trends&start=1"><font color="#FFFFFF">Trends</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=AJAX&start=1"><font color="#FFFFFF">AJAX</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Asp&start=1"><font color="#FFFFFF">ASP.net</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=C&start=1"><font color="#FFFFFF">C</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Cocoa&start=1"><font color="#FFFFFF">Cocoa</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=C%2B%2B&start=1"><font color="#FFFFFF">C++</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Java&amp;start=1"><font color="#FFFFFF">Java</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Certification&start=1"><font color="#FFFFFF">Certification</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Interview&start=1"><font color="#FFFFFF">Interview</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=JSF&start=1"><font color="#FFFFFF">Javascript</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Javascript&start=1"><font color="#FFFFFF">JSF</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=JSP&amp;start=1"><font color="#FFFFFF">JSP</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Java Beans&amp;start=1"><font color="#FFFFFF">Java Beans</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=J2ME&amp;start=1"><font color="#FFFFFF">J2ME</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=JDBC&amp;start=1"><font color="#FFFFFF">JDBC</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=PHP&amp;start=1"><font color="#FFFFFF">PHP</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=ruby&amp;start=1"><font color="#FFFFFF">Ruby</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=VB.net&amp;start=1"><font color="#FFFFFF">VB.net</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=EJB&amp;start=1"><font color="#FFFFFF">EJB</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Struts&amp;start=1"><font color="#FFFFFF">Struts</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtitles.php?category=Hibernate&amp;start=1"><font color="#FFFFFF">Hibernate</font></a>
+</p>
+<p><font color="#FFFFFF">Latest Tutorials on: </font>
+<a href="http://www.java-samples.com/showtutoriallist.php?category=trends&start=1"><font color="#FFFFFF">Trends</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=AJAX&start=1"><font color="#FFFFFF">AJAX</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Asp&start=1"><font color="#FFFFFF">ASP.net</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=C&start=1"><font color="#FFFFFF">C</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Cocoa&start=1"><font color="#FFFFFF">Cocoa</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=C%2B%2B&start=1"><font color="#FFFFFF">C++</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Java&amp;start=1"><font color="#FFFFFF">Java</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Certification&start=1"><font color="#FFFFFF">Certification</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Interview&start=1"><font color="#FFFFFF">Interview</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Javascript&start=1"><font color="#FFFFFF">Javascript</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=JSF&start=1"><font color="#FFFFFF">JSF</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=JSP&amp;start=1"><font color="#FFFFFF">JSP</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Java Beans&amp;start=1"><font color="#FFFFFF">Java Beans</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=J2ME&amp;start=1"><font color="#FFFFFF">J2ME</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=JDBC&amp;start=1"><font color="#FFFFFF">JDBC</font></a>&nbsp; 
+<a href="http://www.java-samples.com/showtutoriallist.php?category=PHP&amp;start=1"><font color="#FFFFFF">PHP</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=ruby&amp;start=1"><font color="#FFFFFF">Ruby</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=VB.net&amp;start=1"><font color="#FFFFFF">VB.net</font></a>&nbsp;
+<a href="http://www.java-samples.com/showtutoriallist.php?category=EJB&amp;start=1"><font color="#FFFFFF">EJB</font></a>&nbsp; 
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Struts&amp;start=1"><font color="#FFFFFF">Struts</font></a>&nbsp; 
+<a href="http://www.java-samples.com/showtutoriallist.php?category=Hibernate&amp;start=1"><font color="#FFFFFF">Hibernate</font></a>
+</p>
+	</p>
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-3939412-1");
+pageTracker._trackPageview();
+</script>
+	</div>
+	
+<!-- wrap ends here -->
+</div>
+ 
+</body>
+</html>
