@@ -1,0 +1,465 @@
+<!DOCTYPE HTML SYSTEM>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="generator" content="Movable Type 4.34-en">
+
+    <link rel="stylesheet" href="/style.css" type="text/css">
+  
+<link rel="start" href="http://www.mnot.net/blog/" title="Home">
+<link rel="alternate" type="application/atom+xml" title="Recent Entries" href="http://www.mnot.net/blog/index.atom">
+<script type="text/javascript" src="http://www.mnot.net/blog/mt.js"></script>
+
+
+    <link rel="prev bookmark" href="http://www.mnot.net/blog/2007/12/09/rfc2616bis" title="Why Revise HTTP?">
+    <link rel="next bookmark" href="http://www.mnot.net/blog/2008/01/04/cache_channels" title="Cache Channels">
+    <title>mnot’s blog: Two HTTP Caching Extensions</title>
+</head>
+<body>
+  <h1>mnot’s blog</h1>
+<p class="subtitle">&#8220;<a href="http://www.mnot.net/blog/2007/05/10/eames">Design depends largely on constraints.</a>&#8221; &#8212; Charles Eames</p>
+
+  <p class="navtop">
+      <a href="/blog/">recent entries</a>
+    | <a href="/blog/all">all entries</a>
+    | <a class="textbutton" href="/blog/index.atom" title="feed for this blog">feed</a>
+  </p>
+
+  <p class="date">Wednesday, 12 December 2007</p>
+  <h2>Two HTTP Caching Extensions</h2>
+
+  <p>
+We use caching extensively inside Yahoo! to improve scalability, latency and availability for back-end HTTP services, as I&#8217;ve <a href="http://www.mnot.net/blog/2007/04/29/squid">discussed before</a>.
+</p><p>
+However, there are a few situations where the plain vanilla HTTP caching model doesn&#8217;t quite do the trick. Rather than come up with one-off solultions to our problems, we tried going in the other direction; finding the most general solution that still met our needs, in the hopes of meeting others&#8217; as well. Here are two of them (with specs and implementation).
+</p><h4>
+stale-while-revalidate
+</h4><p>
+The first problem you&#8217;ve got when you rely on HTTP caching for performance is simple &#8212; what happens when the cache is stale? If fresh responses come in a small number of milliseconds (as they usually do in a well-tuned cache), while stale ones take 200ms or more (as running code often leads to), users will notice (as will your execs).
+</p><p>
+The na&#239;ve solution is to pre-fetch things into cache before the become stale, but this leads to all sorts of problems; deciding when to pre-fetch is a major headache, and if you don&#8217;t get it right, you&#8217;ll overload your cache, the network or your back-end systems, if not all three. 
+</p><p>
+A more elegant way to do this is to give the cache permission to serve slightly stale content, as long as it refreshes things in the background. 
+</p><p>
+<img src="http://www.mnot.net/blog/with-swr.png" height="371" width="729" border="0" hspace="4" vspace="4" />
+</p><p>
+Above, request #1 is served from a fresh cache, as per normal. When the cache becomes stale and stale-while-revalidate is in effect, request #2 will kick off an asyncronous request back to the origin server, while still being served from cache as if it were still fresh (as #3 is, because it&#8217;s still inside the stale-while-revalidate &#8220;window&#8221;). Assuming that the cache is successfully updated, #4 gets served fresh from cache, because that&#8217;s what it is now.
+</p><p>
+So, in a nutshell, stale-while-revalidate hides back-end latency from your clients by taking some liberty with freshness (which you control). See the <a href="http://www.mnot.net/drafts/draft-nottingham-http-stale-while-revalidate-00.txt">stale-while-revalidate Internet-Draft</a> for more information.
+</p><h4>
+stale-if-error
+</h4><p>
+The other issue we had was when services go down. In many cases, it&#8217;s preferable not to show users a &#8220;hard&#8221; error, but instead to use slightly stale content, if it&#8217;s available. Stale-if-error allows you to do this &#8212; again, in a way that&#8217;s controllable by you.
+</p><p>
+For example, <a class="offsite" href="http://tech.yahoo.com/">Yahoo! Tech</a> has a number of modules on its front page that are sourced from services. If a back-end service has a glitch, in many cases it&#8217;s better to show news (for example) that&#8217;s a few minutes old, rather than have a blank space on the page. Stale-if-error makes this possible.
+</p><p>
+Again, see the <a href="http://www.mnot.net/drafts/draft-nottingham-http-stale-if-error-00.txt">stale-if-error Internet-Draft</a> for details.
+</p><h4>
+A Word About Cache-Control
+</h4><p>
+People who have looked at these often comment on their requirement for a Cache-Control header; they often just want to be able to configure their cache manually, rather than go around modifying HTTP headers. In fact, we got this request from so many people, we did add this capability in implementation (see below). 
+</p><p>
+That said, my preference is for the Cache-Control extensions, and I always strongly encourage people to use them. Why? Because, while it&#8217;s easy for an admin to go into a cache and change things, you then have decoupled the URIs (services) from their metadata; if the services change, it isn&#8217;t obvious that some cache configuration somewhere may have to change as well. Additionally, if you have multiple clients caching your data, you then have to go out and remember where all of them are (chances are, you&#8217;ll miss one), and configure each. Not good practice.
+</p><h4>
+Status
+</h4><p>
+Both of these extensions are documented and, in my mind, pretty stable; the I-D&#8217;s have expired, but AFAICT all I need to do is double-check things, re-submit them and request publication (as Informational RFCs). I&#8217;m going to wait a little while to see if anybody has some feedback that I can incorporate.
+</p><p>
+We also have implementation of both in <a class="offsite" href="http://www.squid-cache.org/">Squid</a>, coded by <a class="offsite" href="http://www.henriknordstrom.net/">Henrik</a>. Currently, there&#8217;s a <a class="offsite" href="http://www.squid-cache.org/Versions/v2/HEAD/changesets/11755.patch">changeset sitting on 2.HEAD</a>, but hopefully it&#8217;ll get incorporated in 2.7. Note that that changeset doesn&#8217;t have support for the Cache-Control extensions, but only for the squid.conf directives for controlling these mechanisms; when the drafts start progressing, that should change.
+</p>
+<p>The intent here is to make these features available to anyone who wants them; we don&#8217;t want to maintain private Squid extensions, and Squid isn&#8217;t the only interesting cache in the world. Enjoy, thanks again to Henrik and Yahoo!, and again I&#8217;d love any feedback you have.</p>
+  <a id="more"></a>
+  
+  <br>
+  <p class="footnote">Filed under: 
+    <a href="http://www.mnot.net/blog/Caching/">Caching</a>, <a href="http://www.mnot.net/blog/HTTP/">HTTP</a>, <a href="http://www.mnot.net/blog/Protocol Design/">Protocol Design</a>, <a href="http://www.mnot.net/blog/Standards/">Standards</a>, <a href="http://www.mnot.net/blog/Web/">Web</a>, <a href="http://www.mnot.net/blog/Web Services/">Web Services</a>
+  </p>
+
+  <p class="footnote">
+
+  <div id="delicious-blogbadge-css"></div>
+  <script type="text/javascript">
+    if (typeof window.Delicious == "undefined") window.Delicious = {};
+    Delicious.BLOGBADGE_ICON_SHOW = false
+    Delicious.BLOGBADGE_GRAPH_SHOW = false
+  </script>
+  <script src="http://static.delicious.com/js/d2-blogbadge.js"></script>
+  </p>
+
+  <div id="comments" class="comments">
+    
+      
+        <h2>16 Comments</h2>
+        <div id="comments-content">
+      
+      <div id="comment-1325" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Asbjørn Ulsberg</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>Fascinating! Are these RFC drafts presented to the IETF HTTP mailing list?</p>
+
+<p>PS: Roundtripping my name wrongly converts it from UTF-8 to ISO-8859-1.</p>
+  </blockquote>
+  <p class="footnote">Wednesday, December 12 2007 at  9:06 PM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1326" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">duryodhan</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>or will it be put into the new rewritten HTTP spec ? you said the rewriting involves writing down all the known stuff/accepted practices ...</p>
+  </blockquote>
+  <p class="footnote">Wednesday, December 12 2007 at  9:59 PM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1327" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Mark Nottingham</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>They won't become part of RFC2616bis, as they'd be considered 'new features', and are therefore out of scope.</p>
+  </blockquote>
+  <p class="footnote">Thursday, December 13 2007 at  6:23 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1328" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Ian Bicking</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>re: configuration vs. header -- I've been thinking that more HTTP libraries should emphasize the request object, and use the headers as a kind of API.  So, setting stale-while-revalidate is a reasonable option for the HTTP library, but also fits into the HTTP message itself.  The same applies to stale-if-error.  And I think, though I haven't thought deeply about it, sending that cache control to the library and then possibly over the wire to whatever other intermediate cache's exist, seems ok and maybe good.</p>
+  </blockquote>
+  <p class="footnote">Thursday, December 13 2007 at  8:32 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1329" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Kevin Burton</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>Sweet..... this is exactly what I need for Tailrank.</p>
+
+<p>Right now we prefetch but as you noted it's prone to problems</p>
+
+<p>The one you DIDN'T mention is that if you have LOTs of URLs you might not KNOW what you need to revalidate.</p>
+
+<p>.... so prefetch doesn't work here.</p>
+  </blockquote>
+  <p class="footnote">Thursday, December 13 2007 at  9:28 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1330" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Mark Nottingham</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>Ian - good point. I often have discomfort when a library tries to abstract away the message too much, with convenience functions for caching, etc. This just introduces a separate set of concepts from those used in HTTP.</p>
+  </blockquote>
+  <p class="footnote">Thursday, December 13 2007 at 10:31 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1331" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Henrik</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>The Cache-Control header changeset is now in Squid-2, and all of this will be in the upcoming 2.7 release.</p>
+  </blockquote>
+  <p class="footnote">Thursday, December 13 2007 at 11:57 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1332" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">David Powell</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>IE has implemented a couple of relevant cache-control extensions since IE5, not sure how widely they are used:</p>
+
+<p><a href="http://msdn2.microsoft.com/en-us/library/ms533020.aspx#Use_Cache-Control_Extensions" rel="nofollow">http://msdn2.microsoft.com/en-us/library/ms533020.aspx#Use_Cache-Control_Extensions</a></p>
+  </blockquote>
+  <p class="footnote">Friday, December 14 2007 at 12:19 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1333" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">l.m.orchard</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>One interesting thing that occurs to me is that if you don't prefetch at all for user-facing HTML pages, you could serve up a fake "loading / progress bar" page as the blank-slate result for the first unfortunate users to make the request.  </p>
+
+<p>Kick off the async refresh, and leave a sanely timed meta-refresh on the blank-slate page, and hopefully they're happy enough not to complain.</p>
+  </blockquote>
+  <p class="footnote">Friday, December 14 2007 at  6:06 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1334" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Mark Nottingham</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>WRT IE CC extensions -- I never did really like those; they're specific to browsers, not caches, and their definition is confusing (to put it mildly).</p>
+  </blockquote>
+  <p class="footnote">Friday, December 14 2007 at  8:16 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1335" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Ben Drees</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>This is good stuff. My colleagues and I have discussed implementing something similar to stale-if-error but have not yet gotten around to it. I look forward to trying out these features when Squid 2.7 becomes available.</p>
+
+<p>As to whether the HTTP extension option or the cache configuration option eases maintenance the most in reverse proxy setups, I think it depends on local circumstances. But the HTTP extension option is the clear winner in performance terms, since it makes it possible for downstream caches (beyond one's administrative capacity to configure) to participate in these schemes.</p>
+
+<p>The Internet-Drafts say that these extensions MAY be implemented by shared caches and that private private caches MUST ignore them, but wouldn't it be semantically equivalent for private caches to implement them also (while further boosting the performance benefits)? I suppose that doing so could heighten the security concern with stale-while-revalidate.</p>
+
+<p>Also - the Internet-Drafts don't say anything about cases where the RFC 2616 rules and these extensions come into conflict. For example, consider a request containing "Cache-Control: max-stale=600" that leads to a 500 error while refreshing a stale response (age=900) containing "Cache-Control: max-age=1, stale-if-error=1200". Presumably the user agent gets the 500, but there is room for concern about correct implementation.</p>
+  </blockquote>
+  <p class="footnote">Tuesday, December 18 2007 at  3:24 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1336" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Scott</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>Alot of proxies out there already execute the stale-while-revalidate functionality as a "value-add". Any content with explicit expire or max-age directives will continue to be served if caching of expired content is allowed, while the proxy asynchronously checks to see if there is a fresh object. For any objects with low or infrequent request volumes that change regularly, the user(s) caught in the middle get annoyed.</p>
+
+<p>You can't win for losing.</p>
+
+<p>Another option might be "prefetch-while-stale", although I can see that being rife with problems. This would allow a proxy to proactively refresh stale objects with this directive as soon as the object hits its expiration. A proxy admin could then choose to configure the proxy to enable this functionality with the default disabled.</p>
+
+<p>Of course, I can see this directive used with a max-age of 0 or 1 or something silly like that.</p>
+  </blockquote>
+  <p class="footnote">Tuesday, July 22 2008 at  5:31 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1337" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Mark Nottingham</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>Lots of people have tried prefetching, and the result is usually not worth the effort; occasionally it causes big problems. prefetching while stale generates extra traffic, whereas stale-while-revalidate doesn't.</p>
+  </blockquote>
+  <p class="footnote">Tuesday, July 22 2008 at  8:18 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1338" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Hoop Somuah</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>Any thoughts on a stale-valid-until header that would indicate how long the 2 headers above should be in effect? I'm thinking about the occasionally connected case where I might want to have stale items used by my app until my device can reconnect but there are limits to that and I'd like the server to be able to indicate that with something like stale-valid-until.</p>
+  </blockquote>
+  <p class="footnote">Wednesday, July 23 2008 at  3:13 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1339" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Hoop Somuah </span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>To clariify my comment above, I'm wondernig about the use of stale content in an offline case and wondering whether that should fall under the revalidate case or if it should be given special consideration.</p>
+  </blockquote>
+  <p class="footnote">Wednesday, July 23 2008 at  8:01 AM +10:00</p>
+</div>
+      
+    
+      
+      <div id="comment-1340" class="comment">
+
+  <h4>
+    
+      <span class="vcard author">Mark Nottingham</span> said:
+    
+
+  </h4>
+
+  <blockquote>
+     <p>HTTP allows caches operating in an offline manner to behave differently; the control given currently is mostly through must-revalidate. It sounds like what you want is closest to stale-if-error which allows you to qualify how long stale content is returned if there is a connectivity problem (or a 5xx response).</p>
+  </blockquote>
+  <p class="footnote">Wednesday, July 23 2008 at  9:35 AM +10:00</p>
+</div>
+      
+        </div>
+      
+    
+
+    
+    <div class="comments-open" id="comments-open">
+      <h2 class="comments-open-header">Leave a comment</h2>
+      <div class="comments-open-content">
+        <div id="comment-greeting"></div>
+        <div id="_login"></div>
+
+        <form method="post" action="http://www.mnot.net/blog-bin/mt-comments.cgi" name="comments_form" id="comments-form" onsubmit="return mtCommentOnSubmit(this)">
+          <input type="hidden" name="static" value="1">
+          <input type="hidden" name="entry_id" value="425">
+          <input type="hidden" name="__lang" value="en">
+          <input type="hidden" name="parent_id" value="" id="comment-parent-id">
+          <input type="hidden" name="armor" value="1">
+          <input type="hidden" name="preview" value="">
+          <input type="hidden" name="sid" value="">
+          <div id="comments-open-data">
+            <div id="comment-form-name">
+              <label for="comment-author">Name</label>
+              <input id="comment-author" name="author" size="30" value="" onfocus="mtCommentFormOnFocus()">
+            </div>
+            <div id="comment-form-email">
+              <label for="comment-email">Email Address</label>
+              <input id="comment-email" name="email" size="30" value="" onfocus="mtCommentFormOnFocus()">
+            </div>
+            <div id="comment-form-url">
+              <label for="comment-url">URL</label>
+              <input id="comment-url" name="url" size="30" value="" onfocus="mtCommentFormOnFocus()">
+            </div>
+            <div id="comment-form-remember-me">
+              <input type="checkbox" id="comment-bake-cookie" name="bakecookie" onclick="mtRememberMeOnClick(this)" value="1" accesskey="r">
+              <label for="comment-bake-cookie">Remember personal info?</label>
+            </div>
+          </div>
+          <div id="comment-form-reply" style="display:none">
+            <input type="checkbox" id="comment-reply" name="comment_reply" value="" onclick="mtSetCommentParentID()">
+            <label for="comment-reply" id="comment-reply-label"></label>
+          </div>
+          <div id="comments-open-text">
+            <label for="comment-text">Your Comments
+            (You may use HTML tags for style)</label><br>
+            <textarea id="comment-text" name="text" rows="20" cols="80" onfocus="mtCommentFormOnFocus()"></textarea>
+          </div>
+          <div id="comments-open-captcha"></div>
+          <div id="comments-open-footer">
+            <input type="submit" accesskey="v" name="preview_button" id="comment-preview" value="Preview" onclick="this.form.preview.value='1';" />
+            <input type="submit" accesskey="s" name="post" id="comment-submit" value="Submit" />
+          </div>
+        </form>
+      </div>
+    </div>
+    <script type="text/javascript">
+    <!--
+    mtAttachEvent("load", mtEntryOnLoad);
+    mtAttachEvent("unload", mtEntryOnUnload);
+    //-->
+    </script>
+    
+</div>
+
+
+
+  <br clear="all"> 
+
+<p class="navigation">
+	<a href="/personal/">about</a>
+	<a href="/blog/">blog</a>
+	<a href="/photo/">photos</a>
+	<a href="/">home</a> 
+</p>
+
+
+</body>
+</html>
