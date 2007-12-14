@@ -1,0 +1,153 @@
+<html>
+<head>
+<title>Structured Stream Transport</title>
+<style type="text/css">
+  body { margin-top: 3em; margin-bottom: 3em; 
+         margin-left: 5em; margin-right: 5em; }
+</style>
+</head>
+
+<body>
+
+<!--
+<p>
+[catchy logo goes here]
+</p>
+-->
+
+<center>
+<h1>Structured Stream Transport</h1>
+</center>
+
+<img src="img/streams.png" align="right">
+
+<h2>Introduction</h2>
+
+<p>
+SST is an experimental transport protocol
+designed to address the needs of modern applications
+that need to juggle many asynchronous communication activities in parallel,
+such as downloading different parts of a web page simultaneously
+and playing multiple audio and video streams at once.
+
+<p>
+Features of SST:
+<ul>
+<li>	Multiplexes <b>many application streams</b>
+	onto <b>one network connection</b>
+<li>	Gives streams <b>hereditary structure</b>:
+	applications can <b>spawn lightweight streams</b> from existing ones
+	<ul>
+	<li>	<b>Efficient</b>:
+		no 3-way handshake on startup or TIME-WAIT on close
+	<li>	Supports <b>request/response transactions</b>
+		without serializing onto one stream
+	<li>	General <b>out-of-band signaling</b>:
+		control requests already in progress
+	</ul>
+<li>	Both <b>reliable</b> and <b>best-effort delivery</b>
+	in a <b>semantically unified model</b>
+	<ul>
+	<li>	supports <b>messages/datagrams of any size</b>:
+		no need to limit size of video frames, RPC responses, etc.
+	</ul>
+<li>	<b>Dynamic prioritization</b> of application's streams
+	<ul>
+	<li>	e.g., load visible parts of a web page first,
+		change priorities when user scrolls
+	</ul>
+<li>	<b>Optional end-to-end cryptographic security</b>
+	comparable to SSL
+<li>	<b>Peer-to-peer communication across NATs</b> via
+	<a href="http://www.brynosaurus.com/pub/net/p2pnat/">hole punching</a>
+<li>	<b>Implemented as a library</b> that can be linked
+	directly into applications like SSL for easy deployment
+</ul>
+
+<a name="doc"><h2>Documentation</h2></a>
+
+<ul>
+<li>	<b><a href="http://www.brynosaurus.com/pub/net/sst-abs.html">Research paper</a></b> (PDF/PS/HTML, 12 pages),
+	to appear in
+	<a href="http://www.sigcomm.org/sigcomm2007/">SIGCOMM 2007</a>.
+	Describes SST's principles and the most important design details.
+<li>	<b><a href="spec.pdf">Preliminary protocol specification</a></b>
+	(PDF, 22 pages).
+	Provides a more thorough technical description of the protocol.
+	<b>Warning:</b>
+	Still incomplete and not entirely consistent with the current code
+	or the SIGCOMM paper.
+<li>	<b><a href="api/">Preliminary SST library API documentation</a></b>
+	(HTML).
+	Usable and hopefully moderately stable but still likely to evolve
+	in non-backwards-compatible ways before the first "release".
+</ul>
+
+<h2>Mailing List</h2>
+
+The following public mailing list is available
+for discussions related to SST:
+
+<blockquote>
+<b><a href="https://lists.csail.mit.edu/mailman/listinfo/sst">
+The SST Mailing List</a></b>
+</blockquote>
+
+<a name="download"><h2>Download</h2></a>
+
+<b>Warning:</b>
+the code is still in a very early experimental state.
+Some features are broken or not completely implemented.
+Don't expect to be able to use it right away in a production system.
+
+<p>
+The SST library distribution does not yet have a stable release.
+Anonymous
+<a href="http://subversion.tigris.org">Subversion</a> access
+is available however.
+You can <a href="http://svn.pdos.csail.mit.edu/svn/uia/trunk/uia/sst/">
+browse the source code</a>,
+or check out a copy of the repository:</p>
+
+<pre>
+  % svn co svn://svn.pdos.csail.mit.edu/uia/trunk/uia/sst
+</pre>
+
+To build the library,
+make sure you have
+<a href="http://www.trolltech.com/products/qt/downloads">
+Qt 4.1 or later</a>
+and
+<a href="http://www.openssl.org/">
+OpenSSL 0.9.8 or later</a> installed,
+then type:
+
+<pre>
+  % cd sst
+  % misc/setup
+  % ./configure
+  % make
+</pre>
+
+To get started using the library in your application,
+see <a href="api/index.html">the main page of the API documentation</a>.
+
+<h2>Support</h2>
+
+SST is a part of the <a href="/uia/">UIA project</a>
+at the <a href="/">Parallel and Distributed Operating Systems Group</a>
+in MIT's <a href="http://csail.mit.edu/">
+Computer Science and Artificial Intelligence Laboratory</a>.
+UIA is sponsored by the T-Party Project, a joint research
+program between MIT and Quanta Computer Inc., Taiwan, by the
+National Science Foundation under Cooperative Agreement ANI-0225660
+(<a href="http://iris.csail.mit.edu/">Project IRIS</a>) and
+the NSF FIND program,
+with additional support from Nokia Research Center
+Cambridge.
+
+<hr>
+Last Updated: $Id: index.html 1818 2007-03-28 14:18:44Z baford $
+
+</body>
+</html>
