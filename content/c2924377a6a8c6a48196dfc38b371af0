@@ -1,0 +1,1204 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang=en>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Description" content='PXSL ("pixel") is a convenient, extensible shorthand for writing markup-heavy XML documents.'>
+<title>PXSL: Parsimonious XML Shorthand Language</title>
+<style type="text/css">
+body { background-color: #ffc; }
+tt { color: #036; }
+</style>
+</head><body>
+<h1>PXSL Docs and Downloads</h1>
+<pre><img src="/icons/blank.gif" alt="Icon "> <a href="?C=N;O=D">Name</a>                    <a href="?C=M;O=A">Last modified</a>      <a href="?C=S;O=A">Size</a>  <a href="?C=D;O=A">Description</a><hr><img src="/icons/back.gif" alt="[DIR]"> <a href="/">Parent Directory</a>                             -   
+<img src="/icons/folder.gif" alt="[DIR]"> <a href="Linux-binaries/">Linux-binaries/</a>         27-Jan-2005 10:07    -   
+<img src="/icons/folder.gif" alt="[DIR]"> <a href="MacOSX-binaries/">MacOSX-binaries/</a>        14-Jun-2003 23:35    -   
+<img src="/icons/folder.gif" alt="[DIR]"> <a href="RPMS/">RPMS/</a>                   23-Dec-2007 21:08    -   
+<img src="/icons/folder.gif" alt="[DIR]"> <a href="Win32-binaries/">Win32-binaries/</a>         09-Jun-2003 21:22    -   
+<img src="/icons/folder.gif" alt="[DIR]"> <a href="examples/">examples/</a>               20-Apr-2004 12:52    -   
+<img src="/icons/folder.gif" alt="[DIR]"> <a href="sources/">sources/</a>                15-Dec-2007 12:41    -   
+<hr></pre>
+<!--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html lang=en>
+<head>
+<title>PXSL README</title>
+<meta name="Content-Type" content="text/html; encoding=ISO-8559-1">
+<style type="text/css">
+body { background-color: #ffc; }
+tt { color: #036; }
+</style>
+</head><body> -->
+
+<h1>Parsimonious XML Shorthand Language</h1>
+
+
+
+<p><tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;____&nbsp;&nbsp;_&nbsp;&nbsp;_&nbsp;&nbsp;___&nbsp;&nbsp;__<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(&nbsp;&nbsp;_&nbsp;\(&nbsp;\/&nbsp;)/&nbsp;__)(&nbsp;&nbsp;)<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;)___/&nbsp;)&nbsp;&nbsp;(&nbsp;\__&nbsp;\&nbsp;)(__<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(__)&nbsp;&nbsp;(_/\_)(___/(____)<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;PARSIMONIOUS&nbsp;XML&nbsp;SHORTHAND&nbsp;LANGUAGE<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Updated&nbsp;2008-02-16<br></tt>
+
+
+<p>PXSL ("pixel") is a convenient shorthand for writing markup-heavy XML
+documents.  The following document explains why PXSL is needed and
+shows you how to use it.  For additional information, such as the FAQ
+list, visit the community site:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;<a href="http://community.moertel.com/ss/space/pxsl">http://community.moertel.com/ss/space/pxsl</a><br></tt>
+
+<p>You'll get more out of this document if you read it from start to
+finish, but you can stop anywhere after the "Gentle Introduction to
+PXSL" and be able to take advantage of PXSL in your documents.  The
+later sections explain PXSL's advanced features.  If you're willing to
+invest some time in learning them, you will have at your disposal new
+and powerful ways to create and refactor XML documents.  The advanced
+features are more complicated to master, but they can greatly reduce
+the complexity of your documents.
+
+
+
+<h2 id='table-of-contents'> Table of Contents</h2>
+
+<p><tt class=ind>&nbsp;&nbsp;*&nbsp;Getting&nbsp;PXSL<br></tt>
+<tt class=ind>&nbsp;&nbsp;*&nbsp;Getting&nbsp;help<br></tt>
+<tt class=ind>&nbsp;&nbsp;*&nbsp;License<br></tt>
+<tt class=ind>&nbsp;&nbsp;*&nbsp;Getting&nbsp;or&nbsp;building&nbsp;the&nbsp;PXSL&nbsp;tools<br></tt>
+<tt class=ind>&nbsp;&nbsp;*&nbsp;Gentle&nbsp;Introduction&nbsp;to&nbsp;PXSL<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;-&nbsp;Why&nbsp;PXSL&nbsp;?<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;-&nbsp;A&nbsp;closer&nbsp;look&nbsp;at&nbsp;PXSL<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;-&nbsp;Using&nbsp;PXSL&nbsp;documents<br></tt>
+<tt class=ind>&nbsp;&nbsp;*&nbsp;Advanced&nbsp;topics<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;-&nbsp;Element&nbsp;defaults&nbsp;provide&nbsp;convenient,&nbsp;customizable&nbsp;shortcuts<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;Using&nbsp;element&nbsp;defaults&nbsp;to&nbsp;create&nbsp;attribute&nbsp;shortcuts<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;Using&nbsp;element&nbsp;defaults&nbsp;to&nbsp;create&nbsp;virtual&nbsp;elements<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;Making&nbsp;and&nbsp;using&nbsp;your&nbsp;own&nbsp;element&nbsp;defaults<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;Built-in&nbsp;element&nbsp;defaults&nbsp;for&nbsp;XSLT&nbsp;stylesheets<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;-&nbsp;Advanced&nbsp;quoting&nbsp;with&nbsp;&lt;&lt;&nbsp;&gt;&gt;&nbsp;and&nbsp;&lt;{&nbsp;}&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;-&nbsp;Macro&nbsp;facility<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;-&nbsp;Tip:&nbsp;store&nbsp;frequently&nbsp;used&nbsp;macros&nbsp;in&nbsp;reusable&nbsp;.pxsl&nbsp;files<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;-&nbsp;Advanced&nbsp;macros&nbsp;and&nbsp;passing&nbsp;parameters&nbsp;with&nbsp;the&nbsp;&lt;(&nbsp;)&gt;&nbsp;delimiters<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;-&nbsp;More&nbsp;advanced&nbsp;macros&nbsp;and&nbsp;functional&nbsp;programming<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;-&nbsp;Automatic&nbsp;PXSL-to-XML&nbsp;conversion&nbsp;via&nbsp;Make<br></tt>
+<tt class=ind>&nbsp;&nbsp;*&nbsp;Reference:&nbsp;&nbsp;pxlscc<br></tt>
+<tt class=ind>&nbsp;&nbsp;*&nbsp;Reference:&nbsp;&nbsp;PXSL&nbsp;syntax<br></tt>
+<tt class=ind>&nbsp;&nbsp;*&nbsp;Authors<br></tt>
+
+
+
+<h2 id='getting-pxsl'> Getting PXSL</h2>
+
+<p>The most-recent official version of the PXSL tools can always be found
+here:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;<a href="http://community.moertel.com/pxsl/">http://community.moertel.com/pxsl/</a><br></tt>
+
+<p>The PXSL tools have been also packaged for Debian (thanks Kari Pahula)
+and Red Hat / Fedora.
+
+<p>By the way, you pronounce PXSL like "pixel".
+
+
+<h2 id='getting-help'> Getting help</h2>
+
+<p>If you need help with PXSL, there is a discussion site for PXSL
+users and developers.  Feel free to ask questions and leave your
+comments:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;PXSL&nbsp;Community&nbsp;Forum<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;<a href="http://community.moertel.com/ss/space/pxsl">http://community.moertel.com/ss/space/pxsl</a><br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;PXSL&nbsp;FAQs<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;<a href="http://community.moertel.com/ss/space/PXSL+FAQs">http://community.moertel.com/ss/space/PXSL+FAQs</a><br></tt>
+
+
+<h2 id='license'> LICENSE</h2>
+
+<p>Copyright &copy; 2003--2008 Thomas Moertel &amp; Bill Hubauer.
+
+<p>The PXSL toolkit is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of
+the License, or (at your option) any later version.
+
+<p>The text of the GNU GPL may be found in the LICENSE file,
+included with this software.
+
+<p>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+<p>Except as provided for under the terms of the GNU GPL, all rights
+are reserved worldwide.
+
+
+<h2 id='getting-or-building-the-pxsl-tools'> Getting or building the PXSL tools</h2>
+
+<p>If you don't want to build the PXSL tools from source code, you can
+download one of the pre-built binary packages on the PXSL web site.
+The PXSL tools have been also packaged for Debian (thanks Kari Pahula)
+and Red Hat / Fedora.  You might want to search your local package
+repositories before building from source.
+
+<p>If a binary package isn't available for your computing platform of
+choice, you can use the following procedure to build the PXSL tools
+for your platform.
+
+<p>In order to build the tools you will need the following:
+
+<p><tt class=ind>&nbsp;&nbsp;-&nbsp;A&nbsp;PXSL&nbsp;source&nbsp;tarball&nbsp;(typically&nbsp;named&nbsp;"pxsl-tools-{version}.tar.gz")<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;<a href="http://community.moertel.com/pxsl/sources/">http://community.moertel.com/pxsl/sources/</a><br></tt>
+
+<p><tt class=ind>&nbsp;&nbsp;-&nbsp;A&nbsp;Haskell&nbsp;compiler&nbsp;supporting&nbsp;the&nbsp;Cabal&nbsp;build&nbsp;system.<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;I&nbsp;use&nbsp;GHC:&nbsp;&nbsp;<a href="http://www.haskell.org/ghc/">http://www.haskell.org/ghc/</a><br></tt>
+
+<p>Just uncompress the tarball and build the project using the following
+commands.  If you want to install a personal copy of pxslcc instead of
+the doing the default, system-wide installation, uncomment the extra
+command-line flags on the third command.
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;tar&nbsp;zxvf&nbsp;pxsl-tools-{version}.tar.gz<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;cd&nbsp;pxsl-tools-{version}<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;runhaskell&nbsp;Setup.lhs&nbsp;configure&nbsp;#&nbsp;--user&nbsp;--prefix=$HOME<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;runhaskell&nbsp;Setup.lhs&nbsp;build<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;runhaskell&nbsp;Setup.lhs&nbsp;install<br></tt>
+
+<p>(Replace {version} with the version of PXSL that you downloaded.)
+
+<p>That's it.  You should now have a fully functional version of pxslcc.
+
+<h3 id='rpms'> RPMs</h3>
+
+<p>If you are on a Red Hat or Fedora  Linux system (or a similar
+RPM-based distribution), you can probably find RPMS and SRPMS here:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;<a href="http://community.moertel.com/pxsl/RPMS/">http://community.moertel.com/pxsl/RPMS/</a><br></tt>
+
+<p>Otherwise, you can build custom RPMs using the cabal-rpm tool:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;<a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/cabal-rpm-0.3.2">http://hackage.haskell.org/cgi-bin/hackage-scripts/package/cabal-rpm-0.3.2</a><br></tt>
+
+
+<h2 id='gentle-introduction-to-pxsl'> Gentle Introduction to PXSL</h2>
+
+<p>PXSL ("pixel") is a convenient shorthand for writing markup-heavy XML
+documents.  This introduction assumes that you are familiar with XML.
+If you want a refresher, see the introductions on XML available here:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;<a href="http://xml.coverpages.org/xmlIntro.html">http://xml.coverpages.org/xmlIntro.html</a><br></tt>
+
+<h3 id='why-pxsl'> Why PXSL ?</h3>
+
+<p>XML is a descendant of the markup language SGML and inherits its
+ancestor's historical bias toward marking up textual documents.
+However, XML is becoming an increasingly popular medium for the
+representation of non-textual information such as metadata (RSS, XSD,
+RELAX-NG), remote procedure calls (SOAP), and even information
+that looks much like programming languages (XSLT, SVG, MathML).
+For these uses, XML's text-centric syntax gets in the way.
+
+<p>Consider, for example, this snippet of MathML:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;MathML&nbsp;in&nbsp;XML<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;declare&nbsp;type="fn"&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;ci&gt;&nbsp;f&nbsp;&lt;/ci&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;lambda&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;bvar&gt;&lt;ci&gt;&nbsp;x&nbsp;&lt;/ci&gt;&lt;/bvar&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;apply&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;plus/&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;apply&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;power/&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;ci&gt;&nbsp;x&nbsp;&lt;/ci&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;cn&gt;&nbsp;2&nbsp;&lt;/cn&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;/apply&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;ci&gt;&nbsp;x&nbsp;&lt;/ci&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;cn&gt;&nbsp;3&nbsp;&lt;/cn&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;/apply&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/lambda&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/declare&gt;<br></tt>
+
+<p>Notice something about MathML's structure: There is more markup than
+text.  In fact, the only text in the snippet is "f x x2 x3"; the rest
+is markup.  As you can see above, XML's document-centric style of
+markup, in which the markup is delimited from the flow of surrounding
+text, becomes a hindrance when markup is in the majority.
+
+<p>PXSL, in contrast, was designed specifically to handle this case well.
+It makes dense markup easy because it assumes that everything is
+markup to begin with.  You need only delimit the few portions of text
+that are mixed into the flow of surrounding markup.
+
+<p>In other words, PXSL is what you get when you turn XML inside out:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;XML&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;PXSL<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;markup&gt;text&lt;/markup&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;markup&nbsp;&lt;&lt;text&gt;&gt;<br></tt>
+
+<p>Let's see how this inside-out transformation simplifies our MathML
+example from above:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;MathML&nbsp;in&nbsp;XML&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;MathML&nbsp;in&nbsp;PXSL<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;declare&nbsp;type="fn"&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;declare&nbsp;-type=fn<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;ci&gt;&nbsp;f&nbsp;&lt;/ci&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;ci&nbsp;&lt;&lt;&nbsp;f&nbsp;&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;lambda&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;lambda<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;bvar&gt;&lt;ci&gt;&nbsp;x&nbsp;&lt;/ci&gt;&lt;/bvar&gt;&nbsp; &nbsp; &nbsp; &nbsp;bvar<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;apply&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ci&nbsp;&lt;&lt;&nbsp;x&nbsp;&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;plus/&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;apply<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;apply&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;plus<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;power/&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;apply<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;ci&gt;&nbsp;x&nbsp;&lt;/ci&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;power<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;cn&gt;&nbsp;2&nbsp;&lt;/cn&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;ci&nbsp;&lt;&lt;&nbsp;x&nbsp;&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;/apply&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;cn&nbsp;&lt;&lt;&nbsp;2&nbsp;&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;ci&gt;&nbsp;x&nbsp;&lt;/ci&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;ci&nbsp;&lt;&lt;&nbsp;x&nbsp;&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;cn&gt;&nbsp;3&nbsp;&lt;/cn&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;cn&nbsp;&lt;&lt;&nbsp;3&nbsp;&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;/apply&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/lambda&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/declare&gt;<br></tt>
+
+<p>There are two things to notice about the PXSL version in comparison
+to the XML version.  First, the PXSL version is shorter.  Second, and
+most important, PXSL is comparatively free of noisy characters like <tt>&lt;</tt> <tt>&gt;</tt>
+/ and ".  In PXSL, noise is the exception rather than the rule.
+
+
+<h3 id='a-closer-look-at-pxsl'> A closer look at PXSL</h3>
+
+<p>Writing PXSL is simple.  If you know how to write XML, you can write
+PXSL.  In fact, PXSL is XML, just written in a different, inside-out
+syntax.  Let's see how it works by way of comparison.
+
+<p>First, every XML document and hence every PXSL document has a root
+element.  Here is a tiny document that has a root element and nothing
+else:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;XML&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;PXSL<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;doc/&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;doc<br></tt>
+
+<p>If the document contains other elements, they are simply placed
+underneath the root element, but indented to indicate that the root
+element contains them.  In XML this indenting is optional, but most
+people do it anyway because it is an established practice that makes
+documents easier to understand.  In PXSL however, the indenting is
+mandatory because indentation determines which elements contain
+others.  (This requirement is what enables PXSL to do away with the
+closing tags that XML uses to determine containment.)
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;doc&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;doc<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;title/&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;body/&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;body<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/doc&gt;<br></tt>
+
+<p>If an element has attributes, they are written in the form of
+<tt>-name=value</tt> in PXSL.
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;doc&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;doc<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;title/&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;body&nbsp;id="db13"/&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;body&nbsp;-id=db13<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/doc&gt;<br></tt>
+
+<p>If an attribute value contains whitespace, it must be quoted within
+the literal delimiters <tt>&lt;&lt;</tt> and <tt>&gt;&gt;.</tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;doc&nbsp;keywords="x&nbsp;y&nbsp;z"&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;doc&nbsp;-keywords=&lt;&lt;x&nbsp;y&nbsp;z&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;title/&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;body&nbsp;id="db13"/&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;body&nbsp;-id=db13<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/doc&gt;<br></tt>
+
+<p>Now let's consider text.  If an element contains text, the text is
+quoted in <tt>&lt;&lt;</tt> and <tt>&gt;&gt;</tt> delimiters and indented underneath the element
+that owns the text.
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;doc&nbsp;keywords="x&nbsp;y&nbsp;z"&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;doc&nbsp;-keywords=&lt;&lt;x&nbsp;y&nbsp;z&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;title/&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;body&nbsp;id="db13"&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;body&nbsp;-id=db13<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;This&nbsp;is&nbsp;text.&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;&lt;This&nbsp;is&nbsp;text.&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/body&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/doc&gt;<br></tt>
+
+<p>The <tt>&lt;&lt;</tt> and <tt>&gt;&gt;</tt> delimiters are powerful.  The text within them,
+including all whitespace, is quoted verbatim.  The text can span
+multiple lines and even stray outside of the outline-like indentation
+hierarchy.  If you place sections of quoted text next to one another
+<tt>&lt;&lt;like&gt;&gt;</tt> <tt>&lt;&lt;so&gt;&gt;</tt> they effectively become one section <tt>&lt;&lt;likeso&gt;&gt;.</tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;doc&nbsp;keywords="x&nbsp;y&nbsp;z"&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;doc&nbsp;-keywords=&lt;&lt;x&nbsp;y&nbsp;z&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;title&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;My&nbsp;title&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;My&nbsp;title&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/title&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;body&nbsp;-id=db13<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;body&nbsp;id="db13"&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;This&nbsp;is&nbsp;multi-<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;This&nbsp;is&nbsp;multi-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;line&nbsp;text.&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;line&nbsp;text.<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/body&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/doc&gt;<br></tt>
+
+<p>If you want to add an XML comment, introduce it with the <tt>--</tt> delimiter.
+The comment extends to the end of the line.
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;!--&nbsp;my&nbsp;document&nbsp;--&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;--&nbsp;my&nbsp;document<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;doc&nbsp;keywords="x&nbsp;y&nbsp;z"&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;doc&nbsp;-keywords=&lt;&lt;x&nbsp;y&nbsp;z&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;title&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;My&nbsp;title&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;My&nbsp;title&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/title&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;body&nbsp;-id=db13<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;body&nbsp;id="db13"&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;This&nbsp;is&nbsp;multi-<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;This&nbsp;is&nbsp;multi-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;line&nbsp;text.&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;line&nbsp;text.<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/body&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/doc&gt;<br></tt>
+
+<p>You can also use the # delimiter, which creates a PXSL comment that is
+invisible in XML:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;!--&nbsp;my&nbsp;document&nbsp;--&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;--&nbsp;my&nbsp;document<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;doc&nbsp;keywords="x&nbsp;y&nbsp;z"&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;doc&nbsp;-keywords=&lt;&lt;x&nbsp;y&nbsp;z&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;title&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;My&nbsp;title&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;My&nbsp;title&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/title&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;body&nbsp;-id=db13<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;body&nbsp;id="db13"&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;This&nbsp;is&nbsp;multi-<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;This&nbsp;is&nbsp;multi-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;line&nbsp;text.&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;line&nbsp;text.<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/body&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;#&nbsp;hidden&nbsp;comment,&nbsp;for<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/doc&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;#&nbsp;PXSL&nbsp;readers&nbsp;only<br></tt>
+
+
+<p>That's it.  You now know everything necessary to create PXSL
+documents.
+
+<p>PXSL lets you do more, however, and if you want to take full advantage
+of it, read the Advanced Topics section.  For now, though, let's
+consider how to use PXSL documents with your existing XML-based
+software.
+
+
+<h3 id='using-pxsl-documents'> Using PXSL documents</h3>
+
+<p>Using PXSL documents is easy because they are really XML documents in
+disguise.  (In fact, you may wish to consider PXSL as a convenient
+shorthand for writing XML.)  Any program that can read XML can handle
+PXSL.  All you need to do is remove the disguise first so that the
+programs will recognize your documents for what they are.
+
+<p>The included tool pxlscc (short for PXSL conversion compiler) performs
+this task.  Just feed it a PXSL document, and it returns the
+equivalent plain-old XML document:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;pxlscc&nbsp;document.pxsl&nbsp;&gt;&nbsp;document.xml<br></tt>
+
+<p>You can then use the returned document in your XML-aware programs.
+
+<p>If you know how to use Make or Ant or similar tools, you can easily
+automate this process so that your PXSL files are automagically
+converted into XML when needed.
+
+<p>NOTE:  The pxslcc program expects UTF-8 encoded input and emits UTF-8
+encoded output.
+
+
+<h2 id='advanced-topics'> Advanced topics</h2>
+
+<p>The following sections describe the more advanced capabilities of PXSL
+that can make your life easier.  The element defaults, in particular,
+can significantly reduce markup burdens.
+
+
+<h3 id='element-defaults-provide-convenient-customizable-shortcuts'> Element defaults provide convenient, customizable shortcuts</h3>
+
+<p>Most XML documents conform to established vocabularies.  Once you
+become familiar with your documents' vocabularies, you'll probably
+find that certain elements and attributes always or often occur
+together <tt>--</tt> to the point where typing them becomes repetitive.  For
+example, in XHTML, almost all img elements take the following form:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;img&nbsp;src="..."&nbsp;alt="..."&nbsp;[&nbsp;additional&nbsp;attributes&nbsp;here&nbsp;]&nbsp;/&gt;<br></tt>
+
+<p>Or, in PXSL:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;img&nbsp;-src=...&nbsp;-alt=...&nbsp;[&nbsp;additional&nbsp;attributes&nbsp;here&nbsp;]<br></tt>
+
+<p>So, why should you have to type in the repetitive <tt>src=""</tt> and <tt>alt=""</tt>
+every time you use an img element?  With PXSL's element defaults,
+you don't need to.
+
+<h4 id='using-element-defaults-to-create-attribute-shortcuts'> Using element defaults to create attribute shortcuts</h4>
+
+<p>Element defaults are shortcuts that are defined in a separate file
+using a simple syntax.  (For the specifics of creating and loading
+these files, see the Reference section on pxslcc.)  For example:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;img&nbsp;=&nbsp;img&nbsp;src&nbsp;alt<br></tt>
+
+<p>This shortcut allows you optionally to leave off the <tt>-src=</tt> and <tt>-alt=</tt>
+part whenever you write the PXSL markup for an img element.  For
+example, with this definition in place, all three of these PXSL
+statements mean the exact same thing:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;img&nbsp;-src=/images/logo.png&nbsp;-alt=Logo<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;img&nbsp;/images/logo.png&nbsp;-alt=Logo<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;img&nbsp;/images/logo.png&nbsp;Logo<br></tt>
+
+<p>All of them convert into the same XHTML:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;img&nbsp;src="/images/logo.png"&nbsp;alt="Logo"/&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;img&nbsp;src="/images/logo.png"&nbsp;alt="Logo"/&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;img&nbsp;src="/images/logo.png"&nbsp;alt="Logo"/&gt;<br></tt>
+
+<p>In other words, shortcuts let you pass attribute values by position
+instead of by the <tt>-name=value</tt> syntax.  You provide only the values,
+and the shortcut provides the corresponding <tt>-name=</tt> parts behind the
+scenes.
+
+<p>But there are a couple of restrictions to keep in mind.  First,
+attribute values passed by position must come first, before any values
+passed using the <tt>-name=value</tt> syntax, and they must occur in the same
+order as declared in the shortcut definition.
+
+<p>Second, you can only pass values this way if they do not contain
+whitespace.  If a value contains whitespace, you must use the
+<tt>-name=value</tt> syntax and quote the value: <tt>-name=&lt;&lt;my</tt> <tt>value&gt;&gt;</tt> (There is
+an advanced feature, the <tt>&lt;(</tt> <tt>)&gt;</tt> delimiters, that overcome this
+restriction.  They are described in the section on advanced macros,
+later in this document.)
+
+<h4 id='using-element-defaults-to-create-virtual-elements'> Using element defaults to create virtual elements</h4>
+
+<p>You can also use the element defaults to create your own virtual
+elements.  If you work in XHTML, you have probably noticed that the
+<tt>&lt;a&gt;</tt> element is used to create both hypertext links and anchors.  For
+example:
+
+<p><tt class=ind>&nbsp; &nbsp;&lt;a&nbsp;name="anchor-name"&gt;Anchored&nbsp;text&lt;/a&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&lt;a&nbsp;href="#anchor-name"&gt;Link&nbsp;to&nbsp;anchored&nbsp;text&lt;/a&gt;<br></tt>
+
+<p>Why not make these two uses more obviously distinct while cutting down
+on markup at the same time?  Let's create virtual "anchor" and "hlink"
+elements that do just that:
+
+<p><tt class=ind>&nbsp; &nbsp;anchor&nbsp;=&nbsp;a&nbsp;name<br></tt>
+<tt class=ind>&nbsp; &nbsp;hlink&nbsp;=&nbsp;a&nbsp;href<br></tt>
+
+<p>Now we can use these elements in PXSL to express the above XHTML more
+clearly:
+
+<p><tt class=ind>&nbsp; &nbsp;anchor&nbsp;anchor-name&nbsp;&lt;&lt;Anchored&nbsp;text&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;hlink&nbsp;#anchor-name&nbsp;&lt;&lt;Link&nbsp;to&nbsp;anchored&nbsp;text&gt;&gt;<br></tt>
+
+<p>(Notice that we used <tt>&lt;&lt;</tt> and <tt>&gt;&gt;</tt> in an advanced way that lets us put
+quoted text on the same line as the element that contains it.  This is
+discussed further in the "Advanced quoting" section.)
+
+<p>When we convert the above PXSL into XML, it results in exactly the
+same XHTML that we discussed earlier:
+
+<p><tt class=ind>&nbsp; &nbsp;&lt;a&nbsp;name="anchor-name"&gt;Anchored&nbsp;text&lt;/a&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&lt;a&nbsp;href="#anchor-name"&gt;Link&nbsp;to&nbsp;anchored&nbsp;text&lt;/a&gt;<br></tt>
+
+
+<h4 id='making-and-using-your-own-element-defaults'> Making and using your own element defaults</h4>
+
+<p>Making your own shortcuts is easy.  Just create a file that contains
+lines of this form:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;element-name&nbsp;=&nbsp;preferred-element-name&nbsp;opt-attr-1&nbsp;opt-attr-2&nbsp;...<br></tt>
+
+<p>It's a good idea to extend the file's name with a suffix of ".edf",
+which is short for "element defaults," but feel free to ignore this
+convention.  (Note: element defaults are *not* PXSL macros.  If you
+want to create a file that contains commonly used macros, just save
+them in a regular .pxsl file and include it by mentioning it on the
+command line; the .edf suffix is for element defaults only.  See "Tip:
+store frequently used macros in separate .pxsl files" for more.)
+
+<p>For example, we might create a "xhtml-shortcuts.edf" file to capture
+our shortcuts from above:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;#&nbsp;File:&nbsp;xhtml-shortcuts.edf<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;anchor&nbsp;=&nbsp;a&nbsp;name<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;hlink&nbsp;=&nbsp;a&nbsp;href<br></tt>
+
+<p>(Notice that you can place comment lines in your .edf files by
+starting them with a "#" character.)
+
+<p>To use the shortcuts, tell pxslcc to <tt>--add</tt> them to the set of active
+element defaults that are used when processing your PXSL files:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;pxslcc&nbsp;--add=xhtml-shortcuts.edf&nbsp;my-doc.pxsl&nbsp;&gt;&nbsp;my-doc.xhtml<br></tt>
+
+<p>You can <tt>--add</tt> more than one set of defaults, and pxslcc will use them
+all.
+
+<h4 id='built-in-element-defaults-for-xslt-stylesheets'> Built-in element defaults for XSLT stylesheets</h4>
+
+<p>PXSL was originally created to reduce the verbosity of XSLT
+stylesheets.  As a result, pxslcc has a built-in set of element
+defaults for XSLT that you can enable by passing the <tt>--xslt</tt>
+flag:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;pxslcc&nbsp;--xslt&nbsp;stylesheet.pxsl&nbsp;&gt;&nbsp;stylesheet.xsl<br></tt>
+
+<p>The built-in defaults provide two benefits: First, you can use element
+names from within the XSLT namespace without having to use the xsl:
+prefix.  Second, you can pass common required attributes like "select"
+and "match" by position.
+
+<p>Together, these benefits result in massive markup reductions, making
+your life as an XSLT author much easier.  Compare the following
+snippet of XSLT in XML
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;xsl:template&nbsp;match="/"&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;xsl:for-each&nbsp;select="//*/@src|//*/@href"&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;xsl:value-of&nbsp;select="."/&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;xsl:text&gt;&amp;#10;&lt;/xsl:text&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/xsl:for-each&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/xsl:template&gt;<br></tt>
+
+<p>with the same snippet rewritten in PXSL (using <tt>--xslt</tt> defaults):
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;template&nbsp;/<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;for-each&nbsp;//*/@src|//*/@href<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;value-of&nbsp;.<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;text&nbsp;&lt;&lt;&amp;#10;&gt;&gt;<br></tt>
+
+<p>Among the many XSLT shortcuts enabled by the <tt>--xslt</tt> flag, the above
+PXSL snippet uses the following:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;template&nbsp;=&nbsp;xsl:template&nbsp;match&nbsp;name<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;for-each&nbsp;=&nbsp;xsl:for-each&nbsp;select&nbsp;xml:space<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;value-of&nbsp;=&nbsp;xsl:value-of&nbsp;select&nbsp;disable-output-escaping<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;text&nbsp; &nbsp; &nbsp;=&nbsp;xsl:text&nbsp;disable-output-escaping<br></tt>
+
+<p>To see the complete list of XSLT shortcuts, <tt>--export</tt> them:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;pxslcc&nbsp;--xslt&nbsp;--export<br></tt>
+
+
+<h3 id='advanced-quoting-with-the-lt-lt-gt-gt-and-lt-gt-delimiters'> Advanced quoting with the &lt;&lt; &gt;&gt; and &lt;{ }&gt; delimiters</h3>
+
+<p>PXSL has two kinds of quoting delimiters that can be used to quote
+mixed and text-only content.  Both are described in this section.
+
+<h4 id='xml-quoting-lt-lt-gt-gt-delimiters'> XML quoting &lt;&lt; &gt;&gt; delimiters</h4>
+
+<p>The <tt>&lt;&lt;</tt> and <tt>&gt;&gt;</tt> delimiters not only let you insert text into your PXSL
+documents, but also let you insert raw, full-featured XML.  This works
+great for those times when it's just easier to write a bit of XML than
+its PXSL equivalent.  For example, if you're writing an XSLT
+stylesheet that generates XHTML output, you'll certainly want to use
+PXSL to express the markup-dense xsl:stylesheet directives.  But, if
+you need to drop in some XHTML boilerplate that a designer gave you to
+use in the page footer, just copy-and-paste it using <tt>&lt;&lt;</tt> and <tt>&gt;&gt;:</tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;&lt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&lt;div&nbsp;class="footer"&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;Copyright&nbsp;&copy;&nbsp;2003&nbsp;Blah,&nbsp;Blah,&nbsp;Blah,&nbsp;Inc.<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&lt;!--&nbsp;&nbsp;lots&nbsp;more&nbsp;boilerplate&nbsp;...&nbsp;--&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&lt;/div&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&gt;&gt;<br></tt>
+
+<p>Another great use for the <tt>&lt;&lt;</tt> <tt>&gt;&gt;</tt> delimiters is to drop XML specials
+like processing instructions into your code:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;&lt;&lt;?xml&nbsp;version="1.0"&nbsp;encoding="ISO-8859-1"?&gt;&gt;&gt;<br></tt>
+
+<p>The above PXSL is equivalent to the following XML:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;?xml&nbsp;version="1.0"&nbsp;encoding="ISO-8859-1"?&gt;<br></tt>
+
+<p>Because the <tt>&lt;&lt;</tt> <tt>&gt;&gt;</tt> delimiters quote XML, you must follow XML's
+syntactical rules when using them.  That means that if you
+want to include literal less-than <tt>"&lt;"</tt> and ampersand "&amp;"
+characters, you must use character entity references:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;&lt;&nbsp;less-than:&nbsp;&amp;lt;&nbsp;&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;&lt;&nbsp;ampersand:&nbsp;&amp;amp;&nbsp;&gt;&gt;<br></tt>
+
+<h4 id='verbatim-text-lt-gt-delimiters-cdata'> Verbatim text &lt;{ }&gt; delimiters (CDATA)</h4>
+
+<p>When copy-and-pasting blocks of text from outside sources, you must be
+careful to "escape" any literal <tt>"&lt;"</tt> and "&amp;" characters that may be
+within.  This can be annoying, especially for large blocks of text.
+Another place where this requirement is burdensome is in mathematical
+expressions that sometimes occur in XSLT markup:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;xsl:test&nbsp;-when=&lt;&lt;&nbsp;$i&nbsp;&amp;lt;&nbsp;5&nbsp;&gt;&gt;<br></tt>
+
+<p>For this reason, PXSL provides the verbatim-text delimiters <tt>&lt;{</tt> and <tt>}&gt;</tt>
+that perform the same function as XML's more verbose CDATA delimiters:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;XML&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;PXSL<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;![CDATA[&nbsp;toast&nbsp;&amp;&nbsp;jelly&nbsp;]]&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;{&nbsp;toast&nbsp;&amp;&nbsp;jelly&nbsp;}&gt;<br></tt>
+
+<p>Any characters that you place inside of <tt>&lt;{</tt> <tt>}&gt;</tt> will come out as a
+character literals.  PXSL will take care of any escaping that is
+necessary to prevent XML from misinterpreting your text as markup.
+For example, we can rewrite the above XSLT snippet more clearly
+using the verbatim-text delimiters:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;xsl:test&nbsp;-when=&lt;{&nbsp;$i&nbsp;&lt;&nbsp;5&nbsp;}&gt;<br></tt>
+
+<p>These delimiters are especially handy for including examples of XML
+markup in your documents.  Like <tt>&lt;&lt;</tt> <tt>&gt;&gt;,</tt> <tt>&lt;{</tt> <tt>}&gt;</tt> can handle large blocks
+of multi-line text and preserves whitespace and indentation.
+
+<h4 id='text-content-shortcut'> Text-content shortcut</h4>
+
+<p>As you may have noticed from the MathML example at the beginning of
+this document, if an element contains text, you can declare the
+text on the same line as the element.  This saves space and often
+reads more easily:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;NORMAL&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SHORTCUT<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;h1&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;h1&nbsp;&lt;&lt;Chapter&nbsp;1&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;Chapter&nbsp;1&gt;&gt;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;h2&nbsp;&lt;{Sections&nbsp;1&nbsp;&amp;&nbsp;2}&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;h2<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;{Sections&nbsp;1&nbsp;&amp;&nbsp;2}&gt;<br></tt>
+
+
+<h3 id='macro-facility'> Macro facility</h3>
+
+<p>PXSL has a simple macro facility that you can use to reorganize your
+markup and "factor out" boilerplate.  A macro is defined with a
+leading comma and a trailing equals sign, like so:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,name&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;body-of-the-macro<br></tt>
+
+<p>where "name" is the name of the macro and "body-of-the-macro" can be
+any series of elements and text.  Macros can be defined at any level
+of nesting within a PXSL document, but they are only visible (i.e.,
+available for use) at the level where they were defined and at levels
+nested underneath.  (If two macros with the same name are visible at
+the same time, the deepest one will hide the other, or if both are on
+the same level, the one defined latest in the document will hide the
+earlier.  In other words, the policy is "the last, deepest one wins.")
+
+<h4 id='using-macros-i-e-macro-expansion'> Using macros (i.e., macro expansion)</h4>
+
+<p>To use a macro, simply refer to it by name anywhere that an element
+can be used:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,hello&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;Hello!&gt;&gt;<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;html<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;head<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,hello<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;body<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;Hello!&nbsp;Again!&gt;&gt;<br></tt>
+
+<p>When processed with pxslcc (using the <tt>--indent</tt> flag), this is the
+result:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;html&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;head&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;title&gt;Hello!&lt;/title&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/head&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;body&gt;Hello!&nbsp;Again!&lt;/body&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/html&gt;<br></tt>
+
+<p>Note that the macro definition has been removed and that the reference
+to the macro inside of the "title" element has been replaced by the
+macro's body.  This is called macro expansion.
+
+<p>Macros don't need to be defined before they are expanded, as long as
+they are visible from the sites (locations) where they are expanded.
+Also, macros can call other macros:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,hello&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;Hello!&gt;&gt;<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;html<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;,head<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;,body<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;,head&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;head<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,hello<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;,body&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;body&nbsp;&lt;&lt;Hello!&nbsp;Again!&gt;&gt;<br></tt>
+
+<p>This snippet results in exactly the same XML as the one above.
+Nevertheless, we have made a number of organizational changes.
+The "head" and "body" within the "html" element have been
+factored out into the macros <tt>,head</tt> and <tt>,body</tt> and relocated within
+the document.  These macros are defined within the "html"
+element, after the sites where they are expanded.  Note that the
+<tt>,head</tt> macro calls upon the <tt>,hello</tt> macro that we defined earlier.
+
+<p>Although contrived in this small example, factoring out blocks of
+markup makes the structure of large documents easier to understand and
+manage because you are free to move them around, subdivide them
+further, and reuse them in many locations.
+
+<h4 id='tip-store-frequently-used-macros-in-reusable-pxsl-files'> Tip: store frequently used macros in reusable .pxsl files</h4>
+
+<p>If you use certain macros frequently in your PXSL documents, you might
+benefit from placing the macros into a separate .pxsl file that you
+can reuse.  For example, you could place your macros into a file
+macros.pxsl and then use them when processing several documents:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;pxslcc&nbsp;macros.pxsl&nbsp;doc1.pxsl&nbsp;&gt;&nbsp;doc1.xml<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;pxslcc&nbsp;macros.pxsl&nbsp;doc2.pxsl&nbsp;&gt;&nbsp;doc2.xml<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;pxslcc&nbsp;macros.pxsl&nbsp;doc3.pxsl&nbsp;&gt;&nbsp;doc3.xml<br></tt>
+
+
+<h4 id='parameterized-macros'> Parameterized macros</h4>
+
+<p>Macros can take any number of parameters, which allows you to customize
+their definitions.
+
+<h5 id='using-named-parameters'> Using named parameters</h5>
+
+<p>For example, we could customize the definition of the <tt>,head</tt> macro that
+we used above to accept the title as a parameter:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,make-head&nbsp;my-title&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;head<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,my-title<br></tt>
+
+<p>Now we can use it to create a head element that contains any title
+that we want:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,make-head&nbsp;-my-title=&lt;&lt;This&nbsp;is&nbsp;my&nbsp;title.&gt;&gt;<br></tt>
+
+<p>Note that we pass parameters to a macro just like we pass attributes
+to an element definition.
+
+<h5 id='using-the-magic-implicit-body-parameter'> Using the magic, implicit BODY parameter</h5>
+
+<p>But what if we want to pass more than strings?  What if we want to
+pass large sections of documents as parameters?  We can do this using
+the special BODY parameter that all macros have implicitly:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,make-section&nbsp;title&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;section<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;--&nbsp;start&nbsp;of&nbsp;section<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,BODY<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;--&nbsp;end&nbsp;of&nbsp;section<br></tt>
+
+<p>(Note that the BODY parameter must be spelled exactly "BODY" and in
+all caps.)  The BODY parameter accepts any content defined underneath
+the macro-expansion site (i.e., the body of the macro-expansion
+invocation):
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,make-section&nbsp;-title=&lt;&lt;This&nbsp;is&nbsp;my&nbsp;title&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;p&nbsp;&lt;&lt;This&nbsp;is&nbsp;a&nbsp;paragraph.&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;p&nbsp;&lt;&lt;And&nbsp;another.&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;p&nbsp;&lt;&lt;And&nbsp;so&nbsp;on.&gt;&gt;<br></tt>
+
+<p>The result of calling this macro is the following XML:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;section&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;!--&nbsp;start&nbsp;of&nbsp;section&nbsp;--&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;title&gt;This&nbsp;is&nbsp;my&nbsp;title&lt;/title&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;p&gt;This&nbsp;is&nbsp;a&nbsp;paragraph.&lt;/p&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;p&gt;And&nbsp;another.&lt;/p&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;p&gt;And&nbsp;so&nbsp;on.&lt;/p&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;!--&nbsp;end&nbsp;of&nbsp;section&nbsp;--&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/section&gt;<br></tt>
+
+<h4 id='advanced-macros-and-passing-parameters-with-the-lt-gt-delimiters'> Advanced macros and passing parameters with the &lt;( )&gt; delimiters</h4>
+
+<p>As we showed earlier, one way of passing document fragments to macros
+is via the implicit BODY parameter that all macros have.  Another is
+to pass them as normal arguments using the <tt>&lt;(</tt> <tt>)&gt;</tt> delimiters, which let
+you group PXSL document fragments into chunks that you can pass as
+arguments.
+
+<p>For example, let's redefine the make-section macro we defined above to
+accept the body of the section as a normal parameter:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,make-section&nbsp;title&nbsp;body&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;section<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;--&nbsp;start&nbsp;of&nbsp;section<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,title<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;body<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,body<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;--&nbsp;end&nbsp;of&nbsp;section<br></tt>
+
+<p>Now we can call it like so:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,make-section&nbsp;-title=&lt;&lt;This&nbsp;is&nbsp;my&nbsp;title&gt;&gt;&nbsp;\<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;-body=&lt;(<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;p&nbsp;&lt;&lt;This&nbsp;is&nbsp;a&nbsp;paragraph.&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;p&nbsp;&lt;&lt;And&nbsp;another.&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;p&nbsp;&lt;&lt;And&nbsp;so&nbsp;on.&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;)&gt;<br></tt>
+
+<p>(Note the use of the backslash in between parameters to continue the
+parameter list to the next line.  This useful trick also works to
+continue attribute lists when you are creating elements.)
+
+<p>Because the <tt>&lt;(</tt> <tt>)&gt;</tt> delimiters can be used only to pass arguments, you
+can use them to "quote" arguments that otherwise could not be passed
+via position, e.g., a fragment of text that contains whitespace:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,make-section&nbsp;&lt;(&nbsp;&lt;&lt;This&nbsp;is&nbsp;my&nbsp;title&gt;&gt;&nbsp;)&gt;&nbsp;\<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;(<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;p&nbsp;&lt;&lt;This&nbsp;is&nbsp;a&nbsp;paragraph.&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;p&nbsp;&lt;&lt;And&nbsp;another.&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;p&nbsp;&lt;&lt;And&nbsp;so&nbsp;on.&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;)&gt;<br></tt>
+
+<p>You can even use the <tt>&lt;(</tt> <tt>)&gt;</tt> delimiters to pass the results of macro
+calls to elements and other macros:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,h1&nbsp;x&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;--&nbsp;level&nbsp;one&nbsp;heading<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;h1<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,x<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,bang&nbsp;x&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;,x<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;!&gt;&gt;<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,h1&nbsp;&lt;(&nbsp;&lt;&lt;Hello,&nbsp;&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;,bang&nbsp;World&nbsp;)&gt;<br></tt>
+
+<p>The above produces the following XML:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;!--&nbsp;level&nbsp;one&nbsp;heading&nbsp;--&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;h1&gt;Hello,&nbsp;World!&lt;/h1&gt;<br></tt>
+
+
+<h4 id='more-advanced-macros-and-functional-programming'> More advanced macros and functional programming</h4>
+
+<p>Like functions in functional programming languages, macros in PXSL are
+first-class values that can be created, bound to parameters, and
+passed to other macros.  While this might initially seem like a
+programming-language curiosity, it is actually a simple yet immensely
+powerful tool that you can use to reduce the size and complexity of
+your XML documents.  In particular, this tool lets you "factor out"
+and reuse common, boilerplate portions of your documents.
+
+<p>To see how this works, consider the following XML document that
+represents an address book:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;address-book&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;person&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;first&gt;Joe&lt;/first&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;last&gt;Smith&lt;/last&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;preferred&gt;Joe&nbsp;Smith&lt;/preferred&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/person&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;person&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;first&gt;John&lt;/first&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;last&gt;Doe&lt;/last&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;preferred&gt;John&nbsp;Doe&lt;/preferred&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/person&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;!--&nbsp;...&nbsp;more&nbsp;persons&nbsp;...&nbsp;--&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/address-book&gt;<br></tt>
+
+<p>The address book contains a long list of persons, each of which has a
+first and last name and a "preferred name" that is usually the first
+and last named joined together (but might be something else).
+
+<p>We might write the address book in PXSL like this:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;address-book<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;person<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;first&nbsp;&lt;&lt;Joe&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;last&nbsp;&lt;&lt;Smith&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;preferred&nbsp;&lt;&lt;Joe&nbsp;Smith&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;person<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;first&nbsp;&lt;&lt;John&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;last&nbsp;&lt;&lt;Doe&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;preferred&nbsp;&lt;&lt;John&nbsp;Doe&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;--&nbsp;...&nbsp;more&nbsp;persons&nbsp;...<br></tt>
+
+<p>But, seeing how repetitive that is, we might create a <tt>,person</tt> macro
+to make our lives easier:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,person&nbsp;first&nbsp;last&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;person<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;first<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,first<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;last<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,last<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;preferred<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,first<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;&nbsp;&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,last<br></tt>
+
+<p>Now, with our new macro, we can simply write
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;address-book<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;,person&nbsp;Joe&nbsp;Smith<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;,person&nbsp;John&nbsp;Doe<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;--&nbsp;...&nbsp;more&nbsp;persons&nbsp;...<br></tt>
+
+<p>And, indeed, running the above PXSL code through pxslcc, yields the
+identical XML:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;address-book&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;person&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;first&gt;Joe&lt;/first&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;last&gt;Smith&lt;/last&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;preferred&gt;Joe&nbsp;Smith&lt;/preferred&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/person&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;person&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;first&gt;John&lt;/first&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;last&gt;Doe&lt;/last&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;preferred&gt;John&nbsp;Doe&lt;/preferred&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;/person&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;!--&nbsp;...&nbsp;more&nbsp;persons&nbsp;...&nbsp;--&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/address-book&gt;<br></tt>
+
+<p>Already, we have saved a great deal of work, but let's say that the
+situation is a little more complicated.  Let's say that in addition
+to the address-book, we also need to make a roster of persons:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;roster&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;formal&gt;Smith,&nbsp;Joe&lt;/formal&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;formal&gt;Doe,&nbsp;John&lt;/formal&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;&lt;!--&nbsp;...&nbsp;more&nbsp;persons&nbsp;...&nbsp;--&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;/roster&gt;<br></tt>
+
+<p>and, most important, we need to keep the address-book and roster
+synchronized.  In other words, we have one list of names and we
+must use it in two places.
+
+<p>At this point, we might be tempted to put the list of names in a
+separate XML document and write a small external program or a couple
+of XSLT stylesheets to transform the document into the address-book
+and roster.  After all, we don't want to have to keep the address-book
+and roster synchronized by hand.
+
+<p>But we can do this without leaving PXSL.  All we have to do is create
+a macro that builds things out of our list of people:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,build-from-people&nbsp;builder-macro&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,builder-macro&nbsp;Joe&nbsp;Smith<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,builder-macro&nbsp;John&nbsp;Doe<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;--&nbsp;...&nbsp;more&nbsp;persons&nbsp;...<br></tt>
+
+<p>The interesting thing is that our <tt>,build-from-people</tt> macro takes
+another macro as a parameter and binds it to the name "builder-macro",
+just like it would any other kind of parameter.  It uses this macro to
+transform a first and last name into something else.  What that
+something else is, is up to us: We simply tailor the <tt>,builder-macro</tt> to
+suit our purpose.
+
+<p>For example, to build an address book:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;address-book<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;,build-from-people&nbsp;&lt;(&nbsp;,&nbsp;first&nbsp;last&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,person&nbsp;&lt;(,first)&gt;&nbsp;&lt;(,last)&gt;&nbsp;)&gt;<br></tt>
+
+<p>or, to build a roster:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;roster<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;,build-from-people&nbsp;&lt;(&nbsp;,&nbsp;first&nbsp;last&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;formal<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,last<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&lt;&lt;,&nbsp;&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;,first&nbsp;&nbsp;)&gt;<br></tt>
+
+<p>That's it.  We have just built an address book and a roster from our
+list of people.
+
+<p>Now, you may have noticed something new in the above two snippets of
+PXSL.  In each snippet, inside of the outer-most <tt>&lt;(</tt> <tt>)&gt;</tt> delimiters, we
+created a macro on the fly <tt>--</tt> an anonymous macro, so called because we
+didn't give it a name.  (It doesn't need a name because we're using it
+just this one time; nobody else will ever call it.)  We simply created
+it right when we needed it and passed it to the <tt>,build-from-people</tt>
+macro, where it was bound to the name "builder-macro." Then
+<tt>,build-from-people</tt> used it to construct "person" or "formal" elements
+(depending on how we defined the anonymous macro).  It's a pretty neat
+trick.
+
+<p>You can create anonymous macros using the familiar comma syntax <tt>--</tt>
+just don't provide a name.  Note the space between the comma and the
+start of the argument list:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,&nbsp;arg1&nbsp;arg2...&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;body<br></tt>
+
+<p>To call an anonymous macro, of course, you'll first have to bind it to
+a name.  The way you do this is to pass the anonymous macro to another
+macro, just like we did earlier, causing the anonymous macro to be
+bound to one of the other macro's parameters:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,some-other-macro&nbsp;&lt;(&nbsp;,&nbsp;arg1&nbsp;arg2...&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;body&nbsp;&nbsp;)&gt;<br></tt>
+
+<p>Then that other macro can call it via the parameter's name:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,some-other-macro&nbsp;marco-arg&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp;&nbsp;,macro-arg&nbsp;-arg1=...&nbsp;-arg2=...<br></tt>
+
+<p>Here's another example, less practical but illustrative.  See if you
+can figure out how the code works before reading the explanation
+that follows.
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,double&nbsp;str&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&lt;{"}&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;,str<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&lt;{"}&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;,single&nbsp;str&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&lt;{'}&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;,str<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;&lt;{'}&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;,add-quotes&nbsp;quote-fn&nbsp;str&nbsp;=<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp;,quote-fn&nbsp;&lt;(&nbsp;,str&nbsp;)&gt;<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;--&nbsp;let's&nbsp;quote&nbsp;a&nbsp;couple&nbsp;of&nbsp;strings<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;,add-quotes&nbsp;&lt;(&nbsp;,&nbsp;x&nbsp;=&nbsp;,double&nbsp;&lt;(,x)&gt;&nbsp;)&gt;&nbsp;-str=&lt;&lt;Quote&nbsp;Me&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;&lt;&lt;&nbsp;&gt;&gt;<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;,add-quotes&nbsp;&lt;(&nbsp;,&nbsp;x&nbsp;=&nbsp;,single&nbsp;&lt;(,x)&gt;&nbsp;)&gt;&nbsp;Please!<br></tt>
+
+<p>Pxslcc compiles the above into the following output:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;!--&nbsp;let's&nbsp;quote&nbsp;a&nbsp;couple&nbsp;of&nbsp;strings&nbsp;--&gt;<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;"Quote&nbsp;Me"&nbsp;'Please!'<br></tt>
+
+<p>In this example, the two calls to the <tt>,add-quotes</tt> macro each pass in
+an anonymous macro that performs the desired quoting operation.  The
+anonymous macro is bound to "quote-fn" when the <tt>,add-quotes</tt> macro is
+called and expanded.  Thus, when <tt>,add-quotes</tt> calls <tt>,quote-fn,</tt> it is
+really calling the anonymous macro that we passed to it.  This lets us
+customize the behavior of <tt>,add-quotes</tt> without having to rewrite it.
+
+<h4 id='real-world-example'> Real-world example</h4>
+
+<p>The examples above are contrived and don't do justice to the
+usefulness of this tool.  This type of refactoring shines when dealing
+with large, complicated, and repetitive data structures, but such
+examples are too unwieldy to include in an introduction like this.
+For this reason, I urge you to take a look at the
+"xsl-menus-w-macros.pxsl" example, in examples directory.  It shows
+one way that you can use anonymous macros to factor out common code in
+production XSLT stylesheets.
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;<a href="http://community.moertel.com/pxsl/examples/xsl-menus-w-macros.pxsl">http://community.moertel.com/pxsl/examples/xsl-menus-w-macros.pxsl</a><br></tt>
+
+<h3 id='automatic-pxsl-to-xml-conversion-via-make'> Automatic PXSL-to-XML conversion via Make</h3>
+
+<p>Most Make utilities allow you to define pattern rules that are then
+used automatically to convert one class of documents into another.
+Pattern rules can be used to automate the conversion of PXSL documents
+into their XML counterparts.  For example, if you place the following
+rule into a makefile (this is for GNU make),
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;%.xml:&nbsp;%.pxsl<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;pxlscc&nbsp;--indent=2&nbsp;--header&nbsp;$&lt;&nbsp;&gt;&nbsp;$@<br></tt>
+
+<p>Make will automatically generate .xml documents from the
+corresponding .pxsl documents whenever they are needed.  This
+frees you to substitute .pxsl documents anywhere that your
+project calls for .xml documents, knowing that make will keep all
+of the .xml documents up to date, regenerating them as needed
+when you update your .pxsl documents.
+
+
+<h2 id='reference-pxlscc'> Reference:  pxlscc</h2>
+
+<p><tt class=ind>&nbsp;&nbsp;Usage:&nbsp;pxslcc&nbsp;[OPTION...]&nbsp;[file...]<br></tt>
+<tt class=ind>&nbsp;&nbsp;-i[NUM]&nbsp;&nbsp;--indent[=NUM]&nbsp;&nbsp;Re-indent&nbsp;XML&nbsp;using&nbsp;NUM&nbsp;spaces&nbsp;per&nbsp;nesting&nbsp;level<br></tt>
+<tt class=ind>&nbsp;&nbsp;-h&nbsp; &nbsp; &nbsp; &nbsp;--header&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;Insert&nbsp;edit-the-PXSL-instead&nbsp;header&nbsp;into&nbsp;output&nbsp;XML<br></tt>
+<tt class=ind>&nbsp;&nbsp;-x&nbsp; &nbsp; &nbsp; &nbsp;--xslt&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;Add&nbsp;XSLT&nbsp;defaults<br></tt>
+<tt class=ind>&nbsp;&nbsp;-a&nbsp;FILE&nbsp;&nbsp;--add=FILE&nbsp; &nbsp; &nbsp;&nbsp;Add&nbsp;the&nbsp;given&nbsp;defaults&nbsp;file<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;--export&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;Export&nbsp;(print)&nbsp;all&nbsp;of&nbsp;the&nbsp;active&nbsp;defaults<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;--dump&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;Dump&nbsp;internal&nbsp;parse&nbsp;format&nbsp;(for&nbsp;debugging)<br></tt>
+
+<p>When you list more than one PXSL file on the command line, pxslcc will
+join the files, in order, into one big PXSL document and process that
+document.  You can use this feature to incorporate commonly used
+macros into your documents:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;$&nbsp;pxslcc&nbsp;macros1.pxsl&nbsp;macros2.pxsl&nbsp;doc.pxsl&nbsp;&gt;&nbsp;doc.xml<br></tt>
+
+<p>In the example above, doc.pxsl can use the macros defined in
+macros1.pxsl and macros2.pxsl.
+
+<p>The <tt>--header</tt> option requires some explanation.  It inserts the following
+header comment into the output XML:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;&lt;!--<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;NOTICE:&nbsp;&nbsp;This&nbsp;XML&nbsp;document&nbsp;was&nbsp;generated&nbsp;from&nbsp;PXSL&nbsp;source.<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;If&nbsp;you&nbsp;want&nbsp;to&nbsp;edit&nbsp;this&nbsp;file,&nbsp;you&nbsp;should&nbsp;probably<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;edit&nbsp;the&nbsp;original&nbsp;PXSL&nbsp;source&nbsp;file&nbsp;instead.<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;--&gt;<br></tt>
+
+<p>It's a good idea to use the <tt>--header</tt> option all of the time.  This
+prevents you (or somebody else) from accidentally editing an XML file
+when you really ought to be editing the PXSL file from which the
+XML file is generated.
+
+
+<p>[TODO: Expand this section]
+
+
+<h2 id='reference-pxsl-syntax'> Reference:  PXSL syntax</h2>
+
+<p>The PXSL grammar, in EBNF-like notation:
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;pxsl-document&nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;statement*,&nbsp;EOF<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;statement&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;pxsl-comment<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|&nbsp;xml-comment<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|&nbsp;literal-constructor<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|&nbsp;element-constructor<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|&nbsp;macro-def<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|&nbsp;macro-app<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;pxsl-comment&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;::=&nbsp;'#',&nbsp;&nbsp;all-text-until-newline,&nbsp;NEWLINE<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;xml-comment&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;"--",&nbsp;all-text-until-newline,&nbsp;NEWLINE<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;literal-constructor&nbsp;::=&nbsp;mixed-literal&nbsp;|&nbsp;cdata-literal<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;element-constructor&nbsp;::=&nbsp;xml-name,&nbsp;posn-args,&nbsp;nv-args,&nbsp;children<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;macro-def&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;',',&nbsp;xml-name?,&nbsp;param-names,&nbsp;'=',&nbsp;macro-body<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;macro-app&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;',',&nbsp;xml-name,&nbsp;posn-args,&nbsp;nv-args,&nbsp;children<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;xml-name&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;::=&nbsp;(&nbsp;LETTER&nbsp;|&nbsp;'_'&nbsp;|&nbsp;':'&nbsp;),<br></tt>
+<tt class=ind>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;(&nbsp;LETTER&nbsp;|&nbsp;DIGIT&nbsp;|&nbsp;'_'&nbsp;|&nbsp;':'&nbsp;|&nbsp;'.'&nbsp;|&nbsp;'-'&nbsp;)*<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;posn-args&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;expr-list<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;nv-args&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;(&nbsp;line-continuation?,&nbsp;name-value-pair&nbsp;)*<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;name-value-pair&nbsp; &nbsp; &nbsp;::=&nbsp;'-',&nbsp;xml-name,&nbsp;'=',&nbsp;expr<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;children&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;::=&nbsp;statement*&nbsp; &nbsp; &nbsp;/*&nbsp;must&nbsp;be&nbsp;indented&nbsp;*/<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;macro-body&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;::=&nbsp;children<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;param-names&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;(&nbsp;line-continuation?,&nbsp;xml-name&nbsp;)*<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;line-continuation&nbsp; &nbsp;::=&nbsp;'\',&nbsp;newline<br></tt>
+
+<p><tt class=ind>&nbsp; &nbsp;&nbsp;expr-list&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;(&nbsp;line-continuation?,&nbsp;arg-expr&nbsp;)*<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;arg-expr&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;::=&nbsp;expr&nbsp; &nbsp;&nbsp;/*&nbsp;cannot&nbsp;start&nbsp;with&nbsp;'-'&nbsp;*/<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;expr&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;::=&nbsp;expr-single&nbsp;|&nbsp;NON-WHITESPACE+<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;expr-single&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;mixed-literal&nbsp;|&nbsp;cdata-literal&nbsp;|&nbsp;pxsl-fragment<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;mixed-literal&nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;"&lt;&lt;",&nbsp;all-text-until-&gt;&gt;-delimiter,&nbsp;"&gt;&gt;"<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;cdata-literal&nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;"&lt;{",&nbsp;all-text-until-}&gt;-delimiter,&nbsp;"}&gt;"<br></tt>
+<tt class=ind>&nbsp; &nbsp;&nbsp;pxsl-fragment&nbsp; &nbsp; &nbsp; &nbsp;::=&nbsp;"&lt;(",&nbsp;statement*,&nbsp;")&gt;"<br></tt>
+
+
+<h2 id='authors'> Authors</h2>
+
+<p>Tom Moertel <tt>&lt;tom@moertel.com&gt;</tt> <a href="http://blog.moertel.com/">http://blog.moertel.com/</a>
+
+<p>Bill Hubauer <tt>&lt;bill@hubauer.com&gt;</tt>
+
+<h2 id='for-emacs'> (For Emacs)</h2>
+
+<p><tt class=ind>&nbsp;&nbsp;Local&nbsp;Variables:<br></tt>
+<tt class=ind>&nbsp;&nbsp;mode:outline<br></tt>
+<tt class=ind>&nbsp;&nbsp;End:<br></tt>
+</body></html>
