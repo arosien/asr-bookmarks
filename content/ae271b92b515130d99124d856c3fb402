@@ -1,0 +1,371 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head> 
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"> 
+    <meta name="keywords" content="Java, search engine, index">
+    <style type="text/css">
+      @import "/css/content.php";
+      @import "/css/layout.php";
+	{}
+    </style>
+    <title>MG4J: Managing Gigabytes for Java&trade;</title> 
+  </head> 
+  <body>
+    <div id=header>:::MG4J: <I>Managing Gigabytes</I> for Java&trade;</div>
+
+    <div id=left>
+      <ul id="left-nav">
+		<li><a href="http://vigna.dsi.unimi.it/">Home<span class=arrow>&#10132;</span></a></li>
+	<li><a href="http://vigna.dsi.unimi.it/papers.php">Publications<span class=arrow>&#10132;</span></a>
+      <li><a href="http://vigna.dsi.unimi.it/software.php">Software<span class=arrow>&#10132;</span></a>
+            <li><a href="http://erw.dsi.unimi.it/">ERW<span class=arrow>&#10132;</span></a>
+      <li><a href="http://fastutil.dsi.unimi.it/"><code>fastutil</code><span class=arrow>&#10132;</span></a>
+		<li><a href="http://dsiutils.dsi.unimi.it/">DSI utilities<span class=arrow>&#10132;</span></a>
+      <li><strong><a href="http://mg4j.dsi.unimi.it/">MG4J</a></strong>
+      <ul>
+	<li><a href="#why">Why Java?</A></li>
+        <li><a href="#install">Installation</A></li>
+        <li><a href="#citations">Citations</A></li>
+      </ul>
+      <li><a href="http://webgraph.dsi.unimi.it/">WebGraph<span class=arrow>&#10132;</span></a>
+	<li><a href="http://sux.dsi.unimi.it/">Sux<span class=arrow>&#10132;</span></a>
+	<li><a href="http://vigna.dsi.unimi.it/music.php">Music<span class=arrow>&#10132;</span></a>
+	<li><a href="http://vigna.dsi.unimi.it/kitsch.php">Kitsch<span class=arrow>&#10132;</span></a>
+      </ul>
+    </div>
+
+    <div id="main">
+      <div class="corner-topright">&nbsp;</div>
+      <div class="corner-topleft">&nbsp;</div>
+      <div id="content">
+
+	<H1 class=first>Introduction</H1>
+	
+    <P><IMG STYLE="float: right" ALT="MG4J" SRC="img/mg4j.png">MG4J
+    (<i>Managing Gigabytes</i> for Java) is a free full-text search engine
+    for large document collections written in Java.  MG4J is a highly customisable,
+	 high-performance, full-fledged search engine providing state-of-the-art features
+	 (such as <a href="docs/it/unimi/dsi/mg4j/search/score/BM25Scorer.html">BM25</a>/<a href="docs/it/unimi/dsi/mg4j/search/score/BM25FScorer.html">BM25F</a>
+	 scoring) and new research algorithms.
+
+	 <p><strong>Warning</strong>: Release 2.1 moved several utility classes to
+	<a href="http://dsiutils.dsi.unimi.it/">DSI utilities</a>. As of 3.0, old
+	deprecated versions have been removed.
+	 
+	<p>The main points of MG4J are:
+	<ul>
+
+	<li><strong>Powerful indexing</strong>. Support for document collections
+	and factories makes it possible to analyse, index and query
+	consistently large document collections, providing easy-to-understand
+   snippets that highlight relevant passages in the retrieved documents.
+
+	<li><strong>Efficiency</strong>. We do not provide meaningless data such
+	as "we index x GiB per second" (with which configuration? which
+	language? which data source?)&mdash;we invite you to try it. MG4J can index
+	without effort the TREC GOV2 collection (document factories are provided to this purpose)
+	and scales to hundreds of millions of documents.
+
+	<li><strong>Multi-index interval semantics</strong>. When you submit a query, MG4J returns,
+	for each index, a list of intervals satisfying the query. This provides the
+	base for several high-precision scorers and for very efficient
+	implementation of sophisticated operators. The intervals are built in
+	linear time using <a href="http://vigna.dsi.unimi.it/papers.php#BoVELAMIS">new research algorithms</a>.
+
+	<li><strong>Expressive operators</strong>. MG4J goes far beyond the bag-of-words model, providing
+	efficient implementation of phrase queries, proximity restrictions, ordered conjunction, and
+	combined multiple-index queries. Each operator is represented internally by an abstract object, so you
+	can easily plug in your favourite syntax.
+
+	<li><strong>Virtual fields</strong>. MG4J supports <em>virtual fields</em>&mdash;fields
+	containing text for a different, <em>virtual document</em>; the typical example is anchor text, which
+   must be attributed to the target document.
+
+	<li><strong>Flexibility</strong>. You can build much smaller indices by dropping term positions,
+	or even term counts. It's up to you. Several different types of codes can
+	be chosen to balance efficiency and index size. Documents coming from a
+	collection can be renumbered (e.g., to match a static rank or experiment with indexing techniques).
+
+	<li><strong>Openness</strong>. The document collection/factory interfaces provide an easy way
+	to present your own data representation to MG4J, making it a breeze to
+	set up a web-based search engine accessing directly your data. Every element along the path of query resolution
+   (parsers, document-iterator builders, query engines, etc.) can be substituted with your own
+   versions.
+
+	<li><strong>Distributed processing</strong>. Indices can be built for a collection split in
+	several parts, and combined later. Combination of indices allows
+	non-contiguous indices and even the same document can be split across
+	different collections (e.g., when indexing anchor text).
+
+	<li><strong>Multithreading</strong>. Indices can be queried and scored concurrently.
+
+	<li><strong>Clustering</strong>. Indices can be clustered both lexically and 
+	documentally (possibly after a partitioning). The clustering system is completely open,
+	and user-defined strategies decide how to combine documents from different sources. This
+	architecture makes it possible, for instance, to load in RAM the part of an index that
+	contains terms appearing more frequently in user queries.
+	</ul>
+
+	 <p>The starting point for understanding MG4J is a look at the <a href="man/manual/index.html">tutorial</a>,
+	 which explains how to index a sample collection and query the newly constructed index
+	 from the command line or using a browser. Then,
+	 the <a href="docs/index.html">Javadoc class documentation</a> can provide more insights.
+
+    <P>MG4J is <A
+	HREF="http://www.gnu.org/philosophy/free-sw.html">free software</A> distributed under the  <A
+	HREF="http://www.gnu.org/copyleft/lesser.html"><ACRONYM TITLE="GNU's not
+	Unix">GNU</ACRONYM> Lesser General Public License</A>. If you find MG4J useful, we kindly ask you
+	to quote the following reference:
+
+<pre>
+@INPROCEEDINGS{BoVTREC2005,
+        title = "{M}{G}4{J} at {T}{R}{E}{C} 2005",
+        author="Paolo Boldi and Sebastiano Vigna",
+        year = 2005,
+        booktitle = "The Fourteenth Text REtrieval Conference (TREC 2005) Proceedings",
+        editor = "Ellen M. Voorhees and Lori P. Buckland",
+        publisher = "NIST",
+        series = "Special Publications",
+        number = "SP 500-266",
+	note = "\texttt{\small http://mg4j.dsi.unimi.it/}",
+}
+</pre>
+
+    <h1><a name=why>&#xfeff;</a>Why Java?</h1>
+
+    <P>Writing in Java code that (essentially) has to roll bits over and over
+    may seem a Bad Thing&trade;. However, one should take into consideration
+    the following points:
+
+    <UL>
+      <LI>Improvements in JVMs makes low-level code written in Java faster and
+      faster; often, the performance penalty w.r.t. an equivalent C/C++
+      application is relatively small.
+      </LI>
+
+      <LI>Compression techniques can be mixed in several different ways, and an
+      object-oriented language makes it very easy to play with different
+      implementations of the same interface.</LI>
+
+      <LI>Most of the time, in particular in real-world applications, you will
+      need to rewrite all or part of the code. In this case, as a learning tool
+      a clean implementation in an object-oriented language is certainly better
+      than a C implementation.</LI>
+
+      <LI>Usually, you need very fast lookups, but you can relax during index
+      construction. Since MG4J writes completely documented bit streams, it is
+      very easy to read its output from optimised C code.
+
+    </UL>
+	<H1><a name=install>&#xfeff;</a>Installation</H1>
+
+	<P><IMG STYLE="float: right" ALT="Install" SRC="img/install.png">For a quick start, you just have to install the 
+	<SAMP>.jar</SAMP> file coming with the distribution and the dependencies, which are gathered for your convenience
+	in a <a href="mg4j-deps.tar.gz">tarball</a>. 
+
+	<p>A more detailed list of the dependencies can be found in the <a href="docs/index.html">overview of the Javadoc documentation</a>. 
+
+	<H1><a name=citations>&#xfeff;</a>Citations</H1>
+
+	  <p>Here you can find (in no particular order) research papers that
+            have been written using MG4J. The list is not exhaustive, and
+            we will be happy to include works that are missing.
+
+		<ul>
+<LI><a name="HoJSUPTPMR">&#xfeff;</a>
+Frank Hopfgartner and Joemon Jose.
+ Semantic user profiling techniques for personalised multimedia recommendation.
+ <em>Multimedia Systems</em>, 16:255-274, 2010.
+
+</LI>
+<LI><a name="PMZAHORWD">&#xfeff;</a>
+Jeffrey Pound, Peter Mika, and Hugo Zaragoza.
+ Ad-hoc object retrieval in the web of data.
+ In <em>Proceedings of the 19th international conference on World wide
+  web</em>, pages 771-780. ACM, 2010.
+
+</LI>
+<LI><a name="GFLKMPAS">&#xfeff;</a>
+Erik Graf, Ingo Frommholz, Mounia Lalmas, and Keith van Rijsbergen.
+ Knowledge modeling in prior art search.
+ In <em>Advances in Multidisciplinary Retrieval</em>, volume 6107 of
+  <em>Lecture Notes in Computer Science</em>, pages 31-46. Springer, 2010.
+
+</LI>
+<LI><a name="AOZUSRWSDFC">&#xfeff;</a>
+Eneko Agirre, Olatz Ansa, Xabier Arregi, Maddalen Lopez de Lacalle, Arantxa
+  Otegi, Xabier Saralegi, and Hugo Zaragoza.
+ Using semantic relatedness and word sense disambiguation for (CL)IR.
+ In <em>10th Workshop of the Cross-Language Evaluation Forum, CLEF 2009.
+  Multilingual Information Access Evaluation I. Text Retrieval
+  Experiments</em>, volume 6241 of <em>Lecture Notes in Computer Science</em>,
+  pages 166-173. Springer, 2010.
+
+</LI>
+<LI><a name="AAASRCLPR">&#xfeff;</a>
+Xabier Arregi Maddalen Lopez de Lacalle Arantxa Otegi Xabier Saralegi Hugo
+  Zaragoza Eneko Agirre, Olatz Ansa.
+ Elhuyar-IXA: Semantic relatedness and cross-lingual passage retrieval.
+ In <em>10th Workshop of the Cross-Language Evaluation Forum, CLEF 2009.
+  Multilingual Information Access Evaluation I. Text Retrieval
+  Experiments</em>, volume 6241 of <em>Lecture Notes in Computer Science</em>,
+  pages 273-280. Springer, 2010.
+
+</LI>
+<LI><a name="CSSESMMIA">&#xfeff;</a>
+Nuno Cardoso, Patrícia Sousa, and Mário J. Silva.
+ Experiments with geographic evidence extracted from documents.
+ In <em>Evaluating Systems for Multilingual and Multimodal Information Access.
+  9th Workshop of the Cross-Language Evaluation Forum, CLEF 2008</em>, volume
+  5706 of <em>Lecture Notes in Computer Science</em>, pages 885-893. Springer,
+  2009.
+
+</LI>
+<LI><a name="CamOAPEBS">&#xfeff;</a>
+Fabien Campagne.
+ Objective and automated protocols for the evaluation of biomedical search
+  engines using No Title Evaluation protocols.
+ <em>BMC bioinformatics</em>, 9(1):132, 2008.
+
+</LI>
+<LI><a name="CSSULG2008">&#xfeff;</a>
+Nuno Cardoso, Patrícia Sousa, and Mário J. Silva.
+ The University of Lisbon at GeoCLEF 2008.
+ In <em>Working Notes for CLEF 2008</em>, pages 17-19, 2008.
+
+</LI>
+<LI><a name="SCCGG2008">&#xfeff;</a>
+Diana Santos, Nuno Cardoso, Paula Carvalho, Iustin Dornescu, Sven Hartrumpf,
+  Johannes Leveling, and Yvonne Skalban.
+ GikiP at GeoCLEF 2008: Joining GIR and QA forces for querying
+  Wikipedia.
+ In <em>Evaluating Systems for Multilingual and Multimodal Information
+  Access</em>, volume 5706 of <em>Lecture Notes in Computer Science</em>, pages
+  894-905. Springer, 2009.
+
+</LI>
+<LI><a name="CCCUGSQDSGI">&#xfeff;</a>
+Nuno Cardoso, David Cruz, Marcirio Chaves, and Mário Silva.
+ Using geographic signatures as query and document scopes in geographic IR.
+ In <em>Advances in Multilingual and Multimodal Information Retrieval</em>,
+  volume 5152 of <em>Lecture Notes in Computer Science</em>, pages 802-810.
+  Springer, 2008.
+
+</LI>
+<LI><a name="CCCSULG2007">&#xfeff;</a>
+Nuno Cardoso, David Cruz, Marcirio Chaves, and Mário J. Silva.
+ The University of Lisbon at GeoCLEF 2007.
+ In <em>Working Notes for CLEF 2007</em>, 2007.
+
+</LI>
+<LI><a name="DWCTT2006">&#xfeff;</a>
+Kevin C. Dorff, Matthew J. Wood, and Fabien Campagne.
+ Twease at TREC 2006: Breaking and fixing BM25 scoring with query
+  expansion, a biologically inspired double mutant recovery experiment.
+ In <em>Proceedings of the Text Retrieval Conference</em>, 2006.
+
+</LI>
+<LI><a name="ShCBPNDFT">&#xfeff;</a>
+Lei Shi and Fabien Campagne.
+ Building a protein name dictionary from full text: a machine learning term
+  extraction approach.
+ <em>BMC bioinformatics</em>, 6(1):88, 2005.
+
+</LI>
+<LI><a name="MikDISS">&#xfeff;</a>
+Peter Mika.
+ Distributed indexing for semantic search.
+ In <em>Proceedings of the 3rd International Semantic Search Workshop</em>,
+  pages 1-4. ACM, 2010.
+
+</LI>
+<LI><a name="CSSHIGEGI">&#xfeff;</a>
+Nuno Cardoso, Mário J. Silva, and Diana Santos.
+ Handling implicit geographic evidence for geographic IR.
+ In <em>Proceeding of the 17th ACM conference on Information and knowledge
+  management</em>, CIKM '08, pages 1383-1384. ACM, 2008.
+
+</LI>
+<LI><a name="BlBDIRDR">&#xfeff;</a>
+Roi Blanco and Alvaro Barreiro.
+ Document identifier reassignment through dimensionality reduction.
+ In <em>Proc. of the 27th European Conference on Information Retrieval Research
+  ECIR2005</em>, number 3408 in Lecture Notes in Computer Science, pages
+  375-387, 2005.
+
+</LI>
+<LI><a name="BlBTCBSRDI">&#xfeff;</a>
+Roi Blanco and Alvaro Barreiro.
+ Tsp and cluster-based solutions to the reassignment of document identifiers.
+ <em>Information Retrieval</em>, 9(4):499-517, 2006.
+
+</LI>
+<LI><a name="BlBSAEDIR">&#xfeff;</a>
+Roi Blanco and Alvaro Barreiro.
+ A software architecture for effective document identifier reassignment.
+ In Roberto Moreno Díaz, Franz Pichler, and Alexis Quesada Arencibia,
+  editors, <em>Computer Aided Systems Theory - EUROCAST 2005, 10th
+  International Conference on Computer Aided Systems Theory, Las Palmas de Gran
+  Canaria, Spain, February 7-11, 2005, Revised Selected Papers</em>, volume
+  3643 of <em>Lecture Notes in Computer Science</em>, pages 254-262. Springer,
+  2005.
+
+</LI>
+<LI><a name="LWYESUMDTBT">&#xfeff;</a>
+Minsuk Lee, Weiqing Wang, and Hong Yu.
+ Exploring supervised and unsupervised methods to detect topics in biomedical
+  text.
+ <em>BMC Bioinformatics</em>, 7(140), 2006.
+
+</LI>
+</ul>
+
+
+	  </div>
+      <div class="corner-bottomright">&nbsp;</div>
+      <div class="corner-bottomleft">&nbsp;</div>
+    </div>
+    
+      <div id="right">
+                 
+      <h1>Download</h1>
+      <p><ul>
+	<li><a HREF="mg4j-3.0.1-bin.tar.gz">binary tarball</A>
+	<li><a HREF="mg4j-3.0.1-src.tar.gz">source tarball</A>
+	<li><a HREF="mg4j-deps.tar.gz">dependencies tarball</A>
+	<li><a HREF="mg4j-3.0.1-1.noarch.rpm">JPackage-like RPM</A>
+	<li><a HREF="mg4j-javadoc-3.0.1-1.noarch.rpm">JPackage-like Javadoc RPM</A>
+	<li><a HREF="mg4j-3.0.1-1.src.rpm">JPackage-like source RPM</A>
+      </ul>
+
+      <h1>Documentation</h1>
+      <p><ul>
+	<li><a HREF="README">README</A>
+	<li><a HREF="CHANGES">CHANGES</A>
+	<li><a HREF="man/manual/index.html">Manual (HTML)</A>
+	<li><a HREF="man/manual.pdf">Manual (PDF)</A>
+	<li><a HREF="docs">API</A>
+      </ul>
+		<h1>Discussion</h1>
+
+		<p>There is a <a href="http://groups.google.com/group/mg4j">discussion group</a>
+		about MG4J. You can join or <a href="mailto:mg4j@googlegroups.com">send a message</a>.
+
+      <h1>Papers</h1>
+      <p><ul>
+	<li>A <A HREF="http://vigna.dsi.unimi.it/papers.php#BoVCPESLQIIL">preprint</A>
+	 about the skipping structures used in MG4J (a short version appeared
+	 in the proceedings of <a href="http://www.la-web.org/spire2005/">SPIRE 2005</a>).
+
+	<li>A <A HREF="http://vigna.dsi.unimi.it/papers.php#BoVELAMIS">preprint</A>
+	 about the algorithms for minimal-interval semantics used in MG4J (a shorter version appeared
+	 in the proceedings of <a href="http://www.cis.strath.ac.uk/external/spire06/">SPIRE 2006</a>).
+
+      </ul>
+
+      <h1><a href="http://validator.w3.org/check/referer">This is valid HTML 4.01</a></h1>
+
+		<img alt="LGPLv3" style="float: right" src="img/lgplv3.png">
+    </div>
+  </body>
+</html>
