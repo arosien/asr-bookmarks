@@ -1,0 +1,525 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body>
+<h1><img src="luke.gif" border="0">Luke - Lucene Index Toolbox</h1>
+<p> &nbsp; </p>
+<b>Important note: Luke is now hosted at Google Code:
+	<a href="http://code.google.com/p/luke/">http://code.google.com/p/luke/</a> and you should go to that page to obtain the latest release of Luke.
+	This page contains only information about past releases and is no
+	longer up to date.</b>
+
+<p> &nbsp; </p>
+<a href="http://lucene.apache.org/">Lucene</a> is an Open Source,
+mature and high-performance Java search engine. It is highly flexible,
+and scalable from hundreds to millions of documents.<br>
+<br>
+<b>Luke</b> is a handy development and diagnostic tool, which accesses
+already existing Lucene indexes and allows you to display and modify their
+content in several ways:
+<ul>
+  <li>browse by document number, or by term </li>
+  <li>view documents / copy to clipboard </li>
+  <li>retrieve a ranked list of most frequent terms</li>
+  <li>execute a search, and browse the results</li>
+  <li>analyze search results</li>
+  <li>selectively delete documents from the index </li>
+  <li>reconstruct the original document fields, edit them and re-insert to the index </li>
+  <li>optimize indexes</li>
+  <li>and much more...</li>
+</ul>
+<p>Recent versions of Luke are also extensible through plugins and scripting.
+</p>
+I started this project because I needed a tool like this. I decided to
+distribute it under Open Source license to express my gratitude to the Lucene
+ team for creating such a high-quality product. Lucene is one of the 
+landmark proofs that Open Source paradigm can result in high-quality and
+ free products.<br>
+<h2>Java WebStart version</h2>
+<p>Java Web Start version: <a href="luke.jnlp">launch Luke now</a>. (NOTE: requires <b>Java 1.5 or higher</b>)<p>
+<p><i>NOTE:  use <a href="webstart.html">this link</a> if you want to make
+	sure you use the right version of Java VM and Java WebStart.</i></p>
+<p><i>NOTE 2:  some functions (like plugins, additional analyzers, and parts of
+	the scripting framework) are known to be broken when started from
+	Java WebStart.</i></p>
+
+<h2>Download - source and binary</h2>
+<p>Current version is 0.9.9, released on September 30, 2009.</p>
+It uses the official Lucene 2.9.0 release JARs.<br/>
+<p><b>NOTE: Luke requires now Java 1.5 or higher.</b></p>
+You can download the binary JARs here: 
+<ul>
+	<li>A standalone full JAR, containing Luke, Lucene, Rhino JavaScript,
+		plugins and additional analyzers (~7MB):<br>
+		<a href="luke-0.9.9/lukeall-0.9.9.jar">lukeall.jar</a><br>
+		There are no external dependencies. This version can be run simply by <code>java -jar lukeall.jar</code>, or double-click in Windows.
+	</li>
+	<li>A standalone minimal JAR, containing Luke and Lucene (~850kB):<br>
+		<a href="luke-0.9.9/lukemin-0.9.9.jar">lukemin.jar</a><br>
+		There are no external dependencies. This version can be run simply by <code>java -jar lukemin.jar</code>, or double-click in Windows.
+	</li>
+	<li>As a separate JAR, one containing Luke - NOTE that you need to supply Lucene jars on the classpath:<br>
+		<a href="luke-0.9.9/luke-0.9.9.jar">luke.jar (~120kB)</a><br>
+Again, remember to put at least the three required JARs on your classpath, e.g.: <code>java -classpath luke.jar;lucene.jar;lucene-misc.jar org.getopt.luke.Luke</code>
+	</li>
+</ul>
+<br>
+You can download the source code ZIP (2MB): <a href="luke-0.9.9/luke-src-0.9.9.zip">luke-src-0.9.9.zip</a><br>
+You can download the source code TGZ (2MB): <a href="luke-0.9.9/luke-src-0.9.9.tgz">luke-src-0.9.9.tgz</a><br>
+
+<br>
+
+<h2>License</h2>
+Luke is covered by <a href="http://www.apache.org/LICENSE">Apache
+Software License</a>, which means that it's free for any use, including
+commercial use. It comes with full source code included (see section
+above). Notice however that the <a
+ href="http://thinlet.sourceforge.net">Thinlet library</a> is covered by
+GNU Library (Lesser) Public License, which puts different restrictions
+on that portion of the program.<br>
+<br>
+If you feel inclined, I would appreciate a short email note, in case
+you find this program useful, or if you want to redistribute it in a
+software collection. Although it's not required by the license, it
+gives me some idea of how people use it, and what features are most
+useful to them...<br>
+<h2>Bug reports</h2>
+Hopefully, there will be none! :-) Ok, let's be realistic... if you
+notice a bug, or if you come up with a useful feature request, or even
+better - with patches that implement new functionality - please contact
+the author (Andrzej Bialecki, <img src="ab-email.png" align="middle"/>). Thank you in
+advance for your comments and contributions!<br>
+
+
+
+<h3>Changes in v. 0.9.9 (released on 2009.09.30):</h3>
+This release upgrades to Lucene 2.9.0 jars.
+
+<ul>
+  <li><b>New features and improvements:</b><br/>
+    <ul>
+        <li>Luke can now open multiple indexes found in subdirectories one
+        level below the selected directory.</li>
+        <li>Added Hadoop Plugin for working with indexes on Hadoop file systems.
+	This uses Hadoop 0.19.2 and dependencies released with this release of
+	Hadoop. The plugin uses partial local caching to speed up some operations.</li>
+	<li>Term counts and percentages are calculated in a background thread,
+	so the opening of large indexes should be a little faster. Also, this
+        operation is skipped for indexes accessed over slow IO (such as HDFS).</li>
+       <li>Added More Like This query builder from current document (or its
+       selected fields).</li>
+       <li>Search time is now monitored using System.nanoTime, and the last search time
+       is preserved in the UI.</li>
+       <li>Search can be now repeated N times to get a better estimate of average
+       search time. Note: the measured time involves only the search(), not the retrieval
+       of documents.</li>
+       <li>AnalyzerTool plugin now uses and illustrates the new token Attribute API.</li>
+       <li>Nearly all uses of deprecated Lucene API are replaced with the new API.</li>
+    </ul>
+  </li>
+  <li><b>Bug fixes:</b><br/>
+    <ul>
+      <li>Fix a counter-intuitive behavior where in the Open dialog Luke
+	 chops off the last path element from previously used index path.</li>
+      <li>Fix XMLExporter entity escaping, and add a missing quote in term vector size.</li>
+      <li>Fix a long-standing Thinlet bug related to tabbedpane with many tabs -
+	now tabs don't "overflow" the tabbedpane area thus corrupting the display
+	of surrounding components.</li>
+    </ul>
+  </li>
+</ul>
+
+I'd like to thank people who reported problems and suggested improvements:
+Craig Stires, Phil Whelan, Andrea Habringer, Benjamin Beckmann, George Herson,
+Daniel Noll, Mike McCandless, Chris Pimlott and others.
+
+
+
+<h3>Changes in v. 0.9.2 (released on 2009.03.20):</h3>
+This release upgrades to Lucene 2.4.1 jars.
+
+<ul>
+  <li><b>New features and improvements:</b><br/>
+    <ul>
+        <li>Added term counts per field in Overview - contributed by Mark Harwood.</li>
+        <li>Improved the Analysis plugin to show all token information, and highlight
+        whenever a token is selected from the list.</li>
+    </ul>
+  </li>
+  <li><b>Bug fixes:</b><br/>
+    <ul>
+      <li>(None)</li>
+    </ul>
+</ul>
+
+
+<h3>Changes in v. 0.9.1 (released on 2008.11.22):</h3>
+This is mostly a bug fix release of 0.9.
+
+<ul>
+  <li><b>New features and improvements:</b><br/>
+    <ul>
+        <li>Added ability to set the maximum count of boolean clauses in BooleanQuery.</li>
+    </ul>
+  </li>
+  <li><b>Bug fixes:</b><br/>
+    <ul>
+      <li>Unbalanced &lt;commit&gt; tags breaking the XML export. Reported by Teruhiko Kurosaka.</li>
+      <li>Opening a non-existent index from command-line creates an empty directory.
+        Reported by Chris Pimlott. See also LUCENE-1464.</li>
+      <li>IndexGate inadvertently deleting previous commit points, even if "Keep all commits"
+        option was specified. Reported by Mark Harwood.</li>
+      <li>Empty index with no fields was reported as invalid. Discovered by Andrew Zhang and Michael
+        McCandless (LUCENE-1454).</li>
+    </ul>
+</ul>
+<br/>
+
+<h3>Changes in v. 0.9 (released on 2008.11.15):</h3>
+This release adds many functionality enhancements and advanced features available
+in Lucene 2.4.
+
+<ul>
+  <li><b>New features and improvements:</b><br/>
+    <ul>
+        <li>Added new tools:<br/>
+		<ul>
+			<li>Check Index - checks Lucene indexes for problems, and can fix some of them.
+			This is a GUI front-end to the Lucene CheckIndex tool.</li>
+			<li>Export to XML - exports index data and metadata to XML file. This is
+			available both from the GUI and from the command-line.</li>
+		</ul></li>
+	<li>Significantly improved Optimize and Cleanup tools.</li>
+        <li>Added ability to set norms on any indexed field in a document, or a range of
+	documents.</li>
+	<li>Delete multiple documents by specifying ranges of document numbers.</li>
+        <li>Added support for new field functionality: omitTF and binary fields.</li>
+	<li>Improve the low-level information about the index, including format version.</li>
+	<li>Show interesting details about IndexCommit points and associated files.</li>
+	<li>Add short explanations of index files' functions.</li>
+	<li>Improve document reconstruction - now the information from TermFreqVector can
+	be used if available. Also, DocReconstructor can be used outside of Luke.</li>
+        <li>Significantly improved advanced search options - QueryParser settings, Similarity
+	and HitCollector settings.</li>
+        <li>Read-only functionality is supported directly in IndexReader.</li>
+    </ul>
+  </li>
+  <li><b>Bug fixes:</b><br/>
+    <p>A lot of effort went into refactoring the code, moving away if possible from the spaghetti
+    code influenced by Thinlet and into a modular design. Still much needs to be done here. :(</p>
+    <p>This means that there are likely many more bugs than in the previous release, although I
+    tested all functionality to make sure that there is no data loss.</p>
+    <p><b>HOWEVER</b>, if you work with precious data, it's always a good idea to use the
+    "Read-only" option.</p>
+  </li>
+</ul>
+
+<h3>Changes in v. 0.8.1 (released on 2008.02.13):</h3>
+This release adds some functionality enhancements related to TermVectors and Payloads.
+
+<ul>
+  <li><b>New features and improvements:</b><br/>
+    <ul>
+        <li>When editing document fields it's now possible to specify TermVectors with
+        offsets and/or positions.</li>
+        <li>Added ability to show term vector positions and offsets, if available. It's also
+        possible to copy this list to the clipboard.</li>
+        <li>Added ability to show term positions within a document, and display term payloads
+        if available, using one of several pre-defined payload decoders. It's also
+        possible to copy this list to the clipboard.</li>
+        <li>It's possible now to view the full content of a stored field using various
+        content decoders (hex, date / time, number, utf8, arrays of int or float)</li>
+        <li>Layout of "Browse by Term" panel is changed so that it better reflects the available
+        navigation.</li>
+    </ul>
+  </li>
+  <li><b>Bug fixes:</b><br/>
+    <ul>
+        <li>Check added to prevent from adding new documents if no index is open.</li>
+        <li>Wrong class was used in IndexGate to represent deletable files, which caused a
+        ClassCastException.</li>
+        <li>Some query types may have been skipped when displaying Explanation.</li>
+    </ul>
+  </li>
+</ul>
+<p> </p>
+
+<h3>Changes in v. 0.8 (released on 2008.02.04):</h3>
+<p>This release upgrades to the official Lucene 2.3.0 release JARs.</p>
+<p><b>NOTE:</b> this version of Luke requires Java 1.5 or higher.</p>
+<p>The following changes have been made in this release:</p>
+
+<ul>
+  <li><b>New features and improvements:</b><br/>
+    <ul>
+	<li>Added ability to show full text of a field in a popup dialog, both in
+	plain text and as a hexadecimal dump.</li>
+	<li>It's also possible to save the content of a single field to an external file.
+	This is useful for saving binary fields, or examining exact byte content of a field.</li>
+	<li>Added an option to load the index to RAMDirectory. NOTE: obviously you should take into
+	account the index size vs. the available heap size ... ;) </li>
+	<li>GrowableStringArray is a separate public class now - perhaps some day I'll use it to implement
+	a bulk document reconstruct function.</li>
+	<li>Luke remembers now the last Analyzer and last field used in previous session. </li>
+    </ul>
+  </li>
+  <li><b>Bug fixes:</b><br/>
+    <ul>
+	<li>Neither the document nor the field details have the "Boost" column anymore, it's always 1.0f
+        in documents retrieved from an index. Instead this column now reads "Norms" and shows the fieldNorm
+        value of a field.</li>
+    </ul>
+  </li>
+</ul>
+<p> </p>
+
+<h3>Changes in v. 0.7.1 (released on 2007.06.20):</h3>
+<p>This minor release is mostly an upgrade to the official Lucene 2.2.0 release JARs.</p>
+<p>The following changes have been made in this release:</p>
+
+<ul>
+  <li><b>New features and improvements:</b><br/>
+    <ul>Added a term distribution analysis plugin by Mark Harwood.</ul>
+  </li>
+  <li><b>Bug fixes:</b><br/>
+    <ul>
+	<li>Fixed IndexGate class to correctly show deletable files.</li>
+    </ul>
+  </li>
+</ul>
+<br>
+
+<h3>Changes in v. 0.7 (released on 2007.02.20):</h3>
+<p>This release uses the official Lucene 2.1.0 release JARs.</p>
+
+<p>The following changes have been made in this release:</p>
+
+<ul>
+  <li><b>New features and improvements:</b><br/>
+    <ul>
+	<li>Added pagination of results, especially useful for very large
+	result sets.</li>
+	<li>Added support for new Field flags. They are now
+	displayed in the Document details, and also can be set on
+	edited documents.</li>
+	<li>Added a function to add new documents to the index.</li>
+	<li>Low-level index operations (such as detecting unused files,
+	index directory cleanup) use the newly exposed Lucene classes
+	instead of duplicating their internals in Luke.</li>
+	<li>A side-effect of the above is the ability to properly
+	cleanup all supported index formats, including the new lockless
+	and single-norm indexes.</li>
+	<li>Added a function to copy the list of top terms to clipboard.</li>
+	<li>Added a function to copy the term vector to clipboard.</li>
+	<li>Added a function to close and/or re-open the current index.</li>
+	<li>In the Documents tab, pressing "First Term" now positions the
+	term enumeration at the first term for the selected field.</li>
+	<li>Added a field vocabulary analysis plugin by Mark Harwood, with
+	some modifications.</li>
+	<li>Overall UI cleanup - improved layout in some places,
+	added graphics instead of ASCII art, etc.</li>
+    </ul>
+  </li>
+  <li><b>Bug fixes:</b><br/>
+    <ul>
+	<li>Fixed a bug in index size calculation.</li>
+	<li>Fixed a bug in term browsing - when "First Term" was pressed
+	in reality the second term was shown.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>The following people contributed patches, suggestions, and
+generally kept prodding me and poking to produce this release:
+Volodymyr Bychkoviak,
+Juan Manuel Caicedo,
+Mark Harwood,
+Otis Gospodnetic,
+Benson Margulies,
+Jean-Philippe Robichaud,
+and many, many others. Thank you for your support!</p>
+
+
+
+<br>
+<h3>Changes in v. 0.6:</h3>
+The most important addition is the scripting framework based on Mozilla Rhino
+JavaScript engine. Additional plugins and functions were added, as follows:
+
+<ul>
+    <li>The query view shows not only a parsed form,
+	 but also a re-written query form.</li>
+    <li>Query Structure shows internal structure of a query.
+	 Explanations are provided both for the parsed and rewritten
+	 queries.</li>
+    <li>Command-line argument parsing. Now you can open an index on
+	 startup, and optionally execute a script (see below).</li>
+    <li>Custom Similarity designer plugin, which allows you to design
+	 and test your own Similarity implementation.</li>
+    <li> Scripting plugin, which allows you to interactively experiment
+	 with Luke and Lucene indexes. This plugin also can run scripts
+	 from Luke command-line.</li>
+    <li> Ability to use MMapDirectory. Due to limitations in Lucene API
+	 this feature relies on reflection API, and may sometimes fail if a
+	 restrictive SecurityManager is in use. The Overview panel shows
+	 which Directory implementation is used.</li>
+    <li> Proper display of overlapping tokens (created with analyzers that
+	 use setPositionIncrement(0) ).</li>
+    <li> Field names are sorted in alphabetical order.</li>
+    <li> Characters in field values, which are not letters or digits or plain
+	ASCII, are now displayed using entities, or common escapes (e.g.
+	"\r\n\t" or "&amp;#1234;")</li>
+    <li> Document boost is shown, in addition to each field's boost.</li>
+    <li> The "Files" tab now shows which files found in the index directory
+	 really belong to the index, and what is their status.</li>
+    <li> A new function, "Index Cleanup", cleans up all files from index
+	 directory that do not belong to the index, and all files that are
+	 marked as deletable in the index. This action does NOT optimize the index.</li>
+    <li> Luke has been reviewed and restructured to provide better support
+	 for execution as a part of other applications (or JavaScript
+	 scripts). Javadoc comments were added.</li>
+    <li> The default binary bundle (lukeall.jar) now contains also a
+	 collection of analyzers from the "contrib" area, as well as the
+	 Snowball analyzers.</li>
+    <li> UI font selection: sometimes the field values contain characters
+	 not covered in the default 'dialog' font, like e.g. less common
+	 Unicode glyphs. Or maybe you just wish to view all UI text rendered
+	 in Garamond... now you can ;-)</li>
+    <li> UI color theme: you can now switch color themes for your eye's
+	 pleasure.</li>
+</ul>
+
+<p>I would like to thank the following people for their comments, suggestions,
+bug-fixes and patches (in no particular order): Daniel Naber, Erik Hatcher,
+Grant Ingersoll, Ryan Cox, Terry Steichen, Lubos Pochman, Michael Franken,
+Luke Shannon, Todd VanderVeen, and others. Thank you!</p>
+
+
+<h3>Changes in v. 0.5:</h3>
+<p>This release introduces many changes and new, unique features:
+<ul>
+	<li>NEW: Added support for Term Vectors.</li>
+	<li>NEW: Added a plugin framework - plugins found on classpath are
+	detected automatically and added to the new "Plugins" tab.
+	Note however that for now plugins do NOT work when using Java WebStart.</li>
+	<li>NEW: A sample plugin provided, based on Mark Harwood's
+		"tool for analyzing analyzers".</li>
+	<li>NEW: all tables support resizable columns now. Some dialogs are
+	also resizable.</li>
+	<li>NEW: Added Reconstruct functionality. Using this function users
+	can reconstruct the content of all (also unstored) fields of a
+	document. This function uses a brute-force approach, so it may be
+	slow for larger indexes (&gt; 500,000 docs).</li>
+	<li>NEW: Added "pseudo-edit" functionality. New document editor
+	dialog allows to modify reconstructed documents, and add or replace
+	the original ones.</li>
+	<li>FIX: problems with MRU list solved, and a framework for handling
+	preferences introduced.</li>
+	<li>FIX: the list of available Analyzers is now dynamically
+	populated from the classpath, using the same method as in the
+	AnalyzerTool plugin.</li>
+	<li>FIX: restructured source repository and added Ant build script.</li>
+</ul>
+<p>Please note that as a result of the package name changes, the main class is
+<code>org.getopt.luke.Luke</code>, and NOT as before <code>luke.Luke</code>.</p>
+<p>I felt that all these changes merited a slight change in name, from "Lucene
+Index Browser" to "Lucene Index Toolbox", as this seems to better reflect the
+current functionality of the tool.</p>
+<br>
+
+<h3>Changes in v. 0.45:</h3>
+<ul>
+	<li>Added more details to the Overview panel.</li>
+	<li>Add support for undeleting all deleted documents.</li>
+	<li>Add Boost column to Document view.</li>
+	<li>Use nicer formatting for numbers in the Explain window.</li>
+	<li>Fix for not updating the parsed query view when pressing Search.</li>
+	<li>Fix the JNLP file to require J2SE 1.3+.</li>
+	<li>By popular demand, add a single self-contained JAR to the binary distribution.</li>
+	<li>Minor restructuring to increase reuse.</li>
+</ul>
+<br>
+
+<h3>Changes in v. 0.4:</h3>
+<ul>
+	<li>Use Lucene 1.3-FINAL. The WebStart version has been changed, so
+	that it uses two separate JARs - one contains Luke, the other Lucene.</li>
+	<li>Added support for compound index format. It's also possible to
+	change the format during optimization.</li>
+	<li>visualization of the query parsing. When you change the Analyzer
+	or default field, or perform a Search, you can see the QueryParser's
+	idea of what the final query looks like. Suggested by Erik Hatcher.</li>
+	<li>added functionality to view the explanation for a hit.</li>
+	<li>bugfix for broken behavior: when selecting "Show All Docs" on the
+	"Documents" view, the program would use a QueryParser, whereas it should
+	simply construct a primitive TermQuery. This bug could result in
+	mysterious "No Results" on the search page. Spotted by Erik Hatcher.</li>
+</ul>
+<p>I'll update the screenshots in a few days ... </p>
+<br/>
+<h3>Changes in v. 0.3:</h3>
+<ul>
+	<li>Add several enhancements and bugfixes contributed by Ryan Cox:
+		<ul>
+			<li>drop-down choice with most recently used indexes</li>
+			<li>list of files in an index</li>
+			<li>information about relative index changes after optimization</li>
+			<li>timing of searches</li>
+			<li>Bugfix: reload field list after opening another index</li>
+		</ul>
+	</li>
+	<li>various small UI cleanups</li>
+</ul>
+<br>
+<h3>Changes in v. 0.2:</h3>
+<ul>
+	<li>Add Java WebStart version.</li>
+	<li>Add Read-Only mode.</li>
+	<li>Fix spinbox bug (really a bug in the Thinlet toolkit - fixed there).</li>
+	<li>Allow to browse hidden directories.</li>
+	<li>Add a combobox to choose the default field for searching.</li>
+	<li>Other minor code cleanups.</li>
+</ul>
+
+<h2>Screenshots</h2>
+That's what tiggers love the most...<br>
+<br>
+The following screenshot present the overview screen, just after you
+open an index.<br>
+<br>
+<img src="img/luke1.gif" title="" alt=""
+ style="width: 648px; height: 429px;"><br>
+<br>
+<br>
+The screenshot below shows you the document panel, where you can browse
+through documents sequentially, or select groups of documents by terms,
+which they contain.<br>
+<br>
+<img src="img/luke2.gif" title="" alt=""
+ style="width: 648px; height: 429px;"><br>
+<br>
+The next screenshot shows you the Search panel, where you can enter
+search expressions in the standard Lucene QueryParser syntax. However,
+notice that you can select analyzer used to parse the query - either one
+of the predefined ones, or your own class in a classpath. You can also
+select the default field (this field is used when there is no specific
+field qualifier in your search expression).<br>
+You can also see in the "Parsed query view" area how the choice of analyzer affects the final query. In this case, please note how the phrase "more and more" has changed.<br>
+<br>
+<img src="img/luke3.gif" title="" alt=""
+ style="width: 648px; height: 429px;"><br>
+<br>
+The screenshot below shows a dialog containing the explanation for a hit.
+The Explanation tree shows how various term matches and normalizations
+resulted in the final document score for the current query.
+<br>
+Please note how the fuzzy query expanded the term "book" into "books" (and, not visible here, "bookstore", "bookstores", etc...), adjusting the weight of this hit.
+<br>
+<img src="img/luke4.gif" title="" alt=""
+ style="width: 648px; height: 429px;"><br>
+<br>
+<br>
+<small><span style="font-style: italic;">Last modified: Nov 14, 2008</span></small><br>
+</body>
+</html>
