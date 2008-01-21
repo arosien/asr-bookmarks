@@ -1,0 +1,244 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="keywords" content="URL History Bloom Filters,Kragen Sitaker,Publications" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="CommerceNet Wiki (English)" />
+		<title>URL History Bloom Filters - CommerceNet Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/skins/monobook/main.css?42b"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="/skins/common/commonPrint.css?42b" />
+		<link rel="stylesheet" type="text/css" media="handheld" href="/skins/monobook/handheld.css?42b" />
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/skins/monobook/IE50Fixes.css?42b";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/skins/monobook/IE55Fixes.css?42b";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/skins/monobook/IE60Fixes.css?42b";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/skins/monobook/IE70Fixes.css?42b";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/skins/common/IEFixes.js?42b"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		
+		<script type= "text/javascript">/*<![CDATA[*/
+var skin = "monobook";
+var stylepath = "/skins";
+var wgArticlePath = "/wiki/$1";
+var wgScriptPath = "";
+var wgServer = "http://wiki.commerce.net";
+var wgCanonicalNamespace = "";
+var wgCanonicalSpecialPageName = false;
+var wgNamespaceNumber = 0;
+var wgPageName = "URL_History_Bloom_Filters";
+var wgTitle = "URL History Bloom Filters";
+var wgArticleId = "1170";
+var wgIsArticle = true;
+var wgUserName = null;
+var wgUserLanguage = "en";
+var wgContentLanguage = "en";
+var wgBreakFrames = false;
+var wgCurRevisionId = "1759";
+/*]]>*/</script>
+                
+		<script type="text/javascript" src="/skins/common/wikibits.js?42b"><!-- wikibits js --></script>
+		<script type="text/javascript" src="/index.php?title=-&amp;action=raw&amp;gen=js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/index.php?title=MediaWiki:Common.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+@import "/index.php?title=MediaWiki:Monobook.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+@import "/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body  class="mediawiki ns-0 ltr page-URL_History_Bloom_Filters">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">URL History Bloom Filters</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CommerceNet Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p>(first version of this page was by <a href="/wiki/Kragen_Sitaker" title="Kragen Sitaker">Kragen Sitaker</a>); see also <a href="/wiki/Publications" title="Publications">Publications</a>
+</p><p>(A <a href="http://lists.canonical.org/pipermail/kragen-tol/2004-October/000766.html" class="external text" title="http://lists.canonical.org/pipermail/kragen-tol/2004-October/000766.html" rel="nofollow" target="blank">version of this page</a> got sent out via email in October 2004.)
+</p>
+<table id="toc" class="toc" summary="Contents"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="#Social_recommendation_networks"><span class="tocnumber">1</span> <span class="toctext">Social recommendation networks</span></a></li>
+<li class="toclevel-1"><a href="#Collaborative_filtering:_statistical_recommendations"><span class="tocnumber">2</span> <span class="toctext">Collaborative filtering: statistical recommendations</span></a></li>
+<li class="toclevel-1"><a href="#Cobrowsing:_publishing_your_URL_history"><span class="tocnumber">3</span> <span class="toctext">Cobrowsing: publishing your URL history</span></a></li>
+<li class="toclevel-1"><a href="#Bloom_filters"><span class="tocnumber">4</span> <span class="toctext">Bloom filters</span></a></li>
+<li class="toclevel-1"><a href="#Decentralized_collaborative_filtering_by_publishing_URL_histories_through_Bloom_filters_to_your_social_network"><span class="tocnumber">5</span> <span class="toctext">Decentralized collaborative filtering by publishing URL histories through Bloom filters to your social network</span></a></li>
+<li class="toclevel-1"><a href="#Related_topics"><span class="tocnumber">6</span> <span class="toctext">Related topics</span></a></li>
+<li class="toclevel-1"><a href="#Attacks"><span class="tocnumber">7</span> <span class="toctext">Attacks</span></a></li>
+<li class="toclevel-1"><a href="#Privacy-Enabling_Collaborative_Filtering"><span class="tocnumber">8</span> <span class="toctext">Privacy-Enabling Collaborative Filtering</span></a></li>
+<li class="toclevel-1"><a href="#Bloom_Filter_Resources"><span class="tocnumber">9</span> <span class="toctext">Bloom Filter Resources</span></a></li>
+</ul>
+</td></tr></table><script type="text/javascript"> if (window.showTocToggle) { var tocShowText = "show"; var tocHideText = "hide"; showTocToggle(); } </script>
+<a name="Social_recommendation_networks"></a><h2><span class="editsection">[<a href="/index.php?title=URL_History_Bloom_Filters&amp;action=edit&amp;section=1" title="Edit section: Social recommendation networks">edit</a>]</span> <span class="mw-headline">Social recommendation networks</span></h2>
+<p>Often I'm interested in the same web pages my friends read.  Sometimes, reading their blogs tells me what they read; <a href="http://del.icio.us/inbox/kragen" class="external text" title="http://del.icio.us/inbox/kragen" rel="nofollow" target="blank">del.icio.us</a> helps, too.  However, those approaches take some work per page: you have to explicitly post a link to each page to tell me you liked it.  It's nearly the same amount of work as telling me about cool web pages when we're hanging out at the water cooler.  So we never publish links to the majority of pages we visit, so our friends never find out we liked them.
+</p>
+<a name="Collaborative_filtering:_statistical_recommendations"></a><h2><span class="editsection">[<a href="/index.php?title=URL_History_Bloom_Filters&amp;action=edit&amp;section=2" title="Edit section: Collaborative filtering: statistical recommendations">edit</a>]</span> <span class="mw-headline">Collaborative filtering: statistical recommendations</span></h2>
+<p>Several services, such as <a href="http://wp.netscape.com/escapes/related/faq.html" class="external text" title="http://wp.netscape.com/escapes/related/faq.html" rel="nofollow" target="blank">Alexa's "what's related" service</a> and Amazon's "similar items" service, take advantage of a central point of control in a system to track many people's reading.  Then, they predict what I will be interested in, from statistical profiles of people like me.  These services provide many of the benefits of social recommendation networks, but they don't require as much effort on the part of the users.  They are known as <a href="http://pespmc1.vub.ac.be/COLLFILT.html" class="external text" title="http://pespmc1.vub.ac.be/COLLFILT.html" rel="nofollow" target="blank">collaborative filtering</a> systems.
+</p>
+<a name="Cobrowsing:_publishing_your_URL_history"></a><h2><span class="editsection">[<a href="/index.php?title=URL_History_Bloom_Filters&amp;action=edit&amp;section=3" title="Edit section: Cobrowsing: publishing your URL history">edit</a>]</span> <span class="mw-headline">Cobrowsing: publishing your URL history</span></h2>
+<p>In 1997, in a web page entitled <a href="http://pobox.com/~kragen/community-web.html" class="external text" title="http://pobox.com/~kragen/community-web.html" rel="nofollow" target="blank">Communal Web Browsing</a>, I suggested that you could discourage children from browsing porn sites by just publishing a list of what they were browsing in real time where their parents or other community members could watch; this avoids <a href="http://www.peacefire.org/archives/latimes.on.cybersitter.txt" class="external text" title="http://www.peacefire.org/archives/latimes.on.cybersitter.txt" rel="nofollow" target="blank">the problems Solid Oak Software has so vividly illustrated with censorware</a>.  Off-the-shelf software such as <a href="http://www.tightvnc.com/" class="external text" title="http://www.tightvnc.com/" rel="nofollow" target="blank">VNC</a>, <a href="http://www.bo2k.com/" class="external text" title="http://www.bo2k.com/" rel="nofollow" target="blank">BackOrifice</a>, and <a href="http://www.groove.net/" class="external text" title="http://www.groove.net/" rel="nofollow" target="blank">Groove</a> support sharing of a web browser.  Most Americans, however, would prefer not to publicize their web-browsing habits indiscriminately.  Even public-access computer terminals in public libraries commonly have some sort of privacy shield on the screen to restrict viewing to the person sitting at the machine.
+</p><p>If I were to build a piece of software that published every URL I visited on the Web, my friends could easily see which pages I had visited, with no extra effort on my part.  If my friends also installed this software, I could see which pages had been most frequently visited by my friends --- presumably the most popular ones would also be of interest to me.  My friends might not be willing to install that software, though, because they might prefer a greater measure of privacy, such as that granted by software that requires an explicit action to publish each link.
+</p>
+<a name="Bloom_filters"></a><h2><span class="editsection">[<a href="/index.php?title=URL_History_Bloom_Filters&amp;action=edit&amp;section=4" title="Edit section: Bloom filters">edit</a>]</span> <span class="mw-headline">Bloom filters</span></h2>
+<p>There are these things called <a href="http://www.cap-lore.com/code/BloomTheory.html" class="external text" title="http://www.cap-lore.com/code/BloomTheory.html" rel="nofollow" target="blank">Bloom filters</a>; they're basically compact, lossy representations of sets of hash values.  You feed a Bloom filter a hash, and it returns "yes" or "no".  "Yes" means that the set it represents it may or may not contain the hash value; "no" means that it definitely does not.  The probability of a "yes" for a value it doesn't contain is adjustable, and it's lower for larger Bloom filters.
+</p><p><a href="http://loaf.cantbedone.org/" class="external text" title="http://loaf.cantbedone.org/" rel="nofollow" target="blank">Schachter and Ceglowski's LOAF</a>, a pun on <a href="http://xmlns.com/foaf/0.1/" class="external text" title="http://xmlns.com/foaf/0.1/" rel="nofollow" target="blank">FOAF</a>, uses Bloom filters to help you prioritize your email by letting you recognize which incoming email comes from your friends' correspondents --- with an adjustable probability of a false positive.  If that probability were 50%, then you'd expect a new correspondent to appear to be a correspondent of about 10 out of 20 friends whose LOAF files you have.  The probability is about 1% that, by chance, they will appear to be a correspondent of more than 15, and only about 5% that they will appear to be a correspondent of more than 13.  But if they actually are a correspondent of 7 out of of your 20 friends, the probability is about 50% that they will appear to be a correspondent of more than 13.
+</p><p>As the number of your LOAF-using correspondents increases, you can reliably detect a much smaller proportion of correspondents.
+</p><p>This protects the privacy of your friends' address books, since you can't tell for sure whether any particular friend has an address in their address book --- because of the false positive probability.  But it still gives you an aggregate answer about your community's familiarity with any particular email address.
+</p>
+<a name="Decentralized_collaborative_filtering_by_publishing_URL_histories_through_Bloom_filters_to_your_social_network"></a><h2><span class="editsection">[<a href="/index.php?title=URL_History_Bloom_Filters&amp;action=edit&amp;section=5" title="Edit section: Decentralized collaborative filtering by publishing URL histories through Bloom filters to your social network">edit</a>]</span> <span class="mw-headline">Decentralized collaborative filtering by publishing URL histories through Bloom filters to your social network</span></h2>
+<p>Suppose we apply this to URLs instead.  Each day I'll publish an updated Bloom filter containing all the URLs I've seen in the last few weeks, with a relatively high false-positive rate.  Every few weeks, I'll clear it out, and new URLs will accumulate for a few weeks.  Now all my friends have a hint, whenever they see a URL, whether or not I also saw it.  They can preferentially follow links that several of their friends thought were interesting.
+</p><p>Because I actually only visit a few hundred URLs per week, even a relatively low false-positive rate suffices to protect my privacy.  If there are four billion URLs on the public web, and my Bloom filter's false-positive rate is 0.1%, then four million URLs match the filter without me having visited them (in the last few weeks), while only a few hundred match it because I have visited them.  So the fact that a particular URL matches my filter is pretty weak evidence that I have actually visited it.  Practically speaking, a false-positive rate closer to 10% might be better, since some URLs are much more popular than others, so the prior probability might be high enough to matter.
+</p><p>A URL-recommending engine can accumulate these different Bloom filters over time and compare them against my browser history to see which ones are most closely correlated to it, in order to figure out which ones are the best predictors of where I want to go next.  A naive Bayesian reasoner could simply compute the probability, given that a URL does or does not appear in a particular Bloom filter, that it appears in my history; then it can adjust all these probabilities together to come up with a predicted interest level.  A smarter engine might discover pairwise or even more complex dependencies between the filters and discount those results --- if Adam and Rohit always go to the same URLs, I'd like to not count their two filters as if they were independent.
+</p><p>The question remains how to acquire URLs to recommend in the first place.  You can't simply pull them out of the filters --- that's the point.  You could look at the stream of links in HTML pages I look at, or the stream of links in a bunch of RSS feeds, or the output of Technorati, del.icio.us, Syndic8, or pubsub.com, or my email, IRC, and IM channels.
+</p><p>Then you have the question of how to present the results.  You could display them on an HTML page, sorted with the most relevant links first, or you could rewrite HTML pages on the way in to my browser with icons or colors representing popularity.
+</p>
+<a name="Related_topics"></a><h2><span class="editsection">[<a href="/index.php?title=URL_History_Bloom_Filters&amp;action=edit&amp;section=6" title="Edit section: Related topics">edit</a>]</span> <span class="mw-headline">Related topics</span></h2>
+<p>Other useful things to do with a big pile of URL Bloom filters:
+</p>
+<ul><li> given a seed URL and a list of candidate URLs, order the candidate URLs according to their co-occurrence with the seed URL.
+</li><li> compute the pairwise correlations of the filters, perhaps with a  list of URLs and perhaps without.
+</li><li> cluster a list of URLs into clusters that tend to co-occur in the same filters --- for example, to find the "principal components" of a pile of search engine results, so you can present a few URLs from each "component".
+</li></ul>
+<a name="Attacks"></a><h2><span class="editsection">[<a href="/index.php?title=URL_History_Bloom_Filters&amp;action=edit&amp;section=7" title="Edit section: Attacks">edit</a>]</span> <span class="mw-headline">Attacks</span></h2>
+<p>An attack due to Dan Gould: to find out whether someone has visited a particular URL, instead of testing that URL alone, test many URLs that tend to be associated with it --- for example, pages it links to, or pages that link to it, or several pages in a sequence.  Then test to see whether a statistically unlikely number of these URLs are "hits" in the filter --- it will tell you whether the person has visited some subset of those URLs, but not which ones.  But that may be enough.
+</p>
+<a name="Privacy-Enabling_Collaborative_Filtering"></a><h2><span class="editsection">[<a href="/index.php?title=URL_History_Bloom_Filters&amp;action=edit&amp;section=8" title="Edit section: Privacy-Enabling Collaborative Filtering">edit</a>]</span> <span class="mw-headline">Privacy-Enabling Collaborative Filtering</span></h2>
+<p>John Canny from UC-Berkeley has a couple of papers on that: <a href="http://www.cs.berkeley.edu/~jfc/papers/02/IEEESP02.pdf" class="external text" title="http://www.cs.berkeley.edu/~jfc/papers/02/IEEESP02.pdf" rel="nofollow" target="blank">Collaborative filtering with Privacy</a> and <a href="http://www.cs.berkeley.edu/~jfc/papers/02/SIGIR02.pdf" class="external text" title="http://www.cs.berkeley.edu/~jfc/papers/02/SIGIR02.pdf" rel="nofollow" target="blank">Collaborative Filtering with Privacy via Factor Analysis</a>. More recently, a group of researchers from Haifa published a paper titled "Privacy-Enhanced Collaborative filtering" in <a href="http://www.isr.uci.edu/pep05/papers/w9-proceedings.pdf" class="external text" title="http://www.isr.uci.edu/pep05/papers/w9-proceedings.pdf" rel="nofollow" target="blank">PEP05's proceedings</a>.
+</p>
+<a name="Bloom_Filter_Resources"></a><h2><span class="editsection">[<a href="/index.php?title=URL_History_Bloom_Filters&amp;action=edit&amp;section=9" title="Edit section: Bloom Filter Resources">edit</a>]</span> <span class="mw-headline">Bloom Filter Resources</span></h2>
+<ul><li> Math
+</li></ul>
+<p>Pei Cao has good <a href="http://www.cs.wisc.edu/~cao/papers/summary-cache/node8.html" class="external text" title="http://www.cs.wisc.edu/~cao/papers/summary-cache/node8.html" rel="nofollow" target="blank">mathematic exploration</a> of Bloom filters. It also provides a quite useful table showing false positive rate under various m/n and k combinations. According to Pei's calculation, "it seems that 4 bits per count would be amply sufficient". when m/n=4, k=3 reaches the minimal false positive rate of 0.147 
+</p>
+<ul><li> Applications of Bloom filters
+</li></ul>
+<p>Andrei Broder (IBM Research) and Michael Mitzenmacher (Harvard) have a nice survey paper on <a href="http://www.internetmathematics.org/volumes/1/4/Broder.pdf" class="external text" title="http://www.internetmathematics.org/volumes/1/4/Broder.pdf" rel="nofollow" target="blank">Network Applications of Bloom Filters</a>.
+</p><p>More recently, a <a href="http://www.cs.utexas.edu/users/dahlin/papers/webdb-167.pdf" class="external text" title="http://www.cs.utexas.edu/users/dahlin/papers/webdb-167.pdf" rel="nofollow" target="blank">paper</a> by researchers from UT-Austin and IBM Research talks about how to refine web search results by removing near-duplicate documents detected by using Bloom filters as a means of computing similarities of documents.
+</p><p>Steve Bellovin (AT&amp;T Labs Research) and William Cheswick (Lumeta) proposed a <a href="http://www.cs.columbia.edu/~smb/papers/bloom-encrypt.pdf" class="external text" title="http://www.cs.columbia.edu/~smb/papers/bloom-encrypt.pdf" rel="nofollow" target="blank">new search sheme based on Bloom filters and Pohlig-Hellman encryption</a>.
+</p>
+<ul><li> Coding Bloom filter and tricks
+</li></ul>
+<p>Maciej Ceglowski has a good <a href="http://www.perl.com/pub/a/2004/04/08/bloom_filters.html" class="external text" title="http://www.perl.com/pub/a/2004/04/08/bloom_filters.html" rel="nofollow" target="blank">post</a> on Perl.com
+</p><p><a href="http://www.cap-lore.com/code/BloomTheory.html" class="external text" title="http://www.cap-lore.com/code/BloomTheory.html" rel="nofollow" target="blank">Some Motley Bloom Tricks</a>
+</p><p>Mark Fischer's <a href="http://www.flipcode.com/articles/article_bloomfilters.shtml" class="external text" title="http://www.flipcode.com/articles/article_bloomfilters.shtml" rel="nofollow" target="blank">post</a> on flipcode.com
+</p><p><a href="http://people.csail.mit.edu/cwo/projects/netcom_javadoc/netcom/util/BloomFilter.html" class="external text" title="http://people.csail.mit.edu/cwo/projects/netcom_javadoc/netcom/util/BloomFilter.html" rel="nofollow" target="blank">MIT netcom</a>
+</p><p><a href="http://freepastry.rice.edu/FreePastry/javadoc14/rice/p2p/util/IdBloomFilter.html" class="external text" title="http://freepastry.rice.edu/FreePastry/javadoc14/rice/p2p/util/IdBloomFilter.html" rel="nofollow" target="blank">Rice FreePastry</a>
+</p>
+<ul><li> Notes of BF
+</li></ul>
+<p>The origin:
+In his 1970 seminal paper “Space/Time Trade-offs in Hash Coding with Allowable Errors”, Burton Bloom introduced a new efficient hash-coding method with allowable errors with a formula to calculate the trade-offs among three computational factors: allowable fraction of errors (false positive rate), space (bits of hash area), and time (average time to reject a message as a member of the given set). People name this data structure as “Bloom Filter”. 
+</p><p>The design of BF:
+•	Lee Gremillion in his 1982 paper “Designing a Bloom Filter for Different File Access”, demonstrates a simulation approach to the design of a BF. The argument there is basically to use simulation to determine the actual values of different parameters (e.g., size of the BF).
+•	James Mullin in his 1983 paper “A Second Look at Bloom Filters” proposes an analytic approach of design BF based on probability. His work has been widely quoted in later literature about BF.
+•	Ramakrishna in his 1989 paper “Practical Performance of Bloom Filters and Parallel Free-Text Searching”, focuses on the issue of choosing the “right” transformations/hash functions. He examines a class of hash functions (Hc,d mapS A into B):
+</p><p>Hc,d(x) = ((cx + d) mod p) mod m, and H1 = {Hc,d( ) | 0 &lt; c &lt; p, 0&lt; d &lt; p)}
+</p><p>Where The keys are assumed to be integers drawn from a universe A, A = (1, 2, . . . , p - l), p is a prime; 
+Let B denote the range of hash addresses, B = (0,1, . . . , m - 1). 
+Based on the results of his simulations, he concludes that “by choosing hash transformations randomly from the class H1 the theoretical error rate can be 
+achieved in practice”. 
+•	The hash functions being used are desirable to be perfectly random meaning that they map each item in the universe to a random number uniform over the range of {1,…,m}, where m is the length of the Bloom Filter. While what hash functions to use in practice still remains to be an open questions, currently MD5 is widely used. (Also take a look at Rabin’s fingerprints. It seems that it hashes words)
+</p><p>Different versions/variants of BF:
+•	Standard BF: 
+A Bloom filter for representing a set S = {x1 , x2 , . . . , xn } of n elements is described by an array of m bits, initially all set to 0. A Bloom filter uses k independent hash functions h1 , . . . , hk with range {1, . . . , m}. For each element x ∈ S, the bits hi (x) are set to 1 for 1 ≤ i ≤ k. A location can be set to 1 multiple times, but only the first change has an effect. 
+To check if an item y is in S, we check whether all hi (y) are set to 1. If not, then clearly y is not a member of S. If all hi (y) are set to 1, we assume that y is in S, although we are wrong with some probability (false positive rate).
+</p><p>Some cool properties of BF:
+1.	A Bloom filter that represents the union of two sets can be obtained by taking the OR of the two bit vectors of the original Bloom filters. 
+2.	Bloom filters can easily be halved in size, allowing an application to dynamically shrink a Bloom filter. Suppose that the size of the filter is a power of 2. To halve the size of the filter, just OR the first and second halves together. When hashing to do a lookup, the highest order bit can be masked.
+3.	Bloom filters can also be used to approximate the intersection between two sets. The inner product of the two bit vectors can be used as a measure of their similarity.
+</p><p>•	Another version of standard BF:
+Each hash function has a range of m/k consecutive bit locations disjoint from all the others. The total number of bits is still m, but the bits are divided equally among the k hash functions. According to Andrei Broder and Michael Mitzenmacher’s survey paper, this version shares the same asymptotical performance with the one above. Despite the false positive rate is slightly higher than the previous version, this version might be useful for implementation reasons: e.g., ease the potential exploitation of parallelization of array accesses by dividing the bits among the hash functions.
+</p><p>The minimum value for the false positive rate f is reached when p = 1/2, or equivalently k = ln 2 · (m/n). In this case the false positive rate f is (1/2)k ≈ (0.6185)m/n, but in practice, k must be an integer, and a smaller, sub-optimal k might be preferred since this reduces the number of hash functions that have to be computed. They also derived that the lower bound of the false positive rate f is only (0.5)m/n.
+</p><p>•	Counting Bloom Filter:
+If you have a set that is subject to change, inserting a new element into a BF is easy (hash it k times and set corresponding bits to 1), but deleting an element is tricky. You cannot set all the k bits resulting from hashing the element to 0, because the bits might be set by other elements.
+To prevent this problem, Li Fan et al. proposed the idea of counting Bloom Filter, where each entry in the Bloom filter is a small counter instead of a single bit. When an item is inserted, the corresponding counters are incremented; when an item is deleted, the corresponding counters are decremented. To avoid counter overflow, we choose sufficiently large counters (4 bits per counter is usually large enough). 
+</p><p>•	Compressed BF:
+Michael Mitzenmacher (Harvard) proposed <a href="http://www.eecs.harvard.edu/~michaelm/NEWWORK/postscripts/cbf2.pdf" class="external text" title="http://www.eecs.harvard.edu/~michaelm/NEWWORK/postscripts/cbf2.pdf" rel="nofollow" target="blank">Compressed Bloom filters</a>, which improve the performance when BFs are passed as messages. In our case, BF is not only a data structure of containing users’ history URLs, but also a message being published and thus transmitted on the Internet, so the idea of compressing BF as a message (reduce the transmission size) is straightforward. The focus of optimization is not on the size of a BF but rather the number of 1’s in a BF because BF is usually sparse and we would only transmit the 1’s. So, in his 2002 paper “Compressed Bloom Filter”, Mitzenmacher illustrates that using a larger, but sparser, Bloom filter can yield the same false positive rate with a smaller number of transmitted bits. So, the tradeoff here is between the size of BF and the transmission size. Alternatively, one can use the same number of transmitted bits but improve the false positive rate, or find a more suitable tradeoff between the two.
+</p>
+<!-- Saved in parser cache with key commercenetwiki:pcache:idhash:1170-0!1!0!!en!2 and timestamp 20101217203356 -->
+<div class="printfooter">
+Retrieved from "<a href="http://wiki.commerce.net/wiki/URL_History_Bloom_Filters">http://wiki.commerce.net/wiki/URL_History_Bloom_Filters</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<div class="pBody">
+			<ul>
+						 <li id="ca-nstab-main" class="selected"><a href="/wiki/URL_History_Bloom_Filters">Article</a></li>
+						 <li id="ca-talk" class="new"><a href="/index.php?title=Talk:URL_History_Bloom_Filters&amp;action=edit">Discussion</a></li>
+						 <li id="ca-edit"><a href="/index.php?title=URL_History_Bloom_Filters&amp;action=edit">Edit</a></li>
+						 <li id="ca-history"><a href="/index.php?title=URL_History_Bloom_Filters&amp;action=history">History</a></li>
+				</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a href="/index.php?title=Special:Userlogin&amp;returnto=URL_History_Bloom_Filters">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(/skins/commercenet/wiki.logo.png);" href="/wiki/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class='portlet' id='p-navigation'>
+		<h5>Navigation</h5>
+		<div class='pBody'>
+			<ul>
+				<li id="n-mainpage"><a href="/wiki/Main_Page">Main Page</a></li>
+				<li id="n-portal"><a href="/wiki/CommerceNet_Wiki:Community_Portal">Community portal</a></li>
+				<li id="n-currentevents"><a href="/wiki/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a href="/wiki/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a href="/wiki/Special:Random">Random page</a></li>
+				<li id="n-help"><a href="/wiki/Help:Contents">Help</a></li>
+				<li id="n-sitesupport"><a href="/wiki/CommerceNet_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/wiki/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" type="text" accesskey="f" value="" />
+				<input type='submit' name="go" class="searchButton" id="searchGoButton"	value="Go" />&nbsp;
+				<input type='submit' name="fulltext" class="searchButton" id="mw-searchButton" value="Search" />
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="/wiki/Special:Whatlinkshere/URL_History_Bloom_Filters">What links here</a></li>
+				<li id="t-recentchangeslinked"><a href="/wiki/Special:Recentchangeslinked/URL_History_Bloom_Filters">Related changes</a></li>
+<li id="t-upload"><a href="/wiki/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a href="/wiki/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="/index.php?title=URL_History_Bloom_Filters&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="/index.php?title=URL_History_Bloom_Filters&amp;oldid=1759">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="/skins/common/images/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" /></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 19:43, 19 September 2005.</li>
+				<li id="viewcount">This page has been accessed 17,190 times.</li>
+				<li id="privacy"><a href="/wiki/CommerceNet_Wiki:Privacy_policy" title="CommerceNet Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="/wiki/CommerceNet_Wiki:About" title="CommerceNet Wiki:About">About CommerceNet Wiki</a></li>
+				<li id="disclaimer"><a href="/wiki/CommerceNet_Wiki:General_disclaimer" title="CommerceNet Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+		
+	
+		<script type="text/javascript">if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by www.commerce.net in 0.334 secs. --></body></html>
