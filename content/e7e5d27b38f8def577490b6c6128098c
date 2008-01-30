@@ -1,0 +1,868 @@
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type"/><title>File: README</title><link type="text/css" href=".././rdoc-style.css" media="screen" rel="stylesheet"/><script type="text/javascript">
+// Allison template
+// Copyright 2007 Cloudburst LLC, all rights reserved
+// Redistribution or modification prohibited
+
+var href_base = '.././rdoc-style.css'.replace(/(.*\/).*/, '$1'); // inline js is good for something  
+
+function $(id) {
+    if (document.getElementById)
+      elem = document.getElementById(id);
+    else if ( document.all )
+      elem = eval("document.all." + id);
+    else
+      return false;
+    return elem;
+}
+
+  function toggle(id) {
+    elem = $(id);
+    elemStyle = elem.style;   
+    if (elemStyle.display == "block") {
+      elemStyle.display = "none"
+    } else {
+      elemStyle.display = "block"
+    }
+    return true;
+  }
+
+  function toggleText(id) {
+    elem = $(id)
+    if (m = elem.innerHTML.match(/(Hide)(.*)/)) {
+      elem.innerHTML = "Show" + m[2];
+    } else if (m = elem.innerHTML.match(/(Show)(.*)/)) {
+      elem.innerHTML = "Hide" + m[2];
+    }
+    return true;
+  }
+
+function span(s, klass) {
+  return '<span class="' + klass + '">' + s + '</span>';
+}
+  
+function highlightSymbols() {
+  pres = document.getElementsByTagName('pre');
+  for(var i = 0; i < pres.length; i++) {
+    pre = pres[i];
+    spans = pre.getElementsByTagName('span');
+    for(var k = 0; k < spans.length; k++) {
+      span = spans[k];
+      if (span.className.match(/ruby-identifier/)) {
+        if (span.innerHTML.match(/^:/)) {
+          span.className += " ruby-symbol";
+        }
+      }
+    }
+  }
+}
+
+ function hasClass(obj) {
+     var result = false;
+     if (obj.getAttributeNode("class") != null) {
+         result = obj.getAttributeNode("class").value;
+     }
+     return result;
+  }   
+
+ function stripe() {
+    var even = true;
+    var color = "#e4ebed";
+    var tables = document.getElementsByTagName('table');
+    if (tables.length == 0) { return; }
+    for (var h = 0; h < tables.length; h++) {
+        var trs = tables[h].getElementsByTagName("tr");
+        for (var i = 0; i < trs.length; i++) {
+          var tds = trs[i].getElementsByTagName("td");
+            for (var j = 0; j < tds.length; j++) {       
+              if (hasClass(tds[j]) != "first") {                
+              var mytd = tds[j];
+              if (even) {
+                mytd.style.backgroundColor = color;
+              }         
+            }
+          }
+          even =  ! even;
+      }
+    }
+  }
+  
+function ajaxGet(url) {
+  url = (href_base + url).replace('/./', '/')
+  var req = false;
+
+  if (window.ActiveXObject) {
+    try {
+      // stupid hack because IE7 disables local Ajax with the native xmlhttprequest object
+      // for security purposes. Yet ActiveX still works. Thanks, Microsoft. I hate you. Die.
+      req = new ActiveXObject("MSXML2.XMLHTTP.3.0");
+    } catch (e) {
+      try {
+        /* IE 6 and maybe 5, don't know, don't care */
+        req = new ActiveXObject("Msxml2.XMLHTTP");
+      } catch (e) {
+        try {
+          req = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (e) {
+          req = false;
+        }
+      }
+    }
+  }
+    
+  /* real browsers */
+  if (!req && window.XMLHttpRequest) {
+    try {
+      req = new XMLHttpRequest();
+    } catch (e) {
+      req = false;
+    }
+  } 
+  
+  if (req) {
+    req.open('GET', url, false);
+    req.send(null);
+    return req.responseText;
+  } else {
+    return "Ajax error";  
+  }
+}
+
+
+function addEvent(elm, evType, fn, useCapture) {
+	if (elm.addEventListener) {
+	  elm.addEventListener(evType, fn, useCapture);  
+  	return true;
+	} else if (elm.attachEvent) {
+  	var r = elm.attachEvent('on' + evType, fn);  
+	  return r;  
+	} else {
+  	elm['on' + evType] = fn;
+	}
+}
+
+function insertIndices() {
+  pages = ["class", "file", "method"]
+  for (x in pages) { 
+    $(pages[x]).innerHTML += ajaxGet('fr_' + pages[x] + '_index.html').replace(/(href=")/g, '$1' + href_base);
+  }
+  /* mouseoverify method links */
+  links = $('method').getElementsByTagName('a');
+  for (var x = 0; x < links.length; x++) {
+    if (m = links[x].innerHTML.match(/(.*)\s\((.*)\)/)) {
+      links[x].innerHTML = m[1] + '<br>';
+      links[x].title = m[2];
+    }
+  }
+  /* this is stupid */
+  $('class').style.display = "block";
+  $('file').style.display = "block";
+  
+  /* has to be here because IE7 does not guarantee the onLoad callback order */
+  abbreviateIndicesInner(["class", "file"], 25, "a");
+  /* same, linkTitle() depends on the class link list */
+  linkTitle();
+}
+
+function abbreviateIndices() {
+  var ids = ["defined_in", "child_of", "includes", "requires", "method", "methods"];
+  abbreviateIndicesInner(ids, 25, 'a');
+  abbreviateIndicesInner(ids, 25, 'span');
+}
+
+function abbreviateIndicesInner(indices, amount, tag) {
+  for (var x = 0; x < indices.length; x++) { 
+    var the_index = $(indices[x]);
+    if (the_index) {
+      links = the_index.getElementsByTagName(tag);
+      for (var y = 0; y < links.length; y++) {
+        var link = links[y];
+        if (link.getElementsByTagName('span').length == 0 && link.getElementsByTagName('a').length == 0) {
+          // avoid nesting
+          link.innerHTML = link.innerHTML.replace(/<br>|\n/gi, '');
+          link.title = link.innerHTML;
+          link.innerHTML = abbreviate(link.innerHTML, amount) + '<br>';
+        }
+      }
+    }
+  }
+}
+
+function linkTitle() {
+  
+  /* grab the correct title element from the index */
+  var index_page = ajaxGet('index.html');
+  title_text = index_page.match(/<title>(.*)<\/title>/m)[1];
+  document.title = title_text + " - " + document.title;
+  var p = $('header').getElementsByTagName('p')[0]
+  if (p.innerHTML.match(/^\s*$/)) {
+    p.innerHTML = title_text;
+  } else {
+    p.innerHTML = title_text + ": " + p.innerHTML;
+  }
+  
+  /* set the link properly */
+  title_link = index_page.match(/<a\s+href="(.*?)"/)[1];
+  var element = $('title');
+  var item_type = "";
+  var item_name = "";
+  if (m = element.innerHTML.match(/(Class:|Module:|File:)\s*(.*)/)) {
+    item_type = m[1];
+    item_name = m[2];
+  } else {
+    item_name = element.innerHTML;
+  }
+  element.innerHTML = '<a href="' + href_base + title_link + '">' + item_type + " " + abbreviate(item_name, 45) + '</a>';
+  element.getElementsByTagName('a')[0].title = item_name
+  
+  /* breadcrumb navigation */
+  items = item_name.split("::");
+  items_new = item_name.split("::");
+  file_links = $('class').getElementsByTagName('a');
+  for (var x = 0; x < items.length - 1; x++ ){
+    var item = items[x];
+    link = ("/classes/" + items.slice(0,x).join("/") + "/" + item + ".html").replace('//', '/');
+    regex = new RegExp(RegExp.escape(link) + '$');
+    for (var y = 0; y < file_links.length; y++) {
+      if (file_links[y].href.match(regex)) {
+         items_new[x] = '<a href="' + href_base + link + '">' + item + '</a>';
+         break;
+      }
+    }  
+  }
+  $('item_name').innerHTML = item_type + ' ' + items_new.join(" :: ");
+}
+
+function abbreviate(s, size) {
+  while (s.length > size) {
+    var old_s = s;
+    s = s.replace(/\s|\n/mg, '');
+    s = s.replace(/([A-Z])[a-z]+/m, '$1');
+    if (!s || old_s == s) {
+      return "..." + s.substring(s.length - size, s.length);
+    }
+  }
+  return s;
+}
+
+function disableSubmit(event) {
+  var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+  if (keyCode == 13) {
+    return false;
+  } else {
+    return true;
+  }
+}
+  
+function filterList(id, s, event) {
+  
+  /* some weak escaping */
+  s = s.replace(/[^\w\d\.\_\-\/\:\=\[\]\?\!]/g, '');
+  s = RegExp.escape(s);
+  
+  var show_all = false;
+  if (s.match(/^\s*$/)) {
+    show_all = true;
+  }
+  
+  links = $(id).getElementsByTagName('a')
+  regex = new RegExp(s, 'i');
+  
+  for (var x = 0; x < links.length; x++) {
+    var link = links[x];
+    if (show_all) {
+      link.style.display = 'inline';
+    } else {
+       if (link.innerHTML.match(regex)) {        
+         link.style.display = 'inline';
+       } else {
+         link.style.display = 'none';
+       }
+    }
+  }
+  return true;
+}
+
+RegExp.escape = function(text) {
+  if (!arguments.callee.sRE) {
+    var specials = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'];
+    arguments.callee.sRE = new RegExp(
+      '(\\' + specials.join('|\\') + ')', 'g'
+    );
+  }
+  return text.replace(arguments.callee.sRE, '\\$1');
+}
+
+function hacks() {
+  // show the spacer if necessary, 
+  divs = document.getElementsByTagName('div');
+  for(var x = 0; x < divs.length; x++) {
+    if (divs[x].className && divs[x].className.match(/top/)) {
+      document.getElementById('spacer').style.display = 'block';
+    }
+  }
+  // remove extra colons from tables
+  tds = document.getElementsByTagName('td');
+  for(var x = 0; x < tds.length; x++) {
+    str = tds[x].innerHTML
+    if (str.charAt(str.length - 1) == ":") {
+      tds[x].innerHTML = str.slice(0, str.length - 1)
+    }
+  }
+}
+
+addEvent(window, 'load', insertIndices, false);
+addEvent(window, 'load', abbreviateIndices, false);
+addEvent(window, 'load', stripe, false);
+addEvent(window, 'load', highlightSymbols, false);
+addEvent(window, 'load', hacks, false);
+</script></head><body><div id="container"><div class="curve" id="preheader_curve_0"></div><div class="curve" id="preheader_curve_1"></div><div class="curve" id="preheader_curve_2"></div><div class="curve" id="preheader_curve_3"></div><div class="curve" id="preheader_curve_4"></div><div class="curve" id="preheader_curve_5"></div><div id="header"><p>
+README
+</p><span><h1 id="title">
+File: README
+</h1></span></div><div class="clear"></div><div id="left">
+
+
+
+
+<div id="spacer"></div><div class="navigation darker index" id="class_wrapper"><div class="list_header"><h3>All classes</h3></div><div class="list_header_link"><a onclick="toggle('class'); toggleText('class_link'); return false;" href="#" id="class_link">Hide...</a></div><div class="clear"></div><div id="class"><form><label for="filter_class">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('class', this.value, event);" id="filter_class" onKeyPress="return disableSubmit(event);"></input></form></div></div><div class="navigation darker index" id="file_wrapper"><div class="list_header"><h3>All files</h3></div><div class="list_header_link"><a onclick="toggle('file'); toggleText('file_link'); return false;" href="#" id="file_link">Hide...</a></div><div class="clear"></div><div id="file"><form><label for="filter_file">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('file', this.value, event);" id="filter_file" onKeyPress="return disableSubmit(event);"></input></form></div></div><div class="navigation darker index" id="method_wrapper"><div class="list_header"><h3>All methods</h3></div><div class="list_header_link"><a onclick="toggle('method'); toggleText('method_link'); return false;" href="#" id="method_link">Show...</a></div><div class="clear"></div><div id="method"><form><label for="filter_method">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('method', this.value, event);" id="filter_method" onKeyPress="return disableSubmit(event);"></input></form></div></div></div><div id="content">
+<h1 id="item_name">File: README</h1>
+
+<div id="description"><h1><a href="../classes/Revactor.html">Revactor</a></h1>
+<p>
+<a href="../classes/Revactor.html">Revactor</a> is an <a
+href="../classes/Actor.html">Actor</a> model implementation for Ruby 1.9
+built on top of the Rev high performance event library. <a
+href="../classes/Revactor.html">Revactor</a> is primarily designed for
+writing Erlang-like network services and tools.
+</p>
+<p>
+You can load <a href="../classes/Revactor.html">Revactor</a> into your Ruby
+1.9 application with:
+</p>
+<pre>
+  require 'revactor'
+</pre>
+<p>
+If you&#8216;d like to learn more about the <a
+href="../classes/Actor.html">Actor</a> model, more information is available
+on the <a href="../classes/Revactor.html">Revactor</a> web site:
+</p>
+<p>
+<a href="http://revactor.org/philosophy">revactor.org/philosophy</a>
+</p>
+<p>
+More information about Rev is available on Rubyforge:
+</p>
+<p>
+<a href="http://rev.rubyforge.org/rdoc">rev.rubyforge.org/rdoc</a>
+</p>
+<h2>Anatomy</h2>
+<p>
+<a href="../classes/Revactor.html">Revactor</a> is built out of several
+parts which interoperate to let you build network servers painlessly while
+still guaranteeing correct operation:
+</p>
+<ul>
+<li>Actors - Actors are the main concurrency primitive used by <a
+href="../classes/Revactor.html">Revactor</a>.
+
+</li>
+<li><a href="../classes/Revactor/TCP.html">Revactor::TCP</a> - This module
+provides an API duck typed to the Ruby Sockets API. However, rather than
+blocking calls actually blocking, they defer to the underlying event loop.
+<a href="../classes/Actor.html">Actor</a>-focused means of receiving data
+are also provided.
+
+</li>
+<li>Filters - Applied to all incoming data directly when it&#8216;s received,
+Filters can preprocess or postprocess data before it&#8216;s even delivered
+to an <a href="../classes/Actor.html">Actor</a>. This is useful for
+handling protocol framing or other streaming transforms.
+
+</li>
+</ul>
+<h2>Actors</h2>
+<p>
+Actors are lightweight concurrency primitives which communicate using
+message passing. They multitask cooperatively, meaning that many of the
+worries surrounding threaded programming disappear. Any sequence of
+operations you do in an <a href="../classes/Actor.html">Actor</a> are
+executed in the order you specify. You don&#8216;t (generally) have to
+worry about another <a href="../classes/Actor.html">Actor</a> doing
+something in the background as you frob a particular data structure.
+</p>
+<p>
+Actors are created by calling <a
+href="../classes/Actor.html#M000003">Actor.spawn</a>:
+</p>
+<pre>
+  myactor = Actor.spawn { puts &quot;I'm an Actor!&quot; }
+</pre>
+<p>
+When you spawn an <a href="../classes/Actor.html">Actor</a> it&#8216;s
+scheduled to run after the current <a
+href="../classes/Actor.html">Actor</a> either completes or calls <a
+href="../classes/Actor.html#M000011">Actor.receive</a>. Speaking of which,
+<a href="../classes/Actor.html#M000011">Actor.receive</a> is used to
+receive messages:
+</p>
+<pre>
+  myactor = Actor.spawn do
+    Actor.receive do |filter|
+      filter.when(:dog) { puts &quot;I got a dog!&quot; }
+    end
+  end
+</pre>
+<p>
+You can send a message to an actor using its send method or &lt;&lt;
+</p>
+<p>
+Calling:
+</p>
+<pre>
+  myactor &lt;&lt; :dog
+</pre>
+<p>
+prints:
+</p>
+<pre>
+  &quot;Yay, I got a dog!&quot;
+</pre>
+<p>
+You can retrieve the current <a href="../classes/Actor.html">Actor</a> by
+calling <a href="../classes/Actor.html#M000007">Actor.current</a>. There
+will always be a default <a href="../classes/Actor.html">Actor</a>
+available for every <a href="../classes/Thread.html">Thread</a>.
+</p>
+<h2>Mailboxes</h2>
+<p>
+So, Actors can receive messages. But where do those messages go? The answer
+is every <a href="../classes/Actor.html">Actor</a> has a mailbox. The
+mailbox is sort of like a message queue, but you don&#8216;t have to read
+it sequentially. You can apply filters to it, and change the filterset at
+any time.
+</p>
+<p>
+When you call <a href="../classes/Actor.html#M000011">Actor.receive</a>, it
+yields a filter object and lets you register message patterns you&#8216;re
+interested in, then it sleeps and waits for messages. Each time the current
+actor receives a message, it&#8216;s scanned by the filter, and if a match
+occurs the appropriate action is given.
+</p>
+<p>
+Matching is performed by the Filter#when method, which takes a pattern to
+match against a message and a block to call if the message matches. The
+pattern is compared to the message using ===, the same thing Ruby uses for
+case statements. You can think of the filter as a big case statement.
+</p>
+<p>
+Like the case statement, a class matches any objects of that class. Since
+all classes descend from Object passing Object will match all messages. You
+can also pass a regexp to match against a string.
+</p>
+<p>
+<a href="../classes/Revactor.html">Revactor</a> installs the Case gem by
+default. This is useful for matching against messages stored in Arrays, or
+in fixed-size arrays called Tuples. Case can be used as follows:
+</p>
+<pre>
+  filter.when(Case[:foobar, Object, Object]) { ... }
+</pre>
+<p>
+This will look for messages which are Arrays or Tuples with three members,
+whose first member is the symbol :foobar. As you can probably guess, Case[]
+matches against an Array or <a href="../classes/Tuple.html">Tuple</a> with
+the same number of members, and matches each member of the given tuple with
+===. Once again, Object is a wildcard, so the other members of the message
+can be anything.
+</p>
+<p>
+Want more complex pattern matching? Case lets you use a block to match any
+member by using a guard, ala:
+</p>
+<pre>
+  filter.when(Case[:foobar, Case.guard { |n| n &gt; 100 }, Object]) { ... }
+</pre>
+<p>
+This will look for an Array / <a href="../classes/Tuple.html">Tuple</a>
+with three members, whose first member is the symbol :foobar and whose
+second member is greater than 100.
+</p>
+<p>
+You can also specify how long you wish to wait for a message before timing
+out. This is accomplished with Filter#after:
+</p>
+<pre>
+  filter.after(0.5) { raise 'it timed out ;_;' }
+</pre>
+<p>
+The after method takes a duration in seconds to wait (in the above example
+it waits a half second) before the receive operation times out.
+</p>
+<p>
+<a href="../classes/Actor.html#M000011">Actor.receive</a> returns whatever
+value the evaluated action returned. This means you don&#8216;t have to
+depend on side effects to extract values from receive, instead you can just
+interpret its return value.
+</p>
+<h2>Handling Exceptions</h2>
+<p>
+In a concurrent environment, dealing with exceptions can be incredibly
+confusing. By default, any unhandled exceptions in an <a
+href="../classes/Actor.html">Actor</a> are logged and any remaining Actors
+continue their normal operation. However, Actors also provide a powerful
+tool for implementing fault-tolerant systems that can gracefully recover
+from exceptions.
+</p>
+<p>
+Actors can be linked to each other:
+</p>
+<pre>
+  another_actor = Actor.spawn { puts &quot;I'm an Actor!&quot; }
+  Actor.link(another_actor)
+</pre>
+<p>
+This can also be done as a single &quot;atomic&quot; operation:
+</p>
+<pre>
+  actor = Actor.spawn_link { puts &quot;I'm an Actor!&quot; }
+</pre>
+<p>
+When Actors are linked, any exceptions which occur in one will be raised in
+the other, and vice versa. This means if one <a
+href="../classes/Actor.html">Actor</a> dies, any Actors it&#8216;s linked
+to will also die. Furthermore, any Actors those are linked to also die.
+This occurs until the entire graph of linked Actors has been walked.
+</p>
+<p>
+In this way, you can organize Actors into large groups which all die
+simultaneously whenever an error occurs in one. This means that if an error
+occurs and one <a href="../classes/Actor.html">Actor</a> dies, you&#8216;re
+not left with an interdependent network of Actors which are in an
+inconsistent state. You can kill off the whole group and start over fresh.
+</p>
+<p>
+But if an <a href="../classes/Actor.html">Actor</a> crashing kills off
+every <a href="../classes/Actor.html">Actor</a> it&#8216;s linked to, what
+<a href="../classes/Actor.html">Actor</a> will be left to restart the whole
+group? The answer is that an <a href="../classes/Actor.html">Actor</a> can
+trap exit events from another and receive them as messages:
+</p>
+<pre>
+  Actor.current.trap_exit = true
+  actor = Actor.spawn_link { puts &quot;I'm an Actor!&quot; }
+  Actor.receive do |filter|
+    filter.when(Case[:exit, actor, Object]) { |msg| p msg }
+  end
+</pre>
+<p>
+will print something to the effect of:
+</p>
+<pre>
+  I'm an Actor!
+  [:exit, #&lt;Actor:0x54ad6c&gt;, nil]
+</pre>
+<p>
+We were sent a message in the form:
+</p>
+<pre>
+  [:exit, actor, reason]
+</pre>
+<p>
+and in this case reason was nil, which informs us the <a
+href="../classes/Actor.html">Actor</a> exited normally. But what if it dies
+due to an exception instead?
+</p>
+<pre>
+  Actor.current.trap_exit = true
+  actor = Actor.spawn_link { raise &quot;I fail!&quot; }
+  Actor.receive do |filter|
+    filter.when(Case[:exit, actor, Object]) { |msg| p msg }
+  end
+</pre>
+<p>
+We now get the entire exception, captured and delivered as a message:
+</p>
+<pre>
+  [:exit, #&lt;Actor:0x53ec24&gt;, #&lt;RuntimeError: I fail!&gt;]
+</pre>
+<p>
+If the <a href="../classes/Actor.html">Actor</a> that died were linked to
+any others which were not trapping exits, those would all die and the ones
+trapping exits would remain. This allows us to implement supervisors which
+trap exits and respond to exit messages. The supervisor&#8216;s job is to
+start an <a href="../classes/Actor.html">Actor</a> initially, and if it
+fails log the error then restart it.
+</p>
+<p>
+In this way Actors can be used to build complex concurrent systems which
+fail gracefully and can respond to errors by restarting interdependent
+components of the system en masse.
+</p>
+<h2><a href="../classes/Revactor/TCP.html">Revactor::TCP</a></h2>
+<p>
+The TCP module lets you perform TCP operations on top of the <a
+href="../classes/Actor.html">Actor</a> model. For those of you familiar
+with Erlang, it implements something akin to gen_tcp. Everyone else, read
+on!
+</p>
+<p>
+Perhaps the best part of <a
+href="../classes/Revactor/TCP.html">Revactor::TCP</a> is you don&#8216;t
+really need to know anything about the <a
+href="../classes/Actor.html">Actor</a> model to use it. For the most part
+it&#8216;s duck typed to the Ruby Socket API and can operate as a drop-in
+replacement.
+</p>
+<p>
+To make an outgoing connection, call:
+</p>
+<pre>
+  sock = Revactor::TCP.connect(host, port)
+</pre>
+<p>
+This will resolve the hostname for host (if it&#8216;s not an IPv4 or IPv6
+address), make the connection, and return a socket to it. The best part is:
+this call will &quot;block&quot; until the connection is established, and
+raise exceptions if the connection fails. It works just like the Sockets
+API.
+</p>
+<p>
+However, it&#8216;s not actually blocking. Underneath this call is using
+the <a href="../classes/Actor.html#M000011">Actor.receive</a> method to
+wait for events. This means other Actors can run in the background while
+the current one is waiting for a connection.
+</p>
+<p>
+Furthermore, the <a href="../classes/Actor.html">Actor</a> making this call
+can receive other events and they will remain undisturbed in the mailbox.
+The connect method filters for messages specifically related to making an
+outgoing connection.
+</p>
+<p>
+To listen for incoming connections, there&#8216;s a complimentary method:
+</p>
+<pre>
+  listener = Revactor::TCP.listen(addr, port)
+</pre>
+<p>
+This will listen for incoming connections on the given address and port. It
+returns a listen socket with a accept method:
+</p>
+<pre>
+  sock = listener.accept
+</pre>
+<p>
+Like TCP.connect, this method will block waiting for connections, but in
+actuality is calling <a
+href="../classes/Actor.html#M000011">Actor.receive</a> waiting for messages
+related to incoming connections.
+</p>
+<p>
+Now that you have a handle on a <a
+href="../classes/Revactor.html">Revactor</a> TCP socket, there&#8216;s
+several ways you can begin using it. The first is using a standard
+imperative sockets API:
+</p>
+<pre>
+  data = sock.read(1024)
+</pre>
+<p>
+This call will &quot;block&quot; until it reads a kilobyte from the socket.
+However, you may not be interested in a specific amount of data, just
+whenever data is available on the socket. In that case, you can just call
+the read method without any argument:
+</p>
+<pre>
+  data = sock.read
+</pre>
+<p>
+There&#8216;s also a corresponding command to write to the socket. Like
+read this command will also &quot;block&quot; until all data has been
+written out to the socket:
+</p>
+<pre>
+  sock.write data
+</pre>
+<p>
+For Actors that want to deal with both incoming TCP data and messages from
+other Actors, <a href="../classes/Revactor.html">Revactor</a>&#8216;s TCP
+sockets also support an approach called active mode. Active mode
+automatically delivers incoming data as a message to what&#8216;s known as
+the Socket&#8216;s controller. You can assign the Socket&#8216;s controller
+whenever you want:
+</p>
+<pre>
+  sock.controller = Actor.current
+</pre>
+<p>
+Once you&#8216;ve done this, you can turn on active mode to begin receiving
+messages:
+</p>
+<pre>
+  sock.active = true
+  Actor.receive do |filter|
+    filter.when(Case[:tcp, sock, Object]) do |_, _, data|
+      ...
+    end
+
+    filter.when(Case[:somethingelse, Object]) do |_, message|
+      ...
+    end
+  end
+</pre>
+<p>
+(note: _ is an idiom which means ignore/discard a variable)
+</p>
+<p>
+With active mode, the controller will receive all data as quickly as it can
+be read off the socket. If the <a href="../classes/Actor.html">Actor</a>
+processing incoming message can&#8216;t process them as quickly as
+they&#8216;re being read, then they&#8216;ll begin piling up in the mailbox
+until the controller is able to catch up (if ever).
+</p>
+<p>
+In order to prevent this from happening, sockets can be set active once:
+</p>
+<pre>
+  sock.active = :once
+</pre>
+<p>
+This means read the next incoming message, then fall back to active =
+false. The underlying system will stop monitoring the socket for incoming
+data, and you&#8216;re free to spend as much time as you&#8216;d like
+handling it. Once you&#8216;re ready for the next message, just set active
+to :once again.
+</p>
+<h2>Filters</h2>
+<p>
+Not to be confused with Mailbox filters, <a
+href="../classes/Revactor.html">Revactor</a>&#8216;s TCP sockets can each
+have a filter chain. Filters are specified when a connection is created:
+</p>
+<pre>
+  sock = Revactor::TCP.connect('irc.efnet.org', 6667, :filter =&gt; :line)
+</pre>
+<p>
+Filters transform data as it&#8216;s read or written off the wire. In this
+case we&#8216;re connecting to an IRC server, and the IRC protocol is
+framed using a newline delimiter.
+</p>
+<p>
+The line filter will scan incoming messages for a newline, and buffer until
+it encounters one. When it finds one, it will reassemble the entire message
+from the buffer and deliver it to you in one fell swoop.
+</p>
+<p>
+With the line filter on, receiving messages off IRC is easy:
+</p>
+<pre>
+  message = sock.read
+</pre>
+<p>
+This will provide you with the entire next message, with the newline
+delimiter already removed.
+</p>
+<p>
+If the filter name is a symbol, <a
+href="../classes/Revactor.html">Revactor</a> will look under its filters
+directory for a class of the cooresponding name. Alternatively you can pass
+the name of a class you created yourself which responds to the methods
+encode and decode:
+</p>
+<pre>
+  sock = Revactor::TCP.connect(host, port, :filter =&gt; MyFilter)
+</pre>
+<p>
+Filter chains can be specified by passing an array:
+</p>
+<pre>
+  sock = Revactor::TCP.connect(host, port, :filter =&gt; [MyFilter, :line])
+</pre>
+<p>
+You can pass arguments to your filter&#8216;s initialize method by passing
+an array with a class name as a member of a filter chain:
+</p>
+<pre>
+  sock = Revactor::TCP.connect(host, port, :filter =&gt; [[Myfilter, 42], :line])
+</pre>
+<p>
+In addition to the line filter, <a
+href="../classes/Revactor.html">Revactor</a> bundles a :packet filter. This
+filter constructs messages with a length prefix that specifies the size of
+the remaining message. This is a simple and straightforward way to frame
+discrete messages on top of a streaming protocol like TCP, and is used for,
+among other things, DRb.
+</p>
+<h2><a href="../classes/Mongrel.html">Mongrel</a></h2>
+<p>
+<a href="../classes/Revactor.html">Revactor</a> includes complete support
+for running <a href="../classes/Mongrel.html">Mongrel</a> on top of Actors
+and <a href="../classes/Revactor/TCP.html">Revactor::TCP</a>. The
+implementation monkeypatches two methods in the <a
+href="../classes/Mongrel/HttpServer.html">Mongrel::HttpServer</a> class.
+Initial benchmarks show better throughput and concurrency than threaded <a
+href="../classes/Mongrel.html">Mongrel</a> running on Ruby 1.8 or 1.9.
+</p>
+<p>
+To use <a href="../classes/Mongrel.html">Mongrel</a> on top of <a
+href="../classes/Revactor.html">Revactor</a>, just:
+</p>
+<pre>
+  require 'revactor/mongrel'
+</pre>
+<p>
+Then call <a href="../classes/Mongrel.html">Mongrel</a> within an
+Actor.start block. The semantics are the same. The only difference is that
+Actors, not Threads, are being used for concurrency.
+</p>
+<h2>Roadmap</h2>
+<p>
+<a href="../classes/Revactor.html">Revactor</a> is still in its infancy.
+Erlang and its Open Telcom Platform are an extremely feature rich platform,
+and many features can be borrowed and incorporated into <a
+href="../classes/Revactor.html">Revactor</a>.
+</p>
+<p>
+The first and foremost feature to be added is the concept of linked Actors.
+This idea is somewhat difficult to explain for the uninitiated, but the
+general concept is that interdependent Actors are linked in a graph. When
+one <a href="../classes/Actor.html">Actor</a> dies, it kills all linked
+Actors is well. However, special Actors trap the exit messages from the
+Actors they&#8216;re linked with. These Actors are generally supervisors
+and restart any linked <a href="../classes/Actor.html">Actor</a> graphs
+which crash.
+</p>
+<p>
+Next on the agenda is implementing DRb. This should be possible simply by
+monkeypatching the existing DRb implementation to run on top of <a
+href="../classes/Revactor/TCP.html">Revactor::TCP</a>. Once DRb has been
+implemented it should be fairly trivial to implement distributed <a
+href="../classes/Actor.html">Actor</a> networks over TCP using DRb as the
+underlying message passing protocol.
+</p>
+<p>
+Long term items include implementation of more Filters, Behaviors, and
+protocol modules. These include an HTTP client (subclassed from the client
+in Rev), an HTTP server adapter (using the <a
+href="../classes/Mongrel.html">Mongrel</a> parser), and the gen_fsm
+behavior from Erlang. Additional areas of concern are addressing the
+problems of mutable state in conjunction with Server and FSM behaviors. A
+possible solution is to implement a tuple which stores immutable
+collections of primitive types like numbers, strings, and symbols, but this
+approach is likely to be slow.
+</p>
+</div>
+
+
+
+
+<p></p>
+
+
+
+
+
+
+
+</div><div class="clear" id="footer">Generated on Jan 29, 2008 / Allison 2 &copy; 2007 <a href="http://cloudbur.st">Cloudburst, LLC</a></div></div></body></html>
