@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'>
+<head>
+   <title>libev</title>
+   <style type='text/css'>
+      body {
+        background: white;
+        color: black;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12pt;
+      }
+
+      .bg-ede         { background: url(/img/ede.jpg)    no-repeat; padding: 20px; width: 100%; height:  82px; }
+      .bg-perl        { background: url(/img/perl.jpg)   no-repeat; padding: 20px; width: 100%; height: 194px; }
+      .bg-bluete      { background: url(/img/bluete.jpg) no-repeat; padding: 20px; width: 100%; height: 148px; }
+
+      a:link          { color: #00f; }
+      a:visited       { color: #008; }
+      a:hover         { color: #800; }
+      a:active        { color: #f00; }
+
+      .back           {
+         margin: 0;
+         font-size: 8pt;
+      }
+
+      h1              {
+        color: #034;
+      }
+      .short-desc     {
+        font-weight: bold;
+        padding: 3px 3px 3px 8px;
+        margin: 1em 1px 1px 13px;
+      }
+      h2              {
+        color: #069;
+        font-weight: bold;
+        border: solid red;
+        border-width: 0 0 0 12px;
+        padding: 3px 3px 3px 8px;
+        margin: 1em 1px 1px 1px;
+      }
+      p               {
+        padding: 3px 3px 3px 8px;
+        margin: 1em 1px 1px 13px;
+      }
+      h3              { color: #034; }
+      h4              { color: #034; }
+
+      img             { display: block; }
+
+      .resources      {
+        margin-left: 13px;
+        margin-right: 13px;
+        padding: 3px 3px 3px 8px;
+        border-spacing: 1px 2px;
+      }
+
+      .rr             {
+        background: #eef;
+        padding: 1px 1em 1px 1ex;
+      }
+
+      tt.icon         {
+        display: block;
+        font-family: "Andale Mono", "Lettergothic", monospace;
+        border: 1px solid #88f;
+        background: #ccf;
+        padding: 1px 1em 1px 1em;
+        margin-right: 0;
+        text-align: center;
+        width: 4en;
+      }
+
+      tt              { font-family: "Andale Mono", "Lettergothic", monospace; }
+
+      .overview       {
+        margin-top: 1em;
+        margin-left: 13px;
+        margin-right: 13px;
+        padding: 3px 3px 3px 8px;
+        border-spacing: 1px 2px;
+      }
+
+      .overview th    { border-top: 1px dashed #aaa; vertical-align: top; text-align: left; padding: 0.2ex; }
+      .overview td    { border-top: 1px dashed #aaa; vertical-align: top; text-align: left; padding: 0.2ex; }
+
+      hr.footer       { display: none; }
+      .footer         { font-size: 8pt; border-top: 1px solid red; }
+   </style>
+</head>
+<body>
+<p class='back'><a href='/'>Schmorpforge Ta-Sa Software Repository</a></p>
+<h1 class="bg-ede">libev</h1>
+<div style="text-align: center; float: right; margin-left: 1em; margin-bottom: 1em">
+<!--
+   <a title="Mach mit!" href="http://www.piratenpartei.de/navigation/politik/unsere-ziele">
+      <img src="http://res.tst.eu/denke_selbst.gif" alt="Werde Pirat!" width="468" height="60" border="0" />
+   </a>
+   <br />
+-->
+   <a href="http://www.piratenpartei.de/navigation/politik/unsere-ziele"> 
+      <img src="http://res.tst.eu/piraten1.png" alt="Piratenpartei" width="468" height="60" border="0" />
+   </a>
+   <br />
+   <a href="http://www.deliantra.net/">
+      <img src="http://www.deliantra.net/images/deliantra.png" border="0" alt="Deliantra Free MMORPG" style="display: inline"/>
+      <br />
+      The free as in beer, liberal, code &amp; content retro-style graphical MMORPG :)
+   </a>
+</div>
+<h2>libev</h1>
+<p class='short-desc'> A full-featured and high-performance (<a
+ href="http://libev.schmorp.de/bench.html">see benchmark</a>) event loop that
+ is loosely modelled after libevent, but without its limitations and bugs. It is
+ used, among others, in the <a href="gvpe.html">GNU Virtual Private Ethernet</a> and
+ <a href="rxvt-unicode.html">rxvt-unicode</a> packages, and in
+ the Deliantra MORPG Server and Client.</p>
+
+<h2>Blurb</h2>
+<p class='blurb'> Features include child/pid watchers, periodic timers based on wallclock
+ (absolute) time (in addition to timers using relative timeouts), as well
+ as epoll/kqueue/event ports/inotify/eventfd/signalfd support, fast timer
+ management, time jump detection and correction, and ease-of-use.
+ <p />
+
+ It can be used as a libevent replacement using its emulation API or
+ directly embedded into your programs without the need for complex
+ configuration support. A full-featured and well-documented
+ <a href="EV.html">perl interface</a> is also available.
+ <p />
+ A <a href="http://lists.schmorp.de/mailman/listinfo/libev">mailing
+ list</a> for discussion and support is now available.
+
+</p>
+<h2>Resources</h2>
+<table class='resources'>
+<tr><td><tt class="icon">CVS</tt></td><td class='rr'><a href='http://cvs.schmorp.de/libev'>Browsable CVS module 'libev'</a></td></tr>
+<tr><td><tt class="icon">CVS</tt></td><td class='rr'>Anonymous CVS:
+   <tt>&#160;cvs -z3 -d :pserver:anonymous@cvs.schmorp.de/schmorpforge co libev</tt>
+
+   <small>
+   
+<!--
+   <p>The warning
+   <b>cvs checkout: warning: cannot write to history file /schmorpforge/CVSROOT/history: Permission denied</b>
+   is expected and harmless, just ignore it. It simply means you have no write access to the repository.
+   </p>
+-->
+
+<!--
+   <p>The CVS server moved again on 2008-02-21, you can use the following
+   (untested) snippet to update your CVS checkout. Run it in the top level
+   checked out directory:</ br>
+
+   <pre>
+find . -name CVS | xargs -I% find % -name Root |
+   xargs perl -i -pe 's%:pserver:anonymous\@cvs.schmorp.de:636/schmorpforge%:pserver:anonymous\@cvs.schmorp.de:/schmorpforge%'</pre>
+   </p>
+-->
+
+   </small>
+
+</td></tr>
+<tr><td><tt class='icon'>FILE</tt></td><td class='rr'><a href='http://dist.schmorp.de/libev/'>File Releases</a></td></tr>
+<tr><td><tt class='icon'>LIST</tt></td><td class='rr'><a href='http://lists.schmorp.de/mailman/listinfo/libev'>Mailing List 'libev'</a></td></tr>
+<tr><td><tt class='icon'>IRC</tt></td><td class='rr'>Server <a href='http://chat.schmorp.de/?channels=schmorpforge'><tt><b>irc.schmorp.de</b></tt>, channel <tt>#schmorpforge</tt></a>, users <tt>schmorp</tt> and <tt>elmex</tt> <b>(say hi and <i>wait a few minutes or hours</i>)</b></td></tr>
+</table><h2>Additional Documents</h2><table class='resources'><tr><td><tt class='icon'>FILE</tt></td><td class='rr'><a href='http://cvs.schmorp.de/libev/README'>README</a></td></tr><tr><td><tt class='icon'>POD</tt></td><td class='rr'><a href='http://pod.tst.eu/http://cvs.schmorp.de/libev/ev.pod'>ev.pod</a></td></tr></table><hr class='footer'/>
+<p class='footer'>
+   Contact for this page: <a href="mailto:schmorpforge@schmorp.de">Marc Lehmann &lt;schmorpforge@schmorp.de&gt;</a>.
+</p>
+</body>
+</html>
