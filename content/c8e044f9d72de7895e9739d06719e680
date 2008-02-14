@@ -1,0 +1,1247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>littleb.org - tutorial</title>
+			<LINK REL="SHORTCUT ICON" HREF="./favicon.ico">
+			<link rel=stylesheet type="text/css" href="./style-navbar.css" >
+			<link rel=stylesheet type="text/css" href="./style.css" >
+			<META name="keywords" content="systems biology, modeling, pi calculus, SBML, SysML, Mathematica, MatLab, SimuLink, semantic web, artificial intelligence, symbolic mathematics, Lisp, metaprogramming, dynamic languages, domain specific languages, Harvard, simulation">
+	 </head>
+  <body>
+	    <table Cellpadding="0" Rules="none" cellspacing="0"
+			id=banner><!--class="menu base">-->
+      <tr>
+        <td class=banner>
+          <img src="./images/banner-left.png" alt="">
+        </td>
+        <td width="100%" class=banner> 
+          <img src="./images/banner-text.png" alt=
+          "Little b, a modular modeling language designed by Aneil Mallavarapu">
+          </td>
+        <td class=banner>    
+					<img src="./images/banner-right.png" alt="">
+        </td>
+      </tr>
+			<tr>
+				<td colspan=3 class=menu>
+					<p>
+            <a href="index.html" class="navbar">home</a> / 
+						<a href="intro.html" class="navbar">intro</a> / 
+						<a href="faq.html" class="navbar">faq</a> /
+						<a href="tutorial.html" class="navbar">tutorial</a> / 
+						<a href="manual.html" class="navbar">manual</a> /
+						<a href="models.html" class="navbar">models</a> /  
+						<a href="download.html" class="navbar">download</a> / 
+						<a href="people.html" class="navbar">people</a> /
+						<a href="about.html" class="navbar">about</a> 
+					</p>
+				</td>
+			</tr>
+    </table>	<table class="title">
+		<tr><td>biochemical modeling - quickstart tutorial</td>
+		<td class=title-nav>						
+    		<a href="tutorial.html">
+					<img src="./images/up-arrow.png"/></a>
+		</td></tr>
+		</table>
+		
+
+<h4 class=header>molecular complexes and reactions in little b </h4>
+
+<p class=main>In little b, molecular complexes are represented as graphs
+of connected components called monomers.  Each monomer has one or more <i>sites</i>
+which may be either <i>bond</i> sites or <i>state</i> sites.  Bond sites
+represent regions of interaction between monomers.  State sites represent
+modifications – different states – of a part of a molecule.  </p>
+
+
+
+<p class=main>Monomers are defined using the <b><i>defmonomer</i> </b>form. 
+Let’s define a molecule called scaffold with three bond sites:</p>
+
+
+
+<p class=code>(defmonomer scaffold
+a b c)</p>
+
+
+
+<p class=main><img 
+height=140 src="images/imc_scaffold.gif"></span></p>
+
+<p class=main>That’s it.  Now let’s define a kinase called mapk:</p>
+
+
+
+<p class=code>(defmonomer mapk s (psite
+:states (member :u :p)))</p>
+<p class=main><img width=173 height=121
+src="images/imc_mapk.gif"></p>
+
+
+
+<p class=main>This monomer has 2 sites; a bond site, named <b><i>s</i></b>,
+and a state site, named <b><i>psite</i></b>, which represents a single
+phosphorylatable epitope.  We indicate it is a state site, with the <b><span
+style='font-family:"Courier New"'>:states</span></b><span style='font-family:
+"Courier New"'> </span>keyword.  This is followed by a Lisp type specifier
+indicating the valid states for this site.  In this case, the P sites may have
+states :u (which we use to mean “unphosphorylated”) or :p (“phosphorylated”). 
+We’re saying that the value of psite should be a member of the set (:U :P).</p>
+
+
+
+<p class=main>In addition to the site name, one can specify <i>tags</i>,
+which are additional names which are useful for matching patterns (more on this
+later).  Tags specify additional information about a site.  For example, to
+specify that the psite is a serine residue, we might adopt a convention of using
+the tag :serine to indicate this.  In addition, we may wish to record the amino
+acid identifier.  In this case, ser405:</p>
+
+
+
+<p class=code>(defmonomer mapk s (psite :states
+(member :u :p) :tags (:serine :ser405)))</p>
+
+<p class=main> </p>
+
+<h5 class=header>Describing complexes using [ ]</h5>
+
+<p class=main>Complexes are described using the square brackets.  A
+complex consisting of a single monomer uses only one pair of square brackets. 
+For example,</p>
+
+
+
+<p class=code>[scaffold _ _ _] </span></p>
+
+<p class=main><img width=96 height=140
+src="images/imc_scaffold2.gif" align=left
+hspace=12><span style='font-family:"Courier New"'><br clear=all>
+</span></p>
+
+
+
+<p class=main>indicates a single scaffold monomer where sites A, B, and C
+are all unconnected, indicated by the _ symbol.  The sites are specified in
+order, and the values specified are called the bindings.  Alternatively, one
+could refer to the sites by name like so.</p>
+
+
+
+<p class=code>[scaffold A._ B._
+C._] </span></p>
+
+
+
+<p class=main>or <span style='font-family:"Courier New"'>[scaffold B._ C._
+A._]</span> etc.</p>
+
+
+
+<p class=main>Here, the unconnected binding _ appears after the dot
+following the name of the site.  If a binding is not provided for a bond site,
+it is assumed by default to be unconnected, so the forms above could be written
+in abbreviated form as:</p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=code>[scaffold]</span></p>
+
+
+
+<p class=main>Objects like those described above are instantiated inside
+little b as instances of CLOS (Common Lisp Object System) classes.  This type
+of object is a <i>complex-species-type</i>.</p>
+
+
+
+<p class=main><i>Connecting sites using bond labels</i></p>
+
+<p class=main><i>&nbsp;</i></p>
+
+<p class=main>Bonds connect sites to each other, and are specified with numbers. 
+Bonds are specified when two sites share the same binding <i>and </i>the
+binding is a positive number.  Here is a scaffold in which an intramolecular
+bond connects sites B and C:</p>
+
+
+
+<p class=code>[scaffold _ 1 1]</span></p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=code><img width=96
+height=140 src="images/imc_scaffold_intra.gif"></span></p>
+
+
+
+<p class=main>These numbers (always positive integers) are called <b><i>bond
+labels</i></b>.  They can appear in any order, need not start at 1, but must be
+positive integers.  This means, </p>
+
+
+
+<p class=code>[scaffold _ 1 1] =
+[scaffold _ 2 2] = [scaffold _ 999 999]</span></p>
+
+
+
+
+
+<p class=main>Note, we also could have specified this bond by referring explicitly
+to site names, like so:</p>
+
+
+
+<p class=code>[scaffold C.1 B.1]</span></p>
+
+
+
+<p class=main>or so:</p>
+
+
+
+<p class=code>[scaffold B.1 C.1
+A._]</span></p>
+
+
+
+<p class=main>Not a formal specification, but hopefully you get the
+picture.</p>
+
+
+
+<p class=main><i>Specifying state</i></p>
+
+
+
+<p class=main>Like bonds, states are specified by supplying a value at the
+position or after the name of a site.  For example, to specify the
+phosphorylated form of one of the kinases, we’d write:</p>
+
+
+
+<p class=code>[mapk _ :p]</span></p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=main><a name="OLE_LINK2"></a><a name="OLE_LINK1"><img width=149
+height=104 src="images/imc_mapk_p.gif"></a></p>
+
+<p class=main>or alternatively,</p>
+
+
+
+<p class=code>[mapk psite.p] </span>(the
+S site unbound by default)</p>
+
+
+
+<p class=main>The default value of a state site is either specified
+explicitly.  For example,</p>
+
+
+
+<p class=main><span style='font-size:11.0pt;font-family:"Courier New"'>(defmonomer
+mapk s (psite :states (member :u :p) :default :u))</span></p>
+
+
+
+<p class=main>If a default is not explicitly specified and the type is a
+member type specifier (a list beginning with <b>member</b>), then the first list
+element following member is used (in this case, :u).</p>
+
+
+
+<p class=main><i>Specifying complexes composed of multiple monomers</i></p>
+
+
+
+<p class=main>Ok, now that we’ve seen the basic components of the syntax,
+let’s connect two monomers together.  All that’s required is an outer set of
+square brackets.  A bond label bound to sites in different monomers indicates
+an intermolecular bond.  Here, the scaffold A site is connected to the mapk S
+site, and the mapk monomer is unphosphorylated (Psite state= :U):</p>
+
+
+
+
+
+<p class=code>[[scaffold 1 _
+_][mapk 1 :u]]</span></p>
+
+
+
+<p class=main><img width=216 height=129
+src="images/imc_scaffold-mapk.gif"></p>
+
+
+
+<p class=main>alternatively:  </p>
+
+<p class=code>[[scaffold 1][mapk
+1]]</span></p>
+
+<p class=code>[[scaffold A.1][mapk
+S.1 Psite.u]]</span></p>
+
+<p class=main>etc.</p>
+
+
+
+<p class=main>Complexes containing multiple monomers are no different
+(except for the outer set of brackets) than ones containing a single monomer.  Shared
+bond labels specify connections between bond sites.  Single-bracket expressions
+describing complexes of one monomer and double bracket expressions in which
+several monomers are involved both create instances of <i>complex-species-type</i>.</p>
+
+
+
+<h5 class=header>Patterns</h5>
+
+
+
+<p class=main>Pattern matching is specified by means of the asterisk.  It
+is used in place of a bond label (or the unconnected label, _) for a bond site
+and in place of the state for a state site.</p>
+
+
+
+<p class=main>For example, to specify all complexes in which the scaffold
+is bound to mapk via the A and S sites, we write:</p>
+
+
+
+<p class=code>[[scaffold 1 *
+*][mapk 1 *]]</span></p>
+
+
+
+<p class=main>The asterisks specify that the B and C sites of the scaffold
+may be bound to other complexes (or they may be unbound, _).  The asterisk at
+the PSITE position of mapk indicates that any state (:U or :P) is matched.  </p>
+
+
+
+<p class=main>Objects containing wildcards are instances of the CLOS complex-pattern
+class.  When b/biochem/ode is loaded (usually by including b-user/ode-biochem),
+an accessor field T0 is available which allows you to set the initial
+conditions of all complex-species-types matching the pattern.  For example,
+this sets the T0 initial condition of all complex-species-types containing an
+A/S bond between a scaffold and mapk:</p>
+
+
+
+<p class=code>{[[scaffold 1 *
+*][mapk 1 *]].t0 := 5}</span></p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=main><i>The Double Wildcard (**)</i></p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=main>As we’ve seen, bond sites and state sites may be left
+unspecified, in which case a default is used.  For bond sites, this is normally
+_.  It would be nice to be able to say that the wildcard is the default.  This
+is what the double wildcard (**) does; any unspecified sites are treated as if
+* were used.  </p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=main>For example, </p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=code>[scaffold _ * *] </span>is
+the same as  <span style='font-family:"Courier New"'>[scaffold _ **]</span></p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=code>[scaffold B._ A.*
+C.*] </span>is the same as <span style='font-family:"Courier New"'>[scaffold
+B._ **]</span></p>
+
+<p class=code>&nbsp;</span></p>
+
+
+
+<p class=main><i>Wildcard monomer patterns</i></p>
+
+
+
+<p class=main>Wildcard monomer patterns start with an asterisk, and allow
+matching of any monomer.  They look like this:</p>
+
+
+
+<p class=code>[* <i>site-patterns</i>]</span></p>
+
+
+
+<p class=main>Each site pattern has the following form:</p>
+
+
+
+<p class=main><i><span style='font-family:"Courier New"'>label-pattern.binding</span></i></p>
+
+
+
+<p class=main>The label pattern is either a symbol or a list which should
+match the site name or one of its tags.  By default, the list is interpreted as
+an “and” requirement.  That is, the site’s labels (tags + name) should include
+all of the specified labels.  For example,</p>
+
+
+
+<p class=code>[* (serine psite)]</span></p>
+
+
+
+<p class=main>matches all complexes containing a serine phosphorylation
+site.  More complex logical pattern matches can be built by explicitly
+specifying <b>and</b>, <b>or</b> and <b>not</b> prefix expressions. E.g.,</p>
+
+
+
+<p class=code>[* (and (or :tyrosine
+:serine) (not :psite))]</span></p>
+
+
+
+<p class=main>matches any monomer with the tags :tyrosine or :serine, but
+not with the tag :psite. </p>
+
+
+
+<p class=main>The <i>binding</i> is specified after the dot.  </p>
+
+
+
+<p class=main>To specify site state, use the dot operator:</p>
+
+
+
+<p class=code>[* (serine psite).[:u
+:p]] </span></p>
+
+
+
+<p class=main>The .[] indicates that the site is a state site.  The values
+inside the .[] are treated by default as a logical OR operation – since it
+makes no sense to be in multiple states at once.  However, one might wish to
+exclude a specific state:</p>
+
+
+
+<p class=code>[* (serine
+psite).[not :p]]</span></p>
+
+
+
+<p class=main>Bond sites are similarly specified.  The binding appears
+after the dot:</p>
+
+
+
+<p class=code>[* (A B).*] </span>will
+match any complex containing a site with A <i>and </i>B labels.  This is the
+same as <span style='font-family:"Courier New"'>[* (AND A B).*]</span></p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=code>[* (OR A B)._] </span>will
+match any complex containing an unbound A site or an unbound B site. </p>
+
+
+
+<p class=code>[* A._] </span>will
+match any complex containing an unbound A site. Note how we don’t need to use a
+list:<span style='font-family:"Courier New"'> A._</span> is treated the same as
+<span style='font-family:"Courier New"'>(A)._</span>.</p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=code>[[scaffold A.1][* X.1]]
+w</span>ill match any complex in which a scaffold is bound to an X site via its
+A site.</p>
+
+
+
+<p class=main>To match any set of labels, either use the empty list or *. 
+For example, both <span style='font-family:"Courier New"'>[* ()._] </span>and<span
+style='font-family:"Courier New"'> [* *._]</span> are patterns which match
+monomers with at least one empty site.</p>
+
+<p class=code>&nbsp;</span></p>
+
+
+
+<h5 class=header>Reactions</h5>
+
+
+
+<p class=main>Reactions are specified using the -&gt;&gt; infix operator,
+as follows:</p>
+
+
+
+<p class=code>{<i>lhs-pattern </i>-&gt;&gt;
+<i>rhs-pattern</i>} </span></p>
+
+
+
+<p class=main>They specify the transformation of complexes matching the
+left hand side pattern to those on the right hand side.  Patterns are written
+separated by the + symbol.  For example, to write the reaction for scaffold
+binding to mapk via the A/S sites, we write:</p>
+
+
+
+<p class=main><span style='font-size:11.0pt;font-family:"Courier New"'>{[scaffold
+_ * *] + [mapk _ *] -&gt;&gt; [[scaffold 1 * *][mapk 1*]]}</span></p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=main>If multiple monomers of the same kind are combined in a
+complex, some ambiguity may exist in specifying a reaction.  In this case, it
+is possible to label each monomer using the dot operator.  Here is the equivalent
+reaction where we have explicitly labeled the monomers: </p>
+
+
+
+<p class=main><span style='font-size:10.0pt;font-family:"Courier New"'>{[scaffold.a
+_ * *] + [mapk.b _ *] -&gt;&gt; [[scaffold.a 1 * *][mapk.b 1*]]}</span></p>
+
+
+<p class=main>To be precise, objects generated by the -&gt;&gt; infix
+operator are instances of the CLOS class, <i>complex-reaction-type</i>, and I
+should probably refer to them as “complex reaction type objects” – a bit
+clumsy, so I’ll refer to them simply as “reactions” here.</p>
+
+
+
+<h5 class=header>Locations</h5>
+
+<p class=main>Reactions can occur in many different locations.  For example, an
+ion channel may be present in a cell's outer plasma membrane as well as in the
+membranes of various organelles.  In little b, we describe the reaction <em>once</em>,
+and let little b figure out which species are required.  The trick to making this
+work is to describe reactions in a <em>location-independent</em> manner.  What
+you'll see is that in little b, you describe reactions in terms of location-classes
+rather than specific locations.  For example, for a reaction involving binding of
+a ligand to a membrane-bound receptor, you'll describe the reaction in terms of
+<em>any membrane</em>, instead of a specific membrane you've created in your model.</p>
+ 
+<p class=main>The way to think about any little b reaction specification is in terms
+of the location-class in which that reaction occurs.  In the reactions we've looked
+at so far, the <em>implicit</em> location-class has been COMPARTMENT.  (Common
+location-classes are defined in b/biochem/location.)  For most purposes, you'll only
+need to worry about two: COMPARTMENT and MEMBRANE. Compartments have no structure - 
+they are simple volumetric containers for species.   Membranes are more interesting - 
+they have relations to inner and outer locations - both of which must be compartments.
+You can define a membrane enclosing a compartment named cytoplasm like so:</p>
+
+<p class=code>(define ecm [[compartment] {.size.value := 1}) ; extracellular milieu<BR>
+              (define cytoplasm [[compartment]]  {.size.value := .1}]) ; cytoplasm<BR>
+							(define m1 [[membrane] :outer ecm :inner cytoplasm  {.size.value := .5}])</p>  
+							
+<p class=main>Notice the :OUTER and :INNER keywords in the m1 definition?  That's
+simply how little b initializes fields of the membrane object.  In this case, the
+:OUTER and :INNER fields point to the ECM and CYTOPLASM.  M1, ECM and CYTOPLASM 
+are locations, instances of LOCATION-CLASSes (MEMBRANE, COMPARTMENT and COMPARTMENT,
+respectively).  You can think of the location-classes as stereo-typed molecular situations.
+In little b, we describe reactions in terms of the stereo-typed situation, rather
+than the specific instances involved. </p>
+
+<p class=main>For example, if we wish to describe the binding of a ligand to a 
+membrane-bound receptor, we'll describe the reaction in terms of the MEMBRANE
+location-class and the :INNER and :OUTER fields, rather than the specific locations
+we've defined in our model (m1, ecm, cytoplasm).  The advantage of this approach
+is that it means that rather than having to rewrite reactions every time new compartments
+are added, we can let little b figure it out based on a generic description. An
+example will help at this point.</p>
+
+
+<p class=main>Let’s define a ligand and receptor, with cognate receptor (R) and 
+ligand (L) binding sites.</p>
+
+<p class=code>(defmonomer ligand
+R)</span></p>
+
+<p class=code>(defmonomer (receptor
+<span style='color:red'>membrane</span>) L)</span></p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=main>Take a look at the definition of the receptor monomer.  The
+first argument is a list which specifies the name and the location-class
+(membrane), which is highlighted.  Until now we have left the location-class
+unspecified (little b assumes it is <span style='font-family:"Courier New"'>compartment</span>
+by default).  That is, the above definition of ligand is equivalent to:</p>
+
+<p class=code>(defmonomer (ligand compartment)
+R)</span></p>
+
+<p class=main>To specify the binding of ligand to receptor, we write:</p>
+
+<p class=code>{[receptor
+_] + [ligand _] @ :outer -&gt;&gt; [[receptor 1][ligand 1]]}</p>
+
+
+<p class=main>Notice the funny @ symbol? That's the localization operator.  When 
+a reaction involves molecules interacting between different compartments,
+multiple different locations are involved, we use @ to specify relative location
+of one of the components.  Huh?  Relative to what???  The answer is - relative 
+to the location in which the reaction occurs. This point requires some explaining.  
+Read carefully:</p>
+
+<p class=main>Each reaction is defined, implicitly or explicitly with respect to
+some location-class.  In all of reactions we've defined up to this point, the location-class
+has implicitly been COMPARTMENT.  Little b infers the location-class of the reaction
+by looking at the left (LHS) and right hand side (RHS) components.  Any complexes which don't
+have the @ operator following them are treated as though they are in the same
+location as the reaction.  In the reaction above, <span class=code>[receptor _]</span>
+has no @ operator, and contains a single monomer that resides in membranes.  This
+complex is said to be "in the default location" with respect to the location-class. On
+the other hand, <span class=code>[ligand _]</span> is followed by <span class=code>
+@ :outer</span>, so it is not considered when trying to figure out the location-class
+of the reaction.  But what about <span class=code>[[receptor 1][ligand 1]]</span>?
+That contains a membrane and  a compartment monomer.  Little b follows a simple 
+rule for determining the location-class of complexes: the lowest dimensionality 
+location wins.  Membranes are 2-dimensional; compartments are 3 dimensional.  Using
+this approach, little b determines that this complex has location-class membrane.
+Thus, this reaction has two components which are unadorned by the @ operator, and
+which have the same location-class.  So, this reaction has the location-class membrane. 
+(Note, little b reports an error if more than one default location-class is implied 
+by the reaction components - e.g., <span class=code>{[receptor] + [ligand] ->> ... }</span>
+is an error since RECEPTOR and LIGAND have different location-classes.</p> 
+
+<p class=main>In the reaction we've defined, the ligand is <i>localized</i> to the :outer 
+compartment of the membrane.  Note that the @ operator binds more tightly than the + operator,
+meaning that this expression is equivalent to the following (note the
+highlighted braces):</p>
+
+<p class=main><span style='font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=main><span style='font-size:10.0pt;font-family:"Courier New"'>{[receptor
+_] + <b><span style='color:red'>{</span></b>[ligand _] @ :outer<b><span
+style='color:red'>}</span></b> -&gt;&gt; [[receptor 1][ligand 1]]}</span></p>
+
+<p class=main>When we actually put the ligand and receptor in various specific locations:</p>
+<p class=code>ecm.(contains [ligand])
+              m1.(contains [receptor])</p>
+<p class=main>Little b infers the reaction occurs, because [ligand _] is in the 
+compartment pointed at by the :OUTER field of the membrane M1.  Note that we could
+create a second membrane, M2 with a different :INNER compartment (cyto2, say), and
+the same :OUTER compartment:</p>
+<p class=code>(define cyto2 [compartment])<BR>
+              (define m2 [[membrane] :outer ecm :inner cyto2])</p>
+
+<p class=main>Now, all we have to do is say <span class=code>m2.(contains [receptor _]),
+and little b will use the same reaction definition to infer the presence of the
+ligand-receptor complex in M2.  The same reaction definition is used to infer
+two different reactions.</p>   
+               
+  
+<p class=main>Ok - we've seen out how little b uses the @ symbol and location-classes
+to define generic reactions.  We've seen how complexes which reside in the default
+location are used to implicitly determine the location-class of the reaction.  In some cases, 
+however, we must explicitly specify the location-class because every complex involved 
+in the reaction exists in a sublocation of the reaction's location-class. </p>
+
+<p class=main>For example, imagine the reaction in which an ion is transported from 
+the inner to the outer compartment of a membrane.  The location-class of the 
+reaction needs to be MEMBRANE (so we can refer to :INNER and :OUTER compartments), 
+but there is no complex in the default location.  If we write, <span 
+style='font-family:"Courier New"'>{[ion] @ :inner -&gt;&gt; [ion] @ :outer}</span>, 
+it’s not clear what location class the keywords :inner and :outer refer to.  When 
+this problem arises, we MUST specify the location class explicitly.  This is 
+done as follows:</p>
+
+<p class=code>{[ion] @ membrane.inner -&gt;&gt; [ion] @ membrane.outer}</p>
+
+<p class=main>Note that it's not strictly necessary to use the location-class.sub-location
+syntax everywhere.  Once little b figures out the location-class of the reaction, you can
+just use keyword notation to refer to the sublocations.  For example, the following
+ are both equivalent to the above reaction:</p>
+<p class=code>{[ion] @ membrane.inner -&gt;&gt; [ion] @ :outer}<BR>
+{[ion] @ :inner -&gt;&gt; [ion] @ membrane.outer}</p>
+
+Also, the ligand-receptor reaction could have been written more explicitly and verbosely as:</p>
+
+<p class=main>{{[receptor _] + [ligand _] @ membrane.outer</p>
+
+<p class=main><span style='font-size:11.0pt;font-family:"Courier New"'> -&gt;&gt;
+[[receptor 1][ligand 1]]}</span></p>
+
+<p class=main><span style='font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+
+<h5 class=header>Kinetics</h5>
+
+
+
+<p class=main>Kinetics are specified using the .SET-RATE-FUNCTION field:</p>
+
+
+
+<p class=main><span style='font-size:11.0pt;font-family:"Courier New"'>(define
+r  {[scaffold _ * *] + [mapk _ *]</span></p>
+
+<p class=main style='margin-left:.5in;text-indent:.5in'><span
+style='font-size:11.0pt;font-family:"Courier New"'> -&gt;&gt; [[scaffold 1 *
+*][mapk 1 *]]})</span></p>
+
+<p class=main><span style='font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=main><span style='font-size:11.0pt;font-family:"Courier New"'>r.(set-rate-function
+’mass-action 2)</span></p>
+
+<p class=code>&nbsp;</span></p>
+
+<p class=main>All reactions matching this pattern will have mass-action
+kinetics with a rate constant of 2.</p>
+
+
+
+<p class=main><i>Custom Kinetics</i></p>
+
+
+
+<p class=main>Custom rate functions can be specified by passing the
+CUSTOM-RATE function as the first argument to SET-RATE-FUNCTION.  The second
+argument should be a symbolic mathematical expression, and the rest of the
+arguments are optional and should be an alternating sequence of keywords
+representing variable names.  </p>
+
+
+
+<p class=main>Here’s an example which shows how to manually define kinetics
+based on the hill equation for a binding reaction:</p>
+
+
+
+<p class=main><span style='font-size:11.0pt;font-family:"Courier New"'>{[scaffold
+_ * *] + [mapk _ *] </span></p>
+
+<p class=main><span style='font-size:11.0pt;font-family:"Courier New"'> -&gt;&gt;
+[[scaffold 1][mapk  1]]}.(set-rate-function</span></p>
+
+<p class=main style='text-indent:.5in'><span style='font-size:11.0pt;
+font-family:"Courier New"'>’custom-rate </span></p>
+
+<p class=main style='text-indent:.5in'><span style='font-size:11.0pt;
+font-family:"Courier New"'>{[scaffold _ * *] ^ :hill /</span></p>
+
+<p class=main style='text-indent:.5in'><span style='font-size:11.0pt;
+font-family:"Courier New"'> {[scaffold _ * *] ^ :hill + :kd ^ :hill}}</span></p>
+
+<p class=main style='text-indent:.5in'><span style='font-size:11.0pt;
+font-family:"Courier New"'>:kd {4 micromolar} </span></p>
+
+<p class=main style='text-indent:.5in'><span style='font-size:11.0pt;
+font-family:"Courier New"'>:hill 1.3)</span></p>
+
+<p class=main style='text-indent:.5in'><span style='font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=main>This mathematical template will be applied to all reactions
+generated by this pattern.  To derive the rate function for a reaction
+involving specific species and locations, little b code in
+b/biochem/complex/ode and b/biochem/ode makes 3 substitutions:</p>
+
+<p class=main style='margin-left:.75in;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Complex patterns (such as [scaffold _ * *] in the expression
+above) are substituted with variables representing the concentrations of the
+complex-species-types matching those patterns.  </p>
+
+<p class=main style='margin-left:.75in;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Any keywords stored in the .k dictionary associated with the
+complex-reaction-type are replaced with variable objects which hold parameter
+values. </p>
+
+<p class=main style='margin-left:.75in;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Every function object is called passing the reaction as an
+argument, and is substituted with the result.</p>
+
+
+
+<p class=main><i>A few notes on custom-rate substitutions:</i></p>
+
+
+
+<p class=main>The first substitution step is obviously necessary: the
+final rate equations in an ODE system must contain variables which represent
+the concentrations of <i>specific</i> molecular species, not patterns.  </p>
+
+
+
+<p class=main>The need for the second substitution step is less obvious,
+and relates to issues of dimensional mathematics.  The pattern objects are
+dimensionless; however, the parameters have dimensions.  In the hill function
+above, directly substituting in the parameter variable would lead to a
+dimension error.  If the reaction is named r, then the parameter variables are
+r.k.hill (which is non-dimensional) and r.k.kd (which is in millimolar).  The
+denominator of the hill function <span style='font-family:"Courier New"'>-</span>
+<span style='font-family:"Courier New"'>{[scaffold _ * *] ^ r.k.hill + r.k.kd ^
+r.k.hill} -</span> then entails addition of a non-dimensional and a dimensional
+term, which would trigger an error.  For this reason, only rate-functions are
+expressed using non-dimensional objects, and substituted for dimensional
+quantities when all of the terms are known.</p>
+
+
+
+<p class=main>The need for the third kind of substitution provides a means
+for functions to perform some calculation involving information available only
+from the localized reaction object.  For example, it may be necessary to write
+a term which sums the concentrations of a particular species in membrane
+segments of a polygonal cell.  In fact, this situation arises when encoding the
+Von Dassow/Odell segment polarity network.  </p>
+
+
+
+
+
+<p class=main><i>Defining Custom Rate Functions</i></p>
+
+
+
+<p class=main>Providing rate functions on a per-reaction basis is useful,
+however, it would be better if we could refer to these custom rate functions by
+name and use them without having to write the mathematical templates over and
+over again.  Fortunately, little b provides this capability in the <i>define-custom-rate</i>
+macro.  </p>
+
+<p class=main>We could use it to define a Hill equation generator as
+follows:</p>
+
+
+
+<p class=code>(define-custom-rate
+hill (&amp;key (cooperativity 1)</span></p>
+
+<p class=main style='margin-left:2.5in;text-indent:.5in'><span
+style='font-family:"Courier New"'> (kd 1) </span></p>
+
+<p class=main style='margin-left:3.0in'><span style='font-family:"Courier New"'> species)
+()</span></p>
+
+<p class=code>   (store-parameter
+:cooperativity cooperativity)</span></p>
+
+<p class=code>   (store-parameter
+:kd kd)</span></p>
+
+<p class=code>   {species ^ :hill /
+</span></p>
+
+<p class=code>      {species ^ :hill
++ </span></p>
+
+<p class=main style='text-indent:.5in'><span style='font-family:"Courier New"'>           
+:kd ^ :hill}})</span></p>
+
+
+
+<p class=main>To set the rate function of a reaction R with cooperativity
+of 1.5 and kd of 3 millimolar, the user would then write:</p>
+
+
+
+<p class=code>r.(set-rate-function
+’hill </span></p>
+
+<p class=main style='margin-left:1.5in;text-indent:.5in'><span
+style='font-family:"Courier New"'> :cooperativity 1.5 </span></p>
+
+<p class=main style='margin-left:1.5in;text-indent:.5in'><span
+style='font-family:"Courier New"'> :kd {3 millimolar}) </span></p>
+
+
+
+<p class=main>Not all rate functions can be generated by simple
+substitution.  Some may require examining the list of entities participating in
+a reaction, their stoichiometries or some other properties, and computing a
+function according to some algorithm.  </p>
+
+
+
+<p class=main>A good example is mass-action kinetics.  A predefined
+mathematical template into which values can be substituted will not work in
+this case.  Instead, an expression must be built by multiplying the
+concentrations of every element that participates in the reaction.  </p>
+
+
+
+<p class=main>Fortunately, the third argument to the define-custom-rate
+macro provides a solution.  It is a list of optional keyword parameters which
+allow access to information about the reaction:</p>
+
+
+
+<p class=code>(<b>define-custom-rate</b>
+<i>name </i></span></p>
+
+<p class=main style='margin-left:1.5in;text-indent:.5in'><i><span
+style='font-family:"Courier New"'>user-lambda-list</span></i></p>
+
+<p class=main style='margin-left:1.5in;text-indent:.5in'><span
+style='font-family:"Courier New"'>(<b>&amp;key</b> <i>entities</i></span></p>
+
+<p class=main style='margin-left:2.5in'><i><span style='font-family:"Courier New"'> stoichiometries</span></i></p>
+
+<p class=main style='margin-left:2.5in'><i><span style='font-family:"Courier New"'> dimensions</span></i></p>
+
+<p class=main style='margin-left:2.0in;text-indent:.5in'><i><span
+style='font-family:"Courier New"'> rate-dimension</span></i><span
+style='font-family:"Courier New"'>)</span></p>
+
+<p class=main style='text-indent:.5in'><span style='font-family:"Courier New"'>     <b>&amp;body</b>
+<i>rate-calculation-code</i>)</span></p>
+
+<p class=main><br>
+Let’s define a quick-and-dirty implementation of mass-action kinetics:</p>
+
+
+
+<p class=code>(define-custom-rate mass-action
+</span></p>
+
+<p class=main style='margin-left:1.5in;text-indent:.5in'><span
+style='font-family:"Courier New"'>(mass-action-const) </span></p>
+
+<p class=main style='margin-left:1.5in;text-indent:.5in'><span
+style='font-family:"Courier New"'>(:entities bases</span></p>
+
+<p class=main style='margin-left:1.5in;text-indent:.5in'><span
+style='font-family:"Courier New"'> :stoichiometries powers)</span></p>
+
+<p class=code>   ...)</span></p>
+
+
+
+<p class=main>The first thing we do is tell the custom-rate macro to bind
+values to BASES and POWERS.  The bases will contain a list of entities on the
+left hand side of the reaction-type or complex-reaction-type object.  For
+example, in the case of our scaffold-binding reaction, BASES would be a list of
+the two patterns: </p>
+
+
+
+<p class=main style='text-indent:.5in'><span style='font-family:"Courier New"'>([scaffold.a
+* _ _] [mapk.b _ *])</span></p>
+
+<p class=main style='text-indent:.5in'>&nbsp;</p>
+
+<p class=main>Where did those dotted symbols come from?  Little b
+automatically assigns reference symbols in order if the user has not provided
+them.  The STOICHIOMETRIES, in this case, and in every case involving
+complex-patterns, is always a list of 1s:</p>
+
+
+
+<p class=main style='text-indent:.5in'><span style='font-family:"Courier New"'>(1
+1)</span></p>
+
+
+
+<p class=main>Now that we have this information, we can construct the
+mass-action term.  First, let’s store the mass-action constant.  This is
+accomplished with a call to STORE-PARAMETER, as follows:</p>
+
+
+
+<p class=code>   (store-parameter
+:mass-action mass-action-const)</span></p>
+
+
+
+<p class=main>Next, we construct the mass-action term, using Lisp’s loop
+facility:</p>
+
+
+
+<p class=code>   (loop with term =
+1</span></p>
+
+<p class=code>         for base in
+bases</span></p>
+
+<p class=code>         for power
+in powers</span></p>
+
+<p class=code>         do {term :=
+term * base ^ power}</span></p>
+
+<p class=code>         finally
+return {term * :mass-action})</span></p>
+
+
+
+<p class=main>The loop iterates through all the bases and powers and
+builds up a term consisting of the product of each base raised to each power,
+and finally multiplied by a symbol which refers to the mass-action constant
+stored in the parameter dictionary.</p>
+
+
+
+<p class=main>The final macro looks like this:</p>
+
+
+
+<p class=code>(define-custom-rate mass-action
+</span></p>
+
+<p class=main style='margin-left:1.5in;text-indent:.5in'><span
+style='font-family:"Courier New"'>(mass-action-const) </span></p>
+
+<p class=main style='margin-left:1.5in;text-indent:.5in'><span
+style='font-family:"Courier New"'>(:entities bases</span></p>
+
+<p class=main style='margin-left:1.5in;text-indent:.5in'><span
+style='font-family:"Courier New"'> :stoichiometries powers)</span></p>
+
+<p class=main style='margin-left:1.5in;text-indent:.5in'><span
+style='font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=code>   (store-parameter
+:mass-action mass-action-const)</span></p>
+
+
+
+<p class=code>   (loop with term =
+1</span></p>
+
+<p class=code>         for base in
+bases</span></p>
+
+<p class=code>         for power
+in powers</span></p>
+
+<p class=code>         do {term :=
+term * base ^ power}</span></p>
+
+<p class=code>         finally
+return {term * :mass-action}))</span></p>
+
+<p class=main>We could knock off at this point and call it a day, but we
+haven’t really dealt with issues of dimensionality.  This is where the other
+keyword arguments become useful.  The user might pass in a rate constant of
+incorrect dimensionality.  Ideally, the rate calculator should deal with this,
+and either throw an error, or gracefully correct the mistake, if that’s
+possible.  </p>
+
+
+
+<p class=main>The other keyword arguments are DIMENSIONS and
+RATE-DIMENSION.  DIMENSIONS is a list of concentration dimensions corresponding
+to each pattern.  RATE-DIMENSION is the dimension of the rate of the reaction. 
+When the patterns are finally substituted for concentrations and the
+:mass-action symbol is substituted for the parameter variable when the reaction
+is generated, the resulting term should have the dimensions of RATE-DIMENSION. 
+Because we also know the concentration dimensions (in DIMENSIONS), the
+stoichiometries, we can calculate the correct dimension of the rate constant,
+since:</p>
+
+<p class=main>          RATE = TERM * CONSTANT</p>
+
+<p class=main>                   where TERM = &#8719; C<sub>i</sub><sup>
+Si</sup>  </p>
+
+<p class=main>                             C<sub>i</sub> = concentration
+of entity i</p>
+
+<p class=main>                             S<sub>i</sub> = stoichiometry
+of entity I,</p>
+
+
+
+<p class=main>          We know,</p>
+
+<p class=main>          RATE-DIMENSION = TERM-DIMENSION *
+CONSTANT-DIMENSION</p>
+
+
+
+<p class=main>          Where the TERM-DIMENSION = &#8719; D<sub>i</sub><sup>
+Si</sup>  </p>
+
+<p class=main>                             D<sub>i </sub>= dimension of C<sub>i</sub></p>
+
+
+
+<p class=main>I’ll leave it as an exercise to figure out the
+dimensionality-checking.  You can see one solution in
+b/biochem/std-rate-functions.</p>
+
+
+<h4 class=header>please note</h4>
+<p class=main>The following CODE is deprecated </p>
+
+<h4 class=header>binding reaction (NB: this section is deprecated)</h4>
+<p class=main>Reactions in a simple compartment. <b>Monomer1</b> and <b>monomer2</b> <b>bind</b> to form <b>complex</b>.  <b>Complex</b> degrades
+back to the monomers via an <b>unbind</b>ing reaction.</p>
+<table width=100%>
+	<tr>
+		<td>
+			
+			<img src="./tutorial-biochem-quickstart/binding.png" alt="">
+		</td>
+		<td><table width="100%" class="code">
+      	<tr>
+      		<td>
+      			<kbd class=note>; include the base definitions for biochemical
+      			 modeling</kbd><BR>
+      			(include b-user/3d-ode-biochemistry :use) <BR><BR>
+      			
+      			<kbd class=note>; define species types</kbd><BR>
+      			(define monomer1 [[species-type] :location-class compartment])<BR>
+      			(define monomer2 [[species-type] :location-class compartment])<BR>
+      			(define complex [[species-type] :location-class compartment])<BR><BR>
+      			
+      			<kbd class=note>; define reactions</kbd><BR>
+      			(define binding [[reaction-type {monomer1 + monomer2} {complex}]<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      												(.set-rate-method 'mass-action {1 / millimolar / seconds})])<BR><BR>
+      			(define unbinding [[reaction-type {complex} {monomer1 + monomer2}]<BR>
+      			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      				(.set-rate-method 'mass-action {1 / seconds})])<BR><BR>
+      
+      			<kbd class=note>; a compartment to put things in</kbd><BR>
+      			(define c [[compartment] {.size.value := 3 nanoliters}])<BR><BR>
+      			
+      			<kbd class=note>; add the substrates (or the products, or both) - inference computes complex.(in c)</kbd><BR>
+      
+      			c.(contains monomer1)<BR>
+      			c.(contains monomer2)<BR><BR>
+      			
+      			<kbd class=note>;  set initial conditions on species types </kbd><BR>
+      			{monomer1.t0 := 1 millimolar}<BR>
+      			{monomer2.t0 := 2 millimolar}<BR><BR>
+      			<kbd class=note>; write the model</kbd><BR>
+      			(create-ode-model :name "binding")
+      		</td>
+      	</tr>
+      </table>
+		</td>
+	</tr>
+</table>				
+<!-----------------------------------------------------
+			MEMBRANE EXAMPLE
+	----------------------------------------------------->
+	
+<h4 class=header>membrane transport (NB: this section is deprecated)</h4>
+<p class=main>An <b>ion</b> is transported back and forth across a membrane, <b>m</b>, via a <b>transporter</b>.   </p><p class=main> The membrane is related to two compartments via the <b>c1</b> and <b>c2</b> fields.  Note that the transporter could be
+inverted in the membrane by writing: <kbd class=code>m.inverse.(contains transporter)</kbd>.  This would generate additional reactions, <kbd class=code>import.(in m.inverse)</kbd> and <kbd class=code>export.(in m.inverse)</kbd></p>
+<table width=100%>
+	<tr>
+		<td>
+      <img src="./tutorial-biochem-quickstart/transport.png" alt="">
+		</td>
+		<td>
+      <table width=100% class="code">
+      	<tr>
+      		<td>
+             <kbd class=note>; include the base definitions for biochemical
+      			 modeling</kbd><BR>
+      			(include b-user/3d-ode-biochemistry :use) <BR><BR>
+      			(define ion [[species-type] :location-class compartment])<BR>
+      			(define ion-transporter [[species-type] :location-class membrane])<BR><BR>
+      			
+						<kbd class=note>; define reactions:</kbd><BR>
+      			(define import [reaction-type {ion.(required :c1) + ion-transporter} <BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                  {ion.(required :c2) + ion-transporter}])<BR><BR>
+            (define export [reaction-type {ion.(required :c2) + ion-transporter}<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			{ion.(required :c1) + ion-transporter}])<BR><BR>      			<kbd class=note>; define a spherical membrane-enclosed compartment inside another compartment </kbd><BR>
+      			(define inner [[compartment] {.size.value := 4/3 pi {10 micrometers} ^ 3}])<BR>
+      			(define outer [[compartment] {.size.value := 4/3 pi {10 micrometers} ^ 3}])<BR>
+      			(define [[membrane] :c2 outer	:c1 inner<BR>
+      			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      							{.size.value := 4 pi {10 micrometers} ^ 2}])<BR><BR>
+      			
+      			<kbd class=note>; put the ion in the outer compartment, the transporter in the membrane</kbd><BR>
+      			outer.(contains ion)<BR>
+      			m.(contains ion-transporter) <kbd class=note>; a rule infers ion.(in inner) - alternatively, one could write:</kbd><BR>
+      			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      			&nbsp;&nbsp;&nbsp;&nbsp;
+      			<kbd class=note>; inner.(contains ion) ; this would put ion in inner compartment, b infers ion in dish</kbd><BR>			<BR>
+      			
+      			<kbd class=note>;  set initial conditions on  species</kbd><BR>
+      			{ion.(in outer).conc.t0 := 1 millimolar}<BR>
+      			{ion-transporter.(in me1.membrane).conc.t0 := 2 moles / meters ^ 2}<BR><BR>
+      			<kbd class=note>; ... write the model</kbd><BR>
+      			(create-ode-model :name "transport")      			
+      		</td>
+      	</tr>
+      </table>
+		</td>
+	</tr>
+</table>				
+<!-----------------------------------------------------
+			MEMBRANE APPOSITION EXAMPLE
+	----------------------------------------------------->
+	
+<h4 class=header>membrane apposition  (NB: this section is deprecated)</h4>
+<p class=main>Two receptors, <b>r1</b> and <b>r2</b>, in apposing membranes, <b>mb1</b> and <b>mb2</b> bind to each other to form a complex, <b>r1r2</b>, which degrades (<b>unbinding</b>) back to the two receptors.</p><p class=main> Note that the complex appears in a new location, a membrane-apposition, named <b>ma</b>.  This is location represents the relationship between <b>mb1</b> and <b>mb2</b>, and is written <kbd class=code>[membrane-apposition mb1 mb2]</kbd>. The membrane-apposition is related to the membranes via the <b>m1</b> and <b>m2</b> fields.  The inverse relationship, <kbd class=code>[membrane-apposition mb2 mb1]</kbd> is created automatically.  If the locations of <b>r1</b> and <b>
+r2</b> were swapped, <b>r1r2</b> would be created in this inverse location.</p>     <table width=100%>
+	<tr>
+		<td>
+      <img src="./tutorial-biochem-quickstart/apposition.png" alt="">
+		</td>
+		<td>
+      <table width=100% class="code">
+      	<tr>
+      		<td>
+						<kbd class=note>; include the base definitions for biochemical
+      			 modeling</kbd><BR>
+      			(include b-user/3d-ode-biochemistry :use) <BR><BR>
+      			
+      			<kbd class=note>; define species types</kbd><BR>
+      			(define r1 [[species-type] :location-class membrane])<BR>
+      			(define r2 [[species-type] :location-class membrane])<BR>
+      			(define r1r2 [[species-type] :location-class membrane-apposition])<BR><BR>
+      			
+      			<kbd class=note>; define reactions</kbd><BR>
+      			(define binding [[reaction-type {r1.(required :m1) + r1.(required m2)}<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{r1r2}])<BR>
+unbinding.(set-rate-method 'mass-action {1 / millimolar / seconds})])<BR><BR>(define unbinding [[reaction-type {r1r2}<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{r1.(required :m1) + r1.(required m2)}])<BR>      			
+unbinding.(set-rate-method 'mass-action {1 / seconds})])<BR><BR>
+      
+      			<kbd class=note>; a compartment to put things in</kbd><BR>
+      			(define mb1 [membrane])<BR>
+					  (define mb1 [membrane])<BR>
+						(define ma [membrane-apposition mb1 mb2]<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 {.size.value := {10 micrometers} ^ 2}])])<BR><BR>
+      			
+      			<kbd class=note>; add the product this time - the substrates are generated by inference over the unbinding reaction</kbd><BR>
+      
+      			ma.(contains r1r2)<BR><BR>
+      			
+      			<kbd class=note>;  set initial conditions on species </kbd><BR>
+      			{r1.(in m1).conc.t0 := 1 millimolar}<BR>
+      			{r2.(in m2).conc.t0 := 2 millimolar}<BR><BR>
+      			<kbd class=note>; write the model...</kbd><BR>
+      			(create-ode-model :name "apposition")					</td>	
+      	</tr>
+      </table>
+		</td>
+	</tr>
+</table>
+</body>
+</html>
