@@ -1,0 +1,341 @@
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">-->
+<html>
+
+<head>
+<title>Ignite Realtime: Smack API</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Language" content="en-us" />
+<meta name="keywords" content="jive, jive software, java, open source, jive messenger, xmpp, chat, jabber, smack, whack, sparkweb, tinder, xiff, asterisk"/>
+
+<style type="text/css" media="screen">
+	@import "/styles/global.css";
+</style>
+
+<script type="text/javascript" language="JavaScript" src="/scripts/kitchensink.js"></script>
+<script type="text/javascript" language="JavaScript" src="/scripts/ignite.js"></script>
+<script type="text/javascript" language="JavaScript" src="/scripts/groupchat_timer.js"></script>
+<SCRIPT TYPE='text/javascript' LANGUAGE='JavaScript' SRC='/elqNow/elqCfg.js'></SCRIPT>
+<SCRIPT TYPE='text/javascript' LANGUAGE='JavaScript' SRC='/elqNow/elqImg.js'></SCRIPT>
+    
+<!--
+<script type="text/javascript" language="JavaScript" src="/scripts/cookies.js"></script>
+<script type="text/javascript" language="JavaScript" src="/scripts/prototype.js"></script>
+<script type="text/javascript" language="JavaScript" src="/scripts/scriptaculous.js"></script>
+<script type="text/javascript" language="JavaScript" src="/scripts/window.js"></script>
+<script type="text/javascript" language="JavaScript" src="/scripts/lightbox.js"></script>
+-->
+
+<meta name="body-id" content="projects" />
+<meta name="panel-name" content="smack" />
+<style type="text/css" media="screen">
+	@import "/styles/interior.css";
+</style>
+                                                                           
+</head>
+
+
+
+<body id="projects"  onLoad="initLightbox();;checkPanel('smack');" >
+	 
+
+
+
+<!-- BEGIN page 'wrapper' -->
+<div id="ignite_wrapper">
+                                                              
+
+	<!-- BEGIN header -->
+	<div id="ignite_header">
+		<a href="/"><div id="ignite_logo"></div></a>
+		<a href="http://www.jivesoftware.com?source=Website-Ignite"><div id="ignite_jive"></div></a>
+		<div id="ignite_nav">
+			<ol>
+				<li id="nav01"><a href="/index.jsp">Home</a></li>
+				<li id="nav02"><a href="/projects/index.jsp">Projects</a></li>
+				<li id="nav03"><a href="/downloads/index.jsp">Downloads</a></li>
+				<li id="nav04"><a href="http://community.igniterealtime.org/">Community</a></li>
+				<li id="nav05"><a href="/fans/index.jsp">Fans</a></li>
+				<li id="nav07"><a href="/support/index.jsp">Support</a></li>
+				<li id="nav08"><a href="/about/index.jsp">About</a></li>
+			</ol>
+            <div id="ignite_nav_groupchat" class="ignite_nav_groupchat" style="display: none;">
+				<span class="ignite_nav_groupchat_block" id="ignite_nav_groupchat_block"></span>
+				<span id="ignite_nav_groupchat_moreinfo" style="display: none;"><a href="/support/group_chat.jsp">More Information</a></span>
+			</div>
+		</div>
+	</div>
+	<!-- END header -->
+    <script type="text/javascript">
+    // The javascript timer for the header group chat callout
+    runGroupChatTimer();
+    </script>
+
+
+
+	<div id="ignite_subnav">
+		<ul>
+			<li id="subnav01"><a href="index.jsp" class="ignite_subnav_project">Smack API</a></li>
+			<!-- <li id="subnav02"><a href="screenshots.jsp">Screenshots</a></li> -->
+			<!-- <li id="subnav03"><a href="plugins.jsp">Plugins</a></li> -->
+			<li id="subnav04"><a href="documentation.jsp">Documentation</a></li>
+			<li id="subnav05"><a href="http://issues.igniterealtime.org/browse/SMACK">Issue Tracker</a></li>
+			<li id="subnav06"><a href="/builds/smack/docs/latest/javadoc/">JavaDocs</a></li>
+			
+		</ul>
+	</div>
+
+	<!-- BEGIN body area -->
+	<div id="ignite_body">
+		
+		<!-- BEGIN left column (main content) -->
+		<div id="ignite_body_leftcol">
+			
+			<!-- BEGIN large panel -->
+			<!-- 
+				if there is no cookie, show this panel
+				(there is an 'onload' in the decorator that runs a script from 
+				/scripts/ignite.js, may want to change that).
+				the cookie is defined by the meta 'panel-name' in the head, and
+				set with the onclick of the links below, closePanel().
+			-->
+			
+			<div id="ignite_bigpanel"  style="display:block" >
+				<div id="ignite_bigpanel_content" style="width: 630px;">
+					<h1 class="smack">Smack API <span>3.1.0</span></h1>
+					<p>
+                        Smack is an Open Source XMPP (Jabber) client library for instant messaging and presence.
+                        A pure Java library, it can be embedded into your applications to create anything from
+                        a full XMPP client to simple XMPP integrations such as sending notification messages
+                        and presence-enabling devices.
+                    </p>
+				</div>
+				
+				<div id="ignite_bigpanel_close">
+					<a href="#" onClick="closePanel('smack'); return false;"></a>
+				</div>
+				
+				<!-- <div id="ignite_bigpanel_screenshot"> -->
+					<!-- <img src="/images/ignite_screenshot_openfire.gif" width="210" height="210" alt="" /> -->
+					<!-- <a href="screenshots.jsp">More screens</a> -->
+				<!-- </div> -->
+				
+				<div id="ignite_bigpanel_download">
+					<a href="/downloads/index.jsp#smack">Download</a> 
+					<span>
+						<strong>Smack API 3.1.0</strong> Latest build: November 20, 2008
+					</span>
+				</div>
+				
+			</div>
+			<!-- END large panel -->
+			
+			<!-- BEGIN small panel -->
+			<!-- 
+				if there is a cookie, show this panel
+				(same details as above for 'large panel')
+			-->
+			<div id="ignite_smallpanel" >
+				<h1 class="smack">Smack API <span>3.1.0</span></h1>
+				<div id="ignite_smallpanel_open">
+					<a href="#" onClick="closePanel('smack'); return false;"></a>
+				</div>
+			</div>
+			<!-- END small panel -->
+			
+			
+			<!-- BEGIN home page body content area -->
+			<div id="ignite_int_body">
+
+                
+                <!-- BEGIN 'latest blog entries' column -->
+				<div id="ignite_int_body_widecol">
+					<!-- BEGIN blog header -->
+					<div id="ignite_blog_header">
+						<span id="ignite_blog_header_label">
+							Latest Blog Entries
+						</span>
+						<div style="float: right;">
+                            <span id="ignite_blog_header_rss">
+							 	<a href="http://community.igniterealtime.org/blogs/ignite/feeds/tags/smack"><img src="/images/rss.gif" width="16" height="16" border="0" alt="" /></a>
+							</span>
+						</div>
+					</div>
+					<!-- END blog header -->
+
+                    
+					
+					
+					
+					
+
+	<div class="ignite_blog_entry">
+        <div class="ignite_blog_entry_header">
+			<img src="http://community.igniterealtime.org/people/matt/avatar/32.png" 
+				alt="matt"
+				width="32" height="32" />
+				
+			<div class="ignite_blog_entry_comments">
+				<a href="http://community.igniterealtime.org/blogs/ignite/2008/10/31/smack-310-beta-1-released#comments">6</a>
+			</div>
+
+			<h2><a href="http://community.igniterealtime.org/blogs/ignite/2008/10/31/smack-310-beta-1-released" title="Smack 3.1.0 Beta 1 Released">Smack 3.1.0 Beta 1 Released</a></h2>
+
+            <!-- BEGIN blog entry author and datestamp -->
+            <span class="ignite_blog_entry_author">
+                Posted by <a href="http://community.igniterealtime.org/people/matt/">matt</a>
+            </span>
+            <span class="ignite_blog_entry_date">
+
+		2 years, 1 month ago
+            </span>
+            <!-- END blog entry author and datestamp -->
+        </div>
+	
+        <!-- END blog entry header area -->
+
+        <!-- BEGIN blog entry body area -->
+        <div class="ignite_blog_entry_body">
+			<!-- [DocumentBodyStart:86897070-1795-4516-bdd5-e85352e94ec0] --><div class="jive-rendered-content"><p>We've released the first beta of Smack 3.1.0. Although it's been about a year since the last release, this version is jam-packed with great new features and bug fixes. Check out the <a class="jive-link-external-small" href="http://www.igniterealtime.org/builds/smack/docs/3.1.0.beta1/changelog.html">changelog</a> for full details.</p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p>We expect the beta process on the release to be relatively quick, but much will depend on the stability feedback we get. There are also a few last changes that we're looking to get in before the final release.</p></div><!-- [DocumentBodyEnd:86897070-1795-4516-bdd5-e85352e94ec0] -->
+        </div>
+        <!-- END blog entry body area -->
+
+        <!-- BEGIN blog entry details -->
+        <div class="ignite_blog_entry_details">
+            <span class="ignite_blog_entry_details_tags">Tags:
+				
+				
+				
+					 
+					<a href="http://community.igniterealtime.org/blogs/ignite/tags/planetjabber">planetjabber</a>
+				
+					, 
+					<a href="http://community.igniterealtime.org/blogs/ignite/tags/smack">smack</a>
+				
+				
+            </span>
+            <span class="ignite_blog_entry_details_comments">
+                <a href="http://community.igniterealtime.org/blogs/ignite/2008/10/31/smack-310-beta-1-released">6</a>
+            </span>
+        </div>
+        <!-- END blog entry details-->
+    </div>
+
+	<div class="ignite_blog_entry ignite_blog_entry_odd">
+        <div class="ignite_blog_entry_header">
+			<img src="http://community.igniterealtime.org/people/matt/avatar/32.png" 
+				alt="matt"
+				width="32" height="32" />
+				
+			<div class="ignite_blog_entry_comments">
+				<a href="http://community.igniterealtime.org/blogs/ignite/2008/10/30/what-were-working-on#comments">22</a>
+			</div>
+
+			<h2><a href="http://community.igniterealtime.org/blogs/ignite/2008/10/30/what-were-working-on" title="What We're Working On">What We're Working On</a></h2>
+
+            <!-- BEGIN blog entry author and datestamp -->
+            <span class="ignite_blog_entry_author">
+                Posted by <a href="http://community.igniterealtime.org/people/matt/">matt</a>
+            </span>
+            <span class="ignite_blog_entry_date">
+
+		2 years, 1 month ago
+            </span>
+            <!-- END blog entry author and datestamp -->
+        </div>
+	
+        <!-- END blog entry header area -->
+
+        <!-- BEGIN blog entry body area -->
+        <div class="ignite_blog_entry_body">
+			<!-- [DocumentBodyStart:267fa4ec-d221-449c-adb9-04d9e2f2a5f4] --><div class="jive-rendered-content"><p>Gato and I are sitting together drinking beers and hacking on Ignite code. After a hiatus (too long), we're both back to working on Smack and Openfire weekly. As I'm writing this, Gato is doing some super low level Java debugging to figure out a strange XML parsing error that we're seeing when running the Smack test cases. Assuming we get to the bottom of the problem, we plan to package up and release a new beta release of Smack. It includes lots of great improvements, but I'll leave the details for the next blog post. We have several goals around our weekly hackathons:</p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><ol><li><strong>Jump start software release</strong>s -- it's time to get more regular releases of all the projects going again.</li><li><strong>Recruit and empower community leaders</strong> -- there's already a large number of people in the Ignite community doing some amazing work on the code. Now it's time to equip them with the tools to be as effective as possible and to let them take on more explicit leadership roles.</li><li><strong>Have some fun</strong> -- hence the beer <img height="16px" src="http://community.igniterealtime.org/4.5.2/images/emoticons/happy.gif" width="16px"/></li></ol><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p>We're looking forward to demonstrating progress and to keeping the Ignite projects at the forefront of the XMPP world.</p></div><!-- [DocumentBodyEnd:267fa4ec-d221-449c-adb9-04d9e2f2a5f4] -->
+        </div>
+        <!-- END blog entry body area -->
+
+        <!-- BEGIN blog entry details -->
+        <div class="ignite_blog_entry_details">
+            <span class="ignite_blog_entry_details_tags">Tags:
+				
+				
+				
+					 
+					<a href="http://community.igniterealtime.org/blogs/ignite/tags/openfire">openfire</a>
+				
+					, 
+					<a href="http://community.igniterealtime.org/blogs/ignite/tags/smack">smack</a>
+				
+					, 
+					<a href="http://community.igniterealtime.org/blogs/ignite/tags/we_are_back">we_are_back</a>
+				
+					, 
+					<a href="http://community.igniterealtime.org/blogs/ignite/tags/beer">beer</a>
+				
+				
+            </span>
+            <span class="ignite_blog_entry_details_comments">
+                <a href="http://community.igniterealtime.org/blogs/ignite/2008/10/30/what-were-working-on">22</a>
+            </span>
+        </div>
+        <!-- END blog entry details-->
+    </div>
+
+	<div class="ignite_blog_entry">
+        <div class="ignite_blog_entry_header">
+			<img src="http://community.igniterealtime.org/people/matt/avatar/32.png" 
+				alt="matt"
+				width="32" height="32" />
+				
+			<div class="ignite_blog_entry_comments">
+				<a href="http://community.igniterealtime.org/blogs/ignite/2007/04/22/on-the-release-train#comments">13</a>
+			</div>
+
+			<h2><a href="http://community.igniterealtime.org/blogs/ignite/2007/04/22/on-the-release-train" title="On the Release Train">On the Release Train</a></h2>
+
+            <!-- BEGIN blog entry author and datestamp -->
+            <span class="ignite_blog_entry_author">
+                Posted by <a href="http://community.igniterealtime.org/people/matt/">matt</a>
+            </span>
+            <span class="ignite_blog_entry_date">
+
+		3 years, 8 months ago
+            </span>
+            <!-- END blog entry author and datestamp -->
+        </div>
+	
+        <!-- END blog entry header area -->
+
+        <!-- BEGIN blog entry body area -->
+        <div class="ignite_blog_entry_body">
+			<p>The engineering team at Jive Software is growing fast (btw, <a href="http://www.jivesoftware.com/company/jobs.jsp">we're hiring</a>!). I thought it might be interesting to talk about some of the engineering process changes we're making to cope with that growth, especially since they directly affect product releases. First, a bit of history. We've always had a fairly agile development process -- lots of iterations, tools like unit tests and continuous integration, etc. But, we've consistently had a lot of pain around our current process:</p><p>* Not enough time for QA* . It's always scheduled, but gets squeezed due to lack of time. For example, the "official" QA time period for the Spark 2.5.0 release got crunched down to almost nothing.<br/>* Stress when we don't need it* . The stress is caused by having to cram a ton of work into a short period of time to make internally set product release dates. It's also caused by scheduling extra features into releases at the last minute and by having to do emergency patch releases due to bugs we missed. We like working really hard, but there should be a way to do that without excessive stress.<br/>* Unpredictable release dates* . The bigger a release is, the harder it is to make accurate work effort estimates. That means that dates slip and that it's hard to communicate to the outside world exactly when a release will ship.</p><p>So, there are some clear problems that we want to fix. The trick for us was to come up with a process that fixes those problems but that's still light-weight enough to avoid a huge administrative burden. We're now experimenting with a strict release train model for Spark and Smack. Assuming it goes well, the same model will be applied across all our products, including <a href="http://www.jivesoftware.com/products/clearspace">Clearspace</a>. A visual summary of the model is below (click the image for a larger version):</p><p><img src="http://www.igniterealtime.org/blog/wp-content/uploads/2007/04/train_small.png"/>[Clearspace|http://www.igniterealtime.org/blog/wp-content/uploads/2007/04/train.png|train_small.png]</p><p></p><p>The key points to this model:</p><ul><li level="1" type="ul"><p>We put out a new release every three weeks (although each release will have gone through a nine week process total).</p></li><li level="1" type="ul"><p>Three weeks before each development cycle is reserved for product management; three weeks after each development cycle is reserved for QA. But notice that all three processes are all happening at the same time.</p></li></ul><p>There are all sorts of subtleties to the system like how to deal with new features that take more than three weeks of engineering time, but so far everything is going quite well.</p><p></p><p>The start of the three week cycle is always on a Monday, and we have a big meeting to determine exactly which features will go into the release. Product management has already done the work of prioritizing the features so we just need to choose exactly what we're going to work on and come up with the plan about how to get it done over the next three weeks. On the second and third Mondays during each cycle we go through more detailed updates than in our SCRUM meetings to see what's on track and what's not.</p><p></p><p>At the end of the cycle, we:</p><ul><li level="1" type="ul"><p>Do the product release coming out of QA on Thursday.</p></li><li level="1" type="ul"><p>On Friday, finish all development and create a branch ("spark_2_5_2_branch" for example).</p></li><li level="1" type="ul"><p>Switch the builds in our continuous integration environment, <a href="http://www.jetbrains.com/teamcity/">TeamCity</a>. The new branch becomes the "stable" release of the product and trunk becomes "development".</p></li><li level="1" type="ul"><p>Release a beta version out of the new branch. In other words, the world generally always sees a stable official product release and a beta release that will become official in three weeks.</p></li></ul><p>There's way more that I could talk about with this process (including some of the potential drawbacks), but I'll save that for future blog entries. Things we're jazzed about so far include solid release dates, having a better process in place to deal with new feature requests and bug reports, more stable quality in each release, and always having a place to check in new feature development (trunk). We're still early on in the new system, but we'll all know how exactly how well this works in the next two months. Of course, we'd love your feedback as time goes on about how well you think we're doing.</p><p></p>
+
+	
+	<!-- BEGIN footer -->
+	<div id="ignite_footer">
+		<div class="ignite_footer_nav"><a href="/index.jsp">Home</a> | <a href="/projects/index.jsp">Projects</a> | <a href="/downloads/index.jsp">Downloads</a> | <a href="/community">Community</a> | <a href="/fans/index.jsp">Fans</a> | <a href="/support/index.jsp">Support</a> | <a href="/about/index.jsp">About</a> </div>
+		<div class="ignite_footer_copyright">Powered by <a href="http://www.jivesoftware.com/products/public-community/?source=Website-Ignite">SBS</a> &copy; <a href="http://www.jivesoftware.com?source=Website-Ignite">Jive Software</a></div>
+	</div>
+	<!-- END footer -->
+
+
+</div>
+<!-- END page 'wrapper' -->
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+_uacct = "UA-73301-3";
+urchinTracker();
+</script>
+
+</body>
+</html>
