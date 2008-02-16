@@ -1,0 +1,529 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+<head profile="http://gmpg.org/xfn/11">
+
+	<title>How to Build a Twitter Agent</title>
+
+	<meta name="tweetmeme-title" content="How to Build a Twitter Agent" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<meta name="robots" content="index,follow" />
+
+	<link rel="canonical" href="http://synaptify.com/?p=123" />
+
+	<link rel="stylesheet" type="text/css" href="http://synaptify.com/wp-content/themes/synaptify/style.css" />
+
+	<link rel="alternate" type="application/rss+xml" href="http://synaptify.com/?feed=rss2" title="Synaptify Posts RSS feed" />
+	<link rel="alternate" type="application/rss+xml" href="http://synaptify.com/?feed=comments-rss2" title="Synaptify Comments RSS feed" />
+
+	<link rel="pingback" href="http://synaptify.com/xmlrpc.php" />
+
+<link rel="alternate" type="application/rss+xml" title="Synaptify &raquo; How to Build a Twitter Agent Comments Feed" href="http://synaptify.com/?feed=rss2&amp;p=123" />
+<script type='text/javascript' src='http://synaptify.com/wp-includes/js/jquery/jquery.js?ver=1.3.2'></script>
+<script type='text/javascript' src='http://synaptify.com/wp-includes/js/comment-reply.js?ver=20090102'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://synaptify.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://synaptify.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='index' title='Synaptify' href='http://synaptify.com' />
+<link rel='start' title='Blog up again' href='http://synaptify.com/?p=1' />
+<link rel='prev' title='Creating a Twitter Loop' href='http://synaptify.com/?p=122' />
+<link rel='next' title='Using Wakoopa to broadcast your Geek Life' href='http://synaptify.com/?p=124' />
+
+
+	<script type="text/javascript" src="http://synaptify.com/wp-content/themes/synaptify/library/scripts/hoverIntent.js"></script>
+	<script type="text/javascript" src="http://synaptify.com/wp-content/themes/synaptify/library/scripts/superfish.js"></script>
+	<script type="text/javascript" src="http://synaptify.com/wp-content/themes/synaptify/library/scripts/supersubs.js"></script>
+	<script type="text/javascript" src="http://synaptify.com/wp-content/themes/synaptify/library/scripts/thematic-dropdowns.js"></script>
+
+	<script type="text/javascript">
+		jQuery.noConflict();
+	</script>
+
+</head>
+
+<body class="wordpress y2010 m12 d18 h05 singular slug-how-to-build-a-twitter-agent single postid-123 s-y2008 s-m02 s-d15 s-h10 s-category-uncategorized s-author-dominiek-ter-heide s-comments-open s-pings-open unknown-os unknown-browser">
+
+<div id="wrapper" class="hfeed">
+
+   
+
+    <div id="header">
+        		    	<div id="branding">
+				    		<div id="blog-title"><span><a href="http://synaptify.com/" title="Synaptify" rel="home">Synaptify</a></span></div>
+			
+		    		<div id="blog-description">Technology, Web and Startups</div>
+		    				    	</div><!--  #branding -->
+				    	<div id="access">
+		    		<div class="skip-link"><a href="#content" title="Skip navigation to the content">Skip to content</a></div>
+		            <div class="menu"></div>
+		        </div><!-- #access -->
+		    </div><!-- #header-->
+    
+   
+
+    <div id="main">
+    
+	<div id="container">
+		<div id="content">
+		  
+			
+			<div id="nav-above" class="navigation">
+				<div class="nav-previous"><a href="http://synaptify.com/?p=122"><span class="meta-nav">&laquo;</span> Creating a Twitter Loop</a></div>
+				<div class="nav-next"><a href="http://synaptify.com/?p=124">Using Wakoopa to broadcast your Geek Life <span class="meta-nav">&raquo;</span></a></div>
+			</div>
+
+
+
+
+
+			<div id="post-123" class="hentry p1 post publish author-dominiek-ter-heide category-uncategorized untagged comments-open pings-open y2008 m02 d15 h10 slug-how-to-build-a-twitter-agent">
+    			<h1 class="entry-title">How to Build a Twitter Agent</h1>
+<div class="entry-meta"><span class="meta-prep meta-prep-author">By </span><span class="author vcard"><a class="url fn n" href="http://synaptify.com/?author=2" title="View all posts by Dominiek ter Heide">Dominiek ter Heide</a></span><span class="meta-sep meta-sep-entry-date"> | </span><span class="meta-prep meta-prep-entry-date">Published: </span><span class="entry-date"><abbr class="published" title="2008-02-15T10:27:00+0900">February 15, 2008</abbr></span></div><!-- .entry-meta -->
+<div class="wp-share"><div class="wp-share-twitter"><iframe src="http://api.tweetmeme.com/button.js?source=dominiek&style=normal&service=bit.ly&url=http%3A%2F%2Fsynaptify.com%2F%3Fp%3D123" height="61" width="50" frameborder="0" scrolling="no"></iframe></div><div class="wp-share-facebook"><a name="fb_share" type="box_count" href="http://www.facebook.com/sharer.php">Share</a><script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>&nbsp;</div></div>				<div class="entry-content">
+<p><em>Note, while working on this project <a href="http://www.readwriteweb.com/archives/xmpp_web.php">this ReadWriteWeb article</a>  was released, illustrating the future potential of the Jabber/XMPP protocol.</em></p>
+<p>In this article we will build an actual useful Twitter Service that will allow us to track the Blogosphere. In the process we will get hands on programming experience with Ruby, DRb, Twitter and Jabber. This will sharpen our developer skill-set to get ready for the upcoming (Folk)Semantic Web. Also we evaluate the problems seen and opportunities ahead.</p>
+<h2>Background</h2>
+<p>Whether you want to call it Web 2.0, Web 3.0, the Semantic Web or the Web of Data &#8211; change is happening. The past years we&#8217;ve seen the tremendous power of Folkosonomies and now this Social Web is colliding with the emergence of the Semantic Web, resulting in the first semantic services. For us developers and <a href="http://www.readwriteweb.com/archives/creative_entrepreneurs_masters_of_the_universe.php">creative entrepreneurs</a> it&#8217;s important to get ready for this new wave of <a href="http://www.readwriteweb.com/archives/semantic_wave_2008_free_report.php">business opportunities</a>. I find the whole notion of Intelligent Agents very interesting. For our little project however, we will create a Stupid Agent :]</p>
+<p>Technologies like <a href="http://xmpp.org/">Jabber/XMPP</a> and <a href="http://www.ruby-doc.org/stdlib/libdoc/drb/rdoc/index.html">DRb</a> will enable us to move from a reactive web to a proactive web. Right now this proactive realtime push of data is important for the more liquid content creation services. Micro/nano blogging platforms as <a href="http://twitter.com/">Twitter</a> and <a href="http://tumblr.com/">Tumblr</a> are good examples of this. This is one of the reasons that they already have a Jabber service set up.</p>
+<p>I&#8217;ve had used Jabber before to communicate with my geek friends. For this project, I had to set up a Jabber client and Jabber account. Call me stupid, but I actually had to spend 30 minutes figuring out how the hell I had to create an account and choose which server to use (turns out you can do that in the client). Now of course <span class="caps">XMPP</span>/Jabber is just a standard for enabling IM communication, but apart from <a href="http://www.google.com/talk/">Google&#8217;s GTalk</a> there hasn&#8217;t been much widespread use by ordinary users. In my view, these uses of <span class="caps">XMPP</span> for machine to machine (to human) are much more interesting.</p>
+<p><img src="http://farm3.static.flickr.com/2208/2056492315_6958022f9f.jpg" alt="" /></p>
+<h2>Case: The Observatory Bot</h2>
+<p>I&#8217;ve been programming for quite some time now. When learning a new language I really hate doing little examples that produce zero user/business value. That&#8217;s why I think the best way to learn new technologies is to solve real world problems right away. Of course tutorials are valuable to just get a general idea of what&#8217;s going on, but don&#8217;t waste too much time on them &#8211; implement straight away.</p>
+<p>Our Twitter Service will also need to create some value for the user and must be production ready. However, don&#8217;t get your hopes up too much since these are experimental technologies with dependence on external services like Jabber and Twitter.</p>
+<p>Remember <a href="http://dominiek.com/articles/2008/1/6/building-a-com-in-24-hours">my last little project</a>? <a href="http://wigitize.com/">Wigitize.com</a> is actually generating a lot of data. It&#8217;s tracking about <del>5000</del> 6000 feeds every hour! Let&#8217;s do something with that data :]</p>
+<p style="float:right"><img src="/assets/2008/2/15/Picture_8.png" alt="" /></p>
+<p>The Observatory:</p>
+<ul>
+<li>is a Twitter-only service</li>
+<li>will allow you to &#8216;track&#8217; the Blogosphere</li>
+<li>will send you a direct message when something happens in the Blogosphere</li>
+</ul>
+<p>Basically this is like Twitter&#8217;s IM functionality to track the Twittersphere. So in a sense The Observatory will be a proof of concept portal between the Twittersphere and the Blogosphere.</p>
+<h2>The Architecture</h2>
+<p><img src="/assets/2008/2/11/Picture_2.png" alt="" /></p>
+<p>Right now <a href="http://wigitize.com">Wigitize.com</a> uses <a href="http://backgroundrb.rubyforge.org/">BackgrounDRb</a> to perform background tasks and also to update all <span class="caps">RSS</span> feeds periodically. Everytime the feed aggregation process finds a new feed entry it will create a FeedEntry instance. The creation of these objects serve as events for the Observatory Bot. These events have to be pushed to the Observatory Bot in some way.</p>
+<h2>What can Twitter&#8217;s IM service do for us?</h2>
+<p>To play around with Twitter&#8217;s agent you need to set up a Jabber account and a Twitter account. For debugging I&#8217;ve found the MacOS tool <a href="http://jabberfox.sourceforge.net/">JabberFox</a> very helpful.</p>
+<p>Basically, these commands are available:</p>
+<p><img src="/assets/2008/2/15/Picture_15.png" alt="" /></p>
+<p>However, I think there are a lot more hidden commands which can be used. After emailing with the Twitter developers they told me there is a command called &#8220;d&#8221;. This can be used to send direct messages (<em>d username message</em>). Very useful!</p>
+<h2>Coding the Bot</h2>
+<p>Our implementation choice for today will be <a href="http://rubylang.org">Ruby</a>. If you&#8217;ve programmed intensively in other languages before you&#8217;ve probably come to the conclusion that Ruby is quite different from most other. Ruby&#8217;s flexible object models allow for great extension of the language itself (eg 3.minutes.ago). It is therefore no surprise that interesting Semantic Web projects like <a href="http://www.activerdf.org/">ActiveRDF</a> are choosing Ruby as their language.</p>
+<p>To communicate with Twitter we can use <a href="http://twitter.rubyforge.org/">this cool Ruby Twitter <span class="caps">API</span></a>. Unfortunately all of these <span class="caps">API</span>&#8217;s are <span class="caps">HTTP</span>/REST driven and really limit what we can do in terms of realtime response. Also, if you want to build a serious production ready service, constantly polling Twitter will kill both parties.</p>
+<p><img src="/assets/2008/2/11/Picture_3.png" alt="" /></p>
+<p>So we need to interface with their Jabber Service. Jabber is a friendly name for Instant Messaging (IM) using the open <span class="caps">XMPP</span> protocol. Luckily, there is a Ruby library called <span class="caps">XMPP4R</span> which does most of the <span class="caps">XMPP</span> work for us. <a href="http://devblog.famundo.com/articles/2006/10/14/ruby-and-xmpp-jabber-part-2-logging-in-and-sending-simple-messages">This blog post</a> provides some simple examples and this <a href="http://wiki.bsd-crew.de/index.php/Jabberbots_mit_XMPP4R">German wiki entry</a> provides sample code how to use callbacks (very important for a bot).</p>
+<p>I&#8217;ve wrapped all of this in a simple JabberBot class <a href="/assets/2008/2/11/jabber_bot.rb">jabber_bot.rb</a> that can be used like this:</p>
+<table class="CodeRay">
+<tr>
+<td class="line_numbers" title="click to toggle" onclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }">
+<pre>1<tt>
+</tt>2<tt>
+</tt>3<tt>
+</tt>4<tt>
+</tt>5<tt>
+</tt>6<tt>
+</tt>7<tt>
+</tt>8<tt>
+</tt></pre>
+</td>
+<td class="code">
+<pre ondblclick="with (this.style) { overflow = (overflow == 'auto' || overflow == '') ? 'visible' : 'auto' }">  <span class="r">class</span> <span class="cl">MyJabberBot</span> &lt; <span class="co">JabberBot</span><tt>
+</tt>    <span class="r">def</span> <span class="fu">on_message</span>(from, body)<tt>
+</tt>      say(from, <span class="s"><span class="dl">&quot;</span><span class="k">You said: </span><span class="il"><span class="dl">#{</span>body<span class="dl">}</span></span><span class="dl">&quot;</span></span>)<tt>
+</tt>    <span class="r">end</span><tt>
+</tt>  <span class="r">end</span><tt>
+</tt>  my_jabber_bot = <span class="co">MyJabberBot</span>.new(<span class="s"><span class="dl">'</span><span class="k">observatory@jabber.org</span><span class="dl">'</span></span>, <span class="s"><span class="dl">'</span><span class="k">password</span><span class="dl">'</span></span>)<tt>
+</tt>  my_jabber_bot.connect_and_authenticate<tt>
+</tt>  my_jabber_bot.run<tt>
+</tt></pre>
+</td>
+</tr>
+</table>
+<p>As you can see in the diagram, I&#8217;ve build a TwitterBot on top of this JabberBot. Unfortunatly it&#8217;s not possible to do all communication with Twitter through Jabber yet. For example: there are no events for when users start following other users or ways to retrieve information. This is why <a href="/assets/2008/2/14/twitter_bot.rb">twitter_bot.rb</a> is essentially a hybrid using both the Twitter <span class="caps">API</span> and Twitter&#8217;s Jabber service. Feel free to use all sourcecode provided here, I know it will be useful to some of you out there. This is how to use this TwitterBot:</p>
+<table class="CodeRay">
+<tr>
+<td class="line_numbers" title="click to toggle" onclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }">
+<pre>1<tt>
+</tt>2<tt>
+</tt>3<tt>
+</tt>4<tt>
+</tt>5<tt>
+</tt>6<tt>
+</tt>7<tt>
+</tt>8<tt>
+</tt>9<tt>
+</tt><strong>10</strong><tt>
+</tt>11<tt>
+</tt>12<tt>
+</tt></pre>
+</td>
+<td class="code">
+<pre ondblclick="with (this.style) { overflow = (overflow == 'auto' || overflow == '') ? 'visible' : 'auto' }">  twitter_bot = <span class="co">TwitterBot</span>.new(<span class="s"><span class="dl">'</span><span class="k">observatory</span><span class="dl">'</span></span>, <span class="s"><span class="dl">'</span><span class="k">password</span><span class="dl">'</span></span>, <span class="s"><span class="dl">'</span><span class="k">observatory@jabber.org</span><span class="dl">'</span></span>, <span class="s"><span class="dl">'</span><span class="k">password</span><span class="dl">'</span></span>)<tt>
+</tt>  twitter_bot.track_phrases = [<span class="s"><span class="dl">'</span><span class="k">observatory.topoints.com</span><span class="dl">'</span></span>]<tt>
+</tt>  twitter_bot.on_directed_tweet <span class="r">do</span> |username, message|<tt>
+</tt>    puts(<span class="s"><span class="dl">&quot;</span><span class="k">directed tweet: </span><span class="il"><span class="dl">#{</span>username<span class="dl">}</span></span><span class="k"> says </span><span class="il"><span class="dl">#{</span>message<span class="dl">}</span></span><span class="dl">&quot;</span></span>)<tt>
+</tt>  <span class="r">end</span><tt>
+</tt>  twitter_bot.on_tweet <span class="r">do</span> |username, message|<tt>
+</tt>    puts(<span class="s"><span class="dl">&quot;</span><span class="k">something from </span><span class="il"><span class="dl">#{</span>username<span class="dl">}</span></span><span class="k">: </span><span class="il"><span class="dl">#{</span>message<span class="dl">}</span></span><span class="dl">&quot;</span></span>)<tt>
+</tt>  <span class="r">end</span><tt>
+</tt>  twitter_bot.on_track <span class="r">do</span> |username, message, phrase|<tt>
+</tt>    puts(<span class="s"><span class="dl">&quot;</span><span class="k">track: </span><span class="il"><span class="dl">#{</span>username<span class="dl">}</span></span><span class="k"> says </span><span class="il"><span class="dl">#{</span>message<span class="dl">}</span></span><span class="k"> (keyword: </span><span class="il"><span class="dl">#{</span>phrase<span class="dl">}</span></span><span class="dl">&quot;</span></span>)<tt>
+</tt>  <span class="r">end</span><tt>
+</tt>  twitter_bot.runn(<span class="sy">:follow_all_followers</span> =&gt; <span class="pc">true</span>)<tt>
+</tt></pre>
+</td>
+</tr>
+</table>
+<p>Now that we have the basic building blocks to build our service, let&#8217;s build our core business logic (<a href="/assets/2008/2/15/observatory_twitter_bot.rb">observatory_twitter_bot.rb</a>):</p>
+<p><img src="/assets/2008/2/15/Picture_4.png" alt="" /></p>
+<p>This means that we will send a greeting when people start following us:</p>
+<table class="CodeRay">
+<tr>
+<td class="line_numbers" title="click to toggle" onclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }">
+<pre>1<tt>
+</tt>2<tt>
+</tt>3<tt>
+</tt>4<tt>
+</tt>5<tt>
+</tt>6<tt>
+</tt>7<tt>
+</tt>8<tt>
+</tt></pre>
+</td>
+<td class="code">
+<pre ondblclick="with (this.style) { overflow = (overflow == 'auto' || overflow == '') ? 'visible' : 'auto' }">  on_follow <span class="r">do</span> |username|<tt>
+</tt>    logger.info(<span class="s"><span class="dl">&quot;</span><span class="il"><span class="dl">#{</span>username<span class="dl">}</span></span><span class="k"> is following us, will follow </span><span class="il"><span class="dl">#{</span>username<span class="dl">}</span></span><span class="k"> too and send welcome message</span><span class="dl">&quot;</span></span>)<tt>
+</tt>    follow(username)<tt>
+</tt>    direct_message(username, <span class="s"><span class="dl">&quot;</span><span class="k">the Observatory is now ready to serve you, use '@observatory track [keyword]' to get blogosphere updates.</span><span class="dl">&quot;</span></span>)<tt>
+</tt>  <span class="r">end</span><tt>
+</tt>  on_unfollow <span class="r">do</span> |username|<tt>
+</tt>    logger.info(<span class="s"><span class="dl">&quot;</span><span class="il"><span class="dl">#{</span>username<span class="dl">}</span></span><span class="k"> stopped following us</span><span class="dl">&quot;</span></span>)<tt>
+</tt>  <span class="r">end</span><tt>
+</tt></pre>
+</td>
+</tr>
+</table>
+<p><em>Note: in order to get the on_follow event, we have to poll the Twitter <span class="caps">HTTP API</span> . Since Twitter limits the rate to 70 requests per hour, I poll every two minutes to be on the safe side.</em></p>
+<p>And that we will start tracking the Blogosphere for them when they say the magic word:</p>
+<table class="CodeRay">
+<tr>
+<td class="line_numbers" title="click to toggle" onclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }">
+<pre>1<tt>
+</tt>2<tt>
+</tt>3<tt>
+</tt>4<tt>
+</tt>5<tt>
+</tt>6<tt>
+</tt>7<tt>
+</tt>8<tt>
+</tt>9<tt>
+</tt><strong>10</strong><tt>
+</tt>11<tt>
+</tt>12<tt>
+</tt></pre>
+</td>
+<td class="code">
+<pre ondblclick="with (this.style) { overflow = (overflow == 'auto' || overflow == '') ? 'visible' : 'auto' }">  on_directed_tweet <span class="r">do</span> |username, message|<tt>
+</tt>    logger.info(<span class="s"><span class="dl">&quot;</span><span class="k">directed tweet: </span><span class="il"><span class="dl">#{</span>username<span class="dl">}</span></span><span class="k"> says </span><span class="il"><span class="dl">#{</span>message<span class="dl">}</span></span><span class="dl">&quot;</span></span>)<tt>
+</tt>    <span class="r">if</span> (phrase = track_phrase(message))<tt>
+</tt>      logger.info(<span class="s"><span class="dl">&quot;</span><span class="k">tracking '</span><span class="il"><span class="dl">#{</span>phrase<span class="dl">}</span></span><span class="k">' for user </span><span class="il"><span class="dl">#{</span>username<span class="dl">}</span></span><span class="dl">&quot;</span></span>)<tt>
+</tt>      <span class="r">begin</span><tt>
+</tt>        direct_message(username, <span class="s"><span class="dl">&quot;</span><span class="k">Will send a direct message anytime something happens in the Blogosphere regarding '</span><span class="il"><span class="dl">#{</span>phrase<span class="dl">}</span></span><span class="k">'</span><span class="dl">&quot;</span></span>)<tt>
+</tt>        <span class="co">Tracker</span>.for(username, phrase)<tt>
+</tt>      <span class="r">rescue</span> =&gt; e<tt>
+</tt>        logger.error(<span class="s"><span class="dl">&quot;</span><span class="k">tracking failure: </span><span class="il"><span class="dl">#{</span>e.to_s<span class="dl">}</span></span><span class="dl">&quot;</span></span>)<tt>
+</tt>      <span class="r">end</span><tt>
+</tt>    <span class="r">end</span><tt>
+</tt>  <span class="r">end</span><tt>
+</tt></pre>
+</td>
+</tr>
+</table>
+<p>Now when a new FeedEntry is created, we need to make sure that these Twitter users get notified when their tracked phrase matches the FeedEntry. Since this might take up some time, I&#8217;ve created a background worker task for it:</p>
+<p>As you might see, Distributed Ruby (DRb) makes it extremely easy to control our bot remotely. In the ObservatoryBot we say:</p>
+<table class="CodeRay">
+<tr>
+<td class="line_numbers" title="click to toggle" onclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }">
+<pre>1<tt>
+</tt></pre>
+</td>
+<td class="code">
+<pre ondblclick="with (this.style) { overflow = (overflow == 'auto' || overflow == '') ? 'visible' : 'auto' }">  <span class="co">DRb</span>.start_service(<span class="s"><span class="dl">&quot;</span><span class="k">druby://:8997</span><span class="dl">&quot;</span></span>, <span class="pc">self</span>)<tt>
+</tt></pre>
+</td>
+</tr>
+</table>
+<p>And all bot functionality can be accessed by calling: <em>observatory_bot = DRbObject.new(nil, &#8216;druby://:8997&#8217;)</em></p>
+<p>Now that we have our autonomous agent it would be nice if we could easily start and stop it in a production environment. I found the Ruby Gem called <a href="http://daemons.rubyforge.org/">Daemons</a> extremely useful to wrap these things up.</p>
+<p>First, set up a file that runs the never ending process (eg script/observatory_twitter_bot.rb):</p>
+<table class="CodeRay">
+<tr>
+<td class="line_numbers" title="click to toggle" onclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }">
+<pre>1<tt>
+</tt>2<tt>
+</tt>3<tt>
+</tt>4<tt>
+</tt>5<tt>
+</tt>6<tt>
+</tt>7<tt>
+</tt>8<tt>
+</tt></pre>
+</td>
+<td class="code">
+<pre ondblclick="with (this.style) { overflow = (overflow == 'auto' || overflow == '') ? 'visible' : 'auto' }">require <span class="s"><span class="dl">'</span><span class="k">logger</span><span class="dl">'</span></span><tt>
+</tt>require <span class="co">File</span>.dirname(<span class="pc">__FILE__</span>) + <span class="s"><span class="dl">'</span><span class="k">/../config/boot</span><span class="dl">'</span></span><tt>
+</tt>require <span class="co">File</span>.dirname(<span class="pc">__FILE__</span>) + <span class="s"><span class="dl">'</span><span class="k">/../config/environment</span><span class="dl">'</span></span><tt>
+</tt>require <span class="co">File</span>.dirname(<span class="pc">__FILE__</span>) + <span class="s"><span class="dl">'</span><span class="k">/../lib/observatory_twitter_bot</span><span class="dl">'</span></span><tt>
+</tt><tt>
+</tt>logger = <span class="co">Logger</span>.new(<span class="co">File</span>.join(<span class="co">RAILS_ROOT</span>, <span class="s"><span class="dl">'</span><span class="k">log/observatory_twitter_bot.log</span><span class="dl">'</span></span>))<tt>
+</tt>observatory_twitter_bot = <span class="co">ObservatoryTwitterBot</span>.new(logger)<tt>
+</tt>observatory_twitter_bot.runn<tt>
+</tt></pre>
+</td>
+</tr>
+</table>
+<p>Next, wrap this up in a daemon script (eg script/observatory_twitter_bot):</p>
+<table class="CodeRay">
+<tr>
+<td class="line_numbers" title="click to toggle" onclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }">
+<pre>1<tt>
+</tt>2<tt>
+</tt>3<tt>
+</tt>4<tt>
+</tt>5<tt>
+</tt>6<tt>
+</tt>7<tt>
+</tt></pre>
+</td>
+<td class="code">
+<pre ondblclick="with (this.style) { overflow = (overflow == 'auto' || overflow == '') ? 'visible' : 'auto' }"><tt>
+</tt><span class="c">#!/usr/bin/env ruby</span><tt>
+</tt>require <span class="co">File</span>.dirname(<span class="pc">__FILE__</span>) + <span class="s"><span class="dl">'</span><span class="k">/../config/boot</span><span class="dl">'</span></span><tt>
+</tt>require <span class="s"><span class="dl">'</span><span class="k">rubygems</span><span class="dl">'</span></span><tt>
+</tt>require <span class="s"><span class="dl">'</span><span class="k">daemons</span><span class="dl">'</span></span><tt>
+</tt><tt>
+</tt><span class="co">Daemons</span>.run(<span class="s"><span class="dl">'</span><span class="k">script/observatory_twitter_bot.rb</span><span class="dl">'</span></span>)<tt>
+</tt></pre>
+</td>
+</tr>
+</table>
+<p><br/><br/></p>
+<h2>The Demo</h2>
+<p>Right now if all communication lines with Twitter are working fine, the service is up and running. I&#8217;ve made a little bot homepage at <a href="http://observatory.topoints.com/">observatory.topoints.com</a></p>
+<p><img src="/assets/2008/2/11/Picture_7.png" alt="" /></p>
+<p>@observatory track &#8216;Twitter&#8217;:</p>
+<p><img src="/assets/2008/2/15/Picture_14.png" alt="" /></p>
+<h2>Problems and Opportunities</h2>
+<p>In the development of the Observatory I had one big obstacle: Twitter is often down and it can cripple your service and development time. I understand that Twitter is a small team under enormous pressure but there have been a lot of complaints about this.</p>
+<p>Nevertheless Twitter and it&#8217;s developers really kick ass. I emailed <a href="http://www.al3x.net/">Alex Payne</a> and he was excited about what I&#8217;m doing (and also the Twitter things happening the iKnow! project in Japan). He responded fairly quickly and immediately whitelisted my Twitter account to up the rate limits.</p>
+<p>While working on this project I realized that Twitter in it&#8217;s current state isn&#8217;t really suitable for system-to-human notifications. Twitter could expand their system to be a true notification framework, but I&#8217;m not sure if they will. If they don&#8217;t, there is a tremendous business opportunity here. Imagine an open <span class="caps">API</span> that mashes up with technologies like <span class="caps">XMPP</span> and <a href="http://growl.info/">Growl</a>. A service like that could become <span class="caps">THE</span> notification-bus of the web! (Already Growl is pretty big in Mac land). A full blog post about this startup idea coming up!</p>
+<h2>Geek Food for Thought</h2>
+<p>What about RubyOnRails, Jabber, DRb, Daemons and BackgrounDRb? I think we are seeing a new framework here! In this <a href="http://dannyayers.com/docs/ieee/w5">interesting article</a> by Danny Ayers he talks about a toolset for agents. On Java there is already &#8220;an Agent Framework&#8221; that I haven&#8217;t checked out yet. I can imagine that these frameworks ease doing development like this and facilitate better system autonomy. Of course it&#8217;s desirable to give such a framework a pragmatic paintjob by using Rails paradigms.</p>
+<p><img src="/assets/2008/2/11/Picture_6.png" alt="" /></p>
+<p>Above here I&#8217;ve illustrated Rails&#8217; missing brother. I think it&#8217;s also good to take into account interesting technologies like Juggernaut and Comet. These are basically Javascript Push techniques to make a synchronous interaction on the asynchronous web possible.</p>
+<p>When you combine all these micro- asynchronous communication lines you get one big synchronous connection line between machine agents and user agents.</p>
+<p><img src="/assets/2008/2/11/Picture_5.png" alt="" /></p>
+
+									</div>
+				
+        <div class="wp-share-the-love"><div class="wp-share-the-love"><div class="wp-share-twitter"><iframe src="http://api.tweetmeme.com/button.js?source=dominiek&style=compact&service=bit.ly&url=http%3A%2F%2Fsynaptify.com%2F%3Fp%3D123" height="20" width="90" frameborder="0" scrolling="no"></iframe></div><div class="wp-share-facebook"><a name="fb_share" share_url="http://synaptify.com/?p=123" type="button_count" href="http://www.facebook.com/sharer.php">Share</a><script src="http://www.facebook.com/connect.php/js/FB.SharePro/" type="text/javascript"></script>&nbsp;</div></div><div style="clear: both;"></div></div>
+        
+				<div class="entry-utility"><span class="cat-links">This entry was posted in <a href="http://synaptify.com/?cat=1" title="View all posts in Uncategorized" rel="category">Uncategorized</a></span>. Bookmark the <a href="http://synaptify.com/?p=123" title="Permalink to How to Build a Twitter Agent">permalink</a>. <a class="comment-link" href="#respond" title ="Post a comment">Post a comment</a> or leave a trackback: <a class="trackback-link" href="http://synaptify.com/wp-trackback.php?p=123" title ="Trackback URL for your post" rel="trackback">Trackback URL</a>.</div><!-- .entry-utility -->
+			</div><!-- .post -->
+			
+
+
+
+			
+			<div id="nav-below" class="navigation">
+				<div class="nav-previous"><a href="http://synaptify.com/?p=122"><span class="meta-nav">&laquo;</span> Creating a Twitter Loop</a></div>
+				<div class="nav-next"><a href="http://synaptify.com/?p=124">Using Wakoopa to broadcast your Geek Life <span class="meta-nav">&raquo;</span></a></div>
+			</div>
+
+
+			<div id="comments">
+
+
+
+
+
+
+				<div id="trackbacks-list" class="comments">
+					<h3><span>One</span> Trackback</h3>
+					
+					<ol>
+    		<li id="comment-8759" class="pingback t c-y2010 c-m09 c-d23 c-h10 alt depth-1">
+    			<div class="comment-author">By <a href='http://synaptify.com/?p=613778' rel='external nofollow' class='url'>What people fail to understand about RSS</a> on September 23, 2010 at 10:13 am</div>
+                <div class="comment-content">
+    			<p>[...] think there is a huge opportunity here to accommodate the needs described here (technology and business wise). Execution will be key [...]</p>
+			</div>
+</li>
+					</ol>				
+					
+				</div><!-- #trackbacks-list .comments -->			
+
+				
+
+
+				<div id="respond">
+    				<h3>Post a Comment</h3>
+    				
+    				<div id="cancel-comment-reply"><a rel="nofollow" id="cancel-comment-reply-link" href="/?p=123#respond" style="display:none;">Click here to cancel reply.</a></div>
+
+					<div class="formcontainer">	
+					
+					
+
+						<form id="commentform" action="http://synaptify.com/wp-comments-post.php" method="post">
+
+
+							<p id="comment-notes">Your email is <em>never</em> published nor shared. Required fields are marked <span class="required">*</span></p>
+
+                            <div id="form-section-author" class="form-section">
+    							<div class="form-label"><label for="author">Name</label> <span class="required">*</span></div>
+    							<div class="form-input"><input id="author" name="author" type="text" value="" size="30" maxlength="20" tabindex="3" /></div>
+                            </div><!-- #form-section-author .form-section -->
+
+                            <div id="form-section-email" class="form-section">
+    							<div class="form-label"><label for="email">Email</label> <span class="required">*</span></div>
+    							<div class="form-input"><input id="email" name="email" type="text" value="" size="30" maxlength="50" tabindex="4" /></div>
+                            </div><!-- #form-section-email .form-section -->
+
+                            <div id="form-section-url" class="form-section">
+    							<div class="form-label"><label for="url">Website</label></div>
+    							<div class="form-input"><input id="url" name="url" type="text" value="" size="30" maxlength="50" tabindex="5" /></div>
+                            </div><!-- #form-section-url .form-section -->
+
+
+                            <div id="form-section-comment" class="form-section">
+    							<div class="form-label"><label for="comment">Comment</label></div>
+    							<div class="form-textarea"><textarea id="comment" name="comment" cols="45" rows="8" tabindex="6"></textarea></div>
+                            </div><!-- #form-section-comment .form-section -->
+                            
+                            <div id="form-allowed-tags" class="form-section">
+                                <p><span>You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:</span> <code>&lt;a href=&quot;&quot; title=&quot;&quot;&gt; &lt;abbr title=&quot;&quot;&gt; &lt;acronym title=&quot;&quot;&gt; &lt;b&gt; &lt;blockquote cite=&quot;&quot;&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=&quot;&quot;&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=&quot;&quot;&gt; &lt;strike&gt; &lt;strong&gt; </code></p>
+                            </div>
+							
+                                    
+							<div class="form-submit"><input id="submit" name="submit" type="submit" value="Post Comment" tabindex="7" /><input type="hidden" name="comment_post_ID" value="123" /></div>
+
+                            <input type='hidden' name='comment_post_ID' value='123' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+    
+
+						</form><!-- #commentform -->
+						
+											
+						
+					</div><!-- .formcontainer -->
+
+				</div><!-- #respond -->
+
+			</div><!-- #comments -->
+<p class="btc-powered">Additional comments powered by <a href="http://www.backtype.com/search?q=http://synaptify.com/?p=123">BackType</a></p>
+
+
+
+		</div><!-- #content -->
+	</div><!-- #container -->
+
+
+	<div id="primary" class="aside main-aside">
+		<ul class="xoxo">
+	<li id="text-3" class="widgetcontainer widget_text"><h3 class="widgettitle">About this Blog</h3>
+			<div class="textwidget"><p>Hi, I'm <a href="http://dominiek.com/">Dominiek</a>. I build <a href="http://bottlenoseapp.com/">Smartups</a> and I'm available for <a href="http://dominiek.com/hire">hire</a>. This blog is about Technology, Innovation and the Web.</p>
+<p><a href="http://twitter.com/dominiek" class="twitter">Follow me on Twitter</a><a href="http://feeds.feedburner.com/Synaptify" class="rss">Subscribe to RSS!</a></p>
+</div>
+		</li>		<li id="recent-posts-3" class="widgetcontainer widget_recent_entries">		<h3 class="widgettitle">Previous Articles</h3>
+		<ul>
+				<li><a href="http://synaptify.com/?p=613778" title="What people fail to understand about RSS">What people fail to understand about RSS </a></li>
+				<li><a href="http://synaptify.com/?p=613765" title="Co-founder Wanted for Interest Intelligence Platform">Co-founder Wanted for Interest Intelligence Platform </a></li>
+				<li><a href="http://synaptify.com/?p=613748" title="Technology Acceleration Economics 101">Technology Acceleration Economics 101 </a></li>
+				<li><a href="http://synaptify.com/?p=613728" title="An Innovator Leaving Japan">An Innovator Leaving Japan </a></li>
+				<li><a href="http://synaptify.com/?p=613718" title="Rethinking Professionalism: The Meta-Expert">Rethinking Professionalism: The Meta-Expert </a></li>
+				</ul>
+		</li><li id="archives-2" class="widgetcontainer widget_archive"><h3 class="widgettitle">In the Past</h3>
+		<select name="archive-dropdown" onchange='document.location.href=this.options[this.selectedIndex].value;'> <option value="">Select Month</option> 	<option value='http://synaptify.com/?m=201009'> September 2010 </option>
+	<option value='http://synaptify.com/?m=201007'> July 2010 </option>
+	<option value='http://synaptify.com/?m=201005'> May 2010 </option>
+	<option value='http://synaptify.com/?m=201003'> March 2010 </option>
+	<option value='http://synaptify.com/?m=201002'> February 2010 </option>
+	<option value='http://synaptify.com/?m=200912'> December 2009 </option>
+	<option value='http://synaptify.com/?m=200911'> November 2009 </option>
+	<option value='http://synaptify.com/?m=200909'> September 2009 </option>
+	<option value='http://synaptify.com/?m=200904'> April 2009 </option>
+	<option value='http://synaptify.com/?m=200901'> January 2009 </option>
+	<option value='http://synaptify.com/?m=200812'> December 2008 </option>
+	<option value='http://synaptify.com/?m=200811'> November 2008 </option>
+	<option value='http://synaptify.com/?m=200810'> October 2008 </option>
+	<option value='http://synaptify.com/?m=200809'> September 2008 </option>
+	<option value='http://synaptify.com/?m=200807'> July 2008 </option>
+	<option value='http://synaptify.com/?m=200806'> June 2008 </option>
+	<option value='http://synaptify.com/?m=200805'> May 2008 </option>
+	<option value='http://synaptify.com/?m=200804'> April 2008 </option>
+	<option value='http://synaptify.com/?m=200803'> March 2008 </option>
+	<option value='http://synaptify.com/?m=200802'> February 2008 </option>
+	<option value='http://synaptify.com/?m=200801'> January 2008 </option>
+	<option value='http://synaptify.com/?m=200712'> December 2007 </option>
+	<option value='http://synaptify.com/?m=200710'> October 2007 </option>
+	<option value='http://synaptify.com/?m=200709'> September 2007 </option>
+	<option value='http://synaptify.com/?m=200708'> August 2007 </option>
+	<option value='http://synaptify.com/?m=200707'> July 2007 </option>
+	<option value='http://synaptify.com/?m=200706'> June 2007 </option>
+	<option value='http://synaptify.com/?m=200705'> May 2007 </option>
+	<option value='http://synaptify.com/?m=200704'> April 2007 </option>
+	<option value='http://synaptify.com/?m=200703'> March 2007 </option>
+	<option value='http://synaptify.com/?m=200702'> February 2007 </option>
+	<option value='http://synaptify.com/?m=200701'> January 2007 </option>
+	<option value='http://synaptify.com/?m=200612'> December 2006 </option>
+	<option value='http://synaptify.com/?m=200611'> November 2006 </option>
+	<option value='http://synaptify.com/?m=200610'> October 2006 </option>
+	<option value='http://synaptify.com/?m=200609'> September 2006 </option>
+	<option value='http://synaptify.com/?m=200608'> August 2006 </option>
+	<option value='http://synaptify.com/?m=200607'> July 2006 </option>
+	<option value='http://synaptify.com/?m=200606'> June 2006 </option>
+	<option value='http://synaptify.com/?m=200605'> May 2006 </option>
+	<option value='http://synaptify.com/?m=200604'> April 2006 </option>
+	<option value='http://synaptify.com/?m=200603'> March 2006 </option>
+	<option value='http://synaptify.com/?m=200602'> February 2006 </option>
+	<option value='http://synaptify.com/?m=200601'> January 2006 </option>
+	<option value='http://synaptify.com/?m=200512'> December 2005 </option>
+	<option value='http://synaptify.com/?m=200511'> November 2005 </option>
+	<option value='http://synaptify.com/?m=200510'> October 2005 </option>
+ </select>
+</li>		</ul>
+	</div><!-- #primary .aside -->
+		
+
+
+		
+	
+    </div><!-- #main -->
+    
+    
+
+	<div id="footer">
+        
+    
+
+        <div id="siteinfo">        
+    		Synaptify is a blog by Dominiek ter Heide about Web Technology and Startups. In particular the intersection of the Real-time Web and the Semantic Web (i.e. Synaptic Web). 		</div><!-- #siteinfo -->
+	</div><!-- #footer -->
+	
+  
+
+</div><!-- #wrapper .hfeed -->
+
+
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-2485654-6");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
