@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Ebb</title>
+    <link rel="alternate" href="http://max.kanat.us/tag-syndicate/?user=four&tag=ebb" title="RSS Feed" type="application/rss+xml" />
+    <link type="text/css" rel="stylesheet" href="style.css" media="screen"/>
+  </head>
+  <body>  
+    <div id="content"><p>(this is only for HEAD - old docs are found in the git repo)</p>
+
+<h1>A Web Server Called <em>Ebb</em></h1>
+
+<p>Ebb aims to be a small and fast web server specifically for hosting 
+dynamic Ruby language web applications. </p>
+
+<p>It is a binding to <a href="http://tinyclouds.org/libebb">libebb</a></p>
+
+<h2>Install</h2>
+
+<p>The Ruby binding is available as a Ruby Gem. It can be install by executing</p>
+
+<pre><code>gem install ebb
+</code></pre>
+
+<p>If you want SSL support you must install GnuTLS.
+Ebb has no other dependencies.</p>
+
+<h2>Running</h2>
+
+<p>Use Ebb.start_server()</p>
+
+<h2>Speed</h2>
+
+<p>(these stats are out of date)</p>
+
+<p>Because Ebb handles most of the processing in C, it is able to do work
+often times more efficiently than other Ruby language web servers.</p>
+
+<p><img src="http://s3.amazonaws.com/four.livejournal/20080311/ebb.png" alt="Benchmark"/></p>
+
+<p>Ebb-Ruby can handle threaded processing better than the other 'evented' 
+servers. This won't be of any benefit to Rails applications because Rails
+places a lock around each request that wouldn't allow concurrent processing
+anyway. In Merb, for example, Ebb's thread handling will allow Ebb instances
+to handle larger loads. <a href="http://four.livejournal.com/848525.html">More</a></p>
+
+<h2>Contributions</h2>
+
+<p>Contributions (patches, criticism, advice) are very welcome! 
+Please send all to to 
+<a href="http://groups.google.com/group/ebbebb">the mailing list</a>.</p>
+
+<p>The source code is hosted <a href="http://github.com/ry/ebb/tree/master">github</a>. It
+can be retrieved by executing</p>
+
+<pre><code>git clone git://github.com/ry/ebb.git
+</code></pre>
+
+<h2>(The MIT) License</h2>
+
+<p>Copyright (c) 2008 <a href="http://tinyclouds.org">Ryah Dahl</a> (ry at tiny clouds dot org)</p>
+
+<div id="license">
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+</div></div>
+  </body>
+</html>
