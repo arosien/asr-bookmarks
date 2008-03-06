@@ -1,0 +1,146 @@
+<html>
+<head>
+ <title>TileCache, from MetaCarta Labs</title>
+ <style type="text/css">
+    @import "/style.css";
+ </style>
+
+    <script src="http://openlayers.org/api/OpenLayers.js"></script>
+    <script type="text/javascript">
+        <!--
+        var map, layer;
+
+        function init(){
+            map = new OpenLayers.Map( $('map'), {maxResolution:1.40625/2});
+            layer = new OpenLayers.Layer.WMS( "VMap0", 
+                    "http://labs.metacarta.com/wms-c/Basic.py?", {layers: 'basic', format: 'image/png' } );
+            map.addLayer(layer);
+            layer = new OpenLayers.Layer.WMS( "Blue Marble", 
+                    "http://labs.metacarta.com/wms-c/Basic.py?", {layers: 'satellite' } );
+            map.addLayer(layer);
+            c = new OpenLayers.Control.LayerSwitcher();
+            map.addControl(c);
+            map.addControl(new OpenLayers.Control.Permalink());
+            if (!map.getCenter()) map.zoomToMaxExtent();
+        }
+        // -->
+    </script>
+</head>
+<body onload="init()">
+
+<div id="map" style="float:right;width:512px;height:256px;margin:10px;border: 1px solid #888;"></div> 
+<h2 id="TileCache">TileCache -- Web Map Tile Caching</h2>
+<div id="side">
+<h2>Project info:</h2>
+<ul>
+  <li><a href="http://lists.osgeo.org/mailman/listinfo/tilecache">Mailing list</a></li>
+  <li><a href="http://svn.osgeo.org/tilecache/trunk/tilecache/">SVN</a></li>
+  <li><a href="http://svn.osgeo.org/tilecache/trunk/tilecache/docs/CONTRIBUTORS.txt">Contributors</a></li>
+  <li><a href="http://trac.osgeo.org/tilecache/">Bug Tracker</a></li>
+</ul>  
+<h2>Download:</h2>
+<ul>
+ <li><a href="tilecache-2.11.tar.gz">.tar.gz</a></li>
+ <li><a href="tilecache-2.11.zip">.zip</a></li>
+</ul>
+<h2>Documentation</h2>
+<ul>
+ <li><a href="docs/README.html">Installation Readme</a></li>
+ <li><a href="docs/SuperOverlays.html">Using with SuperOverlays</a></li>
+</ul>
+<h2>Related Links</h2>
+<ul>
+ <li><a href="http://openlayers.org/">OpenLayers</a>
+ <li><a href="http://featureserver.org/">FeatureServer</a>
+ <li><a href="http://labs.metacarta.com">MetaCarta Labs</a>
+</ul> 
+ </div>
+<div id="content">
+<p>
+  TileCache is an implementation of a WMS-C (<a href="#wmsc">about</a>) compliant server made available
+  under the BSD license by MetaCarta.
+  (Also, <a href="#tilecacheconfig">TileCacheConfig</a>)
+
+</p> 
+<p>
+  TileCache provides a Python-based WMS-C/TMS server, with pluggable caching mechanisms and rendering backends. 
+  In the simplest use case, TileCache requires only write access to a disk, the ability to run Python CGI scripts, and a WMS you want to be cached. 
+  With these resources, you can create your own local disk-based cache of any WMS server, and use the result in any WMS-C supporting client, like
+  <a href="http://openlayers.org/">OpenLayers</a>, or any TMS supporting client, like OpenLayers and <a href="http://worldkit.org/">worldKit</a>.  
+</p>
+
+<ul>
+  <li> <a href="http://openlayers.org/mailman/listinfo/tilecache">TileCache Mailing List</a></li>
+  <li> <a href="http://svn.osgeo.org/tilecache/">SVN</a></li>
+</ul>
+
+<p>Download 2.11: <a href="./tilecache-2.11.tar.gz">.tar.gz</a>, <a href="./tilecache-2.11.zip">.zip</a><!--, <a href="./tilecache_2.11-1_all.deb">.deb</a>--> | <a href="http://svn.osgeo.org/tilecache/trunk/tilecache/docs/NEWS.txt">Changelog</a> | <a href="http://svn.tilecache.org/tags/tilecache/release-2.11/">Browse Source</a> | <a href="demo.html">Demo of TileCache in OpenLayers</a> | <a href="readme.html">Readme</a></p>
+<p> To set up your own TileCache client/server:</p>
+<ul>
+  <li><a href="./tilecache-2.11.tar.gz">Download</a> to a web directory that will run CGI.</li>
+  <li>Untar the file: tar -zvxf tilecache-2.11.tar.gz</li>
+  <li>Visit http://example.com/yourdir/tilecache-2.11/</li>
+  <li>That's it! You're now caching WMS on your disk as you browse!</li>
+</ul>
+
+<p>This TileCache client supports multiple different rendering backends. Each rendering backend also supports the ability to draw 'metatiles', where a large tile is rendered, and then chopped into smaller tiles using the Python Imaging library.</p>
+<ul>
+  <li>MapServer -- render a tile using Python mapscript. </li>
+  <li>Mapnik -- render a tile using the mapnik Python bindings.</li>
+  <li>Cascading WMS -- fetch a tile from a remote WMS service. (Uses urllib to fetch tiles.)</li>
+</ul>
+<p>
+  In addition, there are two cache backends:
+</p>
+  <ul>
+    <li>DiskCache -- Store files on disk. (Files stored in directories like basic/0/000/001/053/000/021/052.png)</li>
+    <li>MemoryCache -- Store data in a memcached instance or cluster. (Requires memcached server running.)</li>
+  </ul>
+<p>TileCache supports three tile request mechanisms: <acronym title="Web Map Service">WMS</acronym> requests, 
+   <a href="http://labs.metacarta.com/wms-c/tilecache.py?LAYERS=basic&FORMAT=image/png&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/vnd.ogc.se_inimage&SRS=EPSG:4326&BBOX=-90,0,0,90&WIDTH=256&HEIGHT=256">like this</a>, 
+   WorldWind requests, <a href="http://labs.metacarta.com/wms-c/tilecache.py?T=basic&L=5&X=32&Y=23">like this one</a>, and <acronym title="Tile Mapping Service">TMS</acronym> requests,
+   <a href="http://labs.metacarta.com/wms-c/tilecache.py/1.0.0/basic/5/32/23.png">Like this one</a>.
+</p>
+<p>The TileCache library can speed up access to your WMS by factors of 10-100, or more. Under mod_python, cached requests can be handled at more than 300 requests per second. </p> 
+
+<h2 id="tilecacheconfig">TileCache Config</h2>
+<p>
+  Although editing a config file isn't too hard, it typically requires somewhat
+  lower level access than many users have to a system. TileCacheConfig is a 
+  web based configuration tool for TileCache that makes configuring TileCache
+  via a web browser possible.
+</p>
+<p>
+  TileCache Config is currently an alpha release.
+</p>
+Download TileCacheConfig 0.1: <a href="tilecacheconfig-0.1.tar.gz">.tar.gz</a>, <a href="tilecacheconfig-0.1.zip">.zip</a>
+
+<h2 id="wmsc">About WMS-C</h2>
+<p>
+  The <a href="http://wiki.osgeo.org/index.php/WMS_Tiling_Client_Recommendation">WMS Tiling Client Recommendation</a>, was the result of a set of discussions at the FOSS4G conference in 2006. 
+  The recommendation describes a way to constrain WMS requests to a predefined grid, so
+  that clients can request data that has been pre-rendered or rendered on the fly and the cached. Delivering cached map imagery can reduce image load times from
+  the client's point of view by as much as one or even two orders of magnitude.
+</p>
+<p> 
+  Although some users of WMS have attempted to use naive HTTP proxies to solve the
+  problems of WMS caching, caching HTTP proxies alone don't take full advantage
+  of prior knowledge of the WMS protocol, and don't account for the various
+  idiosyncrasies that WMS clients can present.
+</p>
+<p> 
+  Rendering map imagery on the fly for every WMS request typically requires
+  profound hardware resources to scale well, creating a barrier to entry for
+  organizations wishing to offer WMS access to their data. We hope that
+  creating simple-to-deploy solutions for caching map imagery will help to push
+  forward the publication of geographic data via WMS servers, which will in
+  turn make more and richer maps available to more people.  At MetaCarta Labs,
+  we intend to further this goal by developing software that implements WMS
+  caching servers and clients, such as OpenLayers and TileCache.
+</p>  
+</div>
+<div id="footer">
+(c) 2006-2010, TileCache Contributors
+</div>
+</body>
+</html> 
