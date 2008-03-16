@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+<head>
+	<title>dvtm || dynamic virtual terminal manager</title>
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+	<meta name="author" content="Marc Andre Tanner" />
+	<meta name="keywords" content="dynamic virtual terminal manager, dwm for the console, console window manager" />
+	<!-- <meta name="description" content="" /> -->
+	<meta name="robots" content="index,follow" />
+	<meta name="revisit-after" content="15 days" />
+	<meta http-equiv="content-language" content="en"/>
+	<link rel="stylesheet" type="text/css" href="/css/layout.css" />
+	<!--[if IE]>
+		<style type="text/css">
+			code {
+				font-size:1em;
+			}
+		</style>
+	<![endif]-->
+	<!--[if lte IE 6]>
+		<style type="text/css">
+			#container {
+				width:43em;
+			}
+
+			#content {
+		    		width:34em;
+			}
+
+			.code {
+				width:33em;
+			}
+		</style>
+	<![endif]-->
+	<link rel="shortcut icon" href="/badges/favicon.ico" type="image/x-icon" />
+	<link rel="index" title="Homepage" href="/index.php" />
+	<link rel="top" title="brain-dump.org" href="/index.php" />
+ </head>
+ <body>
+	<div id="container">
+		<div id="header" style="padding-bottom:20px;">
+			<h1 style="font-size:1.4em;"><a href="/projects/dvtm">dvtm || dynamic virtual terminal manager</a></h1>
+			<h2>Tiling window management for the console</h2>
+		</div>
+		<div class="menu_right">
+			<h2>
+				<a href="/projects/dvtm">menu</a>
+				<a href="#content" class="skip_navi" title="Skip navigation" tabindex="4" accesskey="c"><img src="/images/arrow.gif" alt="Skip navigation" /></a>
+			</h2>
+			<ul class="menulist">
+				<li><h4 class="borderless"><a href="#news" title="Internal link, Accesskey: Alt+1" accesskey="1" tabindex="1">News</a></h4></li>
+				<li><h4 class="borderless"><a href="#download" title="Internal link, Accesskey: Alt+2" accesskey="2" tabindex="2">Download</a></h4></li>
+				<li><h4 class="borderless"><a href="#devel" title="Internal link, Accesskey: Alt+3" accesskey="3" tabindex="3">Development</a></h4></li>
+				<li><h4 class="borderless"><a href="#install" title="Internal link, Accesskey: Alt+4" accesskey="4" tabindex="4">Installation</a></h4></li>
+				<li><h4 class="borderless"><a href="#config" title="Internal link, Accesskey: Alt+5" accesskey="5" tabindex="5">Configuration</a></h4></li>
+				<li><h4 class="borderless"><a href="#cmdline" title="Internal link, Accesskey: Alt+6" accesskey="6" tabindex="6">Command line options</a></h4></li>
+				<li><h4 class="borderless"><a href="#faq" title="Internal link, Accesskey: Alt+7" accesskey="7" tabindex="7">FAQ</a></h4></li>
+				<li><h4 class="borderless"><a href="#layouts" title="Internal link, Accesskey: Alt+8" accesskey="8" tabindex="8">Layouts</a></h4></li>
+				<li><h4 class="borderless"><a href="#screenshots" title="Internal link, Accesskey: Alt+9" accesskey="9" tabindex="9">Screenshots</a></h4></li>
+				<li><h4 class="borderless"><a href="#links" title="Internal link">Links</a></h4></li>
+				<li><h4 class="borderless"><a href="#license" title="Internal link">License</a></h4></li>
+			</ul>
+      		</div>
+		<div id="content" style="float:left;">
+			<h2><a href="/projects/dvtm/">dvtm</a></h2>
+			<p class="blogentry">
+				dvtm brings the concept of tiling window management, popularized by X11-window
+				managers like <a href="http://dwm.suckless.org/" class="external">dwm</a> to the
+				console. As a console window manager it tries to make it easy to work with 
+				multiple console based programs like
+				<a href="http://www.vim.org/" class="external">vim</a>,
+				<a href="http://www.mutt.org/" class="external">mutt</a>,
+				<a href="http://cmus.sf.net/" class="external">cmus</a> or 
+				<a href="http://www.irssi.org/" class="external">irssi</a>.
+			</p>
+			<h2><a name="news">News</a></h2>            
+			<ul>
+				<li>
+				    <a href="dvtm-0.6.tar.gz">dvtm-0.6</a>
+				    <a href="http://lists.suckless.org/dev/1010/6146.html" class="external">released</a> (8.10.2010)
+				</li>
+				<li>
+				    <a href="dvtm-0.5.2.tar.gz">dvtm-0.5.2</a>
+				    <a href="http://lists.suckless.org/dev/0907/0520.html" class="external">released</a> (7.07.2009)
+				</li>
+<!--
+
+ * compile fix for Mac OS X 
+
+ * optional beep on terminal bell (enable it per window with MOD+B)
+
+ * the whole screen redraw command which is now by default associated
+   with MOD+r  reads the terminal size and adjust the working area 
+   accordingly
+
+-->
+				<li>
+				    <a href="dvtm-0.5.1.tar.gz">dvtm-0.5.1</a>
+				    <a href="http://lists.suckless.org/dwm/0902/7405.html" class="external">released</a> (8.02.2009)
+				</li>
+<!--
+
+ * compile fix for missing set_escdelay function
+
+ * correct escape codes for HOME / END keys
+
+ * the Makefile links against libncursesw by default,
+   make unicode is gone
+
+-->
+				<li>
+				    <a href="dvtm-0.5.tar.gz">dvtm-0.5</a>
+				    <a href="http://lists.suckless.org/dwm/0901/7354.html" class="external">released</a> (26.01.2009)
+				</li>
+<!--
+
+ * Scrollback support
+
+   By default 500 lines scrollback history is preserved, this can
+   be changed in config.h or overridden by the -h command line option
+   at runtime.
+
+   Scrolling is done with Mod+PageUp and Mod+PageDown.
+
+ * 256 color support
+
+   dvtm checks on startup whether your terminal supports 256
+   colors this detection is done by curses which looks at 
+   $TERM and the terminfo database. If dvtm thinks your terminal
+   supports 256 colors then the child windows $TERM will be set to
+   rxvt-256color. This means you will need a coressponding file in 
+   /usr/share/terminfo/r or wherever your prefered distro stores it.
+
+   For debian based distributions the file is provided by the 
+   ncurses-term package.
+
+   In the long term it would be good to have a dvtm specific 
+   terminfo file. Volunteers are more than welcome.
+ 
+ * Reduced latency on some keystrokes (lower $ESCDELAY value by
+   default).
+ 
+ * Statusbar should now support wide characters
+
+ * $DVTM environment variable which is set to the current version.
+
+   This is meant to be used in shell startup scripts.
+
+   [ ! -z "$DVTM" ] && echo "Welcome to dvtm!";
+
+ * Screen lock functionality with Mod+X
+
+ * Support for shifted arrow keys
+
+ * Mod+? now displays the dvtm man page
+
+ * Cygwin compile fix
+
+ * Code cleanups and shrinkage by adding lots of static modifiers
+
+ * Top stack layout (not compiled in by default)
+
+ * Scripting interface over a named pipe (not compiled in by default)
+
+   See the following mailing list post for further information: 
+
+   http://lists.suckless.org/dwm/0806/6114.html
+-->
+
+				<li>
+				    <a href="dvtm-0.4.1.tar.gz">dvtm-0.4.1</a>
+				    <a href="http://lists.suckless.org/dwm/0805/5672.html" class="external">released</a> (10.05.2008)
+
+<!--
+					<ul>
+ 
+ <li>Cursor key mode switching (this fixes arrow keys in vim)</li>
+
+ <li>Characters following an escape are passed to the underlying
+   application, this fixes ALT+&lt;n&gt; key combination as used by 
+   irssi</li>
+
+ <li>A hack to make the keypad sort of work with putty</li>
+
+ <li>Mouse support is now compile time selectable</li>
+
+ <li>Destroy clients when an IO-error occurs</li>
+
+ <li>Correct signal handling (save and restore errno)</li>
+
+ <li>Destroy clients cleanly, prevent zombies</li>
+
+ <li>Added a note about copy &amp; paste to the manual page (use 
+   SHIFT while selecting or pasting text)</li>
+
+ <li>Some source code formatting fixes</li>
+
+ 					</ul>
+-->
+				</li>
+
+				<li><a href="dvtm-0.4.tar.gz">dvtm-0.4</a> <a href="http://lists.suckless.org/dwm/0802/4850.html" class="external">released</a> (17.02.2008)
+
+<!--
+					<ul>
+ <li>Only draw borders where necessary (titlebar + vertical separator)</li>
+ 
+ <li>Respect cursor visibility of apps running within dvtm</li>
+
+ <li>Autoquit feature, dvtm quits when the last shell is closed</li>
+
+ <li>Support for window title escape sequence (xtermset -T title)</li>
+
+ <li>Links against ncurses by default</li>
+
+ <li>Compilation fix for NetBSD (hopefully)</li>
+
+ <li>Some bugfixes and code cleanups</li>
+					</ul>
+-->
+				</li>
+				<li><a href="dvtm-0.3.tar.gz">dvtm-0.3</a> <a href="http://lists.suckless.org/dwm/0801/4735.html" class="external">released</a> (12.01.2008)
+
+<!--
+					<ul>
+
+ <li> Possibility to specify applications which should be launched after
+   dvtm startup in config.h and on the command line.</li>
+
+ <li>New commands redraw, escapekey and killclient.</li>
+
+ <li>Allow commands to take multiple arguments. This changed how
+   key bindings are defined in config.h. Currently only create uses
+   this, the second argument is the window title.</li>
+
+ <li>Mouse support configurable via config.h.</li>
+ 
+ <li>Allow key bindings with no modifier prefix if modifier is set to zero.</li>
+
+ <li>Make it possible to send the modifier to the underlying application
+   by doubling it (when you press ^g ^g the underlying app will receive
+   ^g).</li>
+
+ <li>Configurable status bar position.</li>
+
+ <li>Better UTF-8 locale detection.</li>
+
+ <li>Various code cleanups.</li>
+
+ <li>Some kind of manual page.</li>
+
+					</ul>
+-->
+				</li>
+				<li><a href="dvtm-0.2.tar.gz">dvtm-0.2</a> <a href="http://lists.suckless.org/dwm/0712/4677.html" class="external">released</a> (29.12.2007)
+
+<!--
+					<ul>
+
+  <li>use madtty instead of librote for terminal emulation.</li>
+
+  <li>a select(2) driven event loop which should reduce CPU usage.</li>
+
+  <li>ability to minimize windows (only the titlebar will be shown)
+   the corresponding function for use with a key binding is 
+   toggleminimize. Functions to select the next/previous non minimized
+   window were also added, they are called focus{next,prev}nm.</li> 
+
+  <li>an optional status bar which reads from a named pipe, see the
+   included dvtm-status script for a use case.</li> 
+
+  <li>a new fullscreen layout</li> 
+
+  <li>sigterm handler, which leaves curses mode. Useful when you kill dvtm
+   so you don't have to type reset.</li> 
+
+  <li>Portability: i have compiled dvtm on Open and FreeBSD, there are some
+   minor issues (OpenBSD uses some ugly window borders and the selected
+   window border isn't red, on FreeBSD only part of the window title is
+   red not the whole window border). Patches welcome.</li> 
+
+					</ul>	
+-->
+				</li>
+				<li><a href="dvtm-0.1.tar.gz">dvtm-0.1</a>
+				    <a href="http://lists.suckless.org/dwm/0712/4632.html" class="external">released</a> (21.12.2007)
+
+<!--
+					<ul>
+
+  <li>new default modifier (CTRL+G)</li>
+  <li>better performance (lower default redraw timeout, other fixes)</li>
+  <li>settimeout function which allows to set the redraw timeout via
+   key bindings.</li>
+  <li>display the window number in the title bar for easier selection 
+   with MOD-n</li>
+  <li>new command line switch (-m), which allows to specify the modifier 
+   at runtime. This is useful when running dvtm recursively (dvtm 
+   within dvtm). Use something like dvtm -m ^w</li>
+  <li>wide character support (librotew)</li>
+  <li>*BSD compile fixes</li>
+
+					</ul>
+-->
+				</li>
+				<li><a href="dvtm-0.01.tar.gz">dvtm-0.01</a> <a href="http://lists.suckless.org/dwm/0712/4424.html" class="external">released</a> (08.12.2007)</li>
+			</ul>
+			<h2><a name="download">Download</a></h2>
+			<p class="blogentry">
+				dvtm is packaged by various distributions, see the links below.
+			</p>
+			<ul>
+				<li><a href="dvtm-0.6.tar.gz">dvtm-0.6 source tarball</a> || <a href="http://freshmeat.net/projects/dvtm" class="external">freshmeat.net project page</a></li>
+				<li><a href="http://packages.debian.org/dvtm" class="external">Debian GNU/Linux</a></li>
+				<li><a href="http://packages.ubuntu.com/dvtm" class="external">Ubuntu</a></li>
+				<li><a href="https://admin.fedoraproject.org/pkgdb/packages/name/dvtm" class="external">Fedora</a></li>
+				<li><a href="http://aur.archlinux.org/packages.php?ID=14182" class="external">Arch Linux</a></li>
+				<li><a href="http://www.freshports.org/sysutils/dvtm/">FreeBSD</a></li>
+				<li><a href="http://www.pkgsrc.se/misc/dvtm/" class="external">NetBSD</a></li>
+				<li><a href="http://openports.se/misc/dvtm" class="external">OpenBSD</a></li>
+				<li><a href="http://pdb.finkproject.org/pdb/package.php/dvtm" class="external">MacOS X</a></li>
+ 			</ul>            
+			<h2><a name="devel">Development</a></h2>
+			<p class="blogentry">
+				You can always fetch the current codebase from the <a href="http://repo.or.cz/w/dvtm.git" class="external">git repository</a>.
+			</p>
+			<div class="code"><pre><code>git clone git://repo.or.cz/dvtm.git</code></pre></div>
+			<p class="blogentry">
+				If you have comments, suggestions, ideas, a bug report, a patch or something
+				else related to dvtm then write to the 
+				<a href="http://lists.suckless.org/dwm/" class="extern">dwm maling list</a>
+				(the list members don't mind) or contact me directly mat[at]brain-dump.org.
+			</p>
+			<h2><a name="install">Installation</a></h2>
+			<p class="blogentry">
+	    			In order to use dvtm you will need a curses library, for example <a href="http://www.gnu.org/software/ncurses/ncurses.html" class="external">libncurses</a>.<br /><br />
+
+				Download the latest version of dvtm and extract it. 
+				Edit config.mk to match your local setup (dvtm is installed into the /usr/local namespace by default).
+				Customize config.h as you see fit, see the <a href="#configuration">configuration section</a>
+				for further information.<br/><br/>
+
+				If you are on a system with utf8 locales (if unsure check $LANG and the output of locale) you probably want
+				dvtm to be linked against libncursesw so type <code>make unicode</code> otherwise plain <code>make</code> should suffice.
+            		</p>
+			<div class="code"><pre><code>$EDITOR config.mk
+$EDITOR config.h
+make
+# or on a utf8 aware system 
+# make unicode
+make install</code></pre></div>
+			<p class="blogentry">
+				You should now be able to start dvtm, redirect stderr to a file or /dev/null 
+				(just in case something goes wrong you will see it there).
+			</p>
+			<div class="code"><pre><code>./dvtm 2&gt; log</code></pre></div>
+			<h2><a name="config">Configuration</a></h2>
+			<p class="blogentry">
+				The configuration of dvtm is done by creating a custom <code>config.h</code>
+				and (re)compiling the source code. See the default config.h as an example adapting it to your
+				preference should be straightforward. You basically define a set of layouts and keys which dvtm 
+				will use. There are some pre defined macros to ease configuration.
+            		</p>
+			<ul>
+				<li><code>CTRL(char key)</code></li>
+				<li><code>ALT(char key)</code></li>
+				<li><code>CTRL_ALT(char key)</code></li>
+				<li><code>COLOR(fg,bg)</code></li>	
+			</ul>
+			<h2><a name="cmdline">Command line options</a></h2>
+			<p class="blogentry">
+				dvtm only contains 3 simple command line options.
+			</p>
+			<ul>
+				<li><code>-v</code> prints the version and exits</li>
+				<li><code>-m mod</code> sets the modifier during runtime and thus overrides settings in config.h. So <code>-m ^w</code> will set the modifier to CTRL+w. This might be useful if you want to run multiple nested dvtm instances.</li>
+				<li><code>-s status-fifo</code> if status-fifo is a valid named pipe dvtm will read it's content and display it in the statusbar. See the dvtm-status script below which is also included in the source tarball for a possible usecase.</li>
+			</ul>
+			<div class="code"><pre><code>#!/bin/sh
+
+FIFO="/tmp/dvtm-status.$$"
+
+[ -e "$FIFO" ] || mkfifo "$FIFO"
+chmod 600 $FIFO
+
+while true; do
+	date +%H:%M
+	sleep 60
+done &gt; $FIFO &amp;
+
+STATUS_PID=$!
+./dvtm -s $FIFO 2&gt; /dev/null
+kill $STATUS_PID
+rm $FIFO</code></pre></div>
+			<h2><a name="faq">FAQ</a></h2>
+			<p class="blogentry">
+				Below are some explanations to topics which were asked quite frequently.
+			</p>
+			<h3>Detach / reattach functionality</h3>
+			<p class="blogentry">
+				If you just want to be able to detach and later reattach dvtm sessions i would suggest to use <a href="http://dtach.sourceforge.net/" class="external">dtach</a>.				
+			</p>
+			<div class="code"><pre><code>dtach -c /tmp/dvtm-session -r winch dvtm</code></pre></div>
+			<p class="blogentry">
+				If you additionaly want something similiar to workspaces try running multiple dvtm sessions in different <a href="http://www.gnu.org/software/screen/" class="external">screen</a> windows.
+			</p>
+			<h3>Some characters are displayed like garbage</h3>
+			<p class="blogentry">
+				Make sure you compile dvtm with <code>make unicode</code> if you are in an unicode environment (check whether your locale contains UTF-8).
+			</p>
+			<h3>Copy / Paste doesn't work in X</h3>
+			<p class="blogentry">
+			If you have mouse support enabled, which is the case with the default settings, you need to hold down shift while selecting and inserting text. In case you don't like this behaviour remove <code>CONFIG_MOUSE</code> from the <code>CFLAGS</code> in config.mk you will however no longer be able to perform other mouse actions like selecting windows etc. 
+			</p>
+			<h3>Problems with some readline keybindings</h3>
+			<p class="blogentry">
+Pressing CTRL+j j/k to view the command line history doesn't work, it behaves like ENTER.
+This is the case for all curses applications because curses uses the keybindings
+as defined by terminfo and CTRL+j is normally configured to match the ENTER behaviour. 
+
+This can be verified with infocmp.
+			</p>
+			<div class="code"><pre><code>infocmp $TERM | grep '\^J'
+   cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C,
+   il=\E[%p1%dL, il1=\E[L, ind=^J, is1=\E[?47l\E=\E[?1l,</code></pre></div>
+
+			<p class="blogentry">
+As you can see ^J is mapped to cud1 and ind which acorrding to terminfo(5) means line down
+respectively scroll text up. This means dvtm will never see CTRL+j but
+instead allways receive KEY_ENTER.
+
+
+			</p>
+			<h2><a name="layouts">Layouts</a></h2>
+			<p class="blogentry">
+			    dvtm currently includes 4 standard layouts, below is a schema of each one.
+			    These layouts are mostly adapted from 
+			    <a href="http://www.suckless.org/wiki/dwm/patches/" class="external">dwm</a> 
+			    (the grid layout is enhanced to always use the whole screen). 
+			    Porting a layout from dwm should be relatively easy.
+			</p>
+		        <ul>
+			    <li><h4><a name="tile">Vertical Stack Tiling (default)</a></h4></li>
+			</ul>                       
+			<div class="code"><pre><code>
+    +----------+----------+ +----------+----------+
+    |          |          | |          |          | 
+    |          |          | |          |          |
+    |          |          | |          |          |
+    |          |          | |          +----------+
+    |          |          | |          |          |
+    |          |          | |          |          |
+    |          |          | |          |          |
+    +---------------------+ +---------------------+
+          2 windows               3 windows
+
+    +----------+----------+ +----------+----------+
+    |          |          | |          |          | 
+    |          |          | |          +----------+
+    |          +----------+ |          |          |
+    |          |          | |          +----------+
+    |          +----------+ |          |          |
+    |          |          | |          +----------+
+    |          |          | |          |          |
+    +---------------------+ +---------------------+
+          4 windows               5 windows
+			</code></pre></div>
+			<ul>
+			    <li><h4><a name="bstack">Bottom Stack Tiling</a></h4></li>
+			</ul>
+			<div class="code"><pre><code>
+    +----------+----------+ +----------+----------+
+    |                     | |                     | 
+    |                     | |                     |
+    |                     | |                     |
+    +---------------------+ +---------------------+
+    |                     | |          |          |
+    |                     | |          |          |
+    |                     | |          |          |
+    +---------------------+ +---------------------+
+          2 windows               3 windows
+
+    +---------------------+ +---------------------+
+    |                     | |                     | 
+    |                     | |                     |
+    |                     | |                     |
+    +------+-------+------+ +----+-----+-----+----+
+    |      |       |      | |    |     |     |    |
+    |      |       |      | |    |     |     |    |
+    |      |       |      | |    |     |     |    |
+    +------+-------+------+ +----+-----+-----+----+
+          4 windows               5 windows
+			</code></pre></div>
+			<ul>
+			    <li><h4><a name="grid">Grid</a></h4></li>			    
+			</ul>
+			<div class="code"><pre><code>
+    +----------+----------+ +----------+----------+
+    |          |          | |          |          | 
+    |          |          | |          |          |
+    |          |          | |          |          |
+    |          |          | +----------+----------+
+    |          |          | |                     |
+    |          |          | |                     |
+    |          |          | |                     |
+    +---------------------+ +---------------------+
+          2 windows               3 windows
+
+    +----------+----------+ +------+-------+------+
+    |          |          | |      |       |      |
+    |          |          | |      |       |      |
+    |          |          | |      |       |      |
+    +----------+----------+ +------+---+---+------+
+    |          |          | |          |          |
+    |          |          | |          |          |
+    |          |          | |          |          |
+    +---------------------+ +---------------------+
+          4 windows               5 windows
+		    </code></pre></div>
+			<ul>
+			    <li><h4><a name="fullscreen">Fullscreen</a></h4></li>			    
+			</ul>
+			<p class="blogentry">
+			   The fullscreen layout displays only the currently selected window.
+			</p>
+			<h2><a name="screenshots">Screenshots</a></h2>
+			<p class="blogentry">
+			   Below are a few screenshots which show dvtm in action.
+			</p>
+		        <ul>
+		            <li><a href="screenshot1.png">dvtm screenshot running elinks, irssi, mutt and cmus in tile layout</a></li>
+		            <li><a href="screenshot2.png">dvtm screenshot running vim, top, elinks and cmus in bottom stack layout</a></li>
+		            <li><a href="screenshot3.png">dvtm screenshot running mutt, irssi, elinks and  cmus in grid layout</a></li>
+		        </ul> 
+			<h2><a name="links">Links</a></h2>
+			<p class="blogentry">
+			    Below are some links which are in one way or another related to dvtm.
+			</p>
+		    <ul>
+		        <li><a href="http://dwm.suckless.org/" class="external">dwm</a></li>
+		        <li><a href="http://git.madism.org/?p=apps/madtty.git" class="external">madtty</a></li>
+		        <li><a href="http://rote.sf.net/" class="external">librote</a></li>
+		        <li><a href="http://www.gnu.org/software/ncurses/ncurses.html" class="external">libncurses</a></li>
+		    </ul>            
+                    <h2><a name="license">License</a></h2>
+		    <p class="blogentry">
+			 dvtm reuses some code of dwm and is released under the same
+			 <a href="http://repo.or.cz/w/dvtm.git?a=blob_plain;f=LICENSE;hb=master" class="external">MIT/X11 license</a>.
+		         madtty which is used for the terminal emulation is licensed under the <a href="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt" class="external">GNU LGPL</a>.
+                    </p>
+		</div>
+		<div id="footer">
+			<ul>
+				<li><a href="http://validator.w3.org/check/referer" title="Valid XHTML 1.1"><img src="/badges/xhtml_1_1.png" class="icon" alt="Valid XHTML 1.1!" width="80" height="15" /></a></li>
+				<li><a href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="/badges/css.png" class="icon" alt="Valid CSS!" width="80" height="15" /></a></li>
+				<li><a href="http://www.anybrowser.org/campaign/" title="Anybrowser"><img src="/badges/anybrowser.png" class="icon" alt="Best viewed with any browser!" width="80" height="15" /></a></li>
+				<li><a href="http://www.catb.org/hacker-emblem/" title="Hacker emblem"><img src="/badges/hacker.png" class="icon" alt="Hacker emblem" width="80" height="15" /></a></li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>
