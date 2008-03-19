@@ -1,0 +1,1278 @@
+    <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head profile="http://purl.org/uF/2008/03/">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+                <title>        RJ’s Journal – libketama - a consistent hashing algo for memcache clients     – Last.fm</title>        
+    <link rel="search" type="application/opensearchdescription+xml" href="http://cdn.last.fm/opensearch.xml" title="Last.fm" />
+            <meta name="description" content="Listen to RJ’s personal radio station (56,990 tracks played). RJ’s top artists: Dream Theater, Dire Straits, Miles Davis. Favourite tags are rock, jazz, 80s. Get your own music profile at Last.fm, the world’s largest social music platform."/>
+    <meta http-equiv="content-language" content="en" />
+                    <meta name="robots" content="NOODP" />
+        
+                    
+                    
+        
+    <meta property="og:title" content="RJ" />
+        <meta property="og:url" content="http://www.last.fm/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" />
+    <meta property="og:image" content="http://userserve-ak.last.fm/serve/126/8270359.jpg" />
+    <meta property="og:site_name" content="Last.fm" />
+        
+    <link rel="shortcut icon" href="http://cdn.last.fm/flatness/favicon.2.ico" />
+    <link rel="apple-touch-icon" href="http://cdn.last.fm/flatness/apple-touch-icon.png" />
+    
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="http://ws.audioscrobbler.com/1.0/user/RJ/journals.rss" />
+        
+        
+                    <link type="text/html" rel="alternate" hreflang="de" href="http://www.lastfm.de/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" />
+                <link type="text/html" rel="alternate" hreflang="es" href="http://www.lastfm.es/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" />
+                <link type="text/html" rel="alternate" hreflang="fr" href="http://www.lastfm.fr/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" />
+                <link type="text/html" rel="alternate" hreflang="it" href="http://www.lastfm.it/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" />
+                <link type="text/html" rel="alternate" hreflang="ja" href="http://www.lastfm.jp/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" />
+                <link type="text/html" rel="alternate" hreflang="pl" href="http://www.lastfm.pl/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" />
+                <link type="text/html" rel="alternate" hreflang="pt" href="http://www.lastfm.com.br/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" />
+                <link type="text/html" rel="alternate" hreflang="ru" href="http://www.lastfm.ru/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" />
+                <link type="text/html" rel="alternate" hreflang="sv" href="http://www.lastfm.se/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" />
+                <link type="text/html" rel="alternate" hreflang="tr" href="http://www.lastfm.com.tr/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" />
+                <link type="text/html" rel="alternate" hreflang="cn" href="http://cn.last.fm/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" />
+            
+        <!-- FRAMEBUST START -->
+    <style type="text/css">
+        /* Framebust */
+        
+        html { zoom: 1; }
+        
+    </style>
+    <script type="text/javascript">
+        // Framebust
+        
+        if (top != self) {
+            if (document.styleSheets[0] && document.styleSheets[0].insertRule) {
+                document.styleSheets[0].insertRule('body { display: none !important }', 0);
+            } else if (document.styleSheets[0] && document.styleSheets[0].addRule) {
+                document.styleSheets[0].addRule('body', 'display: none !important');
+            }
+            top.location.replace(document.location.href);
+        }
+        
+    </script>
+    <!-- FRAMEBUST END -->
+        
+            <!--[if LT IE 7]>
+            <link rel="stylesheet" href="http://cdn.last.fm/css/css/177366/ie/ie6.css" type="text/css" />
+        <![endif]-->
+                                    <link rel="stylesheet" href="http://cdn.last.fm/css/css/177366/journal/overview.css" type="text/css" />
+                            <link rel="stylesheet" href="http://cdn.last.fm/css/css/177366/master.css" type="text/css" />
+                                    
+                            <script type="text/javascript" src="http://cdn.last.fm/javascript/javascript/177366/lib/prototype.js"></script>
+        <script type="text/javascript" src="http://cdn.last.fm/javascript/javascript/177366/lib/scriptaculous.js"></script>
+        <script type="text/javascript" src="http://cdn.last.fm/javascript/javascript/177366/lib/ufo.js"></script>
+        <script type="text/javascript" src="http://cdn.last.fm/javascript/javascript/177366/lib/sm2-min.js"></script>
+        
+                <script type="text/javascript" src="http://cdn.last.fm/javascript/javascript/177366/LFM.js"></script>
+
+                
+        <script type="text/javascript">
+                                        LFM.set("ParentResource", {"id":"1000002","type":4,"name":"RJ","url":"\/user\/RJ","image":{"small":"http:\/\/userserve-ak.last.fm\/serve\/34\/8270359.jpg","smallsquare":"http:\/\/userserve-ak.last.fm\/serve\/34s\/8270359.jpg","medium":"http:\/\/userserve-ak.last.fm\/serve\/64\/8270359.jpg","mediumsquare":"http:\/\/userserve-ak.last.fm\/serve\/64s\/8270359.jpg","large":"http:\/\/userserve-ak.last.fm\/serve\/126\/8270359.jpg","largesquare":"http:\/\/userserve-ak.last.fm\/serve\/126s\/8270359.jpg","mega":"http:\/\/userserve-ak.last.fm\/serve\/252\/8270359.jpg","original":"http:\/\/userserve-ak.last.fm\/serve\/_\/8270359.jpg"},"realname":"Richard Jones "});
+                                        LFM.Adserver.showAds = true;
+                        LFM.set("Session", {"cookieHost":".last.fm","host":"www.last.fm","staticHost":"http:\/\/cdn.last.fm","wsHost":"ws.audioscrobbler.com","userserveHost":"http:\/\/userserve-ak.last.fm","wsKey":"ceec2bb03d4c5929f0d6667fc266dc75","formtoken":"2bcd67b944b9e63a7fd1b2c0c95a8d55947c66b3","location":"us","language":"en","loggedIn":false});
+            LFM.set("resTypes", {
+                EVENT: 29,
+                ARTIST: 6,
+                ALBUM: 8,
+                TRACK: 9,
+                GROUP: 20,
+                TAG: 32,
+                USER: 4,
+                LABEL: 10
+            });
+            LFM.set("resTypeLookup", {
+                29: "Event",
+                6: "Artist",
+                8: "Album",
+                9: "Track",
+                20: "Group",
+                32: "Tag",
+                4: "User",
+                10: "Label"
+            });
+            LFM.set("String", {toRedStr: "Simply Red",toBlackStr: "Paint it Black",okText: "OK",cancelText: "Cancel",clickToEditText: "Click to edit",savingText: "Saving…",loadingText: "Loading…",deletingText: "Deleting…",thereWasAnError: "There was an error.",dialogLoadError: "There was an error loading this dialog.",fileTooBig: "Sorry, the file is too big.",noFile: "Please choose a file.",uploadCancelled: "Upload Cancelled.",deleteMessageTitle: "Delete Message",deleteMessagePrompt: "Are you sure you want to delete this message?",deleteFriendPrompt: "Are you sure you want to delete this friend?",deleteImage: "Are you sure you want to delete this image?",deleteButtonText: "Delete",done: "Done",backText: "Back",yesText: "Yes",noText: "No",saveText: "Save",saveTitle: "Add to profile",sendText: "Send",sendTitle: "Share with friends",addTitle: "Add to library",tagTitle: "Add tags",playlistTitle: "Add to playlist",obsessionTitle: "Personalise your obsession",befriendTitle: "Add a friend",joinTitle: "Join this group",loved: "Loved",RemoveFromLibraryTitle: "Remove from library",uploadImageTitle: "Upload Image",uploadVideoTitle: "Upload Video",usernoteTitle: "Add a note",flageventTitle: "Flag for review",setLocationTitle: "Set your Location",newWindowTooltip: "This link will open in a new window",unloadWarningMessage: "This will stop Radio Playback",trackLoved: "You loved this track",playbackStopped: "Playback stopped",loadingTrackInfo: "Loading track information",errorLoadingTrackInfo: "Error loading track information",emailLineup: "Email this",uploadMessages: {mayTakeLonger: "Sorry, this may take slightly longer than usual. Hold on a couple of seconds.",uploading: "Uploading…",endUploading: "Done",progressDisplay: "PERCENTUPLOADED% complete (TRANSFERRATE kb/s) – TIMEREMAINING seconds remaining",progressComplete: "100% complete",failedRetrying: "Failed retrying upload, bailed.",processingMedia: "Processing media…",unsupportedFormat: "Sorry, the file you uploaded isn’t encoded in a supported format. Please try again.",uploadError: "There was an error uploading your video, please verify that the file you are uploading is not too large or of an incorrect format and try again."},shortMonths: {'1': "Jan",'2': "Feb",'3': "Mar",'4': "Apr",'5': "May",'6': "Jun",'7': "Jul",'8': "Aug",'9': "Sep",'10': "Oct",'11': "Nov",'12': "Dec"},resTypePlural: {29: "Events",6: "Artists",8: "Albums",9: "Tracks",20: "Groups",32: "Tags",4: "Users","friends":   "Friends",10: "Labels"}});LFM.set("Element", {icon_loved_indicator: "<img class=\"icon loved_indicator_icon\" width=\"11\" height=\"9\" src=\"http:\/\/cdn.last.fm\/flatness\/clear.gif\" \/>",icon_tag: "<img class=\"icon tag_icon\" width=\"14\" height=\"14\" src=\"http:\/\/cdn.last.fm\/flatness\/clear.gif\" \/>",icon_dismiss: "<img class=\"icon dismiss_icon\" width=\"13\" height=\"13\" src=\"http:\/\/cdn.last.fm\/flatness\/clear.gif\" \/>",icon_play: "<img class=\"transparent_png play_icon\" width=\"13\" height=\"13\" alt=\"Play\" src=\"http:\/\/cdn.last.fm\/flatness\/preview\/play_indicator.png\" \/>"});        </script>
+        <script type="text/javascript" src="http://cdn.last.fm/javascript/javascript/177366/console.js"></script>
+        
+                            <script type="text/javascript" src="http://cdn.last.fm/javascript/javascript/177366/components.js"></script>
+                    <script type="text/javascript" src="http://cdn.last.fm/javascript/javascript/177366/dialog.js"></script>
+                    <script type="text/javascript" src="http://cdn.last.fm/javascript/javascript/177366/form/typeahead.js"></script>
+                
+        <script type="text/javascript">
+            document.observe("dom:loaded", function () {if (typeof ieHover !== 'undefined') {ieHover.setUp();}});
+        </script>
+        
+    </head>
+
+
+<body class="r-user a-journal lang-en">
+            
+<script src="http://cdn.last.fm/javascript/javascript/177366/lib/omniture.js"></script>
+<script>
+document.fire("omniture:load");
+/* You may give each page an identifying name, server, and channel on
+the next lines. */
+if (s) {
+s.pageName="User/Journal/Entry";
+s.server="";
+s.channel="";
+s.pageType="other";
+
+s.prop1="user";       // namespace
+s.prop2="journal";       // controller
+s.prop3="entry";       // action
+
+
+
+s.prop10="Anonymous";       // logged in/out
+
+s.prop12="last.fm";        // url extension
+
+s.prop13="";        // Member user id
+
+s.prop14="";        // Ad source
+s.prop15="";        // Ad id
+s.prop16="";        // Ad size
+s.prop18=s.getTimeParting('h',0,2010);     // Set hour
+s.prop19=s.getTimeParting('d',0,2010);     // Set day
+
+
+
+
+
+s.prop32 = ""; // TODO: 1st day of visit
+s.prop33 = "en"; // User language
+
+
+
+
+
+/* Success Events */
+s.events="";
+
+/* E-commerce Variables */
+// s.campaign="";
+s.state="";
+s.zip="";
+s.products="";
+s.purchaseID="";
+s.eVar1="us"; // Country
+s.eVar2 = s.pageName; // Page name
+s.eVar3=""; // channel
+
+
+s.eVar10="Anonymous";       // logged in/out
+
+
+
+
+
+s.eVar26=""; // OnClick Location
+s.eVar27=""; // Download Platform
+s.eVar28=""; // Buy/Download Location
+
+s.eVar29=""; // TODO: 1st day of visit
+s.eVar30=s.prop12;        // url extension
+
+s.eVar31=s.getNewRepeat();          // new/repeat visitor
+s.eVar32=s.getDaysSinceLastVisit(); // Days since last visit
+
+s.eVar33="";        // Ad source
+s.eVar34="";        // Ad id
+s.eVar35="";        // Ad size
+
+s.eVar36=""; // Member user id
+
+s.eVar37=s.prop33; // User language
+
+
+s.events = s.events ? s.events + ',event12' : 'event12'; // Page view event
+
+/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+var s_code = s.t(); if (s_code) document.write(s_code);
+}
+
+</script>
+<script type="text/javascript"><!--
+if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')
+//--></script>
+<!--/DO NOT REMOVE/-->
+<!-- End SiteCatalyst code version: H.11. -->
+        
+                <div id="fauxHeaderContainer" class="clearit">
+            <div id="fauxHeader"></div>
+        </div>
+        <div id="page" class="            ">
+        <div class="sic">
+            
+    <script type="text/javascript">
+        var dartORD = LFM.generateOrd();
+        if(!LFM.Adserver) LFM.Adserver = {};
+        LFM.Adserver.keyvalResource = '4/1000002';
+        LFM.Adserver.keyvalZone = '/journal/entry';
+        function writeTop(){         document.write('<scri' + 'pt language="JavaScript" src="http://ad.doubleclick.net/adj/cbsi.last.us/journal/journal/entry;tag=rock;tag=jazz;tag=metal;tag=guitar;tag=mellow;tag=80s;tag=checkitout;tag=femalevocalists;tag=funky;tag=acoustic;ar=;ar=DreamTheater;ar=DireStraits;ar=MilesDavis;ar=SnoopDogg;ar=Metallica;ar=GunsN%27Roses;ar=Aerosmith;ar=JoeSatriani;ar=Buckcherry;ar=RageAgainsttheMachine;source=;established=;res=1000002;dcopt=ist;ontour=0;ontourinusercountry=0;lang=en;geo=us;mmuser=0;pos=top;tandem=1;sz=728x90;tile=1;ord=' + dartORD + '?" type="text/javascript"' + '><' + '\/script>');Event.observe(window,'load',function(event){ if($('catPage')) {Element.addClassName('catPage', 'underAds');}});};function writeTopRight(){};function writeSkyscraperRight(){ document.write('<scri' + 'pt language="JavaScript" src="http://ad.doubleclick.net/adj/cbsi.last.us/journal/journal/entry;tag=rock;tag=jazz;tag=metal;tag=guitar;tag=mellow;tag=80s;tag=checkitout;tag=femalevocalists;tag=funky;tag=acoustic;ar=;ar=DreamTheater;ar=DireStraits;ar=MilesDavis;ar=SnoopDogg;ar=Metallica;ar=GunsN%27Roses;ar=Aerosmith;ar=JoeSatriani;ar=Buckcherry;ar=RageAgainsttheMachine;source=;established=;res=1000002;ontour=0;ontourinusercountry=0;lang=en;geo=us;mmuser=0;tandem=1;sz=160x600;tile=2;ord=' + dartORD + '?" type="text/javascript"' + '><' + '\/script>');};function writeTopTopRight(){};function writeTopTopTopRight(){};function writeMid(){};function writeTopLeaderboard(){};function writeFooter1(){ document.write('<a href="http://www.last.fm/delivery.php?id=11398" target="_blank"><img src="http://static.last.fm/adserver/campaign/9596/Mini-Footer.gif" width="192" title="Advertise on Last.fm" height="64" border="0" \/><\/a>');var ord=Math.random()*10000000;document.write('<img src="http://ad.doubleclick.net/ad/N1260.Lastfm/B4827548.39;sz=1x1;ord='+ord+'?" width="1px" height="1px" \/>');document.write('<a href="http://www.last.fm/delivery.php?id=11399&zoneId=128" target="_blank"><img src="http://www.last.fm/show_ads.php?id=11399&zoneId=128&tracker=true&y=1292617896" width="1px" alt="" height="1px" border="0" /><\/a>');};function writeFooter2(){ document.write('<a href="http://www.last.fm/delivery.php?id=10981&zoneId=129" target="_blank"><img src="http://cdn.last.fm/adserver/campaign/9155/Mini-Footer.gif" width="192" title="Advertise on Last.fm" height="64" border="0" \/><\/a>');};function writeFooter3(){ document.write('<a href="http://www.last.fm/delivery.php?id=10940&zoneId=130" target="_blank"><img src="http://cdn.last.fm/adserver/campaign/9117/Mini-Footer.gif" width="192" title="Advertise on Last.fm" height="64" border="0" \/><\/a>');};function writeFooter4(){ document.write('<a href="http://www.last.fm/delivery.php?id=10983&zoneId=131" target="_blank"><img src="http://cdn.last.fm/adserver/campaign/9159/Mini-Footer.gif" width="192" title="Advertise on Last.fm" height="64" border="0" \/><\/a>');};function writeSkin(){ document.write('<scri' + 'pt language="JavaScript" src="http://ad.doubleclick.net/adj/cbsi.last.us/journal/journal/entry;tag=rock;tag=jazz;tag=metal;tag=guitar;tag=mellow;tag=80s;tag=checkitout;tag=femalevocalists;tag=funky;tag=acoustic;ar=;ar=DreamTheater;ar=DireStraits;ar=MilesDavis;ar=SnoopDogg;ar=Metallica;ar=GunsN%27Roses;ar=Aerosmith;ar=JoeSatriani;ar=Buckcherry;ar=RageAgainsttheMachine;source=;established=;res=1000002;ontour=0;ontourinusercountry=0;lang=en;geo=us;mmuser=0;tandem=1;sz=1x1;tile=3;ord=' + dartORD + '?" type="text/javascript"' + '><' + '\/script>');};function writePreRoll(){};function writeBottomRight(){ document.write('<iframe id="ad-google-lowermpu" src="http://bwp.lastfm.com.com/search" scrolling="no" width="300" height="250" marginheight="0" marginwidth="0" frameborder="0" target="_top"></iframe>');
+
+};function writeTopInside(){};function writePreRollFallback(){};;var aZoneCreativeTypeAssoc={"40":"728x90","134":"120x600","128":"192x64","129":"192x64","130":"192x64","131":"192x64","160":"1024x768","211":"300x250"};
+    </script>
+
+
+<div id="header" class="clearit">
+    <div id="headerWrapper">
+        
+        <a href="/" id="lastfmLogo">Last.fm</a>
+        
+        <ul id="primaryNav">
+            <li id="musicNav" class="navItem">
+                <a href="/music" class="nav-link">Music</a>
+            </li>
+            <li id="listenNav" class="navItem">
+                <a href="/listen" class="nav-link">Radio</a>
+            </li>
+            <li id="eventsNav" class="navItem">
+                <a href="/events" class="nav-link">Events</a>
+            </li>
+            <li id="chartsNav" class="navItem">
+                <a href="/charts" class="nav-link">Charts</a>
+            </li>
+            <li id="communityNav" class="navItem">
+                <a href="/community" class="nav-link">Community</a>
+            </li>
+        </ul>
+        
+        
+        <div id="profileLinks">
+            <ul>
+                            <li id="loginLink" class="profileItem">
+                    <a href="/login" class="profile-link"><strong>Login</strong></a>
+                </li>
+                <li id="signupLink" class="profileItem">
+                    <a href="/join" class="profile-link"><strong>Join</strong></a>
+                </li>
+                        </ul>
+        </div>
+        
+        <div id="headerLinks">
+                                                <a href="/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients?change=language" title="Click here to change your language" rel="nofollow" id="headerLangToggle" class="icon">
+                <img class="transparent_png globe_icon icon" alt="Change language" width="11" height="11" src="http://cdn.last.fm/flatness/clear.gif" />                <span>English</span>
+            </a> | 
+                        <a href="/help">Help</a>
+        </div>
+        
+        <form id="siteSearch" method="get" action="/search" class="autocomplete">
+            <img src="http://cdn.last.fm/flatness/clear.gif" width="16" height="16" id="siteSearchProgress" style="display: none;" />
+            <input id="siteSearchBox" type="text" name="q" autocomplete="off" placeholder="Music search" size="26" />
+            <input type="hidden" name="from" value="ac" />
+            <button id="siteSearchSubmit" type="submit" class="submit" title="Search"></button>
+        </form>
+        
+        <div id="headerPromo">
+                                                                                                                                                
+                
+                <a href="/about/jobs">Come work with us! Last.fm is hiring »</a>                        
+        </div>
+        
+    </div><!-- #headerWrapper -->
+</div><!-- #header -->
+
+<script>
+    LFM.set('String', {
+        'siteSearchViewAll': "Search for ‘QUERY’",
+        'siteSearchSuggestions': "Popular suggestions",
+        'siteSearchNoSuggestions': "No suggestions…",
+        'autocompletePersonalDataDown': "Friends, groups and labels search is currently unavailable."
+    });
+    LFM.Display.setupHeader();
+    new LFM.Activityfeed.DeleteListener();
+</script>
+
+    
+    
+
+<ul id="langSelector"  style="display: none; visibility: hidden;" class="nojs">
+                
+        
+                <li class="de">
+            <a href="http://www.lastfm.de/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients?setlang=de" class="icon">
+                                <img class="icon flag_de_icon" alt="Deutsch" width="16" height="11" src="http://cdn.last.fm/flatness/clear.gif" />                <span>Deutsch</span>
+            </a>
+        </li>
+                    <li class="es">
+            <a href="http://www.lastfm.es/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients?setlang=es" class="icon">
+                                <img class="icon flag_es_icon" alt="Español" width="16" height="11" src="http://cdn.last.fm/flatness/clear.gif" />                <span>Español</span>
+            </a>
+        </li>
+                    <li class="fr">
+            <a href="http://www.lastfm.fr/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients?setlang=fr" class="icon">
+                                <img class="icon flag_fr_icon" alt="Français" width="16" height="11" src="http://cdn.last.fm/flatness/clear.gif" />                <span>Français</span>
+            </a>
+        </li>
+                    <li class="it">
+            <a href="http://www.lastfm.it/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients?setlang=it" class="icon">
+                                <img class="icon flag_it_icon" alt="Italiano" width="16" height="11" src="http://cdn.last.fm/flatness/clear.gif" />                <span>Italiano</span>
+            </a>
+        </li>
+                    <li class="ja">
+            <a href="http://www.lastfm.jp/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients?setlang=jp" class="icon">
+                                <img class="icon flag_jp_icon" alt="日本語" width="16" height="11" src="http://cdn.last.fm/flatness/clear.gif" />                <span>日本語</span>
+            </a>
+        </li>
+                    <li class="pl">
+            <a href="http://www.lastfm.pl/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients?setlang=pl" class="icon">
+                                <img class="icon flag_pl_icon" alt="Polski" width="16" height="11" src="http://cdn.last.fm/flatness/clear.gif" />                <span>Polski</span>
+            </a>
+        </li>
+                    <li class="pt">
+            <a href="http://www.lastfm.com.br/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients?setlang=pt" class="icon">
+                                <img class="icon flag_pt_icon" alt="Português" width="16" height="11" src="http://cdn.last.fm/flatness/clear.gif" />                <span>Português</span>
+            </a>
+        </li>
+                    <li class="ru">
+            <a href="http://www.lastfm.ru/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients?setlang=ru" class="icon">
+                                <img class="icon flag_ru_icon" alt="Руccкий" width="16" height="11" src="http://cdn.last.fm/flatness/clear.gif" />                <span>Руccкий</span>
+            </a>
+        </li>
+                    <li class="sv">
+            <a href="http://www.lastfm.se/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients?setlang=sv" class="icon">
+                                <img class="icon flag_se_icon" alt="Svenska" width="16" height="11" src="http://cdn.last.fm/flatness/clear.gif" />                <span>Svenska</span>
+            </a>
+        </li>
+                    <li class="tr">
+            <a href="http://www.lastfm.com.tr/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients?setlang=tr" class="icon">
+                                <img class="icon flag_tr_icon" alt="Türkçe" width="16" height="11" src="http://cdn.last.fm/flatness/clear.gif" />                <span>Türkçe</span>
+            </a>
+        </li>
+                    <li class="cn">
+            <a href="http://cn.last.fm/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients?setlang=zh" class="icon">
+                                <img class="icon flag_zh_icon" alt="简体中文" width="16" height="11" src="http://cdn.last.fm/flatness/clear.gif" />                <span>简体中文</span>
+            </a>
+        </li>
+        
+</ul>
+<script>
+
+    $("langSelector").className = "js";
+    LFM.set("Page", {
+        navDropDown: new LFM.Display.DropDown(
+            "headerLangToggle",
+            "headerLangToggle",
+            "langSelector",
+            {
+                align: "left",
+                onShow: function (dropdown) {
+                    dropdown.ddbody.setStyle({
+                        top: (dropdown.ddbody.getStyle("top").toPixels() + 3) + "px"
+                    });
+                },
+                trackToggle: true,
+                trackItemClick: true
+            }
+        )
+    });
+
+</script>
+<div id="content">
+    <div><!-- This containing div fixes an IE bug where the absolutely positioned element disappears randomly. Don’t ask me why. -->
+    <div id="secondaryNavigation">
+                                            <ul>
+        <li class=" first "><a href="/user/RJ">Profile</a></li>    <li><a href="/user/RJ/library">Library</a></li>        <li><a href="/user/RJ/charts">Charts</a></li>    <li><a href="/user/RJ/events">Events</a></li>    <li><a href="/user/RJ/friends">Friends</a></li>        <li><a href="/user/RJ/neighbours">Neighbours</a></li>    <li><a href="/user/RJ/groups">Groups</a></li>    <li class=" current "><a href="/user/RJ/journal">Journal</a></li>    <li><a href="/user/RJ/library/tags">Tags</a></li>    
+</ul>                                </div>
+</div>    
+    <div class="pagehead clearit">
+    <p><a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom"><span class="userImage"><img height="34" width="34" alt="" src="http://userserve-ak.last.fm/serve/34s/8270359.jpg" /><img class="icon staff_icon" width="6" height="6" src="http://cdn.last.fm/flatness/clear.gif" /></span>RJ</a></p>
+
+    <h1><a href="/user/RJ/journal" title="">Journal</a></h1>
+    
+                    <a href="http://ws.audioscrobbler.com/1.0/user/RJ/journals.rss" class="icon"><img class="icon feed_small_icon" width="10" height="10" src="http://cdn.last.fm/flatness/clear.gif" /><span>RSS</span></a>
+                
+    </div>    
+                            
+        <div class="journals">
+            <a href="/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" id="button1" class="lfmButton lfmBigButton lfmSendButton 
+"><strong>Share</strong></a>
+    <script>
+(function () {
+    function showDialog () {
+        LFM.Send({"id":"1007","type":70,"name":"libketama - a consistent hashing algo for memcache clients","url":"\/user\/RJ\/journal\/2007\/04\/10\/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients"}, {
+            parameters: null
+                        
+                                     
+             
+                    });
+    }
+        $("button1").observe("click", function (e) {
+        e.stop();
+                showDialog();
+    });
+})()
+    </script>            
+            <h1>libketama - a consistent hashing algo for memcache clients</h1>
+            
+            <p class="subhead">
+                10 Apr 2007, 17:36
+                            </p>
+            <div class="journalBody">
+                <div class="bbcode">We wrote ketama to replace how our memcached clients mapped keys to servers. Previously, clients mapped keys-&gt;servers like this:<br />
+<br />
+ <code>server = serverlist[hash(key)%serverlist.length];</code><br />
+<br />
+This meant that whenever we added or removed servers from the pool, everything hashed to different servers, which effectively wiped the entire cache. We add (and sometimes remove) servers from the memcached pool often enough to warrant writing this - if your memcached pool never changes, you can probably stop reading now :)<br />
+<br />
+Ketama is an implementation of a consistent hashing algorithm, meaning you can add or remove servers from the memcached pool without causing a complete remap of all keys.<br />
+<br />
+Here's how it works:<br />
+<br />
+ * Take your list of servers (eg: 1.2.3.4:11211, 5.6.7.8:11211, 9.8.7.6:11211)<br />
+ * Hash each server string to several (100-200) unsigned ints<br />
+ * Conceptually, these numbers are placed on a circle called the continuum. (imagine a clock face that goes from 0 to 2^32)<br />
+ * Each number links to the server it was hashed from, so servers appear at several points on the continuum, by each of the numbers they hashed to.<br />
+ * To map a key-&gt;server, hash your key to a single unsigned int, and find the next biggest number on the continuum. The server linked to that number is the correct server for that key.<br />
+ * If you hash your key to a value near 2^32 and there are no points on the continuum greater than your hash, return the first server in the continuum.<br />
+<br />
+If you then add or remove a server from the list, only a small proportion of keys end up mapping to different servers.<br />
+<br />
+<br />
+The majority of the code is a C library (libketama) and a php4 extension that wraps it. I've also included a class from our Java client. (Java Collections makes it rather easy). We use a single-server memcache client wrapped with a native php class to make it multi-server capable, so we just replaced the hashing method with a ketama_find_server call. (should be easy enough to plug this into libmemcache if need be)<br />
+<br />
+<del><a href="http://static.last.fm/rj/ketama.tar.bz2">http://static.last.fm/rj/ketama.tar.bz2</a></del><br />
+<del><a href="http://static.last.fm/ketama/ketama-0.1.1.tar.bz2">http://static.last.fm/ketama/ketama-0.1.1.tar.bz2</a></del><br />
+svn://svn.audioscrobbler.net/misc/ketama/<br />
+<br />
+We've been using this in production for all our php installs and java services at Last.fm for around 10 days now. We deployed it just in time to smooth over moving loads of webservers between datacenters.</div>
+            </div>
+            
+
+                        <div class="groupSubmissions">
+                                    <div class="acceptedGroupSubmissions">
+                        <h5>Accepted Submissions</h5>
+                        <a href="/group/Programmers+-+Anyone+who+writes+code">Programmers - Anyone who writes code</a>                    </div>
+                                            </div>
+                        
+            <h2 id="comments">Comments</h2>
+            <div id="shoutbox">
+                                                <ul class="shouts" id="shoutList">
+    <li class="clearit
+ first  message  message
+" id="r71_85856422_1812345746">
+            <strong class="author subscriber">
+                            <a href="/user/Russ" title="Russ Garrett, 25, Male, United Kingdom">                    <span class="userImage"><img height="64" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/48999901.png" /><img class="icon subscriber_icon" width="6" height="6" src="http://cdn.last.fm/flatness/clear.gif" /></span>                    Russ                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        10 Apr 2007, 18:18 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">FWIW, the references for this are:<br />
+<br />
+<a href="http://www.akamai.com/dl/technical_publications/ConsistenHashingandRandomTreesDistributedCachingprotocolsforrelievingHotSpotsontheworldwideweb.pdf" rel="nofollow">http://www.akamai.com/dl/technical_publications/ConsistenHashingandRandomTreesDistributedCachingprotocolsforrelievingHotSpotsontheworldwideweb.pdf</a><br />
+<br />
+and<br />
+<br />
+<a href="http://www8.org/w8-papers/2a-webserver/caching/paper2.html" rel="nofollow">http://www8.org/w8-papers/2a-webserver/caching/paper2.html</a></div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/Russ" title="Russ Garrett, 25, Male, United Kingdom">View Profile</a> | 
+                <a href="/user/Russ#shoutbox" title="Russ Garrett, 25, Male, United Kingdom">                                                Leave Russ a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856423_642820145">
+            <strong class="author staff">
+                            <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">                    <span class="userImage"><img height="66" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/8270359.jpg" /><img class="icon staff_icon" width="6" height="6" src="http://cdn.last.fm/flatness/clear.gif" /></span>                    RJ                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        10 Apr 2007, 18:28 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">I should also reference some perl code (that i think came from Brad) which i've lost all trace of :/</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">View Profile</a> | 
+                <a href="/user/RJ#shoutbox" title="Richard Jones , 28, Male, United Kingdom">                                                Leave RJ a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856424_1300349199">
+            <strong class="author user">
+                            <a href="/user/kryton02" title="">                    <span class="userImage"><img width="64" alt="" src="http://cdn.last.fm/flatness/catalogue/noimage/2/default_user_medium.png" /></span>                    kryton02                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        11 Apr 2007, 00:24 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">I've never heard of consistent hashing before.<br />
+<br />
+What a fantastic idea</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/kryton02" title="">View Profile</a> | 
+                <a href="/user/kryton02#shoutbox" title="">                                                Leave kryton02 a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856425_233626475">
+            <strong class="author subscriber">
+                            <a href="/user/muesli" title="30, Male, United Kingdom">                    <span class="userImage"><img height="64" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/55183773.jpg" /><img class="icon subscriber_icon" width="6" height="6" src="http://cdn.last.fm/flatness/clear.gif" /></span>                    muesli                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        11 Apr 2007, 05:05 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">Please note: I just updated the tarball, so first of all please redownload it from here: <a href="http://static.last.fm/ketama/ketama-0.1.1.tar.bz2"><a href="http://static.last.fm/ketama/ketama-0.1.1.tar.bz2">http://static.last.fm/ketama/ketama-0.1.1.tar.bz2</a></a><br />
+<br />
+Installation<br />
+============<br />
+<br />
+* libketama (the general purpose C library)<br />
+<br />
+$ cd libketama<br />
+$ make<br />
+$ su -c make install<br />
+<br />
+This will compile libketama and install it to the default prefix /usr/local.<br />
+You can change the prefix by editing the PREFIX variable in 'Makefile'.<br />
+<br />
+* php_ketama (PHP4 extension that wraps libketama and therefore depends on it)<br />
+<br />
+$ cd php-4.4.x/ext<br />
+$ ln -s /your/ketama/php_ketama ketama<br />
+$ cd ..<br />
+$ rm -Rf autom4te.cache<br />
+$ ./buildconf --force<br />
+$ ./configure --all_your_configure_options --with-ketama[=/your/ketama/prefix]<br />
+$ make<br />
+$ su -c make install<br />
+<br />
+Don't forget you might have to restart your httpd!<br />
+<br />
+cheers,<br />
+muesli</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/muesli" title="30, Male, United Kingdom">View Profile</a> | 
+                <a href="/user/muesli#shoutbox" title="30, Male, United Kingdom">                                                Leave muesli a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856426_945587673">
+            <strong class="author">
+                            [deleted-user] wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        13 Apr 2007, 10:14 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">that looks like an algorithm i used (also from bit torrent) for distributed file parts called CHORD.<br />
+<br />
+the files are taken to a circular hash just like this one, then each client has a part of the hash and the files placed on that part, he can search forward or jump fixed sizes looking for files (1/2, 1/4 hash, etc).<br />
+<br />
+<a href="http://pdos.csail.mit.edu/chord/" rel="nofollow">http://pdos.csail.mit.edu/chord/</a><br />
+<br />
+but in this case all the list is known and kept at the same place :)</div>
+                    </blockquote>
+        
+                </li><li class="clearit
+ message  message
+" id="r71_85856427_1858408617">
+            <strong class="author user">
+                            <a href="/user/sickdm" title="Anthony V, 25, Male, United States">                    <span class="userImage"><img height="65" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/27760751.jpg" /></span>                    sickdm                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        15 Apr 2007, 23:40 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">Kickass, you hackers! :)<br />
+<br />
+-Anthony @ hype machine</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/sickdm" title="Anthony V, 25, Male, United States">View Profile</a> | 
+                <a href="/user/sickdm#shoutbox" title="Anthony V, 25, Male, United States">                                                Leave sickdm a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856428_1942297638">
+            <strong class="author user">
+                            <a href="/user/rschuil" title="">                    <span class="userImage"><img width="64" alt="" src="http://cdn.last.fm/flatness/catalogue/noimage/2/default_user_medium.png" /></span>                    rschuil                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        20 Jul 2007, 09:42 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">First of all: great work! I've been playing with Chord and Kademlia in the past and loved to see your library for memcached. I suggest that you make it a project on SF or so, so people can join to continue it's development.<br />
+<br />
+Ketama is also nice to use in combination with MySQL slaves. Sure, you can do load balancing using e.g. LVS, but as the number of slaves grow, your query cache efficiency drops (query cache entries are not shared between mysql slaves. It gets less and less likely that a specific query was already in that slave's cache.)<br />
+You could hash the SELECT query to find your preferred MySQL slave to connect to. All requests for the same query would be routed to the same MySQL slave, thus resulting in a more efficient use of the query cache.<br />
+If a slave dies, it will pick the next greater value from the continuum and find another slave to connect to.<br />
+Just an idea :)</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/rschuil" title="">View Profile</a> | 
+                <a href="/user/rschuil#shoutbox" title="">                                                Leave rschuil a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856429_1930148411">
+            <strong class="author staff">
+                            <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">                    <span class="userImage"><img height="66" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/8270359.jpg" /><img class="icon staff_icon" width="6" height="6" src="http://cdn.last.fm/flatness/clear.gif" /></span>                    RJ                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        20 Jul 2007, 11:06 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">Yup - you could use a consistent hash like ketama to improve various things. We also considered using it to balance internal webservice requests.<br />
+<br />
+I will stick it on SF when i get a chance. In the meantime, i will happily review and commit patches against our public SVN of the project: svn://svn.audioscrobbler.net/misc/ketama/</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">View Profile</a> | 
+                <a href="/user/RJ#shoutbox" title="Richard Jones , 28, Male, United Kingdom">                                                Leave RJ a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856430_1012639945">
+            <strong class="author user">
+                            <a href="/user/rschuil" title="">                    <span class="userImage"><img width="64" alt="" src="http://cdn.last.fm/flatness/catalogue/noimage/2/default_user_medium.png" /></span>                    rschuil                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        23 Jul 2007, 09:40 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">Just wondering: it looks to me that the extension currently returns only a single node. What if the node is unreachable? How can you failover to another node?<br />
+I guess that you'd have to increment server-&gt;point by one and call ketama_get_server() again to find the next node on the continuum?</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/rschuil" title="">View Profile</a> | 
+                <a href="/user/rschuil#shoutbox" title="">                                                Leave rschuil a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856431_667975525">
+            <strong class="author staff">
+                            <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">                    <span class="userImage"><img height="66" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/8270359.jpg" /><img class="icon staff_icon" width="6" height="6" src="http://cdn.last.fm/flatness/clear.gif" /></span>                    RJ                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        23 Jul 2007, 10:30 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">Yeah that's the right approach, but not implemented - we don't do failover between nodes because of the possibility of stale cached data, we would just hit the DB if a node is unresponsive.<br />
+We have a monitoring daemon that checks all the nodes and pushes out updated ketama.servers files to all the webnodes should a memcache server go down.</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">View Profile</a> | 
+                <a href="/user/RJ#shoutbox" title="Richard Jones , 28, Male, United Kingdom">                                                Leave RJ a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856432_1856635079">
+            <strong class="author user">
+                            <a href="/user/rschuil" title="">                    <span class="userImage"><img width="64" alt="" src="http://cdn.last.fm/flatness/catalogue/noimage/2/default_user_medium.png" /></span>                    rschuil                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        23 Jul 2007, 10:59 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">we don't do failover between nodes because of the possibility of stale cached data<br />
+If you push out an updated ketama.servers, it would have the same effect and thus the same problem, wouldn't it?<br />
+It would be nice if ketama_get_servers would return e.g. three candidate nodes instead of one. If one doesn't respond, simply try the next one and the next one. If all three nodes fail to connect, hit the db.</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/rschuil" title="">View Profile</a> | 
+                <a href="/user/rschuil#shoutbox" title="">                                                Leave rschuil a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856433_791124889">
+            <strong class="author staff">
+                            <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">                    <span class="userImage"><img height="66" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/8270359.jpg" /><img class="icon staff_icon" width="6" height="6" src="http://cdn.last.fm/flatness/clear.gif" /></span>                    RJ                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        23 Jul 2007, 11:13 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">If you are centrally controlling when to add and remove servers from the pool, you can do a flush_all on servers that you re-add, to avoid the stale data issue.<br />
+It should be easy enough to pass get_servers a parameter indicating the number of candidates you want, and have it return an array.</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">View Profile</a> | 
+                <a href="/user/RJ#shoutbox" title="Richard Jones , 28, Male, United Kingdom">                                                Leave RJ a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856434_689212271">
+            <strong class="author user">
+                            <a href="/user/ludvigericson" title="Ludvig Ericson, 20, Male, Sweden">                    <span class="userImage"><img height="64" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/3613870.jpg" /></span>                    ludvigericson                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        25 Jul 2007, 15:56 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">Hello RJ, just would like you to know this,<br />
+I've got a fix for the bug you mention in ketama/TODO:<br />
+ * Invalid sever definition file causes ketama_roll to crash.<br />
+<br />
+And we're developing a Python extension wrapped around libketama. You'll be hearing from us when it's ready for release, along with aforementioned bug-fix.<br />
+<br />
+Thank you for a great library.</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/ludvigericson" title="Ludvig Ericson, 20, Male, Sweden">View Profile</a> | 
+                <a href="/user/ludvigericson#shoutbox" title="Ludvig Ericson, 20, Male, Sweden">                                                Leave ludvigericson a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856435_1532305057">
+            <strong class="author staff">
+                            <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">                    <span class="userImage"><img height="66" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/8270359.jpg" /><img class="icon staff_icon" width="6" height="6" src="http://cdn.last.fm/flatness/clear.gif" /></span>                    RJ                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        25 Jul 2007, 16:01 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">Great - if you have patches against the svn feel free to send them over. When your python lib is done i will gladly add it to the ketama page <a href="http://www.audioscrobbler.net/development/ketama/" rel="nofollow">http://www.audioscrobbler.net/development/ketama/</a><br />
+<br />
+<br />
+Currently top of my ketama wishlist is adding ketama support to <a href="http://pecl.php.net/package/memcache" rel="nofollow">http://pecl.php.net/package/memcache</a> - hopefully i'll get a chance to look at that in the next few weeks.</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">View Profile</a> | 
+                <a href="/user/RJ#shoutbox" title="Richard Jones , 28, Male, United Kingdom">                                                Leave RJ a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856436_836009045">
+            <strong class="author user">
+                            <a href="/user/rschuil" title="">                    <span class="userImage"><img width="64" alt="" src="http://cdn.last.fm/flatness/catalogue/noimage/2/default_user_medium.png" /></span>                    rschuil                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        27 Jul 2007, 08:16 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">Hi RJ, I have trouble doing a checkout from your subversion repository. Using svn:// my client claims that your server does not respond, http:// doesn't seem to be supported by your server. Could you please verify that it is working externally?</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/rschuil" title="">View Profile</a> | 
+                <a href="/user/rschuil#shoutbox" title="">                                                Leave rschuil a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856437_207851768">
+            <strong class="author user">
+                            <a href="/user/rschuil" title="">                    <span class="userImage"><img width="64" alt="" src="http://cdn.last.fm/flatness/catalogue/noimage/2/default_user_medium.png" /></span>                    rschuil                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        27 Jul 2007, 08:21 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">Grmbl. From a different location the checkout does work - port 3690 must be blocked by the firewall here.</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/rschuil" title="">View Profile</a> | 
+                <a href="/user/rschuil#shoutbox" title="">                                                Leave rschuil a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856438_197045242">
+            <strong class="author user">
+                            <a href="/user/rschuil" title="">                    <span class="userImage"><img width="64" alt="" src="http://cdn.last.fm/flatness/catalogue/noimage/2/default_user_medium.png" /></span>                    rschuil                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        27 Jul 2007, 13:49 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">FYI: Just compiled libketama with FLV-1 hash instead of MD5. It is about twice as fast now.<br />
+I'll contribute my patch to the repository as soon as I'm done testing</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/rschuil" title="">View Profile</a> | 
+                <a href="/user/rschuil#shoutbox" title="">                                                Leave rschuil a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856439_378608053">
+            <strong class="author user">
+                            <a href="/user/rschuil" title="">                    <span class="userImage"><img width="64" alt="" src="http://cdn.last.fm/flatness/catalogue/noimage/2/default_user_medium.png" /></span>                    rschuil                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        27 Jul 2007, 15:03 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">I analyzed the output of ketama_test for both hash functions:<br />
+<br />
+Number of duplicate keys<br />
+MD5: 141<br />
+FNV-1a: 4<br />
+<br />
+Execution time<br />
+MD5: 0m2.990s<br />
+FNV-1a: 0m1.290s<br />
+<br />
+Distribution among servers is the same, if not slightly better.</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/rschuil" title="">View Profile</a> | 
+                <a href="/user/rschuil#shoutbox" title="">                                                Leave rschuil a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856440_2067854821">
+            <strong class="author staff">
+                            <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">                    <span class="userImage"><img height="66" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/8270359.jpg" /><img class="icon staff_icon" width="6" height="6" src="http://cdn.last.fm/flatness/clear.gif" /></span>                    RJ                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        27 Jul 2007, 15:21 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">Cool :)<br />
+We would have a hard time changing, as we'd need it working and tested in java too.. It could certainly be made an option in libketama tho.</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">View Profile</a> | 
+                <a href="/user/RJ#shoutbox" title="Richard Jones , 28, Male, United Kingdom">                                                Leave RJ a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856441_279098283">
+            <strong class="author user">
+                            <a href="/user/ludvigericson" title="Ludvig Ericson, 20, Male, Sweden">                    <span class="userImage"><img height="64" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/3613870.jpg" /></span>                    ludvigericson                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        29 Jul 2007, 18:09 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">I'd say LOOKUP3 looks like a more proper algorithm to use, MD5 is of course a bit shaky since it's made for _secure_ hashing in mind, not diversity &amp; speed.<br />
+<br />
+Anyway, I'd say it's better if the Java class could utilize libketama.so as well, so as to tie it all down to one place.</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/ludvigericson" title="Ludvig Ericson, 20, Male, Sweden">View Profile</a> | 
+                <a href="/user/ludvigericson#shoutbox" title="Ludvig Ericson, 20, Male, Sweden">                                                Leave ludvigericson a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856442_198707960">
+            <strong class="author staff">
+                            <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">                    <span class="userImage"><img height="66" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/8270359.jpg" /><img class="icon staff_icon" width="6" height="6" src="http://cdn.last.fm/flatness/clear.gif" /></span>                    RJ                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        1 Aug 2007, 11:28 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">Yeah i just used md5 because it was convenient.. <br />
+I've put the patch from rschuil into a patches folder in SVN  (svn.audioscrobbler.net) for now.<br />
+<br />
+My initial testing shows it's quite a bit faster - a 3.7s test reduced to 2.0s when using FNV. Distribution looks about the same.<br />
+<br />
+Will post an update once i have tidied up the lib and merged in a couple more changes i have lying around.</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">View Profile</a> | 
+                <a href="/user/RJ#shoutbox" title="Richard Jones , 28, Male, United Kingdom">                                                Leave RJ a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856443_1503898918">
+            <strong class="author staff">
+                            <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">                    <span class="userImage"><img height="66" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/8270359.jpg" /><img class="icon staff_icon" width="6" height="6" src="http://cdn.last.fm/flatness/clear.gif" /></span>                    RJ                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        3 Aug 2007, 19:16 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">public svn updated, license changed to BSD, some style and other patches from blogg.se folks - python patch imminent, still testing fnv one. off to the pub ;)</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">View Profile</a> | 
+                <a href="/user/RJ#shoutbox" title="Richard Jones , 28, Male, United Kingdom">                                                Leave RJ a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856444_964212554">
+            <strong class="author user">
+                            <a href="/user/psz" title="Patryk Szczygłowski, 27, Male, Poland">                    <span class="userImage"><img height="64" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/9130867.png" /></span>                    psz                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        17 Oct 2007, 12:25 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">How does libketama relate to consistent hashing introduced recently in pecl/memcache?</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/psz" title="Patryk Szczygłowski, 27, Male, Poland">View Profile</a> | 
+                <a href="/user/psz#shoutbox" title="Patryk Szczygłowski, 27, Male, Poland">                                                Leave psz a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ message  message
+" id="r71_85856445_1207714186">
+            <strong class="author staff">
+                            <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">                    <span class="userImage"><img height="66" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/8270359.jpg" /><img class="icon staff_icon" width="6" height="6" src="http://cdn.last.fm/flatness/clear.gif" /></span>                    RJ                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        17 Oct 2007, 15:36 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">similar, but ketama uses md5 instead of crc32. I've not yet had a chance to test the new branch of pecl memcache cvs.<br />
+<br />
+there is a python and java implementation of the ketama algorithm in our SVN. So compatibility with non-php languages is the only reason to use it over the pecl branch really - at least until it is integrated into a memcache extension.</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/RJ" title="Richard Jones , 28, Male, United Kingdom">View Profile</a> | 
+                <a href="/user/RJ#shoutbox" title="Richard Jones , 28, Male, United Kingdom">                                                Leave RJ a shout
+                                        </a>            </p>
+                </li><li class="clearit
+ last  message  message
+" id="r71_85856446_2063761357">
+            <strong class="author user">
+                            <a href="/user/ludvigericson" title="Ludvig Ericson, 20, Male, Sweden">                    <span class="userImage"><img height="64" width="64" alt="" src="http://userserve-ak.last.fm/serve/64/3613870.jpg" /></span>                    ludvigericson                </a>                wrote:
+                    </strong>
+        
+        <div class="meta">
+            <span class="date">
+                                                                                                        17 May 2008, 11:44 
+                            </span>
+                    </div>
+        
+        <blockquote>
+                            <div class="bbcode">Though, I don't see why you'd use CRC32 for something that isn't data integrity checking. CRC32 is designed to give distant checksums only for two *similar* inputs, I'll try to explain better:<br />
+<br />
+When f is CRC32,<br />
+ f(AAA) = 9839781 (not true, example)<br />
+ f(AAB) = 2387523 ( ^ )<br />
+But,<br />
+ f(ZZZ) = 9839782 (same)<br />
+<br />
+What I'm trying to say is that CRCs are designed to detect small changes. MD5 isn't ideal either, but it's designed to have good distribution all-over. CRC32 isn't.<br />
+<br />
+Using a checksum as hashing is just backwards, IMHO. Again, MD5 isn't optimal either, but it's a better choice.</div>
+                    </blockquote>
+        
+                    <p class="actions">
+                <a href="/user/ludvigericson" title="Ludvig Ericson, 20, Male, Sweden">View Profile</a> | 
+                <a href="/user/ludvigericson#shoutbox" title="Ludvig Ericson, 20, Male, Sweden">                                                Leave ludvigericson a shout
+                                        </a>            </p>
+                </li>
+</ul>                        <span class="moduleOptions">
+                <a href="/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients/comments">                    See all 34 comments                </a>            </span>
+                            <div class="shoutboxInput">
+                        <div class="    messageBox
+    infoMessage 
+    ">
+            <span class="messageWrapper">                <strong>Leave a comment.</strong>
+                <a href="/login/">Log in to Last.fm</a> or <a href="/join/">sign up</a> (it’s&nbsp;free).
+            </span>
+    </div>            </div>                            
+            </div>            
+        </div><!-- .journals -->
+        <!-- Adserving start -->
+<div id="LastAd_Mid" class="LastAd">
+    <div align="center">
+    <script type="text/javascript">
+                if(typeof writeMid == 'function') writeMid();
+            </script>
+    </div>
+</div>
+    <script>
+        $("LastAd_Mid").hide();
+    </script>
+<!-- Adserving end --></div><!-- #content -->
+
+<div id="LastFooter">
+        
+        <ul id="footerStuff" class="clearit">
+        <li></li>
+
+        <li><p id="uploadYourMusic">
+            <strong>Do you make music? Upload it!</strong><br /><a href="/uploadmusic?accountType=artist">Artists</a> or <a href="/uploadmusic?accountType=label">Labels</a>
+        </p></li>
+    </ul><!-- #footerStuff -->
+    
+    <div id="footer_content">
+        <ul id="footerLinks" class="clearit">
+            <li class="first">
+                <dl>
+                    <dt>Learn About Us</dt>
+                    <dd><a href="/about/contact">Contact</a></dd>
+                    <dd><a href="/about">About Us</a></dd>
+                    <dd><a href="/about/team">Team</a></dd>
+                    <dd><a href="/about/jobs">Jobs</a></dd>
+                    <dd><a href="/resources">Media Kit</a></dd>
+                    <dd><a href="/advertise">Advertise</a></dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>Get Help</dt>
+                    <dd><a href="/help/faq">FAQ</a></dd>
+                    <dd><a href="/forum/21713">Website Support</a></dd>
+                    <dd><a href="/forum/34905">Scrobbler Support</a></dd>
+                    <dd><a href="/group/Last.fm+for+iPhone+and+iPod+Touch/forum/103852">iPhone Support</a></dd>
+                    <dd><a href="http://www.last.fm/group/Last.fm+on+Xbox+LIVE/forum/137848">Xbox LIVE Support</a></dd>
+                    <dd><a href="http://status.last.fm/">System Status</a></dd>
+                </dl>
+            </li>
+        
+            <li>
+                <dl>
+                    <dt>Join In</dt>
+                    <dd><a href="/join">Sign up</a></dd>                    <dd><a href="/community/users">Find People</a></dd>
+                    <dd><a href="/community/groups">Find Groups</a></dd>
+                    <dd><a href="/forum">Forums</a></dd>
+                    <dd><a href="/help/guidelines">Community Guidelines</a></dd>
+                    <dd><a href="/about/moderators">Moderators</a></dd>
+                    <dd><a href="/promotions">Contests &amp; Promotions</a></dd>
+                </dl>
+            </li>
+            <li class="last">
+                <dl>
+                    <dt>Do More</dt>
+                    <dd><a href="/download">Download Last.fm Scrobbler</a></dd>
+                    <dd><a href="/download#content_ipod">Download iPod Scrobbler</a></dd>
+                    <dd><a href="/hardware/apple">iPhone App</a></dd>
+                    <dd><a href="http://build.last.fm">More Apps</a></dd>
+                    <dd><a href="/music/+free-music-downloads">Free Music Downloads</a></dd>
+                    <dd><a href="/hardware">Hardware</a></dd>
+                    <dd><a href="/tools/charts">Chart Images</a></dd>
+                    <dd><a href="/subscribe">Subscribe</a></dd>
+                    <dd><a href="/api">API</a></dd>
+                </dl>
+            </li>
+        </ul><!-- #footerLinks -->
+        
+        <div id="justCantGetEnough" class="clearit">
+            <blockquote>“Top Breeders Recommend Last.fm.”</blockquote>
+            <p>
+                <strong>More Last.fm Sites:</strong>
+                <a href="http://blog.last.fm/">Blog</a>
+                | <a href="http://musicmanager.last.fm">Music Manager</a>
+                | <a href="http://build.last.fm">Build</a>
+                | <a href="http://playground.last.fm">Playground (Subscriber VIP zone)</a>
+                                    | <a href="http://www.last.fm/bestof/2010">Best of 2010</a>
+                            </p>
+        </div>
+        
+        <div id="legalities">
+                            <div id="cbsi_f">
+<form>
+<script language="javascript">
+document.write("<div><label class=\"rb_visit_txt\" for=\"cbsi_footer_menu\">Visit other Sites</label><select name=\"cbsi_footer_menu\" id=\"cbsi_footer_menu\" class=\"rb_visit_sel\"><option value=\"\">Select Site</option><option value=\"http://www.bnet.com\">BNET</option><option value=\"http://www.cbscares.com\">CBS Cares</option><option value=\"http://www.cbsfilms.com\">CBS Films</option><option value=\"http://www.cbsradio.com/streaming/index.html\">CBS Radio</option><option value=\"http://www.cbs.com\">CBS.com</option><option value=\"http://www.cbsinteractive.com\">CBSInteractive</option><option value=\"http://www.cbsnews.com\">CBSNews.com</option><option value=\"http://www.cbssports.com\">CBSSports.com</option><option value=\"http://www.chow.com\">CHOW</option><option value=\"http://www.cnet.com\">CNET</option><option value=\"http://collegenetwork.cbssports.com\">College Network</option><option value=\"http://findarticles.com\">Find Articles</option><option value=\"http://www.gamespot.com\">GameSpot</option><option value=\"http://www.help.com\">Help.com</option><option value=\"http://www.last.fm\">Last.fm</option><option value=\"http://www.maxpreps.com\">MaxPreps</option><option value=\"http://www.metacritic.com\">Metacritic.com</option><option value=\"http://moneywatch.bnet.com\">Moneywatch</option><option value=\"http://www.mysimon.com\">mySimon</option><option value=\"http://www.radio.com\">Radio.com</option><option value=\"http://www.search.com\">Search.com</option><option value=\"http://www.shopper.com\">Shopper.com</option><option value=\"http://www.sho.com\">Showtime</option><option value=\"http://www.smartplanet.com\">SmartPlanet</option><option value=\"http://www.techrepublic.com\">TechRepublic</option><option value=\"http://www.theinsider.com\">The Insider</option><option value=\"http://www.tv.com\">TV.com</option><option value=\"http://www.urbanbaby.com\">UrbanBaby.com</option><option value=\"http://www.zdnet.com\">ZDNet</option></select><input type=\"button\" class=\"rb_visit_go\" value=\"Go\" onClick=\"window.location=document.getElementById('cbsi_footer_menu').options[document.getElementById('cbsi_footer_menu').selectedIndex].value;\" /></div>");
+</script>
+</form>
+  <noscript>
+	<a href="http://www.bnet.com">BNET</a>  | <a href="http://www.cbscares.com">CBS Cares</a>  | <a href="http://www.cbsfilms.com">CBS Films</a>  | <a href="http://www.cbsradio.com/streaming/index.html">CBS Radio</a>  | <a href="http://www.cbs.com">CBS.com</a>  | <a href="http://www.cbsinteractive.com">CBSInteractive</a>  | <a href="http://www.cbsnews.com">CBSNews.com</a>  | <a href="http://www.cbssports.com">CBSSports.com</a>  | <a href="http://www.chow.com">CHOW</a>  | <a href="http://www.cnet.com">CNET</a>  | <a href="http://collegenetwork.cbssports.com">College Network</a>  | <a href="http://findarticles.com">Find Articles</a>  | <a href="http://www.gamespot.com">GameSpot</a>  | <a href="http://www.help.com">Help.com</a>  | <a href="http://www.last.fm">Last.fm</a>  | <a href="http://www.maxpreps.com">MaxPreps</a>  | <a href="http://www.metacritic.com">Metacritic.com</a>  | <a href="http://moneywatch.bnet.com">Moneywatch</a>  | <a href="http://www.mysimon.com">mySimon</a>  | <a href="http://www.radio.com">Radio.com</a>  | <a href="http://www.search.com">Search.com</a>  | <a href="http://www.shopper.com">Shopper.com</a>  | <a href="http://www.sho.com">Showtime</a>  | <a href="http://www.smartplanet.com">SmartPlanet</a>  | <a href="http://www.techrepublic.com">TechRepublic</a>  | <a href="http://www.theinsider.com">The Insider</a>  | <a href="http://www.tv.com">TV.com</a>  | <a href="http://www.urbanbaby.com">UrbanBaby.com</a>  | <a href="http://www.zdnet.com">ZDNet</a> 
+  </noscript>
+</div>                <p id="copy">
+                    &copy; 2010 Last.fm Ltd. All rights reserved. | 
+                    <a href="/legal/terms" target="_blank">Terms of Use</a> 
+                    and <a href="/legal/privacy" target="_blank">Privacy Policy</a> | <span class="date">Updated Feb 11, 2009</span><br />
+                        
+                                    </p>
+        </div><!-- #legalities -->
+        
+                    </div>
+</div><!-- #LastFooter -->
+
+<div id="multiButtonMenu" style="display: none;">
+    <div>
+        <ul class="lfmDropDownBody">
+            <li class="mAddToLibrary"><a href="#">Add to my Library</a></li>
+            <li class="mAddToFriends"><a href="#">Add to Friends</a></li>
+            
+            <!-- <li class="save"><a href="#">Bookmark</a></li> -->
+            <li class="mSend"><a href="#">Share</a></li>
+            
+            <li class="mLove"><a href="#">Love this track</a></li>
+            <li class="mUnlove"><a href="#">Unlove track</a></li>
+            <li class="mBan"><a href="#">Ban track from radio</a></li>
+            <li class="mUnban"><a href="#">Unban track from radio</a></li>
+
+                                    
+            <li class="mAddTags"><a href="#">Add tags</a></li>
+            <li class="mAddToPlaylist"><a href="#">Add to playlist</a></li>
+            
+            <li class="mRemoveFromLibrary"><a href="#">Remove from your Library</a></li>
+            
+            <li class="mBuy"><a href="#">Buy Track</a></li>
+                        <li class="mMessage"><a href="#">Send a message</a></li>
+                        <li class="mEditDetails"><a href="#">Edit Details</a></li>
+            <li class="mMessageAll"><a href="#">Message All Users</a></li>
+            <li class="mEditPermissions"><a href="#">Edit Permissions</a></li>
+            <li class="mAbdicate"><a href="#">Abdicate</a></li>
+            <li class="mLeave"><a href="#">Leave Group</a></li>
+            
+            <li class="mLoading"><a href="#">&nbsp;</a></li>
+        </ul>
+    </div>
+</div>
+
+
+
+<script type="text/javascript"> 
+var use_ga = true; 
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www."); 
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E")); 
+</script> 
+<script type="text/javascript"> 
+try {
+var pageTracker = _gat._getTracker("UA-1966571-6"); 
+pageTracker._trackPageview(); 
+var masterTracker = _gat._getTracker("UA-18602122-1"); 
+masterTracker._trackPageview(); 
+} 
+catch(err) {} 
+</script>
+
+<div id="siteSearchAutocomplete" class="autocomplete" style="display: none;"></div>
+
+<script>
+// Search autocomplete
+new LFM.Ajax.SideGroupedMulticompleter('siteSearchBox', 'siteSearchAutocomplete', '/search/autocomplete', {
+    frequency: 0.2,
+    indicator: 'siteSearchProgress',
+    enabled: true
+});
+LFM.Button.MultiButton.setup();
+LFM.Display.setMinHeight();
+
+
+
+    document.observe('click', function(event) {
+            
+        try {
+            
+            if(event.element().tagName.toLowerCase() == 'body') {
+
+                LFM.Omniture.prepareEvar('ClickSource', 'BackgroundClick');
+                LFM.Omniture.trackEvents('Click');
+            }
+        }
+        catch(e) { }
+    });
+
+</script>
+
+
+        </div>
+    </div>
+    </body>
+</html>
