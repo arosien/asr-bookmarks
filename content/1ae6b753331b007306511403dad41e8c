@@ -1,0 +1,1429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tahoe: A Secure Distributed Filesystem</title>
+</head>
+
+<body>
+
+<h1>Tahoe: A Secure Distributed Filesystem</h1>
+
+<a href="http://allmydata.org">http://allmydata.org</a>
+
+<ul>
+  <li>Brian Warner, allmydata.com : <cite>warner-tahoe@lothar.com</cite></li>
+  <li>Zooko Wilcox-O'Hearn, allmydata.com : <cite>zooko@zooko.com</cite></li>
+  <li>Rob Kinninmont, allmydata.com : <cite>robk-tahoe@allmydata.com</cite></li>
+</ul>
+
+<h2>Abstract</h2>
+
+<blockquote>The "Tahoe" project is a distributed filesystem, which safely
+stores files on multiple machines to protect against hardware failures.
+Cryptographic tools are used to ensure integrity and confidentiality, and a
+decentralized architecture minimizes single points of failure. Files can be
+accessed through a web interface or native system calls (via FUSE).
+Fine-grained sharing allows individual files or directories to be delegated
+by passing short URI-like strings through email. Tahoe grids are easy to set
+up, and can be used by a handful of friends or by a large company for
+thousands of customers.</blockquote>
+
+<h2>Introduction: What Is It?</h2>
+
+<p>
+The "Tahoe" project is remote filesystem, a place to store files and
+directories on distant computers instead of your own. The primary goal is
+robustness: increasing the chances that you will be able to get your data
+back. The data is spread among several machines so that the files will be
+recoverable even if some of the servers are lost or unavailable. All data is
+encrypted and validated to control who can read and modify the contents.
+Individual files and directories can be shared by passing around small
+URI-like strings, in either read-write or read-only modes.
+</p>
+
+<p>A Tahoe grid can be used to back-up files from a home computer, to make
+sure the data survives a fire or hard drive crash. This grid could be
+commercially managed (you pay for storage space), or run by a collection of
+friends on each other's computers (everybody provides storage for each
+other). The directory-sharing features can be used by a group of coworkers to
+collaborate on a project; a common place to which they can all read and
+write.</p>
+
+<p>
+Each Tahoe client offers a web server through which users can upload and
+download files. There are also FUSE plugins through which other programs can
+access the virtual filesystem. Other front-ends are possible.
+</p>
+
+<p>Tahoe is free software: all of the source code is available under an
+open-source license. The home page is at <a
+href="http://allmydata.org">http://allmydata.org</a> . Tahoe is sponsored by
+allmydata.com, which uses it as the back-end for a personal-data backup
+service.</p>
+
+<p>This paper provides an overview of the Tahoe architecture, enough to get a
+clear idea of how it is designed and how the various pieces fit together. For
+actual protocol specifications and installation instructions, please refer to
+the source code and its accompanying documentation. This paper describes the
+tahoe-0.8.0 release, and portions of it may be obsoleted by changes in
+subsequent versions.</p>
+
+<h2>How Does It Work?</h2>
+
+<p>
+The short form: files to be uploaded are encrypted, then split up into
+pieces. These pieces are created using a technique called "erasure coding",
+which gives them the interesting property that any sufficiently-large subset
+will be enough to reconstruct the original file (typically 3-out-of-10). Each
+piece is uploaded to a different server, distributed to spread the load
+uniformly and avoid correlated failures. When it is time to download the
+file, the client asks around to see which servers are still available, pulls
+the necessary pieces from them, then decodes and decrypts the results.
+</p>
+
+<p>Users interact with a client that works on their behalf: usually a program
+running on their local computer, but sometimes running on some other
+computer. The client runs a local webserver, so the user can point a browser
+at "http://localhost:8123/", or they can use other front-ends that use the
+same webserver. The client talks to a collection of storage servers, managed
+by an Introducer. The clients, servers, introducer, and other components are
+collectively referred to as a "Tahoe grid".</p>
+
+<h2>What Technologies Does It Use?</h2>
+
+<p>Tahoe itself is pure-python, but several of the libraries that it depends
+upon use C extensions (sometimes for speed, sometimes to interface to
+pre-existing C libraries). Twisted <a href="#TWISTED">[TWISTED]</a> is used
+for event-loop and control-flow management, application support,
+daemonization, web services, and other purposes. Tahoe uses Foolscap <a
+href="#FOOLSCAP">[FOOLSCAP]</a> for inter-node communications (which itself
+uses PyOpenSSL), Nevow <a href="#NEVOW">[NEVOW]</a> for HTML templating on
+the web interface, pycryptopp <a href="#PYCRYPTOPP">[PYCRYPTOPP]</a> for data
+encryption (which uses the Crypto++ library <a
+href="#CRYPTO++">[CRYPTO++]</a>), and other support libraries.</p>
+
+<p> Erasure coding is done using the zfec library <a href="#ZFEC">[ZFEC]</a>,
+which is a python wrapper around the Rizzo FEC library <a
+href="#RIZZO">[RIZZO]</a>. The easiest way to visualize how FEC works is to
+consider a an overspecified polynomial: any two points will define a line,
+any three points will define a quadratic, etc. By providing more points than
+are necessary, you can afford to drop many of them without losing the ability
+to determine the exact polynomial function. The encode() function of the zfec
+library accepts a chunk of input data, a count of required shares 'k', and a
+count of total shares 'N'. It then produces 'N' blocks of output data. The
+total output data is larger than the input by the "expansion factor" N/k.
+The zfec decode() function takes 'k' blocks of data and produces the original
+input chunk. </p>
+
+<h2>Architecture Overview</h2>
+
+<p>Tahoe is composed of three layers. The lowest layer is effectively a
+Distributed Hash Table (DHT), like a python dictionary, but spread across
+multiple machines. In this DHT, there are a large number of "slots" which are
+filled with arbitrary data. Tahoe has both mutable slots and immutable slots.
+Immutable slots are write-once: after the slot has been closed, no more data
+can be written to it. Mutable slots can be written multiple times. Capability
+discipline is used to control access to the slots: if you hold a
+write-reference (or "write-cap"), then you can modify the slot, if you don't
+hold such a reference, then you cannot. Mutable slots have both write-caps
+and read-caps (and the write-cap can be used to produce a read-cap, so really
+it is a read+write-cap). Immutable slots have only read-caps. These read- and
+write- caps can be expressed as short strings, containing encryption keys,
+integrity hashes, and location information. In this form, they look a lot
+like web URIs: a string that provides a reference to some piece of data.</p>
+
+<p>
+The data for each DHT slot is distributed among some number of storage
+servers, using encryption and erasure coding to provide confidentiality and
+reliability.
+</p>
+
+<p>
+The middle layer is the Virtual Drive, which organizes these slots into
+directories. Each directory is just a table that maps a name to a read-cap or
+write-cap of some child file or subdirectory. Each client stores a specific
+"root directory" to use as a starting point. To visit e.g.
+/projects/tahoe/README.txt, the client will look up "projects" in the root
+directory, then look up "tahoe" in the results of that first query, then look
+up "README.txt" in the results of the second query, and finally present the
+contents of the file to the user. The table's child entries can point to any
+file or directory object, even itself, therefore allowing cycles. As a
+result, the virtual drive is shaped like an arbitrary directed graph rather
+than being a strict tree.
+</p>
+
+<p>
+The top-most layer is an application or presentation service; something that
+uses the virtual drive for some purpose. We currently have two such
+interfaces. The most mature one is a RESTful HTTP interfaces, in which PUT,
+GET, and POST are used to add and retrieve files and directories. This
+interface provides HTML for the benefit of a human sitting at a web browser,
+and JSON for the benefit of programs using httplib. The other interface under
+development is a FUSE plugin, allowing all programs on a host computer to use
+the Tahoe virtual filesystem as if it were a local one.
+</p>
+
+<p>
+Other applications can then be written on top of this, for example a backup
+program. The Tahoe drive semantics are slightly different than a traditional
+filesystem, so there is still much work to be done to allow these application
+programs to make efficient use of Tahoe. For example, a backup program that
+does a simple 'cp' will spend a lot of time and bandwidth on files which
+haven't changed since the last backup. Programs like 'rsync' use special
+protocols to reduce this bandwidth. Similar schemes could be constructed for
+Tahoe to efficiently determine if a file were already present in the grid and
+thus avoid uploading it again, or to make small modifications to an existing
+file.
+</p>
+
+
+
+<h2>File Types</h2>
+
+<p>
+Tahoe's DHT layer uses two distinct types of slots: Mutable and Immutable.
+Mutable slots can be changed indefinitely, whereas immutable slots are
+write-once. We currently use immutable slots for all data files, and mutable
+slots to contain directories.
+</p>
+
+<h2>Capabilities</h2>
+
+<p>
+Each slot is referenced by a handful of "capabilities": secure identifiers
+that provide location, confidentiality, and integrity. Each capability grants
+a specific set of abilities, such as the ability to read a file, or the
+ability to modify a directory. The access model is simple: if you hold a
+capability, you can perform the corresponding actions. If not, you cannot. No
+access control lists or passwords are used in Tahoe.
+</p>
+
+<p>These capabilities contain cryptographic values: large unguessable
+numbers and SHA-256 hashes. They are expressed as (relatively) short ASCII
+strings, which allows them to be passed easily through email, IM, and other
+channels. To share read-access to a file, you just ask your Tahoe client for
+that file's read-cap, then mail it to your friend. The friend pastes the
+read-cap into their own Tahoe client, and the client retrieves the contents
+of that file for them.</p>
+
+<p>
+Some capabilities can be used to derive others for the same file, typically
+by hashing the secret numbers. For example, if you can write to a mutable
+slot, then you can also read from it. If you can read an immutable file, you
+can produce a "verify-cap" which gives someone else enough information to
+check on the availability of the file (and verify the integrity of the
+ciphertext), but not enough to read the plaintext. This property makes it
+easy to delegate limited access to other parties: you can create a new
+directory, grant read access to a coworker, but retain write access for
+yourself.
+</p>
+
+
+<h2>Introducer / Grid Setup</h2>
+
+<p>The current release uses a central "Introducer", which is responsible for
+making sure that all clients know about all storage servers. Clients and
+servers are both special instances of a generic "node", which is just a
+single program running on a single machine, with a distinct identity. Each
+node provides certain services to the other nodes, storage being the most
+common one.</p>
+
+<p>All nodes speak to each other using Foolscap <a
+href="#FOOLSCAP">[FOOLSCAP]</a>, which provides secure object reference
+semantics over SSL connections. Each client maintains a connection to all
+storage servers: if each client is also a server (such as the "friendnet"
+scenario), this results in a fully-connected mesh topology.</p>
+
+<p>
+Future releases are expected to make the introduction process less
+centralized, and to reduce the number of long-lived connections that must be
+maintained.
+</p>
+
+<p>
+Each storage server is assigned a "node id" or "peer id", based upon the
+fingerprint of the SSL certificate that Foolscap uses for all connections.
+This provides a secure identifier of the node: to claim a given node id would
+require knowledge of the corresponding private key. The nodeid is also
+effectively random, making it attractive to use for load distribution (a
+sufficiently large number of storage servers will have uniformly distributed
+nodeids).
+</p>
+
+<h2>Storage Index / Peer Selection</h2>
+
+<p>Each mutable and immutable slot is associated with a 128-bit number called
+the "Storage Index". This value is used to determine the location of the
+encoded shares: both the set of servers that will be used to hold the shares,
+and to distinguish these shares from all other shares stored on those
+servers. The Storage Index (or "SI") is unique but not secret.</p>
+
+<p>In general, knowing the storage index is sufficient to obtain the
+ciphertext of any given mutable or immutable slot. Tahoe effectively has a
+DHT which maps storage index to ciphertext, and another DHT on top of that
+which maps read-cap to plaintext. (Note that integrity of the ciphertext must
+be provided by a distinct value: knowing just the SI is <b>not</b> sufficient
+to validate the ciphertext).</p>
+
+<p>
+The Storage Index is contained in or derivable from all other capabilites.
+For immutable slots, it is the hash of the AES read-key, so holders of the
+read-key can derive the SI from it. The immutable slot verify-cap contains a
+verbatim copy of the SI. The same is true for mutable slots.
+</p>
+
+<p>The Storage Index, being the output of a hash, is effectively random. This
+property means it can be used to achieve load distribution. Tahoe uses a
+techique called "hash-based permutation" to convert the SI into a set of
+servers. For each upload or download, the client creates a list that consists
+of each server identifier concatenated with the SI, then hashes each item in
+the list, then sorts the list according to the output of the hash. This
+creates a consistent-yet-effectively-random ordering of the server list for
+each file. We then contact the servers at the beginning of the permuted list
+to place or retrieve shares. For an upload with 3-out-of-10 encoding, we use
+the first 10 servers that will accept the share. When downloading, we start
+with the first servers and continue forwards until we have enough shares or
+we decide we've tried enough and declare failure.</p>
+
+<p>
+This "peer selection" algorithm (known internally as "Tahoe2" to distinguish
+it from other possible ones) has the following properties:
+</p>
+
+<ul>
+ <li>no hot spots due to server identifier</li>
+ <li>tolerate churn</li>
+ <li>minimize search time</li>
+</ul>
+
+<p>
+"Hot Spots" occur when a given server gets more than a reasonable share of
+the total traffic. This might occur because a single file (which happens to
+use that server) is very popular, or very large. It might also occur if the
+peer selection algorithm tends to put more shares on that server than the
+others. The Tahoe2 algorithm gives each file a new permutation, so servers
+should (when averaged over time) get an equal number of share requests,
+regardless of what their server identifiers are. Hot spots may still occur
+due to popularity or size.
+</p>
+
+<p>
+"Churn" refers to variations in the set of servers over time. In a casual
+grid, participants may join or drop out at any time. Even in large
+professionally managed grids, hard drives fail and machines get replaced. As
+a result, when it comes time to download a file that was uploaded several
+months or years earlier, not all of the original servers will still be there,
+and new ones will have been added. These will appear as randomly-located
+insertions and deletions in the permuted peer list. If the original upload
+used 10 peers out of a grid that contains 100, and there have been 20
+insertions and 20 deletions since then, the download will see (on average) 2
+insertions and 2 deletions in the 10% portion that they care about.
+</p>
+
+<p>
+The consistent permutation means that the servers found during upload are
+highly likely to appear early in the list used for download. This means that
+downloading clients have a good chance of finding their shares with just a
+few queries. If there has been a lot of churn, they may have to search
+further afield to find them. The peer selection algorithm is designed to
+minimize this search depth.
+</p>
+
+<p>
+The churn rate (servers added/removed per unit time) directly affects the
+reliability of the grid. For a Tahoe grid to remain reliable in the long
+term, files must be repaired fast enough to tolerate the churn. See below for
+details about approaches to file repair.
+</p>
+
+
+
+<h2>Immutable Files</h2>
+
+<p>
+Immutable slots in Tahoe are referenced using a cryptographic identifier
+known as the "read-cap". This read-cap contains (among other things) a hash
+of the contents of the file. This provides "integrity": the promise that the
+file you've downloaded matches the file that was originally uploaded, such
+that no attacker could modify the bytes without your knowledge. The read-cap
+also contains an AES encryption key, which is not shared with anyone else
+during the upload or download process. The encryption key provides
+"confidentiality": the promise that nobody else (i.e. people who don't know
+the read-cap) can see the plaintext of the file. The file is encrypted on the
+client machine with this key before being erasure-coded.
+</p>
+
+<p>
+In the current release, a Tahoe immutable-slot read-cap looks like this:
+</p>
+
+<ul>
+ <li><tt>URI:CHK:6hwdguhr5dvgte3qhosev7zszq:lgi66a5s6gchcu4yyaji3blogdxmrrrgcdxj5q33bz7h2dhlp6oq:3:10:8448</tt></li>
+</ul>
+
+<p>
+The first base32-encoded string (6hw..) is the encryption key, while the
+second (lgi..) is the SHA-256 hash of the "UEB" (described below), which
+includes the hash of the file contents.
+</p>
+
+<p>There are two ways to generate the encryption key. The simplest is to pick
+a random string. The slightly more complicated approach is to hash the file
+and use the result as the key, which is then known as a "Content Hash Key",
+or "CHK" (a technique originating with the Freenet project <a
+href="#FREENET-CHK">[FREENET-CHK])</a>. A nice property of CHK is
+"convergence", meaning that a given file will be encoded to the same read-cap
+everywhere. This improves the overall behavior of a backup client, because it
+can avoid duplicate uploads of large common files (such as firefox.exe). On
+the other hand, it requires more hashing before upload can begin (which may
+prevent streaming upload).</p>
+
+<p>The encryption key is hashed to get the Storage Index, which governs where
+the encoded shares are placed (see above). The file is encrypted using this
+key, then erasure-coded into shares. Erasure-coding is performed one segment
+at a time (the default segment size is 1MB) for two purposes. The first is to
+keep the memory footprint down, since the client only need to hold one
+segment in RAM at a time. The second is to improve a property called
+"download alacrity": the amount of time it takes to get the first byte of
+validated plaintext. A low alacrity allows, for example, a streaming music
+player to begin playing the song quickly, rather than requiring that the
+whole file be downloaded first.</p>
+
+</p>Each segment is hashed separately, and a Merkle hash tree over the
+segments is stored along with the shares. This means it is possible to
+validate the hash of a single segment without needing to retrieve all the
+other segments too. The segment size can be reduced to improve alacrity and
+make the download smoother (smaller pieces more frequently) at the expense of
+storage overhead.</p>
+
+<p>The shares that are placed on the storage servers are an aggregate data
+structure, containing the following:</p>
+
+<ul>
+ <li> "blocks", which are the erasure-coded ciphertext segments. These make up
+   the majority of the share data.</li>
+ <li> "block hash tree": a Merkle tree covering the blocks, different for each
+   share. The root of this tree is called the "block hash root"</li>
+ <li> one chain of the "share hash tree", which is a Merkle tree computed over
+   the block hash root from each share. Each share holds just those hashes
+   necessary to validate its block hash root. The root of the share hash
+   tree is called the "share hash root".</li>
+ <li> the "URI Extension Block", which contains a number of items that
+   are nominally part of the read-cap but which were moved into the shares
+   to allow read-caps to be shorter:
+   <ul>
+     <li> the share hash root. Each file has a single share hash root</li>
+     <li> a Merkle tree over the ciphertext segments</li>
+     <li> a flat hash of the complete ciphertext</li>
+     <li> a Merkle tree over the plaintext segments</li>
+     <li> a flat hash of the complete plaintext</li>
+     <li> encoding parameters: total-shares, required-shares, segment-size</li>
+     <li> total file size, number of segments</li>
+   </ul></li>
+</ul>
+
+<p>
+The Merkle tree of blocks makes it possible to isolate share corruption to a
+single server (the other hashes allow the client to detect corruption, but
+recovery is much easier if we know exactly which server has the bad share).
+The ciphertext hashes make it possible for a verifier or repairer to validate
+both the shares and the erasure-coding process. The plaintext hashes add the
+ability for read-cap holders to validate the decryption process.
+</p>
+
+<p>
+The hash of the URI Extension Block is included in the read-cap and
+verify-cap, providing an integrity check on everything, including the
+original file contents.
+</p>
+
+<p>
+The capabilities associated with an immutable slot are:
+</p>
+
+<ul>
+  <li>read-cap : grants the ability to read the plaintext</li>
+  <li>verify-cap : read and verify the ciphertext but not the plaintext</li>
+</ul>
+
+<p>
+The read-cap can be used to derive the verify-cap, but not the other way
+around.
+</p>
+
+<h2>Mutable Files</h2>
+
+<p>
+Mutable slots in Tahoe are referenced with an identifier known as the
+"write-cap" which, in the current release, looks like this:
+</p>
+
+<ul>
+ <li><tt>URI:SSK:rymosvvxauojktsga6ukfbffsu:d4b2rqamue744nejtu4h7akxicllb7ta7iybckfywx7ba3lcqj7a</tt></li>
+</ul>
+
+<p>Each slot has an RSA public/private keypair. Knowing the private key
+allows write access, while the public key is public knowledge and allows all
+parties to verify the integrity of the encoded ciphertext. Read access is
+protected by an AES "read-key". Because RSA keys are big, we hash the RSA
+private key to form an AES "write-key", and use it to store an encrypted copy
+of the RSA private key inside the share. The read-key is then the hash of the
+write-key, and the Storage Index is the hash of the read-key. Each share
+contains a copy of the RSA public key, and the hash of the public key
+(usually known as the "fingerprint") can be used to make sure we're using the
+correct public key.</p>
+
+<p>
+The write-cap is then the write-key and the public key fingerprint. The
+read-cap is the read-key and the public key fingerprint. The verify-cap is
+the storage index and the public key fingerprint. Thus each cap can be used
+to derive the next.
+</p>
+
+<p>Mutable slots are inspired by the "Signed Subspace Key" design in Freenet
+<a href="#FREENET-SSK">[FREENET-SSK]</a>, which has similar properties.</p>
+
+<p>
+The current contents of the mutable slot are signed using the RSA private
+key, and the signature goes into the share. When a client wants to download
+the file, it computes the storage index, retrieves the public key, checks its
+fingerprint, then downloads the data and checks its signature. When uploading
+a new version of the file, the client uses the storage index to retrieve a
+copy of the encrypted private key, uses the write-key to decrypt it, uploads
+a new copy of the data, signs that data using the private key, then uploads
+the new signature.
+</p>
+
+<p>The actual details are more complex, to deal with the possibility of
+simultaneous colliding writes. Each time the mutable file is modified, it
+gets a new "version identifier", which consists of a sequence number and a
+hash of the file's contents. The signature covers this identifier as well as
+several encoding parameters which can affect the way shares are produced.
+There is an algorithm to control how the uploader decides what sequence
+number to use, and how downloads should react when they see a variety of
+sequence numbers, carefully designed to optimize reliability and minimize
+confusion.</p>
+
+<p>
+The current version of Tahoe's mutable slots (known as "SMDF: Small Mutable
+Distributed Files") imposes a size limit of one segment (usually 1MB), and
+only allows updates that replace the whole file at once. We have initial
+designs for more advanced forms: "medium"-sized MDMF to allow larger files
+and updates of individual segments in-place, and "large" LDMF to allow
+insert/delete and preserve multiple versions of the data.
+</p>
+
+<p>
+The capabilities associated with a mutable slot are (in descending order of
+power: each cap can be used to derive the one below it):
+</p>
+
+<ul>
+  <li>write-cap : grants the ability to modify the plaintext</li>
+  <li>read-cap : read the plaintext but not modify it</li>
+  <li>verify-cap : read and verify the ciphertext but not the plaintext</li>
+</ul>
+
+<h2>Dirnodes</h2>
+
+<p>
+Directories are simply tables that map a child name to a read-cap or
+write-cap for that child. For example, a directory that contained a file
+called "foo.txt" and a subdirectory called "documents/" could be represented
+as:
+</p>
+
+<table border="1">
+ <tr><td>foo.txt</td>
+ <td>URI:CHK:6hwdguhr5dvgte3qhosev7zszq:lgi66a5s6gchcu4yyaji:3:10:8448</td>
+ </tr>
+ <tr><td>documents</td>
+ <td>URI:DIR2:rymosvvxauojktsga6ukfbffsu:d4b2rqamue744nejtu4h7akxicll</td>
+ </tr>
+</table>
+
+<p>This table is serialized into a single string and stored in a mutable
+slot. Note that if we only had immutable slots, each change to a directory
+would create a new file for that directory, causing any parent directories to
+change, etc, rippling all the way up to the root directory. There are
+benefits to this approach (journalling filesystems use it to provide atomic
+updates), but for performance and complexity reasons (mainly garbage
+collection), Tahoe does not currently work this way.</p>
+
+<p>
+We put each file or directory into a "node" of the directory graph, so this
+graph consists of "filenodes" and "dirnodes". Each filenode is a leaf. The
+root directory is simply a pointer to some dirnode inside this graph, and the
+full "contents" of the vdrive are just the set of nodes which are reachable
+from that starting point. One Tahoe operation used for maintenance and repair
+is to build the "manifest", which is a set of verify-caps for all files and
+directories that a given user cares about; this is built by doing a traversal
+of the graph from that starting point and accumulating the verify-cap for
+each node.
+</p>
+
+<p>
+Because files are only readable by holders of their read-caps, the directory
+is only traversable by those who hold the read-cap. Entries may only be
+added, removed, or modified by holders of the write-cap.
+</p>
+
+<p>
+The directory structure is slightly more complicated than described above.
+The first complication is that we add "metadata" to each table entry. This is
+known as "edge" metadata, because it exists on the directory graph's edges
+rather than on its nodes. This metadata is associated with a name, rather
+than with a file: two difference references to the same file will have
+different edge-metadata. We currently use this to store creation/modification
+timestamps (ctime+mtime), but a future release will provide an interface to
+attach arbitrary key-value pairs to each edge. We may also add node-metadata
+in the future, perhaps for things like Content-Type.
+</p>
+
+<p>
+The second complication is that we store two separate capabilities in each
+table entry, the child's read-cap, and its write-cap. The read-cap is stored
+normally, so everyone who can read the directory will be able to get read
+access to its children. The child's write-cap is encrypted with the dirnode's
+write-key before being stored in the table. This provides a useful property
+of "transitive readonlyness": if you've been given read-only access to a
+directory, you get read-only access to its children instead of read-write
+access. (you might have read-write access to some child directory via some
+other path, but not through the one that passes through this dirnode).
+</p>
+
+<p>
+To avoid crypto problems with key-reuse, the actual AES key for each
+write-cap is formed by hashing a randomly-generated salt with the dirnode's
+write-key. This salt is stored next to the entry's ciphertext.
+</p>
+
+<p>
+The current dirnode structure uses SDMF files as their backing store,
+therefore they are limited to directories that can fit in a single 1MB
+segment (which results in a limit of about 3000 entries per directory), and
+must be retrieved and updated all at once. When MDMF files are implemented,
+it will become possible to fetch a single dirnode entry without needing to
+download the whole thing: at that point it may become useful to build an
+index at the start of the file, so that the useful span of data can be
+determined. However, this must be balanced against the latency of performing
+multiple retrievals: only extremely large directories would benefit.
+</p>
+
+<h2>Security Model</h2>
+
+<p>Tahoe seeks to be a <b>secure</b> filesystem: to make certain promises
+about the security of the data stored in it. The most important property it
+tries to provide is "data integrity": the promise that attackers cannot
+modify your stored data without detection. It also offers "confidentiality":
+the promise that attackers cannot read your files unless you give them
+permission. Unlike some related projects, Tahoe does not attempt to offer
+"privacy" or anonymity: the promise that attackers can find out which files
+you are storing or retrieving.</p>
+
+<p>
+These security goals are achieved by encrypting and hashing all data before
+it leaves the user's client. No other machines are assumed or required to
+behave correctly. Shares are public knowledge: storage servers are expected
+to store and return data, but are not required to keep it secret. A malicious
+or buggy storage server (one which returns corrupted data) cannot cause
+undetected changes to a file.
+</p>
+
+<p>When diagnostic logs need to record information about a file upload or
+download, they log the storage index rather than anything that can be turned
+into an encryption key. Web server logs are censored to remove file
+capabilities inside URLs. The web server can be used to access private data,
+but only when supplied with a read-cap: no secrets are disclosed on pages
+with guessable URLs. In fact, the Tahoe node does not remember read- or
+write- caps once the upload or download operation has finished: all authority
+that it uses must be given to it by the user.</p>
+
+<h3>Integrity</h3>
+
+<p>Cryptographic hashes (SHA-256) are used throughout Tahoe to provide data
+integrity: the promise that attackers cannot modify stored data without
+detection. If a share is corrupted, the Tahoe download algorithm will ignore
+it and use other shares. If all shares are corrupted, the download process
+will raise an exception. If any data-corrupting bug has occurred during the
+upload or download process, the hash checks will probably detect the error
+and raise an exception rather than return corrupt data to the user.</p>
+
+<p>For mutable files, the integrity promise is that the data retrieved was
+uploaded by some authorized writer (one who possesses the file's write-cap).
+Obviously the promise is stronger for immutable files: the data will match
+exact data that was uploaded by the creator of the read-cap. So, while it is
+reasonable to read the contents of an immutable read-cap today and expect
+them to be the same next week, this is not the case for mutable files:
+someone (perhaps unknown to you) who retains the write-cap may modify the
+file by the time you read it a second time. In addition, if an attacker
+controls enough storage servers, they can accomplish a "rollback attack", in
+which your mutable file is returned to the state that it was in last week or
+last month. The best defense against this is to query more servers than are
+strictly necessary: this requires the attacker to control all the servers
+instead of merely a subset.</p>
+
+<p>
+Though Tahoe files are retrievable by pathname through the virtual drive,
+applications which care about integrity should identify files by their
+read-caps. Anyone with a write-cap on any of the intermediate directories can
+change the mapping from pathname to file contents, whereas changing the
+mapping from read-cap to immutable file contents would require breaking
+SHA-256.
+</p>
+
+<h3>Confidentiality</h3>
+
+<p>
+The second security promise that Tahoe attempts to provide is
+confidentiality: keeping your plaintext secret. All file contents are
+encrypted (using AES in counter mode) before leaving the client, and the key
+is not shared with unauthorized parties. As long as you do not reveal the
+read-cap for a file, nobody else will be able to read it.
+</p>
+
+<h3>Privacy</h3>
+
+<p>In general, Tahoe does not make any attempt to provide anonymity or
+privacy. This means that a sufficiently powerful observer (one who runs
+several storage servers) can determine which user uploaded or downloaded any
+given file. Although directories are encrypted in the same way as files,
+timing analysis can be used to deduce which files are in which directories,
+even if the attacker cannot read the contents of those files.</p>
+
+<p>Note that Foolscap provides strong encryption of all inter-node links, so
+the attacker must actually control the storage server to mount this attack.
+Merely observing the encrypted traffic entering and leaving the storage
+server is insufficient.</p>
+
+<p>
+If convergence is in use, then the fact that storage index values are public
+knowledge means that observers can deduce which common files you are working
+with. Specifically, if my copy of firefox.exe and yours both upload to the
+same read-cap (and therefore use the same storage index), any storage server
+that I run will see your lease requests for that storage index, and I will be
+able to deduce that you are uploading or downloading firefox.exe . If you
+were using random keys (thus disabling convergence), I would see an unrelated
+storage index. Of course, I would still see the filesize, and that may be
+sufficiently unique that I could make the same deduction.
+</p>
+
+
+<h2>Leases / GC / Deletion</h2>
+
+<p>Each share that is put on a storage server is covered by one or more
+"leases", one for each client that wants the share to stick around. Each
+lease is a promise by the storage server to hold the share faithfully on disk
+and to provide it to anyone who asks. The lease may be valid indefinitely, or
+for a limited period of time (we expect one month to be a common default).
+Any lease can be cancelled by the client which requested it, and when the
+last lease is cancelled or expires, the share can be deleted to reclaim
+storage space.</p>
+
+<p>
+When clients no longer care about a file, they are expected to cancel the
+leases on all of its shares. This should occur shortly after that file is
+deleted from their virtual drive. Because the vdrive graph could contain
+multiple references to any given file, the actual process involves
+constructing a manifest of all files on a periodic basis, and looking for
+changes to that manifest. If a client deletes a whole directory, the next
+manifest will be missing many files (as well as the directory itself), and
+the client will need to cancel many leases.
+</p>
+
+<p>
+If the grid uses expiring leases, then those leases that are still needed
+must be renewed on a periodic basis. In this mode, the client performs lease
+renewal on its current manifest perhaps once a week. Expiring leases insure
+that space is eventually reclaimed, even if a client fails to explicitly
+cancel a lease.
+</p>
+
+<h2>File Checking/Repair/Verify</h2>
+
+<p>Once a file has been uploaded to a Tahoe grid, it is expected to stay
+there until the last client cancels its lease. However, hard drives are
+fallible, with current drives advertising an average lifetime (MTBF: Mean
+Time Between Failure) of about 40,000 hours, or approximately 4.5 years. In
+addition, machines come and go over time: storage servers may be rebooted or
+taken offline for maintenance, friendnet machines may leave the grid and
+never come back.</p>
+
+<p>We can draw a distinction between availability problems (caused by
+machines that are temporarily offline but which are likely to return) and
+reliability problems (caused by permanent failures: disk failures, servers
+which leave and never come back). It may not be possible for the client to
+tell the difference, but we can model the probabilities of each one
+separately and add up the results.</p>
+
+<p>
+We define the "health" of a file as the number of outstanding shares that can
+be found on distinct servers. This value will be at a maximum just after it
+is uploaded, but will slowly drop towards zero over time, as shares disappear
+from the grid. This is a probabilistic drop (i.e. the health is a random
+variable), with an expected value that decays exponentially over time. When
+the number of available shares drops below the number of required shares, the
+file will be irretrievable. With professionally-managed storage servers, a 4
+year drive MTBF, and 3-of-10 encoding, we can expect a failure rate (for any
+given file) of about .2 shares per month, leading (on average) to file loss
+after 8/.2 = 40 months.
+</p>
+
+<p>
+The goal of "repair" is to make sure this does not happen, or more
+specifically to reduce the chance of file loss to some acceptably small
+value. We cannot completely rule out the possibility of file loss (since
+there is always a slight chance of all the storage servers failing
+simultaneously), but we can reduce it to arbitrarily low values as long as
+we're willing to pay the storage and bandwidth costs. Note that another way
+to quantify the reliability of file retrieval is to calculate the MTBF of any
+given file, and to make sure that it is so high (thousands of years) that the
+chances of losing even one file out of millions is acceptably low.
+</p>
+
+<p>
+To repair the file, some client merely needs to download the ciphertext and
+re-upload it: the client does not need to be able to read the plaintext. This
+means that the repair function can be delegated to someone who doesn't get
+read access, if the original uploader isn't able to do it themselves. For
+example, the original user uploads some files, then goes on vacation for five
+years and leaves their computer turned off that whole time. This user would
+need to find another client willing to repair its files until they get back:
+they could pass their manifest of repair-caps (basically the same as
+verify-caps) to the repairer to check on during their absence. In a
+commercial Tahoe grid, the repairer might be run by the service provider on
+behalf of all their customers.
+</p>
+
+<p>
+To avoid losing data in the long run, the overall repair rate must equal the
+share loss rate. If a petabyte grid has 1000 1TB drives, each with an MTBF of
+40000 hours, then we can expect to lose one drive every 40 hours, which
+represents a rate of 7 megabytes per second. The repair process must create
+new shares at this same rate to keep up.
+</p>
+
+<p>The big question is when to perform this repair. To minimize bandwidth
+usage, repair should be done at the last possible moment: just before the
+last vital share goes away (i.e. when the health of the file drops to k-1).
+On the other hand, to minimize the probability of file loss, the repair
+should be done as soon as possible: when we lose the very first share (i.e.
+at N-1). Clearly, we must choose some compromise point between these
+extremes.</p>
+
+<p>One approach is to define a "check frequency" and a "repair threshold". A
+monthly check frequency means that once each month, somebody performs a "file
+check" for each file: the client simply queries the appropriate servers and
+counts the number of existing shares. If that count is below the repair
+threshold, the client initiates a repair operation for that file (or notifies
+a separate repair agent). The cost of this approach depends upon the number
+of files, the check frequency, and the repair threshold. We expect it should
+be appropriate for small grids, but the load may be unacceptably high for
+larger commercial grids.</p>
+
+<p>
+A different approach is to pay attention to the storage servers instead of
+the files. If we are informed when a storage server fails, and if we can get
+a list of storage index values for all the shares that used to be on that
+server, then we can trigger repair of just the files that need it. We are
+investigating ways to reliably maintain a table of which shares are on which
+servers (a large but not insurmountable database problem). If the table is
+constructed to allow efficient counting of how many shares are available for
+each file, repair can be delayed beyond the first share loss (using a repair
+threshold), reducing the repair costs. With this approach, there is no
+filechecking. The table would not necessarily have to be centralized: each
+server could have a set of "buddy servers" to which they report their share
+lists. Once the buddy determines that the server has failed, the buddy could
+be responsible for informing a repair process of the list of files that now
+need repair.
+</p>
+
+<p>Another question is <b>where</b> to perform the repair. Note that each
+repair operation requires one full download plus an upload of each missing
+share (each of which requires 1/N of the normal upload bandwidth). For a
+commercial grid, in which the storage servers live in a colocation facility,
+repair will be cheapest when performed by a machine in the same colo (and
+therefore have fast cheap bandwidth to the servers). High-availability grids
+that are split between multiple colos will want to keep repair confined to a
+single colo. This suggests that each site should have k+1 shares, allowing
+single-failure-triggered repair to remain in-colo, and only requiring
+expensive inter-colo bandwidth to be used when multiple servers in a single
+colo fail at the same time.</p>
+
+<p>
+A stronger form of checking is called "File Verification", which downloads
+the ciphertext and validates the hashes. This will detect disk errors that
+somehow slip past the hard drive's built-in integrity checking, or
+buggy/malicious storage servers which have corrupted the shares. The most
+intensive form of verification would download every share and validate every
+byte. Tahoe does not currently perform this kind of check, but provisions
+will be made to allow the user to initiate such a check whenever they like.
+This check would be most useful in an environment where storage servers are
+not trusted to honor the leases they have agreed to. For more details about
+this sort of environment, see the section on "P2P" below.
+</p>
+
+
+<h2>Storage Authority / Quotas</h2>
+
+<p>
+Each storage server offers a limited amount of disk space to the world.
+Leases are accepted until this (configurable) limit is reached, then leases
+are rejected until some shares are deleted to free up space. This protects
+the storage server from disk exhaustion, and allows its admin to decide how
+much space they want to dedicate to the Tahoe grid.
+</p>
+
+<p>On the other hand, limiting per-user storage consumption is a larger
+topic, and one that is still very much under research. The current release
+makes no attempt to enforce quotas: there is no way for an admin to declare
+that they want to allow Alice to use 5GB but no more, and that Bob should get
+10GB.</p>
+
+<p>The current plan is to have each user create a DSA public/private
+keypair, and then have an "Account Server" which produces "membership cards",
+basically a signed certificate that states something like "DSA key #123
+(owned by 'Alice', account #4) is a member in good standing until date
+4/1/2008". The storage servers will then be configured with the Account
+Server's public key. The first time a client contacts a server, it presents
+its current membership card along with a signed request for service, and the
+server checks the contents and the signatures. If valid, the server gives the
+client a shared secret that can be used for later storage requests: the
+leases created in these requests will be marked with the user's account
+number.</p>
+
+<p> Then, by enumerating the leases marked with account #4, the storage
+server can determine that Alice is currently using 4.9GB, and a request for a
+2GB lease should be turned down. For a centrally-managed grid, the storage
+servers can report this lease-ownership data to a central accounting facility
+on a periodic basis, enabling the creation of a report that shows the
+full-grid usage per customer. The accounting facility can then bill customers
+appropriately. Our current expectation is to have the client software track
+its own total usage and refrain from going over the quota, using random
+server-side audits to enforce the quota policy.</p>
+
+<p>Note that the repair process needs to be aware of these per-account leases
+too. When a server is lost and replacement shares are created on new servers,
+those shares eventually need to acquire replacement leases too. This may
+require giving the repair agent the authority to create leases on behalf of
+other users. Another approach is to have the repair agent create leases under
+its own authority, then eventually transfer those leases back to the original
+client (when it comes back online). In the meantime, the repair agent can
+remember which leases it is holding on behalf of which client, so that the
+associated storage can be accounted properly.</p>
+
+<h2>Upload Helper</h2>
+
+<p>Tahoe achieves high reliability by expanding the data into shares which,
+in combination, are larger than the original file by an expansion factor N/k.
+This means that uploads will push more data than downloads, typically 3x more
+(for the default 3-of-10 encoding). It is unfortunate that most home internet
+connections (ADSL or cable modem) are highly asymmetrical, offering upload
+speeds that are 8x-10x slower than their download speeds. For Tahoe, these
+two slowdowns are in the same direction, meaning that an unassisted Tahoe
+upload might be 30x slower than a download of the same file.</p>
+
+<p>
+One way to mitigate this effect is to use an "Upload Helper". This is a
+service, run on a node in some convenient location, which performs encoding
+on behalf of its clients. Files are still encrypted on the original computer
+(so the helper does not get to see plaintext), but the resulting ciphertext
+is sent to the Helper, which then encodes it into shares and sends the shares
+to the storage servers.
+</p>
+
+<p>
+This will allow the client to perform a 1x upload (sending the same amount of
+data as the original file), as opposed to the 3x upload that would result if
+the client had to send all N shares. If the bandwidth from the helper to the
+servers is high enough, the transfer of shares to the servers will complete
+in less time than the ciphertext transfer, and the overall process will be
+faster than an unassisted upload. For a commercial grid, the helper can be
+located in the same colo as the storage servers, giving them extremely high
+bandwidth, typically several megabytes per second.
+</p>
+
+<p>
+In addition, the helper is in a good position to perform a pre-check to see
+if a given file is already present in the grid before the client spends the
+upload bandwidth. Clients must perform local hashing to compute the
+encryption key and the storage index, but then they ask the helper if the
+storage index is already present, and skip the upload if so. This
+"de-duplication" feature can allow clients to avoid redundant uploads of
+common files that have previously been uploaded by some other user.
+Convergence is necessary to take advantage of this feature, otherwise two
+separate uploads of the same file will not be comparable.
+</p>
+
+<p>
+Finally, the helper can accumulate the ciphertext on disk before beginning
+the upload. This is a great help for the unfortunate client that gets
+interrupted halfway through an upload: when it tries the upload a second
+time, it will learn that half the ciphertext is already present on the
+helper, and it only has to transfer the remaining data, thus salvaging the
+previous upload progress. Convergence (or some other way to make one upload
+of a given file achieve the same storage index as a later one) is required to
+take advantage of this feature.
+</p>
+
+<h2>P2P</h2>
+
+<p>
+Tahoe has been specifically designed to work well in both friend-net and
+commercial-grid use-cases. The friend-net case (in which a group of friends
+all run storage servers for each other, and each also runs a client to push
+their own files into this grid) is a "peer to peer" scenario, in which no
+node is more special than any others. In contrast, a commercial grid will
+typically have storage servers in colo that do not run clients, while
+customer machines will run clients but not provide storage service.
+</p>
+
+<p>
+The main advantage of using P2P technology is to increase reliability and
+lower costs. Each point of centralization is also a point of failure. No
+Tahoe storage server is special: any k shares will do, and any component of a
+tahoe grid can fail without causing data loss. Storage servers are expected
+to fail at a certain rate, repair processes are not time-critical, and we are
+working to replace the centralized introducer with a distributed form.
+Distributed services are also easier to scale up to higher traffic levels
+than centralized ones.
+</p>
+
+<p>Through erasure coding, it is possible to obtain extremely high reliability
+ with modest expansion factors. Most home computers have a lot of unused hard
+drive space, so it is usually a good bargain to trade some of that space for
+the service of getting reliable storage on the rest of a friend-net grid.</p>
+
+<p>In addition, the download code will retrieve multiple shares in parallel
+('k' at a time), so it may be possible to get better utilization of the
+available download bandwidth than a simple single-copy remote transfer would
+achieve. On a home ADSL line, the download speed is typically 8x faster than
+the upload speed. If the members of a friendnet all have identical DSL lines,
+and 'k' is at least 8, then the download code will pull from enough servers
+to saturate the download link. This property is sometimes known as a
+"swarming download", but note that, unlike BitTorrent, Tahoe does not use
+downloading clients to push data towards other downloading clients.</p>
+
+<p>On the other hand, the expansion factor (N/k) is causing a slowdown in the
+already-slow upload direction: with 3-of-10, a Tahoe upload may be 30x slower
+than a download. If speed is a higher priority than reliability, 9-of-10 will
+allow uploads to be almost as fast as a simple remote copy, and still exploit
+download parallelism. Another possibility is to set up a Helper (see above)
+on some machine with good upstream bandwidth (perhaps in a colo facility),
+which would remove the expansion-factor penalty.</p>
+
+
+<p>Tahoe (and allmydata.com) is a distant relative of the Mojo Nation project
+<a href="#MOJO">[MOJO]</a>, which used economic incentives to encourage
+participants to provide storage space to each other. Systems like that are
+designed to tolerate cheating, in which a node might pretend to hold a share,
+but would in fact throw it away. In Mojo Nation (and Mnet which followed it),
+credits were exchanged at both upload and download time, so if a server
+couldn't actually cough up the share on demand, clients would stop using it,
+resulting in a loss of revenue, and thus creating an incentive for the server
+to act honestly and honor their promises.</p>
+
+<p>
+Tahoe has no such features at this time. Clients assume that shares which
+have been accepted by a storage server will be retained and retrieveable
+until the lease is cancelled or expires, or until the server fails. Therefore
+cheating is equivalent to server failure. More importantly, Tahoe clients
+choose servers purely on the basis of their nodeids (and the Tahoe2
+peer-selection algorithm), and do not compute or use any notion of
+"reliability", so even if the client could detect that a given server had a
+poor track record of returning stored data, it would have no way to avoid
+using that server again in the future.
+</p>
+
+<h2>Front Ends</h2>
+
+<h3>Web Server</h3>
+
+<p>
+Each Tahoe node can run a web server through which both humans and programs
+can manipulate the virtual drive. The human-oriented interface (known as the
+Web User Interface: "WUI") displays each directory on a separate page, with
+forms to upload, buttons to delete, and hyperlinks to download. The interface
+is functional but not particularly pretty, being oriented towards engineers
+and Tahoe developers more than customers.
+</p>
+
+<p>This same web server offers a machine-oriented RESTful interface, in
+which PUT is used for upload, GET is used for download, and DELETE is used
+for delete. This well-defined Web API ("WAPI") interface can be used by
+programs (using simple httplib calls) to work with the virtual drive.</p>
+
+<p>In both modes, the HTTP client starts by passing in a directory read- or
+write- cap. There are no login passwords or cookies. However convenient it
+might be, if the web server were to remember any secrets for you, it would
+become vulnerable to CSRF attacks. By requiring that the client provide the
+access authority in the URL, these attacks are blocked. It also enables
+simple and intuitive use of browser bookmarks to retain pointers to various
+files and directories. Users can share access to any page by merely copying
+the current URL from the address bar and mailing it to their friend.</p>
+
+<p>
+The web server also provides some diagnostic information on the current state
+of the grid, and timing/progess data on recent uploads and downloads.
+</p>
+
+<h3>CLI</h3>
+
+<p>
+A primitive command-line tool is distributed with Tahoe, named "tahoe", and
+provides basic 'ls', 'put', and 'get' functionality. This tool uses a private
+"root.cap" file on disk as a starting point.
+</p>
+
+<h3>FUSE plugin</h3>
+
+<p>There are several FUSE plugins available, for various platforms: a
+WinFUSE one (which, despite the name, uses SMB), and an OS-X/Linux one. These
+make the Tahoe virtual drive visible to regular programs, allowing them to
+read and write arbitrary files. This enables a large class of applications to
+take advantage of Tahoe, but is not without its pitfalls. There are several
+impedance mismatches between the filesystem provided by Tahoe and the one
+that most POSIX-oriented programs expect. So far, immutable files and
+edge-based metadata have been the two sticking points. Several filesystem
+features that we think of as optional are less so, for example the Macintosh
+OS-X Finder will refuse to update a directory view unless its mtime has been
+advanced. Tahoe stores mtime as edge-metadata in the parent dirnode, rather
+than as node-metadata on the child dirnode, making it difficult to update the
+mtime consistently and correctly.</p>
+
+<p>
+Many applications do not tolerate the close() call taking a significant
+amount of time: some Windows applications appear to use 30-60 second timeouts
+and declare a failure if close() does not return within this time. Of these
+applications, the ones that work with (relatively slow) network filesystems
+at all seem to expect the delays to occur inside the write() calls rather
+than in close(). Since Tahoe stores most data as immutable files (and
+convergence is the default), it is difficult to push the correct data over a
+slow link before having all the data available. Several tradeoffs must be
+made. Finding a clean "impedance match" between Tahoe's concept of a
+filesystem and that of POSIX is a continuing effort.
+</p>
+
+
+<h2>Reliability Modeling</h2>
+
+<p>
+Tahoe's primary goal is to provide safe, reliable storage of data. This comes
+at a cost: redundant shares and periodic repair. There is a tradeoff between
+cost and reliability: more redundancy means more hard drives and more
+servers, but will reduce the chances of file loss. If we could model the
+relationship between these two quantities, we could make an educated
+decision between the costs and the benefits.
+</p>
+
+<p>
+Full analysis of the Tahoe reliability model is well beyond the scope of this
+paper, but we can attempt to provide an initial sketch here. There are two
+metrics to pay attention to: availability and reliability.
+</p>
+
+<p>Availability is the chance that a given file can be downloaded right now.
+Reliability is the chance that a given file can be downloaded at some point
+in the future. When a server is offline for a few minutes while it reboots,
+that affects availability. When a hard drive has a head crash and all the
+shares on it are lost forever, that affects reliability.</p>
+
+<p>In truth, these are both special cases of the same function. The general
+form is expressed as follows. At time t=0, we finish uploading a given file.
+At some time in the future t=T, we decide that we want to download it. We are
+willing to wait until t=T+A to get the file. What is the probability that we
+will be able to get the file? This probability is a function of both T and A
+(as well as the encoding parameters and the availability/failure behavior of
+all servers). Let us call it Pfile(T,A). Now the "availability" is what we
+call this function when A is small: Pfile(T,0). The "reliability" is what we
+call it when A is large: Pfile(T,infinity).</p>
+
+<p>We model servers as being available Pa of the time. For example, a cheap
+linux box in a colo facility with reliable power can easily achieve 99.9%
+uptime, which allows 9 hours per year for upgrades and hardware replacements.
+99.7% uptime is achievable without requiring operations personnel to wear a
+pager. We model hard drives as having some well-characterized failure
+behavior, for example a Poisson process with rate = 1/40000 hours. We make
+the assumption that hard drives are 100% available until they fail forever,
+and that all servers are replaceable (by moving the drives to a different
+chassis if necessary), so server failure can be expressed as downtime.</p>
+
+<p>
+Note that to achieve the metrics predicted by these models, operations must
+be careful to avoid correlated failures. For example, the rack full of
+99.9%-available servers must not all be rebooted at the same time. Likewise,
+hard drives are frequently killed by power surges and thermal damage, which
+can affect neighboring drives simultaneously.
+</p>
+
+<p>
+For large grids, we expect Tahoe storage servers to consist of large numbers
+of 1U or 2U rack-mounted machines in a colo facility: this means 4 or 8
+drives per server. We assume that this ratio is low enough that we can
+neglect the chance that multiple shares for the same file will wind up on the
+same server (but on different drives). Once the total number of servers is
+high enough, this is a fairly reasonable assumption.
+</p>
+
+<h3>Availability</h3>
+
+<p>Without too much loss of accuracy, we can examine availability and
+reliability separately. Availability is easier, and is only influenced by
+server availability (and encoding parameters). 3-of-10 encoding means that
+there are 10 servers of interest, and that we can retrieve the file if at
+least 3 of them are available. This is a textbook case of the well-known
+"binomial distribution function", specifically the "upper tail" of that
+function (UTBF according to my HP calculator), which is a function of k, N,
+and Pa. It is defined as the sum of the chance that all 10 servers are
+available, plus the chance that there are exactly 9 servers available, plus 8
+servers, etc, down to the chance that there are 3 servers available. The
+corresponding chance of failure is the "lower tail" (LTBF), specifically the
+chance that there are exactly 0, 1, or 2 servers available.</p>
+
+<p>
+When Pa=50% this looks like the area under the right-hand side of the normal
+Bell curve (with a dividing line drawn at 0.3 instead of 0.5). But when Pa is
+close to 100%, this curve is drastically skewed towards the right, and the
+probability of success is close to 100% as well. To maintain numerical
+accuracy, we use two techniques. The first is to pay attention to the
+probability of failure rather than the probability of success, and the other
+is to use an approximation in the binomial distribution equation.
+</p>
+
+<p>
+To this end we use a metric adapted from the electrical engineering world:
+the decibel (dB). The "Bel" is a logarithmic scale, and a "deciBel" is one
+tenth of a Bel. So in EE terms, 0 dBW is 1.0 watts, 10 dBW is 10 watts, 20
+dBW is 100 watts, and 30 dBW is a kilowatt. 5 dBW is sqrt(10) = 3.3 watts. 3
+dBW is about 2 watts. -10 dBW is 0.1 watts, -20 dBW is 10 milliwatts, and -30
+dBW is 1 milliwatt.
+</p>
+
+<p>
+Using this concept, we define a metric named "dBA", which measures decibels
+of availability. We also define its opposite, a "dBF" (which measures
+failure).
+</p>
+
+<table border="1">
+ <tr><td> 100% failure  </td><td>   0 dBF </td><td>  0 dBA </td><td> 0% success</td></tr>
+ <tr><td> 10% failure   </td><td> -10 dBF </td><td> 10 dBA </td><td> 90% success</td></tr>
+ <tr><td> 1% failure    </td><td> -20 dBF </td><td> 20 dBA </td><td> 99% success</td></tr>
+ <tr><td> .1% failure   </td><td> -30 dBF </td><td> 30 dBA </td><td> 99.9% success ("three nines")</td></tr>
+ <tr><td> .01% failure  </td><td> -40 dBF </td><td> 40 dBA </td><td> 99.99% success ("four nines")</td></tr>
+ <tr><td> .001% failure </td><td> -50 dBF </td><td> 50 dBA </td><td> 99.999% success ("five nines")</td></tr>
+</table>
+
+<p>
+We use this for the same reason EEs use it: it makes it easy to convert
+multiplication into addition, and exponentiation into multiplication. This
+turns out to simplify many of the equations. In addition, it makes it easier
+to retain numerical accuracy when dealing with numbers that are very close to
+1.0.
+</p>
+
+<p>
+The second techique we use is to observe that the LTBF area (when P is close
+to 100%) is dominated by the N=k-1 sample. That is, for our 3-of-10 case, the
+chance that there are exactly 2 servers available is so much higher than the
+chance of having exactly 1 server available, that for engineering purposes
+(i.e. within an order of magnitude) we can ignore the N=1 (and N=0) cases.
+</p>
+
+<p>Through these approximations, we observe that 3-of-10 encoding with
+servers that are available 90% of the time results in 64 dBA, meaning that
+the chance that there will be fewer than three servers available is less than
+one in a million. With 99%-available servers, the number climbs to 144 dBA,
+which is one in 10e14. And with 99.9%-available servers, we get 224 dBA,
+which is one in 10e22. Clearly, redundancy is a valuable technique for
+achieving extremely high availability.</p>
+
+<p>
+The approximation to pay attention to is the number of servers we must lose
+before the file cannot be retrieved: N-k+1. There must be this many
+simultaneous offline servers, and the probability of each being offline is
+very low (P=10%, 1%, or 0.1% in our example). Each additional server whose
+loss we can tolerate reduces our unavailability probability by another factor
+of P. In dBA terms, the file-availability "dBAfile" equals
+(N-k+1)*dBAserver+B, where B is a function of N and k (specifically "N choose
+k-1"). So the availability of a single server is magnified by the number of
+servers that we can lose due to encoding.
+</p>
+
+<p>Note that this analysis considers high-availability servers and large
+expansion ratios. If we consider either low-availability servers (50% or
+less), or low expansion ratios (i.e. 8-of-10, which only expands the data by
+25%), the story is very different. With no expansion (i.e. 10-of-10), the
+file availability is drastically <b>lower</b> than the individual server
+availability, because you are depending upon all 10 servers to be available
+at the same time. Low-availability servers are difficult to distinguish from
+failed servers, raising the possibility that the system may spend more
+bandwidth doing repair than on actual user traffic <a
+href="#BLAKE">[BLAKE]</a>.</p>
+
+<p>Also note that this analysis only covers server hardware failure. Once
+enough redundancy has been used to remove the threat of hardware failure,
+other problems become visible. The most likely remaining one is software
+failure: since all server nodes are likely to be running the same code, a bug
+in that release will affect all of them. Client-side problems will also
+prevent a client from getting access to their files. The goal of erasure
+coding and redundancy is to survive the failure mode that we have the least
+control over (hardware failure), leaving us responsible for the failure modes
+that we have more control over (software engineering practices). It is not
+appropriate to calculate an availability of 224 dBA and then assume that the
+system really is that robust, but it gives us confidence that when a problem
+<b>does</b> happen, it won't be the result of a disk crash.</p>
+
+<h3>Reliability</h3>
+
+<p>Reliability (the chance that a file will be available at some point in
+the future) is a far more complicated analysis task. Simply modelling the
+failure characteristics of a single hard drive is a difficult and
+poorly-understood field of study <a href="#GOOGLE-DISK">[GOOGLE-DISK]</a>.
+The best we can do here is to describe the general direction that our
+analysis is heading.</p>
+
+<p>
+We start with some sort of failure pattern for hard drives, the ever-popular
+useful fiction: a poission process. Hard drives are assumed to fail randomly
+as some specified rate, once per MTBF. We assume all drive failures are
+independent and that each share is on a different drive. The number of
+surviving shares for any particular file will decay over time in a roughly
+exponential shape. By modelling this shape, we can derive some probability
+distribution for the number of surviving shares at any given point in time.
+</p>
+
+<p>
+We will have some sort of repair process: either triggered by file checking
+(run periodically), or by the loss of a server. In both cases we assume that
+the repair is only triggered when the health drops below some threshold R, so
+there is some time A at which the health is just at the threshold, some
+intermediate point when we decide to initiate a repair, and some later time B
+when the repair process has successfully downloaded a copy of the ciphertext
+and can now survive the loss of the remaining shares. If the file loses R-k+1
+shares between time A and time B, then we've lost the file. This is the
+probability we are interested in.
+</p>
+
+<p>
+We might assume that the repair load is low enough to allow effectively
+instantaneous repairs. In that case, a grid which uses periodic file-checking
+is mostly affected by the rate of file-checking: checking faster uses more
+network bandwidth, but checking slower increases the chance of file loss.
+Raising the repair threshold increases the rate of repair (costing bandwidth
+and CPU), but lowering it increases the chance of file loss. For grids that
+use a centralized tracking of which shares are present on each server, the
+periodic filecheck poll is replaced by a server-loss interrupt, reducing the
+critical interval. Grids which are willing to implement this kind of
+centralization may be able to afford lower repair thresholds and achieve the
+same level of reliability.
+</p>
+
+<h2>Future Work</h2>
+
+<p>The Tahoe project is still in its infancy: most of the code is about 6
+months old, and changes are occurring rapidly. There are several features
+currently in active development, and many others looming on the horizon.</p>
+
+<h3>DSA-based mutable files and directories</h3>
+
+<p>The current RSA-based mutable files require large primes that take several
+seconds to generate, limiting the rate at which new directories can be
+created. The keys are too large to fit in the URI, so they must be pushed out
+to the share, requiring multiple round-trips to get them down to the client,
+which slows down both reads and writes.</p>
+
+<p>We have a design in place (ticket <a
+href="http://allmydata.org/trac/tahoe/ticket/217">#217</a>) for DSA-based
+mutable files using a system-wide shared modulus, which would allow very fast
+directory creation, and make the private key small enough to fit inside the
+write-cap. In addition, the write-caps will be smaller, making the containing
+dirnodes smaller and faster to manipulate.</p>
+
+<p>
+We plan to update the write-cap format at the same time to make these strings
+short enough to fit in a 72-column email without line-wrapping, and to avoid
+word-breaking characters that tend to cause cut-and-paste errors.
+</p>
+
+<h3>Chord-based Peer Selection</h3>
+
+<p>Once the number of storage servers becomes large, the need for clients to
+talk to many (perhaps all) of them becomes a burden. There are alternate
+network topologies that scale better: one well-known approach is known as
+Chord <a href="#CHORD">[CHORD]</a>, in which the number of connections grows
+logarithmically with the number of nodes rather than linearly. Our general
+idea is to use the Chord network to send a bundle of lease requests to the
+target area, then have the target nodes send the individual requests to their
+immediate neighbors as necessary. Each accepted lease request causes the
+server to contact the uploading client directly, and share data is sent over
+a direct TCP connection between the two.</p>
+
+<h3>Network-Aware Share Placement</h3>
+
+<p>
+The Tahoe2 peer-selection algorithm is designed to provide uniform load
+distribution, but there are other desirable properties we could design for.
+Servers may be distributed in user's homes, in a colo facility, on employee
+desktops, etc, and some are closer to clients than others. For download
+speed, it would be fastest to have a full set of 'k' shares resident on a
+server on the same LAN as the likely clients. The download-time
+peer-selection algorithm could preferentially choose close or fast servers,
+using the others only when necessary. A corporate grid designed this way
+could put one full set of shares on-site for speed, and use off-site servers
+just to improve reliability.
+</p>
+
+<p>For data that is expected to survive for years, repair is inevitable.
+Repairing files costs bandwidth, since it needs both a full download and a
+partial upload. But not all bandwidth costs the same: local gigabit ethernet
+within a single rack or machine room is quite common, whereas even 10 megabit
+symmetric bandwidth to a house or office is prohibitively expensive. Local
+repair will be far cheaper than a repair that must push the data a long
+distance. To this end, we could place k+1 shares in each colo, allowing
+single-disk failures to be repaired entirely locally, and using multiple
+colos to tolerate multiple-disk failures and site-wide disasters (i.e. a
+flood that takes out the whole facility).</p>
+
+<p>
+To obtain these properties, we will need to modify the upload-time peer
+selection algorithm to place shares according to our new goals. Instead of
+using a hash-based permutation, we could simply interleave the servers into a
+useful order (colo1-hostA, colo2-hostB, colo1-hostC, colo2-hostD, etc), and
+then use a SI-based starting index. Achieving load distribution requires
+additional effort, but is not infeasible.
+</p>
+
+<h2>Conclusion</h2>
+
+<p>The Tahoe project, while still under development, provides a useful system
+for safely backing up important files. Distributed storage and cryptographic
+techniques provide protection against prying eyes, data corruption, and
+machine failure. Tahoe grids are easy to set up and have been specifically
+designed to be useful for both small friend-nets and large commercial
+deployments.</p>
+
+<h2>References</h2>
+
+<ul>
+  <li><a name="BLAKE"/>[BLAKE]: <a href="http://www.usenix.org/events/hotos03/tech/blake.html">http://www.usenix.org/events/hotos03/tech/blake.html</a></li>
+  <li><a name="CHORD"/>[CHORD]: <a href="http://pdos.csail.mit.edu/chord/">http://pdos.csail.mit.edu/chord/</a></li>
+  <li><a name="CRYPTO++"/>[CRYPTO++]: <a href="http://www.cryptopp.com">http://www.cryptopp.com</a></li>
+  <li><a name="FOOLSCAP"/>[FOOLSCAP]: <a href="http://foolscap.lothar.com/">http://foolscap.lothar.com/trac</a></li>
+  <li><a name="FREENET-CHK"/>[FREENET-CHK]: <a href="http://wiki.freenetproject.org/FreenetCHKPages">http://wiki.freenetproject.org/FreenetCHKPages</a></li>
+  <li><a name="FREENET-SSK"/>[FREENET-SSK]: <a href="http://wiki.freenetproject.org/FreenetSSKPages">http://wiki.freenetproject.org/FreenetSSKPages</a></li>
+  <li><a name="GOOGLE-DISK"/>[GOOGLE-DISK]: <a href="http://research.google.com/archive/disk_failures.pdf">http://research.google.com/archive/disk_failures.pdf </a></li>
+  <li><a name="MOJO"/>[MOJO]: <a href="http://sourceforge.net/projects/mojonation/">http://sourceforge.net/projects/mojonation/</a></li>
+  <li><a name="NEVOW"/>[NEVOW]: <a href="http://divmod.org/trac/wiki/DivmodNevow">http://divmod.org/trac/wiki/DivmodNevow</a></li>
+  <li><a name="PYCRYPTOPP"/>[PYCRYPTOPP]: <a href="http://allmydata.org/source/pycryptopp/">http://allmydata.org/source/pycryptopp/</a></li>
+  <li><a name="RIZZO"/>[RIZZO]: <a href="http://info.iet.unipi.it/~luigi/fec.html">http://info.iet.unipi.it/~luigi/fec.html</a></li>
+  <li><a name="TWISTED"/>[TWISTED]: <a href="http://twistedmatrix.com/">http://twistedmatrix.com/</a></li>
+  <li><a name="ZFEC"/>[ZFEC]: <a href="http://allmydata.org/source/zfec">http://allmydata.org/source/zfec</a></li>
+</ul>
+
+<!-- hhmts start -->Last modified: Sat Mar  1 18:28:35 PST 2008 <!-- hhmts end -->
+
+</body>
+</html>
