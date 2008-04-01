@@ -1,0 +1,258 @@
+ 
+	  
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+      
+      <link rel="stylesheet" type="text/css" href="http://www.sics.se/~adam/pt/style.css">
+      <title>Protothreads - Lightweight, Stackless Threads in C</title>
+    </head>
+<body bgcolor="#f2f2f2" text="black">
+<div id="header">
+  <span class="sitename">
+  <a href="http://www.sics.se/~adam/pt/">Protothreads - Lightweight, Stackless Threads in C</a>
+  </span><br>
+  <span class="siteurl"><a href="http://www.sics.se/~adam/pt/">http://www.sics.se/~adam/pt/</a></span>
+  
+</div>
+<div id="container">
+<table border="0" cellpadding="8" cellspacing="0"><tr>
+<td width="150" bgcolor="#f2f2f2" valign="top">
+      
+      <div class="menu">	
+      <p class="border-title">Menu</p>
+      <p class="menu">
+      
+   
+<b>Protothreads</b>
+<br>
+   
+<a href="http://www.sics.se/~adam/pt/about.html">About</a>
+<br>
+   
+<a href="http://www.sics.se/~adam/pt/download.html">Download</a>
+<br>
+ 
+   
+<a href="http://www.sics.se/~adam/pt/api.html">API</a>
+<br>
+   
+<a href="http://www.sics.se/~adam/pt/expansion.html">Under the hood</a>
+<br>
+   
+<a href="http://www.sics.se/~adam/pt/examples.html">Examples</a>
+<br>
+   
+<a href="http://www.sics.se/~adam/pt/publications.html">Publications and documentation</a>
+<br>
+   
+<a href="http://www.sics.se/~adam/pt/talks.html">Presentations</a>
+<br>
+   
+<a href="http://www.sics.se/~adam/pt/changelog.html">Changelog</a>
+<br>
+      
+   
+<a href="http://www.sics.se/~adam/pt/news.html">News archive</a>
+<br>
+   
+<a href="http://www.sics.se/~adam/pt/license.html">License</a>
+<br>
+   
+   
+<a href="http://www.sics.se/~adam/pt/links.html">Links</a>
+<br>
+      
+      </p>
+      </div> 
+     
+      
+      <div class="menu">	
+      <p class="border-title">Related sites</p>
+      <p class="related">
+      <a href="http://www.sics.se/contiki/"><b>Contiki</b></a><br>
+<font size="-2">The Contiki OS uses protothreads</font>
+<br><br>
+<a href="http://www.sics.se/~adam/uip/"><b>uIP</b></a><br>
+<font size="-2">The uIP embedded TCP/IP stack uses protothreads</font>
+<br><br>
+      </p>
+      </div>
+      
+	
+	
+</td>
+<td width="560" bgcolor="white" valign="top">
+    
+      <p class="intro">Protothreads are extremely lightweight stackless
+threads designed for severely memory constrained systems, such as
+small embedded systems or wireless sensor network nodes. Protothreads
+provide linear code execution for event-driven systems implemented in
+C. Protothreads can be used with or without an underlying operating
+system to provide blocking event-handlers. Protothreads provide
+sequential flow of control without complex state machines or full
+multi-threading.
+</p>
+<div class="rfig">
+<pre>
+#include "pt.h"
+ 
+struct pt pt;
+struct timer timer;
+ 
+PT_THREAD(example(struct pt *pt))
+{
+  PT_BEGIN(pt);
+ 
+  while(1) {
+    if(initiate_io()) {
+      timer_start(&timer);
+      PT_WAIT_UNTIL(pt,
+         io_completed() ||
+         timer_expired(&timer));
+      read_data();
+    }
+  }
+  PT_END(pt);
+}
+</pre>
+Example protothreads code.
+</div>
+<p>
+While protothreads originally were created for memory-constrained
+embedded systems, it has found many uses as a general purpose library
+too. Examples include multimedia streaming server software, grid
+computing research software, and MPEG decoding software for Internet
+TVs.
+</p>
+<p class="intro"><b><a href="about.html">Read more...</a></b></p>
+<p>
+Main features:
+</p>
+<ul>
+<li>Very small RAM overhead - only two bytes per protothread and no
+extra stacks
+<li>Highly portable - the protothreads library is 100% pure C and no
+architecture specific assembly code
+<li>Can be used with or without an OS
+<li>Provides blocking wait without full multi-threading or
+stack-switching
+<li>Freely available under a BSD-like open source license
+</ul>
+<p>
+Example applications:
+</p>
+<ul>
+<li>Memory constrained systems
+<li>Event-driven protocol stacks
+<li>Small embedded systems
+<li>Sensor network nodes
+<li>Portable C applications
+</ul>
+<p>
+For example usages, see the <a href="examples.html">Examples page</a>.
+</p>
+<p>
+The protothreads library is released under an open source
+<a href="license.html">BSD-style license</a> that freely allows for both
+non-commercial and commercial usage. The only requirement is that
+credit is given. <a href="download.html">Download the full source code
+here</a>.
+</p>
+<p>
+Protothreads were invented by <a href="http://www.sics.se/~adam">Adam Dunkels</a> with support
+from Oliver Schmidt &lt;ol.sc&#64;web.de&gt;.
+</p>
+<p align="left">        
+<font size="-1"><i>
+Last updated: $Date: 2006/10/02 08:09:56 $ (CEST)
+</i></font>
+</p>
+      <p class="mailaddr">
+      <a href="http://www.sics.se/~adam/">Adam Dunkels</a>
+   (<a href="http://www.sics.se/~adam/contact.html">contact</a>)
+      </p>
+</td>
+</td><td width="200" bgcolor="#f2f2f2" valign="top">
+    
+    
+    
+    
+     
+     
+     <div id="right" class="column">
+     <div class="news">
+     <p class="border-title">Latest news</p>
+      <p class="news">
+      <b>2009-12-28</b><br><img
+src="http://www.sics.se/~adam/img/sonicunleashed.jpg"
+align="right">Sonic Unleashed for the Play Station 2 uses protothreads,
+according to the copyright statements in its instruction manual.<br><br>
+<b>2009-07-22</b><br><img
+src="http://www.sics.se/~adam/img/microcontrollers.jpg" align="right">In the book <a
+href="http://www.amazon.com/Microcontrollers-Assembly-Language-Using-Family/dp/1584505834/ref=sr_1_1?ie=UTF8&s=books&qid=1243945128&sr=8-1">Microcontrollers:
+From Assembly Language to C Using the PIC24 Family</a> by Reese,
+Bruce, and Jones, the authors develop a protothread-based operating
+system for the PIC family of microcontrollers.<br><br>
+<b>2009-01-13</b><br>The <a
+href="http://www.ganssle.com/tem/tem172.pdf">January 2009 issue of
+Jack Ganssle's Embedded Musings</a> notes a new
+protothreads implementation, complete with a built-in scheduler: <em>&quot;Larry
+Ruane has developed an open source protothread manager that combines
+eventdriven techniques with threads. Check out <a
+href="http://protothread.wiki.sourceforge.net">http://protothread.wiki.sourceforge.net.</a>&quot;</em>.
+It is a complete reimplementation that uses gcc label addresses and
+has a very nice syntax. Download from <a
+href="http://sourceforge.net/project/showfiles.php?group_id=248874&amp;package_id=304459">the
+projects SourceForge page</a>.'<br><br>
+	
+	
+     
+     </p>
+     </div>
+     
+     
+     
+  
+<div id="twtr-profile-widget" align="left"></div>
+<script src="http://widgets.twimg.com/j/1/widget.js"></script>
+<link href="http://widgets.twimg.com/j/1/widget.css" type="text/css" rel="stylesheet">
+<script>
+new TWTR.Widget({
+  profile: true,
+  id: 'twtr-profile-widget',
+  loop: true,
+  width: 200,
+  height: 400,
+  theme: {
+    shell: {
+      background: '#3082af',
+      color: '#ffffff'
+    },
+    tweets: {
+      background: '#ffffff',
+      color: '#444444',
+      links: '#1985b5'
+    }
+  }
+}).render().setProfile('adunk').start();
+</script>
+     <div class="printable">
+     <p>
+     <a href="http://www.sics.se/~adam/pt/index-print.html">Printable version</a>
+     </p>
+     </div>
+ </div>
+ </td></tr></table>
+ 
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-12080905-3");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
