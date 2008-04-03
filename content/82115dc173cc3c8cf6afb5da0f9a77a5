@@ -1,0 +1,303 @@
+<html>
+  <head>
+    <title>Gozirra</title>
+  </head>
+  <body bgcolor="white">
+    <H1><A HREF='http://www.germane-software.com/software/Gozirra'>Gozirra</A></H1>
+    <H2> 0.4.1 (75) </H2>
+
+    <P>Gozirra is a lightweight implementation of the <A
+    HREF="http://docs.codehaus.org/display/STOMP/Home">Stomp specification</A>.
+    As of the first release it includes both client and server implementations
+    for Java.  The name stinks, and may change.</P> 
+
+    <P>Stomp (previously TTMP) is a simple publish/subscribe messaging 
+    protocol.  Its main attraction, to me at least, is its simplicity and
+    focus.  A Ruby client comes out to 107 lines of code.  The Java server and
+    client of this project fit in a jarball about 14KB large.  You can easily
+    communicate with a Stomp server via telnet, and it provides publish,
+    subscribe, receipts, and transactions.  It is everything you need for a
+    lightweight communication protocol.</P>
+
+    <P>Gozirra is not intended to be a scalable standalone MOM solution.  While
+    it can be run in standalone mode, it is really targetted at being a library
+    for providing embedded messaging to other applications.  If you want a
+    more feature full messaging provider, check out <a 
+      href='http://activemq.codehaus.org/'>ActiveMQ</a>, the reference platform
+    for Stomp.</P>
+
+    <HR>
+    <H2>Getting</H2>
+
+    <P>Sources and binaries can be downloaded from the following links:</P>
+    <UL>
+    <LI><A HREF='/archives/gozirra-0.4.1.tar.gz'>The sources</A></LI>
+    <LI><A HREF='/archives/gozirra-0.4.1.jar'>The binary</A></LI>
+    <LI><A HREF='/archives/gozirra-client-0.4.1.jar'>Only the client binaries</A></LI>
+    <LI><A HREF='/archives/gozirra-server-0.4.1.jar'>Only the server binaries</A></LI>
+    <LI>The <A HREF="/repos/Gozirra">sourcecode repository</A> is a <A 
+    HREF='http://subversion.tigris.org'>Subversion</A> repository.  Here is a
+    <A HREF="/repos/Gozirra/tags/0.4.1">direct link</A> the the tag of this 
+    version.  The development branch is <A HREF="/repos/Gozirra/trunk">here</A>
+    </LI>
+    <LI>The <A HREF="/projects/gozirra">bug database</A>, courtesy of <a
+      href='http://www.edgewall.com/trac/'>Trac</a></LI>
+    </UL>
+
+    <HR>
+    <H2>Building</H2>
+
+    <P>Requires Jakarta Ant.  You build one of: all-jar, server-only-jar, or
+    client-only-jar depending on what you're using it for.</P>
+
+    <UL>
+      <LI> client-only-jar Produces a 8kb stomp-client.jar.  Useful for
+      applications that only want to be able to connect via a network to a Stomp
+      server.</LI>
+      <LI>server-only-jar Produces a 12.5kb stomp-server.jar.  Useful for
+      applications that want to run a server, but don't need the client class.
+      Right now, this doesn't gain you much over the all-jar, but I'll refactor
+      with factories and it'll get a bit smaller in future versions.</LI>
+      <LI>all-jar Produces a 13.5kb stomp.jar.  Contains both the client and
+      server codes.</LI>
+    </UL>
+
+    <HR>
+    <H2>Usage</H2>
+
+    <P>The entry points are the Client and Server classes.  For intra-VM
+    communications, only the Server class is needed, and is used to return a
+    Stomp client.  The Client class is used to connect to servers over the
+    network.  The other class you may use is the Listener interface, which is
+    how clients get Stomp messages delivered.  You shouldn't need to directly
+    access any of the other classes in the package.</P>
+
+    <P> I've purposely kept the API minimal.  </P>
+
+    <H3>Running a server</H3>
+    <PRE>
+  Server s = new Server( 61626 );   // To start it.
+  s.stop();                         // To stop it.  That's it.
+    </PRE>
+    </P>
+
+    <H3>Intra-VM messaging</H3>
+    <P>To deliver messages on the server, get an internal client:
+    <PRE>
+  Stomp local_client = s.getClient();
+  // Deliver some messages:
+  local_client.send( "/log/foo", "Message number one" );
+  // Listen for commands from clients
+  local_client.subscribe( "/command/info", new Listener() {
+    public void message( Map header, String body ) {
+      if (body.equals( "get-info" )) {
+        // Send some message to the clients with info about the server
+      }
+      // ...
+    }
+  } );
+    </PRE>
+    </P>
+
+    <H3>Network clients</H3>
+    <P>To connect to a network server from a client:
+    <PRE>
+  Client c = new Client( "localhost", 61626, "ser", "ser" );
+  c.subscribe( "foo-channel", my_listener );
+  c.subscribe( "foo-channel", other_listener );
+  c.unsubscribe( "foo-channel", other_listener );  // Unsubscribe only one listener
+  c.unsubscribe( "foo-channel" );   // Unsubscribe all listeners
+  c.disconnect();
+    </PRE>
+    </P>
+
+    <H3>Errors</H3>
+    <p>Server errors are delivered as messages to special listeners.  These are
+    attached to the Stomp client with addErrorListene().</p>
+
+    <PRE>
+  c.addErrorListener( new Listener() {
+    public void message( Map header, String message ) {
+      // ...
+    }
+  });
+    </PRE>
+
+    <H3>Receipts</H3>
+    <P>Receipts can be added to any message by passing in a header Map
+    containing a receipt header.</P>
+
+    <PRE>
+  HashMap headers = new HashMap();
+  headers.put( "receipt", "my-receipt-123" );
+  client.send( "channela", "Hello World", headers );
+    </PRE>
+    
+    <P>There are two ways of testing for receipts:</P>
+
+    <H4>hasReceipt()</H4>
+    <P><TT>hasReceipt()</TT> returns true if the client has already received
+    a receipt from the server:</P>
+    <PRE>
+  boolean receipt = client.hasReceipt( "my-receipt-123" )
+    </PRE>
+
+    <H4>waitOnReceipt()</H4>
+
+    <P>There are two blocking methods for waiting for a receipt to come in.
+    The first takes one argument -- the receipt id -- and returns only when it 
+    finds a receipt.  This
+    method has no return value.  The second takes two arguments -- the receipt id
+    and a <TT>long</TT> timeout -- and waits for 
+    that many milliseconds.  This method returns <TT>true</TT> if and only if it 
+    received the receipt within the timeout period.</P>
+    <PRE>
+  // Wait two seconds for the receipt
+  boolean receipt = client.waitOnReceipt( "my-receipt-123", 2000 );
+    </PRE>
+
+    <P>Receipts can be cleared with the Stomp.clearReceipts() method.  Individual
+    receipts can be cleared with the Stomp.clearReceipt() method.</P>
+    <PRE>
+  client.clearReceipt( "my-receipt-123" );  // Clear just one
+  client.clearReceipts();                   // Clear all receipts
+    </PRE>
+
+    <H3>Synchronous communication</H3>
+    <P>Stomp is inherantly asynchronous.  Synchronous communication can be
+    implemented using receipts, and Gozirra provides convenience methods for
+    this.  The synchronous methods are all suffixed with a <TT>W</TT>, for
+    wait, and they do not return until the server has acknowledged the receipt
+    of the message.  Messages sent to the server via these methods either (a) 
+    do not return, (b) throw an InterruptedException, or (c) guarantee 
+    delivery.  The first case occurs if the server never sends a receipt, the
+    second occurs if the client is interrupted while waiting for a receipt,
+    and the third occurs when the client receives delivery confirmation from the
+    server.</P>
+
+    <P>Four methods have synchronous versions: <TT>send</TT>, <TT>subscribe</TT>,
+    <TT>unsubscribe</TT>, and <TT>commit</TT>.</P>
+
+    <PRE>
+  c.sendW( "/destination", "some method" );
+    </PRE>
+
+    <P>There is no synchronous version of unsubcribe( String, Listener ), since
+    this usually occurs on the client side.</P>
+
+    <H3>Transactions</H3>
+    <P>Gozirra implements server-side transactions.  A transaction is a sequence
+    of messages that are cached on a server, and then are either aborted or
+    delivered.  Gozirra transactions are not atomic; that is, the only guarantee
+    is that all of the messages will be on the server and pending delivery
+    until the commit or the abort.  There is no guarantee that all subscribers
+    will receive only either all or none of the messages.</P>
+    <PRE>
+  client.begin();   // Begin the transaction
+  client.send( "c1", "Mess1" );
+  client.send( "c1", "Mess2" );
+  client.send( "c1", "Mess3" );
+  client.send( "c1", "Mess4" );
+  client.commit();  // Now the server delivers the four messages to the clients
+    </PRE>
+
+    <PRE>
+  client.begin();   // Begin the transaction
+  client.send( "c1", "Mess1" );
+  client.send( "c1", "Mess2" );
+  client.send( "c1", "Mess3" );
+  client.send( "c1", "Mess4" );
+  client.abort();  // None of the messages are delivered to any clients
+    </PRE>
+
+    <H3>Authentication</H3>
+    <p>The server can be provided with an authenticating instance that will
+    validate connections, sends, and subscriptions.</p>
+    <PRE>
+  public class AllowAllAuthenticator implements Authenticator {
+    public Object connect( String user, String pass ) throws LoginException {
+      // Send back some token here if the user and pass are Ok; otherwise,
+      // throw an exception.
+    }
+    public boolean authorizeSend( Object token, String channel ) {
+      // If token is allowed to send to channel, return true.
+      // Otherwise, return false.
+    }
+
+    public boolean authorizeSubscribe( Object token, String channel ) {
+      // If token is allowed to subscribe to channel, return true.
+      // Otherwise, return false.
+    }
+  }
+
+  Server s = new Server( port, new AllowAllAuthenticator() );
+    </PRE>
+
+    <P> See the API docs and unit tests for usage information and examples.
+    </P>
+
+
+    <HR>
+    <H2>To do</H2>
+    <UL>
+      <LI>Implement a queueing mechanism, for persistent messages.  Currently,
+      SENDs are only delivered to clients which are subscribed while the
+      message is received.  This makes the server act like an IRC server.
+      Queueing will allow messages to be persistified.</LI>
+      <LI> Currently, clients can connect to the port and start sending
+      messages without ever sending a CONNECT message.  The server should
+      enforce a CONNECT/CONNECTED transaction.</LI>
+      <LI> Error messages should be fleshed out, with destinations (where
+      possible), more information, and in more cases.</LI>
+    </UL>
+
+    <HR>
+    <H2>0.3.2 -> 0.4.0</H2>
+    <UL>
+      <LI>Implements an authentication mechanism.</LI>
+      <LI>API doc improvements</LI>
+      <LI>Improved thread data management</LI>
+      <LI>New Error API</LI>
+      <LI>Headers are trimmed of whitespace, making the server a little
+      more lenient</LI>
+      <LI>Exceptions thrown by client code is less likely to stop the
+      IO thread now.</LI>
+    </UL>
+    The only significant API change that require changes to code using
+    this library is that the Client constructor can now throw a
+    javax.security.auth.login.LoginException in addition to an IOException,
+    and this must be caught.
+
+    <H2>0.3.1 -> 0.3.2</H2>
+
+    <UL>
+    <li>Includes a minor fix to disallow adding the same listener to the same
+    channel twice.</li>
+    </UL>
+
+    <H2>0.3.0 -> 0.3.1</H2>
+
+    <UL>
+    <LI>Added synchronous messaging convenience methods</LI>
+    <LI>Implemented error handling via error listeners</LI>
+    <LI>The error() method has been removed from the Listener interface</LI>
+    </UL>
+
+    <HR>
+    <H2>0.3.2 (Beta) Notes:</H2>
+    <UL>
+      <LI> Only Java is provided.</LI>
+      <LI> The Receiver uses a busy loop (sleeping 100ms).  This sucks, but it
+        works.  Java NIO sucks even more and <EM>still</EM> requires a busy
+        loop.</LI>
+      <LI> The source documentation is really poor. The code quality is
+        probably poor, too. The first version was written, documented, and
+        debugged within about <A HREF="#" TITLE="And I wasted several of those
+        hours dicking around with NIO">eight hours</A>.  sloccount says that
+        this should have taken about 2.4 person-months and <a href="#" title='Version 0.1 estimated out to $19,400.  It is getting cheaper the more time I spend on it.'>$15,774</a>  And you get it for free!  What a bargain!</LI>
+    </UL>
+
+    <HR>
+    <I>This page produced with VIM</I>
+  </body>
+</html>
