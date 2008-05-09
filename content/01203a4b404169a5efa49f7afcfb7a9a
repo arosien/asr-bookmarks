@@ -1,0 +1,442 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ceph | open source distributed storage</title>
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="http://ceph.newdream.net/blog/wp-content/themes/blue-pix-100/style.css" type="text/css" media="screen" />
+	<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://ceph.newdream.net/feed/" />
+	<link rel="alternate" type="text/xml" title="RSS .92" href="http://ceph.newdream.net/feed/rss/" />
+	<link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="http://ceph.newdream.net/feed/atom/" />
+	<link rel="pingback" href="http://ceph.newdream.net/blog/xmlrpc.php" />
+	<link rel='archives' title='November 2010' href='http://ceph.newdream.net/2010/11/' />
+	<link rel='archives' title='October 2010' href='http://ceph.newdream.net/2010/10/' />
+	<link rel='archives' title='September 2010' href='http://ceph.newdream.net/2010/09/' />
+	<link rel='archives' title='August 2010' href='http://ceph.newdream.net/2010/08/' />
+	<link rel='archives' title='July 2010' href='http://ceph.newdream.net/2010/07/' />
+	<link rel='archives' title='May 2010' href='http://ceph.newdream.net/2010/05/' />
+	<link rel='archives' title='April 2010' href='http://ceph.newdream.net/2010/04/' />
+	<link rel='archives' title='March 2010' href='http://ceph.newdream.net/2010/03/' />
+	<link rel='archives' title='February 2010' href='http://ceph.newdream.net/2010/02/' />
+	<link rel='archives' title='December 2009' href='http://ceph.newdream.net/2009/12/' />
+	<link rel='archives' title='October 2009' href='http://ceph.newdream.net/2009/10/' />
+	<link rel='archives' title='September 2009' href='http://ceph.newdream.net/2009/09/' />
+	<link rel='archives' title='August 2009' href='http://ceph.newdream.net/2009/08/' />
+	<link rel='archives' title='July 2009' href='http://ceph.newdream.net/2009/07/' />
+	<link rel='archives' title='June 2009' href='http://ceph.newdream.net/2009/06/' />
+	<link rel='archives' title='May 2009' href='http://ceph.newdream.net/2009/05/' />
+	<link rel='archives' title='March 2009' href='http://ceph.newdream.net/2009/03/' />
+	<link rel='archives' title='February 2009' href='http://ceph.newdream.net/2009/02/' />
+	<link rel='archives' title='January 2009' href='http://ceph.newdream.net/2009/01/' />
+	<link rel='archives' title='December 2008' href='http://ceph.newdream.net/2008/12/' />
+	<link rel='archives' title='November 2008' href='http://ceph.newdream.net/2008/11/' />
+	<link rel='archives' title='October 2008' href='http://ceph.newdream.net/2008/10/' />
+	<link rel='archives' title='August 2008' href='http://ceph.newdream.net/2008/08/' />
+	<link rel='archives' title='July 2008' href='http://ceph.newdream.net/2008/07/' />
+	<link rel='archives' title='June 2008' href='http://ceph.newdream.net/2008/06/' />
+	<link rel='archives' title='May 2008' href='http://ceph.newdream.net/2008/05/' />
+	<link rel='archives' title='April 2008' href='http://ceph.newdream.net/2008/04/' />
+	<link rel='archives' title='March 2008' href='http://ceph.newdream.net/2008/03/' />
+<!?[if IE 7]>
+<style type="text/css">
+div#page div#main div#rightside {width: 176px}
+div#page div#main div#rightside div.box ul li a {width: 168px}
+</style>
+<![endif]->
+</head>
+<body>
+<div id="page">
+<!-- header [-]-->
+<div id="header"><a id="top"></a>
+<form method="get" id="searchform" action="http://ceph.newdream.net/">
+<br/>
+<p class="text_s">
+<input type="text" value="Search" name="s" id="s" class="search-box" onfocus="if (value =='Search'){value =''}" onblur="if (value ==''){value='Search'}" /><input type="submit" id="searchsubmit" value="" class="search-button" /></p>
+</form>
+<a href="http://ceph.newdream.net/" title="News"><img src="http://ceph.newdream.net/images/ceph-logo1.jpg" width="244" height="84"></a>
+
+</div>
+<!-- header [+} -->
+<div id="menu">
+		<ul>
+			<li class="current_page_item"><a href="http://ceph.newdream.net/" title="News">News</a></li>
+			<li class="page_item page-item-2"><a href="http://ceph.newdream.net/about/" title="About Ceph">About Ceph</a></li>
+<li class="page_item page-item-99"><a href="http://ceph.newdream.net/jobs/" title="Jobs">Jobs</a></li>
+<li class="page_item page-item-10"><a href="http://ceph.newdream.net/mailing-lists-and-irc/" title="Mailing Lists and IRC">Mailing Lists and IRC</a></li>
+<li class="page_item page-item-7"><a href="http://ceph.newdream.net/publications/" title="Publications">Publications</a></li>
+<li class="page_item page-item-5"><a href="http://ceph.newdream.net/source-control/" title="Source Control">Source Control</a></li>
+		</ul>
+
+</div>
+<div id="main">
+<div id="rightside">
+<div class="box">
+<h2>Ceph</h2>
+<p>Ceph is an open source distributed file system capable of managing many petabytes of storage with ease.</p>
+</div>
+
+<div class="box">
+<h2>Links</h2>
+<ul>
+	<li><a href="http://ceph.newdream.net/git/" title="Browse Git repositories">Browse Source</a></li>
+<li><a href="http://tracker.newdream.net/projects/ceph">Bug Tracker</a></li>
+<li><a href="http://ceph.newdream.net/download">Download</a></li>
+<li><a href="http://tracker.newdream.net/projects/ceph/roadmap">Roadmap</a></li>
+<li><a href="http://ceph.newdream.net/wiki/" title="The ceph wiki">Wiki</a></li>
+          
+</ul>
+</div>
+
+<div class="box">
+<h2>Tags</h2>
+	<ul>
+	<li class="cat-item cat-item-8"><a href="http://ceph.newdream.net/category/dev-notes/" title="View all posts filed under Dev notes">Dev notes</a>
+</li>
+	<li class="cat-item cat-item-10"><a href="http://ceph.newdream.net/category/rados/" title="View all posts filed under RADOS">RADOS</a>
+</li>
+	<li class="cat-item cat-item-9"><a href="http://ceph.newdream.net/category/releases/" title="View all posts filed under Releases">Releases</a>
+</li>
+	<li class="cat-item cat-item-1"><a href="http://ceph.newdream.net/category/uncategorized/" title="View all posts filed under Uncategorized">Uncategorized</a>
+</li>
+	<li class="cat-item cat-item-3"><a href="http://ceph.newdream.net/category/updates/" title="View all posts filed under Updates">Updates</a>
+</li>
+	</ul>
+</div>
+
+<div class="box">
+<h2>Archive</h2>
+<ul>
+		<li><a href='http://ceph.newdream.net/2010/11/' title='November 2010'>November 2010</a></li>
+	<li><a href='http://ceph.newdream.net/2010/10/' title='October 2010'>October 2010</a></li>
+	<li><a href='http://ceph.newdream.net/2010/09/' title='September 2010'>September 2010</a></li>
+	<li><a href='http://ceph.newdream.net/2010/08/' title='August 2010'>August 2010</a></li>
+	<li><a href='http://ceph.newdream.net/2010/07/' title='July 2010'>July 2010</a></li>
+	<li><a href='http://ceph.newdream.net/2010/05/' title='May 2010'>May 2010</a></li>
+	<li><a href='http://ceph.newdream.net/2010/04/' title='April 2010'>April 2010</a></li>
+	<li><a href='http://ceph.newdream.net/2010/03/' title='March 2010'>March 2010</a></li>
+	<li><a href='http://ceph.newdream.net/2010/02/' title='February 2010'>February 2010</a></li>
+	<li><a href='http://ceph.newdream.net/2009/12/' title='December 2009'>December 2009</a></li>
+	<li><a href='http://ceph.newdream.net/2009/10/' title='October 2009'>October 2009</a></li>
+	<li><a href='http://ceph.newdream.net/2009/09/' title='September 2009'>September 2009</a></li>
+	<li><a href='http://ceph.newdream.net/2009/08/' title='August 2009'>August 2009</a></li>
+	<li><a href='http://ceph.newdream.net/2009/07/' title='July 2009'>July 2009</a></li>
+	<li><a href='http://ceph.newdream.net/2009/06/' title='June 2009'>June 2009</a></li>
+	<li><a href='http://ceph.newdream.net/2009/05/' title='May 2009'>May 2009</a></li>
+	<li><a href='http://ceph.newdream.net/2009/03/' title='March 2009'>March 2009</a></li>
+	<li><a href='http://ceph.newdream.net/2009/02/' title='February 2009'>February 2009</a></li>
+	<li><a href='http://ceph.newdream.net/2009/01/' title='January 2009'>January 2009</a></li>
+	<li><a href='http://ceph.newdream.net/2008/12/' title='December 2008'>December 2008</a></li>
+	<li><a href='http://ceph.newdream.net/2008/11/' title='November 2008'>November 2008</a></li>
+	<li><a href='http://ceph.newdream.net/2008/10/' title='October 2008'>October 2008</a></li>
+	<li><a href='http://ceph.newdream.net/2008/08/' title='August 2008'>August 2008</a></li>
+	<li><a href='http://ceph.newdream.net/2008/07/' title='July 2008'>July 2008</a></li>
+	<li><a href='http://ceph.newdream.net/2008/06/' title='June 2008'>June 2008</a></li>
+	<li><a href='http://ceph.newdream.net/2008/05/' title='May 2008'>May 2008</a></li>
+	<li><a href='http://ceph.newdream.net/2008/04/' title='April 2008'>April 2008</a></li>
+	<li><a href='http://ceph.newdream.net/2008/03/' title='March 2008'>March 2008</a></li>
+								
+</ul>
+</div>
+
+<div class="box">
+<h2>Meta</h2>
+<ul>
+	<li><a href="http://ceph.newdream.net/blog/wp-login.php?action=register">Register</a></li>	<li><a href="http://ceph.newdream.net/blog/wp-login.php">Log in</a></li>
+	<li><a href="http://ceph.newdream.net/feed/">[Feed] Latest News</a></li>
+	<li><a href="http://ceph.newdream.net/comments/feed/">[Feed] Latest Comments</a></li>
+</ul>
+</div>													
+</div>
+<div id="leftside">
+		    
+    <div class="post">
+	<h1><small>23 November 2010 - 9:46</small><a href="http://ceph.newdream.net/2010/11/v0-23-1-released/" rel="bookmark">v0.23.1 released</a></h1>
+	<div class="entry">
+	<p>This release includes some bug fixes for v0.23, although there&#8217;s nothing here that too many people have been hitting, fortunately.</p>
+<ul>
+<li>cfuse/libceph: fix crash with clustered mds restart</li>
+<li>cfuse/libceph: fix hard link caching</li>
+<li>cfuse/libceph: fix lssnap</li>
+<li>msgr: fix various races</li>
+<li>msgr: fix IPv6 address parsing buffer overflow</li>
+</ul>
+<p>v0.24 is still a few weeks away, and will include OSD recovery improvements, background scrubbing, and MDS clustering and performance improvements, among other things.</p>
+<p style="margin-top: 5px; margin-right: 0px; margin-bottom: 10px; margin-left: 0px; padding: 0px;">Relevant URLs:</p>
+<ul style="margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 20px; font: normal normal normal 11px/17px Tahoma, sans-serif; padding: 0px;">
+<li style="padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; list-style-type: none; list-style-position: initial; list-style-image: initial; background-image: url(http://ceph.newdream.net/blog/wp-content/themes/blue-pix-100/images/arrow.gif); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: initial; background-position: 0px 6px; background-repeat: no-repeat no-repeat; margin: 0px;">Direct download at: <a style="color: #2759ad; text-decoration: none; padding: 0px; margin: 0px;" href="http://ceph.newdream.net/download/ceph-0.23.1.tar.gz">http://ceph.newdream.net/download/ceph-0.23.1.tar.gz</a></li>
+<li style="padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; list-style-type: none; list-style-position: initial; list-style-image: initial; background-image: url(http://ceph.newdream.net/blog/wp-content/themes/blue-pix-100/images/arrow.gif); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: initial; background-position: 0px 6px; background-repeat: no-repeat no-repeat; margin: 0px;">For Debian packages, see <a style="color: #2759ad; text-decoration: none; padding: 0px; margin: 0px;" href="http://ceph.newdream.net/wiki/Debian">http://ceph.newdream.net/wiki/Debian</a></li>
+</ul>
+	</div>
+	<p class="info">posted by sage <span>|</span> No Comments <span>|</span>  Tags: <a href="http://ceph.newdream.net/category/releases/" title="View all posts in Releases" rel="category tag">Releases</a> </p>
+	</div>
+		    
+    <div class="post">
+	<h1><small>12 November 2010 - 16:03</small><a href="http://ceph.newdream.net/2010/11/s3-compatible-object-storage-with-radosgw/" rel="bookmark">S3-compatible object storage with radosgw</a></h1>
+	<div class="entry">
+	<p>The <a href="http://ceph.newdream.net/wiki/RADOS_Gateway">radosgw</a> has been around for a while, but it hasn&#8217;t been well publicized or documented, so I thought I&#8217;d mention it here.  The idea is this:</p>
+<ul>
+<li>Ceph&#8217;s architecture is based on a robust, scalable distributed object store called RADOS.</li>
+<li>Amazon&#8217;s S3 has shown that a simple object-based storage interface is a convenient way to write applications, even when that interface is very restrictive.</li>
+<li>Providing access to Ceph&#8217;s object store via an S3-compatible interface is easy with <a href="http://ceph.newdream.net/wiki/RADOS_Gateway">librados</a>.</li>
+</ul>
+<p>The result is <a href="http://ceph.newdream.net/wiki/RADOS_Gateway">radosgw</a>, a FastCGI-based proxy that exposes Ceph&#8217;s object store via a REST (HTTP-based) interface.  Radosgw implements a subset of Amazon&#8217;s API (some Amazon-specific features of ACLs and object versioning aren&#8217;t supported), but the subset it does implement aims to be fully compatible.  That means that most existing apps that are designed for S3 can be seamlessly migrated to a Ceph-based object store, provided they allow the hostname to be configured (many hard-code s3.amazonaws.com).</p>
+<p>It should be noted that this approach has some fundamental limitations:</p>
+<ul>
+<li>librados provides direct parallel access to storage nodes; radosgw is a single endpoint proxy that sits in front of your storage cluster.  That may actually be a good thing, depending on your security model.</li>
+<li>The REST-based storage interface is much more restricted than that provided by librados.  librados allows partial object updates, has no object size limits, supports extensible object classes, fine-grained snapshots, and more.</li>
+<li>The radosgw security model emulates S3&#8217;s, and is implemented as a layer on top of librados.  Accessing the same objects via the native librados library will not reflect S3-style ACLs created via radosgw.</li>
+</ul>
+<p>Check it out!</p>
+	</div>
+	<p class="info">posted by sage <span>|</span> 1 Comment <span>|</span>  Tags: <a href="http://ceph.newdream.net/category/dev-notes/" title="View all posts in Dev notes" rel="category tag">Dev notes</a>,  <a href="http://ceph.newdream.net/category/rados/" title="View all posts in RADOS" rel="category tag">RADOS</a> </p>
+	</div>
+		    
+    <div class="post">
+	<h1><small>12 November 2010 - 9:55</small><a href="http://ceph.newdream.net/2010/11/v0-23-released/" rel="bookmark">v0.23 released</a></h1>
+	<div class="entry">
+	<p>Another month, and v0.23 is out.  The main milestone here is that clustered MDS is pretty stable.  Stable enough that, if you&#8217;re interested and willing, we&#8217;d like you to try it and let us know what problems you have.  Notably, clustered recovery is <em>not</em> yet well tested (that&#8217;s v0.24), so don&#8217;t do this unless you&#8217;re feeling adventurous.  Directory fragmentation (splitting and merging) is also working, although still off by default.  If you&#8217;d like to try that too, add &#8216;mds bal frag = true&#8217; to your [mds] section.</p>
+<p>Other notable changes this time around:</p>
+<ul>
+<li>osd: use new btrfs snapshot ioctls (2.6.37), parallel journaling</li>
+<li>mds: clustering, replay fixes</li>
+<li>mon: better commit batches, lower latency updates</li>
+<li>objecter: bug fixes</li>
+<li>osd: spread data across multiple xattrs; assert on io/enospc errors</li>
+<li>osd: start up despite corrupt pg logs</li>
+<li>ceph: new gui (ceph -g)</li>
+</ul>
+<p>The general focus for v0.24 will be continuing OSD stability and clustered MDS recovery.</p>
+<p style="margin-top: 5px; margin-right: 0px; margin-bottom: 10px; margin-left: 0px; padding: 0px;">Relevant URLs:</p>
+<ul style="margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 20px; font: normal normal normal 11px/17px Tahoma, sans-serif; padding: 0px;">
+<li style="padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; list-style-type: none; list-style-position: initial; list-style-image: initial; background-image: url(http://ceph.newdream.net/blog/wp-content/themes/blue-pix-100/images/arrow.gif); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: initial; background-position: 0px 6px; background-repeat: no-repeat no-repeat; margin: 0px;">Direct download at: <a style="color: #2759ad; text-decoration: none; padding: 0px; margin: 0px;" href="http://ceph.newdream.net/download/ceph-0.23.tar.gz">http://ceph.newdream.net/download/ceph-0.23.tar.gz</a></li>
+<li style="padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; list-style-type: none; list-style-position: initial; list-style-image: initial; background-image: url(http://ceph.newdream.net/blog/wp-content/themes/blue-pix-100/images/arrow.gif); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: initial; background-position: 0px 6px; background-repeat: no-repeat no-repeat; margin: 0px;">For Debian packages, see <a style="color: #2759ad; text-decoration: none; padding: 0px; margin: 0px;" href="http://ceph.newdream.net/wiki/Debian">http://ceph.newdream.net/wiki/Debian</a></li>
+</ul>
+	</div>
+	<p class="info">posted by sage <span>|</span> No Comments <span>|</span>  Tags: <a href="http://ceph.newdream.net/category/releases/" title="View all posts in Releases" rel="category tag">Releases</a> </p>
+	</div>
+		    
+    <div class="post">
+	<h1><small>30 October 2010 - 14:12</small><a href="http://ceph.newdream.net/2010/10/v0-22-2-released/" rel="bookmark">v0.22.2 released</a></h1>
+	<div class="entry">
+	<p>v0.22.2 is out with a few minor bug fixes:</p>
+<ul>
+<li>cfuse: fix truncation issue</li>
+<li>osd: fix decoding of legacy (0.21 and earlier) coll_t (which caused problems for people upgrading)</li>
+<li>osd: handle missing objects on snap reads</li>
+<li>filestore: escape xattr chunk names</li>
+</ul>
+<p>Not too much here, but the decoding error would bite anyone upgrading from v0.21.</p>
+<p style="margin-top: 5px; margin-right: 0px; margin-bottom: 10px; margin-left: 0px; padding: 0px;">Relevant URLs:</p>
+<ul style="margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 20px; font: normal normal normal 11px/17px Tahoma, sans-serif; padding: 0px;">
+<li style="padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; list-style-type: none; list-style-position: initial; list-style-image: initial; background-image: url(http://ceph.newdream.net/blog/wp-content/themes/blue-pix-100/images/arrow.gif); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: initial; background-position: 0px 6px; background-repeat: no-repeat no-repeat; margin: 0px;">Direct download at: <a style="color: #2759ad; text-decoration: none; padding: 0px; margin: 0px;" href="http://ceph.newdream.net/download/ceph-0.22.2.tar.gz">http://ceph.newdream.net/download/ceph-0.22.2.tar.gz</a></li>
+<li style="padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; list-style-type: none; list-style-position: initial; list-style-image: initial; background-image: url(http://ceph.newdream.net/blog/wp-content/themes/blue-pix-100/images/arrow.gif); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: initial; background-position: 0px 6px; background-repeat: no-repeat no-repeat; margin: 0px;">For Debian packages, see <a style="color: #2759ad; text-decoration: none; padding: 0px; margin: 0px;" href="http://ceph.newdream.net/wiki/Debian">http://ceph.newdream.net/wiki/Debian</a></li>
+</ul>
+	</div>
+	<p class="info">posted by sage <span>|</span> 2 Comments <span>|</span>  Tags: <a href="http://ceph.newdream.net/category/uncategorized/" title="View all posts in Uncategorized" rel="category tag">Uncategorized</a> </p>
+	</div>
+		    
+    <div class="post">
+	<h1><small>29 October 2010 - 11:27</small><a href="http://ceph.newdream.net/2010/10/rados-block-device-merged-for-2-6-37/" rel="bookmark">Rados Block Device merged for 2.6.37</a></h1>
+	<div class="entry">
+	<p>The Linux kernel merge window is open for v2.6.37, and RBD (rados block device) has finally been merged.  RBD lets you create a block device in Linux that is striped over objects stored in a Ceph distributed object store.  This basic approach gives you some nice features:</p>
+<ul>
+<li>&#8220;thin provisioning&#8221; &#8212; space isn&#8217;t used in the cluster until you write to it</li>
+<li>reliable &#8212; data objects are replicated by Ceph, so no single node failure (besides the mounting host) will take out the device</li>
+<li>scalable &#8212; the device can be arbitrarily sized (and resized)</li>
+<li>snapshots &#8212; RBD supports read-only named snapshots (and rollback)</li>
+</ul>
+<p>One of the nice things about the kernel implementation is that there is relatively little new code; mostly it just reuses the infrastructure already in place for the Ceph file system.  The biggest change is a code refactor that moves much of the old <em>ceph</em> module (fs/ceph) into <em>libceph</em>, which includes the networking layer and interaction with the cluster monitor and OSDs (now in net/ceph).  The new <em>rbd</em> module (drivers/block/rbd.c) uses only <em>libceph</em>.  One consequence of this refactor is that the <a href="http://ceph.newdream.net/git/?p=ceph-client-standalone.git;a=summary">ceph-client-standalone.git</a> repository (which includes just the backported module source, allowing you to build ceph and rbd against older kernels) has been reorganized to contain three separate modules.  The new RBD code is currently found in the <em>unstable</em> and <em>unstable-backport</em> branches of <a href="http://ceph.newdream.net/git/?p=ceph-client-standalone.git;a=summary">ceph-client-standalone.git</a>, and the <em>unstable</em> branch of <a href="http://ceph.newdream.net/git/?p=ceph-client.git;a=summary">ceph-client.git</a>.</p>
+<p>There is also a new(ish) command line tool <em>rbd</em> that is used for creating and manipulating images (block devices) within the cluster.</p>
+<p>For more information about using RBD, see <a href="http://ceph.newdream.net/wiki/Rbd">http://ceph.newdream.net/wiki/Rbd</a>.</p>
+	</div>
+	<p class="info">posted by sage <span>|</span> 1 Comment <span>|</span>  Tags: <a href="http://ceph.newdream.net/category/updates/" title="View all posts in Updates" rel="category tag">Updates</a> </p>
+	</div>
+		    
+    <div class="post">
+	<h1><small>23 October 2010 - 19:26</small><a href="http://ceph.newdream.net/2010/10/v0-22-1-released/" rel="bookmark">v0.22.1 released</a></h1>
+	<div class="entry">
+	<p>This release fixes a few critical bugs in v0.22:</p>
+<ul>
+<li>osd: fix hang during mkfs journal creation</li>
+<li>objecter: fix rare hang during shutdown</li>
+<li>msgr: fix reconnect errors due to timeouts</li>
+<li>init-ceph: check for correct instance in daemon_is_running()</li>
+<li>filestore: deliberate crash on ENOSPC/EIO to avoid corruption</li>
+<li>filestore: split xattrs into chunks (partial workaround for xattr size limitations on btrfs)</li>
+<li>filestore: ignore ENOSPC on xattrs until workaround for extN is implemented</li>
+<li>radosgw: return 204 on removal of bucket/object</li>
+</ul>
+<p>The main issue was the messenger bug, which causes internal cluster messages to be dropped and triggered random cosd crashes.  The ENOSPC/EIO issue is also a bit strange: previously we silently ignored these errors.  Now we crash to avoid corrupting our data with partially committing transaction, except in the case where we are trying to set a large xattr.  The problem here is that both btrfs have size limitations we hadn&#8217;t noticed before, btrfs on an individual xattr, and extN on the total size of all xattrs.  We will continue to ignore errors on extN (aside from logging them) until we implement a workaround.</p>
+<p>Relevant URLs:</p>
+<ul>
+<li>Direct download at: <a href="http://ceph.newdream.net/download/ceph-0.22.1.tar.gz">http://ceph.newdream.net/download/ceph-0.22.1.tar.gz</a></li>
+<li>For Debian packages, see <a href="http://ceph.newdream.net/wiki/Debian">http://ceph.newdream.net/wiki/Debian</a></li>
+</ul>
+	</div>
+	<p class="info">posted by sage <span>|</span> No Comments <span>|</span>  Tags: <a href="http://ceph.newdream.net/category/releases/" title="View all posts in Releases" rel="category tag">Releases</a> </p>
+	</div>
+		    
+    <div class="post">
+	<h1><small>15 October 2010 - 15:46</small><a href="http://ceph.newdream.net/2010/10/v0-22-released/" rel="bookmark">v0.22 released</a></h1>
+	<div class="entry">
+	<p>It&#8217;s a bit late, but v0.22 is here.  The original goal for this release was to have a stable clustered MDS that we can encourage users to test.  Unfortunately, we did not quite make that mark: there are still a couple significant bugs we&#8217;re working on, and I don&#8217;t want to push this release back any farther.  In retrospect, having such an infrequent release schedule to begin with (&gt;2 months since v0.21!) makes our life a bit harder because we are tracking bug fixes in both branches, and end up with a long delay between a new feature being merged and most users testing it.  For the next release (and the immediate future), we will be aiming for more frequent releases, and will stick as close as possible to the original timeline.</p>
+<p>Notable changes in v0.22 include:</p>
+<ul>
+<li>mon: improved naming</li>
+<li>osd: support separate interface for cluster-internal traffic</li>
+<li>mds: many many snapshot, recursive accounting fixes</li>
+<li>mon: back off on clock drift errors/warnings</li>
+<li>mds: fix xattr bugs</li>
+<li>cfuse: readdir caching, readdir fixes</li>
+<li>mon: trim laggy standby mds&#8217;s from map</li>
+<li>osd: data integrity fixes</li>
+<li>osd: fix hang during mkfs/journal creation</li>
+<li>improved debug logging on crash</li>
+<li>cdebugpack: new debug information capture tool</li>
+<li>mon: improve osd failure logic</li>
+<li>mds/osd: use tcmalloc (faster, more memory efficient)</li>
+<li>mds: set file layout/striping policy on directory/subtree basis</li>
+<li>cfuse: mount subdir</li>
+<li>mds: respawn on failure</li>
+</ul>
+<p>At a high level, the goals for v0.23 are a stable clustered MDS and directory fragmentation.  We are also continuing to work on hardening the OSD cluster recovery, particularly given the level of interest in RBD.</p>
+<p>Relevant URLs:</p>
+<ul>
+<li>Direct download at: <a href="http://ceph.newdream.net/download/ceph-0.22.tar.gz">http://ceph.newdream.net/download/ceph-0.22.tar.gz</a></li>
+<li>For Debian packages, see <a href="http://ceph.newdream.net/wiki/Debian">http://ceph.newdream.net/wiki/Debian</a></li>
+</ul>
+	</div>
+	<p class="info">posted by sage <span>|</span> No Comments <span>|</span>  Tags: <a href="http://ceph.newdream.net/category/releases/" title="View all posts in Releases" rel="category tag">Releases</a> </p>
+	</div>
+		    
+    <div class="post">
+	<h1><small>18 September 2010 - 13:05</small><a href="http://ceph.newdream.net/2010/09/v0-21-3-released/" rel="bookmark">v0.21.3 released</a></h1>
+	<div class="entry">
+	<p>The v0.21.3 release is out.  Changes since v0.21.2 include:</p>
+<ul>
+<li>cfuse: fix readdir for large directories</li>
+<li>cfuse: fixed truncation (now passes fsx)</li>
+<li>radosgw: fixed some info leakage between users</li>
+<li>radosgw: support wildcard dns for bucketname.domain/object access</li>
+<li>mon: less log noise</li>
+<li>mds: fixed snap bug with directory renames</li>
+<li>mds: fixed journal replay bug with reconnecting clients</li>
+<li>mds: fixed journal replay bug with inconsistent lock state, subsequent crash</li>
+</ul>
+<p>Nothing groundbreaking, but v0.21.2 users experiencing any problems should upgrade.</p>
+<p>This will likely be the last v0.21 series release; v0.22 is due in about two weeks (see the <a href="http://tracker.newdream.net/projects/ceph/roadmap">roadmap</a>).</p>
+<p>Relevant URLs:</p>
+<ul>
+<li>Direct download at: <a href="http://ceph.newdream.net/download/ceph-0.21.3.tar.gz">http://ceph.newdream.net/download/ceph-0.21.3.tar.gz</a></li>
+<li>For Debian packages, see <a href="http://ceph.newdream.net/wiki/Debian">http://ceph.newdream.net/wiki/Debian</a></li>
+</ul>
+	</div>
+	<p class="info">posted by sage <span>|</span> No Comments <span>|</span>  Tags: <a href="http://ceph.newdream.net/category/releases/" title="View all posts in Releases" rel="category tag">Releases</a> </p>
+	</div>
+		    
+    <div class="post">
+	<h1><small>30 August 2010 - 11:44</small><a href="http://ceph.newdream.net/2010/08/rbd-rados-block-device-status/" rel="bookmark">rbd (rados block device) status</a></h1>
+	<div class="entry">
+	<p>The <a href="http://ceph.newdream.net/wiki/Rbd">rados block device (rbd)</a> is looking pretty good at this point.  The basic feature set:</p>
+<ul>
+<li>network block device backed by objects in the Ceph distributed object store (rados)</li>
+<li>thinly provisioned</li>
+<li>image resizing</li>
+<li>image export/import/copy/rename</li>
+<li>read-only snapshots</li>
+<li>revert to snapshot</li>
+<li>Linux and qemu/kvm clients</li>
+</ul>
+<p>Main items on the the to-do list:</p>
+<ul>
+<li>TRIM</li>
+<li>image layering/copy-on-write</li>
+<li>locking</li>
+</ul>
+<p>The server side components are in place in both the v0.21 releases and the unstable branch.  On the client side, there are two options.</p>
+<p>First, qemu/kvm can be patched to map an rbd image as a block device.  The code is available in git from</p>
+<ul>
+<li><a href="http://ceph.newdream.net/git/?p=qemu-kvm.git;a=shortlog;h=refs/heads/rbd">git://ceph.newdream.net/git/qemu-kvm.git</a> (branch rbd)</li>
+</ul>
+<p>Alternatively, Wido has built some patched Ubuntu 10.4 packages for both qemu and libvirt, available from</p>
+<ul>
+<li>deb http://pcx.apt-get.eu/ubuntu lucid unofficial</li>
+</ul>
+<p>The qemu/kvm patches will likely be included in the next major qemu release.</p>
+<p>The native Linux kernel rbd kernel driver is also quite stable, but did not make it upstream for the 2.6.36 release cycle.  We hope to have it in 2.6.37.  The code for that is available at</p>
+<ul>
+<li><a href="http://ceph.newdream.net/git/?p=ceph-client.git;a=shortlog;h=refs/heads/rbd">git://ceph.newdream.net/git/ceph-client.git</a> (branch rbd)</li>
+</ul>
+<p>The main hold up there is that the addition of rbd involves refactoring a lot of the common Ceph file system client code into a libceph module that is shared by both rbd and the file system client.  This makes rebasing more difficult, so that branch may not have the most recent fixes in the master branch or the current -rc kernels.  Also, the code reorganization completely breaks my semi-automated ceph-client-standalone.git updates, so for now you can&#8217;t clone and build it as a standalone module.</p>
+<p>For more information, see the <a href="http://ceph.newdream.net/wiki/Rbd">rbd</a> and <a href="http://ceph.newdream.net/wiki/Kvm-rbd">kvm-rbd</a> wiki pages.</p>
+	</div>
+	<p class="info">posted by sage <span>|</span> 4 Comments <span>|</span>  Tags: <a href="http://ceph.newdream.net/category/rados/" title="View all posts in RADOS" rel="category tag">RADOS</a> </p>
+	</div>
+		    
+    <div class="post">
+	<h1><small>28 August 2010 - 8:49</small><a href="http://ceph.newdream.net/2010/08/v0-21-2-released/" rel="bookmark">v0.21.2 released</a></h1>
+	<div class="entry">
+	<p>This is a second bugfix release for the v0.21 series.  Changes include:</p>
+<ul>
+<li>osd: less log noise</li>
+<li>osd: mark down old heartbeat peers</li>
+<li>filejournal: clean up init sequence, less confusing errors on startup</li>
+<li>msgr: fix throttler leak (fixes deadlock)</li>
+<li>osdmaptool: don&#8217;t crash on corrupt input</li>
+<li>mds: error to client on invalid opcode</li>
+<li>mds: fix ENOTEMPTY checks on rmdir</li>
+<li>osd: fix race between reads and cloned objects</li>
+<li>auth: fix keyring search path when $HOME not defined</li>
+<li>client: fix xattr writeback</li>
+<li>client: fix snap vs metadata writeback</li>
+<li>osd: fix journal, btrfs throttling</li>
+<li>msgr: fix memory leak on closed connections</li>
+</ul>
+<p>Relevant URLs:</p>
+<ul>
+<li>Direct download at <a href="../../download/ceph-0.21.2.tar.gz">http://ceph.newdream.net/download/ceph-0.21.2.tar.gz</a></li>
+<li>For Debian packages see <a href="../../wiki/Debian">http://ceph.newdream.net/wiki/Debian</a></li>
+</ul>
+	</div>
+	<p class="info">posted by sage <span>|</span> No Comments <span>|</span>  Tags: <a href="http://ceph.newdream.net/category/uncategorized/" title="View all posts in Uncategorized" rel="category tag">Uncategorized</a> </p>
+	</div>
+			
+	<div class="pagebar"><a href="http://ceph.newdream.net/page/2/" ><strong>Next Page &raquo;</strong></a></div>
+	
+	
+</div>
+</div>	
+<div id="footer">
+	<div class="rside"><!-- Please Do not remove/change the copyright links (livetr.org) -->
+	  <a href="#top" title="Jump to Top">Top ^</a> <span class="ac">|</span> <a href="http://ceph.newdream.net/feed/" title="Feed">Feed</a> <span class="ac">|</span> <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons">CC License</a> <span class="ac">|</span> <a href="http://www.livetr.org/">Blue-Pix</a> <a href="http://www.livetr.org/blue-pix/" title="WordPress Theme">Them</a><a href="http://www.livetr.org/blue-pix-theme/">e</a></div>
+	<!-- Page Load Time: 0.340 s. <span class="ac">|</span> SQL Queries: 12-->
+</div>
+
+</div>
+
+<script type="text/javascript">
+var _sf_async_config={uid:12483,domain:"ceph.newdream.net"};
+(function(){
+  function loadChartbeat() {
+    window._sf_endpt=(new Date()).getTime();
+    var e = document.createElement('script');
+    e.setAttribute('language', 'javascript');
+    e.setAttribute('type', 'text/javascript');
+    e.setAttribute('src',
+       (("https:" == document.location.protocol) ? "https://s3.amazonaws.com/" : "http://") +
+       "static.chartbeat.com/js/chartbeat.js");
+    document.body.appendChild(e);
+  }
+  var oldonload = window.onload;
+  window.onload = (typeof window.onload != 'function') ?
+     loadChartbeat : function() { oldonload(); loadChartbeat(); };
+})();
+
+</script>
+
+</body>
+</html>
