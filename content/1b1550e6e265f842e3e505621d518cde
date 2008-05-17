@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+	<title>MCSTL: The Multi-Core Standard Template Library</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="author" content="Johannes Singler"/>
+	<meta name="keywords" content="MCSTL, The Multi-Core Standard Template Library, Introduction
+"/>
+	<link rel="stylesheet" title="Normal" href="./normal.css" type="text/css" media="all"/>
+</head>
+
+<body>
+<div id="page">
+<div class="enclosure">
+<p>
+&nbsp;
+</p>
+<h1 style="text-align: center">
+MCSTL: The Multi-Core Standard Template Library
+</h1>
+</div><!-- topper -->
+<div id="pane">
+<hr/>
+<div id="menu">
+<div id="navLinks">
+<a href="./index.php?page=introduction" class="menu0">Introduction</a>
+<a href="./index.php?page=documentation" class="menu0">Documentation</a>
+<a href="./index.php?page=publications" class="menu0">Publications</a>
+<a href="./index.php?page=downloads" class="menu0">Downloads</a>
+<a href="./index.php?page=contact" class="menu0">Contact</a>
+<a href="./index.php?page=links" class="menu0">Links</a>
+<p>
+&nbsp;
+</p>
+<!-- SiteSearch Google -->
+<form method="get" action="http://www.google.com/search">
+<input type="hidden" name="ie" value="UTF-8"/>
+<input type="hidden" name="oe" value="UTF-8"/>
+<input type="hidden" name="sitesearch" value="algorithm-engineering.de"/>
+<p class="small" style="margin: 50px 0px 20px 0px;">
+<input type="text" name="q" size="12" maxlength="255" value=""/>
+<input type="submit" name="btnG" value="Search"/>
+</p>
+</form><!-- SiteSearch Google -->
+<p class="small">
+<img style="margin: 0px 45px 0px 35px;" src="./counter/c.php?n=main" alt="counter"/><br/>
+</p>
+</div><!-- navLinks -->
+<p class="center" style="margin: 50px 0px 20px 0px;">
+</p>
+</div><!-- menu -->
+<div id="content">
+
+<h2>Introduction</h2>
+<p>
+The Multi-Core Standard Template Library (MCSTL) is a parallel implementation of the standard C++ library. It makes use of multiple processors and/or multiple cores of a processor with shared memory. It blends in transparently and there is in principle <b>no</b> change necessary in the program itself. Applications that make use of the STL algorithms like <span class="code">sort</span>, <span class="code">random_shuffle</span>, <span class="code">partial_sum</span> or <span class="code">for_each</span>, benefit from the improved speed due to parallelism. MCSTL cooperates particularly well with the <a href="http://stxxl.sourceforge.net">STXXL</a>, the STL library for huge data sets in external memory.
+</p>
+<p>
+More information about how to incorporate the library into your application is given in the <a href="index.php?page=documentation">documentation section</a>.
+</p>
+<p>
+The library is licensed partly licensed under 
+<a href="http://www.boost.org/LICENSE_1_0.txt">Boost Software License 1.0</a>, partly under the <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GNU General Public License Version 2</a> with <b>Runtime Exception</b>.
+</p>
+
+<h2>Incorporation into GNU libstdc++</h2>
+
+From GCC version 4.3, the MCSTL is incorporated in the GNU STL implementation,
+namely libstdc++, as the so-called <i>libstdc++ parallel mode</i>.
+<b>Maintenance of the code happens only there, so please use the
+<a href="http://gcc.gnu.org/onlinedocs/libstdc++/manual/parallel_mode.html">
+parallel mode</a> code instead of MCSTL.</b>
+Many bugs and incompatibilities have been fixed there.
+Issue bug reports to the <a href="http://gcc.gnu.org/bugzilla/index.cgi">
+GCC bugzilla</a>, and add <img src="singler-email.png" alt="email address"/> as CC.
+
+<h2>News</h2>
+
+<h3>
+2008-05-15: Development ongoing as libstdc++ parallel mode
+</h3>
+The development of the libstdc++ parallel mode is ongoing.
+Improved versions will be included in future versions of GCC.
+Accelerating and extending the underlying OpenMP runtime is also ongoing.
+
+<h3>
+2008-03-25: GCC 4.3 release
+</h3>
+The GCC version 4.3 including the parallel mode has been released two weeks ago.
+Please note that the settings mechanism has changed considerably.
+
+<h3>
+2008-02-20: GCC branches to 4.3
+</h3>
+Some days ago, the GCC has branched to version 4.3 which will contain the MCSTL algorithms under the name "libstdc++ parallel mode".
+
+<h3>
+2007-11-23: Integration of MCSTL into GCC ongoing
+</h3>
+The MCSTL code will be integrated into GCC as the
+<a href="http://gcc.gnu.org/onlinedocs/libstdc++/parallel_mode.html">"libstdc++ parallel mode"</a>.
+See also the <a href="http://gcc.gnu.org/">announcement</a> from September 11, 2007.
+
+<h3>
+2007-08-27: Release of MCSTL 0.8.0-beta: added bulk dictionary operations, major code cleanup, bug fixes
+</h3>
+We announce that integration of the MCSTL into the GNU libstdc++ has started.
+The final version will most likely be licensed under the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License Version 3</a> with <b>Runtime Exception</b>
+
+<h3>
+2007-05-29: Release of MCSTL 0.7.5-beta: added <span class="code">unique_copy</span>, set operations
+</h3>
+<h3>
+2007-05-04: Release of MCSTL 0.7.3-beta: improved compatibility, stability
+</h3>
+<h3>
+2007-04-20: Release of MCSTL 0.7.1-beta: cleanup, more complete functionality
+</h3>
+<h3>
+2006-12-21: Release of MCSTL 0.7.0-beta: dynamically load-balanced quicksort, greatly improved compatibility and performance
+</h3>
+<h3>
+2006-10-10: Release of MCSTL 0.6.0-beta: many more algorithms implemented
+</h3>
+<h3>
+2006-07-31: Release of MCSTL 0.4.0-alpha: much more regression testing has taken place
+</h3>
+<h3>
+2006-07-19: First Release MCSTL 0.3.0-alpha
+</h3>
+<h3>
+2006-06-22: Website goes online
+</h3>
+
+
+</div><!-- content -->
+</div><!-- pane -->
+<div class="enclosure">
+<hr/>
+<p class="small" style="text-align: center">
+The Multi-Core Standard Template Library
+</p>
+</div><!-- bottomer -->
+</div><!-- page -->
+</body>
+</html>
+
