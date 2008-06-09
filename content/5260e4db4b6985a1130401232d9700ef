@@ -1,0 +1,811 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+
+
+
+
+
+
+
+
+<html>
+  <head>
+    <title>Esper - Complex Event Processing</title>
+    <!-- index.html -->
+    <style type="text/css" media="all">
+      @import url("./css/esper.css");
+    </style>
+        <META NAME="keywords" content="Esper, NEsper, eda, open source, source, esp, cep, event stream, complex event, soa, services, support, free, event server, continuous query">
+    <meta name="author" content="David Herreman (www.free-css-templates.com)" />
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="-1"/>
+<link rel="shortcut icon" href="./images/favicon.ico" />
+<!--[if IE]>
+<style type="text/css" media="screen">
+ #menu ul li {float: left; width: 100%;}
+</style>
+<![endif]-->
+<!--[if lt IE 7]>
+<style type="text/css" media="screen">
+body {
+behavior: url(./css/csshover.htc);
+}
+</style>
+<![endif]-->
+<!-- google search widget -->
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+var searchControl;
+
+google.load('search', '1');
+
+function OnComplete(searchControl, searcher) {
+	document.getElementById("left_main").style.visibility = 'hidden';
+}
+	
+function OnLoad() {
+	// Create a search control
+	searchControl = new google.search.SearchControl();
+	searchControl.setSearchCompleteCallback(this, OnComplete);
+			
+	//Documentation (latest only)
+	var docSearch = new google.search.WebSearch();
+	docSearch.setUserDefinedLabel("Doc");
+	docSearch.setSiteRestriction("esper.codehaus.org");//no slash /esper.codehaus.org here please.
+	// we include doc only for one version (that gets fancy here with escape of . for google and \ for javascript)
+	docSearch.setQueryAddition("-inurl:html_single inurl:4\\.0\\.0/doc/");
+	searchControl.addSearcher(docSearch);
+
+	//Esper
+	var siteSearch = new google.search.WebSearch();
+	siteSearch.setUserDefinedLabel("Community");
+	// we exclude archive.esper.codehaus.org as we have Nabble below [the / prefix sounds fragile in google search]
+	siteSearch.setSiteRestriction("/esper.codehaus.org");
+	siteSearch.setQueryAddition("-inurl:/doc/");// we exclude doc
+	searchControl.addSearcher(siteSearch);
+
+	//EsperTech
+	var etSearch = new google.search.WebSearch();
+	etSearch.setUserDefinedLabel("EsperTech");
+	etSearch.setSiteRestriction("espertech.com");
+	searchControl.addSearcher(etSearch);
+
+	// Nabble search
+	var mlSearch = new google.search.WebSearch();
+	mlSearch.setUserDefinedLabel("Lists");
+	mlSearch.setSiteRestriction("nabble.com");
+	mlSearch.setQueryAddition("'Esper User list' OR 'Esper Dev list'");
+	searchControl.addSearcher(mlSearch);
+	
+	// draw in tabbed layout mode and split form from results
+	var drawOptions = new google.search.DrawOptions();
+	drawOptions.setDrawMode(google.search.SearchControl.DRAW_MODE_TABBED);
+	drawOptions.setSearchFormRoot(document.getElementById("google_searchForm"));
+	searchControl.draw(document.getElementById("google_searchResult"), drawOptions);
+}
+
+google.setOnLoadCallback(OnLoad, true);
+//]]>
+</script>
+  </head>
+<body>
+<div id="top">
+	<div class="content">
+			<div id="icons">
+				<a href="http://www.espertech.com/index.php" title="Home page"><img src="./images/home.gif" alt="Home" /></a>
+				<a href="http://www.espertech.com/company/contact.php" title="Contact us"><img src="./images/contact.gif" alt="Contact" /></a>
+			</div>
+			<table border="0" width="95%">
+				<tr><td width="203px">
+					<img src="./images/espertech_logo_transparent.png"/>
+				</td><td width="380px">
+					<h2>Event Stream Intelligence: <small>Esper & NEsper</small></h2>
+				</td>
+				<td><div id="google_searchForm"/></td>
+				</tr>
+			</table>
+	</div>
+</div><!-- top -->
+<div id="precHOME">
+<div id="wrap">
+		<div id="dmenu">
+<ul><li><h2><a href="http://www.espertech.com/index.php" title="Home"><img src="./images/home.gif" valign="bottom"/></a></h2></li></ul><ul><li><h2><a>|</a></h2></li></ul><ul><li><h2><a href="http://www.espertech.com/products/">Products</a></h2>	<ul><li><a href="http://www.espertech.com/products/index.php">Event Processing and CEP platform</a></li><li><a href="http://www.espertech.com/products/esperee.php">Esper Enterprise Edition</a></li><li><a href="http://www.espertech.com/products/esperha.php">EsperHA</a></li><li><a href="http://www.espertech.com/products/technicalspec.php">Technical Specifications</a></li><li><a href="http://www.espertech.com/products/faq.php">FAQ</a></li>	</ul></li></ul><ul><li><h2><a>|</a></h2></li></ul><ul><li><h2><a href="http://www.espertech.com/support/">Support & Services</a></h2>	<ul><li><a href="http://www.espertech.com/support/index.php">Support</a></li><li><a href="http://www.espertech.com/support/services.php">Services</a></li><li><a href="http://www.espertech.com/support/training.php">Training</a></li>	</ul></li></ul><ul><li><h2><a>|</a></h2></li></ul><ul><li><h2><a href="http://www.espertech.com/partners/">Customers & OEMs</a></h2>	<ul><li><a href="http://www.espertech.com/partners/index.php">Become a Partner</a></li><li><a href="http://www.espertech.com/partners/embedded.php">Embed our CEP Engine</a></li><li><a href="http://www.espertech.com/partners/partners.php">Customers, Partners and OEMs</a></li>	</ul></li></ul><ul><li><h2><a>|</a></h2></li></ul><ul><li><h2><a href="http://www.espertech.com/resources/">Resources</a></h2>	<ul><li><a href="http://www.espertech.com/resources/index.php">Demonstrations</a></li><li><a href="http://www.espertech.com/resources/index.php">Data Sheets</a></li></ul></li></ul><ul><li><h2><a>|</a></h2></li></ul><ul><li><h2><a href="http://www.espertech.com/community/">Community</a></h2>	<ul><li><a href="http://www.espertech.com/community/../download/index.php">Products Download</a></li><li><a href="http://esper.codehaus.org" target="_blank">Esper and NEsper at Codehaus</a></li>	</ul></li></ul><ul><li><h2><a>|</a></h2></li></ul><ul><li><h2><a href="http://www.espertech.com/company/">Company</a></h2>	<ul><li><a href="http://www.espertech.com/company/index.php">Overview</a></li><li><a href="http://www.espertech.com/company/news.php">News</a></li><li><a href="http://www.espertech.com/company/contact.php">Contact us</a></li>	</ul></li></ul><ul><li><h2><a>|</a></h2></li></ul><ul><li><h2><a href="http://www.espertech.com/company/contact.php" title="Contact us"><img src="./images/contact.gif" valign="bottom"/></a></h2></li></ul><br/>&nbsp;</div>
+	<div id="pic">
+		<div id="slogan">
+			Where <b>Complex Event Processing meets Open Source</b>: <a href="http://www.espertech.com/products/">Esper & NEsper</a></b><br/>
+			High-availability and Enterprise Readiness: <a href="http://www.espertech.com/products/esperha.php">EsperHA</a>, <a href="http://www.espertech.com/products/esperee.php">Enterprise Edition</a> and <a href="http://www.espertech.com/support/">support services</a>.
+			Embed mainstream CEP in your products and deployments: Learn about our <a href="http://www.espertech.com/partners/embedded.php">licensing options</a>.<br/>
+			<small><a href="http://www.espertech.com/products/" style="color: #A00">Product info</a> | <a href="http://www.espertech.com/partners/partners.php" style="color: #A00">Customers</a> | <a href="http://www.espertech.com/company/contact.php" style="color: #A00">Contact us</a></small>
+		</div>
+	</div>
+</div></div>
+<div class="content">
+	<div id="main">
+		<div id="left_side">
+			<div id="google_searchResult" style="width:660px;"></div>
+			<div id="left_main">
+		        <div class="section"><h2>Event Stream Intelligence with Esper and NEsper </h2>
+<p>Esper is a component for CEP and ESP applications, available for Java as Esper, and for .NET as NEsper.</p>
+<p>Esper and NEsper enable rapid development of applications that process large volumes of incoming messages or events. Esper and NEsper filter and analyze events in various ways, and respond to conditions of interest in real-time.</p>
+</div>
+<div class="section"><h2>Technology Introduction</h2>
+<p>Complex Event Processing, or CEP, is technology to process events and discover complex patterns among multiple streams of event data. ESP stands for Event Stream Processing and deals with the task of processing multiple streams of event data with the goal of identifying the meaningful events within those streams, and deriving meaningful information from them. Real-time OLAP (online analytical processing) and continuous query are also terms used frequently for this technology.</p>
+<p>Esper provides an optimized language for dealing with high frequency time-based event data: the Event Processing Language (EPL).</p>
+<p>The Esper engine has been developed to address the requirements of applications that analyze and react to events. Some typical examples of applications are:</p>
+<ul><li>Business process management and automation (process monitoring, BAM, reporting exceptions, operational intelligence) </li>
+<li>Finance (algorithmic trading, fraud detection, risk management) </li>
+<li>Network and application monitoring (intrusion detection, SLA monitoring) </li>
+<li>Sensor network applications (RFID reading, scheduling and control of fabrication lines, air traffic) </li>
+</ul>
+</div>
+<div class="section"><h2>Commonly Asked Questions </h2>
+<p><a href="tutorials/faq_esper/faq.html#how-does-it-work-overview">How does it work?</a> <a href="tutorials/faq_esper/faq.html#comparison">How does it compare with other CEP products?</a> <a href="tutorials/faq_esper/faq.html#testing">How has this been tested?</a> <a href="tutorials/faq_esper/faq.html#performance">What is the performance?</a> <a href="about/license/license.html">What is the license?</a> <a href="http://www.espertech.com/support" class="externalLink">Can I get support?</a></p>
+</div>
+<div class="section"><h2>Esper Enterprise Edition Feature Summary </h2>
+<ul><li>Rich web-based multi-window GUI based on Flex</li>
+<li>Real-time continuously-updating displays<ul><li>Charts, Timeline, Gauge, Grids</li>
+<li>Interactive, composable, configurable, can be integrated</li>
+</ul>
+</li>
+<li>Data distribution service</li>
+<li>Hot deployment of EPL modules and event-driven applications packaged as WAR</li>
+<li><a href="http://www.espertech.com/products/esperee.php" class="externalLink">Info and Download</a></li>
+<li><a href="http://www.espertech.com/resources/sd_esperhqscreenshots.html" class="externalLink">Screenshots</a></li>
+</ul>
+</div>
+<div class="section"><h2>Core CEP Features</h2>
+<div class="section"><h3>Event Stream Processing</h3>
+<ul><li>Sliding windows: time, length, sorted, accumulating, time-ordering, externally-timed (value-based windowing)</li>
+<li>Tumbling windows: time, length and multi-policy; first-event</li>
+<li>Combine windows with intersection and union semantics.</li>
+<li>Grouping, aggregation, sorting, filtering, merging, splitting or duplicating of event streams</li>
+<li>Familiar SQL-standard-based continuous query language using <i>insert into</i>, <i>select</i>, <i>from</i>, <i>where</i>, <i>group-by</i>, <i>having</i>, <i>order-by</i>, <i>limit</i> and <i>distinct</i> clauses</li>
+<li>Inner-joins and outer joins (left, right, full) of an unlimited number of streams or windows</li>
+<li>Subqueries including <i>exists</i> and <i>in</i></li>
+<li>Output rate limiting and stabilizing, snapshot output</li>
+<li>Named windows<ul><li>Explicit sharing of data windows between statements</li>
+<li>Multiple and custom entry and exit criteria for events</li>
+<li>Support for predefined query execution optimized by indexed access, via on-select and on-demand (fire-and-forget) query and explicit indexes</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section"><h3>Event Pattern Matching</h3>
+<ul><li>Logical and temporal event correlation</li>
+<li>Crontab-like timer <i>'at'</i> operator</li>
+<li>Lifecycle of pattern can be controlled by timer and via operators, repeat-number and repeat-until, every-distinct, while</li>
+<li>Pattern-matched events provided to listeners</li>
+<li>Support for <i>match-recognize</i> which is a proposed SQL standard for row pattern matching based on regular expressions</li>
+</ul>
+</div>
+<div class="section"><h3>Event Representations</h3>
+<ul><li>Supports event-type inheritance and polymorphism as provided by the Java language, for Java object events as well as for Map-type events</li>
+<li>Events can be plain Java objects, XML (DOM and streaming through Apache Axiom) and java.util.Map including nested objects and hierarchical maps</li>
+<li>Event properties can be simple, indexed, mapped or nested - allows querying of deep Java object graphs and XML structures</li>
+<li>Dynamic properties allow dynamic typing of properties, supported by <i>cast</i>, <i>instanceof</i> and <i>exists</i> functions</li>
+<li>Applications can plug-in their own event representation and dynamic type resolution</li>
+<li>Insert-into can directly populate a plain or legacy Java object or Map from a select-clause</li>
+<li>Support for a create-schema syntax, useful to declare event types from a column-and-type list, from existing classes or from other types</li>
+</ul>
+</div>
+<div class="section"><h3>Modularization and Deployment</h3>
+<ul><li>Module parsing and deployment API</li>
+<li>A module files is a plain text file with EPL statements</li>
+</ul>
+</div>
+<div class="section"><h3>API</h3>
+<ul><li>Mature API with few significant changes since version 1.0</li>
+<li>Support for both the <b> listener (push/subscription) API</b> and the <b>consumer (pull/receive) API</b> for querying results</li>
+<li>Control event visibility and the concept of timer on a statement level via isolated service provider<ul><li>Suspend statements: take statements offline and online without losing state</li>
+<li>Load statements from historical data and merge into real-time streams</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section"><h3>Prepared statements and substitution parameters</h3>
+<ul><li>Precompile a statement with substitution parameters and efficiently start the parameterized statement multiple times</li>
+</ul>
+</div>
+<div class="section"><h3>Statement Object Model</h3>
+<ul><li>A set of classes providing an object-oriented representation of a statement </li>
+<li>Full and complete specification of a statement via object model</li>
+<li>Round-trip from object model to statement text and back to object model</li>
+<li>Build, change or interrogate statements beyond the textual representation </li>
+</ul>
+</div>
+<div class="section"><h3>Input+Output Adapters</h3>
+<ul><li>CSV input adapter reads comma-separated value formats<ul><li>simulate multiple event streams with timed, coordinated playback via timestamp column</li>
+<li>load generator</li>
+<li>preloading of reference data</li>
+</ul>
+</li>
+<li>JMS input and output adapter based on Spring JMS templates</li>
+<li>DB output adapter for running DML and for keyed update-insert (aka. upsert)</li>
+<li>HTTP input+output adapter</li>
+<li>Socket input adapter</li>
+</ul>
+</div>
+<div class="section"><h3>Other</h3>
+<ul><li><b>Executes a large number of simultaneous queries</b> - Esper's query processor can run thousands of queries continuously and simultaneously on a single instance</li>
+<li><b>Relational database access via SQL-query joins with event streams</b><ul><li>LRU (least-recently used) and expiry-time query result caches</li>
+<li>Keyed cache entries for fast cache lookup</li>
+<li>Engine indexes cached rows for fast filtering within a large number of SQL-query result rows</li>
+<li>Multiple SQL-queries in one statement transparently integrates multiple autonomous database systems</li>
+</ul>
+</li>
+<li><b>Joins to method invocation results</b> allows easy integration with distributed caches, web services and object-oriented databases </li>
+<li><b>On-demand queries</b> are fire-and-forget EPL queries against named windows for non-continuous query execution.<ul><li>Support for &quot;create index&quot; for on-demand query execution against large named windows</li>
+</ul>
+</li>
+<li><b>Variables</b> can occur in any expression and can dynamically control output rate<ul><li>Guarantees of consistency and atomicity of variable updates</li>
+<li>Scalar, un-typed and event-typed variables with support for nested property read/write</li>
+</ul>
+</li>
+<li><b>Variant event streams</b> allows treating disparate types of events as the same type, such as when the event type can only be known at runtime, when the event type is expected to vary, or when optional properties are desired.</li>
+<li><b>Concurrency-safe iterator</b> provides complete query capability for all statements </li>
+<li>Supports <b>externally-provided time</b> as well as Java system time, allowing applications full control over the concept of time within an engine</li>
+<li><b>Multithread-safe</b> as of release 1.5<ul><li>Multithreaded sends of events into an engine</li>
+<li>Create, start and stop statements during operation without adversely impacting performance</li>
+<li>Applications can retain full control over threading; Inbound, outbound and execution threading configurable</li>
+<li>Efficiently sharing resources between statements and low thread blocking</li>
+</ul>
+</li>
+<li>Supports <b>multiple independent Esper engines per JavaVM</b></li>
+<li><b>Pluggable architecture</b> for event pattern and event stream analysis via user-defined functions, plug-in views, plug-in aggregation functions, plug-in pattern guards and plug-in pattern event observers, event instance methods</li>
+<li><b>Performance-minded design</b>: query strategy analysis and index building; array-based collections; delta networks and many other techniques<ul><li>Benchmark kit available for download; Performance testing results and tips see page in menu</li>
+</ul>
+</li>
+<li><b>Unmatched event listener</b> receives a callback if an event does not match any started statement</li>
+<li>Support for all Java data types including BigInteger and BigDecimal</li>
+<li><b>Contained-Event</b> select syntax for easy handling of coarse-grained, business-level events that themselves contain events</li>
+<li>JSON and XML output event rendering without syntax to learn</li>
+<li><b>Annotations</b> allow adding information to EPL statements specific to your application</li>
+<li>Assign a <b>priority</b> to your statement; Identify <b>preemptive</b> statements that cause an event to drop in face of multiple statements matching filters.</li>
+<li>Declarative update of event properties via <b>on update</b> for named windows and <b>update istream</b> of events entering a stream.</li>
+<li>Support for <b>versioned events</b> that update, provide a new version or that revise an existing event held by an engine.</li>
+</ul>
+</div>
+<div class="section"><h3>Excellent documentation </h3>
+</div>
+<div class="section"><h3>Many examples</h3>
+<ul><li>J2EE and non-J2EE, from many different domains</li>
+<li>Java Messaging Service (JMS) server shell demonstrates a multi-threaded JMS server with dynamic statement management using Java Management Extensions (JMX)</li>
+</ul>
+</div>
+<div class="section"><h3>Supportive user and developer community</h3>
+</div>
+<div class="section"><h3>Performance tested</h3>
+</div>
+</div>
+<div class="section"><h2>Typical Uses</h2>
+<p>What these applications have in common is the requirement to process events (or messages) in real-time or near real-time. This is sometimes referred to as complex event processing (CEP) and event stream analysis. </p>
+<p>Key considerations for these types of applications are the complexity of the logic required, throughput and latency. </p>
+<ul><li>Complex computations - applications that detect patterns among events (event correlation), filter events, aggregate time or length windows of events, join event streams, trigger based on absence of events etc.</li>
+<li>High throughput - applications that process large volumes of messages (between 1,000 to 100k messages per second) </li>
+<li>Low latency - applications that react in real-time to conditions that occur (from a few milliseconds to a few seconds) </li>
+</ul>
+</div>
+<div class="section"><h2>Java - Known Limitations</h2>
+<ul><li>Esper requires a Java Virtual Machine version 5.0 runtime, or above. </li>
+<li>Esper will not work with JavaVM versions 1.4.2 or below.</li>
+</ul>
+</div>
+<div class="section"><h2>.NET - Known Limitations</h2>
+<ul><li>NEsper is the .NET version of the Java Esper, check the release section for feature information</li>
+</ul>
+</div>
+<div class="section"><h2>Summary</h2>
+<p>Esper and NEsper were designed to make it easier to build CEP and ESP applications. Esper and NEsper are open-source software available under the GNU General Public License (GPL) license.</p>
+<hr />
+<hr />
+<p>We are happy to use licenses of <a href="http://www.jetbrains.com/idea/?java_esper" class="externalLink">IntelliJ IDEA</a>, <a href="http://www.jetbrains.com/resharper/?java_esper" class="externalLink">ReSharper</a>, and <a href="http://www.jetbrains.com/profiler/?java_esper" class="externalLink">dotTrace</a> through the <a href="http://www.jetbrains.com/devnet/index.html?java_esper" class="externalLink">JetBrains Open Source Program</a></p>
+<p>YourKit is kindly supporting open source projects with its full-featured Java Profiler. YourKit, LLC is creator of innovative and intelligent tools for profiling Java and .NET applications. Take a look at YourKit's leading software products: <a href="http://www.yourkit.com/java/profiler/index.jsp" class="externalLink">YourKit Java Profiler</a> and <a href="http://www.yourkit.com/.net/profiler/index.jsp" class="externalLink">YourKit .NET Profiler</a>.</p>
+</div>
+
+			</div><!-- left_main -->
+    		</div><!-- right_side -->
+		<div id="right_side">
+			<a href="./index.html"><img src="./images/home.gif" alt="Esper and NEsper at Codehaus"/></a>
+			<div id="google_searchFormContainer"/>
+			<div id="google_search"/>
+			          <!--<h5>Esper 4.0.0</h5> Esper site.vm ignores it -->
+                  
+          
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+            
+    	<h3>
+  
+          <strong>About Esper and NEsper</strong>
+    
+    	</h3>
+      
+    
+                        
+    
+  
+          <a href="about/news/news.html">News</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="about/esper/esper.html">About Esper for Java</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="about/nesper/nesper.html">About NEsper for .NET</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="about/license/license.html">License</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="about/license/terms.html">Terms of Use</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                
+  
+  
+              
+          
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+        
+    	<h3>
+  
+          <a href="tutorials/tutorials.html">Tutorials and Case Studies</a>
+    
+    	</h3>
+      
+    
+                        
+    
+  
+          <a href="tutorials/tutorial/tutorial.html">Tutorial</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="tutorials/tutorial/quickstart.html">Quick Start</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="tutorials/tutorial/presentations.html">Articles and Presentations</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="tutorials/solution_patterns/solution_patterns.html">Solution Patterns</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="tutorials/tutorial/feedmonitor_casestudy.html">Short Case Study</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="tutorials/tutorial/transaction_casestudy.html">Longer Case Study</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="tutorials/tutorial/examples.html">Additional Examples</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="tutorials/links/links.html">Technology Links</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                
+  
+  
+              
+          
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+        
+    	<h3>
+  
+          <a href="about/esper/esper.html">Esper for Java</a>
+    
+    	</h3>
+      
+    
+                        
+    
+  
+          <a href="esper/download/download.html">Download</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="esper/history/history.html">Change History</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="esper/documentation/documentation.html">Documentation</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="tutorials/faq_esper/faq.html">FAQ</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="esper/issues/issues.html">Reporting Issues</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="esper/building/building.html">Building</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="esper/performance/performance.html">On Performance</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                
+  
+  
+              
+          
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+        
+    	<h3>
+  
+          <a href="about/nesper/nesper.html">NEsper for .NET</a>
+    
+    	</h3>
+      
+    
+                        
+    
+  
+          <a href="nesper/download/download.html">Download</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="nesper/history/history.html">Change History</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="nesper/documentation/documentation.html">Documentation</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="tutorials/faq_nesper/faq.html">FAQ</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="nesper/issues/issues.html">Reporting Issues</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="nesper/building/building.html">Building</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                
+  
+  
+              
+          
+              
+      
+            
+      
+            
+      
+            
+      
+              
+        
+    	<h3>
+  
+          <a href="team/team.html">The Esper/NEsper Team</a>
+    
+    	</h3>
+      
+    
+                        
+    
+  
+          <a href="team/contribute/contribute.html">How To Contribute</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="about/esper/mailinglist.html">Mailing Lists/Forums</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="http://jira.codehaus.org/browse/ESPER?report=com.atlassian.jira.plugin.system.project:roadmap-panel">Roadmap</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                  
+    
+  
+          <a href="about/esper/sourcerepo.html">Source Repository</a>
+    
+    	<br/>
+      
+    
+    
+  
+  
+                
+  
+  
+        			<h3>&nbsp;</h3>
+			<a href="http://www.codehaus.org"><img src="./images/logos/codehaus-small.gif" alt="" width="100"/></a>
+			<h3>&nbsp;</h3>
+			    
+  
+
+    
+  Last Published: Sep 26, 2010
+  <br/>Version: 4.0.0  
+
+		</div>
+    	</div><!-- main -->
+    	
+	<div id="footer">
+		<div class="right">
+			&copy; 2006-2007, Esper contributors &amp; EsperTech Inc. - <small>Design: <a href="http://www.free-css-templates.com">David Herreman</a></small>
+		</div>
+	</div>
+</div><!-- content -->
+
+<!-- google analytics -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-1261295-1");
+pageTracker._trackPageview();
+</script>
+</body>
+<!--
+memo:
+- html title (for UA)
+- use mvn macro for download.apt ? (requires maven doxia 1.0beta9 not publicly available yet)
+-->
+</html>
