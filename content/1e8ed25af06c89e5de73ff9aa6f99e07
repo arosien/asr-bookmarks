@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+  <title>Fantom Programming Language</title>
+  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+  <meta name="Description" content=" Fantom is an OO, functional programming
+    language designed to cross compile to Java, .NET, and JavaScript. It
+    provides a concise syntax along with elegant, cross portable libraries." />
+  <link rel='stylesheet' type='text/css' href='doc/doc.css'/>
+  <style type='text/css'>
+
+    div.content { margin-top: 1em; }
+    div.content strong
+    {
+      font-size: 110%;
+      font-family: "Ludica Grande", Arial;
+      display: block;
+      color: #414f61;
+    }
+
+    div.content h1
+    {
+      /*
+      text-indent:-9999px;
+      font: bold 14pt "Ludica Grande", Arial;
+      background: url(fanProgLang.png) no-repeat center;
+      padding:1em;
+      */
+      display:none;
+    }
+
+    div.content p { margin-top: 0; color:#666; }
+    #col1 { float: left; width: 33%; margin-right: 10px; }
+    #col2 { float: left; width: 33%; margin-right: 10px; }
+    #col3 { padding-bottom: 55px; }
+
+    #aside-right { float: right; }
+    #aside-left { float: left; }
+
+    #download
+    {
+      width: 275px;
+      height: 160px;
+      color: white;
+      background: #080;
+      -moz-border-radius: 5px;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      -webkit-border-radius: 5px;
+    }
+    #download a
+    {
+      padding: 17px 0 0 63px;
+      height: 48px;
+      display: inline-block;
+      color: white;
+      background: url(download.png) no-repeat 15px 15px;
+      text-decoration: none;
+    }
+    #download a span:first-child
+    {
+      font-size: 11pt;
+      text-decoration: underline;
+    }
+    #download a.hg
+    {
+      font-size: 11pt;
+      color: #fff;
+      background: url(hg.png) no-repeat;
+      margin: 1em;
+      padding: 5px 0 0 35px;
+      display: inline-block;
+      height: 32px;
+      text-decoration: underline;
+    }
+
+    #links a.docs { background-image: url(question.png); }
+    #links a.hg { background-image: url(hg.png); }
+    #links
+    {
+      width: 275px;
+      height: 160px;
+      background: #2f5381;
+      -moz-border-radius: 5px;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      -webkit-border-radius: 5px;
+    }
+    #links ul
+    {
+      list-style: none;
+      margin: 0;
+      padding: 1em;
+    }
+    #links li { margin-top: 10px; }
+    #links li:first-child { margin-top: 0; }
+    #links a
+    {
+      font-size: 11pt;
+      color: #fff;
+      background: url(lightBulb.png) no-repeat;
+      padding: 5px 0 0 35px;
+      display: inline-block;
+      height: 32px;
+    }
+    #links a.docs { background-image: url(question.png); }
+    #links a.irc  { background-image: url(irc.png); }
+
+    #snippet
+    {
+      width: 280px;
+      height: 160px;
+      margin: 2em 0 2em 284px;
+      background: #1b2f49;
+      -moz-border-radius: 5px;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      -webkit-border-radius: 5px;
+    }
+    #snippet pre { margin-left:2em; padding-top:15px; }
+    #snippet pre code { color:#fff; font-size: 10pt; line-height:15px; }
+
+    #bullets
+    {
+      padding: 1em;
+      border: 1px solid #bebea8;
+      background: #f7f7ed;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+    }
+    #bullets > p { text-align:center; border-bottom:1px solid #ddd; padding-bottom:1em; }
+    #bullets > p > strong { color: #ad4e00; }
+
+    #download ul
+    {
+      position: absolute;
+      background: #414F61; /*#25272a;*/
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      -moz-border-radius-topleft: 4px;
+      -moz-border-radius-bottomleft: 4px;
+      -webkit-border-top-left-radius: 4px;
+      -webkit-border-bottom-left-radius: 4px;
+      width: 260px;
+      height: 298px;
+      overflow: hidden;
+    }
+
+  </style>
+  <script type='text/javascript' src='doc/doc.js'></script>
+  <!--[if lt IE 7]>
+  <script src='http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE7.js' type='text/javascript'></script>
+  <![endif]-->
+  <!--[if IE 7]>
+  <style>#snippet { margin-top:0; }</style>
+  <![endif]-->
+
+</head>
+<body onload='Login.check();'>
+
+<!-- Header -->
+<div class='header'>
+<div>
+  <h1><a href='/'>Fantom</a></h1>
+  <p id='sidewalkLogin_'>&nbsp;</p>
+  <form method='get' action='/sidewalk/search/'>
+  <p>
+  <input type='text' name='q' size='30' value='Search...'
+    onfocus='if (value=="Search...") value=""' onblur='if (value=="") value="Search..."' />
+  </p>
+  </form>
+  <ul>
+  <li class='active'><a href='/'>Home</a></li>
+  <li><a href='/doc/index.html'>Docs</a></li>
+  <li><a href='/sidewalk/blog/'>Blog</a></li>
+  <li><a href='/sidewalk/ticket/'>Tickets</a></li>
+  <li><a href='/sidewalk/topic/'>Discuss</a></li>
+  </ul>
+</div>
+</div>
+
+<!-- Main -->
+<div class='content'>
+<div style='position: relative;'>
+
+  <h1>Fantom Programming Language</h1>
+
+  <div id='aside-right'>
+    <div id='download'>
+      <a href='http://fan.googlecode.com/files/fantom-1.0.56.zip' class='top'>
+        <span>Download Fantom</span><br/>
+        <span>Build 1.0.56</span>
+      </a>
+      <a class='hg' href='http://hg.fantom.org/'>Hg Repo</a>
+    </div>
+  </div>
+
+  <div id='aside-left'>
+    <div id='links'>
+      <ul>
+        <li><a href='doc/docIntro/StartHere.html'>Learn About Fantom</a></li>
+        <li><a class='docs' href='doc/index.html'>Documentation</a></li>
+        <li><a class='irc' href='http://webchat.freenode.net/?channels=#fantom'>IRC - irc.freenode.net - #fantom</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div id='snippet'>
+    <pre><code><span style='color:#5d5'>// Hello from Fantom!</span>
+<span style='color:#88f'>class</span> HelloWorld
+<span style='color:#f55'>{</span>
+  <span style='color:#88f'>static</span> Void main<span style='color:#f55'>()</span>
+  <span style='color:#f55'>{</span>
+    echo<span style='color:#f55'>(</span><span style='color:#c5c'>"Hello, World!"</span><span style='color:#f55'>)</span>
+  <span style='color:#f55'>}</span>
+<span style='color:#f55'>}</span></code></pre>
+  </div>
+
+  <!-- bullet points on why Fantom is awesome -->
+  <div id='bullets'>
+  <p><strong>The Language Formerly Known as Fan</strong></p>
+  <div id='col1'>
+  <p>
+  <strong>Portability</strong>
+  Write code portable to the Java VM, .NET CLR, and JavaScript in the browser.
+  </p>
+  <p>
+  <strong>Familiar Syntax</strong>
+  Java and C# programmers will feel at home with Fantom's
+  evolutionary syntax.
+  </p>
+  <p>
+  <strong>Mixins</strong>
+  Interfaces but with implementation.
+  </p>
+  <p>
+  <strong>Concurrency</strong>
+  Tackle concurrency with built-in immutability and actor model.
+  </p>
+  </div>
+
+  <div id='col2'>
+  <p>
+  <strong>Object Oriented</strong>
+  Everything subclasses from Obj. Value types when you need the
+  performance.
+  </p>
+  <p>
+  <strong>Functional</strong>
+  Functions and closures are baked in.
+  </p>
+  <p>
+  <strong>Static and Dynamic Typing</strong>
+  Don't like the extremes - take the middle of the road.
+  </p>
+  <p>
+  <strong>Serialization</strong>
+  Built-in "JSON like" serialization syntax
+  makes Fantom ideal for declarative programming too.
+  </p>
+  </div>
+
+  <div id='col3'>
+  <p>
+  <strong>Elegant APIs</strong>
+  We're quite obsessive about providing all the key features
+  required for a standard library, but with much less surface
+  area than the APIs found in Java or .NET.
+  </p>
+  <p>
+  <strong>REST</strong>
+  URI literals and a unified namespace of resources identified with URIs.
+  </p>
+  <p>
+  <a id='learnMore' href='doc/docIntro/StartHere.html'>Learn More About Fantom</a>
+  </p>
+  </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- Footer -->
+<div class='footer'>
+<div class='content'>
+</div>
+</div>
+
+</body>
+</html>
