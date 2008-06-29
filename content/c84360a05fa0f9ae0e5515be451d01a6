@@ -1,0 +1,751 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en" dir="ltr">
+  <head>
+<base href="https://launchpad.net/erma/+index" />
+
+    <title>Extremely Reusable Monitoring API in Launchpad</title>
+    <link rel="shortcut icon" href="/@@/launchpad.png" />
+
+    
+      <link rel="alternate" type="application/atom+xml"
+            href="http://feeds.launchpad.net/erma/announcements.atom"
+            title="Announcements for ERMA" />
+      <link rel="alternate" type="application/atom+xml"
+            href="http://feeds.launchpad.net/erma/latest-bugs.atom"
+            title="Latest Bugs for ERMA" />
+      <link rel="alternate" type="application/atom+xml"
+            href="http://feeds.launchpad.net/erma/branches.atom"
+            title="Latest Branches for ERMA" />
+      <link rel="alternate" type="application/atom+xml"
+            href="http://feeds.launchpad.net/erma/revisions.atom"
+            title="Latest Revisions for ERMA" />
+    
+
+    
+  
+  <link type="text/css" rel="stylesheet"
+        media="screen, print"
+        href="/+icing/rev12035/combo.css" />
+
+
+    
+
+    
+    <style type="text/css">
+      fieldset.collapsed div, fieldset div.collapsed {display: none;}
+    </style>
+    <noscript>
+      <style type="text/css">
+        fieldset.collapsible div, fieldset div.collapsed {display: block;}
+      </style>
+    </noscript>
+
+    
+  
+
+  
+
+  
+  
+  <script type="text/javascript"
+          src="/+icing/rev12035/MochiKit.js"></script>
+
+  
+  
+    <script type="text/javascript"
+            src="/+icing/rev12035/build/launchpad.js"></script>
+  
+
+  <script type="text/javascript">var cookie_scope = '; Path=/; Secure; Domain=.launchpad.net';</script>
+  <script type="text/javascript">
+    // Define a global YUI sandbox that should be used by everyone.
+    var LPS = YUI({
+      // Don't try to fetch the loader module.
+      bootstrap: false,
+      // Don't try to fetch CSS files.
+      fetchCSS: false,
+      // Turn off combo loading.
+      combine: false,
+      // For paranoia, set a low timeout to not wait on loading a resource.
+      timeout: 50
+      });
+  </script>
+
+
+  <script id="base-layout-load-scripts" type="text/javascript">
+    LPS.use('node', 'lp', function(Y) {
+        Y.on('load', function(e) {
+            sortables_init();
+            initInlineHelp();
+            Y.lp.activate_collapsibles();
+            activateFoldables();
+            activateConstrainBugExpiration();
+        }, window);
+
+        // Hook up the function that dismisses the help window if we click
+        // anywhere outside of it.
+        Y.on('click', handleClickOnPage, window);
+    });
+
+    LPS.use('lp.app.links',
+      function(Y) {
+        Y.on('load', function(e) {
+            Y.lp.app.links.check_valid_lp_links();
+        }, window);
+    });
+  </script>
+
+    
+    <style type="text/css">
+      div.collapsible {
+        border:medium none;
+        margin:0;
+        padding:16px 0 0;
+      }
+
+      div.collapsed {
+        display: None
+      }
+    </style>
+
+    <noscript>
+      <style type="text/css">
+        div.collapsible, div.collapsed {display: block;}
+      </style>
+    </noscript>
+
+        <script type="text/javascript">
+          LPS.use('lp.registry.pillar', function(Y) {
+              Y.on('load',
+                  function(e) {
+                      Y.lp.registry.pillar.activate_collapsible_div();
+                  },
+                  window);
+          });
+        </script>
+  
+  </head>
+
+  <body id="document"
+        class="tab-overview
+      main_side
+      public
+      yui3-skin-sam">
+        <script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-12833497-1']);
+          _gaq.push(['_setDomainName', '.launchpad.net']);
+          _gaq.push(['_setAllowHash', false]);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+          })();
+        </script>
+    <div class="yui-d0">
+      <div id="locationbar" class="login-logout">
+        
+
+<div id="logincontrol"><a href="https://launchpad.net/erma/+login">Log in / Register</a></div>
+
+
+
+      </div><!--id="locationbar"-->
+
+      <div id="watermark" class="watermark-apps-portlet">
+        <div class="flowed-block">
+          <img alt="" width="64" height="64" src="/@@/product-logo" />
+        </div>
+        <div class="flowed-block wide">
+          <h1 id="product-title"><span
+    class="yui3-editable_text-text">Extremely Reusable Monitoring API</span>
+    
+</h1>
+
+
+          
+  <!-- Application Menu -->
+  <ul class="facetmenu">
+    
+      <li class="overview active"
+          title="General information about ERMA"><span>Overview</span></li>
+      
+      
+    
+    
+      
+      <li class="branches" title="Branches for ERMA"><a
+    href="https://code.launchpad.net/erma">Code</a></li>
+      
+    
+    
+      
+      <li class="bugs" title="Bugs reported about ERMA"><a
+    href="https://bugs.launchpad.net/erma">Bugs</a></li>
+      
+    
+    
+      
+      <li class="specifications"
+          title="Feature specifications for ERMA"><a
+    href="https://blueprints.launchpad.net/erma">Blueprints</a></li>
+      
+    
+    
+      
+      <li class="translations"
+          title="Translations of ERMA in Launchpad"><a
+    href="https://translations.launchpad.net/erma">Translations</a></li>
+      
+    
+    
+      
+      <li class="answers" title="Questions for ERMA"><a
+    href="https://answers.launchpad.net/erma">Answers</a></li>
+      
+    
+  </ul>
+
+        </div>
+      </div>
+
+      <div class="yui-t4">
+        <div id="maincontent" class="yui-main">
+          <div class="yui-b" dir="ltr">
+            <div class="context-publication">
+              
+              
+
+              <div id="registration" class="registering">
+                
+    Registered
+    2008-05-14
+    by
+    <a href="/~erma-core" class="sprite team">Erma-core</a>
+  
+              </div>
+            </div>
+
+            
+            
+              
+      <div class="top-portlet">
+        
+
+        <div class="summary">ERMA (Extremely Reusable Monitoring API) is an instrumentation API that has been designed to be applicable for all monitoring needs. The design goal is "to make instrumentation as simple as logging." Lowering the effort needed to add instrumentation will encourage developers to add monitoring code where ever it makes sense.</div>
+
+        <div class="description"><p>Bug tracking: <a rel="nofollow" href="http://code.orbitz.net">http://<wbr></wbr>code.orbitz.<wbr></wbr>net</a></p></div>
+
+        
+        <ul id="external-links" class="horizontal">
+          <li>
+            <a id="homepageurl-link"
+               class="sprite external-link" rel="nofollow"
+               href="http://erma.wikidot.com/">Home page</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="yui-g">
+        <div class="yui-u first">
+          <div id="project-info" class="portlet">
+            <h2>Project information</h2>
+
+            <div class="two-column-list">
+              
+
+              <dl id="owner">
+                <dt>Maintainer:</dt>
+                <dd>
+                  <a href="/~erma-core" class="sprite team">Erma-core</a>
+                  
+                </dd>
+              </dl>
+
+              
+
+              <dl id="driver">
+                <dt>Driver:</dt>
+                <dd>
+
+                  
+
+                  
+                  Not yet appointed.
+                  
+                  
+
+                  <a target="help" href="/+help/driver.html" class="sprite maybe">&nbsp;<span class="invisible-link">Driver help</span></a>
+                </dd>
+              </dl>
+
+              <dl id="dev-focus">
+                <dt>Development focus:</dt>
+                <dd>
+                  <p>
+                  <a href="/erma/trunk">trunk series</a>&nbsp;
+                  </p>
+                  <p>
+                    <a href="https://code.launchpad.net/~erma-core/erma/main" class="sprite branch">lp:erma</a>&nbsp;
+                    
+                    <br />
+                    <a href="http://bazaar.launchpad.net/~erma-core/erma/main/files"
+     class="menu-link-source sprite info">View the branch content</a>
+                  </p>
+                </dd>
+              </dl>
+
+              <dl id="product-languages">
+                <dt>Programming Languages:</dt>
+                <dd><span id="programminglang"><span
+    class="yui3-editable_text-text">Java</span>
+    
+</span>
+
+</dd>
+              </dl>
+
+              <dl id="licences">
+                <dt>Licenses:</dt>
+                <dd>
+                  
+                    Apache License
+                  
+                  
+                  
+                </dd>
+                
+                
+              </dl>
+            </div>
+
+            <p>
+              <a href="https://launchpad.net/erma/+rdf"
+     class="menu-link-rdf sprite download"><abbr title="Resource Description Framework">RDF</abbr> metadata</a>
+            </p>
+
+            
+          </div>
+        </div>
+
+        <div class="yui-u">
+          <div class="portlet">
+            <h2>
+              <span class="see-all"><a href="https://launchpad.net/erma/+series"
+     class="menu-link-series sprite info">View full history</a></span>
+              Series and milestones
+            </h2>
+
+            
+  
+  <div id="timeline-loading" style="display: none">
+    <img src="/@@/spinner" /> Loading graph...
+  </div>
+
+  <!-- Opera ignores overflow:hidden for iframe, so use scrolling=no. -->
+  <iframe id="timeline-iframe" name="timeline-iframe" class="timeline-iframe" style="display: none; border: 0" scrolling="no" width="100%" height="216px"></iframe>
+  <script>
+  <!--
+  function timeline_iframe(auto_resize, include_inactive, start, size) {
+      var timeline_url = "+timeline-graph?";
+      if (include_inactive == 'true') {
+          timeline_url += "include_inactive=true&";
+      }
+
+      if (auto_resize == 'true') {
+          timeline_url += 'resize_frame=timeline-iframe&';
+      }
+
+      start = parseInt(start);
+      size = parseInt(size);
+      if (start != NaN && start >= 0) {
+          timeline_url += "start=" + start + "&";
+      }
+      if (size != NaN && size >= 1) {
+          timeline_url += "size=" + size + "&";
+      }
+      LPS.use('node', function(Y) {
+          if (Y.UA.ie) {
+              return;
+          }
+          var loading_el = Y.one('#timeline-loading');
+          loading_el.setStyle('display', 'block');
+          var iframe = Y.one('#timeline-iframe');
+          iframe.set('src', timeline_url);
+          Y.on('load', function(e) {
+              loading_el.setStyle('display', 'none');
+              iframe.setStyle('display', 'block');
+          }, iframe);
+      });
+  }
+  -->
+  </script>
+  <script>
+      timeline_iframe(
+        'None',
+        'None',
+        'None',
+        'None'
+        );
+      </script>
+
+
+            <p id="development-focus">
+              <a href="/erma/trunk">ERMA trunk series</a>
+              is the current focus of development
+            </p>
+
+            <ul class="horizontal">
+              
+              <li>
+                <a href="https://launchpad.net/erma/+milestones"
+     class="menu-link-milestones sprite info">View milestones</a>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="yui-g">
+        <div class="yui-u first">
+          <div>
+</div>
+
+          
+
+          <div>
+  <div class="portlet" id="portlet-top-contributors">
+  <h2>
+    <span class="see-all"><a href="https://launchpad.net/erma/+topcontributors"
+     class="menu-link-top_contributors sprite info">More contributors</a></span>
+    Top contributors
+  </h2>
+
+  <ul>
+    
+      <li>
+        <a href="/~sanjeewa190" class="sprite person">sanjeewa malalgoda</a>
+        25 points
+      </li>
+    
+  </ul>
+</div>
+
+</div>
+
+          <div>
+</div>
+        </div>
+
+        <div class="yui-u">
+          <div><div class="portlet" id="portlet-latest-questions">
+  <h2>
+    <span class="see-all"><a href="https://answers.launchpad.net/erma">All questions</a></span>
+    Latest questions
+  </h2>
+
+  <ul>
+    <li>
+      <a href="https://answers.launchpad.net/erma/+question/137630"
+         class=" sprite question">use erma in my project</a>
+      <br /><span class="registered">
+        Posted on 2010-12-13
+      </span>
+    </li>
+    <li>
+      <a href="https://answers.launchpad.net/erma/+question/44131"
+         class=" sprite question">NullPointerException thrown when using TransactionMonitor</a>
+      <br /><span class="registered">
+        Posted on 2008-09-04
+      </span>
+    </li>
+    <li>
+      <a href="https://answers.launchpad.net/erma/+question/44129"
+         class=" sprite question">Problem when using LoggingMonitorProcessor, the log is null</a>
+      <br /><span class="registered">
+        Posted on 2008-09-04
+      </span>
+    </li>
+    <li>
+      <a href="https://answers.launchpad.net/erma/+question/44119"
+         class=" sprite question">WiKi documentation outdated ?</a>
+      <br /><span class="registered">
+        Posted on 2008-09-04
+      </span>
+    </li>
+    <li>
+      <a href="https://answers.launchpad.net/erma/+question/43470"
+         class=" sprite question">Javadocs?</a>
+      <br /><span class="registered">
+        Posted on 2008-08-28
+      </span>
+    </li>
+  </ul>
+</div>
+</div>
+
+          <div>
+
+<div class="portlet" id="portlet-blueprints">
+  <h2>
+    <span class="see-all"><a href="https://blueprints.launchpad.net/erma">All blueprints</a></span>
+    Latest blueprints</h2>
+
+  <ul>
+  </ul>
+</div>
+
+</div>
+
+          <div>
+</div>
+        </div>
+      </div>
+    
+          </div><!-- yui-b -->
+        </div><!-- yui-main -->
+
+        <div id="side-portlets" class="yui-b side">
+          
+      <div id="global-actions" class="portlet vertical">
+  <ul>
+    <li>
+      <a href="https://launchpad.net/erma/+subscribe"
+     class="menu-link-subscribe sprite add">Subscribe to bug mail</a>
+    </li>
+  </ul>
+</div>
+
+
+      <div id="involvement" class="portlet">
+  <h2>Get Involved</h2>
+
+  <ul class="involvement">
+    <li>
+      <a href="https://answers.launchpad.net/erma/+addquestion"
+     class="menu-link-ask_question sprite answers">Ask a question</a>
+    </li>
+    <li>
+      <a href="https://code.launchpad.net/erma/+addbranch"
+     class="menu-link-submit_code sprite code">Submit code</a>
+    </li>
+    <li>
+      <a href="https://blueprints.launchpad.net/erma/+addspec"
+     class="menu-link-register_blueprint sprite blueprints">Register a blueprint</a>
+    </li>
+    
+      <li class="disabled"
+          title="Launchpad needs to know where the user can report a bug">
+        <div style="padding: 0.3em 0 0.3em 0.3em">
+          <div style="display: inline-block" class="sprite icon-only warning-icon"></div>
+
+          <div style="height: 1.2em; float: right">
+            <img src="/@@/gray-arrow-right.png" style="top: 50%; bottom: 50%; margin-top: -5px;
+                       position: relative;
+                       height: 9px; width: 14px; padding: 0" />
+          </div>
+
+          <span>Report a bug</span>
+        </div>
+      </li>
+    
+    
+      <li class="disabled"
+          title="Launchpad needs to know where the user can help translate">
+        <div style="padding: 0.3em 0 0.3em 0.3em">
+          <div style="display: inline-block" class="sprite icon-only warning-icon"></div>
+
+          <div style="height: 1.2em; float: right">
+            <img src="/@@/gray-arrow-right.png" style="top: 50%; bottom: 50%; margin-top: -5px;
+                       position: relative;
+                       height: 9px; width: 14px; padding: 0" />
+          </div>
+
+          <span>Help translate</span>
+        </div>
+      </li>
+    
+  </ul>
+
+  
+    
+    
+  
+
+  
+</div>
+
+
+      <div id="downloads" class="top-portlet downloads">
+        <h2>Downloads</h2>
+
+        
+          
+  <div class="version">
+    Latest version is 3.1-rc1
+  </div>
+
+  <ul>
+    <li>
+      <a href="http://launchpad.net/erma/3.1/3.1-rc1/+download/erma-3.1-RC1.zip"
+         title="src and dependencies">erma-3.1-RC1.zip</a>
+    </li>
+    <li>
+      <a href="http://launchpad.net/erma/3.1/3.1-rc1/+download/erma-3.1-RC1.tar.gz"
+         title="src and dependencies">erma-3.1-RC1.tar.gz</a>
+    </li>
+    <li>
+      <a href="http://launchpad.net/erma/3.1/3.1-rc1/+download/erma-lib-3.1-RC1.jar"
+         title="erma-lib">erma-lib-3.1-RC1.jar</a>
+    </li>
+    <li>
+      <a href="http://launchpad.net/erma/3.1/3.1-rc1/+download/erma-api-3.1-RC1.jar"
+         title="erma-api">erma-api-3.1-RC1.jar</a>
+    </li>
+  </ul>
+
+  <div class="released">
+    released on 2008-08-12
+  </div>
+
+
+        
+
+        <p class="alternate">
+          <a class="sprite info"
+             href="https://launchpad.net/erma/+download">All downloads</a>
+           
+        </p>
+      </div>
+
+      
+
+<div id="portlet-latest-announcements"
+     class="portlet announcements">
+  <h2>
+    <span style="float: right;"><a title="Atom 1.0 feed"
+    href="http://feeds.launchpad.net/erma/announcements.atom"><img src="/@@/rss.png" /></a></span>
+    Announcements
+  </h2>
+
+  
+
+  
+    <ul>
+      <li>
+        <div class="latest-announcement">
+          
+          <a href="/erma/+announcement/1060">Jira now available</a>
+          <strong>on 2008-09-13</strong>
+          <br /> Thanks to hosting provided by Orbitz Worldwide and a free license provided by...
+        </div>
+      </li>
+      <li>
+        
+          
+          <a href="/erma/+announcement/787">ERMA forum now available on the wiki</a>
+          <strong>on 2008-08-01</strong>
+          <br /> We have created a forum on the ERMA wiki at http://erma.wikidot.com/forum/sta...
+        
+      </li>
+    </ul>
+
+    <div class="see-all"><a href="https://launchpad.net/erma/+announcements"
+     class="menu-link-announcements sprite info">Read all announcements</a></div>
+  
+
+  <div class="actions"></div>
+</div>
+
+
+
+    
+        </div><!-- yui-b side -->
+      </div><!-- yui-t4 -->
+
+      
+  <div id="footer" class="footer">
+    <div class="lp-arcana">
+        <div class="lp-branding">
+          <a href="https://launchpad.net/"><img src="/@@/launchpad-logo-and-name-hierarchy.png" alt="Launchpad" /></a>
+          &nbsp;&bull;&nbsp;
+          <a href="https://launchpad.net/+tour">Take the tour</a>
+          &nbsp;&bull;&nbsp;
+          <a href="https://help.launchpad.net/">Read the guide</a>
+          &nbsp;
+          <form id="globalsearch" method="get"
+                accept-charset="UTF-8"
+                action="https://launchpad.net/+search">
+            <input type="search" id="search-text" name="field.text" />
+            <input type="submit" value="" class="icon-only sprite search-icon" />
+          </form>
+        </div>
+        
+  
+
+    </div>
+
+    <div class="colophon">
+      &copy; 2004-2010
+      <a href="http://canonical.com/">Canonical&nbsp;Ltd.</a>
+      &nbsp;&bull;&nbsp;
+      <a href="https://launchpad.net/legal">Terms of use</a>
+      &nbsp;&bull;&nbsp;
+      <a href="/feedback">Contact Launchpad Support</a>
+      
+      &nbsp;&bull;&nbsp;
+      <a href="http://identi.ca/launchpadstatus">System status</a>
+      <span id="lp-version">
+      &nbsp;&bull;&nbsp;
+        r12035
+        
+        
+        (<a href="https://code.launchpad.net/~launchpad-pqm/launchpad/stable/">get the code</a>)
+      </span>
+    </div>
+  </div>
+
+    </div><!-- yui-d0-->
+
+    <div id="help-pane" class="invisible">
+      <div id="help-body">
+        
+        <iframe id="help-pane-content" class="invisible" src="javascript:void(0);"></iframe>
+      </div>
+      <div id="help-footer">
+        <span id="help-close"></span>
+      </div>
+    </div>
+
+    
+  
+
+  <script>LP.client.cache['context'] =
+                 {"project_group_link": null, "license_reviewed": "tag:launchpad.net:2008:redacted", "license_info": null, "remote_product": null, "development_focus_link": "https://launchpad.net/api/devel/erma/trunk", "bug_supervisor_link": null, "official_bug_tags": [], "active_milestones_collection_link": "https://launchpad.net/api/devel/erma/active_milestones", "commercial_subscription_is_due": false, "all_specifications_collection_link": "https://launchpad.net/api/devel/erma/all_specifications", "translation_focus_link": null, "licenses": ["Apache License"], "all_milestones_collection_link": "https://launchpad.net/api/devel/erma/all_milestones", "bug_reported_acknowledgement": null, "display_name": "ERMA", "wiki_url": null, "title": "Extremely Reusable Monitoring API", "homepage_url": "http://erma.wikidot.com/", "download_url": null, "is_permitted": "tag:launchpad.net:2008:redacted", "reviewer_whiteboard": "tag:launchpad.net:2008:redacted", "self_link": "https://launchpad.net/api/devel/erma", "resource_type_link": "https://launchpad.net/api/devel/#project", "programming_language": "Java", "description": "Bug tracking: http://code.orbitz.net", "valid_specifications_collection_link": "https://launchpad.net/api/devel/erma/valid_specifications", "security_contact_link": null, "brand_link": "https://launchpad.net/api/devel/erma/brand", "sourceforge_project": null, "http_etag": "\"4584a34f56db0387c08cd811f8275830e3af7661-c5a0ad0e7381036eaee70bd8dc78ba96842efe70\"", "date_next_suggest_packaging": null, "bug_reporting_guidelines": null, "active": true, "bug_tracker_link": null, "name": "erma", "license_approved": "tag:launchpad.net:2008:redacted", "driver_link": null, "freshmeat_project": null, "screenshots_url": null, "registrant_link": "https://launchpad.net/api/devel/~erma-core", "summary": "ERMA (Extremely Reusable Monitoring API) is an instrumentation API that has been designed to be applicable for all monitoring needs. The design goal is \"to make instrumentation as simple as logging.\" Lowering the effort needed to add instrumentation will encourage developers to add monitoring code where ever it makes sense.", "logo_link": "https://launchpad.net/api/devel/erma/logo", "owner_link": "https://launchpad.net/api/devel/~erma-core", "qualifies_for_free_hosting": true, "releases_collection_link": "https://launchpad.net/api/devel/erma/releases", "date_created": "2008-05-14T18:54:44.931915+00:00", "series_collection_link": "https://launchpad.net/api/devel/erma/series", "commercial_subscription_link": null, "icon_link": "https://launchpad.net/api/devel/erma/icon"};</script>
+
+  </body>
+</html>
+
+
+  <!--
+    Facet name: overview
+    Page type: main_side
+    Has global search: True
+    Has application tabs: True
+    Has side portlets: True
+
+    At least 58 queries/external actions issued in 1.04 seconds
+
+    Features: {'memcache': None, u'code.recipes_enabled': None, 'hard_timeout': u'15000'} 
+    in scopes {'pageid:BugTask:+create-question': False, 'pageid:Archive:+packages': False, 'default': True, 'pageid:Distribution:+bugs': False, 'pageid:Archive:EntryResource:getBuildSummariesForSourceIds': False, 'pageid:MailingListApplication:MailingListAPIView': False, 'pageid:POFile:+translate': False, 'pageid:ProjectGroup:+milestones': False, 'pageid:Person:+commentedbugs': False, 'pageid:Archive:+index': False, 'pageid:BugTask:+index': False, 'pageid:CodeImportSchedulerApplication:CodeImportSchedulerAPI': False, 'pageid:Person:+bugs': False, 'team:launchpad-recipe-beta': False, 'pageid:Milestone:+index': False} 
+
+    r12035
+  -->
+
+
