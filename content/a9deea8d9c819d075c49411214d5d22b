@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>Kilim</title>
+
+<link rel="stylesheet" type="text/css" href="../style.css">
+
+</head>
+<body>
+<div id="content" style="position:relative; left:0px; top:0px; width: 700px;">
+
+  <table width="700 px">
+    <tr valign="bottom">
+      <td >
+	<img src="../images/kilim_head.jpg">
+      </td>
+      <td style="text-align:right">
+	sriram srinivasan
+      </td>
+    </tr>
+</table>
+<hr>
+<p style="margin-top:50px"></p>
+
+<h1> What is Kilim?</h1>
+<p>Kilim is a message-passing framework for Java that provides ultra-lightweight threads and facilities for fast, safe, zero-copy messaging between these threads.
+
+<p>It consists of a bytecode postprocessor (a "weaver"), a run time library with buffered mailboxes (multi-producer, single consumer queues) and a user-level scheduler and a type system that puts certain constraints on pointer aliasing within messages to ensure interference-freedom between threads.
+<hr>
+<h1> Why?</h1>
+<p>Hardware facilities are getting distributed, from the micro to the macro levels -- increasing numbers of cores, CPUs in a box, boxes in a data center to a multitude of data centers. The current crop of software architectures, languages and idioms are not suited to this trend. Here are a few reasons:
+<ul>
+<li> A multi-core/CPU box is internally a distributed system, but operating systems and hardware manufacturers go to great lengths to provide an illusion of local shared memory. In reality, the illusion is never complete, which is why programmers have no option but to learn about non-trivial memory models and consistency schemes.
+</li>
+<li>The problems with shared memory has been well documented [ <a href="http://www.eecs.berkeley.edu/Pubs/TechRpts/2006/EECS-2006-1.pdf">PDF</a> ].</li>
+<li>Different mindset between "concurrent programming" and "distributed programming". Programmers have to deal with both (even embedded systems have network interactions) and require separate sets of tools for verification, profiling and debugging these two patterns.
+</li>
+<li> The "events vs. threads" debate unnecessarily conflates two problems: threads are considered bad because they are (a) heavyweight (which doesn't have to be the case) and (b) the thread paradigm is implicitly associated with shared memory locking constructs that are error-prone, which again does not have to be the case. As Kilim demonstrates, it is possible to have lightweight threads that are just as lightweight as state machines, yet provide the automatic stack management feature (there's no need for the "return to the mainloop" mentality).
+</li>
+</ul>
+
+The combination of lightweight threads plus message-passing is a good fit for the emerging world. It permits us to blur the line between concurrency and distribution -- the API (send/receive) is the same (although the failure modes and frequencies may be different), and allows a uniform set of tools for debugging, profiling, and verification. For example, the most common verification tool in practice, the SPIN model checker, is based on a message passing mindset. There is a good reason why Tony Hoare used "communicating sequential processes" as a model for verification. 
+<hr>
+<h1> Download </h1>
+
+<p>The software is released under a MIT-style open source license. I have removed the isolation type system from this version because I've decided to rewrite it.
+
+<p>Sources+docs+bugs on github:   <a href="http://github.com/kilim/kilim">kilim-0.7.2</a>
+<p>Discussions at the <a href="http://groups.google.com/group/kilimthreads?hl=en"> kilimthreads</a> google group</p>
+<p> Please send feedback, suggestions, fixes to kilim @ malhar.net. 
+<hr>
+<h1> Publications </h1>
+<p>Kilim: Isolation-Typed Actors for Java. [<a href="kilim_ecoop08.pdf"> pdf </a>]<br>
+<i>Sriram Srinivasan, Alan Mycroft</i><br>
+European Conference on Object Oriented Programming ECOOP 2008, Cyprus.
+<p>
+A Thread of One's Own. [<a href="thread_of_ones_own.pdf"> pdf </a>]<br>
+<i>Sriram Srinivasan</i><br>
+New Horizons in Compilers Workshop, HIPC, Bangalore 2006
+<hr>
+<h1> Presentations</h1>
+  <p> <a href="../talks/kilim-google.pdf">Kilim: Isolation-typed actors for Java [PDF]</a></p>
+        <blockquote>
+          <p class = "talkdesc">These slides accompany a <a href="http://www.youtube.com/watch?v=37NaHRE0Sqw">Google tech talk ([Google Video])</a>. Download the video from  <a href="http://www.kissyoutube.com/watch?v=37NaHRE0Sqw">kissyoutube</a>.</p>
+        </blockquote>
+
+<div style="float:right"><a href="../index.html"><img alt="home" border="0" src="../images/home_icon.gif" width="50" height="50"></a></div>
+</div>
+</body></html>
