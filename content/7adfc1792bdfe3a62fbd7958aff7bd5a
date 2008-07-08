@@ -1,0 +1,174 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fityk — curve fitting software </title>
+    <link rel="stylesheet" href="_static/fityk.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.9.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/fityk.ico"/>
+    <link rel="top" title="Fityk 0.9.4 manual" href="#" /> 
+  </head>
+  <body>
+<div style="background-color: white; text-align: center; padding: 10px 10px 10px 10px">
+ <a href="http://www.unipress.waw.pl/fityk/"><img src="_static/fityk-banner.png" alt="" /></a>
+</div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <a class="screenshot reference internal image-reference" href="_images/fityk076.png"><img align="right" alt="[screenshot]" class="screenshot align-right" src="_images/fityk076.png" style="width: 389.0px; height: 303.0px;" /></a>
+<p>Fityk <em>[fi:tik]</em> is a program for data processing
+and nonlinear <strong>curve fitting</strong>.</p>
+<p>It is primarily used...</p>
+<ul class="simple">
+<li>by scientists who analyse data from powder diffraction, chromatography,
+photoluminescence and photoelectron spectroscopy,
+infrared and Raman spectroscopy, and other experimental techniques,</li>
+</ul>
+<ul class="simple">
+<li>to fit bell-shaped functions (Gaussian, Lorentzian, Voigt,
+Pearson VII, bifurcated Gaussian, EMG, Doniach-Sunjic, etc.),</li>
+</ul>
+<p>... but any functions can be fitted to any 2D (i.e. <em>x</em>,<em>y</em>) data.</p>
+<div class="section" id="features">
+<h1>Features</h1>
+<ul class="simple">
+<li>intuitive graphical interface (and also command line interface),</li>
+<li>support for many data file formats, thanks to
+the <a class="reference external" href="http://www.unipress.waw.pl/fityk/xylib/">xylib library</a>,</li>
+<li>dozens of built-in functions and support for user-defined functions,</li>
+<li>equality constraints,</li>
+<li>modelling error of the <em>x</em> coordinate of points (that can be caused by
+instrumental zero-shift or by sample displacement in powder diffraction),</li>
+<li>peak detection algorithm,</li>
+<li>various optimization methods (standard Marquardt least-squares algorithm,
+Genetic Algorithms, Nelder-Mead simplex),</li>
+<li>handling series of datasets,</li>
+<li>automation with scripts,</li>
+<li>an add-on for powder diffraction data (Pawley refinement)</li>
+<li>modular <a class="reference external" href="http://sourceforge.net/apps/trac/fityk/wiki/architecture">architecture</a>,</li>
+<li>open source licence (GPL),</li>
+<li>portability.</li>
+</ul>
+</div>
+<div class="section" id="download">
+<h1>Download</h1>
+<p><img alt="ico-win" src="_images/ico-win.png" /> MS Windows: <a class="reference external" href="http://downloads.sourceforge.net/fityk/fityk-0.9.4-setup.exe">fityk-0.9.4-setup.exe</a></p>
+<p><img alt="ico-tux" src="_images/ico-tux.png" /> Fresh Linux RPMs from <a class="reference external" href="http://download.opensuse.org/repositories/home://wojdyr/">OBS</a> and DEBs from <a class="reference external" href="https://launchpad.net/~wojdyr/+archive/fityk">PPA</a> or <a class="reference external" href="http://debian-xray.iit.edu/">debian-xray</a></p>
+<p><img alt="ico-osx" src="_images/ico-osx.png" /> Mac OS X: see details <a class="reference external" href="http://sourceforge.net/apps/trac/fityk/wiki/MacOSX">here</a>.</p>
+<p>Source code: <a class="reference external" href="http://downloads.sourceforge.net/fityk/fityk-0.9.4.tar.bz2">fityk-0.9.4.tar.bz2</a> or the latest revision from</p>
+<div class="highlight-fityk" id="svn"><div class="highlight"><pre>svn co https://fityk.svn.sourceforge.net/svnroot/fityk/trunk fityk
+</pre></div>
+</div>
+<p>Version 0.9.4 was released on 2010-10-09
+(<a class="reference external" href="http://fityk.svn.sourceforge.net/svnroot/fityk/trunk/NEWS">changelog</a>).
+FreshMeat provides new version <strong>notifications</strong>:
+<a class="reference external" href="http://freshmeat.net/projects/fityk/">emails</a> and
+<a class="reference external" href="http://freshmeat.net/projects/fityk/releases.atom">feeds</a>.</p>
+<div align="center" style="font-size:x-small; margin-top:20px;">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_donations">
+<input type="hidden" name="business" value="wojdyr@gmail.com">
+<input type="hidden" name="lc" value="US">
+<input type="hidden" name="item_name" value="Fityk">
+<input type="hidden" name="currency_code" value="USD">
+<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHosted">
+<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal">
+<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+<p>
+Alternatively, you may donate via
+<a href="http://moneybookers.com">moneybookers</a> to wojdyr@gmail.com
+</p>
+</div></div>
+<div class="section" id="documentation">
+<h1>Documentation</h1>
+<p><a class="reference external" href="fityk-manual.html">The manual</a>
+(<a class="reference external" href="http://www.unipress.waw.pl/fityk/fityk-manual.pdf">PDF</a>)
+documents mainly commands of the fityk mini-language.</p>
+<p><a class="reference external" href="http://sourceforge.net/apps/trac/fityk/">Trac Wiki</a>
+contains all other informations.
+You are welcome to contribute.</p>
+<p>Citing fityk in academic papers:
+M. Wojdyr,
+<a class="reference external" href="http://dx.doi.org/10.1107/S0021889810030499">J. Appl. Cryst. 43, 1126-1128</a>
+(2010)
+[<a class="reference external" href="http://www.unipress.waw.pl/fityk/fityk-JAC-10-reprint.pdf">reprint</a>]</p>
+</div>
+<div class="section" id="questions">
+<h1>Questions?</h1>
+<p>Join the Google group
+<a class="reference external" href="http://groups.google.com/group/fityk-users/">fityk-users</a>.
+You may select option &#8220;no mail&#8221; and use the web interface to send messages.
+Feel free to send questions, comments, bug reports, new feature requests
+and success stories.</p>
+<p>Asking for a new feature usually results in adding the request to
+the <a class="reference external" href="http://fityk.svn.sourceforge.net/svnroot/fityk/trunk/TODO">TODO list</a>
+or, if it already is in the list, in assigning higher priority to it.</p>
+<p>If for some reasons you do not want to use the group,
+you may contact directly the maintainer of the program:
+<a class="reference external" href="http://www.unipress.waw.pl/~wojdyr/">Marcin Wojdyr</a>  <a class="reference external" href="mailto:wojdyr&#37;&#52;&#48;gmail&#46;com">wojdyr<span>&#64;</span>gmail<span>&#46;</span>com</a>.</p>
+<script type="text/javascript"> <!--
+if (window != top) top.location.href = location.href;
+$(document).ready(function(){
+  $("#features").hide();
+  $("#features").prev().after(
+   "<p id='expand_features'><a href=''>More &raquo;</a></p>");
+  $("#expand_features a").click(function(event){
+    $(this).parent().hide();
+    $("#features").show('slow');
+    event.preventDefault();
+  });
+  $("#svn").hide();
+  $("#svn").prev().append(
+   "<span id='expand_svn'> <a href=''>SVN &raquo;</a></span>");
+  var svn_shown = true;
+  $("#expand_svn a").click(function(event){
+    $(this).html('SVN ' + (svn_shown ? '&laquo;' : '&raquo'));
+    $("#svn").toggle('fast');
+    svn_shown = !svn_shown;
+    event.preventDefault();
+  });
+});
+//--> </script></div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+  <li><a href="http://www.unipress.waw.pl/fityk/">Fityk home</a>&nbsp;&nbsp;&nbsp;</li>
+  <li><a href="http://sourceforge.net/apps/trac/fityk/">Wiki/Trac</a>&nbsp;&nbsp;&nbsp;</li>
+  
+        <li><a href="fityk-manual.html">Fityk 0.9.4 manual</a> </li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+      Last updated on 2010-11-12.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>
