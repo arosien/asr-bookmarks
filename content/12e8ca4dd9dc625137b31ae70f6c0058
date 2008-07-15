@@ -1,0 +1,139 @@
+<html>
+<head>
+<title>Piccolo XML Parser for Java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="description" content="A small and very fast XML (SAX) parser for Java">
+<meta name="keywords" content="java, sax, xml, parser, piccolo, free, fastest">
+<link rel="stylesheet" href="piccolo.css" type="text/css">
+
+</head>
+
+
+<body bgcolor="#FFFFFF" text="#000000" onLoad="onLoad()">
+<script language="JavaScript">
+<!--
+function onLoad() {
+	var f = document['subscribe'];
+	if (f != null) {
+		pw = f['pw'];
+		pwconf = f['pw-conf'];
+		if (pw != null && pwconf != null) {
+			pw.value = randomASCII(8);
+			pwconf.value = pw.value;
+		}
+	}
+}
+
+function randomASCII(len) {
+	var s = "";
+	for (var i=0; i < len; i++)
+		s += String.fromCharCode(0x61 + Math.round((Math.random() * 25)));
+		
+	return s;
+}
+
+//-->
+</script>
+
+
+<center>
+  <table class="main">
+    <tr> 
+      <td width="28%"><img src="piccolo_logo.gif" width="108" height="60"> 
+        <A href="http://sourceforge.net/projects/piccolo"><IMG src="http://sourceforge.net/sflogo.php?group_id=48384" width="88" height="31"
+					  									border="0" alt="Piccolo Project Page"></A> 
+      </td>
+      <td width="72%" valign="bottom" class="title"><strong class="title">Piccolo 
+        XML Parser for Java</strong></td>
+    </tr>
+    <tr> 
+      <td class="navbar" colspan="2"> <a class="navbar" href="http://bluecast.com/">bluecast.com</a> 
+        &nbsp;|&nbsp; <a class="navbar" href="http://yoren.org/">yoren.org</a> 
+        &nbsp;|&nbsp; <a class="navbar" href="index.html">piccolo</a> &nbsp;|&nbsp; 
+        <a class="navbar" href="using.html">documentation</a> 
+        &nbsp;|&nbsp; <a class="navbar" href="bench.html">benchmarks</a> 
+		&nbsp;|&nbsp; <a class="navbar" href="http://bluecast.com/contact.html">contact</a>			
+	  </td>
+    </tr>
+    <tr> 
+      <td bgcolor="#000000" colspan="2"> 
+        <table width="100%" border="0" bgcolor="#ffffff">
+          <tr> 
+            <td class="content"><br>
+              Piccolo is a small, extremely fast XML parser for Java. It implements 
+              the SAX 1, SAX 2.0.1, and JAXP 1.1 (SAX parsing only) interfaces 
+              as a non-validating parser and attempts to detect all XML well-formedness 
+              errors. Piccolo was developed by Yuval Oren and is released as open 
+              source software under the terms of the <a href="http://apache.org/licenses/LICENSE-2.0">Apache Software License 2.0 </a>. 
+              <p>Piccolo was developed using modified versions of the parser generator 
+                tools <a href="http://www.jflex.de/">JFlex</a> and <a href="http://troi.lincom-asg.com/~rjamison/byacc/">BYACC/J</a>. 
+                I had used flex and byacc in C and C++ parsers, but I noticed 
+                that almost all Java XML parsers are hand-written. I developed 
+                Piccolo as an investigation of parser generator tools in Java 
+                and of high performance Java techniques. Thanks to James Clark 
+                and to the Apache project, whose parsers helped me improve my 
+                own.</p>
+              <p>If you want to build Piccolo from the source code, you will also 
+                need Apache's <a href="http://jakarta.apache.org/ant">Ant</a>, 
+                a tool similar to UNIX &quot;make&quot;. More information is also 
+                available on Piccolo's <a href="http://sourceforge.net/projects/piccolo">SourceForge 
+                project page</a>.</p>
+              <form name="subscribe" method="post" action="http://lists.sourceforge.net/lists/subscribe/piccolo-announce">
+                Receive announcements about Piccolo: 
+                <input type="text" name="email" size="30" value="your@email.com">
+				<input type="hidden" name="pw" value="password">
+				<input type="hidden" name="pw-conf" value="password">				
+                <input type="submit" name="Submit" value="Subscribe">
+              </form>
+              <center>
+                <table border="0" width="90%" cellpadding="10" cellspacing="10">
+                  <tr align="left"> 
+                    <th>Downloads</th>
+                    <th>Documentation</th>
+                    <th><a href="bench.html">Benchmarks</a></th>
+                  </tr>
+                  <tr valign="top"> 
+                    <td nowrap> 
+                      <dl> 
+                        <dt>Binaries:</dt>
+                        <dd><a href="http://prdownloads.sourceforge.net/piccolo/piccolo-1.04-bin.zip">Piccolo 1.04</a></dd>
+						<p/>
+                        <dt>Source code:</dt>
+                        <dd><a href="http://prdownloads.sourceforge.net/piccolo/piccolo-1.04-src.zip">Piccolo 1.04 source</a><br>
+							<a href="http://prdownloads.sourceforge.net/piccolo/jflex-1.3.5-yoren.zip">Modified JFlex 1.3.5</a><br>
+							<a href="http://prdownloads.sourceforge.net/piccolo/byaccj-1.1-yoren.zip">Modified BYACC/J 1.1</a><br>
+							<a href="http://prdownloads.sourceforge.net/saxbench/saxbench-2.1b1.zip">SAXBench 2.1b1</a><br>							
+						</dd>
+                      </dl>
+                      <p>&nbsp;</p>
+                    </td>
+                    <td>
+                      <p><a href="using.html">Using Piccolo</a></p>
+                      <p><a href="sourcedoc.html">Source code documentation</a></p>
+                    </td>
+                    <td>
+                      <p>My <a href="bench.html">tests</a> show Piccolo to be 
+                        significantly faster than Xerces, Crimson, or other parsers. However, I encourage 
+                        you to download <a href="http://prdownloads.sourceforge.net/saxbench/saxbench-2.1b1.zip">SAXBench</a> 
+                        and try these tests yourself.</p>
+                      <p>There is also a 
+					  	 <a href="http://www.javaworld.com/javaworld/jw-04-2002/jw-0426-xmljava3.html?">JavaWorld article</a> 
+                         in which Piccolo was the fastest parser tested.</p>
+                    </td>
+                  </tr>
+                </table>
+			  </center>
+              <p><br>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    <tr> 
+      <td colspan="2" class="copyrightbar">&copy; Copyright 2002 Yuval Oren. All 
+        rights reserved.</td>
+    </tr>
+  </table>
+</center>
+</body>
+</html>
