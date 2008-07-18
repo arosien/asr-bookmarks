@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="MSSmartTagsPreventParsing" content="TRUE" />
+    <link rel="next" href="/index.php/2007/09/22/139-dear-tollef" title="Dear Tollef, …" />
+<link rel="previous" href="/index.php/2007/09/04/137-of-the-usefulness-of-testsuites-or-how-the-grep-mess-should-have-been-avoided-in-the-first-place" title="Of the usefulness of testsuites… (Or how the grep mess should have been avoided in the first place)" />
+<link rel="section" href="/index.php/General" title="General" />
+<link rel="section" href="/index.php/Actualite" title="Actualité" />
+<link rel="section" href="/index.php/Societe" title="Société" />
+<link rel="section" href="/index.php/Humeurs" title="Humeurs" />
+<link rel="section" href="/index.php/Polyorg" title="Poly.org" />
+<link rel="section" href="/index.php/Geeky" title="Geeky" />
+<link rel="section" href="/index.php/Debian" title="Debian" />
+<link rel="archive" href="/index.php/2009/02" title="February 2009" />
+<link rel="archive" href="/index.php/2008/12" title="December 2008" />
+<link rel="archive" href="/index.php/2008/06" title="June 2008" />
+<link rel="archive" href="/index.php/2008/05" title="May 2008" />
+<link rel="archive" href="/index.php/2008/04" title="April 2008" />
+<link rel="archive" href="/index.php/2008/03" title="March 2008" />
+<link rel="archive" href="/index.php/2008/02" title="February 2008" />
+<link rel="archive" href="/index.php/2008/01" title="January 2008" />
+<link rel="archive" href="/index.php/2007/12" title="December 2007" />
+<link rel="archive" href="/index.php/2007/11" title="November 2007" />
+<link rel="archive" href="/index.php/2007/10" title="October 2007" />
+<link rel="archive" href="/index.php/2007/09" title="September 2007" />
+<link rel="archive" href="/index.php/2007/08" title="August 2007" />
+<link rel="archive" href="/index.php/2007/07" title="July 2007" />
+<link rel="archive" href="/index.php/2007/06" title="June 2007" />
+<link rel="archive" href="/index.php/2007/05" title="May 2007" />
+<link rel="archive" href="/index.php/2007/03" title="March 2007" />
+<link rel="archive" href="/index.php/2007/02" title="February 2007" />
+<link rel="archive" href="/index.php/2007/01" title="January 2007" />
+<link rel="archive" href="/index.php/2006/12" title="December 2006" />
+<link rel="archive" href="/index.php/2006/11" title="November 2006" />
+<link rel="archive" href="/index.php/2006/10" title="October 2006" />
+<link rel="archive" href="/index.php/2006/09" title="September 2006" />
+<link rel="archive" href="/index.php/2006/08" title="August 2006" />
+<link rel="archive" href="/index.php/2006/07" title="July 2006" />
+<link rel="archive" href="/index.php/2006/06" title="June 2006" />
+<link rel="archive" href="/index.php/2006/05" title="May 2006" />
+<link rel="archive" href="/index.php/2006/04" title="April 2006" />
+<link rel="archive" href="/index.php/2006/03" title="March 2006" />
+<link rel="archive" href="/index.php/2006/02" title="February 2006" />
+<link rel="archive" href="/index.php/2006/01" title="January 2006" />
+<link rel="archive" href="/index.php/2005/11" title="November 2005" />
+<link rel="archive" href="/index.php/2005/10" title="October 2005" />
+<link rel="archive" href="/index.php/2005/08" title="August 2005" />
+<link rel="archive" href="/index.php/2005/07" title="July 2005" />
+<link rel="archive" href="/index.php/2005/06" title="June 2005" />
+<link rel="archive" href="/index.php/2005/05" title="May 2005" />
+<link rel="archive" href="/index.php/2005/03" title="March 2005" />
+<link rel="archive" href="/index.php/2005/02" title="February 2005" />
+<link rel="archive" href="/index.php/2005/01" title="January 2005" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.php" />
+    <meta name="DC.title" content="MadBlog" />
+    <title>git awsome-ness [git rebase --interactive] - MadBlog</title>
+    <link rel="stylesheet" type="text/css" href="/themes/madblog/style.css" media="screen" />
+      </head>
+
+  <body>
+    <div id="page">
+      <div id="top">
+        <a href="/index.php/">MadBlog</a>
+      </div>
+
+      <div id="main">
+        <div id="content">
+
+<div class="post">
+  <h1><a href="/index.php/2007/09/09/138-git-awsome-ness-git-rebase-interactive-">git awsome-ness [git rebase --interactive]</a></h1>
+  <div class="post-info">Par MadCoder,
+    Sunday  9 September 2007 &agrave; 01:08    &nbsp;::&nbsp;
+    <a href="/index.php/Geeky">Geeky</a>
+      </div>
+      
+  <div class="post-chapo"></div>  <div class="post-content"><p>With the last git release, <code>git-rebase</code> gained a new option: <code>--interactive</code>.</p>
+
+
+<p>If you already had the feeling that in a patch series of yours you should have ordered patches differently, or merged some, then this command is what you dreamed of. Here is how it works…</p>
+
+
+<p>Let's pretend you want to rework your last 10 patches, you'll run:</p>
+
+
+<pre>   $ git rebase -i HEAD~10</pre>
+
+
+<p>It will launch your <code>$EDITOR</code> and you'll see something like:</p>
+
+
+<pre>   # Rebasing 16d3800..14f3d11 onto 16d3800 
+   # 
+   # Commands: 
+   #  pick = use commit 
+   #  edit = use commit, but stop for amending 
+   #  squash = use commit, but meld into previous commit 
+   # 
+   # If you remove a line here THAT COMMIT WILL BE LOST. 
+   # 
+   pick 6270640 Simplify write_tree using strbuf's. 
+   pick 27c528a Further strbuf re-engineering. 
+   pick fd82c9a Eradicate yet-another-buffer implementation in buitin-rerere.c 
+   pick eee488f More strbuf uses in cache-tree.c. 
+   pick 16878b5 Add strbuf_rtrim and strbuf_insert. 
+   pick e9081af Change semantics of interpolate to work like snprintf. 
+   pick 99c3ef5 Rework pretty_print_commit to use strbufs instead of custom buffers. 
+   pick 203db5d Use strbuf_read in builtin-fetch-tool.c. 
+   pick a20d939 Use strbufs to in read_message (imap-send.c), custom buffer--. 
+   pick 14f3d11 Replace all read_fd use with strbuf_read, and get rid of it.
+   ~
+   ~
+   ~
+   ~
+   ~
+   ~<sup>[<a href="#pnote-138-1" id="rev-pnote-138-1">1</a>]</sup></pre>
+
+
+<p>Then you can rewrite "<code>pick</code>" into "<code>edit</code>" if you want to change something in a commit, or "<code>squash</code>" if you want to merge it with the one from the line before.</p>
+
+
+<p>What the small help doesn't say is that you can actually <strong>reorder</strong> your commits, and it will do what you expect it to do. I used it 10 minutes ago, because I have this string buffer module I extend on a regular basis, I squashed every API extension of that module in one commit using that.</p>
+
+
+<p>Each time one change needs you to edit anything because either you asked for it, or that one of the change you asked for generated a conflict, then as usual the rebase will stop. You will be prompted to make the change, or fix the conflict, or merge comments (in case of a squash), and when all is in order, you just need to:</p>
+
+<pre>   $ git rebase --continue</pre>
+
+
+<p>This is just <strong>awsomely simple and intuitive</strong></p>
+<div class="footnotes"><h4>Notes</h4>
+<p>[<a href="#rev-pnote-138-1" id="pnote-138-1">1</a>] if you don't have those, your <code>$EDITOR</code> sucks btw</p></div></div>
+</div>
+
+<div id="trackbacks">
+  <h3 id="tb">Trackbacks</h3>
+      <p>Aucun trackback.</p>
+    
+      <p>Les trackbacks pour ce billet sont ferm&eacute;s.</p>
+  </div>
+  
+<div id="comments">
+  <h3 id="co">Commentaires</h3>
+      <p>Aucun commentaire pour le moment.</p>
+    
+    
+  <h3 id="addco">Ajouter un commentaire</h3>
+  </div>
+        </div>
+      </div>
+
+      <div id="sidebar">
+        <div><h2>Cat&eacute;gories</h2><ul><li><a href="/index.php/General">General</a></li> <li><a href="/index.php/Actualite">Actualité</a></li> <li><a href="/index.php/Societe">Société</a></li> <li><a href="/index.php/Humeurs">Humeurs</a></li> <li><a href="/index.php/Polyorg">Poly.org</a></li> <li><a href="/index.php/Geeky">Geeky</a></li> <li><a href="/index.php/Debian">Debian</a></li> </ul></div>        <div><h2>Langues</h2><ul><li><a href="/index.php/en">en</a></li><li><a href="/index.php/fr">fr</a></li></ul></div>        
+        <div>
+          <form action="/index.php/" method="get">
+            <h2><label for="q">Rechercher</label></h2>
+            <p class="field">
+              <input name="q" type="text" size="10"
+                value="" accesskey="4" />
+              <input type="submit" class="submit" value="ok" />
+            </p>
+          </form>
+        </div>
+        
+        <div id="calendar">
+          <h2>Calendrier</h2>
+          <table summary="Calendrier">
+<caption><a href="/index.php/2007/08"  title="August 2007">&#171;</a> September 2007 <a href="/index.php/2007/10"  title="October 2007">&#187;</a></caption><thead><tr><th scope="col"><abbr title="Monday">Mon</abbr></th><th scope="col"><abbr title="Tuesday">Tue</abbr></th><th scope="col"><abbr title="Wednesday">Wed</abbr></th><th scope="col"><abbr title="Thursday">Thu</abbr></th><th scope="col"><abbr title="Friday">Fri</abbr></th><th scope="col"><abbr title="Saturday">Sat</abbr></th><th scope="col"><abbr title="Sunday">Sun</abbr></th></tr></thead>
+<tbody><tr><td> </td><td> </td><td> </td><td> </td><td> </td><td>1</td><td>2</td></tr>
+<tr><td>3</td><td><a href="/index.php/2007/09/04">4</a></td><td>5</td><td>6</td><td>7</td><td>8</td><td class="active"><a href="/index.php/2007/09/09">9</a></td></tr>
+<tr><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td></tr>
+<tr><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td><a href="/index.php/2007/09/22">22</a></td><td>23</td></tr>
+<tr><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td></tr>
+</tbody>
+</table>        </div>
+        
+        <div><h2>Archives</h2><ul><li><a href="/index.php/2009/02">February 2009</a></li><li><a href="/index.php/2008/12">December 2008</a></li><li><a href="/index.php/2008/06">June 2008</a></li><li><a href="/index.php/2008/05">May 2008</a></li><li><a href="/index.php/2008/04">April 2008</a></li><li><a href="/index.php/2008/03">March 2008</a></li><li><a href="/index.php/2008/02">February 2008</a></li><li><a href="/index.php/2008/01">January 2008</a></li><li><a href="/index.php/2007/12">December 2007</a></li><li><a href="/index.php/2007/11">November 2007</a></li><li><a href="/index.php/2007/10">October 2007</a></li><li><strong><a href="/index.php/2007/09">September 2007</a></strong></li><li><a href="/index.php/2007/08">August 2007</a></li><li><a href="/index.php/2007/07">July 2007</a></li><li><a href="/index.php/2007/06">June 2007</a></li><li><a href="/index.php/2007/05">May 2007</a></li><li><a href="/index.php/2007/03">March 2007</a></li><li><a href="/index.php/2007/02">February 2007</a></li><li><a href="/index.php/2007/01">January 2007</a></li><li><a href="/index.php/2006/12">December 2006</a></li><li><a href="/index.php/2006/11">November 2006</a></li><li><a href="/index.php/2006/10">October 2006</a></li><li><a href="/index.php/2006/09">September 2006</a></li><li><a href="/index.php/2006/08">August 2006</a></li><li><a href="/index.php/2006/07">July 2006</a></li><li><a href="/index.php/2006/06">June 2006</a></li><li><a href="/index.php/2006/05">May 2006</a></li><li><a href="/index.php/2006/04">April 2006</a></li><li><a href="/index.php/2006/03">March 2006</a></li><li><a href="/index.php/2006/02">February 2006</a></li><li><a href="/index.php/2006/01">January 2006</a></li><li><a href="/index.php/2005/11">November 2005</a></li><li><a href="/index.php/2005/10">October 2005</a></li><li><a href="/index.php/2005/08">August 2005</a></li><li><a href="/index.php/2005/07">July 2005</a></li><li><a href="/index.php/2005/06">June 2005</a></li><li><a href="/index.php/2005/05">May 2005</a></li><li><a href="/index.php/2005/03">March 2005</a></li><li><a href="/index.php/2005/02">February 2005</a></li><li><a href="/index.php/2005/01">January 2005</a></li></ul></div>        
+        <div>
+          <ul><li><a href="http://www.madism.org/" rel="me">Homepage</a></li></ul><h3>Lectures et Textes</h3><ul><li><a href="http://www.glodyte.net/tubuai/">Île était une fois</a></li><li><a href="http://artefact.entierement.nu/wordpress/">L'artefact</a></li></ul><h3>Blogs [fr]</h3><ul><li><a href="http://maitre.eolas.free.fr/" title="Blog de Maitre Eolas">Journal d'un avocat</a></li><li><a href="http://www.vuntz.net/journal/">Journal zen</a></li><li><a href="http://glazman.org/weblog/dotclear/" title="Blog de Daniel Glazman">&lt;Glazblog/&gt;</a></li><li><a href="http://standblog.org/" title="les standards du Web, les navigateurs et la technologie">Tristan Nitot</a></li></ul><h3>Blogs [en]</h3><ul><li><a href="http://www.joelonsoftware.com/">Joel on Software</a></li></ul>        </div>
+
+        <div id="syndicate">
+          <h2>Syndication</h2>
+          <ul>
+            <li>
+              <a href="/rss.php"><img src='/themes/madblog/images/rssicon.gif' alt='RSS' /></a> Blog complet
+            </li>
+            <li>
+              <a href="/rss.php?type=co"><img src='/themes/madblog/images/rssicon.gif' alt='RSS' /></a> Commentaires
+            </li>
+          </ul>
+                  <h2>Post</h2>
+          <ul>
+            <li>
+              <a href="/rss.php?type=co&amp;post=138"><img src='/themes/madblog/images/rssicon.gif' alt='RSS' /></a>
+              Commentaires
+            </li>
+          </ul>
+                </div>
+
+        <div id="license">
+          <a rel="license" href="http://creativecommons.org/licenses/by/2.0/fr/">
+            <img alt="CC License" src="http://creativecommons.org/images/public/somerights20.fr.png" />
+          </a>
+          <!--
+          <rdf:RDF xmlns="http://web.resource.org/cc/"
+              xmlns:dc="http://purl.org/dc/elements/1.1/"
+              xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+          <Work rdf:about="">
+             <dc:creator><Agent><dc:title>Pierre Habouzit</dc:title></Agent></dc:creator>
+             <dc:rights><Agent><dc:title>Pierre Habouzit</dc:title></Agent></dc:rights>
+             <dc:source rdf:resource="http://www.vuntz.net/"/>
+             <license rdf:resource="http://creativecommons.org/licenses/by/2.0/fr/" />
+          </Work>
+
+          <License rdf:about="http://creativecommons.org/licenses/by/2.0/fr/">
+             <permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+             <permits rdf:resource="http://web.resource.org/cc/Distribution" />
+             <requires rdf:resource="http://web.resource.org/cc/Notice" />
+             <requires rdf:resource="http://web.resource.org/cc/Attribution" />
+             <permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+          </License>
+
+          </rdf:RDF>
+          -->
+          <br />
+          &copy;&nbsp;2005-2010&nbsp;Pierre&nbsp;Habouzit<br />
+        </div>
+      </div>
+
+      <div id="footer">
+        <a href="http://www.dotclear.net/"><img src='/images/dotclear_pw.png' alt='Powered by DotClear' title='Powered by DotClear' /></a>
+      </div>
+
+    </div>
+  </body>
+</html>
