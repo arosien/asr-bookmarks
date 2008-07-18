@@ -1,0 +1,160 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Jiffy Firefox Extension - Documentation</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.0/build/reset-fonts-grids/reset-fonts-grids.css">
+<link href="css/yui.css" rel="stylesheet" type="text/css">
+
+<style type="text/css">
+	table thead td { border: 1px solid #DDDDDD; background-color: #EEEEEE;}
+	table td { padding: 0px; vertical-align: top; border: 1px solid #DDDDDD; }
+	ul {
+	}
+</style>
+
+</head>
+<body>
+<div id="doc" class="yui-t7">
+   <div id="hd">
+
+   </div>
+
+	<div id="bd">
+
+<div class="component" id="promo">
+   <h1>Jiffy Firebug Extension for Firefox - 1.0.20080619 - 06/19/2008</h1>
+<p>The Jiffy Firefox Extension is written <a href="http://looksgoodworkswell.blogspot.com" title="Looks Good Works Well">Bill Scott</a> of <a href="http://www.netflix.com" title="Netflix Online Movie Rentals - Rent DVDs, Classic Films to DVD New Releases">Netflix</a>. It adds an additional panel to <a href="http://getfirebug.com">Firebug</a> that provides a visual view of the Javascript time measurements captured by <a href="http://code.google.com/p/jiffy-web/" title="jiffy-web - Google Code">Jiffy-Web</a>. The extension is available under <a href="copyright.txt">Creative Commons license</a>.</p>
+<p>Jiffy-Web is a fine-grained and flexible website performance tracking and analysis suite written by Scott Ruthfield and the team at <a href="http://whitepages.com" title="White Pages Phone Directory with Free People Search">Whitepages.com</a>. The <a href="http://code.google.com/p/jiffy-web/" title="jiffy-web - Google Code">library</a> provides a simple way to insert and capture time measurements in your Javascript code and save them to a backend service for later analysis.</p>
+	<a href="images/jiffy-duration.png"><img  style="border:1px solid gray;width:700px;" src="images/jiffy-duration.png" alt="Jiffy Extension with mock data"/></a>
+<div>
+	
+<h4>On This Page:</h4>
+<ul>
+	<li><a href="#overview">Overview</a></li>
+	<li><a href="#compatibility">Compatibility</a></li>
+	<li><a href="#features">Features</a></li>
+	<li><a href="#installation">Installation</a></li>
+	<li><a href="#verification">Verifying Installation</a></li>
+	<li><a href="#configuration">Working with Other Measurement Libraries</a></li>
+    <li><a href="#faq">FAQ</a></li>
+ 
+</ul>
+</div>
+<div>
+	<h4>Quick Links:</h4>
+	<ul>	  
+		<li><a href="release.html">Jiffy Extension Release Notes</a></li>
+		<li><a href="copyright.txt">Jiffy Extension License</a></li>
+		<li><a href="https://addons.mozilla.org/en-US/firefox/addon/7613">Install Jiffy Extension</a></li>
+		<li><a href="testJiffyExt.html">Test Jiffy Extension</a></li>
+		<li><a href="https://addons.mozilla.org/en-US/firefox/addons/versions/1843">Install Firebug 1.0.5</a> for Firefox 2</li>
+		<li><a href="https://addons.mozilla.org/en-US/firefox/addon/1843">Install Firebug 1.2.0b6</a> for Firefox 3</li>
+		<li><a href="http://code.google.com/p/jiffy-web/">Jiffy-Web Javascript Library</a> - Official Jiffy JS library</li>
+		<li><a href="http://groups.google.com/group/jiffy-web">Jiffy-Web Google Group</a> - For discussing the Jiffy library or extension</li>
+</ul>
+</div>
+	
+</div>
+
+		
+   	  <h2><a name="overview">Overview</a></h2>
+   	  <p>Each time you take a measurement with Jiffy, the measurements are recorded in the DOM under a single JSON object. This firefox extension simply grabs the values when its panel is opened in firebug, a page with metrics is loaded or the Refresh button is hit. </p>
+<p>The extension provides the following features:</p>
+   	  <ul>
+   	  <li><strong>Graphical view of Javascript measurements.</strong> Two types of rows are displayed. The first is a summary row for each measurment category. These are created in Jiffy by calling Jiffy.mark(markName). Individual events within a mark category are captured with Jiffy.measure(eventName, markName). These are displayed as subrows.</li>
+   	  <li><strong>Clear.</strong> Measurements can be cleared from the DOM and the graph reset. This is useful for taking measurements that might happen after the onload during user interaction with the page.</li>
+   	  <li><strong>Refresh.</strong> If more measurements are collected after the onload, Refresh will generate a new graph based on the current measurements.</li>
+   	  <li><strong>Print.</strong> Opens a new window with a printable version of the graph.</li>
+   	  </ul>
+  	  <h2><a name="compatibility">Compatibility</a></h2>
+		<p>The Extension has been tested on the following Firefox versions:</p>
+		<ul>
+		<li>Firefox 2.0.0.*</li>
+		<li>Firefox 3.0.*</li>
+		</ul>
+		<p>The Extension works with the following Firefox/Firebug combinations (it may work on other versions, but these are officially supported):</p>
+		<ul>
+			<li><a href="https://addons.mozilla.org/en-US/firefox/addons/versions/1843">Firebug 1.0.5</a> for Firefox 2</li>
+			<li><a href="https://addons.mozilla.org/en-US/firefox/addon/1843">Firebug 1.2.0b6</a> for Firefox 3 (Latest Firebug version)</li> 
+		</ul>
+
+	  <h2><a name="features">Features</a></h2>
+	<p>The extension has four command buttons: Clear, Refresh, Duration and Print.</p>
+
+	<h3>Clear</h3>
+	<p>Pressing the clear button will clear the stats from the page and render a blank panel. This is a destructive operation as it calls the clearMeasures method (see <a href="#configuration">Configuration section below</a>).</p>
+
+	<h3>Refresh</h3>
+	<p>Forces the graph to render the current measures available on the page. This is useful if some measures are captured on user events. After triggering these measured events, press the Refresh button to see a new graph including the new measures. This calls the getMeasures method (see <a href="#configuration">Configuration section below</a>).</p>
+
+	<h3>Duration</h3>
+	<p>This toggles rendering the measures as a list of elapsed times vs. rendering the measures as elapsed and duration times along a timeline.</p>
+	  <a href="images/jiffy-nonduration.png"><img  style="border:1px solid gray;width:500px;" src="images/jiffy-nonduration.png" alt="Snapshot of duration turned off"/></a><p style="margin-top:0px;font-size:12px;"><em>When the Duration button is off, marks are rendered in a vertical list fashion. Each event measurement is plotted relative to the mark.</em></p>
+
+	<p>In duration mode the both elapsed and duration times are represented for each mark.</p>
+	  <a href="images/jiffy-duration.png"><img  style="border:1px solid gray;width:500px;" src="images/jiffy-duration.png" alt="Snapshot of duration turned on"/></a><p style="margin-top:0px;font-size:12px;"><em>When the Duration button is on, marks and events are rendered along a timeline. Each mark displays both elapsed and duration times. Each mark bar graph renders the elapsed time plus the "dead" time giving a total picture of duration.</em></p>
+
+	<h3>Print</h3>
+	<p>Displays the current stats as a list of elapsed time measurements in a separate window formatted for printing.</p>
+				
+      <h2><a name="installation">Installation</a></h2>
+      <p>This is a firebug extension. You will need Firebug installed. The steps to getting setup are:</p>
+ 		<ul>
+		<li>Install the correct version of Firebug.</li>
+		 	<ul style="margin-bottom:0px">
+			    <li>Firefox 2. <a href="https://addons.mozilla.org/en-US/firefox/addons/versions/1843">Firebug 1.0.5</a></li>
+				<li>Firefox 3. <a href="https://addons.mozilla.org/en-US/firefox/addon/1843">Firebug 1.2.0b6</a></li>
+		    </ul>
+		<li><a href="https://addons.mozilla.org/en-US/firefox/addon/7613">Install the Jiffy Extension</a></li>
+		<li>Restart Firefox</li>
+		<li>Verify the installation by <a href="testJiffyExt.html">browsing to this page</a>, opening Firebug and selecting the 'Jiffy' tab.</li>
+		<li>You should see something similar to the page below.</li>
+		</ul>
+ 
+<a name="verification"></a>
+	  <a href="images/jiffy.png"><img  style="border:1px solid gray;width:500px;" src="images/jiffy.png" alt="Snapshot of Jiffy Extension"/><p style="margin-top:0px;font-size:12px;"></a><em>If installed correctly, the test page should look something like this.</em></p>
+
+      <h2><a name="configuration">Working with Other Measurement Libraries</a></h2>
+      <p>By default, the Jiffy extension gets measurements from the web page by calling window.Jiffy.getMeasures() and clears measurements by calling window.Jiffy.clearMeasures(). It also tests whether a page has metrics by looking for the presence of the window.Jiffy object.<p>
+	<p>These three points of interaction with Jiffy are defined in Firefox configuration properties. The three properties and the default values are:</p>
+	
+	  <table>
+	  <thead><tr><td>Property</td><td>Default Value</td><td>Description</td></tr></thead>
+	  <tbody>
+		<tr><td>extensions.jiffy.clearMeasures</td><td>Jiffy.clearMeasures()</td><td>A valid Javascript code fragment that when appended to 'window.' will clear the measurements for the page.</td></tr>
+		<tr><td>extensions.jiffy.getMeasures</td><td>Jiffy.getMeasures()</td><td>A valid Javascript code fragment that when appended to 'window.' will return the measurements for the page. The details of the Java array returned is discussed below.</td></tr>
+		<tr><td>extensions.jiffy.scopeObject</td><td>Jiffy</td><td>A valid Javascript variable that when appended to 'window.' will denote (by it being defined and non-null) that measurements exist on the page.</td></tr>
+	</tbody>
+	</table>
+	
+	<h3>Array returned by getMeasures()</h3>
+	<p>The getMeasures() call should return an array of Java objects, each containing the following fields</p>
+	  <table>
+	  <thead><tr><td>Field</td><td>Description</td></tr></thead>
+	  <tbody>
+		<tr><td>et</td><td>Elapsed time for this measurement.</td></tr>
+		<tr><td>evt</td><td>The event measured (in Jiffy this is recorded with the Jiffy.measure() method).</td></tr>
+		<tr><td>name</td><td>The name of the category that holds a set of events. In Jiffy this is called a 'mark'. A mark is created by calling Jiffy.mark(markName). Each call to Jiffy.measure(evt, mark) associates an event with a mark.</td></tr>
+	</tbody>
+	</table>	
+	<p>Here is an example of the array returned by Jiffy.getMeasures().</p>
+      <pre>
+        var measures = [
+            {et:2676, evt:"load",             name:"PageStart", rt:1213159816044},
+            {et:7,    evt:"carouselcreated", name:"onLoad",    rt:1213159818722},
+            {et:67,   evt:"finishedonLoad",  name:"onLoad",    rt:1213159818729}
+        ];
+	 </pre>
+<p>If you set the three extensions.jiffy.* configuration parameters (use about:config to access them), return an array as described above, clear the measures and supply the name of the object holding your values or methods, then the Jiffy extension can work with your Javascript measurements. Jiffy Extension will render it like this:</p>
+<a href="images/jiffy-mock.png"><img  style="border:1px solid gray;width:500px;" src="images/jiffy-mock.png" alt="Jiffy Extension with mock data"/><p style="margin-top:0px;font-size:12px;"></a><em>What the Jiffy extension will graph with the mock data above.</em></p>
+
+<h2><a name="faq">FAQ</a></h2>
+<p>Frequently asked questions will be added here.</p>
+<p><a rel="license" href="http://creativecommons.org/licenses/by/3.0/us/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/us/88x31.png"/></a><br/><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dc:title" rel="dc:type">Jiffy Firebug Extension</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://billwscott.com/jiffyext/" property="cc:attributionName" rel="cc:attributionURL">Bill W Scott</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/us/">Creative Commons Attribution 3.0 United States License</a>.</p>
+	</div>
+</div>
+
+</body>
+</html>
