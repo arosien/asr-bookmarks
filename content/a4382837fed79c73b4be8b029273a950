@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta http-equiv='Content-Type' content='text/html;charset=utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='YOUR MOM'>
+    <meta name='viewport' content='width=700'>
+    <title>The Thing About Git</title>
+    <link rel="icon"            href="http://tomayko.com/favicon.png"         type="image/png">
+    <link rel="home index"      href="http://tomayko.com/"                    type="text/html">
+    <link rel="me author"       href="http://tomayko.com/about"               type="text/html">
+    <link rel="alternate"       href="http://tomayko.com/feed"                type="application/atom+xml" title="Ryan Tomayko">
+    <link rel="alternate"       href="http://tomayko.com/writings/feed"       type="application/atom+xml" title="Just the Writings">
+    <link rel="alternate"       href="http://tomayko.com/linkings/feed"       type="application/atom+xml" title="Just the Linkings">
+    <link rel="alternate"       href="http://tomayko.com/comments/feed"       type="application/atom+xml" title="Comments">
+    <link rel="stylesheet"      href="/css/tomayko.css?1279563744"              type="text/css" media="all">
+    <link rel="stylesheet"      href="/css/small-device.css?1279563744"               type="text/css" media="only screen and (max-width: 480px)">
+    <link rel="openid.server"   href="http://www.myopenid.com/server">
+    <link rel="openid.delegate" href="http://rtomayko.myopenid.com/">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.2.3.js"></script>
+    <script type="text/javascript" src="/js/tomayko.js?1279563744"></script>
+    </head>
+<body>
+  <div id='container'>
+    <div id='header'>
+  <p><a href="/about" rel="me author">Ryan Tomayko</a></p>
+  <h1 id='title'>The Thing About Git</h1>
+  <p class='date'>Tuesday, April 08, 2008</p>
+</div>
+
+<div id='content' class='entry'>
+
+  <div id='body'><p>The thing about <a href="http://git.or.cz/" title="Git - Fast Version Control System">Git</a> is that it&rsquo;s oddly liberal with how and when you use it. Version control systems have traditionally required a lot of up-front planning followed by constant interaction to get changes to the right place at the right time and in the right order. And <em>woe unto thee</em> if a rule is broken somewhere along the way, or you change your mind about something, or you just want to fix this one thing real quick before having to commit all the other crap in your working copy.</p>
+
+<p>Git is quite different in this regard. You can work on five separate logical changes in your working copy &mdash; without interacting with the VCS at all &mdash; and then build up a series of commits in one fell swoop. Or, you can take the opposite extreme and commit really frequently and mindlessly, returning later to rearrange commits, annotate log messages, squash commits together, tease them apart, or rip stuff out completely. It&rsquo;s up to you, really. Git doesn&rsquo;t have an opinion on the matter.</p>
+
+<p><img src="http://farm1.static.flickr.com/214/502139478_42c8133bed_m.jpg" style='float:right;border-width:0;padding:5px 0 5px 15px' /></p>
+
+<p>Remember a long time ago, at the dinner table, when your kid brother mashed together a bunch of food that really <em>should not</em> have been mashed together &mdash; chicken, jello, gravy, condiments, corn, milk, peas, pudding, all that stuff &mdash; and proceeded to eat it? And <em>loved</em> it! And then your crazy uncle, having seen the look of disgust on your face, said: &ldquo;it all goes to the same place!&rdquo; Remember that? No? Then you were probably the one shoving nasty shit into your face, but the important thing to understand here is that your uncle is crazy. And so is Git.</p>
+
+<p>I&rsquo;ve personally settled into a development style where coding and interacting with version control are distinctly separate activities. I no longer find myself constantly weaving in and out due to the finicky workflow rules demanded by the VCS. When I&rsquo;m coding, I&rsquo;m coding. Period. Version control &ndash; out of my head. When I feel the need to organize code into logical pieces and write about it, I switch into version control mode and go at it.</p>
+
+<p>I&rsquo;m not saying this is the <em>Right Way</em> to use Git: in the end, it all goes to the same place. I&rsquo;m saying that this is the way I seem naturally inclined to develop software, and Git is the first VCS I&rsquo;ve used that accommodates the style.</p>
+
+<p>I&rsquo;d like to run through a short example &mdash; on the off chance that my extreme hyperbole has left you unconvinced &mdash; that shows how one might first stumble onto some of Git&rsquo;s more advanced features, and that hopefully also brings to light how easily one could then develop a strong addiction to such features.</p>
+
+<h2>The Tangled Working Copy Problem</h2>
+
+<p>Suppose that, last night, I start work on some enhancements to the &ldquo;Leave Comment&rdquo; forms on this site. I figure this will take all of maybe ten minutes, so I begin pounding away in my working copy. After screwing around for an hour or so, I give up and go to bed, leaving the half-baked changes in my working copy.</p>
+
+<p>The next morning, I coffee up and find <a href="http://del.icio.us/rtomayko">my del.icio.us bookmarks</a> not being sucked into the site properly and so I start playing with <em>that</em> mess (this is completely unrelated to what I was doing the night before, mind).</p>
+
+<p>After working out the small problem with sucking in bookmarks, I take a peek at <code>git status</code> to see where my working copy is at:</p>
+
+<pre><code>$ git status
+# On branch master
+# Changed but not updated:
+# 
+#     modified: models.rb
+#     modified: views/entry.haml
+#     modified: bin/synchronize-bookmarks
+#     modified: js/tomayko.js
+#     modified: stylesheets/tomayko.css
+</code></pre>
+
+<p>I realize, for the first time, that I have two unrelated changes in my working copy:</p>
+
+<ol>
+<li><p>The experimental comment form tweaks: <code>models.rb</code>, <code>entry.haml</code>, <code>tomayko.js</code>, and <code>tomayko.css</code>. I&rsquo;m not ready to push this into the live site yet so I don&rsquo;t want these changes on the master branch.</p></li>
+<li><p>Bookmark synching fixes: <code>models.rb</code> and <code>synchronize-bookmarks</code>. This needs a commit on master and should be shipped up to the live site, immediately.</p></li>
+</ol>
+
+
+<p>The big problem here is <code>models.rb</code> &ndash; it&rsquo;s &ldquo;tangled&rdquo; in the sense that it includes modifications from two different logical changes. I need to tease these changes apart into two separate commits, somehow.</p>
+
+<p>This is the type of situation that occurs fairly regularly (to me, at least) and that very few VCS&rsquo;s are capable of helping out with. We&rsquo;ll call it, &ldquo;The Tangled Working Copy Problem.&rdquo;</p>
+
+<h2>Git means never having to say, &ldquo;you should have&rdquo;</h2>
+
+<p>If you took <em>The Tangled Working Copy Problem</em> to the mailing lists of each of the VCS&rsquo;s and solicited proposals for how best to untangle it, I think it&rsquo;s safe to say that most of the solutions would be of the form: &ldquo;<em>You should have</em> XXX <em>before</em> YYY.&rdquo;</p>
+
+<ul>
+<li><p><strong>Subversion:</strong> <em>You should have</em> committed the experimental changes to a separate branch <em>before</em> working on the bookmark stuff.</p></li>
+<li><p><del><strong>Bazaar:</strong> <em>You should have</em> <a href="https://launchpad.net/shelf">shelved</a> your experimental changes <em>before</em> working on the bookmark stuff.</del><ins>EDIT: My mistake. <code>bzr shelve</code> solves <a href="#comment-74394"><em>exactly</em> this problem</a>.</ins></p></li>
+<li><p><strong>CVS:</strong> <em>You should have</em> RTFM <em>before</em> wasting everyone&rsquo;s time with such a lame question.</p></li>
+</ul>
+
+
+<p>Here&rsquo;s a general principle I would like my VCS to acknowledge: moving from the present point <em>B</em> to some desired point <em>C</em> should not require a change in behavior at point <em>A</em> in the past. More simply, the phrase: &ldquo;you should have,&rdquo; ought to set off <em>alarm bells</em>. These are precisely the types of problems I want my VCS to <em>solve</em>, not throw back in my face with rules for how to structure workflow <em>the next time</em>.</p>
+
+<p class='note'>(To be fair, <del>Darcs</del><ins>Mercurial</ins> handles <em>The Tangled Working Copy Problem</em> without breaking a sweat and others do as well. <em>UPDATE: see comments below for discussion on this.</em>)</p>
+
+
+<h2>Solving The Tangled Working Copy Problem When Your VCS Won&rsquo;t</h2>
+
+<p>I run into <em>The Tangled Working Copy Problem</em> so often that I&rsquo;ve devised a manual process for dealing with it under VCS&rsquo;s that punt on the problem. For instance, if I were using Subversion, I might go at it like this:</p>
+
+<ol>
+<li>Run <code>svn diff</code> over the files with changes I <em>don&rsquo;t</em> want to
+commit (the comment related stuff), piping the output into <code>vim</code>.</li>
+<li>Remove hunks from the diff corresponding to those changes I
+want to commit (the bookmark related hunks) and write the diff out
+to <code>comment-stuff.diff</code>.</li>
+<li>Run <code>patch -p0 -R &lt; comment-stuff.diff</code>. This removes the comment
+related changes from my working copy (<code>-R</code> = &ldquo;apply diff in reverse&rdquo;).</li>
+<li>Commit the bookmark related fixes sitting in my working copy to the
+repository.</li>
+<li>Run <code>patch -p0 &lt; comment-stuff.diff</code> to reapply the comment related
+changes to my working copy.</li>
+<li>Forget to create branch for comment stuff, again.</li>
+<li>Hack on comment stuff for a while.</li>
+<li>Find more unrelated brokeness and fix it.</li>
+<li><em>Oops!</em> GOTO 1.</li>
+</ol>
+
+
+<p>This works well enough when there are no changes to binary files, and the diff doesn&rsquo;t mind being teased apart, and when there&rsquo;s only two or three changes tangled up, but it raises the question: what am I paying my VCS for?</p>
+
+<p>The idea of manually managing sets of patches to coerce my patch management program into managing patches is literally absurd.</p>
+
+<h2><em>Viva La Index</em></h2>
+
+<p>Git has this alien thing between the working copy and the repository called <em>The Index</em>. I was entirely annoyed by the concept when starting out &ndash; you have no idea why you&rsquo;re forced to deal with it and you&rsquo;re <em>always</em> dealing with it. Even after reading multiple accounts of what <em>The Index</em> supposedly was, I continued to be baffled by it, wondering how it could possibly serve any useful purpose at all. That is, until the first time I ran into <em>The Tangled Working Copy Problem</em>.</p>
+
+<p><em>The Index</em> is also sometimes referred to as <em>The Staging Area</em>, which makes for a much better conceptual label in this case. I tend to think of it as <em>the next patch</em>: you build it up interactively with changes from your working copy and can later review and revise it. When you&rsquo;re happy with what you have lined up in the staging area, which basically amounts to a diff, you commit it. And because your commits are no longer bound directly to what&rsquo;s in your working copy, you&rsquo;re free to stage individual pieces on a file-by-file, hunk-by-hunk basis.</p>
+
+<p>Once you&rsquo;ve wrapped your head around it, this seemingly simple and poorly named layer of goo between your working copy and the next commit can have some really magnificent implications on the way you develop software.</p>
+
+<h2>Solving The Tangled Working Copy Problem With Git&rsquo;s Index</h2>
+
+<p>Let&rsquo;s review the status of our working copy:</p>
+
+<pre><code>$ git status
+# On branch master
+# Changed but not updated:
+# 
+#     modified: models.rb
+#     modified: views/entry.haml
+#     modified: bin/synchronize-bookmarks
+#     modified: js/tomayko.js
+#     modified: stylesheets/tomayko.css
+</code></pre>
+
+<p>We want to commit all of the changes to <code>synchronize-bookmarks</code> and some of the changes to <code>models.rb</code>, so let&rsquo;s add them to the staging area:</p>
+
+<pre>$ git add bin/synchronize-bookmarks
+$ git add --patch models.rb
+diff --git a/models.rb b/models.rb
+index be4159d..3efd4ce 100644
+--- a/models.rb
++++ b/models.rb
+@@ -256,7 +256,7 @@
+     class Bookmark &lt; Entry
+       next unless source[:shared]
+       bookmark = find_or_create(:slug => source[:hash])
+-      bookmark.update_attributes(
++      bookmark.attributes = {
+         :url        => source[:href],
+         :title      => source[:description],
+         :summary    => source[:extended],
+Stage this hunk [y/n/a/d/j/J/?]?
+</pre>
+
+
+<p>The magic is in the <code>--patch</code> argument to <a href="http://www.kernel.org/pub/software/scm/git/docs/git-add.html" title="git-add(1) manual page"><code>git-add(1)</code></a>. This instructs Git to display all changes to the files specified on a hunk-by-hunk basis and lets you choose one of the following options for each hunk:</p>
+
+<ul>
+<li><em>y</em> &ndash; stage this hunk</li>
+<li><em>n</em> &ndash; do not stage this hunk</li>
+<li><em>a</em> &ndash; stage this and all the remaining hunks in the file</li>
+<li><em>d</em> &ndash; do not stage this hunk nor any of the remaining hunks in the file</li>
+<li><em>j</em> &ndash; leave this hunk undecided, see next undecided hunk</li>
+<li><em>J</em> &ndash; leave this hunk undecided, see next hunk</li>
+<li><em>k</em> &ndash; leave this hunk undecided, see previous undecided hunk</li>
+<li><em>K</em> &ndash; leave this hunk undecided, see previous hunk</li>
+<li><em>s</em> &ndash; split the current hunk into smaller hunks</li>
+</ul>
+
+
+<p>In this case, I staged (<em>y</em>) about half of the hunks (the ones that were bookmark related) and left the other hunks unstaged (<em>n</em>). Now my index has all of the changes to <code>synchronize-bookmarks</code> plus half of the changes made to <code>models.rb</code>.</p>
+
+<p>I like to review that the changes in the staging area match my expectations before committing:</p>
+
+<pre>$ git diff --cached
+[diff of changes in staging area]
+</pre>
+
+
+<p>I also like to verify that my unstaged / working copy changes are as I expect:</p>
+
+<pre>$ git diff
+[diff of changes in working copy that are not in the staging area]
+</pre>
+
+
+<p>Everything looks good, so I commit the staged changes:</p>
+
+<pre><code>$ git commit -m "fix bookmark sucking problems"
+</code></pre>
+
+<p>I&rsquo;m left with only the experimental comment enhancements in my working copy and am free to move them onto a topic branch, or maybe I&rsquo;ll just let them sit in my working copy for a while. Git doesn&rsquo;t care.</p>
+
+<h2>Taking Control of Your Local Workflow</h2>
+
+<p>We&rsquo;ve seen how to use <code>git add --patch</code> to pluck specific changes out of the working copy and stage them for the next commit, a nice feature that elegantly solves a once-tedious problem and that makes possible a previously forbidden style of development. There&rsquo;s more where that came from, though. Here are some related concepts that you will want to also introduce yourself to:</p>
+
+<ul>
+<li><p><code>git add --patch</code> is actually a shortcut to features in <code>git add --interactive</code>, a powerful front-end for managing all aspects of the staging area.  The <a href="http://www.kernel.org/pub/software/scm/git/docs/git-add.html" title="git-add(1) manual page"><code>git-add(1)</code> manual page</a> is a treasure trove of worthwhile information that&rsquo;s often passed over due to the traditional semantics of VCS &ldquo;add&rdquo; commands. Remember that <code>git-add(1)</code> does a lot more than just add stuff &ndash; it&rsquo;s your interface for modifying the staging area.</p></li>
+<li><p><code>git commit --amend</code> takes the changes staged in the index and squashes them into the previous commit. This lets you fix a problem with the last commit, which is almost always where you see the technique prescribed, but it also opens up the option of a commit-heavy workflow where you continuously revise and annotate whatever it is you&rsquo;re working on. See the <a href="http://www.kernel.org/pub/software/scm/git/docs/git-commit.html"><code>git-commit(1)</code> manual page</a> for more on this.</p></li>
+<li><p>And then there&rsquo;s <code>git rebase --interactive</code>, which is a bit like <code>git commit --amend</code> hopped up on acid and holding a chainsaw &ndash; completely insane and quite dangerous but capable of exposing entirely new states of mind. Here you can edit, squash, reorder, tease apart, and annotate existing commits in a way that&rsquo;s easier and more intuitive than it ought to be. The &ldquo;INTERACTIVE MODE&rdquo; section of the <a href="http://www.kernel.org/pub/software/scm/git/docs/git-rebase.html" title="git-rebase(1) manual page"><code>git-rebase(1)</code> manual page</a> is instructive but <a href="http://blog.madism.org/index.php/2007/09/09/138-git-awsome-ness-git-rebase-interactive" title="git awsome-ness [git rebase --interactive]">Pierre Habouzit&rsquo;s demonstration</a> is what flipped the light on for me.</p></li>
+</ul>
+
+
+<p>That&rsquo;s really all you need to know above and beyond Git&rsquo;s fundamentals to start dominating your local workflow. From here, you may want to explore some of the various other concepts and utilities specifically designed to augment your local workflow:</p>
+
+<ul>
+<li><p>People seem to get a lot of utility out of <a href="http://www.kernel.org/pub/software/scm/git/docs/user-manual.html" title="Git User's Manual"><code>git-stash(1)</code></a>, which lets you move changes from your working copy into a lightweight holding area to be reintroduced some time later. I personally haven&rsquo;t used it much in practice, and I used Bazaar&rsquo;s rough equivalent of <code>git-stash(1)</code> (<code>bzr shelve</code>) frequently. I find that the staging area removes the need for stashing in a bunch of cases and when I really do need to get stuff out of my working copy and somewhere safe, I just create a topic branch.</p></li>
+<li><p>I haven&rsquo;t played with it yet but <a href="http://wiki.procode.org/cgi-bin/wiki.cgi/StGIT">StGIT</a> (&ldquo;Stacked Git&rdquo;) looks seriously interesting from the examples in <a href="http://wiki.procode.org/cgi-bin/wiki.cgi/StGIT_Tutorial">the tutorial</a>. I tend to visualize version control concepts as series of patch operations so I&rsquo;d probably feel more at home with this style of front-end.</p></li>
+<li><p>There&rsquo;s a section of the <a href="http://www.kernel.org/pub/software/scm/git/docs/user-manual.html" title="Git User's Manual">Git User&rsquo;s Manual</a> called <a href="http://www.kernel.org/pub/software/scm/git/docs/user-manual.html#the-workflow" title="Git User's Manual - The Workflow">The Workflow</a> that describes, at a fairly low level, the various interactions between the working copy, the index, and the object database.</p></li>
+</ul>
+
+
+<hr />
+
+<h3>Attribution</h3>
+
+<p><a href="http://flickr.com/photos/mahalie/502139478/">Baby Eats Camera</a> is Copyright © 2007 by <a href="http://mahalie.com/">mahalie</a>.</p></div>
+
+  <div id='appendix'>
+    <p class='tags'>
+      More on <a href='http://tomayko.com/topics/subversion' rel='tag directory'>subversion</a> <a href='http://tomayko.com/topics/essay' rel='tag directory'>essay</a> <a href='http://tomayko.com/topics/tools' rel='tag directory'>tools</a> <a href='http://tomayko.com/topics/unix' rel='tag directory'>unix</a> <a href='http://tomayko.com/topics/coding' rel='tag directory'>coding</a> <a href='http://tomayko.com/topics/vcs' rel='tag directory'>vcs</a> <a href='http://tomayko.com/topics/git' rel='tag directory'>git</a> <a href='http://tomayko.com/topics/bazaar' rel='tag directory'>bazaar</a>
+    </p>
+  </div>
+
+  <div id='comments'>
+    <h2>Comments</h2>
+    <ol class='comments'>
+    <li class='comment container' id='comment-74375'>
+        <div class='body'><p>Thank you for explaining git add —patch. Wonderful!</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://www.buxfer.com/'>Ashwin</a>
+          on Tuesday, April 08, 2008 at 06:37 AM
+
+          <a href="#comment-74375" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74376'>
+        <div class='body'><p>Ryan,
+Thanks for the great &amp; informative article on git… I sorely needed it yesterday when I was diff'n &amp; patch'n my working copy (for git :—)</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Jim Holt</span>
+          on Tuesday, April 08, 2008 at 06:56 AM
+
+          <a href="#comment-74376" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74380'>
+        <div class='body'><p>I think you mean “woe unto thee”.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>JR</span>
+          on Tuesday, April 08, 2008 at 07:17 AM
+
+          <a href="#comment-74380" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74381'>
+        <div class='body'><p>Ha! <em>&lt;blush&gt;</em></p>
+
+<p>I suppose “whoa unto thee” is something you’d expect to find in the screenplay to “Bill and Ted’s Excellent Adventure.”</p>
+
+<p>Fixed. Thanks.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://tomayko.com'>Ryan Tomayko</a>
+          on Tuesday, April 08, 2008 at 07:22 AM
+
+          <a href="#comment-74381" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74382'>
+        <div class='body'><p>Just to let you know, git borrowed the git-add user interaction from darcs which has had it for years.  For small projects, you might find you like the simplicty of darcs much better than git.</p>
+
+<p>-Jim</p>
+
+<p>PS If you are forced to use CVS for some reason, you might like cvs-commit-patch which allows the same style of work (especially if you editor helps you to edits patches easily)</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Jim</span>
+          on Tuesday, April 08, 2008 at 07:25 AM
+
+          <a href="#comment-74382" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74383'>
+        <div class='body'><p>Interesting. Thanks, Jim.</p>
+
+<p>People: I’d much appreciate further comments comparing how other VCS’s stack up to Git in this regard. I know there’s some nifty features for crafting local workflows in other systems and I’m very interested in exploring the general concept further.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://tomayko.com'>Ryan Tomayko</a>
+          on Tuesday, April 08, 2008 at 07:32 AM
+
+          <a href="#comment-74383" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74385'>
+        <div class='body'><p>I, too, code a lot and then commit a bunch of stuff all at once. A friend (who I just noticed is comment #5!) and I wrote a tool to help us do this back in the CVS days (it basically codified your manual svn patching steps). It’s been modified since to use several different vcs-es including CVS, Mercurial, and Darcs. Check it out at <a href='http://porkrind.org/commit-patch'>http://porkrind.org/commit-patch</a>.</p>
+
+<p>I use it on a daily bases with darcs, even though darcs has the same sort of hunk choosing UI as git because I find that editing patches in emacs allows me one last step of editorial control as I review hunks for check-in. I’ll add comments or delete debug prints in the patch but leave them in my working copy. It’s also a life saver if you have 2 unrelated commits that end up being on the same line or bump into each other and cause the hunks to merge (which happens to me more often than you’d expect).</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>David</span>
+          on Tuesday, April 08, 2008 at 07:39 AM
+
+          <a href="#comment-74385" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74386'>
+        <div class='body'><p>With bazaar, you don’t have to shelve BEFORE working on a separate piece.  In your case you can shelve your experimental stuff and it will chunk your models.rb file so you can pick pieces of it to shelve.  Once that is done then commit and unshelve.  That really isn’t “to go from B to C you should have done A first”.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Fizz</span>
+          on Tuesday, April 08, 2008 at 08:16 AM
+
+          <a href="#comment-74386" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74388'>
+        <div class='body'><p>Index in Spanish is used with the article El so the proper subtitle is “Viva el Index”.</p>
+
+<p>Nice post.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Jorge</span>
+          on Tuesday, April 08, 2008 at 08:20 AM
+
+          <a href="#comment-74388" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74389'>
+        <div class='body'><p>Git solution with index is wrong. You can’t actually test the “index state” before committing, without extra work later.</p>
+
+<p>stgit seems like a cleaner solution for this problem.</p>
+
+<p>One builds the current patch in the working copy, tests it and commit’s it. That is the normal scenario and should be the default. Unfortunately, not in git.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Mark</span>
+          on Tuesday, April 08, 2008 at 08:25 AM
+
+          <a href="#comment-74389" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74391'>
+        <div class='body'><p>bzr shelve allows you to cherry-pick hunks in a fashion similar to git-add.  By shelving the parts you don’t want to commit, you can commit the parts that you do want, and then unshelve to continue working on your experimental changes.</p>
+
+<p>Please consider editing your post to reflect the fact that bzr does handle the problem you were facing.  Bzr does not deserve to be lumped in with svn and cvs.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>John James</span>
+          on Tuesday, April 08, 2008 at 08:28 AM
+
+          <a href="#comment-74391" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74394'>
+        <div class='body'><p>Fizz / John: good points. It turns out I frequently used <code>bzr shelve --all</code> and was under the mistaken assumption that this limited mode of operation was the extent of its capabilities. The text will be corrected shortly. My apologies.</p>
+
+<p>If anyone’s interested in more detail on this, see <a href='http://bazaar-vcs.org/BzrShelveExample'>this example of shelving</a> from the Bazaar wiki.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://tomayko.com'>Ryan Tomayko</a>
+          on Tuesday, April 08, 2008 at 08:31 AM
+
+          <a href="#comment-74394" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74395'>
+        <div class='body'><p>Perhaps I misunderstood your explanation, but I find bzr’s shelve command  to be both easier to understand and provide essentially the same thing without introducing a staging area concept. Regardless of the VCS, you need some way to differentiate the changes you want (bookmarks) and those you don’t (comments). With bzr’s shelve you are saying put aside the comment changes and come back to them later. With git, it seems you’re just saying what you want to keep. I’d also note that with bzr you can do shelve at any point — once you discover you have multiple changes in your branch is fine — and mark “hunks” in a similar fashion as you described for git. The unshelve command lets you come back to the changes later.</p>
+
+<p>I suppose this is just about how much complexity you want to manage at once. Shelve certainly feels easier to use to me.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Tim</span>
+          on Tuesday, April 08, 2008 at 08:41 AM
+
+          <a href="#comment-74395" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74397'>
+        <div class='body'><p>While it does not provide exactly the same work-flow, the record extension to Mercurial enables one to cherry-pick changes of the changed files in your working copy. Enable it by editing your .hgrc:</p>
+
+<pre><code>[extensions]
+record=
+</code></pre>
+
+<p>and invoke it with:</p>
+
+<pre><code>hg record
+</code></pre>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://redflavor.com'>Eivind Uggedal</a>
+          on Tuesday, April 08, 2008 at 08:45 AM
+
+          <a href="#comment-74397" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74398'>
+        <div class='body'><p>Sure would be nice to be able to link to the <code>bzr shelve --help</code> output to clear up any misconceptions I may have caused. Oh well, maybe sullying my Git article with Bazaar help text will count as penance enough?</p>
+
+<pre>$ bzr shelve --help
+Purpose: Temporarily set aside some changes from the current tree.
+Usage:   bzr shelve [FILE...]
+
+Options:
+  --all                 Shelve all changes without prompting.
+  -v, --verbose         Display more information.
+  -h, --help            Show help message.
+  -q, --quiet           Only display errors and warnings.
+  -m ARG, --message=ARG
+                        A message to associate with the shelved changes.
+  --no-color            Never display changes in color.
+  -r ARG, --revision=ARG
+                        See "help revisionspec" for details.
+
+
+Description:
+  Shelve allows you to temporarily put changes you've made "on the shelf",
+  ie. out of the way, until a later time when you can bring them back from
+  the shelf with the 'unshelve' command.
+  
+  Shelve is intended to help separate several sets of text changes that have
+  been inappropriately mingled.  If you just want to get rid of all changes
+  (text and otherwise) and you don't need to restore them later, use revert.
+  If you want to shelve all text changes at once, use shelve --all.
+  
+  By default shelve asks you what you want to shelve, press '?' at the
+  prompt to get help. To shelve everything run shelve --all.
+  
+  If filenames are specified, only the changes to those files will be
+  shelved, other files will be left untouched.
+  
+  If a revision is specified, changes since that revision will be shelved.
+  
+  You can put multiple items on the shelf. Normally each time you run
+  unshelve the most recently shelved changes will be reinstated. However,
+  you can also unshelve changes in a different order by explicitly
+  specifiying which changes to unshelve. This works best when the changes
+  don't depend on each other.
+  
+  While you have patches on the shelf you can view and manipulate them with
+  the 'shelf' command. Run 'bzr shelf -h' for more info.</pre>
+
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://tomayko.com'>Ryan Tomayko</a>
+          on Tuesday, April 08, 2008 at 08:49 AM
+
+          <a href="#comment-74398" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74399'>
+        <div class='body'><p>What the guy at #10 said: by using the index in this way you are committing changes you have not compiled (if needed) or tested. ‘make test’ looks at the changes in your working directory, not the changes in the git index. That you’re really excited by this functionality shows that git has lead you astray.</p>
+
+<p>Folks have mentioned shelve and other set-aside mechanisms, but it occurs to me that the index, set-aside and patch queues (stgit, hg queues) form a continuum, with patch queues being a superset of the others.</p>
+
+<p>For example, with mercurial (because I’m not familiar with stgit) you would use the qrecord command to pluck changes out of your working directory to define a new patch. Then you would use the usual qnew and qrefresh to create another patch for your bookmark changes. Then, you would qpop the bookmark patch and your all set to eyeball, compile, test. At each stage, applied patches appear in the repo so all the normal repo commands work, unlike the index which is an entity unto itself.</p>
+
+<p>The folks who say “you should have done…”, while being a bit unhelpful because, well, you didn’t, are still basically right. You need to keep changes separate. The git index limbo state makes you think you don’t need to do this, but you do and you will be sorry. Mercurial queues (and stgit, I guess), are an easy way to do what you should have done in the first place.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Hmmm</span>
+          on Tuesday, April 08, 2008 at 09:20 AM
+
+          <a href="#comment-74399" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74422'>
+        <div class='body'><p>Thanks! This is very enlightening.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>no</span>
+          on Tuesday, April 08, 2008 at 11:19 AM
+
+          <a href="#comment-74422" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74431'>
+        <div class='body'><p>I actually like the Subversion way of doing things better:</p>
+
+<p>cp -r working one-feature
+cd one-feature
+files.select { !committed? }.each { revert }
+while !test
+  fix
+end
+commit</p>
+
+<p>It gets around the all too frequent “good intentions but broken trunk” problem.  Like others said, test before you commit!</p>
+
+<p>Not to be confused with my current dislike for SVN.  The Git/Mercurial tools are so much better, I prefer to use them any day, but I’ve yet to find a better algorithm.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://labnotes.org'>Assaf</a>
+          on Tuesday, April 08, 2008 at 11:38 AM
+
+          <a href="#comment-74431" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74439'>
+        <div class='body'><p>You says darcs handles the tangled working copy problem without breaking a sweat, but unless I’m doing something wrong, I haven’t found that to be the case. It’s fine, right up until the point that diff decides that changes from two separate logical changes are in the same hunk. And then you’re screwed. From what you’ve written, it looks like Git might be able to handle this by splitting the current hunk into smaller hunks. But as far as I’m aware, darcs can’t.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Tet</span>
+          on Tuesday, April 08, 2008 at 12:21 PM
+
+          <a href="#comment-74439" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74444'>
+        <div class='body'><p>#10 – you are only committing to your local copy. Now you can stash or branch your experimental stuff. Go back to your master, compile, test, or whatever to your hearts content. Then push to the central repo possibly rewriting your history before you do.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>StevenA</span>
+          on Tuesday, April 08, 2008 at 12:39 PM
+
+          <a href="#comment-74444" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74445'>
+        <div class='body'><p>That is a champion article. I had definitely wondered about committing bits of a file. Thx.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://drnicwilliams.com'>Dr Nic</a>
+          on Tuesday, April 08, 2008 at 12:47 PM
+
+          <a href="#comment-74445" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74446'>
+        <div class='body'><p>I’ve noticed that <a href='http://gitforum.net'>http://gitforum.net</a> just showed up…</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>mike</span>
+          on Tuesday, April 08, 2008 at 12:58 PM
+
+          <a href="#comment-74446" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74451'>
+        <div class='body'><p>I find myself drawn to git more and more while putting it off since I wont be able to immediately use it at work and solo projects are more manageable with svk (though nothing like git).  It sounds so much like the “dream SCM” I pretty much expected when I started using Subversion only to find out the hard way…</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://baron.vc'>Baron</a>
+          on Tuesday, April 08, 2008 at 03:03 PM
+
+          <a href="#comment-74451" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74471'>
+        <div class='body'><p>What do you do when the hunks themselves are tangled?</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Keong</span>
+          on Tuesday, April 08, 2008 at 07:32 PM
+
+          <a href="#comment-74471" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74473'>
+        <div class='body'><blockquote><p>Mercurial anyone?</p></blockquote>
+
+<p>Mercurial has both a <code>record</code> extension that works like <code>darcs record</code> or <code>git add --patch</code> (an interactive commit) and a <code>shelve</code> extension which is pretty much the same as <code>bzr shelve</code> (an interactive shelving)</p>
+
+<blockquote><p>But as far as I’m aware, darcs can’t.</p></blockquote>
+
+<p>Indeed it can’t, it’s “theorically possible”, but the ui for <code>darcs record</code> doesn’t give that possibility, which is a shame.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Masklinn</span>
+          on Tuesday, April 08, 2008 at 07:48 PM
+
+          <a href="#comment-74473" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74523'>
+        <div class='body'><p>#20 – the problem with git is the abuse of terminology. The problem is that in most VCSs the ‘commit’ is something more permanent (almost never thrown away), but in git it isn’t so.</p>
+
+<p>What I’d like is for git to have something like ‘publish’ (push would do it automatically) and git tools would be careful (by default) not to modify part of published history (either by rebase or reset, etc..) It would also check that unpublished changes were not available for pulling.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Mark</span>
+          on Wednesday, April 09, 2008 at 12:06 AM
+
+          <a href="#comment-74523" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74536'>
+        <div class='body'><p>Great article. It may be just what I need to leave SVN. Thanks!</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://rpheath.com'>Ryan</a>
+          on Wednesday, April 09, 2008 at 01:48 AM
+
+          <a href="#comment-74536" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74556'>
+        <div class='body'><p>Thanks for posting this!  I recently started using Git, and find new, wonderful goodies every day.  The git add —patch shortcut is particularly nice.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Hez</span>
+          on Wednesday, April 09, 2008 at 04:02 AM
+
+          <a href="#comment-74556" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74559'>
+        <div class='body'><p>Excellent article!</p>
+
+<p>Thanks for the —patch option. Wasn’t aware of it.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://www.bryanray.net'>Bryan Ray</a>
+          on Wednesday, April 09, 2008 at 04:30 AM
+
+          <a href="#comment-74559" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74574'>
+        <div class='body'><p>Good to hear about git commit —amend. Originally from darcs (the amend-record command), I believe.  This is one thing that I miss in Mercurial, which otherwise simply handles my day-to-day version control needs.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://www.emilsit.net/'>Emil Sit</a>
+          on Wednesday, April 09, 2008 at 06:01 AM
+
+          <a href="#comment-74574" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74580'>
+        <div class='body'><p>I had about the same problems as you struggling with git.  I was mockingly saying for months now that git needed a new ‘porcelain’ that more resembled darcs.  After getting pushed by various colleagues I finally started writing one to do exactly that about 2 months ago.
+The various perl/whatever wrappers out there just seem to wrap the existing UI and don’t really give you the nice feature richness that darcs has.</p>
+
+<p>Please do check out the early alpha version of my tool called ‘vng’. I’d love to have as much feedback as possible ;)  http://repo.or.cz/w/vng.git</p>
+
+<p>I think you’ll like the way that you indeed use very small patches that you can use or skip as you want.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Thomas Zander</span>
+          on Wednesday, April 09, 2008 at 06:47 AM
+
+          <a href="#comment-74580" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74617'>
+        <div class='body'><p>Git has a ‘stash’ command similar to bzr’s shelf discussed here.
+If you want to test before doing a commit, put everything you’re considering in the index, run ‘git stash’ to temporarily hide away the rest of your local changes, and test away.
+When you’re done, git commit, git stash apply.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://pleasedieinafire.net/'>Stephen Weeks</a>
+          on Wednesday, April 09, 2008 at 10:10 AM
+
+          <a href="#comment-74617" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74644'>
+        <div class='body'><p>How about 2 distinct workspaces? If you’re working on 2 different things then you need to check out the source in 2 different directories. This works fine for me when I’m using either Perforce (although each client costs IIRC) or Subversion.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://www.porc.ro'>Cristian</a>
+          on Wednesday, April 09, 2008 at 12:26 PM
+
+          <a href="#comment-74644" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74645'>
+        <div class='body'><p>Did you ever know that you’re my hero?</p>
+
+<blockquote><p>And then there’s git rebase —interactive, which is a bit like git commit —amend hopped up on
+acid and holding a chainsaw – completely insane and quite dangerous but capable of exposing
+<em>entirely new states of mind</em>.</p></blockquote>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://meme-rocket.com'>Bill Burcham</a>
+          on Wednesday, April 09, 2008 at 12:51 PM
+
+          <a href="#comment-74645" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74646'>
+        <div class='body'><p>Cristian: If managing multiple workspaces is such a fundamental aspect of source control, doesn’t it make sense to bring those concepts into the VCS?</p>
+
+<blockquote><p>This works fine for me when I’m using either Perforce (although each client costs IIRC) or Subversion.</p></blockquote>
+
+<p>A lot of things work <em>fine</em>: horse and buggies, Encyclopedia Britannica, purchasing music on physical media, Windows — all work fine. If I was shooting for fine, I’d be using RCS.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://tomayko.com'>Ryan Tomayko</a>
+          on Wednesday, April 09, 2008 at 12:53 PM
+
+          <a href="#comment-74646" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74867'>
+        <div class='body'><p>Thanks for this write-up!</p>
+
+<p>Choosing between mercurial and git was a very difficult decision for me, but now after the fact I’m extremely grateful I embraced git!  You can really do just about anything with it.  I love the rebase command, when used properly, it’s awesome.  Up until this point I’ve been afraid to try git rebase —interactive… but I suppose I should go give it a shot because it sounds awesome. (like Brondo sounds awesome)</p>
+
+<p>@mike (if that is your real name) – you’re comment is a shameless self-promotion in disguise.  I’m not against self-promotion, but just when you try to hide it, it’s a tad silly.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://tim.theenchanter.com/'>Tim Harper</a>
+          on Thursday, April 10, 2008 at 08:42 AM
+
+          <a href="#comment-74867" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74936'>
+        <div class='body'><p>Do you know if there is a way to get this same behavior out of patch or diff?  I would like to be able to select only certain differences into a patch, or patch only certain differences into a file, but I can find nothing on the subject.  Is git the only solution to this problem?</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>James Aguilar</span>
+          on Thursday, April 10, 2008 at 02:07 PM
+
+          <a href="#comment-74936" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-74945'>
+        <div class='body'><p>This is WHY I’m switching to git! You convinced me! Thank you Ryan!</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://xhtml-css.com'>Karim</a>
+          on Thursday, April 10, 2008 at 02:26 PM
+
+          <a href="#comment-74945" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-75061'>
+        <div class='body'><p>darcs' “split hunk” problem is <a href='http://bugs.darcs.net/issue126'>issue 126</a>, btw, and is entirely stuck on “how should we do this?” and implementation.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://nikolasco.livejournal.com/'>Nikolas Coukouma</a>
+          on Friday, April 11, 2008 at 03:22 AM
+
+          <a href="#comment-75061" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-75074'>
+        <div class='body'><p>Awesome.  It’s hard to find the time to try new stuff like git, but this makes it seem rather easy.  Thanks.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://destiney.com/'>Greg Donald</a>
+          on Friday, April 11, 2008 at 04:54 AM
+
+          <a href="#comment-75074" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-75661'>
+        <div class='body'><p>Nice! Thanks for opening my eyes.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Stefan Naewe</span>
+          on Sunday, April 13, 2008 at 09:02 PM
+
+          <a href="#comment-75661" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-77538'>
+        <div class='body'><p>I’m afraid your “how to do it when your vcs won’t” is really a huge strawman argument. Here’s a much simpler way that I frequently use at work with Tortoise SVN.</p>
+
+<ol>
+<li>Start the Commit process. (right click on the project folder and hit Commit.)</li>
+<li>Right click on each file listed in the commit. Look through the Diff and comment on it in the comment box.</li>
+<li>If I see an entire file I don’t want to commit right now, I simply uncheck it.</li>
+<li>Occasionally I’ll entangle something and not want to commit the whole file. An example is a file I have that has one line NOPLC=TRUE. In the repository it’s NOPLC=FALSE. This is a pure testing variable. If I edit that file, all I do is slide a copy of that one file into another folder, then right click on the offending blocks of the file and say “Revert.”</li>
+<li>Now properly commented, I hit the button and the changes go into the repository.</li>
+<li>Now that I’m done with that, I simply move those files back into place from my temporary holding folder. The changes that I’ve committed no longer show up on my svn diff, leaving only those that are yet to commit.</li>
+</ol>
+
+
+<p>It’s nice that git and bzr do this automatically, but it’s hardly as much of a problem as you imply it is and hardly intrinsic or an unsurmountable problem in SVN. As for other VCS front ends than TortoiseSVN, I’m sure there’s 2-way diff/merge programs that you can slide into anything that would do the same thing without all the superfluous patches. I haven’t needed to do partial commits in linux yet, but my workflow is much the same with multiple terminal windows.</p>
+
+<p>I’m planing on playing with Bzr eventually and there are many great reasons to pick Bzr and Git over Svn, but this isn’t really a reason to hang your hat on one or the other.</p>
+
+<p>Now being able to replicate the repository, edit the sources on a non-network-connected machine, commit, then carry that repository on a memory stick and put it on a network connected machine and commit it again to the main repository… That’s something that Svn can’t really do right now that we want in our VCS.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://kazriko.arkaic.com'>Kazriko</a>
+          on Monday, April 28, 2008 at 04:51 PM
+
+          <a href="#comment-77538" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-78701'>
+        <div class='body'><p>@James Aguilar</p>
+
+<p>Look at patchutils ( http://cyberelk.net/tim/software/patchutils/ ) and in particular, filterdiff.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Eli</span>
+          on Saturday, May 10, 2008 at 04:40 AM
+
+          <a href="#comment-78701" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-79905'>
+        <div class='body'><blockquote><p>And then there’s git rebase –interactive, which is a bit like git commit –amend
+hopped up on acid and holding a chainsaw – completely insane and quite dangerous
+but capable of exposing entirely new states of mind.</p></blockquote>
+
+<p>But while being dangerous git has this general behaviour of immortality, ehem immutability… Everything in the object store is immutable and can’t be broken once it is in there (until you get to know git prune…) The only mutable things in your git repository are the heads which are just references to a specific commit.</p>
+
+<p>So if you accidentally do(rebase, commit) anything wrongly regarding your repository nothing is lost. Everything is still there, but not referenced anymore. You can look in .git/logs how the references have changed and checkout some older commit and work on this one (or git reset your branch to that commit).</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://virtual-void.net'>Johannes</a>
+          on Tuesday, May 20, 2008 at 11:48 PM
+
+          <a href="#comment-79905" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-86417'>
+        <div class='body'><p>I want to say that having used Git for a while, I have gotten myself into and out of a few hairy situations using rebase -i. :)</p>
+
+<p>What is awesome, is git gives you enough rope to hang yourself ( and I have, borking my tree 3 times now! ), and a knife to cut yourself down! If you haven’t pruned in a while, you can immediately go back and fix your mess.</p>
+
+<p>I can’t count the number of times I’ve clobbered myself with Subversion’s brain dead merging, or tried to revert a file, and fix it, and pretty much have to resort to all kinds of painful contortions to try and get my branch back into shape.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Dan</span>
+          on Friday, July 11, 2008 at 12:07 PM
+
+          <a href="#comment-86417" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-130385'>
+        <div class='body'><p>Best explanation of the index for beginners that I’ve seen so far</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://wtanaka.com/'>Wesley</a>
+          on Saturday, January 10, 2009 at 06:41 AM
+
+          <a href="#comment-130385" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-148135'>
+        <div class='body'><p>Ryan, you never discuss branching which I thought was a huge advantage to Git? Branching is cheap, so do it often. Can you elaborate?</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='mailto:taylor.pickard@gmail.com'>Taylor</a>
+          on Friday, March 06, 2009 at 10:53 AM
+
+          <a href="#comment-148135" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-151411'>
+        <div class='body'><p>Very useful explanation of git’s index. I like your writing style.
+Especially the part “I figure this will take all of maybe ten minutes, so I begin pounding away in my working copy. After screwing around for an hour or so, …” sounds quite familiar to me. ;–)</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Rainer</span>
+          on Friday, March 13, 2009 at 08:52 AM
+
+          <a href="#comment-151411" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-173254'>
+        <div class='body'><p>#24: Exactly. What git is still missing is a way to split hunks manually. Sometimes what looks to git like one unsplittable hunk is actually two separate changes, and as far as I can tell there’s no way to convince it otherwise.</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Katherine</span>
+          on Tuesday, April 21, 2009 at 02:27 PM
+
+          <a href="#comment-173254" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-178517'>
+        <div class='body'><p>git was driving me mad: now it all makes sense! A wonderful article in a sea of low quality “information”: clear, informative, well written and educational: you’re my hero of the day! Thanks :)</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <span class='commentor'>Tushar</span>
+          on Friday, May 01, 2009 at 01:36 PM
+
+          <a href="#comment-178517" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-181576'>
+        <div class='body'><p>Thanks a lot for this useful article. It helped me a bunch when I needed to untangle my working copy, to break a gigantic patch down into more easily digestible pieces!</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://fredericiana.com'>Fred</a>
+          on Wednesday, May 06, 2009 at 06:33 PM
+
+          <a href="#comment-181576" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    <li class='comment container' id='comment-217105'>
+        <div class='body'><p>Another thank you! A coworker pointed me at this, turns out that “git add —patch” works fine with git-svn, too, and it really does give you more freedom to fix bugs right when you notice them (I’d been doing git-stash/fix/git-stash-pop but this is much smoother.) Best of both worlds…</p>
+</div>
+        <p class='comment-meta'>
+          &mdash; <a class='commentor' href='http://www.thok.org/bloggery'>_Mark_</a>
+          on Thursday, July 23, 2009 at 11:55 PM
+
+          <a href="#comment-217105" title="Permanent link to this comment">#</a>
+        </p>
+      </li>
+    </ol>
+  </div>
+  </div>
+
+
+    <div id='footer'>
+      <p class='rights'>
+        Copyright
+        <a href="http://creativecommons.org/licenses/by-sa/2.5/" rel="license">&copy;</a>
+        2003-2010 by <a href='http://tomayko.com/about' rel='me author'>Ryan Tomayko</a>.
+      </p>
+      <p class='heroku'>
+        Awesomely hosted by <a href='http://heroku.com/'>Heroku</a>.
+      </p>
+    </div>
+  </div>
+  <script src='http://www.google-analytics.com/ga.js' type='text/javascript'></script>
+  <script type="text/javascript">
+  var pageTracker = _gat._getTracker('UA-125803-2');
+  pageTracker._trackPageview();
+  </script>
+  </body>
+</html>
