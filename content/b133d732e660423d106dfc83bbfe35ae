@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Multiple branches using git-svn</title>
+
+<link rel="stylesheet" href="../../style.css" type="text/css" />
+<link rel="stylesheet" href="../../local.css" type="text/css" />
+
+
+<meta name="title" content="Multiple branches using git-svn" />
+</head>
+<body>
+
+<div class="header">
+<span>
+
+<a href="./../../">dmo.ca</a>/ 
+
+<a href="./../">blog</a>/ 
+
+Multiple branches using git-svn
+</span>
+
+</div>
+
+
+
+
+<div id="sidebar">
+<h2>Tags</h2>
+
+<div class='pagecloud'>
+<span class="smallestPC"><a href="./../../tag/ack/">ack</a></span>
+<span class="smallestPC"><a href="./../../tag/alternatives/">alternatives</a></span>
+<span class="smallestPC"><a href="./../../tag/bad/">bad</a></span>
+<span class="smallestPC"><a href="./../../tag/berkeleydb/">berkeleydb</a></span>
+<span class="smallestPC"><a href="./../../tag/bind/">bind</a></span>
+<span class="smallestPC"><a href="./../../tag/bug/">bug</a></span>
+<span class="smallestPC"><a href="./../../tag/cdb/">cdb</a></span>
+<span class="smallPC"><a href="./../../tag/chicago/">chicago</a></span>
+<span class="smallestPC"><a href="./../../tag/chroot/">chroot</a></span>
+<span class="smallestPC"><a href="./../../tag/conference/">conference</a></span>
+<span class="smallestPC"><a href="./../../tag/continuousintegration/">continuousintegration</a></span>
+<span class="smallestPC"><a href="./../../tag/database/">database</a></span>
+<span class="smallPC"><a href="./../../tag/debian/">debian</a></span>
+<span class="smallestPC"><a href="./../../tag/email/">email</a></span>
+<span class="smallestPC"><a href="./../../tag/etc/">etc</a></span>
+<span class="smallestPC"><a href="./../../tag/etckeeper/">etckeeper</a></span>
+<span class="normalPC"><a href="./../../tag/git/">git</a></span>
+<span class="smallestPC"><a href="./../../tag/git-svn/">git-svn</a></span>
+<span class="smallestPC"><a href="./../../tag/hardware/">hardware</a></span>
+<span class="smallestPC"><a href="./../../tag/ikiwiki/">ikiwiki</a></span>
+<span class="smallestPC"><a href="./../../tag/lastfm/">lastfm</a></span>
+<span class="smallestPC"><a href="./../../tag/lenny/">lenny</a></span>
+<span class="normalPC"><a href="./../../tag/linux/">linux</a></span>
+<span class="smallestPC"><a href="./../../tag/memory/">memory</a></span>
+<span class="smallestPC"><a href="./../../tag/mimedefang/">mimedefang</a></span>
+<span class="smallestPC"><a href="./../../tag/ottawa/">ottawa</a></span>
+<span class="biggestPC"><a href="./../../tag/perl/">perl</a></span>
+<span class="smallestPC"><a href="./../../tag/ruby/">ruby</a></span>
+<span class="smallestPC"><a href="./../../tag/shell/">shell</a></span>
+<span class="smallestPC"><a href="./../../tag/subversion/">subversion</a></span>
+<span class="smallestPC"><a href="./../../tag/sysadmin/">sysadmin</a></span>
+<span class="smallestPC"><a href="./../../tag/testing/">testing</a></span>
+<span class="smallestPC"><a href="./../../tag/tokyocabinet/">tokyocabinet</a></span>
+<span class="normalPC"><a href="./../../tag/vimblog/">vimblog</a></span>
+<span class="smallestPC"><a href="./../../tag/virtualization/">virtualization</a></span>
+<span class="smallestPC"><a href="./../../tag/wmii/">wmii</a></span>
+<span class="smallPC"><a href="./../../tag/yapc/">yapc</a></span>
+</div>
+
+<h2>Archive</h2>
+
+<ul>
+<li><a href="./../archive/2009/">2009</a></li>
+<li><a href="./../archive/2008/">2008</a></li>
+<li><a href="./../archive/2007/">2007</a></li>
+<li><a href="./../archive/2006/">2006</a></li>
+</ul>
+
+</div>
+
+
+<div id="content">
+<p>I've recently switched to using git for source control, after svk screwed up a
+merge on me.  Unfortunately, I'm still interacting with a Subversion repository
+until we convert entirely to git.</p>
+
+<p>One thing that git does really well is merge, so naturally when I need to
+backport something from our devel tree to our stable release tree, I want to
+use git.  Unfortunately, git-svn doesn't seem to handle branches nicely.  Or,
+maybe it does and I'm just missing something.  At any rate, I could check out
+using git-svn, but pushing the changes back to the branch seemed to break,  so
+I had to hack something.  Here's how I got multiple branches working.</p>
+
+<p><a name="more"></a></p>
+
+<p><strong>UPDATE:</strong> Bart has found a <a href="http://www.jukie.net/~bart/blog/svn-branches-in-git">better
+way</a> of doing this.  You
+should follow his instructions instead.</p>
+
+<blockquote>
+  <p><strong>Edit:</strong> Bart pointed out that I should mention which version of git this
+  works with, since there are usually 3 releases by the time you've eaten
+  breakfast.  Accordingly, <code>git --version</code> says <code>git version
+  1.5.2.rc3.29.gfd985-dirty</code> and <code>git-svn --version</code> says <code>git-svn version
+  1.5.2.rc3.29.gfd985-dirty (svn 1.4.2)</code></p>
+</blockquote>
+
+<p>First, clone the SVN repo with:</p>
+
+<pre><code>git-svn clone svn+ssh://your-server/home/svn/project-name/trunk -r NNNN project-name.git
+</code></pre>
+
+<p>where NNNN is some relatively recent revision, unless you like waiting forever
+for git-svn to sync.  Make sure that the revision number you pick is actually
+on trunk -- don't just choose an arbitrary number in the past. Don't bother
+trying to pull branches with the -b argument at this point -- if that worked,
+we wouldn't be doing this.</p>
+
+<p>Then, cd into project-name.git and:</p>
+
+<pre><code>git-svn rebase
+</code></pre>
+
+<p>to pull in everything from your NNNN revision to date.</p>
+
+<p>Now you've got a working git repo that you can mangle at will, and recommit to svn with </p>
+
+<pre><code>git-svn dcommit
+</code></pre>
+
+<p>(There are some problems, namely that git-svn seems to get confused about
+ancestry if your local git branching gets complex, but we'll ignore that for now.)</p>
+
+<p>Now, we want to add a second remote branch to our local git.  To do this, edit your
+.git/config file.  You've probably got soemthing like this in there:</p>
+
+<pre><code>[svn-remote "svn"]
+    url = svn+ssh://your-server/home/svn/project-name/trunk
+    fetch = :refs/remotes/git-svn
+</code></pre>
+
+<p>To track a second branch (for this example, it's "branches/3.4.x"), you want to add:</p>
+
+<pre><code>[svn-remote "svn34"]
+    url = svn+ssh://your-server/home/svn/project-name/branches/3.4.x
+    fetch = :refs/remotes/git-svn-3.4
+</code></pre>
+
+<p>You're just adding a new svn-remote stanza with a new svn-remote name, url, and
+fetch target.</p>
+
+<p>Next, we want to pull that branch:</p>
+
+<pre><code>git-svn fetch svn34  -r MMMM
+</code></pre>
+
+<p>Again, pick for the MMMM revision a value that's a) somewhat recent, or you'll
+wait forever, and b) actually on the branch you want to retrieve.</p>
+
+<p>Now, 'git branch -a' should show a new remote branch named git-svn-3.4.  You
+don't want to mess with this remote branch, so we'll want a local master to
+edit and/or branch from:</p>
+
+<pre><code>git checkout git-svn-3.4
+git checkout -b master-3.4.x
+</code></pre>
+
+<p>Now we've got a new master-3.4.x that can be used for git-svn rebase and
+dcommit just as your old master could.  From here, cherry-pick the patches you
+want to backport to your branch, and then dcommit them back to svn.</p>
+
+</div>
+
+<div id="footer">
+<div id="pageinfo">
+
+
+<div class="tags">
+Tags:
+
+<a href="./../../tag/git/" rel="tag">git</a>
+
+<a href="./../../tag/git-svn/" rel="tag">git-svn</a>
+
+<a href="./../../tag/subversion/" rel="tag">subversion</a>
+
+</div>
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited Fri 08 Jun 2007 11:35:13 AM EDT
+<!-- Created Fri 08 Jun 2007 11:35:13 AM EDT -->
+</div>
+
+</div>
+
+<!-- from dmo.ca -->
+</div>
+
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try{
+var pageTracker = _gat._getTracker("UA-186707");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+</body>
+</html>
