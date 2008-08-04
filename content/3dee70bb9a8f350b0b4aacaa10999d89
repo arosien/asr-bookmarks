@@ -1,0 +1,2192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+<script type="text/javascript">(function() { var a=window;function c(b){this.t={};this.tick=function(d,i,e){e=e?e:(new Date).getTime();this.t[d]=[e,i]};this.tick("start",null,b)}var f=new c;a.jstiming={Timer:c,load:f};try{var g=null;if(a.chrome&&a.chrome.csi)g=Math.floor(a.chrome.csi().pageT);if(g==null)if(a.gtbExternal)g=a.gtbExternal.pageT();if(g==null)if(a.external)g=a.external.pageT;if(g)a.jstiming.pt=g}catch(h){};a.tickAboveFold=function(b){b=b;var d=0;if(b.offsetParent){do d+=b.offsetTop;while(b=b.offsetParent)}b=d;b<=750&&a.jstiming.load.tick("aft")};var j=false;function k(){if(!j){j=true;a.jstiming.load.tick("firstScrollTime")}}a.addEventListener?a.addEventListener("scroll",k,false):a.attachEvent("onscroll",k);
+ })();</script>
+<meta content='true' name='MSSmartTagsPreventParsing'/>
+<meta content='blogger' name='generator'/>
+<link href='http://www.blogger.com/favicon.ico' rel='icon' type='image/vnd.microsoft.icon'/>
+<link href='http://debasishg.blogspot.com/2008/07/scaling-out-messaging-applications-with.html' rel='canonical'/>
+<link rel="alternate" type="application/atom+xml" title="Ruminations of a Programmer - Atom" href="http://debasishg.blogspot.com/feeds/posts/default" />
+<link rel="alternate" type="application/rss+xml" title="Ruminations of a Programmer - RSS" href="http://debasishg.blogspot.com/feeds/posts/default?alt=rss" />
+<link rel="service.post" type="application/atom+xml" title="Ruminations of a Programmer - Atom" href="http://www.blogger.com/feeds/22587889/posts/default" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.blogger.com/rsd.g?blogID=22587889" />
+<link rel="alternate" type="application/atom+xml" title="Ruminations of a Programmer - Atom" href="http://debasishg.blogspot.com/feeds/3013795989207953349/comments/default" />
+<!--[if IE]> <script> (function() { var html5 = ("abbr,article,aside,audio,canvas,datalist,details," + "figure,footer,header,hgroup,mark,menu,meter,nav,output," + "progress,section,time,video").split(','); for (var i = 0; i < html5.length; i++) { document.createElement(html5[i]); } })(); </script> <![endif]-->
+<title>Ruminations of a Programmer: Scaling out messaging applications with Scala Actors and AMQP</title>
+<link type='text/css' rel='stylesheet' href='http://www.blogger.com/static/v1/widgets/1743847221-widget_css_bundle.css' />
+ <link rel="stylesheet" type="text/css" href="http://www.blogger.com/dyn-css/authorization.css?targetBlogID=22587889&zx=54a9f118-334e-4404-8d45-26be7f244e3a"/>
+<style type="text/css">#navbar-iframe { display:block }
+</style>
+
+<style id='page-skin-1' type='text/css'><!--
+/*
+-----------------------------------------------
+Blogger Template Style
+Name:     Rounders 3
+Designer: Douglas Bowman
+URL:      www.stopdesign.com
+Date:     27 Feb 2004
+Updated by: Blogger Team
+----------------------------------------------- */
+/* Variable definitions
+====================
+<Variable name="mainBgColor" description="Main Background Color"
+type="color" default="#eec">
+<Variable name="mainTextColor" description="Text Color" type="color"
+default="#333">
+<Variable name="postTitleColor" description="Post Title Color" type="color"
+default="#333">
+<Variable name="dateHeaderColor" description="Date Header Color"
+type="color" default="#586">
+<Variable name="borderColor" description="Post Border Color" type="color"
+default="#bbb">
+<Variable name="mainLinkColor" description="Link Color" type="color"
+default="#456">
+<Variable name="mainVisitedLinkColor" description="Visited Link Color"
+type="color" default="#234">
+<Variable name="titleBgColor" description="Page Header Background Color"
+type="color" default="#357">
+<Variable name="titleTextColor" description="Blog Title Color"
+type="color" default="#fff">
+<Variable name="topSidebarHeaderColor"
+description="Top Sidebar Title Color"
+type="color" default="#fff">
+<Variable name="topSidebarBgColor"
+description="Top Sidebar Background Color"
+type="color" default="#586">
+<Variable name="topSidebarTextColor" description="Top Sidebar Text Color"
+type="color" default="#fff">
+<Variable name="topSidebarLinkColor" description="Top Sidebar Link Color"
+type="color" default="#fff">
+<Variable name="topSidebarVisitedLinkColor"
+description="Top Sidebar Visited Link Color"
+type="color" default="#fff">
+<Variable name="bottomSidebarHeaderColor"
+description="Bottom Sidebar Title Color"
+type="color" default="#abc">
+<Variable name="bottomSidebarLinkColor"
+description="Bottom Sidebar Link Color"
+type="color" default="#99ddbb">
+<Variable name="bottomSidebarVisitedLinkColor"
+description="Bottom Sidebar Visited Link Color"
+type="color" default="#ffffff">
+<Variable name="bodyFont" description="Text Font" type="font"
+default="normal normal 100% 'Trebuchet MS',Verdana,Arial,Sans-serif">
+<Variable name="pageTitleFont" description="Blog Title Font" type="font"
+default="normal bold 200% 'Trebuchet MS',Verdana,Arial,Sans-serif">
+<Variable name="descriptionFont" description="Blog Description Font" type="font"
+default="normal normal 100% 'Trebuchet MS',Verdana,Arial,Sans-serif">
+<Variable name="headerFont" description="Sidebar Title Font" type="font"
+default="normal bold 100% 'Trebuchet MS',Verdana,Arial,Sans-serif">
+<Variable name="postTitleFont" description="Post Title Font" type="font"
+default="normal bold 135% 'Trebuchet MS',Verdana,Arial,Sans-serif">
+*/
+code {
+color: #558866;
+font: Courier
+font-size: small;
+}
+pre {
+background-color: #f1f1f3;
+color: #112;
+padding: 10px;
+font-size: 1.1em;
+overflow: auto;
+margin: 4px 0px;
+width: 95%;
+}
+/* Syntax highlighting */
+pre .normal {}
+pre .comment { color: #005; font-style: italic; }
+pre .keyword { color: #A00; font-weight: bold; }
+pre .method { color: #077; }
+pre .class { color: #074; }
+pre .module { color: #050; }
+pre .punct { color: #447; font-weight: bold; }
+pre .symbol { color: #099; }
+pre .string { color: #944; background: #FFE; }
+pre .char { color: #F07; }
+pre .ident { color: #004; }
+pre .constant { color: #07F; }
+pre .regex { color: #B66; background: #FEF; }
+pre .number { color: #F99; }
+pre .attribute { color: #5bb; }
+pre .global { color: #7FB; }
+pre .expr { color: #227; }
+pre .escape { color: #277; }
+.java_type {
+color: rgb(0,44,221);
+}
+.java_keyword {
+color: rgb(0,0,0); font-weight: bold;
+}
+.java_javadoc_comment {
+color: rgb(147,147,147); /* background-color: rgb(247,247,247); */ font-style: italic;
+}
+.java_comment {
+color: rgb(147,147,147); /* background-color: rgb(247,247,247); */
+}
+.java_operator {
+color: rgb(0,124,31);
+}
+.java_plain {
+color: rgb(0,0,0);
+}
+.java_literal {
+color: rgb(188,0,0);
+}
+/* code {
+color: rgb(0,0,0); font-family: monospace; font-size: 12px; white-space: nowrap;
+} */
+.java_javadoc_tag {
+color: rgb(147,147,147); background-color: rgb(247,247,247); font-style: italic; font-weight: bold;
+}
+.java_separator {
+color: rgb(0,33,255);
+}
+.xml_plain {
+color: rgb(0,0,0);
+}
+.xml_tag_name {
+color: rgb(0,55,255);
+}
+.xml_comment {
+color: rgb(147,147,147); background-color: rgb(247,247,247);
+}
+.xml_tag_symbols {
+color: rgb(0,59,255);
+}
+.xml_rife_tag {
+color: rgb(0,0,0); background-color: rgb(228,230,160);
+}
+.xml_attribute_value {
+color: rgb(193,0,0);
+}
+.xml_attribute_name {
+color: rgb(0,0,0); font-weight: bold;
+}
+.xml_char_data {
+color: rgb(0,0,0);
+}
+/* code {
+color: rgb(0,0,0); font-family: monospace; font-size: 12px; white-space: nowrap;
+}
+.xml_rife_name {
+color: rgb(0,0,196); background-color: rgb(228,230,160);
+}
+h1 {
+font-family: sans-serif; font-size: 16pt; font-weight: bold; color: rgb(0,0,0); background: rgb(210,210,210); border: solid 1px black; padding: 5px; text-align: center;
+} */
+.xml_processing_instruction {
+color: rgb(0,0,0); font-weight: bold; font-style: italic;
+}
+body {
+background:#123;
+margin:0;
+text-align:center;
+line-height: 1.5em;
+font: x-small Trebuchet MS, Verdana, Arial, Sans-serif;
+color:#333333;
+font-size/* */:/**/small;
+font-size: /**/small;
+}
+/* Page Structure
+----------------------------------------------- */
+/* The images which help create rounded corners depend on the
+following widths and measurements. If you want to change
+these measurements, the images will also need to change.
+*/
+#outer-wrapper {
+width:940px;
+margin:0 auto;
+text-align:left;
+font: normal normal 100% 'Trebuchet MS',Verdana,Arial,Sans-serif;
+}
+#main-wrap1 {
+width:685px;
+float:left;
+background:#eeeecc no-repeat left bottom;
+margin:15px 0 0;
+padding:0 0 10px;
+color:#333333;
+font-size:97%;
+line-height:1.5em;
+word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+overflow: hidden;     /* fix for long non-text content breaking IE sidebar float */
+}
+#main-wrap2 {
+float:left;
+width:100%;
+background: no-repeat left top;
+padding:10px 0 0;
+}
+#main {
+background: repeat-y;
+padding:0;
+}
+#sidebar-wrap {
+width:240px;
+float:right;
+margin:15px 0 0;
+font-size:97%;
+line-height:1.5em;
+word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+overflow: hidden;     /* fix for long non-text content breaking IE sidebar float */
+}
+.main .widget {
+margin-top: 4px;
+width: 668px;
+padding: 0 13px;
+}
+.main .Blog {
+margin: 0;
+padding: 0;
+width: 684px;
+}
+/* Links
+----------------------------------------------- */
+a:link {
+color: #445566;
+}
+a:visited {
+color: #223344;
+}
+a:hover {
+color: #223344;
+}
+a img {
+border-width:0;
+}
+/* Blog Header
+----------------------------------------------- */
+#header-wrapper {
+background:#335577 no-repeat left top;
+margin:22px 0 0 0;
+padding:8px 0 0 0;
+color:#ffffff;
+}
+#header {
+background: no-repeat left bottom;
+padding:0 15px 8px;
+}
+#header h1 {
+margin:0;
+padding:10px 30px 5px;
+line-height:1.2em;
+font: normal bold 200% 'Trebuchet MS',Verdana,Arial,Sans-serif;
+}
+#header a,
+#header a:visited {
+text-decoration:none;
+color: #ffffff;
+}
+#header .description {
+margin:0;
+padding:5px 30px 10px;
+line-height:1.5em;
+font: normal normal 100% 'Trebuchet MS',Verdana,Arial,Sans-serif;
+}
+/* Posts
+----------------------------------------------- */
+h2.date-header {
+margin:0 28px 0 43px;
+font-size:85%;
+line-height:2em;
+text-transform:uppercase;
+letter-spacing:.2em;
+color:#558866;
+}
+.post {
+margin:.3em 0 25px;
+padding:0 13px;
+border:1px dotted #bbbbbb;
+border-width:1px 0;
+}
+.post h3 {
+margin:0;
+line-height:1.5em;
+background: no-repeat 10px .5em;
+display:block;
+border:1px dotted #bbbbbb;
+border-width:0 1px 1px;
+padding:2px 14px 2px 29px;
+color: #333333;
+font: normal bold 135% 'Trebuchet MS',Verdana,Arial,Sans-serif;
+}
+.post h3 a, .post h3 a:visited {
+text-decoration:none;
+color: #333333;
+}
+a.title-link:hover {
+background-color: #bbbbbb;
+color: #333333;
+}
+.post-body {
+border:1px dotted #bbbbbb;
+border-width:0 1px 1px;
+border-bottom-color:#eeeecc;
+padding:10px 14px 1px 29px;
+}
+html>body .post-body {
+border-bottom-width:0;
+}
+.post p {
+margin:0 0 .75em;
+}
+.post-footer {
+background: #ffffff;
+margin:0;
+padding:2px 14px 2px 29px;
+border:1px dotted #bbbbbb;
+border-width:1px;
+font-size:100%;
+line-height:1.5em;
+color: #666666;
+}
+.post-footer p {
+margin: 0;
+}
+html>body .post-footer {
+border-bottom-color:transparent;
+}
+.uncustomized-post-template .post-footer {
+text-align: right;
+}
+.uncustomized-post-template .post-author,
+.uncustomized-post-template .post-timestamp {
+display: block;
+float: left;
+text-align:left;
+margin-right: 4px;
+}
+.post-footer a {
+color: #456;
+}
+.post-footer a:hover {
+color: #234;
+}
+a.comment-link {
+/* IE5.0/Win doesn't apply padding to inline elements,
+so we hide these two declarations from it */
+background/* */:/**/ no-repeat 0 45%;
+padding-left:14px;
+}
+html>body a.comment-link {
+/* Respecified, for IE5/Mac's benefit */
+background: no-repeat 0 45%;
+padding-left:14px;
+}
+.post img {
+margin:0 0 5px 0;
+padding:4px;
+border:1px solid #bbbbbb;
+}
+blockquote {
+margin:.75em 0;
+border:1px dotted #bbbbbb;
+border-width:1px 0;
+padding:5px 15px;
+color: #558866;
+}
+.post blockquote p {
+margin:.5em 0;
+}
+#blog-pager-newer-link {
+float: left;
+margin-left: 13px;
+}
+#blog-pager-older-link {
+float: right;
+margin-right: 13px;
+}
+#blog-pager {
+text-align: center;
+}
+.feed-links {
+clear: both;
+line-height: 2.5em;
+margin-left: 13px;
+}
+/* Comments
+----------------------------------------------- */
+#comments {
+margin:-25px 13px 0;
+border:1px dotted #bbbbbb;
+border-width:0 1px 1px;
+padding:20px 0 15px 0;
+}
+#comments h4 {
+margin:0 0 10px;
+padding:0 14px 2px 29px;
+border-bottom:1px dotted #bbbbbb;
+font-size:120%;
+line-height:1.4em;
+color:#333333;
+}
+#comments-block {
+margin:0 15px 0 9px;
+}
+.comment-author {
+background: no-repeat 2px .3em;
+margin:.5em 0;
+padding:0 0 0 20px;
+font-weight:bold;
+}
+.comment-body {
+margin:0 0 1.25em;
+padding:0 0 0 20px;
+}
+.comment-body p {
+margin:0 0 .5em;
+}
+.comment-footer {
+margin:0 0 .5em;
+padding:0 0 .75em 20px;
+}
+.comment-footer a:link {
+color: #333;
+}
+.deleted-comment {
+font-style:italic;
+color:gray;
+}
+/* Profile
+----------------------------------------------- */
+.profile-img {
+float: left;
+margin: 5px 5px 5px 0;
+border: 4px solid #ffffff;
+}
+.profile-datablock {
+margin:0 15px .5em 0;
+padding-top:8px;
+}
+.profile-link {
+background: no-repeat 0 .1em;
+padding-left:15px;
+font-weight:bold;
+}
+.profile-textblock {
+clear: both;
+margin: 0;
+}
+.sidebar .clear, .main .widget .clear {
+clear: both;
+}
+#sidebartop-wrap {
+background:#558866  no-repeat left bottom;
+margin:0px 0px 15px;
+padding:0px 0px 10px;
+color:#ffffff;
+}
+#sidebartop-wrap2 {
+background: no-repeat left top;
+padding: 10px 0 0;
+margin:0;
+border-width:0;
+}
+#sidebartop h2 {
+line-height:1.5em;
+color:#ffffff;
+border-bottom: 1px dotted #ffffff;
+font: normal bold 100% 'Trebuchet MS',Verdana,Arial,Sans-serif;
+margin-bottom: 0.5em;
+}
+#sidebartop a {
+color: #ffffff;
+}
+#sidebartop a:hover {
+color: #ffffff;
+}
+#sidebartop a:visited {
+color: #ffffff;
+}
+#sidebar a {
+color: #99ddbb;
+}
+#sidebar a:hover,
+#sidebar a:visited {
+color: #ffffff;
+}
+/* Sidebar Boxes
+----------------------------------------------- */
+.sidebar .widget {
+margin:.5em 13px 1.25em;
+padding:0 0px;
+}
+.widget-content {
+margin-top: 0.5em;
+}
+#sidebarbottom-wrap1 {
+background:#335577 no-repeat left top;
+margin:0 0 15px;
+padding:10px 0 0;
+color: #ffffff;
+}
+#sidebarbottom-wrap2 {
+background: no-repeat left bottom;
+padding:8px 0px 8px;
+}
+.sidebar h2 {
+margin:0 0 .5em 0;
+padding:0 0 .2em;
+line-height:1.5em;
+font:normal bold 100% 'Trebuchet MS',Verdana,Arial,Sans-serif;
+}
+.sidebar ul {
+list-style:none;
+margin:0 0 1.25em;
+padding:0 0px;
+}
+.sidebar ul li {
+background: no-repeat 2px .25em;
+margin:0;
+padding:0 0 3px 16px;
+margin-bottom:3px;
+border-bottom:1px dotted #bbbbbb;
+line-height:1.4em;
+}
+.sidebar p {
+margin:0 0 .6em;
+}
+#sidebar h2 {
+color: #aabbcc;
+border-bottom: 1px dotted #aabbcc;
+}
+/* Footer
+----------------------------------------------- */
+#footer-wrap1 {
+clear:both;
+margin:0;
+padding:15px 0 0;
+}
+#footer-wrap2 {
+background:#335577  no-repeat left top;
+padding:8px 0 0;
+color:#ffffff;
+}
+#footer {
+background: no-repeat left bottom;
+padding:8px 15px 8px;
+}
+#footer hr {display:none;}
+#footer p {margin:0;}
+#footer a {color:#ffffff;}
+/** Page structure tweaks for layout editor wireframe */
+body#layout #main-wrap1,
+body#layout #sidebar-wrap,
+body#layout #header-wrapper {
+margin-top: 0;
+}
+body#layout #header, body#layout #header-wrapper,
+body#layout #outer-wrapper {
+margin-left:0,
+margin-right: 0;
+padding: 0;
+}
+body#layout #outer-wrapper {
+width: 730px;
+}
+body#layout #footer-wrap1 {
+padding-top: 0;
+}
+
+--></style>
+<script type="text/javascript">
+if (window.jstiming) window.jstiming.load.tick('headEnd');
+</script></head>
+<body>
+<div class='navbar section' id='navbar'><div class='widget Navbar' id='Navbar1'><script type="text/javascript">
+    function setAttributeOnload(object, attribute, val) {
+      if(window.addEventListener) {
+        window.addEventListener("load",
+          function(){ object[attribute] = val; }, false);
+      } else {
+        window.attachEvent('onload', function(){ object[attribute] = val; });
+      }
+    }
+  </script>
+<iframe src="http://www.blogger.com/navbar.g?targetBlogID=22587889&amp;blogName=Ruminations+of+a+Programmer&amp;publishMode=PUBLISH_MODE_BLOGSPOT&amp;navbarType=BLUE&amp;layoutType=LAYOUTS&amp;searchRoot=http%3A%2F%2Fdebasishg.blogspot.com%2Fsearch&amp;blogLocale=en_US&amp;homepageUrl=http%3A%2F%2Fdebasishg.blogspot.com%2F&amp;targetPostID=3013795989207953349" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="30px" width="100%" id="navbar-iframe" allowtransparency="true" title="Blogger Navigation and Search"></iframe>
+<div></div></div></div>
+<div id='outer-wrapper'>
+<div id='header-wrapper'>
+<div class='header section' id='header'><div class='widget Header' id='Header1'>
+<div id='header-inner'>
+<div class='titlewrapper'>
+<h1 class='title'>
+<a href='http://debasishg.blogspot.com/'>Ruminations of a Programmer</a>
+</h1>
+</div>
+<div class='descriptionwrapper'>
+<p class='description'><span>A programmer's blog - will deal with everything that relates to a programmer. Occasionally, it will contain some humour, some politics and some sport news.</span></p>
+</div>
+</div>
+</div></div>
+</div>
+<div id='crosscol-wrapper' style='text-align:center'>
+<div class='crosscol section' id='crosscol'></div>
+</div>
+<div id='main-wrap1'><div id='main-wrap2'>
+<div class='main section' id='main'><div class='widget Blog' id='Blog1'>
+<div class='blog-posts hfeed'>
+<!-- google_ad_section_start(name=default) -->
+
+          <div class="date-outer">
+        
+<h2 class='date-header'><span>Monday, July 14, 2008</span></h2>
+
+          <div class="date-posts">
+        
+<div class='post-outer'>
+<div class='post hentry uncustomized-post-template'>
+<a name='3013795989207953349'></a>
+<h3 class='post-title entry-title'>
+Scaling out messaging applications with Scala Actors and AMQP
+</h3>
+<div class='post-header'>
+<div class='post-header-line-1'></div>
+</div>
+<div class='post-body entry-content'>
+We have been sandboxing various alternatives towards scaling out Java/JMS based services that we implemented for our clients quite some time back. The services that form the stack comprise of dispatchers and routers meant to handle heavy load and perform heavy duty processing on a huge number of trade messages streaming in from the front and middle offices. I have been exploring lots of options including some of the standard ones like grid based distribution of processing and some wildly insane options like using <A HREF="http://www.erlang.se/">Erlang/OTP</A>. I knew Erlang/OTP is a difficult sell to a client, though we got some amazing results using OTP and mnesia over a clustered intranet. I was also looking at clustered Scala actors as another option, but I guess the Terracotta implementation is not yet production ready and would be a more difficult sell to clients.<br /><br />Over the last week, I happened to have a look at <A HREF="http://www.rabbitmq.com">RabbitMQ</A>. It is based on Erlang/OTP and implements <A HREF="http://www.amqp.org/">AMQP</A>, a protocol, built on open standards, designed by the financial industry to replace their existing proprietary message queues. AMQP based implementations create full functional interoperability between conforming clients and messaging middleware servers (also called "brokers").<br /><br />People have been <A HREF="http://intertwingly.net/blog/2007/08/12/Long-Bets">talking</A> <A HREF="http://www.tbray.org/ongoing/When/200x/2007/08/13/Prognostication">about</A> messaging as the front-runners in implementing enterprise architectures. And RabbitMQ is based on the best of the implementations, that, messaging over a set of clustered nodes, has to offer. Erlang's shared-nothing process hierarchies, extreme pattern matching capabilities and wonderful bit comprehension based binary data handling implement high performance reliable messaging with almost obscene scalability. And with RabbitMQ, the wonderful part is that you can hide your Erlang machine completely from your application programmers, who can still write <A HREF="http://www.rabbitmq.com/api-guide.html">Java classes</A> to blast bits across the wire using typical message queueing programming paradigms.<br /><br />AMQP (and hence RabbitMQ) defines the set of messaging capabilities as a set of components that route and store messages and a wire level protocol that defines the interaction between the client and the messaging services. The application has to define the producers and consumers for the messaging engines. And in order to ensure linear scalability, these components also need to be scalable enough to feed the Erlang exchange with enough bits to chew on and harness the full power of OTP.<br /><br /><B>Linear scalability on the JVM .. enter Scala actors ..</B><br /><br />Over the weekend I had great fun with Scala actors churning out messages over AMQP endpoints, serializing trade objects at one end, and dispatching them to the subscribers at the other end for doing necessary trade enrichment calculations. Here are some snippets (simplified for brevity) of the quick and dirty prototype that I cooked up. Incidentally <A HREF="http://liftweb.net/">Lift</A> contains actor-style APIs that allows you to send and receive messages from an AMQP broker, and the following prototype uses the same interfaces ..<br /><br />The class <CODE>TradeDispatcher</CODE> is a Scala actor that listens as an AMQP message endpoint. It manages a list of subscribers to the trade message and also sends AMQP messages coming in to the queue/exchange to the list of observers.<br /><br /><div style="width:600px;height:720px;overflow:scroll;white-space: nowrap; "><br /><code><span class="java_comment">//&nbsp;message&nbsp;for&nbsp;adding&nbsp;observers</span><br /><span class="java_keyword">case</span><span class="java_plain">&nbsp;</span><span class="java_keyword">class</span><span class="java_plain">&nbsp;</span><span class="java_type">AddListener</span><span class="java_separator">(</span><span class="java_plain">a</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Actor</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_comment">//&nbsp;The&nbsp;trade&nbsp;object&nbsp;that&nbsp;needs&nbsp;to&nbsp;be&nbsp;serialized</span><br /><span class="java_plain">@serializable</span><br /><span class="java_keyword">case</span><span class="java_plain">&nbsp;</span><span class="java_keyword">class</span><span class="java_plain">&nbsp;</span><span class="java_type">Trade</span><span class="java_separator">(</span><span class="java_plain">ref</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">String</span><span class="java_separator">,</span><span class="java_plain">&nbsp;security</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">String</span><span class="java_separator">,</span><span class="java_plain">&nbsp;var&nbsp;value</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Int</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_keyword">case</span><span class="java_plain">&nbsp;</span><span class="java_keyword">class</span><span class="java_plain">&nbsp;</span><span class="java_type">TradeMessage</span><span class="java_separator">(</span><span class="java_plain">message</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Trade</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_comment">//&nbsp;The&nbsp;dispatcher&nbsp;that&nbsp;listens&nbsp;over&nbsp;the&nbsp;AMQP&nbsp;message&nbsp;endpoint</span><br /><span class="java_keyword">class</span><span class="java_plain">&nbsp;</span><span class="java_type">TradeDispatcher</span><span class="java_separator">(</span><span class="java_plain">cf</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">ConnectionFactory</span><span class="java_separator">,</span><span class="java_plain">&nbsp;host</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">String</span><span class="java_separator">,</span><span class="java_plain">&nbsp;port</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Int</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">extends</span><span class="java_plain">&nbsp;</span><span class="java_type">Actor</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;conn&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;cf</span><span class="java_separator">.</span><span class="java_plain">newConnection</span><span class="java_separator">(</span><span class="java_plain">host</span><span class="java_separator">,</span><span class="java_plain">&nbsp;port</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;channel&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;conn</span><span class="java_separator">.</span><span class="java_plain">createChannel</span><span class="java_separator">()</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;ticket&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;channel</span><span class="java_separator">.</span><span class="java_plain">accessRequest</span><span class="java_separator">(</span><span class="java_literal">&quot;/data&quot;</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;set&nbsp;up&nbsp;exchange&nbsp;and&nbsp;queue</span><br /><span class="java_plain">&nbsp;&nbsp;channel</span><span class="java_separator">.</span><span class="java_plain">exchangeDeclare</span><span class="java_separator">(</span><span class="java_plain">ticket</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;mult&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;direct&quot;</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;channel</span><span class="java_separator">.</span><span class="java_plain">queueDeclare</span><span class="java_separator">(</span><span class="java_plain">ticket</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;mult_queue&quot;</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;channel</span><span class="java_separator">.</span><span class="java_plain">queueBind</span><span class="java_separator">(</span><span class="java_plain">ticket</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;mult_queue&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;mult&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;routeroute&quot;</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;register&nbsp;consumer</span><br /><span class="java_plain">&nbsp;&nbsp;channel</span><span class="java_separator">.</span><span class="java_plain">basicConsume</span><span class="java_separator">(</span><span class="java_plain">ticket</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;mult_queue&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">false</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_keyword">new</span><span class="java_plain">&nbsp;</span><span class="java_type">TradeValueCalculator</span><span class="java_separator">(</span><span class="java_plain">channel</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_keyword">this</span><span class="java_separator">))</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">def</span><span class="java_plain">&nbsp;act&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;loop</span><span class="java_separator">(</span><span class="java_type">Nil</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">def</span><span class="java_plain">&nbsp;loop</span><span class="java_separator">(</span><span class="java_plain">as</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">List</span><span class="java_separator">[</span><span class="java_type">Actor</span><span class="java_separator">])</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">react</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">case</span><span class="java_plain">&nbsp;</span><span class="java_type">AddListener</span><span class="java_separator">(</span><span class="java_plain">a</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_operator">=&gt;</span><span class="java_plain">&nbsp;loop</span><span class="java_separator">(</span><span class="java_plain">a&nbsp;</span><span class="java_operator">::</span><span class="java_plain">&nbsp;as</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">case</span><span class="java_plain">&nbsp;msg@</span><span class="java_type">TradeMessage</span><span class="java_separator">(</span><span class="java_plain">t</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_operator">=&gt;</span><span class="java_plain">&nbsp;as</span><span class="java_separator">.</span><span class="java_plain">foreach</span><span class="java_separator">(</span><span class="java_plain">_&nbsp;</span><span class="java_operator">!</span><span class="java_plain">&nbsp;msg</span><span class="java_separator">);</span><span class="java_plain">&nbsp;loop</span><span class="java_separator">(</span><span class="java_plain">as</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">case</span><span class="java_plain">&nbsp;_&nbsp;</span><span class="java_operator">=&gt;</span><span class="java_plain">&nbsp;loop</span><span class="java_separator">(</span><span class="java_plain">as</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span><br /><span class="java_separator">}</span><span class="java_plain"></span><br /></code><br /></div><br /><br />and here is an actor that gets messages from upstream and publishes them to the AMQP exchange .. <br /><br /><div style="width:600px;height:550px;overflow:scroll;white-space: nowrap; "><br /><code><span class="java_keyword">class</span><span class="java_plain">&nbsp;</span><span class="java_type">TradeMessageGenerator</span><span class="java_separator">(</span><span class="java_plain">cf</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">ConnectionFactory</span><span class="java_separator">,</span><span class="java_plain">&nbsp;host</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">String</span><span class="java_separator">,</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Int</span><span class="java_separator">,</span><span class="java_plain">&nbsp;exchange</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">String</span><span class="java_separator">,</span><span class="java_plain">&nbsp;routingKey</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">String</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_keyword">extends</span><span class="java_plain">&nbsp;</span><span class="java_type">Actor</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;conn&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;cf</span><span class="java_separator">.</span><span class="java_plain">newConnection</span><span class="java_separator">(</span><span class="java_plain">host</span><span class="java_separator">,</span><span class="java_plain">&nbsp;port</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;channel&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;conn</span><span class="java_separator">.</span><span class="java_plain">createChannel</span><span class="java_separator">()</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;ticket&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;channel</span><span class="java_separator">.</span><span class="java_plain">accessRequest</span><span class="java_separator">(</span><span class="java_literal">&quot;/data&quot;</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">def</span><span class="java_plain">&nbsp;send</span><span class="java_separator">(</span><span class="java_plain">msg</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Trade</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;bytes&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_keyword">new</span><span class="java_plain">&nbsp;</span><span class="java_type">ByteArrayOutputStream</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;store&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_keyword">new</span><span class="java_plain">&nbsp;</span><span class="java_type">ObjectOutputStream</span><span class="java_separator">(</span><span class="java_plain">bytes</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;store</span><span class="java_separator">.</span><span class="java_plain">writeObject</span><span class="java_separator">(</span><span class="java_plain">msg</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;store</span><span class="java_separator">.</span><span class="java_plain">close</span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;publish&nbsp;to&nbsp;exchange</span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;channel</span><span class="java_separator">.</span><span class="java_plain">basicPublish</span><span class="java_separator">(</span><span class="java_plain">ticket</span><span class="java_separator">,</span><span class="java_plain">&nbsp;exchange</span><span class="java_separator">,</span><span class="java_plain">&nbsp;routingKey</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">null</span><span class="java_separator">,</span><span class="java_plain">&nbsp;bytes</span><span class="java_separator">.</span><span class="java_plain">toByteArray</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">def</span><span class="java_plain">&nbsp;act&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;loop</span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">def</span><span class="java_plain">&nbsp;loop&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">react</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">case</span><span class="java_plain">&nbsp;</span><span class="java_type">TradeMessage</span><span class="java_separator">(</span><span class="java_plain">msg</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Trade</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_operator">=&gt;</span><span class="java_plain">&nbsp;send</span><span class="java_separator">(</span><span class="java_plain">msg</span><span class="java_separator">);</span><span class="java_plain">&nbsp;loop</span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span><br /><span class="java_separator">}</span><span class="java_plain"></span><br /></code><br /></div><br /><br />The next step is to design the consumer that reads from the exchange and does some business processing. Here the consumer (<CODE>TradeValueCalculator</CODE>) does valuation of the trade and has already been registered with the dispatcher above. Then it passes the message back to the dispatcher for relaying to the interested observers. Note that the <CODE>TradeDispatcher</CODE> has already passed itself as the actor while registering the object <CODE>TradeValueCalculator</CODE> as consumer callback in the snippet above (class <CODE>TradeDispatcher</CODE>). <br /><br /><div style="width:600px;height:520px;overflow:scroll;white-space: nowrap; "><br /><code><span class="java_keyword">class</span><span class="java_plain">&nbsp;</span><span class="java_type">TradeValueCalculator</span><span class="java_separator">(</span><span class="java_plain">channel</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Channel</span><span class="java_separator">,</span><span class="java_plain">&nbsp;a</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Actor</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">extends</span><span class="java_plain">&nbsp;</span><span class="java_type">DefaultConsumer</span><span class="java_separator">(</span><span class="java_plain">channel</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">override</span><span class="java_plain">&nbsp;</span><span class="java_keyword">def</span><span class="java_plain">&nbsp;handleDelivery</span><span class="java_separator">(</span><span class="java_plain">tag</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">String</span><span class="java_separator">,</span><span class="java_plain">&nbsp;env</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Envelope</span><span class="java_separator">,</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;props</span><span class="java_operator">:</span><span class="java_plain">&nbsp;AMQP</span><span class="java_separator">.</span><span class="java_type">BasicProperties</span><span class="java_separator">,</span><span class="java_plain">&nbsp;body</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Array</span><span class="java_separator">[</span><span class="java_type">byte</span><span class="java_separator">])</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;routingKey&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;env</span><span class="java_separator">.</span><span class="java_plain">getRoutingKey</span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;contentType&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;props</span><span class="java_separator">.</span><span class="java_plain">contentType</span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;deliveryTag&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;env</span><span class="java_separator">.</span><span class="java_plain">getDeliveryTag</span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;in&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_keyword">new</span><span class="java_plain">&nbsp;</span><span class="java_type">ObjectInputStream</span><span class="java_separator">(</span><span class="java_keyword">new</span><span class="java_plain">&nbsp;</span><span class="java_type">ByteArrayInputStream</span><span class="java_separator">(</span><span class="java_plain">body</span><span class="java_separator">))</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;deserialize</span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">var</span><span class="java_plain">&nbsp;t&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;in</span><span class="java_separator">.</span><span class="java_plain">readObject</span><span class="java_separator">.</span><span class="java_plain">asInstanceOf</span><span class="java_separator">[</span><span class="java_type">Trade</span><span class="java_separator">]</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;invoke&nbsp;business&nbsp;processing&nbsp;logic</span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;t</span><span class="java_separator">.</span><span class="java_plain">value&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;computeTradeValue</span><span class="java_separator">(...)</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;send&nbsp;back&nbsp;to&nbsp;dispatcher&nbsp;for&nbsp;further&nbsp;relay&nbsp;to</span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;interested&nbsp;observers</span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;</span><span class="java_operator">!</span><span class="java_plain">&nbsp;</span><span class="java_type">TradeMessage</span><span class="java_separator">(</span><span class="java_plain">t</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;channel</span><span class="java_separator">.</span><span class="java_plain">basicAck</span><span class="java_separator">(</span><span class="java_plain">deliveryTag</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">false</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span><br /><span class="java_separator">}</span><span class="java_plain"></span><br /></code><br /></div><br /><br />I have not yet done any serious benchmarking. But the implementation, on its face, looks wicked cool. Erlang at the backend, for high performance reliable messaging being throttled out by Scala actors in the application layer. Every actor opens up a new channel - the <I>channel-per-thread model</I> that AMQP encourages for multi-threaded client applications and scales so well in RabbitMQ.<br /><br />Integrating the above classes into a small application prototype is not that difficult. Here is a small service class that uses the above framework classes to have the scala actors flying to talk to RabbitMQ ..<br /><br /><div style="width:600px;height:500px;overflow:scroll;white-space: nowrap; "><br /><code><span class="java_keyword">class</span><span class="java_plain">&nbsp;</span><span class="java_type">SampleTradeListener</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;params&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_keyword">new</span><span class="java_plain">&nbsp;</span><span class="java_type">ConnectionParameters</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;params</span><span class="java_separator">.</span><span class="java_plain">setUsername</span><span class="java_separator">(</span><span class="java_literal">&quot;guest&quot;</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;params</span><span class="java_separator">.</span><span class="java_plain">setPassword</span><span class="java_separator">(</span><span class="java_literal">&quot;guest&quot;</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;params</span><span class="java_separator">.</span><span class="java_plain">setVirtualHost</span><span class="java_separator">(</span><span class="java_literal">&quot;/&quot;</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;params</span><span class="java_separator">.</span><span class="java_plain">setRequestedHeartbeat</span><span class="java_separator">(</span><span class="java_literal">0</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;factory&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_keyword">new</span><span class="java_plain">&nbsp;</span><span class="java_type">ConnectionFactory</span><span class="java_separator">(</span><span class="java_plain">params</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;amqp&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_keyword">new</span><span class="java_plain">&nbsp;</span><span class="java_type">TradeDispatcher</span><span class="java_separator">(</span><span class="java_plain">factory</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;localhost&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">5672</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;amqp</span><span class="java_separator">.</span><span class="java_plain">start</span><br /><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">class</span><span class="java_plain">&nbsp;</span><span class="java_type">TradeListener</span><span class="java_plain">&nbsp;</span><span class="java_keyword">extends</span><span class="java_plain">&nbsp;</span><span class="java_type">Actor</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">def</span><span class="java_plain">&nbsp;act&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">react</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_keyword">case</span><span class="java_plain">&nbsp;msg@</span><span class="java_type">TradeMessage</span><span class="java_separator">(</span><span class="java_plain">contents</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_type">Trade</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_operator">=&gt;</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;println</span><span class="java_separator">(</span><span class="java_literal">&quot;received&nbsp;trade:&nbsp;&quot;</span><span class="java_plain">&nbsp;</span><span class="java_operator">+</span><span class="java_plain">&nbsp;msg</span><span class="java_separator">.</span><span class="java_plain">message</span><span class="java_separator">);</span><span class="java_plain">&nbsp;act</span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">val</span><span class="java_plain">&nbsp;tradeListener&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_keyword">new</span><span class="java_plain">&nbsp;</span><span class="java_type">TradeListener</span><span class="java_separator">()</span><span class="java_plain"></span><br /><span class="java_plain">&nbsp;&nbsp;tradeListener</span><span class="java_separator">.</span><span class="java_plain">start</span><br /><span class="java_plain">&nbsp;&nbsp;amqp&nbsp;</span><span class="java_operator">!</span><span class="java_plain">&nbsp;</span><span class="java_type">AddListener</span><span class="java_separator">(</span><span class="java_plain">tradeListener</span><span class="java_separator">)</span><span class="java_plain"></span><br /><span class="java_separator">}</span><span class="java_plain"></span><br /></code><br /></div><br /><br />Instantiate the above <CODE>SampleTradeListener</CODE> class and write a sample message generator facade that sends trdae messages to the consumer <CODE>TradeMessageGenerator</CODE> designed above.<br /><br />Meanwhile here are some other related thoughts behind an AMQP based architecture ..<br /><UL><br />  <LI>One of the areas which always makes me sceptical about linear scalability of applications is the single point of dependency on the relational database store.</LI><br />  <LI>If the application involves heavy relational database processing, does it make sense to make use of mnesia's easy distribution and fault tolerance capabilities to achieve overall scalability of the application ? Harness the power of durable and reliable transacted message processing of RabbitMQ and integrate RDBMS storage through write-behind log of AMQP activities.</LI><br />  <LI>Financial services solutions like back office systems typically need to talk to lots of external systems like Clearing Corporations, Stock Exchanges, Custodians etc. I think AMQP is more meaningful when you have the end points under your control and operate over a low latency, high bandwidth wire. When we talk about messaging over the internet (high latency, low bandwidth), possibly XMPP or Atompub is a better option. RabbitMQ has also <A HREF="http://www.lshift.net/blog/2008/07/01/rabbitmq-xmpp-gateway-released">released</A> an XMPP gateway,  for exposing a RabbitMQ instance to the global XMPP network through an ejabberd extension module. Looks like it's going to be messaging all the way down and up.</LI><br /></UL>
+<div style='clear: both;'></div>
+</div>
+<div class='post-footer'>
+<div class='post-footer-line post-footer-line-1'>
+<span class='post-author vcard'>
+Posted by
+<span class='fn'>Debasish</span>
+</span>
+<span class='post-timestamp'>
+at
+<a class='timestamp-link' href='http://debasishg.blogspot.com/2008/07/scaling-out-messaging-applications-with.html' rel='bookmark' title='permanent link'><abbr class='published' title='2008-07-14T10:27:00+05:30'>7/14/2008 10:27:00 AM</abbr></a>
+</span>
+<span class='reaction-buttons'>
+</span>
+<span class='dummy-feature'>
+</span>
+<span class='star-ratings'>
+</span>
+<span class='post-comment-link'>
+</span>
+<span class='post-backlinks post-comment-link'>
+</span>
+<span class='post-icons'>
+<span class='item-action'>
+<a href='http://www.blogger.com/email-post.g?blogID=22587889&postID=3013795989207953349' title='Email Post'>
+<img alt='' class='icon-action' height='13' src='http://img1.blogblog.com/img/icon18_email.gif' width='18'/>
+</a>
+</span>
+<span class='item-control blog-admin pid-79107103'>
+<a href='http://www.blogger.com/post-edit.g?blogID=22587889&postID=3013795989207953349' title='Edit Post'>
+<img alt='' class='icon-action' height='18' src='http://img2.blogblog.com/img/icon18_edit_allbkg.gif' width='18'/>
+</a>
+</span>
+</span>
+<div class='post-share-buttons'>
+</div>
+</div>
+<div class='post-footer-line post-footer-line-2'>
+<span class='post-labels'>
+Labels:
+<a href='http://debasishg.blogspot.com/search/label/amqp' rel='tag'>amqp</a>,
+<a href='http://debasishg.blogspot.com/search/label/concurrency' rel='tag'>concurrency</a>,
+<a href='http://debasishg.blogspot.com/search/label/erlang' rel='tag'>erlang</a>,
+<a href='http://debasishg.blogspot.com/search/label/scala' rel='tag'>scala</a>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-3'>
+<span class='post-location'>
+</span>
+</div>
+</div>
+</div>
+<div class='comments' id='comments'>
+<a name='comments'></a>
+<h4>
+5
+comments:
+        
+</h4>
+<div id='Blog1_comments-block-wrapper'>
+<dl class='avatar-comment-indent' id='comments-block'>
+<dt class='comment-author ' id='c6227782978203961357'>
+<a name='c6227782978203961357'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><a href="http://www.blogger.com/profile/05424249133012786442" rel="nofollow" onclick="" class="avatar-hovercard" id="av-0-05424249133012786442"><img src="http://img2.blogblog.com/img/b16-rounded.gif" width="16" height="16" alt="" title="Carlos">
+
+</a></span></div>
+<a href='http://www.blogger.com/profile/05424249133012786442' rel='nofollow'>Carlos</a>
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-6227782978203961357'>
+<p>
+Hi<BR/><BR/>Nice article, I've been looking for alternatives to our activemq based solutions and RabbitMQ seems something really worth to look at.<BR/><BR/>ActiveMQ is limited by the inherent thread limitations of java and so, though it can process high volumes of messages, it is limted to the amount of simultaneous client.<BR/><BR/>Would the same limitations apply to your Scala actors? Would that limit the client's scalability?
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://debasishg.blogspot.com/2008/07/scaling-out-messaging-applications-with.html?showComment=1217436360000#c6227782978203961357' title='comment permalink'>
+Wednesday, July 30, 2008 10:16:00 PM GMT+05:30
+</a>
+<span class='item-control blog-admin pid-1655393972'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=22587889&postID=6227782978203961357' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author blog-author' id='c7520106521708621922'>
+<a name='c7520106521708621922'></a>
+<div class="avatar-image-container vcard"><span dir="ltr"><a href="http://www.blogger.com/profile/01613713587074301135" rel="nofollow" onclick="" class="avatar-hovercard" id="av-1-01613713587074301135"><img src="http://img1.blogblog.com/img/blank.gif" width="35" height="33" alt="" class="delayLoad" style="display: none;" longdesc="http://bp3.blogger.com/_r-NJO1NMiu4/R4xuinCTM2I/AAAAAAAAAEM/M4l9vjwpw1Y/S220/dg_1.jpg" title="Debasish">
+
+<noscript><img src="http://bp3.blogger.com/_r-NJO1NMiu4/R4xuinCTM2I/AAAAAAAAAEM/M4l9vjwpw1Y/S220/dg_1.jpg" width="35" height="33" class="photo" alt=""></noscript></a></span></div>
+<a href='http://www.blogger.com/profile/01613713587074301135' rel='nofollow'>Debasish</a>
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-7520106521708621922'>
+<p>
+<I>@carlos:</I> RabbitMQ is implemented in Erlang and has all the wonderful scalability characteristics that OTP offers viz. seamless distribution, fault tolerance, process supervisors etc. I suggested using Scala actors at the application layer, since Scala actors scale much more than native Java threads. Scala actors are event based and use much more finer grained concurrency techniques. It is not thread-per-actor model and hence scales better.
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://debasishg.blogspot.com/2008/07/scaling-out-messaging-applications-with.html?showComment=1217485860000#c7520106521708621922' title='comment permalink'>
+Thursday, July 31, 2008 12:01:00 PM GMT+05:30
+</a>
+<span class='item-control blog-admin pid-79107103'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=22587889&postID=7520106521708621922' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c5964123395230615203'>
+<a name='c5964123395230615203'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><a href="http://www.jroller.com/cquiroz/" rel="nofollow" onclick=""><img src="http://img1.blogblog.com/img/blank.gif" width="16" height="16" alt="" title="carlos">
+
+</a></span></div>
+<a href='http://www.jroller.com/cquiroz/' rel='nofollow'>carlos</a>
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-5964123395230615203'>
+<p>
+I'm not totally clear that Scala would use one thread per actor if you are doing IO. Could you comment on that? If you have blocking IO I cannot see a way that on thread per actor could work.<BR/><BR/>That of course doesn't invalidate the actor model at all, is just a limitation of the underlying java platform. I guess you can use NIO in any case.
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://debasishg.blogspot.com/2008/07/scaling-out-messaging-applications-with.html?showComment=1217878140000#c5964123395230615203' title='comment permalink'>
+Tuesday, August 5, 2008 12:59:00 AM GMT+05:30
+</a>
+<span class='item-control blog-admin pid-605239171'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=22587889&postID=5964123395230615203' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author blog-author' id='c5995505466422750131'>
+<a name='c5995505466422750131'></a>
+<div class="avatar-image-container vcard"><span dir="ltr"><a href="http://www.blogger.com/profile/01613713587074301135" rel="nofollow" onclick="" class="avatar-hovercard" id="av-3-01613713587074301135"><img src="http://img1.blogblog.com/img/blank.gif" width="35" height="33" alt="" class="delayLoad" style="display: none;" longdesc="http://bp3.blogger.com/_r-NJO1NMiu4/R4xuinCTM2I/AAAAAAAAAEM/M4l9vjwpw1Y/S220/dg_1.jpg" title="Debasish">
+
+<noscript><img src="http://bp3.blogger.com/_r-NJO1NMiu4/R4xuinCTM2I/AAAAAAAAAEM/M4l9vjwpw1Y/S220/dg_1.jpg" width="35" height="33" class="photo" alt=""></noscript></a></span></div>
+<a href='http://www.blogger.com/profile/01613713587074301135' rel='nofollow'>Debasish</a>
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-5995505466422750131'>
+<p>
+<I>@carlos:</I> Scala uses 2 types of actors - one based on OS threads and the other based on class abstractions (event based actors). The thread based ones map 1:1 to OS threads, are heavyweight, do not scale. While the event based ones are lightweight and can be spawned in millions much like Erlang processes. Please have a look at http://lamp.epfl.ch/~phaller/doc/haller07actorsunify.pdf for details of implementation.<BR/><BR/>But the summary is that, event-based actors are executed in a thread pool, which gets automatically resized in case all threads are blocked due to blocking operations. Hence there is a chance that the thread pool cannot be resized due to system limitations, while all actors call blocking operations.
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://debasishg.blogspot.com/2008/07/scaling-out-messaging-applications-with.html?showComment=1217916540000#c5995505466422750131' title='comment permalink'>
+Tuesday, August 5, 2008 11:39:00 AM GMT+05:30
+</a>
+<span class='item-control blog-admin pid-79107103'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=22587889&postID=5995505466422750131' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c5878374857873754681'>
+<a name='c5878374857873754681'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><a href="http://www.blogger.com/profile/06786072335349487451" rel="nofollow" onclick="" class="avatar-hovercard" id="av-4-06786072335349487451"><img src="http://img2.blogblog.com/img/b16-rounded.gif" width="16" height="16" alt="" title="Ittay Dror">
+
+</a></span></div>
+<a href='http://www.blogger.com/profile/06786072335349487451' rel='nofollow'>Ittay Dror</a>
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-5878374857873754681'>
+<p>
+can you call loop recursively like you do? it&#39;s a tail recursion, but does scala actually optimizes it away? i thought you were supposed to use Actor#loop
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://debasishg.blogspot.com/2008/07/scaling-out-messaging-applications-with.html?showComment=1260420255916#c5878374857873754681' title='comment permalink'>
+Thursday, December 10, 2009 10:14:00 AM GMT+05:30
+</a>
+<span class='item-control blog-admin pid-662423501'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=22587889&postID=5878374857873754681' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+</dl>
+</div>
+<p class='comment-footer'>
+<a href='https://www.blogger.com/comment.g?blogID=22587889&postID=3013795989207953349' onclick=''>Post a Comment</a>
+</p>
+<div id='backlinks-container'>
+<div id='Blog1_backlinks-container'>
+<a name='links'></a><h4>
+</h4>
+<p class='comment-footer'>
+<a class='comment-link' href='' id='Blog1_backlinks-create-link' target='_blank'>
+</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="latency-3013795989207953349"></div><script type="text/javascript">if (window['tickAboveFold']) {window['tickAboveFold'](document.getElementById("latency-3013795989207953349")); } </script>
+
+        </div></div>
+      
+<!-- google_ad_section_end -->
+</div>
+<div class='blog-pager' id='blog-pager'>
+<span id='blog-pager-newer-link'>
+<a class='blog-pager-newer-link' href='http://debasishg.blogspot.com/2008/07/my-picks-for-oscon-2008.html' id='Blog1_blog-pager-newer-link' title='Newer Post'>Newer Post</a>
+</span>
+<span id='blog-pager-older-link'>
+<a class='blog-pager-older-link' href='http://debasishg.blogspot.com/2008/07/erlangs-concurrency-model-on-jvm-can-we.html' id='Blog1_blog-pager-older-link' title='Older Post'>Older Post</a>
+</span>
+<a class='home-link' href='http://debasishg.blogspot.com/'>Home</a>
+</div>
+<div class='clear'></div>
+<div class='post-feeds'>
+<div class='feed-links'>
+Subscribe to:
+<a class='feed-link' href='http://debasishg.blogspot.com/feeds/3013795989207953349/comments/default' target='_blank' type='application/atom+xml'>Post Comments (Atom)</a>
+</div>
+</div>
+</div></div>
+</div></div>
+<div id='sidebar-wrap'>
+<div id='sidebartop-wrap'><div id='sidebartop-wrap2'>
+<div class='sidebar section' id='sidebartop'><div class='widget Profile' id='Profile1'>
+<h2>About Me</h2>
+<div class='widget-content'>
+<a href='http://www.blogger.com/profile/01613713587074301135'><img alt='My Photo' class='profile-img' height='60' src='http://1.bp.blogspot.com/_r-NJO1NMiu4/TBO5DIULPCI/AAAAAAAAAPI/Cc1OPcMC6Pk/S220/12062010119.jpg' width='80'/></a>
+<dl class='profile-datablock'>
+<dt class='profile-data'>Debasish Ghosh</dt>
+<dd class='profile-textblock'>Author : DSLs In Action Programmer and software engineering evangelist.</dd>
+</dl>
+<a class='profile-link' href='http://www.blogger.com/profile/01613713587074301135'>View my complete profile</a>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=Profile&widgetId=Profile1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("Profile1"));' target='configProfile1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div><div class='widget HTML' id='HTML7'>
+<div class='widget-content'>
+<a href="http://feeds.feedburner.com/RuminationsOfAProgrammer" rel="alternate" title="Subscribe to my feed" type="application/rss+xml"><img alt="" style="border:0" src="http://www.feedburner.com/fb/images/pub/feed-icon32x32.png"/></a><a href="http://feeds.feedburner.com/RuminationsOfAProgrammer" rel="alternate" title="Subscribe to my feed" type="application/rss+xml">Subscribe in a reader</a>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=HTML&widgetId=HTML7&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML7"));' target='configHTML7' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div></div>
+</div></div>
+<div id='sidebarbottom-wrap1'><div id='sidebarbottom-wrap2'>
+<div class='sidebar section' id='sidebar'><div class='widget Text' id='Text1'>
+<div class='widget-content'>
+Buy your copy of <i>DSLs in Action</i> <a href="http://www.manning.com/affiliate/idevaffiliate.php?id=1099">here</a>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=Text&widgetId=Text1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("Text1"));' target='configText1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget Image' id='Image1'>
+<h2>Now Available in MEAP</h2>
+<div class='widget-content'>
+<a href='http://manning.com/ghosh/'>
+<img alt='Now Available in MEAP' height='188' id='Image1_img' src='http://manning.com/ghosh/ghosh_cover150.jpg' width='150'/>
+</a>
+<br/>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=Image&widgetId=Image1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("Image1"));' target='configImage1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget HTML' id='HTML8'>
+<h2 class='title'>Ruminations Soul Search</h2>
+<div class='widget-content'>
+<form id="cse-search-box" action="http://www.google.com/cse" target="_blank">
+  <div>
+    <input value="partner-pub-8028556515308264:9zpwtkqv4nq" name="cx" type="hidden"/>
+    <input value="ISO-8859-1" name="ie" type="hidden"/>
+    <input name="q" size="31" type="text"/>
+    <input value="Search" name="sa" type="submit"/>
+  </div>
+</form>
+
+<script src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en" type="text/javascript"></script>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=HTML&widgetId=HTML8&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML8"));' target='configHTML8' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget HTML' id='HTML6'>
+<h2 class='title'>PostRank</h2>
+<div class='widget-content'>
+<script src="http://api.postrank.com/static/widget-v2.js" type="text/javascript"></script>
+<script type="text/javascript">
+var options = {
+	"feed_hash": "a9a4f4567067d383faf8920467b3ea11",
+	"num":        10 ,
+	"theme":     "springMeadows" 
+};
+new PostRankWidget(options);
+</script>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=HTML&widgetId=HTML6&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML6"));' target='configHTML6' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget AdSense' id='AdSense1'>
+<div class='widget-content'>
+<script type="text/javascript"><!--
+google_ad_client="pub-8028556515308264";
+google_ad_host="pub-1556223355139109";
+google_ad_host_channel="00000+00031+00005";
+google_ad_width=160;
+google_ad_height=600;
+google_ad_format="160x600_as";
+google_ad_type="text";
+google_color_border="335577";
+google_color_bg="335577";
+google_color_link="445566";
+google_color_url="445566";
+google_color_text="EEEECC";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=AdSense&widgetId=AdSense1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("AdSense1"));' target='configAdSense1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div><div class='widget HTML' id='HTML2'>
+<h2 class='title'>Twitter Updates</h2>
+<div class='widget-content'>
+<div id="twitter_div"><ul id="twitter_update_list"></ul>
+<a id="twitter-link" style="display:block;text-align:right;" href="http://twitter.com/debasishg">follow me on Twitter</a></div><script src="http://twitter.com/javascripts/blogger.js" type="text/javascript"></script><script src="http://twitter.com/statuses/user_timeline/debasishg.json?callback=twitterCallback2&amp;count=5" type="text/javascript"></script>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=HTML&widgetId=HTML2&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML2"));' target='configHTML2' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget HTML' id='HTML3'>
+<div class='widget-content'>
+<a href="http://twittercounter.com/?username=debasishg" title="TwitterCounter for @debasishg"><img width="88" style="border:none;" alt="TwitterCounter for @debasishg" src="http://twittercounter.com/counter/?username=debasishg&style=blue" height="26"/></a>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=HTML&widgetId=HTML3&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML3"));' target='configHTML3' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget Followers' id='Followers1'>
+<h2 class='title'>Followers</h2>
+<div class='widget-content'>
+<div id='Followers1-wrapper'>
+<div style='margin-right:2px;'>
+<script type="text/javascript">
+        if (!window.google || !google.friendconnect) {
+          document.write('<script type="text/javascript"' +
+              'src="http://www.google.com/friendconnect/script/friendconnect.js">' +
+              '</scr' + 'ipt>');
+        }
+      </script>
+<script type="text/javascript">
+      if (!window.registeredBloggerCallbacks) {
+        window.registeredBloggerCallbacks = true;
+
+        
+
+        
+        gadgets.rpc.register('requestReload', function() {
+          document.location.reload();
+        });
+
+        
+        gadgets.rpc.register('requestSignOut', function(siteId) {
+          
+          google.friendconnect.container.openSocialSiteId = siteId;
+          google.friendconnect.requestSignOut();
+        });
+      }
+    </script>
+<script type="text/javascript">
+    
+    function registerGetBlogUrls() {
+      gadgets.rpc.register('getBlogUrls', function() {
+        var holder = {};
+        
+          
+            
+            
+              holder.currentPost = "http://www.blogger.com/feeds/22587889/posts/default/3013795989207953349";
+            
+            
+            
+              holder.currentComments = "http://www.blogger.com/feeds/22587889/3013795989207953349/comments/default";
+            
+            holder.currentPostUrl = "";
+            holder.currentPostId = 3013795989207953349
+          
+          
+          
+            holder.postFeed = "http://www.blogger.com/feeds/22587889/posts/default";
+          
+          
+          
+            holder.commentFeed = "http://www.blogger.com/feeds/22587889/comments/default";
+          
+          holder.currentBlogUrl = "http://debasishg.blogspot.com/";
+          holder.currentBlogId = "22587889";
+        
+        return holder;
+      });
+    }
+  </script>
+<script type="text/javascript">
+  if (!window.registeredCommonBloggerCallbacks) {
+    window.registeredCommonBloggerCallbacks = true;
+
+    gadgets.rpc.register('resize_iframe', function(height) {
+      var el = document.getElementById(this['f']);
+      if (el) {
+        el.style.height = height + 'px';
+      }
+    });
+
+    
+    gadgets.rpc.register('set_pref', function() {});
+
+    registerGetBlogUrls();
+  }
+  </script>
+<div id="div-e3wfto3p7isy" style="width: 100%; "></div>
+<script type="text/javascript">
+    var skin = {};
+    skin['FACE_SIZE'] = '32';
+    skin['HEIGHT'] = "260";
+    skin['TITLE'] = "Followers";
+    skin['BORDER_COLOR'] = "transparent";
+    skin['ENDCAP_BG_COLOR'] = "transparent";
+    skin['ENDCAP_TEXT_COLOR'] = "#333333";
+    skin['ENDCAP_LINK_COLOR'] = "#000000";
+    skin['ALTERNATE_BG_COLOR'] = "transparent";
+    
+    skin['CONTENT_BG_COLOR'] = "transparent";
+    skin['CONTENT_LINK_COLOR'] = "#000000";
+    skin['CONTENT_TEXT_COLOR'] = "#333333";
+    skin['CONTENT_SECONDARY_LINK_COLOR'] = "#FFFFFF";
+    skin['CONTENT_SECONDARY_TEXT_COLOR'] = "#000000";
+    skin['CONTENT_HEADLINE_COLOR'] = "#000000";
+    skin['FONT_FACE'] = "normal normal 100% \x27Trebuchet MS\x27,Verdana,Arial,Sans-serif";
+    google.friendconnect.container.setParentUrl("/");
+    google.friendconnect.container["renderMembersGadget"](
+    {id: "div-e3wfto3p7isy",
+     height: 260,
+     
+     
+     
+     site: "06559288805331945377",
+      
+     locale: 'en_US' },
+     skin);
+  </script>
+</div>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=Followers&widgetId=Followers1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("Followers1"));' target='configFollowers1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div><div class='widget BloggerButton' id='BloggerButton1'>
+<div class='widget-content'>
+<a href='http://www.blogger.com'><img alt='Powered By Blogger' src='http://www.blogger.com/buttons/blogger-ipower-kahki.gif'/></a>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=BloggerButton&widgetId=BloggerButton1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("BloggerButton1"));' target='configBloggerButton1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div><div class='widget BlogArchive' id='BlogArchive1'>
+<h2>Blog Archive</h2>
+<div class='widget-content'>
+<div id='ArchiveList'>
+<div id='BlogArchive1_ArchiveList'>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/search?updated-min=2010-01-01T00%3A00%3A00%2B05%3A30&updated-max=2011-01-01T00%3A00%3A00%2B05%3A30&max-results=31'>2010</a>
+<span class='post-count' dir='ltr'>(31)</span>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2010_12_01_archive.html'>December</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2010/12/monads-applicative-functors-and.html'>Monads, Applicative Functors and sequencing of eff...</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/12/composable-domain-models-using-scalaz.html'>Composable domain models using scalaz</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2010_11_01_archive.html'>November</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2010/11/exploring-scalaz.html'>Exploring scalaz</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/11/domain-modeling-in-haskell-applicative.html'>Domain Modeling in Haskell - Applicative Functors ...</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2010_10_01_archive.html'>October</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2010/10/domain-modeling-in-haskell-combinators.html'>Domain Modeling in Haskell - Combinators for Compo...</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/10/domain-modeling-in-haskell-follow-types.html'>Domain Modeling in Haskell - Follow the Types</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2010_09_01_archive.html'>September</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2010/09/domain-models-thinking-differently-in.html'>Domain Models - Thinking differently in Scala &amp; Cl...</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/09/towards-generic-apis-for-open-world.html'>Towards generic APIs for the open world</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2010_08_01_archive.html'>August</a>
+<span class='post-count' dir='ltr'>(3)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2010/08/random-thoughts-on-clojure-protocols.html'>Random thoughts on Clojure Protocols</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/08/using-generalized-type-constraints-how.html'>Using generalized type constraints - How to remove...</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/08/updates-on-dsls-in-action-into-copy.html'>Updates on DSLs In Action - Into Copy Editing</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2010_07_01_archive.html'>July</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2010/07/sjson-now-offers-type-class-based-json.html'>sjson: Now offers Type Class based JSON Serializat...</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/07/refactoring-into-scala-type-classes.html'>Refactoring into Scala Type Classes</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2010_06_01_archive.html'>June</a>
+<span class='post-count' dir='ltr'>(4)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2010/06/phase-shift-for-orm.html'>A Phase Shift for the ORM</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/06/scala-implicits-type-classes-here-i.html'>Scala Implicits : Type Classes Here I Come</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/06/functional-data-structures-in_14.html'>Functional Data Structures in a Persistent Setting...</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/06/functional-data-structures-in.html'>Functional Data Structures in a Persistent Setting...</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2010_05_01_archive.html'>May</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2010/05/grokking-functional-data-structures.html'>Grokking Functional Data Structures</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/05/laziness-in-clojure-some-thoughts.html'>Laziness in Clojure - Some Thoughts</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2010_04_01_archive.html'>April</a>
+<span class='post-count' dir='ltr'>(3)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2010/04/dsl-interoperability-and-language.html'>DSL Interoperability and Language Cacophony</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/04/pubsub-with-redis-and-akka-actors.html'>PubSub with Redis and Akka Actors</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/04/thrush-in-clojure.html'>Thrush in Clojure</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2010_03_01_archive.html'>March</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2010/03/domain-services-and-bounded-context.html'>Domain Services and Bounded Context using Akka - P...</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/03/thinking-asynchronous-domain-modeling.html'>Thinking Asynchronous - Domain Modeling using Akka...</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2010_02_01_archive.html'>February</a>
+<span class='post-count' dir='ltr'>(4)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2010/02/dependency-injection-as-function.html'>Dependency Injection as Function Currying</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/02/dsl-grow-your-syntax-on-top-of-clean.html'>DSL : Grow your syntax on top of a clean semantic ...</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/02/why-i-dont-like-activerecord-for-domain.html'>Why I don&#39;t like ActiveRecord for Domain Model Per...</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/02/scala-self-type-annotations-for.html'>Scala Self-Type Annotations for Constrained Orthog...</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2010_01_01_archive.html'>January</a>
+<span class='post-count' dir='ltr'>(3)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2010/01/new-way-to-think-of-data-storage-for.html'>A new way to think of Data Storage for your Enterp...</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/01/case-for-orthogonality-in-design.html'>A Case for Orthogonality in Design</a></li>
+<li><a href='http://debasishg.blogspot.com/2010/01/pragmatics-of-impurity.html'>Pragmatics of Impurity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/search?updated-min=2009-01-01T00%3A00%3A00%2B05%3A30&updated-max=2010-01-01T00%3A00%3A00%2B05%3A30&max-results=48'>2009</a>
+<span class='post-count' dir='ltr'>(48)</span>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2009_12_01_archive.html'>December</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2009/12/case-for-hybrid-sql-nosql-stack.html'>A case for hybrid SQL - NoSQL stack</a></li>
+<li><a href='http://debasishg.blogspot.com/2009/12/no-comet-hacking-with-websocket-and.html'>No Comet, Hacking with WebSocket and Akka</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2009_11_01_archive.html'>November</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2009/11/dsls-in-action-updates-on-book-progress.html'>DSLs In Action - Updates on the Book Progress</a></li>
+<li><a href='http://debasishg.blogspot.com/2009/11/nosql-movement-excited-with-coexistence.html'>NOSQL Movement - Excited with the coexistence of D...</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2009_10_01_archive.html'>October</a>
+<span class='post-count' dir='ltr'>(4)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2009/10/are-orms-really-thing-of-past.html'>Are ORMs really a thing of the past ?</a></li>
+<li><a href='http://debasishg.blogspot.com/2009/10/dsls-in-action-sharing-detailed-table.html'>DSLs in Action : Sharing the detailed Table of Con...</a></li>
+<li><a href='http://debasishg.blogspot.com/2009/10/dsls-in-action-now-in-meap.html'>DSLs in Action now in MEAP</a></li>
+<li><a href='http://debasishg.blogspot.com/2009/10/pluggable-persistent-transactors-with.html'>Pluggable Persistent Transactors with Akka</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2009_09_01_archive.html'>September</a>
+<span class='post-count' dir='ltr'>(3)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2009/09/thrush-combinator-in-scala.html'>The Thrush combinator in Scala</a></li>
+<li><a href='http://debasishg.blogspot.com/2009/09/misconstrued-language-similarity.html'>Misconstrued Language Similarity Considered Harmfu...</a></li>
+<li><a href='http://debasishg.blogspot.com/2009/09/side-effects-with-kestrel-in-scala.html'>Side-effects with Kestrel in Scala</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2009_08_01_archive.html'>August</a>
+<span class='post-count' dir='ltr'>(4)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2009/08/json-serialization-for-scala-objects.html'>JSON Serialization for Scala Objects</a></li>
+<li><a href='http://debasishg.blogspot.com/2009/08/5-reasons-why-you-should-learn-new.html'>5 Reasons why you should learn a new language NOW!...</a></li>
+<li><a href='http://debasishg.blogspot.com/2009/08/static-typing-gives-you-head-start.html'>Static Typing gives you a head start, Tests help y...</a></li>
+<li><a href='http://debasishg.blogspot.com/2009/08/mongodb-for-akka-persistence.html'>MongoDB for Akka Persistence</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2009_07_01_archive.html'>July</a>
+<span class='post-count' dir='ltr'>(3)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2009/07/macros-preprocessors-and-dsl.html'>Macros, Preprocessors and DSL development</a></li>
+<li><a href='http://debasishg.blogspot.com/2009/07/dsl-composition-techniques-in-scala.html'>DSL Composition techniques in Scala</a></li>
+<li><a href='http://debasishg.blogspot.com/2009/07/patterns-in-internal-dsl.html'>Patterns in Internal DSL implementations</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2009_06_01_archive.html'>June</a>
+<span class='post-count' dir='ltr'>(6)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2009/06/scouchdb-views-now-interoperable-with.html'>scouchdb Views now interoperable with Scala Object...</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2009_05_01_archive.html'>May</a>
+<span class='post-count' dir='ltr'>(4)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2009_04_01_archive.html'>April</a>
+<span class='post-count' dir='ltr'>(3)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2009_03_01_archive.html'>March</a>
+<span class='post-count' dir='ltr'>(8)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2009_02_01_archive.html'>February</a>
+<span class='post-count' dir='ltr'>(3)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2009_01_01_archive.html'>January</a>
+<span class='post-count' dir='ltr'>(6)</span>
+</li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate expanded'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy toggle-open'>&#9660;&#160;</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/search?updated-min=2008-01-01T00%3A00%3A00%2B05%3A30&updated-max=2009-01-01T00%3A00%3A00%2B05%3A30&max-results=50'>2008</a>
+<span class='post-count' dir='ltr'>(56)</span>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2008_12_01_archive.html'>December</a>
+<span class='post-count' dir='ltr'>(6)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2008_11_01_archive.html'>November</a>
+<span class='post-count' dir='ltr'>(2)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2008_10_01_archive.html'>October</a>
+<span class='post-count' dir='ltr'>(6)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2008_09_01_archive.html'>September</a>
+<span class='post-count' dir='ltr'>(7)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2008_08_01_archive.html'>August</a>
+<span class='post-count' dir='ltr'>(5)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate expanded'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy toggle-open'>&#9660;&#160;</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2008_07_01_archive.html'>July</a>
+<span class='post-count' dir='ltr'>(6)</span>
+<ul class='posts'>
+<li><a href='http://debasishg.blogspot.com/2008/07/programmable-web-is-getting-more.html'>The Programmable Web is getting more complex</a></li>
+<li><a href='http://debasishg.blogspot.com/2008/07/oscon-2008-day-1-and-2-great-tutorial.html'>OSCON 2008 (Day 1 and 2) - Great Tutorial Sessions...</a></li>
+<li><a href='http://debasishg.blogspot.com/2008/07/my-picks-for-oscon-2008.html'>My Picks for OSCON 2008</a></li>
+<li><a href='http://debasishg.blogspot.com/2008/07/scaling-out-messaging-applications-with.html'>Scaling out messaging applications with Scala Acto...</a></li>
+<li><a href='http://debasishg.blogspot.com/2008/07/erlangs-concurrency-model-on-jvm-can-we.html'>Erlang&#39;s concurrency model on the JVM - Can we hav...</a></li>
+<li><a href='http://debasishg.blogspot.com/2008/07/what-else-you-need-to-consider-for.html'>What else you need to consider for designing well-...</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2008_06_01_archive.html'>June</a>
+<span class='post-count' dir='ltr'>(3)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2008_05_01_archive.html'>May</a>
+<span class='post-count' dir='ltr'>(4)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2008_04_01_archive.html'>April</a>
+<span class='post-count' dir='ltr'>(3)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2008_03_01_archive.html'>March</a>
+<span class='post-count' dir='ltr'>(4)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2008_02_01_archive.html'>February</a>
+<span class='post-count' dir='ltr'>(5)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2008_01_01_archive.html'>January</a>
+<span class='post-count' dir='ltr'>(5)</span>
+</li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/search?updated-min=2007-01-01T00%3A00%3A00%2B05%3A30&updated-max=2008-01-01T00%3A00%3A00%2B05%3A30&max-results=50'>2007</a>
+<span class='post-count' dir='ltr'>(57)</span>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2007_12_01_archive.html'>December</a>
+<span class='post-count' dir='ltr'>(6)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2007_11_01_archive.html'>November</a>
+<span class='post-count' dir='ltr'>(6)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2007_10_01_archive.html'>October</a>
+<span class='post-count' dir='ltr'>(7)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2007_09_01_archive.html'>September</a>
+<span class='post-count' dir='ltr'>(6)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2007_08_01_archive.html'>August</a>
+<span class='post-count' dir='ltr'>(5)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2007_07_01_archive.html'>July</a>
+<span class='post-count' dir='ltr'>(7)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2007_06_01_archive.html'>June</a>
+<span class='post-count' dir='ltr'>(4)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2007_05_01_archive.html'>May</a>
+<span class='post-count' dir='ltr'>(4)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2007_04_01_archive.html'>April</a>
+<span class='post-count' dir='ltr'>(3)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2007_03_01_archive.html'>March</a>
+<span class='post-count' dir='ltr'>(3)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2007_02_01_archive.html'>February</a>
+<span class='post-count' dir='ltr'>(3)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2007_01_01_archive.html'>January</a>
+<span class='post-count' dir='ltr'>(3)</span>
+</li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/search?updated-min=2006-01-01T00%3A00%3A00%2B05%3A30&updated-max=2007-01-01T00%3A00%3A00%2B05%3A30&max-results=50'>2006</a>
+<span class='post-count' dir='ltr'>(78)</span>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2006_12_01_archive.html'>December</a>
+<span class='post-count' dir='ltr'>(5)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2006_11_01_archive.html'>November</a>
+<span class='post-count' dir='ltr'>(4)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2006_10_01_archive.html'>October</a>
+<span class='post-count' dir='ltr'>(5)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2006_09_01_archive.html'>September</a>
+<span class='post-count' dir='ltr'>(5)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2006_08_01_archive.html'>August</a>
+<span class='post-count' dir='ltr'>(5)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2006_07_01_archive.html'>July</a>
+<span class='post-count' dir='ltr'>(6)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2006_06_01_archive.html'>June</a>
+<span class='post-count' dir='ltr'>(4)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2006_05_01_archive.html'>May</a>
+<span class='post-count' dir='ltr'>(6)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2006_04_01_archive.html'>April</a>
+<span class='post-count' dir='ltr'>(8)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2006_03_01_archive.html'>March</a>
+<span class='post-count' dir='ltr'>(19)</span>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://debasishg.blogspot.com/2006_02_01_archive.html'>February</a>
+<span class='post-count' dir='ltr'>(11)</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=BlogArchive&widgetId=BlogArchive1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("BlogArchive1"));' target='configBlogArchive1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div><div class='widget HTML' id='HTML5'>
+<h2 class='title'>FeedBurner FeedCount</h2>
+<div class='widget-content'>
+<p><a href="http://feeds.feedburner.com/RuminationsOfAProgrammer"><img width="88" style="border:0" alt="" src="http://feeds.feedburner.com/~fc/RuminationsOfAProgrammer?bg=99CCFF&amp;fg=444444&amp;anim=0" height="26"/></a></p>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=HTML&widgetId=HTML5&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML5"));' target='configHTML5' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget Image' id='Image2'>
+<div class='widget-content'>
+<a href='http://developers.blognotions.com/referral.php?k=ghosh'>
+<img alt='' height='125' id='Image2_img' src='http://4.bp.blogspot.com/_r-NJO1NMiu4/TMbCc6E0ruI/AAAAAAAAAZA/h8-kabwdN0w/S240/developers_125x125.gif' width='125'/>
+</a>
+<br/>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=22587889&widgetType=Image&widgetId=Image2&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("Image2"));' target='configImage2' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div></div>
+</div></div>
+</div>
+<div id='footer-wrap1'><div id='footer-wrap2'>
+<div class='footer section' id='footer'></div>
+</div></div>
+</div>
+<script src='http://www.google-analytics.com/urchin.js' type='text/javascript'>
+</script>
+<script type='text/javascript'>
+_uacct = "UA-2100898-1";
+urchinTracker();
+</script>
+<script type="text/javascript">
+if (window.jstiming) window.jstiming.load.tick('widgetJsBefore');
+</script><script type="text/javascript" src="http://www.blogger.com/static/v1/widgets/512629240-widgets.js"></script>
+<script type='text/javascript'>
+if (typeof(BLOG_attachCsiOnload) != 'undefined' && BLOG_attachCsiOnload != null) { window['blogger_templates_experiment_id'] = "templatesV1";window['blogger_blog_id'] = '22587889';BLOG_attachCsiOnload('item_'); }_WidgetManager._Init('http://www.blogger.com/rearrange?blogID=22587889','http://debasishg.blogspot.com/2008/07/scaling-out-messaging-applications-with.html','22587889');
+_WidgetManager._SetPageActionUrl('http://www.blogger.com/display?blogID=22587889','RxkD0sGHR7PBvrUfDpnq4dTD7qU:1292617744217','AOuZoY6gWAwtireit_le2KQGeGiEfDo4Fw:1292617744218');
+_WidgetManager._SetDataContext([{'name': 'blog', 'data': {'title': 'Ruminations of a Programmer', 'pageType': 'item', 'url': 'http://debasishg.blogspot.com/2008/07/scaling-out-messaging-applications-with.html', 'canonicalUrl': 'http://debasishg.blogspot.com/2008/07/scaling-out-messaging-applications-with.html', 'homepageUrl': 'http://debasishg.blogspot.com/', 'enabledCommentProfileImages': true, 'searchLabel': '', 'searchQuery': '', 'pageName': 'Scaling out messaging applications with Scala Actors and AMQP', 'pageTitle': 'Ruminations of a Programmer: Scaling out messaging applications with Scala Actors and AMQP', 'encoding': 'UTF-8', 'locale': 'en-US', 'isPrivate': false, 'isMobile': false, 'mobileClass': '', 'languageDirection': 'ltr', 'feedLinks': '\74link rel\75\42alternate\42 type\75\42application/atom+xml\42 title\75\42Ruminations of a Programmer - Atom\42 href\75\42http://debasishg.blogspot.com/feeds/posts/default\42 /\76\n\74link rel\75\42alternate\42 type\75\42application/rss+xml\42 title\75\42Ruminations of a Programmer - RSS\42 href\75\42http://debasishg.blogspot.com/feeds/posts/default?alt\75rss\42 /\76\n\74link rel\75\42service.post\42 type\75\42application/atom+xml\42 title\75\42Ruminations of a Programmer - Atom\42 href\75\42http://www.blogger.com/feeds/22587889/posts/default\42 /\76\n\74link rel\75\42EditURI\42 type\75\42application/rsd+xml\42 title\75\42RSD\42 href\75\42http://www.blogger.com/rsd.g?blogID\07522587889\42 /\76\n\74link rel\75\42alternate\42 type\75\42application/atom+xml\42 title\75\42Ruminations of a Programmer - Atom\42 href\75\42http://debasishg.blogspot.com/feeds/3013795989207953349/comments/default\42 /\76\n', 'meTag': '', 'openIdOpTag': '', 'imageSrcTag': '', 'latencyHeadScript': '\74script type\75\42text/javascript\42\76(function() { var a\75window;function c(b){this.t\75{};this.tick\75function(d,i,e){e\75e?e:(new Date).getTime();this.t[d]\75[e,i]};this.tick(\42start\42,null,b)}var f\75new c;a.jstiming\75{Timer:c,load:f};try{var g\75null;if(a.chrome\46\46a.chrome.csi)g\75Math.floor(a.chrome.csi().pageT);if(g\75\75null)if(a.gtbExternal)g\75a.gtbExternal.pageT();if(g\75\75null)if(a.external)g\75a.external.pageT;if(g)a.jstiming.pt\75g}catch(h){};a.tickAboveFold\75function(b){b\75b;var d\0750;if(b.offsetParent){do d+\75b.offsetTop;while(b\75b.offsetParent)}b\75d;b\74\075750\46\46a.jstiming.load.tick(\42aft\42)};var j\75false;function k(){if(!j){j\75true;a.jstiming.load.tick(\42firstScrollTime\42)}}a.addEventListener?a.addEventListener(\42scroll\42,k,false):a.attachEvent(\42onscroll\42,k);\n })();\74/script\076', 'mobileHeadScript': ''}}]);
+_WidgetManager._RegisterWidget('_ProfileView', new _WidgetInfo('Profile1', 'sidebartop', null, document.getElementById('Profile1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML7', 'sidebartop', null, document.getElementById('HTML7'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_TextView', new _WidgetInfo('Text1', 'sidebar', null, document.getElementById('Text1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_ImageView', new _WidgetInfo('Image1', 'sidebar', null, document.getElementById('Image1'), {'resize': true}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML8', 'sidebar', null, document.getElementById('HTML8'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML6', 'sidebar', null, document.getElementById('HTML6'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_AdSenseView', new _WidgetInfo('AdSense1', 'sidebar', null, document.getElementById('AdSense1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML2', 'sidebar', null, document.getElementById('HTML2'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML3', 'sidebar', null, document.getElementById('HTML3'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_FollowersView', new _WidgetInfo('Followers1', 'sidebar', null, document.getElementById('Followers1'), {'title': 'Followers', 'codeSnippet': '\74script type\75\42text/javascript\42\76\n        if (!window.google || !google.friendconnect) {\n          document.write(\47\74script type\75\42text/javascript\42\47 +\n              \47src\75\42http://www.google.com/friendconnect/script/friendconnect.js\42\76\47 +\n              \47\74/scr\47 + \47ipt\76\47);\n        }\n      \74/script\76\n\74script type\75\42text/javascript\42\76\n      if (!window.registeredBloggerCallbacks) {\n        window.registeredBloggerCallbacks \75 true;\n\n        \n\n        \n        gadgets.rpc.register(\47requestReload\47, function() {\n          document.location.reload();\n        });\n\n        \n        gadgets.rpc.register(\47requestSignOut\47, function(siteId) {\n          \n          google.friendconnect.container.openSocialSiteId \75 siteId;\n          google.friendconnect.requestSignOut();\n        });\n      }\n    \74/script\76\n\74script type\75\42text/javascript\42\76\n    \n    function registerGetBlogUrls() {\n      gadgets.rpc.register(\47getBlogUrls\47, function() {\n        var holder \75 {};\n        \n          \n            \n            \n              holder.currentPost \75 \42http://www.blogger.com/feeds/22587889/posts/default/3013795989207953349\42;\n            \n            \n            \n              holder.currentComments \75 \42http://www.blogger.com/feeds/22587889/3013795989207953349/comments/default\42;\n            \n            holder.currentPostUrl \75 \42\42;\n            holder.currentPostId \75 3013795989207953349\n          \n          \n          \n            holder.postFeed \75 \42http://www.blogger.com/feeds/22587889/posts/default\42;\n          \n          \n          \n            holder.commentFeed \75 \42http://www.blogger.com/feeds/22587889/comments/default\42;\n          \n          holder.currentBlogUrl \75 \42http://debasishg.blogspot.com/\42;\n          holder.currentBlogId \75 \04222587889\42;\n        \n        return holder;\n      });\n    }\n  \74/script\76\n\74script type\75\42text/javascript\42\76\n  if (!window.registeredCommonBloggerCallbacks) {\n    window.registeredCommonBloggerCallbacks \75 true;\n\n    gadgets.rpc.register(\47resize_iframe\47, function(height) {\n      var el \75 document.getElementById(this[\47f\47]);\n      if (el) {\n        el.style.height \75 height + \47px\47;\n      }\n    });\n\n    \n    gadgets.rpc.register(\47set_pref\47, function() {});\n\n    registerGetBlogUrls();\n  }\n  \74/script\76\n\74div id\75\42div-1re6kc3q239ub\42 style\75\42width: 100%; \42\76\74/div\76\n\74script type\75\42text/javascript\42\76\n    var skin \75 {};\n    skin[\47FACE_SIZE\47] \75 \04732\47;\n    skin[\47HEIGHT\47] \75 \042260\42;\n    skin[\47TITLE\47] \75 \42Followers\42;\n    skin[\47BORDER_COLOR\47] \75 \42transparent\42;\n    skin[\47ENDCAP_BG_COLOR\47] \75 \42transparent\42;\n    skin[\47ENDCAP_TEXT_COLOR\47] \75 \42#333333\42;\n    skin[\47ENDCAP_LINK_COLOR\47] \75 \42#000000\42;\n    skin[\47ALTERNATE_BG_COLOR\47] \75 \42transparent\42;\n    \n    skin[\47CONTENT_BG_COLOR\47] \75 \42transparent\42;\n    skin[\47CONTENT_LINK_COLOR\47] \75 \42#000000\42;\n    skin[\47CONTENT_TEXT_COLOR\47] \75 \42#333333\42;\n    skin[\47CONTENT_SECONDARY_LINK_COLOR\47] \75 \42#FFFFFF\42;\n    skin[\47CONTENT_SECONDARY_TEXT_COLOR\47] \75 \42#000000\42;\n    skin[\47CONTENT_HEADLINE_COLOR\47] \75 \42#000000\42;\n    skin[\47FONT_FACE\47] \75 \42normal normal 100% \\x27Trebuchet MS\\x27,Verdana,Arial,Sans-serif\42;\n    google.friendconnect.container.setParentUrl(\42/\42);\n    google.friendconnect.container[\42renderMembersGadget\42](\n    {id: \42div-1re6kc3q239ub\42,\n     height: 260,\n     \n     \n     \n     site: \04206559288805331945377\42,\n      \n     locale: \47en_US\47 },\n     skin);\n  \74/script\076'}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_BloggerButtonView', new _WidgetInfo('BloggerButton1', 'sidebar', null, document.getElementById('BloggerButton1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_BlogArchiveView', new _WidgetInfo('BlogArchive1', 'sidebar', null, document.getElementById('BlogArchive1'), {'languageDirection': 'ltr'}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML5', 'sidebar', null, document.getElementById('HTML5'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_ImageView', new _WidgetInfo('Image2', 'sidebar', null, document.getElementById('Image2'), {'resize': true}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HeaderView', new _WidgetInfo('Header1', 'header'));
+_WidgetManager._RegisterWidget('_NavbarView', new _WidgetInfo('Navbar1', 'navbar'));
+_WidgetManager._RegisterWidget('_BlogView', new _WidgetInfo('Blog1', 'main', null, document.getElementById('Blog1'), {'cmtInteractionsEnabled': false, 'commentInteractionIframeUrl': 'http://www.blogger.com/comment-interaction-iframe.g?blogId\07522587889', 'showBacklinks': true, 'postId': '3013795989207953349', 'mobile': false}, 'displayModeFull'));
+</script>
+</body>
+</html>
