@@ -1,0 +1,979 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html dir='ltr'>
+<head>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+<script type="text/javascript">(function() { var a=window;function c(b){this.t={};this.tick=function(d,i,e){e=e?e:(new Date).getTime();this.t[d]=[e,i]};this.tick("start",null,b)}var f=new c;a.jstiming={Timer:c,load:f};try{var g=null;if(a.chrome&&a.chrome.csi)g=Math.floor(a.chrome.csi().pageT);if(g==null)if(a.gtbExternal)g=a.gtbExternal.pageT();if(g==null)if(a.external)g=a.external.pageT;if(g)a.jstiming.pt=g}catch(h){};a.tickAboveFold=function(b){b=b;var d=0;if(b.offsetParent){do d+=b.offsetTop;while(b=b.offsetParent)}b=d;b<=750&&a.jstiming.load.tick("aft")};var j=false;function k(){if(!j){j=true;a.jstiming.load.tick("firstScrollTime")}}a.addEventListener?a.addEventListener("scroll",k,false):a.attachEvent("onscroll",k);
+ })();</script>
+<meta content='true' name='MSSmartTagsPreventParsing'/>
+<meta content='blogger' name='generator'/>
+<link href='http://www.blogger.com/favicon.ico' rel='icon' type='image/vnd.microsoft.icon'/>
+<link href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html' rel='canonical'/>
+<link rel="alternate" type="application/atom+xml" title="What Mighty Mouse Has Learned - Atom" href="http://whatmightymousehaslearned.blogspot.com/feeds/posts/default" />
+<link rel="alternate" type="application/rss+xml" title="What Mighty Mouse Has Learned - RSS" href="http://whatmightymousehaslearned.blogspot.com/feeds/posts/default?alt=rss" />
+<link rel="service.post" type="application/atom+xml" title="What Mighty Mouse Has Learned - Atom" href="http://www.blogger.com/feeds/5024166485270337322/posts/default" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.blogger.com/rsd.g?blogID=5024166485270337322" />
+<link rel="alternate" type="application/atom+xml" title="What Mighty Mouse Has Learned - Atom" href="http://whatmightymousehaslearned.blogspot.com/feeds/3835514752516163840/comments/default" />
+<!--[if IE]> <script> (function() { var html5 = ("abbr,article,aside,audio,canvas,datalist,details," + "figure,footer,header,hgroup,mark,menu,meter,nav,output," + "progress,section,time,video").split(','); for (var i = 0; i < html5.length; i++) { document.createElement(html5[i]); } })(); </script> <![endif]-->
+<title>What Mighty Mouse Has Learned: So, you're gonna code the whole thing, do the servers and work for sweat equity. Well then, you better read this if you don't want to get screwed.</title>
+<link type='text/css' rel='stylesheet' href='http://www.blogger.com/static/v1/widgets/1743847221-widget_css_bundle.css' />
+ <link rel="stylesheet" type="text/css" href="http://www.blogger.com/dyn-css/authorization.css?targetBlogID=5024166485270337322&zx=9af35475-6419-47e3-a4ab-6fa12bda588f"/>
+<style type="text/css">#navbar-iframe { display:block }
+</style>
+
+<style id='page-skin-1' type='text/css'><!--
+/*
+-----------------------------------------------------
+Blogger Template Style Sheet
+Name:     Scribe
+Date:     27 Feb 2004
+Updated by: Blogger Team
+------------------------------------------------------ */
+/*
+Variable definitions
+====================
+<Variable name="textColor" description="Text Color" type="color"
+default="#29303b">
+<Variable name="postTitleColor" description="Post Title Color" type="color"
+default="#1b0431">
+<Variable name="linkColor" description="Link Color" type="color"
+default="#473624">
+<Variable name="visitedLinkColor" description="Visited Link Color" type="color"
+default="#956839">
+<Variable name="pageHeaderColor" description="Blog Title Color" type="color"
+default="#612e00">
+<Variable name="blogDescriptionColor" description="Blog Description Color"
+type="color" default="#29303B">
+<Variable name="sidebarHeaderColor" description="Sidebar Title Color"
+type="color"
+default="#211104">
+<Variable name="bodyFont" description="Text Font"
+type="font"
+default="normal normal 100% Georgia, Times New Roman,Sans-Serif;">
+<Variable name="headerFont" description="Sidebar Title Font"
+type="font"
+default="normal normal 150% Georgia, Times New Roman,sans-serif">
+<Variable name="pageTitleFont" description="Blog Title Font"
+type="font"
+default="normal normal 225% Georgia, Times New Roman,sans-serif">
+<Variable name="blogDescriptionFont" description="Blog Description Font"
+type="font"
+default="italic normal 100% Georgia, Times New Roman, sans-serif">
+<Variable name="startSide" description="Start side in blog language"
+type="automatic" default="left">
+<Variable name="endSide" description="End side in blog language"
+type="automatic" default="right">
+*/
+/* Defaults
+----------------------------------------------- */
+body {
+margin:0;
+padding:0;
+font-size: small;
+text-align:center;
+color:#29303b;
+line-height:1.3em;
+background:#483521 url("http://www2.blogblog.com/scribe/bg.gif") repeat;
+}
+blockquote {
+font-style:italic;
+padding:0 32px;
+line-height:1.6;
+margin-top:0;
+margin-right:0;
+margin-bottom:.6em;
+margin-left:0;
+}
+p {
+margin:0;
+padding:0;
+}
+abbr, acronym {
+cursor:help;
+font-style:normal;
+}
+code {
+font-size: 90%;
+white-space:normal;
+color:#666;
+}
+hr {display:none;}
+img {border:0;}
+/* Link styles */
+a:link {
+color:#473624;
+text-decoration:underline;
+}
+a:visited {
+color: #956839;
+text-decoration:underline;
+}
+a:hover {
+color: #956839;
+text-decoration:underline;
+}
+a:active {
+color: #956839;
+}
+/* Layout
+----------------------------------------------- */
+#outer-wrapper {
+background-color:#473624;
+border-left:1px solid #332A24;
+border-right:1px solid #332A24;
+width:700px;
+margin:0px auto;
+padding:8px;
+text-align:center;
+font: normal normal 100% Georgia, Times New Roman,Sans-Serif;;
+}
+#main-top {
+width:700px;
+height:49px;
+background:#FFF3DB url("http://www2.blogblog.com/scribe/bg_paper_top.jpg") no-repeat top left;
+margin:0px;
+padding:0px;
+display:block;
+}
+#main-bot {
+width:700px;
+height:81px;
+background:#FFF3DB url("http://www.blogblog.com/scribe/bg_paper_bot.jpg") no-repeat top left;
+margin:0;
+padding:0;
+display:block;
+}
+#wrap2 {
+width:700px;
+background:#FFF3DB url("http://www1.blogblog.com/scribe/bg_paper_mid.jpg") repeat-y;
+margin-top: -14px;
+margin-right: 0px;
+margin-bottom: 0px;
+margin-left: 0px;
+text-align:left;
+display:block;
+}
+#wrap3 {
+padding:0 50px;
+}
+.Header {
+}
+h1 {
+margin:0;
+padding-top:0;
+padding-right:0;
+padding-bottom:6px;
+padding-left:0;
+font: normal normal 225% Georgia, Times New Roman,sans-serif;
+color: #612e00;
+}
+h1 a:link {
+text-decoration:none;
+color: #612e00;
+}
+h1 a:visited {
+text-decoration:none;
+}
+h1 a:hover {
+border:0;
+text-decoration:none;
+}
+.Header .description {
+margin:0;
+padding:0;
+line-height:1.5em;
+color: #29303B;
+font: italic normal 100% Georgia, Times New Roman, sans-serif;
+}
+#sidebar-wrapper {
+clear:left;
+}
+#main {
+width:430px;
+float:right;
+padding:8px 0;
+margin:0;
+word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+overflow: hidden;     /* fix for long non-text content breaking IE sidebar float */
+}
+#sidebar {
+width:150px;
+float:left;
+padding:8px 0;
+margin:0;
+word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+overflow: hidden;     /* fix for long non-text content breaking IE sidebar float */
+}
+#footer {
+clear:both;
+background:url("http://www.blogblog.com/scribe/divider.gif") no-repeat top left;
+padding-top:10px;
+_padding-top:6px; /* IE Windows target */
+}
+#footer p {
+line-height:1.5em;
+font-size:75%;
+}
+/* Typography :: Main entry
+----------------------------------------------- */
+h2.date-header {
+font-weight:normal;
+text-transform:uppercase;
+letter-spacing:.1em;
+font-size:90%;
+margin:0;
+padding:0;
+}
+.post {
+margin-top:8px;
+margin-right:0;
+margin-bottom:24px;
+margin-left:0;
+}
+.post h3 {
+font-weight:normal;
+font-size:140%;
+color:#1b0431;
+margin:0;
+padding:0;
+}
+.post h3 a {
+color: #1b0431;
+}
+.post-body p {
+line-height:1.5em;
+margin-top:0;
+margin-right:0;
+margin-bottom:.6em;
+margin-left:0;
+}
+.post-footer {
+font-family: Verdana, sans-serif;
+font-size:74%;
+border-top:1px solid #BFB186;
+padding-top:6px;
+}
+.post-footer a {
+margin-right: 6px;
+}
+.post ul {
+margin:0;
+padding:0;
+}
+.post li {
+line-height:1.5em;
+list-style:none;
+background:url("http://www.blogblog.com/scribe/list_icon.gif") no-repeat left .3em;
+vertical-align:top;
+padding-top: 0;
+padding-right: 0;
+padding-bottom: .6em;
+padding-left: 17px;
+margin:0;
+}
+.feed-links {
+clear: both;
+line-height: 2.5em;
+}
+#blog-pager-newer-link {
+float: left;
+}
+#blog-pager-older-link {
+float: right;
+}
+#blog-pager {
+text-align: center;
+}
+/* Typography :: Sidebar
+----------------------------------------------- */
+.sidebar h2 {
+margin:0;
+padding:0;
+color:#211104;
+font: normal normal 150% Georgia, Times New Roman,sans-serif;
+}
+.sidebar h2 img {
+margin-bottom:-4px;
+}
+.sidebar .widget {
+font-size:86%;
+margin-top:6px;
+margin-right:0;
+margin-bottom:12px;
+margin-left:0;
+padding:0;
+line-height: 1.4em;
+}
+.sidebar ul li {
+list-style: none;
+margin:0;
+}
+.sidebar ul {
+margin-left: 0;
+padding-left: 0;
+}
+/* Comments
+----------------------------------------------- */
+#comments {}
+#comments h4 {
+font-weight:normal;
+font-size:120%;
+color:#29303B;
+margin:0;
+padding:0;
+}
+#comments-block {
+line-height:1.5em;
+}
+.comment-author {
+background:url("http://www.blogblog.com/scribe/list_icon.gif") no-repeat 2px .35em;
+margin:.5em 0 0;
+padding-top:0;
+padding-right:0;
+padding-bottom:0;
+padding-left:20px;
+font-weight:bold;
+}
+.comment-body {
+margin:0;
+padding-top:0;
+padding-right:0;
+padding-bottom:0;
+padding-left:20px;
+}
+.comment-body p {
+font-size:100%;
+margin-top:0;
+margin-right:0;
+margin-bottom:.2em;
+margin-left:0;
+}
+.comment-footer {
+color:#29303B;
+font-size:74%;
+margin:0 0 10px;
+padding-top:0;
+padding-right:0;
+padding-bottom:.75em;
+padding-left:20px;
+}
+.comment-footer a:link {
+color:#473624;
+text-decoration:underline;
+}
+.comment-footer a:visited {
+color:#716E6C;
+text-decoration:underline;
+}
+.comment-footer a:hover {
+color:#956839;
+text-decoration:underline;
+}
+.comment-footer a:active {
+color:#956839;
+text-decoration:none;
+}
+.deleted-comment {
+font-style:italic;
+color:gray;
+}
+/* Profile
+----------------------------------------------- */
+#main .profile-data {
+display:inline;
+}
+.profile-datablock, .profile-textblock {
+margin-top:0;
+margin-right:0;
+margin-bottom:4px;
+margin-left:0;
+}
+.profile-data {
+margin:0;
+padding-top:0;
+padding-right:8px;
+padding-bottom:0;
+padding-left:0;
+text-transform:uppercase;
+letter-spacing:.1em;
+font-size:90%;
+color:#211104;
+}
+.profile-img {
+float: left;
+margin-top: 0;
+margin-right: 5px;
+margin-bottom: 5px;
+margin-left: 0;
+border:1px solid #A2907D;
+padding:2px;
+}
+#header .widget, #main .widget {
+margin-bottom:12px;
+padding-bottom:12px;
+}
+#header {
+background:url("http://www.blogblog.com/scribe/divider.gif") no-repeat bottom left;
+}
+/** Page structure tweaks for layout editor wireframe */
+body#layout #outer-wrapper {
+margin-top: 0;
+padding-top: 0;
+}
+body#layout #wrap2,
+body#layout #wrap3 {
+margin-top: 0;
+}
+body#layout #main-top {
+display:none;
+}
+
+--></style>
+<script type="text/javascript">
+if (window.jstiming) window.jstiming.load.tick('headEnd');
+</script></head>
+<body>
+<div class='navbar section' id='navbar'><div class='widget Navbar' id='Navbar1'><script type="text/javascript">
+    function setAttributeOnload(object, attribute, val) {
+      if(window.addEventListener) {
+        window.addEventListener("load",
+          function(){ object[attribute] = val; }, false);
+      } else {
+        window.attachEvent('onload', function(){ object[attribute] = val; });
+      }
+    }
+  </script>
+<iframe src="http://www.blogger.com/navbar.g?targetBlogID=5024166485270337322&amp;blogName=What+Mighty+Mouse+Has+Learned&amp;publishMode=PUBLISH_MODE_BLOGSPOT&amp;navbarType=BLUE&amp;layoutType=LAYOUTS&amp;searchRoot=http%3A%2F%2Fwhatmightymousehaslearned.blogspot.com%2Fsearch&amp;blogLocale=en&amp;homepageUrl=http%3A%2F%2Fwhatmightymousehaslearned.blogspot.com%2F&amp;targetPostID=3835514752516163840" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="30px" width="100%" id="navbar-iframe" allowtransparency="true" title="Blogger Navigation and Search"></iframe>
+<div></div></div></div>
+<div id='outer-wrapper'>
+<div id='main-top'></div>
+<!-- placeholder for image -->
+<div id='wrap2'><div id='wrap3'>
+<div class='header section' id='header'><div class='widget Header' id='Header1'>
+<div id='header-inner'>
+<div class='titlewrapper'>
+<h1 class='title'>
+<a href='http://whatmightymousehaslearned.blogspot.com/'>What Mighty Mouse Has Learned</a>
+</h1>
+</div>
+<div class='descriptionwrapper'>
+<p class='description'><span>
+</span></p>
+</div>
+</div>
+</div></div>
+<div id='crosscol-wrapper' style='text-align:center'>
+<div class='crosscol section' id='crosscol'></div>
+</div>
+<div id='sidebar-wrapper'>
+<div class='sidebar section' id='sidebar'><div class='widget BlogArchive' id='BlogArchive1'>
+<h2>Blog Archive</h2>
+<div class='widget-content'>
+<div id='ArchiveList'>
+<div id='BlogArchive1_ArchiveList'>
+<ul class='hierarchy'>
+<li class='archivedate expanded'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy toggle-open'>&#9660;&#160;</span>
+</a>
+<a class='post-count-link' href='http://whatmightymousehaslearned.blogspot.com/search?updated-min=2008-01-01T00%3A00%3A00-08%3A00&updated-max=2009-01-01T00%3A00%3A00-08%3A00&max-results=1'>2008</a>
+<span class='post-count' dir='ltr'>(1)</span>
+<ul class='hierarchy'>
+<li class='archivedate expanded'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy toggle-open'>&#9660;&#160;</span>
+</a>
+<a class='post-count-link' href='http://whatmightymousehaslearned.blogspot.com/2008_08_01_archive.html'>August</a>
+<span class='post-count' dir='ltr'>(1)</span>
+<ul class='posts'>
+<li><a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html'>So, you&#39;re gonna code the whole thing, do the serv...</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=5024166485270337322&widgetType=BlogArchive&widgetId=BlogArchive1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("BlogArchive1"));' target='configBlogArchive1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div>
+</div>
+</div>
+<div class='main section' id='main'><div class='widget Blog' id='Blog1'>
+<div class='blog-posts hfeed'>
+<!-- google_ad_section_start(name=default) -->
+
+          <div class="date-outer">
+        
+<h2 class='date-header'><span>Wednesday, August 13, 2008</span></h2>
+
+          <div class="date-posts">
+        
+<div class='post-outer'>
+<div class='post hentry uncustomized-post-template'>
+<a name='3835514752516163840'></a>
+<h3 class='post-title entry-title'>
+So, you're gonna code the whole thing, do the servers and work for sweat equity. Well then, you better read this if you don't want to get screwed.
+</h3>
+<div class='post-header'>
+<div class='post-header-line-1'></div>
+</div>
+<div class='post-body entry-content'>
+<div>******You must get a business lawyer to implement all these points!!  One who knows business contract law!!!  No exceptions.  Do not get your lawyer friend to do you a favor who does injury law to help you.  Do not get your friend who just graduated law school.  They still know jack.  And don't think just because you and your business partner(s)  came out of the same womb and are sworn blood brothers that you don't need any of this. You do! It will be a most uncomfortable conversation but if you don't do this then you will be shoving things up your ass in a hard way for being sand stupid if things go south.<br /></div><div><br /></div><div>HOW MUCH STOCK</div><div>You are going to do twice as much work as you think.  So you should be getting twice the percentage as you think you deserve unless you are already 50/50 with your business partner(s).<br /></div><div><ul><li>If you are going to put these guys on the map and do all the coding, run the servers then you should be getting between 10-20% of the company stock.</li><li>SUPER F-ING IMPORTANT.  Make damn sure your stock can not be diluted. So make sure you have what is called preemptive rights that let you buy any new or currently issued stock back at the same price as your partner(s) based on your percentage.  If you own 10% of your company stock and your partner(s) decide to buy back X amount of stock or issues X amount of stock then you have the same right to buy 10% of X at their price. </li></ul></div><div>SALARY</div><div>Negotiate a proper deferred salary once the company is operational. You are going to pour thousands of hours into your coding to get the site live.  That's your sweat equity.  After that they need to start paying you.  But most likely the company wont have the cash yet so you want them to defer a portion of your salary PLUS interest as a liability on the company books.   Lets say that in the market place, as a programmer, you would be getting 100K per year.  The company only has cash to pay you 30K a year.  So 70K is deferred plus whatever interest you can negotiate.</div><div>Your partner(s) will not be keen on the fact that you want a deferred salary.  So one way to approach this is to suggest that all the partner(s) have an equal deferred salary.   And until you are paid in full and receiving your full wage then collectively you are all compensated equally with whatever distributions (besides equity distributions -we'll get to this later)  they take out from the company.  Remember to have your lawyer define distributions as anything the company buys for your partners:  Car, home computers, home entertainment centers, box seats too the hockey game, etc.  If you can't get the perk then you get the cash equivalent.</div><div><br /></div><div>SUPER IMPORTANT -- If you do get a deferred salary then MAKE SURE that you negotiate a raise for yourself after they pay off the deferred salary.   For example, you finally get paid your deferred salary and interest after 4 years.  Well, guess what?  It's been four years!  You are worth more now.   Negotiate at least a 1-3% salary increase for each of the deferred salary years.  </div><div><br /></div><div>ACCOUNTING</div><div>As a partner of the company you want to make sure you have in writing that you are able to see the books of the company whenever you please.  Make sure you get them used to the fact that you like seeing the accounting reports quarterly. If you don't know how to read them then learn!  This will be the only way you know if you are being screwed.</div><div><br /></div><div>EXPENSE ACCOUNTS</div><div>If your partner(s) have one then you certainly want one too.  If you agreed on collectively being equal until your deferred salary was paid then make sure you get the same expense account.  And you will only be able to know if they are taking expense accounts and how much they are taking if you get to see the books.<br /></div><div><br /></div><div>BOARD MEMBER</div><div>You are an important part of this company.  You built everything.  You should most definitely be on the board of directors.   If your partner(s) don't give this to you then ask for more salary or get more equity.</div><div><br /></div><div>VACATION/SICK DAYS/HOURS</div><div>Make sure you get the same as your partner(s).  If they get 5 weeks in the year then then you get 5 weeks in the year.  As the company grows, a human resource person is going to start tracking vacation days/hours.  If the HR person doesn't track your partner(s) vacation days then you don't get tracked either.   If they don't have to fill out a form and notify HR two weeks before then you don't either.  </div><div><br /></div><div>WHO DO YOU REPORT TO</div><div>You will only report to your partner(s) no matter how many level of general managers there are.</div><div><br /></div><div>REVIEWS</div><div>You are one of the owners of the company.  You do not get written reviews.</div><div><br /></div><div>TERMINATION</div><div>Pre negotiate your severance.  If they terminate you for any reason you get it.  A good rule is for every year employed you get a month of salary.  Also, get in writing that the company will give you money to compensate for your taxes based on any stock associated income distributed by the company. See taxes for an explanation of this.  If you went the deferred salary route and they terminate you then make it so they have to pay out the deferred salary upon termination.</div><div><br /></div><div>TAXES</div><div>There are different ways to incorporate your company.  The one you have to be concerned with is where the profits pass through directly to the partner(s).   So let's say the company does $100,000 in profit and you own 10% of the company then the government is going to ask you pay taxes on $10,000 at whatever your tax rate is.  Since your partner(s) owns the controlling interest in the company they get to decide if they want to pay your taxes for you.  What that means is they'll assume the highest tax bracket of 40%, and at the end of the year give all the stock owners a check to pay for the taxes.  Your check in this case would be $4,000.  This type of thing is very nice and not all companies with pass through income do this.  THE PROBLEM.  If your partner(s) ever wanted to get rid of you and force you sell your stock back to them then they could make life very uncomfortable for you by not paying your taxes.  Of course, they are in the same boat and would have to pay the taxes too but at this point (your deferred agreement is over) they could be giving themselves very large salaries to compensate.  SOLUTION: Get in writing that the company will give you money to compensate for your taxes based on any stock associated income distributed by the company.</div><div><br /></div><div>SELLING YOUR STOCK</div><div>If your partner(s) make an offer to buy back your stock then make sure you know "the multiple" for the type of company you have.  You can look this up and find the range.  Your lawyer will help you.  Basically, if the company has been grossing $10 million every year and the multiple for your type of company is 3 then the company is worth $30 million.  If you own 10% then you stock is worth $3 million.  So don't sell it back to them for less.  Especially if you think the company is going to grow even more.</div><div><br /></div><div>AGREEMENT VIOLATIONS</div><div>If you find that your agreement has been violated then you should first, talk to your partners and rationally discuss with them the issue.  Bring in the agreement and say I took this to mean x but I'm seeing you guys doing y.   Hopefully, it's just a misunderstanding and all will be good again.   If not, then you'll have to learn to let go or call your lawyer.</div><div><br /></div><div>That's it.  Again, make sure your lawyer draws all these points up in your agreement.  Good luck! </div><div><br /></div><br /><!-- GoStats Simple HTML Based Code --><br /><img src="http://c4.gostats.com/bin/count/a_320883/t_5/i_1/counter.png" /><br /><!-- End GoStats Simple HTML Based Code -->
+<div style='clear: both;'></div>
+</div>
+<div class='post-footer'>
+<div class='post-footer-line post-footer-line-1'>
+<span class='post-author vcard'>
+Posted by
+<span class='fn'>Mighty Mouse</span>
+</span>
+<span class='post-timestamp'>
+at
+<a class='timestamp-link' href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html' rel='bookmark' title='permanent link'><abbr class='published' title='2008-08-13T15:18:00-07:00'>3:18 PM</abbr></a>
+</span>
+<span class='reaction-buttons'>
+</span>
+<span class='dummy-feature'>
+</span>
+<span class='star-ratings'>
+</span>
+<span class='post-comment-link'>
+</span>
+<span class='post-backlinks post-comment-link'>
+</span>
+<span class='post-icons'>
+<span class='item-control blog-admin pid-1660703847'>
+<a href='http://www.blogger.com/post-edit.g?blogID=5024166485270337322&postID=3835514752516163840' title='Edit Post'>
+<img alt='' class='icon-action' height='18' src='http://img2.blogblog.com/img/icon18_edit_allbkg.gif' width='18'/>
+</a>
+</span>
+</span>
+<div class='post-share-buttons'>
+</div>
+</div>
+<div class='post-footer-line post-footer-line-2'>
+<span class='post-labels'>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-3'>
+<span class='post-location'>
+</span>
+</div>
+</div>
+</div>
+<div class='comments' id='comments'>
+<a name='comments'></a>
+<h4>
+14
+comments:
+        
+</h4>
+<div id='Blog1_comments-block-wrapper'>
+<dl class='avatar-comment-indent' id='comments-block'>
+<dt class='comment-author ' id='c6371233392735410909'>
+<a name='c6371233392735410909'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="http://img1.blogblog.com/img/blank.gif" width="16" height="16" alt="" title="tim">
+
+</span></div>
+tim
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-6371233392735410909'>
+<p>
+"Negotiate at least a 1-3% salary increase for each of the deferred salary years."<BR/><BR/>That sounds pretty low to me, especially if you're the guy who built the product for the past four years. No?<BR/><BR/>I found that low for me right now, even though I'm not doing anything!<BR/><BR/><BR/>Otherwise, great writing! It saddens me though that a lot of people are greedy and take advantage of situations like that. I'm more of the kind to let go and just try to be nice.
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219798740000#c6371233392735410909' title='comment permalink'>
+August 26, 2008 5:59 PM
+</a>
+<span class='item-control blog-admin pid-1029368440'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=6371233392735410909' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c1699146525875995764'>
+<a name='c1699146525875995764'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><a href="http://www.blogger.com/profile/13359266430742140308" rel="nofollow" onclick="" class="avatar-hovercard" id="av-1-13359266430742140308"><img src="http://img2.blogblog.com/img/b16-rounded.gif" width="16" height="16" alt="" title="Tom">
+
+</a></span></div>
+<a href='http://www.blogger.com/profile/13359266430742140308' rel='nofollow'>Tom</a>
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-1699146525875995764'>
+<p>
+Start your own company. That is basically what you are asking for... what do the others get for actually *putting up cash*? <BR/><BR/>sheesh.
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219800780000#c1699146525875995764' title='comment permalink'>
+August 26, 2008 6:33 PM
+</a>
+<span class='item-control blog-admin pid-1696928231'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=1699146525875995764' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c102527137596370895'>
+<a name='c102527137596370895'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="http://img1.blogblog.com/img/blank.gif" width="16" height="16" alt="" title="Anonymous">
+
+</span></div>
+Anonymous
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-102527137596370895'>
+<p>
+Yep, sure, go right ahead and do this.  They'll laugh their ass off at you, tell you to get lost, then go hire some other code monkey.
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219800780001#c102527137596370895' title='comment permalink'>
+August 26, 2008 6:33 PM
+</a>
+<span class='item-control blog-admin pid-1594711000'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=102527137596370895' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c7708875735490802224'>
+<a name='c7708875735490802224'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="http://img1.blogblog.com/img/blank.gif" width="16" height="16" alt="" title="Anonymous">
+
+</span></div>
+Anonymous
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-7708875735490802224'>
+<p>
+10% of $100,000 is $10,000, not $1,000. Unless I'm missing some invisible extra factor of 10% somewhere.
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219801980000#c7708875735490802224' title='comment permalink'>
+August 26, 2008 6:53 PM
+</a>
+<span class='item-control blog-admin pid-1438196420'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=7708875735490802224' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c4468357594060746187'>
+<a name='c4468357594060746187'></a>
+<div class="avatar-image-container vcard"><span dir="ltr"><a href="http://www.blogger.com/profile/17091882982715332143" rel="nofollow" onclick="" class="avatar-hovercard" id="av-4-17091882982715332143"><img src="http://img1.blogblog.com/img/blank.gif" width="21" height="35" alt="" class="delayLoad" style="display: none;" longdesc="http://fnarg.com/img/Billco-dark.jpg" title="Billco">
+
+<noscript><img src="http://fnarg.com/img/Billco-dark.jpg" width="21" height="35" class="photo" alt=""></noscript></a></span></div>
+<a href='http://www.blogger.com/profile/17091882982715332143' rel='nofollow'>Billco</a>
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-4468357594060746187'>
+<p>
+Well now that depends... if it's a small startup company, set up by a bunch of friends/ex-coworkers, then the developer should definitely get their piece of the pie.<BR/><BR/>"Hiring any code monkey" is a fantastic way to fail.  It's better to give your good developer a chunk of the action, than to hire some MCSE douchebag who couldn't care less about your company's success, as long as the cheques don't bounce.  Giving away 10-15% of a million-dollar enterprise is better than keeping 100% of a flop.
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219808100000#c4468357594060746187' title='comment permalink'>
+August 26, 2008 8:35 PM
+</a>
+<span class='item-control blog-admin pid-502584651'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=4468357594060746187' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c791778171386154322'>
+<a name='c791778171386154322'></a>
+<div class="avatar-image-container vcard"><span dir="ltr"><a href="http://www.blogger.com/profile/01300895986114196848" rel="nofollow" onclick="" class="avatar-hovercard" id="av-5-01300895986114196848"><img src="http://img1.blogblog.com/img/blank.gif" width="35" height="35" alt="" class="delayLoad" style="display: none;" longdesc="http://3.bp.blogspot.com/_M5ueJTe0mUI/SKwt6qqeq9I/AAAAAAAAAAQ/lQn4Q3zFJvg/S220/extra-xcode.png" title="lvizon">
+
+<noscript><img src="http://3.bp.blogspot.com/_M5ueJTe0mUI/SKwt6qqeq9I/AAAAAAAAAAQ/lQn4Q3zFJvg/S220/extra-xcode.png" width="35" height="35" class="photo" alt=""></noscript></a></span></div>
+<a href='http://www.blogger.com/profile/01300895986114196848' rel='nofollow'>lvizon</a>
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-791778171386154322'>
+<p>
+"Hiring any code monkey" is a fantastic way to fail. - Billco<BR/><BR/>they're more the exception that the rule, but don't forget about <A HREF="http://digg.com" REL="nofollow">digg</A>
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219808700000#c791778171386154322' title='comment permalink'>
+August 26, 2008 8:45 PM
+</a>
+<span class='item-control blog-admin pid-1378185620'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=791778171386154322' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c5059101042605045742'>
+<a name='c5059101042605045742'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><a href="http://www.blogger.com/profile/14592139915809999627" rel="nofollow" onclick="" class="avatar-hovercard" id="av-6-14592139915809999627"><img src="http://img2.blogblog.com/img/b16-rounded.gif" width="16" height="16" alt="" title="Andy Freeman">
+
+</a></span></div>
+<a href='http://www.blogger.com/profile/14592139915809999627' rel='nofollow'>Andy Freeman</a>
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-5059101042605045742'>
+<p>
+If they don't have the money to pay you, you're not an employee, you're a founder and you get the same deal that they get.<BR/><BR/>If they balk, suggest that they find another code monkey while you find another biz monkey and the see who ends up with the bananas.
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219811880000#c5059101042605045742' title='comment permalink'>
+August 26, 2008 9:38 PM
+</a>
+<span class='item-control blog-admin pid-1766437818'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=5059101042605045742' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c3685522800845873414'>
+<a name='c3685522800845873414'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="http://img1.blogblog.com/img/blank.gif" width="16" height="16" alt="" title="Anonymous">
+
+</span></div>
+Anonymous
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-3685522800845873414'>
+<p>
+How does a mouse know all this? How come you can type?!
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219816980000#c3685522800845873414' title='comment permalink'>
+August 26, 2008 11:03 PM
+</a>
+<span class='item-control blog-admin pid-1289937119'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=3685522800845873414' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c1292811436579123398'>
+<a name='c1292811436579123398'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="http://img1.blogblog.com/img/blank.gif" width="16" height="16" alt="" title="Anonymous">
+
+</span></div>
+Anonymous
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-1292811436579123398'>
+<p>
+Thank you, very useful! Especially since I begun coding the whole thing just last week :)
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219826100000#c1292811436579123398' title='comment permalink'>
+August 27, 2008 1:35 AM
+</a>
+<span class='item-control blog-admin pid-1919033707'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=1292811436579123398' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c6538988695990798307'>
+<a name='c6538988695990798307'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><a href="http://www.blogger.com/profile/07699749219424408334" rel="nofollow" onclick="" class="avatar-hovercard" id="av-9-07699749219424408334"><img src="http://img2.blogblog.com/img/b16-rounded.gif" width="16" height="16" alt="" title="Ben">
+
+</a></span></div>
+<a href='http://www.blogger.com/profile/07699749219424408334' rel='nofollow'>Ben</a>
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-6538988695990798307'>
+<p>
+a question, what would you say to somebody that has been involved with a company for 5 years, accomplished the sweat equity and knows the books from start to finish.   the company is suffering profitabily and future sales look risky.  the problem lies with potential.  the company is amazingly innovative, brimming with foresight and has the lock on certain aspects of the market.  i have 'phantom stock options' which are not truly ownership stakes.  if i stay, which is debatable, what do i negotiate for?  is a lawyer the best option?
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219832400000#c6538988695990798307' title='comment permalink'>
+August 27, 2008 3:20 AM
+</a>
+<span class='item-control blog-admin pid-1716062739'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=6538988695990798307' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c6805638599669952372'>
+<a name='c6805638599669952372'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><a href="http://chrisco.wordpress.com" rel="nofollow" onclick=""><img src="http://img1.blogblog.com/img/blank.gif" width="16" height="16" alt="" title="chrisco">
+
+</a></span></div>
+<a href='http://chrisco.wordpress.com' rel='nofollow'>chrisco</a>
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-6805638599669952372'>
+<p>
+Hey there Mighty Mouse,<BR/><BR/>Interesting post, with some great ideas.  However, some points could be a little overreaching for most people, unless they really are the next Larry Page or Mark Zuckerberg or whatever.<BR/><BR/>Point 1: Negotiating Position:<BR/>People who own 10-20% of a company generally do not dictate terms to the other 80-90% (unless they&#8217;ve a real BSD, as defined here: http://en.wikipedia.org/wiki/Liar%27s_Poker).  That said, you are 100% right that whatever terms people agree on must be fair and balanced (considering the relative positions of the parties).  True dat!<BR/><BR/>Point 2: Deferred Salary:<BR/>You can write whatever you want in the agreement, because it doesn&#8217;t mean sh*t.  Make it a million dollars a year, it doesn't matter.  F*ck, appoint yourself &#8220;I&#8217;m Dr. Evil Monkey Biyatch&#8221; and pay yourself $1 billion per year, it just doesn't mean sh*t.  Why?  Because if you primates ever get to a spot where you need to, and are able to, raise venture capital then your entire &#8220;how many angels can you fit on the head of a pin debate&#8221; and agreement will be torn up and a shiny new agreement, written by the VC&#8217;s lawyers, will be shoved right up your little monkey asses (and VCs don&#8217;t used lube).  How ya like 'dem bananas?!<BR/><BR/>Ok, back to seriousness.  If the point is: Negotiate a fair and balanced deal BEFORE you get to work, do it in writing, and use a competent lawyer, then I agree 100%.  I just urge some caution and discretion is all.  Why?  Because I just had to cut loose a young guy who overplayed his hand based on some advice he was receiving, possibly from a blog like this, possibly even from this blog.<BR/><BR/>It&#8217;s the same as in poker, politics or other games, you can reach too far.  And if you do, the other guy notices, you&#8217;re f*cked.  I think it was said best by Tony Soprano, about 30 seconds into this audio clip: http://chrisco.soup.io/post/4854879/sopranos-dialogue.  Recent example: America and Russia: America overplayed it&#8217;s hand, Russia called the bluff.  Whatcha gonna do now, &#8216;Merica?  Nothin.&#8217;  Now Russia is in Georgia and America looks stupid (plus has possibly started a new cold war).  Welcome to the new new world order, Biyatch!<BR/><BR/>Cheers,<BR/>chrisco
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219833360000#c6805638599669952372' title='comment permalink'>
+August 27, 2008 3:36 AM
+</a>
+<span class='item-control blog-admin pid-1393613136'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=6805638599669952372' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c6084071042884519070'>
+<a name='c6084071042884519070'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><a href="http://www.blogger.com/profile/12827316948123815528" rel="nofollow" onclick="" class="avatar-hovercard" id="av-11-12827316948123815528"><img src="http://img2.blogblog.com/img/b16-rounded.gif" width="16" height="16" alt="" title="Graeme Lewis">
+
+</a></span></div>
+<a href='http://www.blogger.com/profile/12827316948123815528' rel='nofollow'>Graeme Lewis</a>
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-6084071042884519070'>
+<p>
+trading in equity is the most expensive asset you can mess with. If the idea is worth anything, carve it into small pieces and have separate developers code for you, then integrate it yourself. http://theprofitgenie.blogspot.com.<BR/><BR/>Then, before you start selling, learn how to mark products up profitably. Most of us SME types just kinda jump in there, years later we burn out stress and overwork.<BR/><BR/>learn how to make a profit first. Then find people who want you product. Even better, before you invent something, find out what people want and rather sell them that.
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219841700000#c6084071042884519070' title='comment permalink'>
+August 27, 2008 5:55 AM
+</a>
+<span class='item-control blog-admin pid-1690386670'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=6084071042884519070' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c4608362279704818035'>
+<a name='c4608362279704818035'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="http://img1.blogblog.com/img/blank.gif" width="16" height="16" alt="" title="Anonymous">
+
+</span></div>
+Anonymous
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-4608362279704818035'>
+<p>
+I would not rate a board position nearly as highly as you do and it comes with a load of responsibility. Once you are on the board you are responsible (legally) for liabilities of the company, illegal activity by other company members, etc. <BR/><BR/>Being on the board of directors can be incredibly distracting and time consuming. As the lead developer, you should be focused on helping grow the company, not the bureaucracy or even the strategic direction of the company.<BR/><BR/>You are a coder right? not a CEO
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1219864200000#c4608362279704818035' title='comment permalink'>
+August 27, 2008 12:10 PM
+</a>
+<span class='item-control blog-admin pid-1861112972'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=4608362279704818035' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+<dt class='comment-author ' id='c5208243119973534334'>
+<a name='c5208243119973534334'></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="http://img1.blogblog.com/img/blank.gif" width="16" height="16" alt="" title="Anonymous">
+
+</span></div>
+Anonymous
+said...
+</dt>
+<dd class='comment-body' id='Blog1_cmt-5208243119973534334'>
+<p>
+Having done a ton of startups, you're high if you think anybody gives a shit what a coder wants. If you talked weren't a founder to being with and came in with this set of demands, every company on the planet would tell you to pound sand. Even if you were a founder and wanted half this crap, any VC on the planet would tell you to pound sand.<BR/><BR/>So, if you're content to found it all and never go for outside funding, you're welcome to all that stuff (and a pony, too--you deserve it, after all). If you're a non-founding coder interviewing for a job and asking for all that, you're high.
+</p>
+</dd>
+<dd class='comment-footer'>
+<span class='comment-timestamp'>
+<a href='http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html?showComment=1220056560000#c5208243119973534334' title='comment permalink'>
+August 29, 2008 5:36 PM
+</a>
+<span class='item-control blog-admin pid-1428549309'>
+<a class='comment-delete' href='http://www.blogger.com/delete-comment.g?blogID=5024166485270337322&postID=5208243119973534334' title='Delete Comment'>
+<img src='//www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</span>
+</dd>
+</dl>
+</div>
+<p class='comment-footer'>
+<a href='https://www.blogger.com/comment.g?blogID=5024166485270337322&postID=3835514752516163840' onclick=''>Post a Comment</a>
+</p>
+<div id='backlinks-container'>
+<div id='Blog1_backlinks-container'>
+</div>
+</div>
+</div>
+</div>
+<div id="latency-3835514752516163840"></div><script type="text/javascript">if (window['tickAboveFold']) {window['tickAboveFold'](document.getElementById("latency-3835514752516163840")); } </script>
+
+        </div></div>
+      
+<!-- google_ad_section_end -->
+</div>
+<div class='blog-pager' id='blog-pager'>
+<a class='home-link' href='http://whatmightymousehaslearned.blogspot.com/'>Home</a>
+</div>
+<div class='clear'></div>
+<div class='post-feeds'>
+<div class='feed-links'>
+Subscribe to:
+<a class='feed-link' href='http://whatmightymousehaslearned.blogspot.com/feeds/3835514752516163840/comments/default' target='_blank' type='application/atom+xml'>Post Comments (Atom)</a>
+</div>
+</div>
+</div></div>
+<div id='footer-wrapper'>
+<div class='footer section' id='footer'></div>
+</div>
+</div></div>
+<div id='main-bot'></div>
+<!-- placeholder for image -->
+</div>
+<script type="text/javascript">
+if (window.jstiming) window.jstiming.load.tick('widgetJsBefore');
+</script><script type="text/javascript" src="http://www.blogger.com/static/v1/widgets/512629240-widgets.js"></script>
+<script type='text/javascript'>
+if (typeof(BLOG_attachCsiOnload) != 'undefined' && BLOG_attachCsiOnload != null) { window['blogger_templates_experiment_id'] = "templatesV1";window['blogger_blog_id'] = '5024166485270337322';BLOG_attachCsiOnload('item_'); }_WidgetManager._Init('http://www.blogger.com/rearrange?blogID=5024166485270337322','http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html','5024166485270337322');
+_WidgetManager._SetPageActionUrl('http://www.blogger.com/display?blogID=5024166485270337322','QYpAk7Ju1UHVFiRGg1MTLrfq82k:1292617713931','AOuZoY5qQZ4chaqkcWrq_1SJlnCnvoLZnw:1292617713931');
+_WidgetManager._SetDataContext([{'name': 'blog', 'data': {'title': 'What Mighty Mouse Has Learned', 'pageType': 'item', 'url': 'http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html', 'canonicalUrl': 'http://whatmightymousehaslearned.blogspot.com/2008/08/so-youre-gonna-code-whole-thing-and.html', 'homepageUrl': 'http://whatmightymousehaslearned.blogspot.com/', 'enabledCommentProfileImages': true, 'searchLabel': '', 'searchQuery': '', 'pageName': 'So, you\47re gonna code the whole thing, do the servers and work for sweat equity. Well then, you better read this if you don\47t want to get screwed.', 'pageTitle': 'What Mighty Mouse Has Learned: So, you\47re gonna code the whole thing, do the servers and work for sweat equity. Well then, you better read this if you don\47t want to get screwed.', 'encoding': 'UTF-8', 'locale': 'en', 'isPrivate': false, 'isMobile': false, 'mobileClass': '', 'languageDirection': 'ltr', 'feedLinks': '\74link rel\75\42alternate\42 type\75\42application/atom+xml\42 title\75\42What Mighty Mouse Has Learned - Atom\42 href\75\42http://whatmightymousehaslearned.blogspot.com/feeds/posts/default\42 /\76\n\74link rel\75\42alternate\42 type\75\42application/rss+xml\42 title\75\42What Mighty Mouse Has Learned - RSS\42 href\75\42http://whatmightymousehaslearned.blogspot.com/feeds/posts/default?alt\75rss\42 /\76\n\74link rel\75\42service.post\42 type\75\42application/atom+xml\42 title\75\42What Mighty Mouse Has Learned - Atom\42 href\75\42http://www.blogger.com/feeds/5024166485270337322/posts/default\42 /\76\n\74link rel\75\42EditURI\42 type\75\42application/rsd+xml\42 title\75\42RSD\42 href\75\42http://www.blogger.com/rsd.g?blogID\0755024166485270337322\42 /\76\n\74link rel\75\42alternate\42 type\75\42application/atom+xml\42 title\75\42What Mighty Mouse Has Learned - Atom\42 href\75\42http://whatmightymousehaslearned.blogspot.com/feeds/3835514752516163840/comments/default\42 /\76\n', 'meTag': '', 'openIdOpTag': '', 'imageSrcTag': '', 'latencyHeadScript': '\74script type\75\42text/javascript\42\76(function() { var a\75window;function c(b){this.t\75{};this.tick\75function(d,i,e){e\75e?e:(new Date).getTime();this.t[d]\75[e,i]};this.tick(\42start\42,null,b)}var f\75new c;a.jstiming\75{Timer:c,load:f};try{var g\75null;if(a.chrome\46\46a.chrome.csi)g\75Math.floor(a.chrome.csi().pageT);if(g\75\75null)if(a.gtbExternal)g\75a.gtbExternal.pageT();if(g\75\75null)if(a.external)g\75a.external.pageT;if(g)a.jstiming.pt\75g}catch(h){};a.tickAboveFold\75function(b){b\75b;var d\0750;if(b.offsetParent){do d+\75b.offsetTop;while(b\75b.offsetParent)}b\75d;b\74\075750\46\46a.jstiming.load.tick(\42aft\42)};var j\75false;function k(){if(!j){j\75true;a.jstiming.load.tick(\42firstScrollTime\42)}}a.addEventListener?a.addEventListener(\42scroll\42,k,false):a.attachEvent(\42onscroll\42,k);\n })();\74/script\076', 'mobileHeadScript': ''}}]);
+_WidgetManager._RegisterWidget('_BlogArchiveView', new _WidgetInfo('BlogArchive1', 'sidebar', null, document.getElementById('BlogArchive1'), {'languageDirection': 'ltr'}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HeaderView', new _WidgetInfo('Header1', 'header'));
+_WidgetManager._RegisterWidget('_NavbarView', new _WidgetInfo('Navbar1', 'navbar'));
+_WidgetManager._RegisterWidget('_BlogView', new _WidgetInfo('Blog1', 'main', null, document.getElementById('Blog1'), {'cmtInteractionsEnabled': false, 'commentInteractionIframeUrl': 'http://www.blogger.com/comment-interaction-iframe.g?blogId\0755024166485270337322', 'mobile': false}, 'displayModeFull'));
+</script>
+</body>
+</html>
