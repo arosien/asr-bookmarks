@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="" >
+<head>
+<title>
+  
+  home |  Disco Project
+  
+</title>
+<link rel="stylesheet" type="text/css" href="/media/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/media/css/reset-fonts-grids.css" />
+<link rel="stylesheet" type="text/css" href="/media/css/pygments_style.css" />
+
+
+</head>
+
+<body class="body">
+  <div id="doc4" class="yui-t2">
+    
+
+    <div id="hd">
+      
+      <div id="logotext">
+        <a href="http://discoproject.org"><img src="/media/images/discotext.png" /></a>
+      </div>
+      
+    </div>
+
+    <div class="yui-b">
+      
+      <ul id="menu">
+  <li><a class='chosen' href="/">Home</a></li>
+  <li><a class='' href="/about">About</a></li>
+  <li>
+    <a href="/doc/">Documentation</a>
+    <ul>
+      <li><a href="/doc/start/download.html">Get Disco</a></li>
+      <li><a href="/doc/start/tutorial.html">Tutorial</a></li>
+      <li><a href="/doc/start/install.html">Cluster setup</a></li>
+      <li><a href="/doc/faq.html">FAQ</a></li>
+      <li><a href="/doc/py/">API Reference</a></li>
+      <li><a href="/doc/start/getinvolved.html">Get Involved</a></li>
+      <ul>
+        <li><a href="/doc/start/getinvolved.html#irc">IRC</a></li>
+      </ul>
+      <li><a href="/doc/screenshots.html">Screenshots</a></li>
+      <li><a href="/doc/releases.html">Release Notes</a></li>
+    </ul>
+  </li>
+  <li><a href="http://github.com/tuulos/disco/">Source code</a> <img src="/media/images/extlink.png" /></li>
+  <li><a href="http://github.com/tuulos/disco/issues/">Issue tracker</a> <img src="/media/images//extlink.png" /></li>
+  <li><a href="http://github.com/tuulos/disco/blob/master/LICENSE">License</a>  <img src="/media/images/extlink.png" /></li>
+  <li><a href="http://groups.google.com/group/disco-dev">Mailing list</a> <img src="/media/images/extlink.png" /></li>
+</ul>
+
+      
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g">
+            <div class="yui-u first" id="main">
+              
+<div>
+  <h2>The Disco Project</h2>
+</div>
+<div class="blurb">
+  <p>
+    Disco is a distributed computing framework based on the <a href="http://en.wikipedia.org/wiki/MapReduce">MapReduce</a> paradigm.
+    Disco is open-source;
+    developed by <a href="http://research.nokia.com">Nokia Research Center</a> to solve <i>real</i> problems in handling massive amounts of data.
+  </p>
+
+  <p>
+    Disco is powerful and easy to use, thanks to Python.
+    Disco <a href="/doc/start/ddfs.html">distributes and replicates your data</a>,
+    and <a href="/doc/overview.html">schedules your jobs</a> efficiently.
+    Disco even includes the tools you need to <a href="/doc/contrib/discodex/index.html">index billions of data points and query them in real-time</a>.
+  </p>
+
+  <p>
+    <a href="/doc/start/download.html">Install Disco</a> on your laptop,
+    cluster or cloud of choice and <a href="/doc/start/getinvolved.html">become a part</a> of the Disco community!
+  </p>
+</div>
+<div id="blog"></div>
+
+
+            </div>
+
+            <div class="yui-u" id="rightcol">
+              
+<div class="feed">
+  <div class="heading">
+    <a href="http://twitter.com/discoproject">
+      @discoproject on Twitter...
+      <img src="/media/images/feed.png" />
+    </a>
+  </div>
+
+  <div class="tweets">
+    <div id="twitter_div">
+      <ul id="twitter_update_list"></ul>
+    </div>
+  </div>
+</div>
+
+<div id="github">
+  
+
+<div class="feed">
+  <div class="heading">
+    <a href="">
+      recent commits on github
+      <img src="/media/images/feed.png" />
+    </a>
+  </div>
+
+  
+</div>
+
+</div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="ft" role="contentinfo">
+        
+        
+      </div>
+
+    </div>
+  
+  </div>
+
+<script type="text/javascript">
+  function twitterCallback(twitters) {
+        var statusHTML = [];
+        for (var i=0; i<twitters.length; i++) {
+                var username = twitters[i].user.screen_name;
+                var status = twitters[i].text.replace(/((https?|s?ftp|ssh)\:\/\/[^"\s\<\>]*[^.,;'">\:\s\<\>\)\]\!])/g, function(url) {
+                        return '<a href="'+url+'">'+url+'</a>';
+                }).replace(/\B@([_a-z0-9]+)/ig, function(reply) {
+                        return  reply.charAt(0)+'<a href="http://twitter.com/'+reply.substring(1)+'">'+reply.substring(1)+'</a>';
+                });
+                statusHTML.push('<li><div>'+status+'</div><div><a style="font-size:85%;" href="http://twitter.com/'+username+'/statuses/'+twitters[i].id+'">'+relative_time(twitters[i].created_at)+'</a></div></li>');
+        }
+        document.getElementById('twitter_update_list').innerHTML = statusHTML.join('');
+   }
+
+   function relative_time(time_value) {
+        var values = time_value.split(" ");
+        time_value = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
+        var parsed_date = Date.parse(time_value);
+        var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+        var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+        delta = delta + (relative_to.getTimezoneOffset() * 60);
+
+        if (delta < 60) {
+                return 'less than a minute ago';
+        } else if(delta < 120) {
+                return 'about a minute ago';
+        } else if(delta < (60*60)) {
+                return (parseInt(delta / 60)).toString() + ' minutes ago';
+        } else if(delta < (120*60)) {
+                return 'about an hour ago';
+        } else if(delta < (24*60*60)) {
+                return 'about ' + (parseInt(delta / 3600)).toString() + ' hours ago';
+        } else if(delta < (48*60*60)) {
+                return '1 day ago';
+        } else {
+                return (parseInt(delta / 86400)).toString() + ' days ago';
+        }
+   }
+</script>
+<script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
+<script type="text/javascript" src="http://twitter.com/statuses/user_timeline/discoproject.json?callback=twitterCallback&amp;count=5"></script>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+          $.ajax({
+                  type: "GET",
+                  url: "blog",
+                  success:
+                        function (data, status, req) {
+                                $("#blog").html(data);
+                        },
+                });
+
+          $.ajax({
+                  type: "GET",
+                  url: "github",
+                  success:
+                        function (data, status, req) {
+                                $("#github").html(data);
+                        },
+                });
+  });
+</script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-2269620-4");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+
+</body>
+</html>
