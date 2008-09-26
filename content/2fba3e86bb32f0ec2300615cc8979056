@@ -1,0 +1,444 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/~cduan/common/stylesheet.css">
+<title>A Use of the Y Combinator in Ruby</title>
+</head>
+
+<body>
+
+
+<div class="title">
+<h1>A Use of the Y Combinator in Ruby</h1>
+(the function, not the <a href="http://www.ycombinator.com/">VC firm</a>)
+</div>
+
+<!--
+nav-header.shtml
+
+Navigation bar, to be placed in header. Contains links to the basic sections of
+this site.
+
+-->
+<div class=nav-header>
+
+<div class=nav-header-top>
+ <b>Navigation</b>
+</div>
+
+<div>
+ <b><a href="/~cduan/" alt="Home page">Home</a></b>
+</div>
+
+<div>
+ <a href="/~cduan/download/">Downloads</a>
+</div>
+
+<div>
+ <a href="/~cduan/technical/">Technical Writings</a>
+</div>
+
+<div>
+ <a href="/~cduan/writings/">Non-Technical Writings</a>
+</div>
+
+<div>
+ <a href="/~cduan/misc/">Miscellaneous</a>
+</div>
+
+<div>
+ <a href="/~cduan/links.shtml">Links</a>
+</div>
+
+<div>
+ <a href="/~cduan/nav-help.shtml">Help</a>
+</div>
+
+</div>
+
+
+<div class="content">
+
+<div class="sub-nav-header">
+<span><a href="#background">Background</a></span>
+<span><a href="#ycomb">The Y Combinator</a></span>
+<span><a href="#implementation">Implementation</a></span>
+</div>
+
+<h2>Introduction</h2>
+
+<p>
+The other night, I came across the problem of implementing autovivication in
+Ruby hashes. The solution I devised exemplifies an elegant and practical use of
+the Y combinator, and it seemed worth sharing.
+</p>
+
+<p>
+For those of you who just want the solution, here it is:
+<pre class="code"><span class="comment"># Define the Y combinator</span>
+module YCombinator
+    def y_comb(&amp;generator)
+        proc { |x|
+            proc { |*args|
+                generator.call(x.call(x)).call(*args)
+            }
+        }.call(proc { |x|
+            proc { |*args|
+                generator.call(x.call(x)).call(*args)
+            }
+        })
+    end
+end
+
+<span class="comment"># Give the y_comb function to all objects</span>
+class Object
+    include(YCombinator)
+end
+
+<span class="comment"># Call the Y combinator, providing it with a procedure that
+# accepts a recursive callback function and returns a procedure.
+# The Y combinator returns the recursive function. Then call that
+# function to produce a Hash object.</span>
+hash = y_comb { |callback|
+    proc {
+        Hash.new { |h, k| h[k] = callback.call }
+    }
+}.call
+
+<span class="comment"># Now this will work:</span>
+hash['a']['b']['c']['d']['e']['f']['g'] = 1
+
+       <span class="comment"># And hash looks like:</span>
+hash   <span class="comment"># =&gt; {"a"=&gt;{"b"=&gt;{"c"=&gt;{"d"=&gt;{"e"=&gt;{"f"=&gt;{"g"=&gt;1}}}}}}}</span>
+</pre>
+
+<h2><a name="background">Background: Hash Autovivication</a></h2>
+
+<p>
+In Perl, the following line will successfully run:
+<pre class="code">$hash{'a'}{'b'}{'c'} = 1;</pre>
+even if <code>%hash</code> was previously undefined. Perl will automatically
+set <code>%hash</code> to be an empty hash, it will assign
+<code>$hash{'a'}</code> to be a reference to an empty hash, and so on, all
+automatically. This is called <em>autovivication</em> in Perl: hash and array
+variables automatically &#8220;come to life&#8221; as necessary. This is
+incredibly convenient for working with multidimensional arrays, for example.
+</p>
+
+<p>
+Ruby, sadly, does not have autovivication (though not surprisingly, given the
+structure of the language). It does, however, provide a facility for default
+values of hashes. For example, one could write:
+<pre class="code">hash = Hash.new { |hash, key| hash[key] = {} }
+hash['a']['b'] = 3
+</pre>
+in which case Ruby will create an empty hash, assign it to
+<code>hash['a']</code>, and set the key <code>'b'</code> in that new hash to 3.
+However, this only works for two levels. This would not work:
+<pre class="code">hash['a']['b']['c'] = 3</pre>
+because <code>hash['a']['b']</code> returns <code>nil</code>, causing the
+attempt to access <code>['c']</code> to fail.
+</p>
+
+<p>
+One solution would be to make an even more complicated default procedure:
+<pre class="code">hash = Hash.new { |hash, key|
+    hash[key] = Hash.new { |hash, key| hash[key] = {} }
+}
+</pre>
+But again, that will fail for even higher dimensions of access.
+</p>
+
+<p>
+What is needed is a recursive definition of the default function, one that
+continues to assign auto-generating hashes to each higher dimension. A standard
+recursive approach will work:
+<pre class="code">def make_hash
+    return Hash.new { |hash, key| hash[key] = make_hash }
+end
+</pre>
+But this requires that you define and store the <code>make_hash</code> function
+somewhere. This is risky: what if someone redefines or deletes the method? Can
+it be done without defining any methods, to prevent this problem?
+</p>
+
+<h2><a name="ycombinator">The Y Combinator in Ruby</a></h2>
+
+<p>
+Luckily, there is a solution made just for this situation: the Y combinator!
+There are several good web pages that derive and explain the Y combinator in
+greater detail
+(e.g., <a href="http://en.wikipedia.org/wiki/Y_Combinator">Wikipedia</a>, and a <a href="http://weblog.raganwald.com/2007/02/but-y-would-i-want-to-do-thing-like.html">blog post</a>
+that claims that the Y combinator has &#8220;no practical use&#8221;!), so this
+will be a brief explanation of how it works.
+</p>
+
+<p>
+Say you have a recursive Ruby procedure:
+<pre class="code">factorial = proc { |arg|
+    if arg.zero?  then 1
+    else          arg * factorial.call(arg - 1)
+    end
+}
+</pre>
+Right now this procedure relies on the variable <code>factorial</code> to
+contain the procedure.
+</p>
+
+<p>
+We can remove this dependence by passing the recursive call's procedure as an
+argument. Instead of writing a function that calculates factorials, we write a
+function that <em>generates another function</em> that calculates factorials:
+<pre class="code">factorial_generator = proc { |callback|
+    proc { |arg|
+        if arg.zero?  then 1
+        else          arg * callback.call(arg - 1)
+        end
+    }
+}
+</pre>
+Now we just need to pass the right <code>callback</code> to this procedure to
+implement the recursion.
+</p>
+
+<p>
+Imagine what an appropriate <code>callback</code> procedure would look like.
+When the Y combinator is applied to <code>generator</code>, it should return a
+procedure that can be called to perform the recursive function (here, the
+factorial function). Call this function <code>recursive</code>. In the midst of
+executing <code>recursive</code>, the <code>callback</code> procedure may be
+executed. If <code>callback</code> is identical to <code>recursive</code>, then
+we will have successfully implemented a recursive function. So the goal is to
+design a Y combinator that accepts a generator and produces a procedure that,
+when executed, will set the generator's callback to be identical to that same
+procedure.
+</p>
+
+<p>
+Here is the Y combinator implemented in Ruby:
+<pre class="code">y = proc { |generator|
+    proc { |x|
+        proc { |*args|
+            generator.call(x.call(x)).call(*args)
+        }
+    }.call(proc { |x|
+        proc { |*args|
+            generator.call(x.call(x)).call(*args)
+        }
+    })
+}
+</pre>
+It is difficult to explain how this works, but here is how I think of it at
+least. Think of the procedure that reads:
+<pre class="code">    proc { |x|
+        proc { |*args|
+            generator.call(x.call(x)).call(*args)
+        }
+    }
+</pre>
+as the &#8220;ycombinator-function&#8221;. Now the Y combinator looks like:
+<pre class="code">y = proc { |generator|
+    &#8220;ycombinator-function&#8221;.call(&#8220;ycombinator-function&#8221;)
+}
+</pre>
+</p>
+
+<p>
+Now we pass the generator function to the Y combinator:
+<pre class="code">recursive = y.call(factorial_generator)</pre>
+and the following things happen. First, the <code>generator</code> variable is
+bound to <code>factorial_generator</code>. Then, the
+&#8220;ycombinator-function&#8221; is executed with itself as the argument. All
+that the function does is return another procedure, so the result of calling the
+Y combinator is the procedure:
+<pre class="code">recursive = proc { |*args|
+    generator.call(x.call(x)).call(*args)
+}
+</pre>
+with <code>generator</code> bound to <code>factorial_generator</code> and
+<code>x</code> bound to the &#8220;ycombinator-function&#8221;.
+</p>
+
+<p>
+Now what happens when we call this resulting function with some arguments (e.g.,
+<code>recursive.call(5)</code>)? First, the argument to
+<code>generator.call</code> is evaluated. But since that argument is
+<code>x.call(x)</code>, and x is bound to the
+&#8220;ycombinator-function&#8221;, the result is a procedure identical to
+<code>recursive</code>! Hence, we have successfully set the
+<code>callback</code> to what we wanted from above.
+</p>
+
+<p>
+Next, the <code>generator</code> procedure is executed, setting
+<code>recursive</code> to be the callback procedure. This produces the procedure
+specified by the <code>generator</code>. That procedure is run with the passed
+arguments. If that generated procedure needs to make a recursive call, it
+executes the callback procedure, and because the callback procedure is the
+recursive procedure, this whole cycle repeats itself.
+</p>
+
+<p>
+Whew! Hopefully some of that makes sense. The main point, though, is that:
+<pre class="code">factorial = y.call(proc { |callback|
+    proc { |arg|
+        if arg.zero?  then 1
+        else          arg * callback.call(arg - 1)
+        end
+    }
+})
+factorial.call(5)  # =&gt; 120
+</pre>
+will produce a proper factorial procedure, without ever having to store a name
+for that procedure.
+</p>
+
+<h2><a name="implementation">Implementation of Autovivifying Hashes</a></h2>
+
+<p>
+For autovivifying hashes, we start with our regular recursive implementation:
+<pre class="code">make_hash = proc {
+    Hash.new { |hash, key| hash[key] = make_hash.call }
+}
+</pre>
+Now we separate out the named procedure call to produce a generator function:
+<pre class="code">proc { |callback|
+    proc {
+        Hash.new { |hash, key| hash[key] = callback.call }
+    }
+}
+</pre>
+The next step is to implement the Y combinator. Unlike the above explanation, I
+will make it a method available to all objects rather than a procedure.
+<pre class="code">module YCombinator
+    def y_comb(&amp;generator)
+        proc { |x|
+            proc { |*args|
+                generator.call(x.call(x)).call(*args)
+            }
+        }.call(proc { |x|
+            proc { |*args|
+                generator.call(x.call(x)).call(*args)
+            }
+        })
+    end
+end
+
+class Object
+    include YCombinator
+end
+</pre>
+The autovivifying hash, now, is created by:
+<pre class="code">hash = y_comb { |callback|
+    proc {
+        Hash.new { |h, k| h[k] = callback.call }
+    }
+}.call
+# Now this will work:
+hash['a']['b']['c']['d']['e']['f']['g'] = 1
+</pre>
+Congratulations! You have successfully implemented hash autovivication, without
+needing to define any external methods or variables. (Other than the Y
+combinator, of course. It is possible to do that, though I&#8217;ll leave that
+as an exercise to the reader.)
+
+<h2><a name="postscript">Postscript</a></h2>
+
+<p>
+In writing this, I discovered an unusual &#8220;feature&#8221; of ruby. If you
+run the code:
+<pre class="code">x = 1
+y = proc { |x| x + 3 }
+y.call(5)   <span class="comment"># Now x == 5</span>
+</pre>
+it turns out that <code>x</code> is not local to the procedure stored in
+<code>y</code>, but rather is actually identical to the variable outside.
+I&#8217;m not sure I like this aspect of Ruby, but there it is.
+</p>
+
+<p>
+It is possible to implement autovivication of hashes without using the Y
+combinator but still retaining the safety of having no global variables. Just
+take advantage of scoping inside procedures:
+<pre class="code">hash = proc {
+    make_hash = proc {
+        Hash.new { |h, k| h[k] = make_hash.call }
+    }
+    make_hash.call
+}.call
+</pre>
+This works fine as long as there is no variable <code>make_hash</code> already
+defined. But this approach uses 33 lexical tokens, and the Y combinator one only
+uses 31 (not including the Y combinator itself). So there!
+</p>
+
+<p>
+<a href="http://zenspider.com/">Ryan Davis</a> sent me an object-oriented
+implementation of autovivication:
+<pre class="code">class AVHash < Hash
+    def initialize
+        super { |h,k| h[k] = AVHash.new }
+    end
+end
+</pre>
+This is probably the best approach if you need to make many autovivifying
+hashes. This is what I like about Ruby: there are so many ways to do things, and
+they are all surprisingly elegant.
+</p>
+
+<p>
+A <a href="http://news.ycombinator.com/item?id=91051">comment on
+this article</a> on Hacker News observed that my implementation was vulnerable
+to someone overwriting the Y combinator method that I defined in
+<code>Object</code>. This is partially correct: if someone overwrites the
+<code>y_comb</code> method, then uses of that method <i>afterwards</i> may fail,
+although already created (&#8220;combinated&#8221;?) procedures will work fine.
+But, more importantly, notice that defining of the Y combinator is actually
+unnecessary to define the Y combinator at all. You could just define and run it
+all in one go:
+<pre class="code"><span class="comment"># Y combinator with no unbound variables</span>
+hash = proc { |generator|
+    proc { |x|
+	proc { |*args|
+	    generator.call(x.call(x)).call(*args)
+	}
+    }.call(proc { |x|
+	proc { |*args|
+	    generator.call(x.call(x)).call(*args)
+	}
+    })
+}.call(proc { |callback|
+    proc {
+        Hash.new { |h, k| h[k] = callback.call }
+    }
+}).call
+</pre>
+The commenter is right, though, in that the Y combinator shouldn't really be
+necessary in most modern production languages used by coders of reasonable
+skill&#8212;though I see no reason <em>not</em> to use it if the opportunity
+presents itself and it is documented properly (consider linking to this
+article!).
+</p>
+
+<p>
+The commenter also expressed difficulty in understanding this article, as well
+as the Y combinator in general. If it is any consolation, it took me three full
+days before I managed to wrap my head around it. This is tricky stuff, but
+that&#8217;s what makes the best brain exercise.
+</p>
+
+</div>
+
+
+<div class=footer>
+
+<i>Last modified on Wednesday, December 19, 2007.</i><br>
+My name is Charles Duan.<br>
+My e-mail address is my first initial and last name, with nothing in between,
+followed by <tt>@eecs.harvard.edu</tt>.
+</div>
+
+
+</body>
+</html>
