@@ -1,0 +1,645 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns:p="urn:schemas-microsoft-com:office:powerpoint"
+xmlns:a="urn:schemas-microsoft-com:office:access"
+xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
+xmlns:s="uuid:BDC6E3F0-6DA3-11d1-A2A3-00AA00C14882"
+xmlns:rs="urn:schemas-microsoft-com:rowset" xmlns:z="#RowsetSchema"
+xmlns:b="urn:schemas-microsoft-com:office:publisher"
+xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+xmlns:oa="urn:schemas-microsoft-com:office:activation"
+xmlns:html="http://www.w3.org/TR/REC-html40"
+xmlns:q="http://schemas.xmlsoap.org/soap/envelope/" xmlns:D="DAV:"
+xmlns:x2="http://schemas.microsoft.com/office/excel/2003/xml"
+xmlns:ois="http://schemas.microsoft.com/sharepoint/soap/ois/"
+xmlns:dir="http://schemas.microsoft.com/sharepoint/soap/directory/"
+xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+xmlns:dsp="http://schemas.microsoft.com/sharepoint/dsp"
+xmlns:udc="http://schemas.microsoft.com/data/udc"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:sps="http://schemas.microsoft.com/sharepoint/soap/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:udcxf="http://schemas.microsoft.com/data/udc/xmlfile"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 11">
+<meta name=Originator content="Microsoft Word 11">
+<link rel=File-List href="LazyAndSpeculativeAbstract_files/filelist.xml">
+<title>Lazy and Speculative Execution Slides</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Butler Lampson</o:Author>
+  <o:Keywords>Slides</o:Keywords>
+  <o:LastAuthor>Butler Lampson</o:LastAuthor>
+  <o:Revision>6</o:Revision>
+  <o:TotalTime>31</o:TotalTime>
+  <o:Created>2007-01-15T08:37:00Z</o:Created>
+  <o:LastSaved>2007-01-16T19:15:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>499</o:Words>
+  <o:Characters>2850</o:Characters>
+  <o:Company>Microsoft Corporation</o:Company>
+  <o:Lines>23</o:Lines>
+  <o:Paragraphs>6</o:Paragraphs>
+  <o:CharactersWithSpaces>3343</o:CharactersWithSpaces>
+  <o:Version>11.8107</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:DisplayHorizontalDrawingGridEvery>0</w:DisplayHorizontalDrawingGridEvery>
+  <w:DisplayVerticalDrawingGridEvery>0</w:DisplayVerticalDrawingGridEvery>
+  <w:UseMarginsForDrawingGridOrigin/>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:Compatibility>
+   <w:FootnoteLayoutLikeWW8/>
+   <w:ShapeLayoutLikeWW8/>
+   <w:ForgetLastTabAlignment/>
+   <w:DoNotUseHTMLParagraphAutoSpacing/>
+   <w:SelectEntireFieldWithStartOrEnd/>
+   <w:UseWord2002TableStyleRules/>
+  </w:Compatibility>
+  <w:DoNotOptimizeForBrowser/>
+ </w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" LatentStyleCount="156">
+ </w:LatentStyles>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Courier;
+	panose-1:2 7 4 9 2 2 5 2 4 4;
+	mso-font-alt:"Courier New";
+	mso-font-charset:0;
+	mso-generic-font-family:modern;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:3 0 0 0 1 0;}
+@font-face
+	{font-family:"Arial Unicode MS";
+	panose-1:2 11 6 4 2 2 2 2 2 4;
+	mso-font-alt:Arial;
+	mso-font-charset:0;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:variable;
+	mso-font-signature:3 0 0 0 1 0;}
+@font-face
+	{font-family:Times;
+	panose-1:2 2 6 3 5 4 5 2 3 4;
+	mso-font-charset:0;
+	mso-generic-font-family:roman;
+	mso-font-pitch:variable;
+	mso-font-signature:536902279 -2147483648 8 0 511 0;}
+@font-face
+	{font-family:"MS PGothic";
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:0;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:variable;
+	mso-font-signature:1 134676480 16 0 131072 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin-top:9.0pt;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;}
+h1
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	text-align:center;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	font-size:18.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	font-weight:bold;
+	mso-bidi-font-weight:normal;}
+h2
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:2;
+	font-size:14.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	font-weight:bold;
+	mso-bidi-font-weight:normal;}
+h3
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:3;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	font-weight:normal;
+	font-style:italic;
+	mso-bidi-font-style:normal;}
+p.MsoEnvelopeAddress, li.MsoEnvelopeAddress, div.MsoEnvelopeAddress
+	{margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	mso-element:frame;
+	mso-element-frame-width:7.5in;
+	mso-element-frame-height:99.35pt;
+	mso-element-frame-hspace:9.35pt;
+	mso-element-frame-vspace:9.35pt;
+	mso-element-wrap:around;
+	mso-element-anchor-horizontal:page;
+	mso-element-left:center;
+	mso-element-top:bottom;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;}
+p.MsoEnvelopeReturn, li.MsoEnvelopeReturn, div.MsoEnvelopeReturn
+	{margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;
+	text-underline:single;}
+p.MsoDocumentMap, li.MsoDocumentMap, div.MsoDocumentMap
+	{mso-style-noshow:yes;
+	margin-top:9.0pt;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:0in;
+	margin-bottom:.0001pt;
+	line-height:14.0pt;
+	mso-line-height-rule:exactly;
+	mso-pagination:widow-orphan;
+	background:navy;
+	font-size:8.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:HE;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"MS PGothic";
+	mso-bidi-font-family:"MS PGothic";
+	mso-fareast-language:JA;}
+p.top1, li.top1, div.top1
+	{mso-style-name:top1;
+	margin-top:9.0pt;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:0in;
+	margin-bottom:.0001pt;
+	text-align:center;
+	line-height:14.0pt;
+	mso-line-height-rule:exactly;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:"Times New Roman";
+	mso-fareast-language:EN-US;}
+p.b, li.b, div.b
+	{mso-style-name:"b\,bulleted";
+	margin-top:9.0pt;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.25in;
+	margin-bottom:.0001pt;
+	text-indent:-.25in;
+	mso-pagination:widow-orphan;
+	mso-list:l0 level1 lfo2;
+	tab-stops:list .25in;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:HE;}
+p.cmd1, li.cmd1, div.cmd1
+	{mso-style-name:cmd1;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:27.35pt;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	tab-stops:.75in 4.5in;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:Courier;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:HE;
+	mso-no-proof:yes;}
+p.cont, li.cont, div.cont
+	{mso-style-name:"cont\,co";
+	mso-style-next:Normal;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:HE;}
+p.i, li.i, div.i
+	{mso-style-name:"i\,indent";
+	margin-top:9.0pt;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.25in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:HE;}
+p.ib, li.ib, div.ib
+	{mso-style-name:"ib\,indent bulleted";
+	mso-style-parent:"i\,indent";
+	margin-top:9.0pt;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	text-indent:-.25in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:HE;}
+p.picture, li.picture, div.picture
+	{mso-style-name:picture;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:0in;
+	margin-bottom:.0001pt;
+	text-align:center;
+	mso-pagination:widow-orphan;
+	mso-element:frame;
+	mso-element-frame-width:5.5in;
+	mso-element-frame-hspace:9.0pt;
+	mso-element-frame-vspace:9.0pt;
+	mso-element-wrap:auto;
+	mso-element-anchor-horizontal:column;
+	mso-element-left:center;
+	mso-element-top:top;
+	mso-height-rule:exactly;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:HE;}
+p.routine, li.routine, div.routine
+	{mso-style-name:routine;
+	margin-top:9.0pt;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	tab-stops:27.0pt 4.5in;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:HE;
+	mso-no-proof:yes;}
+p.title, li.title, div.title
+	{mso-style-name:title;
+	margin-top:.75in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:0in;
+	margin-bottom:.0001pt;
+	text-align:center;
+	mso-pagination:widow-orphan;
+	font-size:18.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:HE;}
+p.u, li.u, div.u
+	{mso-style-name:"u\,nUmbered";
+	margin-top:9.0pt;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.25in;
+	margin-bottom:.0001pt;
+	text-indent:-.25in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:HE;}
+p.Hin, li.Hin, div.Hin
+	{mso-style-name:Hin;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	text-indent:-.25in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Times;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:HE;}
+span.speaker
+	{mso-style-name:speaker;
+	font-style:italic;
+	mso-bidi-font-style:normal;}
+span.-
+	{mso-style-name:"-\,subscript";
+	vertical-align:sub;}
+span.code
+	{mso-style-name:"code\,c";
+	mso-ansi-font-size:10.0pt;
+	font-family:"Courier New";
+	mso-ascii-font-family:"Courier New";
+	mso-hansi-font-family:"Courier New";
+	mso-bidi-font-family:"Courier New";
+	mso-no-proof:yes;}
+span.e
+	{mso-style-name:"e\,emphasis";
+	font-style:italic;
+	mso-bidi-font-style:normal;}
+span.v
+	{mso-style-name:"v\,variable";
+	font-style:italic;
+	mso-bidi-font-style:normal;}
+span.vs
+	{mso-style-name:"vs\,var subs";
+	mso-style-parent:"v\,variable";
+	mso-ansi-font-size:8.0pt;
+	position:relative;
+	top:2.0pt;
+	mso-text-raise:-2.0pt;
+	font-style:italic;
+	mso-bidi-font-style:normal;}
+span.dir
+	{mso-style-name:dir;
+	color:green;
+	font-style:italic;
+	mso-bidi-font-style:normal;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:1175615001;
+	mso-list-type:simple;
+	mso-list-template-ids:-293585466;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-style-link:b;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.25in;
+	mso-level-number-position:left;
+	margin-left:.25in;
+	text-indent:-.25in;
+	font-family:Symbol;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="3074"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=EN-US link=blue vlink=purple style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<h1>Lazy and Speculative Execution Slides</h1>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:14.0pt;
+mso-line-height-rule:exactly'><span style='mso-bidi-font-size:10.0pt;
+mso-bidi-font-family:"Times New Roman"'>Butler Lampson<br>
+Microsoft<o:p></o:p></span></p>
+
+<p class=MsoNormal align=center style='text-align:center'>OPODIS, Bordeaux,
+France</p>
+
+<p class=MsoNormal align=center style='margin-top:0in;text-align:center'>12
+December 2006</p>
+
+<p class=MsoNormal align=center style='margin-top:12.0pt;margin-right:0in;
+margin-bottom:.25in;margin-left:0in;text-align:center;page-break-after:avoid;
+mso-outline-level:1'><b style='mso-bidi-font-weight:normal'><span
+style='font-size:18.0pt;mso-bidi-font-size:10.0pt;mso-fareast-font-family:"Arial Unicode MS";
+mso-bidi-font-family:"Times New Roman"'>&nbsp;<o:p></o:p></span></b></p>
+
+<p class=MsoNormal>The distinction between lazy and eager (or strict)
+evaluation has been studied in programming languages since Algol 60’s call by name,
+as a way to avoid unnecessary work and to deal gracefully with infinite
+structures such as streams. It is deeply integrated in some languages, notably
+Haskell, and can be simulated in many languages by wrapping a lazy expression
+in a lambda.</p>
+
+<p class=MsoNormal>Less well studied is the role of laziness, and its opposite,
+speculation, in computer systems, both hardware and software. A wide range of
+techniques can be understood as applications of these two ideas. Laziness is
+the idea behind:</p>
+
+<p class=Hin>Redo logging for maintaining persistent state and replicated state
+machines: the log represents the current state, but it is evaluated only after
+a failure or to bring a replica online.</p>
+
+<p class=Hin>Copy-on-write schemes for maintaining multiple versions of a
+large, slowly changing state, usually in a database or file system.</p>
+
+<p class=Hin>Write buffers and writeback caches in memory and file systems,
+which are lazy about updating the main store.</p>
+
+<p class=Hin>Relaxed memory models and eventual consistency replication schemes
+(which require weakening the spec).</p>
+
+<p class=Hin>Clipping regions and expose events in graphics and window systems.</p>
+
+<p class=Hin>Carry-save adders, which defer propagating carries until a clean
+result is needed.</p>
+
+<p class=Hin>“Infinity” and “Not a number” results of floating point
+operations.</p>
+
+<p class=Hin>Futures (in programming) and out of order execution (in CPUs),
+which launch a computation but are lazy about consuming the result. Dataflow is
+a generalization.</p>
+
+<p class=Hin>“Formatting operators” in text editors, which apply properties
+such as “italic” to large regions of text by attaching a sequence of functions
+that compute the properties; the functions are not evaluated until the text
+needs to be displayed.</p>
+
+<p class=Hin>Stream processing in database queries, Unix pipes, etc., which
+conceptually applies operators to unbounded sequences of data, but rearranges
+the computation when possible to apply a sequence of operators to each data
+item in turn.</p>
+
+<p class=MsoNormal>Speculation is the idea behind:</p>
+
+<p class=Hin>Optimistic concurrency control in databases, and more recently in
+transactional memory.</p>
+
+<p class=Hin>Prefetching in memory and file systems.</p>
+
+<p class=Hin>Branch prediction, and speculative execution in general in modern
+CPUs.</p>
+
+<p class=Hin>Data speculation, which works especially well when the data is
+cached but might be updated by a concurrent process. This is a form of
+optimistic concurrency control.</p>
+
+<p class=Hin>Exponential backoff schemes for scheduling a resource, most
+notably in LANs such as WiFi or classical Ethernet.</p>
+
+<p class=Hin>All forms of caching, which speculate that it’s worth filling up
+some memory with data in the hope that it will be used again.</p>
+
+<p class=MsoNormal>In both cases it is usual to insist that the laziness or
+speculation is strictly a matter of scheduling that doesn’t affect the result
+of a computation but only improves the performance. Sometimes, however, the
+spec is weakened, for example in eventual consistency.</p>
+
+<p class=MsoNormal>I will discuss many of these examples in detail and examine
+what they have in common, how they differ, and what factors govern the
+effectiveness of laziness and speculation in computer systems.</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-top:0in'><span style='font-family:"Arial Unicode MS";
+color:black;display:none;mso-hide:all'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal style='line-height:14.0pt;mso-line-height-rule:exactly'><span
+style='mso-bidi-font-family:"Times New Roman";color:black;display:none;
+mso-hide:all'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-top:0in'><u><span style='mso-bidi-font-family:
+"Times New Roman";color:blue'><a href="LazyAndSpeculative.ppt" onClick="stc(this, 1)">PowerPoint</a></span></u><span
+style='mso-bidi-font-family:"Times New Roman"'>, <a
+href="LazyAndSpeculative.pdf" onClick="stc(this, 2)">Acrobat</a>, <a href="LazyAndSpeculative.htm" onClick="stc(this, 3)">HTML</a>
+</span></p>
+
+<p class=MsoNormal style='line-height:14.0pt;mso-line-height-rule:exactly'><span
+style='mso-bidi-font-size:10.0pt;mso-bidi-font-family:"Times New Roman"'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal style='line-height:14.0pt;mso-line-height-rule:exactly'><span
+style='mso-bidi-font-size:10.0pt;mso-bidi-font-family:"Times New Roman"'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+</div>
+
+<script type="text/javascript">
+   function stc(e, linkIndex) {
+      if (document.images) {
+         (new Image()).src="/a/i/stg.gif?f=" + escape(document.location.href) + "&t=" + escape(e.href) + "&i=" + linkIndex;
+      }
+   }
+</script>
+</body>
+
+</html>
