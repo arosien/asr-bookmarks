@@ -1,0 +1,2423 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+
+
+
+
+
+
+
+
+<html>
+<head>
+	<title>InfoQ: How to GET a Cup of Coffee</title>
+    
+	
+	<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="&copy; 2006 C4Media" />
+<meta name="author" content="alex[at]c4media[dot]com" />
+
+	
+	
+    <link rel="stylesheet" type="text/css" media="screen" href="http://cdn3.infoq.com/styles/style.css;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" />
+    <link rel="stylesheet" type="text/css" media="print" href="http://cdn4.infoq.com/styles/print.css;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" />
+    <!--[if LTE IE 6]>
+    <link rel="stylesheet" type="text/css" media="screen" href="/styles/style-ie.css;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" />
+    <![endif]-->
+    <link rel="shortcut icon" href="http://cdn4.infoq.com/favicon.ico;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" type="image/x-icon">
+    
+    <script src="http://cdn3.infoq.com/scripts/combinedJs_en.js;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" type="text/javascript"></script>
+	
+	
+
+	
+	<meta name="keywords" content="webber rest workflow,SOA,REST,Workflow / BPM,Web services,Design Guideline,Patterns,"/>
+	<meta name="description" content="In this article, Jim Webber, Savas Parastatidis and Ian Robinson show how to drive an application's flow through the use of hypermedia in a RESTful application, using the well-known example from Gregor Hohpe's &quot;Starbucks does not use Two-Phase-Commit&quot; to illustrate how the Web's concepts can be used for integration purposes."/>
+
+
+</head>
+
+<body > 
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	var bannerURL='/ads/skyscraper.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+	var textLinksHomepageURL='/ads/homepageads.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+	var textLinksLeftBarURL='/ads/textlinks.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+	var rightbarURL='/rightbar.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+	var comunityWidgetUrl='/widgets/communityWidget.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+</script>
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+var loginLanguage='en';
+var loginURL='/login.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+var registerURL='/reginit.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+var reactivateURL='/reactivate.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+var reserpasswordURL='/resetpassword.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+var loggedIn=false;
+var logoutURL='/logout.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+var editUserURL='/edituser.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+var aboutURL='/about;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+var homeURL='/;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D';
+</script>
+<div id="tooltip" style="display:none;"></div>
+<div id="loginWindow" style="display:none;">
+	
+
+
+
+
+
+
+<div id="innerLoginWindow" class="popup login-popup" style="display:none; z-index: 25550; position: absolute;">
+		<div class="popup-wrapper">
+			<p class="popup-close"><a href="javascript:void(0);" onclick="javascript:hideLoginWindow();">Close</a></p>
+			<h2>Existing Users:</h2>
+			<div id="loginArea">
+				<div id="loginAreaFields">
+					<form onsubmit="doLogin();return false;" style="margin-bottom: 1px;">
+						<p><label for="username">Email:</label> <input id="username" name="username" style="width: 100%;" type="text"></p>
+						<p><label for="password">Password:</label> <input id="password" name="password" style="width: 100%;" onkeydown="if ((event.which &amp;&amp; event.which == 13)||(event.keyCode &amp;&amp; event.keyCode == 13)){doLogin();return false;} else return true;" type="password"></p>
+						<p><input value="Login" type="submit"></p>
+					</form>	
+				</div>
+				<div id="loginUpperArea" style="display:none;"></div>
+				<div style="display: none; text-align: left; padding-top:2px; padding-bottom:2px;" id="loginMessage"></div>
+				<div style="display: none; text-align: left; padding-top:2px; padding-bottom:2px;" id="forgotMessage">					
+					<p><a style="text-decoration:none;" href="javascript:void(0);" onClick="javascript:showResetPasswordWindow();">Forgot password?</a></p>
+				</div>
+				<hr>
+				<h2>New Users:</h2>
+				<p><a style="text-decoration:none; font-weight:bold;" href="/reginit.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D">Register now</a></p>				
+			</div>
+		</div>
+</div>
+</div>
+<div id="tagPopup" style="display:none;"></div>
+<div id="container">
+	<h1 class="logo"><a href="#">InfoQ</a></h1>
+
+	
+
+
+
+
+
+
+
+
+
+<div id="header">
+	<p class="skip"><a href="#content">Skip to Content</a></p>
+
+	<div id="quote"><p>Tracking change and innovation in the enterprise software development community</p></div>
+
+	<div style="float: left;width: 29%;position: relative;margin: 0 0 2px 0;padding: 0;">
+		
+
+
+
+
+
+
+
+
+<p style="margin:0;padding: 6px 37px 0 0;margin: 0;float: right;">
+	En | <a href="/cn/;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D">中文</a> | <a href="/jp/;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D">日本語</a> | <a href="/br/;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D">Br</a>
+	
+</p>
+<p style="margin: 0;padding: 6px 9px;text-align:left;">
+	
+	
+</p>
+	</div>
+	<div class="clearer" style="height: 0px;"></div>
+</div>
+
+
+
+	<div id="columns_container">
+	
+	<div id="content">
+	<div id="content-wrapper">
+		
+		<div class="box">
+			
+			
+
+	<div class="contribute contribute-print">
+		<ul>
+			<li class="c-news"/><li class="c-print"><a href="javascript:print()">Print</a></li>
+		</ul>		        
+	</div>			
+	<h2>Article</h2>
+    <div class="top-corners"><div></div></div>
+    
+    <div class="box-content">
+    <div class="box-content-2">
+    <div class="box-content-5">
+	
+    	
+    		<p class="h1-r"><img src="/resource/articles/webber-rest-workflow/en/smallimage/image_coffee_cup.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" alt="" /></p>
+    	
+	
+		
+			
+			      
+	    <h1><a href="/articles/webber-rest-workflow;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" rel="permalink">How to GET a Cup of Coffee</a></h1>
+	
+		<p class="info">
+			Posted by
+			
+				
+			
+			<strong><a
+	
+	href="/author/Jim-Webber%2C-Savas-Parastatidis-%26-Ian-Robinson;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D"
+
+ class="editorlink">
+Jim Webber, Savas Parastatidis &amp; Ian Robinson</a>
+</strong>
+			
+			on
+			Oct 02, 2008
+		</p>
+		
+    	<dl class="tags2">
+			<dt class="community">Community</dt>
+			
+				<dd><a href="/soa;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" name="soa" id="2" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">SOA</a></dd>
+			
+			
+	       		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt class="topics">Topics</dt>
+
+   	<dd>
+   		
+   			
+   			<a href="/rest;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" name="rest" id="94" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">REST</a>
+    
+   		,
+   	</dd>
+
+   	<dd>
+   		
+   			
+   			<a href="/workflow;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" name="workflow" id="236" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Workflow / BPM</a>
+    
+   		
+   	</dd>
+
+
+	<dt class="topics">Tags</dt>
+	
+		<dd>
+			
+				
+				<a href="/Design_Guideline;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" name="Design_Guideline" id="3,627" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Design Guideline</a>
+    
+			,
+		</dd>
+	
+		<dd>
+			
+				
+				<a href="/patterns;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" name="patterns" id="401" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Patterns</a>
+    
+			,
+		</dd>
+	
+		<dd>
+			
+				
+				<a href="/web_services;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" name="web_services" id="448" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Web services</a>
+    
+			
+		</dd>
+	
+
+	     
+
+		</dl>
+   	    
+   	    
+
+
+
+
+
+
+
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style" style="width:100%;height:19px;">
+	<a href="http://www.addthis.com/bookmark.php?v=250&amp;username=infoq" class="addthis_button" 
+		style="text-decoration:none;color:#1C497B; padding:0 2px; float:left; font-weight: bold;font-size: 85%;">
+		Share				
+		<img src="http://s7.addthis.com/static/btn/sm-plus.gif"  width="16" height="15" border="0" alt="Share" />
+	</a>
+	<span class="addthis_separator">|</span>
+	<a class="addthis_button_facebook"></a>
+	<a class="addthis_button_digg"></a>
+	<a class="addthis_button_dzone"></a>
+	<a class="addthis_button_slashdot"></a>
+	<a class="addthis_button_twitter"></a>
+	<a class="addthis_button_reddit"></a>
+	<a class="addthis_button_delicious"></a>
+	<a class="addthis_button_email"></a>
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=infoq"></script>
+<!-- AddThis Button END -->
+
+
+		   	    
+       	<p>We are used to building distributed systems on top of large middleware platforms like those implementing CORBA, the Web Services protocols stack, J2EE, etc. In this article, we take a different approach, treating the protocols and document formats that make the Web tick as an application platform, which can be accessed through lightweight middleware. We showcase the role of the Web in application integration scenarios through a simple customer-service interaction scenario. In this article, we use the Web as our primary design philosophy to distil and share some of the thinking in our forthcoming book &ldquo;GET /connected - Web-based integration&rdquo; (working title).</p>
+
+		
+
+
+
+
+
+
+
+
+<div class="vendor-content-box-float">
+	<h3>Related<span class="vendor">Vendor</span>Content</h3>
+	
+	
+	
+		
+		
+			<p class="entrypdf">
+				<a href="/infoq/url.action?i=1455&t=f" target="_blank">
+					Taking Control of the Cloud: Addressing Security, Visibility, and Governance
+				</a>
+			</p>
+		
+	
+
+	
+	
+		
+			
+		
+		<p class="entrypdf f_vcrembed" jsh="{&quot;title&quot;:&quot;7 Key Requirements of an Agile ALM Platform&quot;,&quot;id&quot;:1250}">
+			<a href="/vendorcontent/show.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D?vcr=1250" >
+				7 Key Requirements of an Agile ALM Platform
+			</a>
+		</p>
+	
+		
+			
+		
+		<p class="entrypdf f_vcrembed" jsh="{&quot;title&quot;:&quot;Security Appliance Showdown- Intel Expressway vs IBM Datapower &quot;,&quot;id&quot;:1143}">
+			<a href="/vendorcontent/show.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D?vcr=1143" target="_blank">
+				Security Appliance Showdown- Intel Expressway vs IBM Datapower 
+			</a>
+		</p>
+	
+		
+			
+		
+		<p class="entrydemo f_vcrembed" jsh="{&quot;title&quot;:&quot;Architecting the Ultimate Control-Point-Advanced Cyber-Threat Mitigation&quot;,&quot;id&quot;:1236}">
+			<a href="/vendorcontent/show.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D?vcr=1236" >
+				Architecting the Ultimate Control-Point-Advanced Cyber-Threat Mitigation
+			</a>
+		</p>
+	
+		
+			
+		
+		<p class="entrydemo f_vcrembed" jsh="{&quot;title&quot;:&quot;DataPower: Messaging, ESB, Cloud, Security as an Appliance&quot;,&quot;id&quot;:1178}">
+			<a href="/vendorcontent/show.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D?vcr=1178" >
+				DataPower: Messaging, ESB, Cloud, Security as an Appliance
+			</a>
+		</p>
+	
+
+	
+	
+	
+	
+	
+		<h3>Related Sponsor</h3>
+		
+			<a href="/infoq/url.action?i=1460&t=f" target="_blank">
+				<img src="/resource/sponsorship/featuredcategory/2/SGQ4.gif;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" border="0" alt="" title="" align="right" style="margin: 0 0 5px 5px;"/>
+			</a>
+		
+		
+
+		<div class="entrysponsors">
+			<p>*<a href="/infoq/url.action?i=1457&t=f" target="_blank">Security Gateway Buyer's Guide</a><br />
+*<a href="/infoq/url.action?i=1459&t=f" target="_blank">Gunnar Peterson Tech Tutorials</a><br />
+*<a href="/infoq/url.action?i=1456&t=f" target="_blank">Visit Dynamicperimeter.com</a><br />
+*<a href="/infoq/url.action?i=1458&t=f" target="_blank">Intel's Security Resource for Architects</a></p>
+		</div>
+	
+	
+</div>
+
+
+
+       	
+<h2>Introduction</h2>
+<p>The integration domain as we know it is changing. The influence of the Web and the trend towards more agile practices are challenging our notions of what constitutes good integration. Instead of being a specialist activity conducted in the void between systems &ndash; or even worse, an afterthought &ndash; integration is now an everyday part of successful solutions.</p>
+<p>Yet, the impact of the Web is still widely misunderstood and underestimated in enterprise computing. Even those who are Web-savvy often struggle to understand that the Web isn't about middleware solutions supporting XML over HTTP, nor is it a crude RPC mechanism. This is a shame because the Web has much more value than simple point-to-point connectivity; it is in fact a robust integration platform.</p>
+<p>In this article we'll showcase some interesting uses of the Web, treating it as a pliant and robust platform for doing very cool things with enterprise systems. And there is nothing that typifies enterprise software more than workflows&hellip;</p>
+<h2>Why Workflows?</h2>
+<p>Workflows are a staple of enterprise computing, and have been implemented in middleware practically forever (at least in computing terms). A workflow structures work into a number of discrete steps and the events that prompt transitions between steps. The overarching business process implemented by a workflow often spans several enterprise information systems, making workflows fertile ground for integration work.</p>
+<h2>Starbucks: Standard generic coffee deserves standard generic integration </h2>
+<p>If the Web is to be a viable technology for enterprise (and wider) integration, it has to be able to support workflows &ndash; to reliably coordinate the interactions between disparate systems to implement some larger business capability. </p>
+<p>To do justice to a real-world workflow, we'd no doubt have to address a wealth of technical and domain-specific details, which would likely obscure the aim of this article, so we've chosen a more accessible domain to illustrate how Web-based integration works: Gregor Hohpe's Starbucks coffee shop workflow. <a href="http://www.enterpriseintegrationpatterns.com/ramblings/18_starbucks.html">In his popular blog posting</a>, Gregor describes how Starbucks functions as a decoupled revenue-generating pipeline:</p>
+<blockquote>&quot;Starbucks, like most other businesses is primarily interested in maximizing throughput of orders. More orders equals more revenue. As a result they use asynchronous processing. When you place your order the cashier marks a coffee cup with your order and places it into the queue. The queue is quite literally a queue of coffee cups lined up on top of the espresso machine. This queue decouples cashier and barista and allows the cashier to keep taking orders even if the barista is backed up for a moment. It allows them to deploy multiple baristas in a Competing Consumer scenario if the store gets busy.&quot;</blockquote>
+<p>While Gregor prefers EAI techniques like message-oriented middleware to model Starbucks, we'll model the same scenario using Web resources &ndash; addressable entities that support a uniform interface. In fact, we'll show how Web techniques can be used with all the dependability associated with traditional EAI tools, and how the Web is much more than XML messaging over a request/response protocol!</p>
+<p>We'll apologise in advance for taking liberties with the way Starbucks works because our goal here isn't to model Starbucks completely accurately, but to illustrate workflows with Web-based services. So with belief duly suspended, let's jump in.</p>
+<h3>Stating the Obvious</h3>
+<p>Since we're talking about workflows, it makes sense to understand the states from which our workflows are composed, together with the events that transition the workflows from state to state. In our example, there are two workflows, which we've modelled as state machines. These workflows run concurrently. One models the interaction between the customer and the Starbucks service as shown in Figure 1 the other captures the set of actions performed by a barista as per Figure 2.</p>
+<p>In the customer workflow, customers advance towards the goal of drinking some coffee by interacting with the Starbucks service. As part of the workflow, we assume that the customer places an order, pays, and then waits for their drink. Between placing and paying for the order, the customer can usually amend it &ndash; by, for example, asking for semi-skimmed milk to be used. </p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/image1.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://image1.jpg" alt="" />
+<p><small><strong>Figure1 The Customer State Machine</strong></small></p>
+<p>The barista has his or her own state machine, though it's not visible to the customer; it's private to the service's implementation. As shown in Figure 2, the barista loops around looking for the next order to be made, preparing the drink, and taking the payment. An instance of the loop can begin when an order is added to the barista's queue. The outputs of the workflow are available to the customer when the barista finishes the order and releases the drink.</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/image2.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://image2.jpg" alt="" />
+<p><small><strong>Figure 2 The Barista's State Machine</strong></small></p>
+<p>Although all of this might seem a million miles away from Web-based integration, each transition in our two state machines represents an interaction with a Web resource. Each transition is the combination of a HTTP verb on a resource via its URI causing state changes. </p>
+<blockquote> <em>GET and HEAD are special cases since they don't cause state transitions. Instead they allow us to inspect the current state of a resource.</em></blockquote>
+<p>But we're getting ahead of ourselves. Thinking about state machines and the Web isn't easy to swallow in one big lump. So let's revisit the entire scenario from the beginning, look at it in a Web context, and proceed one step at a time.</p>
+<h3>The Customer's Viewpoint</h3>
+<p>We'll begin at the beginning, with a simple story card that kick-starts the whole process:</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/image3.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://image3.jpg" alt="" />
+<p>This story contains a number of useful actors and entities. Firstly, there's the customer actor, who is the obvious consumer of the (implicit) Starbucks service. Secondly, there are two interesting entities (coffee and order), and an interesting interaction (ordering), which starts our workflow.</p>
+<p>To submit an order to Starbucks, we simply POST a representation of an order to the well-known Starbucks ordering URI, which for our purposes will be <code>http://starbucks.example.org/order</code>.</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/image4.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://image4.jpg" alt="" />
+<p><small><strong>Figure 3 Ordering a coffee</strong></small></p>
+<p>Figure 3 shows the interaction to place an order with Starbucks. Starbucks uses an XML dialect to represent entities from its domain; interestingly, this dialect also allows information to be embedded so that customers can progress through the ordering process &ndash; as we'll see shortly. On the wire the act of posting looks something like Figure 4.</p>
+<blockquote> <em>In the human Web, consumers and services use HTML as a representation format. HTML has its own particular semantics, which are understood and adopted by all browsers: <code>&lt;a/&gt;</code>, for example, <em><strong>means</strong></em> &ldquo;an anchor that links to another document or to a bookmark within the same document.&rdquo; The consumer application &ndash; the Web browser &ndash; simply renders the HTML, and the state machine (that's you!) follows links using <code>GET</code> and <code>POST</code>. In Web-based integration the same occurs, except the services and their consumers not only have to agree on the interaction protocols, but also on the format and semantics of the representations.</em></blockquote><img src="/resource/articles/webber-rest-workflow/en/resources/code1.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://code1.jpg" alt="" />
+<p><small><strong>Figure 4 POSTing a drinks order</strong></small></p>
+<p>The Starbucks service creates an order resource, and then responds to the consumer with the location of this new resource in the <code>Location</code> HTTP header. For convenience, the service also places the representation of the newly created order resource in the response. The response looks something like .</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/code2.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://code2.jpg" alt="" />
+<p><small><strong>Figure 5 Order created, awaiting payment</strong></small></p>
+<p>The <code>201 Created</code> status indicates that Starbucks successfully accepted the order. The <code>Location</code> header gives the URI of the newly created order. The representation in the response body contains confirmation of what was ordered along with the cost. In addition, this representation contains the URI of a resource with which Starbucks expects us to interact to make forward progress with the customer workflow; we'll use this URI later.</p>
+<p>Note that the URI is contained in a <code>&lt;next/&gt;</code> tag, not an HTML <code>&lt;a/&gt;</code> tag. <code>&lt;next/&gt;</code> is here meaningful in the context of the customer workflow, the semantics of which have been agreed a priori.</p>
+<blockquote><em>We've already seen that the <code>201 Created</code> status code indicates the successful creation of a resource. We'll need a handful of other useful codes both for this example and for Web-based integration in general:<br />  <code>200 OK</code> - This is what we like to see: everything's fine; let's keep going. <code>201 Created</code> - We've just created a resource and everything's fine.<br /> <code>202 Accepted</code> - The service has accepted our request, and invites us to poll a URI in the Location header for the response. Great for asynchronous processing.<br /> <code>303 See Other</code> - We need to interact with a different resource. We're probably still OK.<br /> <code>400 Bad Request</code> - We need to reformat the request and resubmit it.<br /> <code>404 Not Found</code> - The service is far too lazy (or secure) to give us a real reason why our request failed, but whatever the reason, we need to deal with it.<br /> <code>409 Conflict</code> - We tried to update the state of a resource, but the service isn't happy about it. We'll need to get the current state of the resource (either by checking the response entity body, or doing a GET) and figure out where to go from there.<br /> <code>412 Precondition Failed</code> - The request wasn't processed because an Etag, If-Match or similar guard header failed evaluation. We need to figure out how to make forward progress.<br /> <code>417 Expectation Failed</code> - You did the right thing by checking, but please don't try to send that request for real.<br /> <code>500 Internal Server Error</code> - The ultimate lazy response. The server's gone wrong and it's not telling why. Cross your fingers&hellip;</em></blockquote>
+<h3>Updating an Order</h3>
+<p>One of the nice things about Starbucks is you can customise your drink in a myriad of different ways. In fact, some of the more advanced customers would be better off ordering by chemical formula, given the number of upgrades they demand! But let's not be that ambitious &ndash; at least not to start with. Instead, we'll look at another story card:</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/image5.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://image5.jpg" alt="" />
+<p>Looking back on Figure 4, it's clear we made a significant error: for anyone that really likes coffee, a single shot of espresso is going to be swamped by gallons of hot milk. We're going to have to change that. Fortunately, the Web (or more precisely HTTP) provides support for such changes, and so does our service.</p>
+<p>Firstly, we'll make sure we're still allowed to change our order. Sometimes the barista will be so fast our coffee's been made before we've had a chance to change it &ndash; and then we're stuck with a cup of hot coffee-flavoured milk. But sometimes the barista's a little slower, which gives us the opportunity to change the order before the barista processes it. To find out if we can change the order, we ask the resource what operations it's prepared to process using the HTTP <code>OPTIONS</code> verb, as shown on the wire in Figure 6.</p>
+<table width="100%" cellspacing="0" cellpadding="4" border="1">
+    <tbody>
+        <tr valign="middle" align="left">
+            <td><small><strong>Request</strong></small></td>
+            <td><small><strong>Response</strong></small></td>
+        </tr>
+        <tr valign="middle" align="left">
+            <td><code>OPTIONS /order/1234 HTTP 1.1 Host: starbucks.example.org</code></td>
+            <td><code>200 OK Allow: GET, PUT </code></td>
+        </tr>
+    </tbody>
+</table>
+<p><small><strong>Figure6 Asking for OPTIONS</strong></small></p>
+<p>From Figure 6 we see that the resource is readable (it supports GET) and it's updatable (it supports PUT). As we're good citizens of the Web, we can, optionally, do a trial PUT of our new representation, testing the water using the <code>Expect</code> header before we do a real PUT &ndash; like in Figure 7.</p>
+<table width="100%" cellspacing="0" cellpadding="4" border="1">
+    <tbody>
+        <tr valign="middle" align="left">
+            <td><small><strong>Request</strong></small></td>
+            <td><small><strong>Response</strong></small></td>
+        </tr>
+        <tr valign="middle" align="left">
+            <td><code>PUT /order/1234 HTTP 1.1 Host: starbucks.example.com Expect: 100-Continue </code></td>
+            <td><code>100 Continue</code></td>
+        </tr>
+    </tbody>
+</table>
+<p><small><strong>Figure 7 Look before you leap!</strong></small></p>
+<p>If it had no longer been possible to change our order, the response to our &ldquo;look before you leap&rdquo; request in Figure 7 would have been <code>417 Expectation Failed</code>. But here the response is <code>100 Continue</code>, which allows us to try to <code>PUT</code> an update to the resource with an additional shot of espresso, as shown in Figure 8. <code>PUT</code>ting an updated resource representation effectively changes the existing one. In this instance PUT lodges a new description with an <code>&lt;additions/&gt;</code> element containing that vital extra shot.</p>
+<blockquote> <em>Although partial updates are the subject of deep philosophical debates within the REST community, we take a pragmatic approach here and assume that our request for an additional shot is processed in the context of the existing resource state. As such there is little point in moving the whole resource representation across the network for each operation and so we transmit deltas only.</em></blockquote><img src="/resource/articles/webber-rest-workflow/en/resources/code3.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://code3.jpg" alt="" />
+<p><small><strong>Figure 8 Updating a resource's state</strong></small></p>
+<p>If we're successfully able to <code>PUT</code> an update to the new resource state, we get a <code>200</code> response from the server, as shown in Figure 9.</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/code4.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://code4.jpg" alt="" />
+<p><small><strong>Figure 9 Successfully updating the state of a resource</strong></small></p>
+<p>Checking <code>OPTIONS</code> and using the <code>Expect</code> header can't totally shield us from a situation where a change at the service causes subsequent requests to fail. As such we don't mandate their use, and as good Web citizens we're going to handle <code>405</code> and <code>409</code> responses anyway.</p>
+<blockquote> <em><code>OPTIONS</code> and especially using the <code>Expect</code> header should be considered optional steps.</em></blockquote>
+<p>Even with our judicious use of <code>Expect </code>and <code>OPTIONS</code>, sometimes our <code>PUT</code> will fail; after all, we're in a race with the barista &ndash; and sometimes those guys just fly!</p>
+<p>If we lose the race to get our extra shot, we'll learn about it when we try to <code>PUT</code> the updates to the resource. The response in Figure 10 is typical of what we can expect. <code>409 Conflict</code> indicates the resource is in an inconsistent state to receive the update. The response body shows the difference between the representation we tried to <code>PUT</code> and the resource state on the server side. In coffee terms it's too late to add the shot &ndash; the barista's already pouring the hot milk.</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/code5.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://code5.jpg" alt="" />
+<p><small><strong>Figure 10 Losing a race</strong></small></p>
+<p>We've discussed using <code>Expect </code>and <code>OPTIONS</code> to guard against race conditions as much as possible. Besides these, we can also attach <code>If-Unmodified-Since </code>or <code>If-Match </code>headers to our <code>PUT</code> to convey our intentions to the receiving service. <code>If-Unmodified-Since </code>uses the timestamp and <code>If-Match</code> the ETag<sup><a href="#sdfootnote1sym" name="sdfootnote1anc" class="sdfootnoteanc"><sup>1</sup></a></sup> of the original order. If the order hasn't changed since we created it &ndash; that is, the barista hasn't started preparing our coffee yet &ndash; then the change will be processed. If the order has changed, we'll get a <code>412 Precondition Failed </code>response. If we lose the race, we're stuck with milky coffee, but at least we've not transitioned the resource to an inconsistent state.</p>
+<blockquote> <em>There are a number of patterns for consistent state updates using the Web. HTTP PUT is idempotent, which takes much of the intricate work out of updating state, but there are still choices that need to be made. Here's our recipe for getting updates right:</em>
+<p>&nbsp;</p>
+<p> <em>1. Ask the service if it's still possible to <code>PUT</code> by sending <code>OPTIONS</code>. This step is optional. It gives clients a clue about which verbs the server supports for the resource at the time of asking, but there are no guarantees the service will support those same verbs indefinitely.</em></p>
+<p> <em>2. Use an <code>If-Unmodified-Since</code> or <code>If-Match</code> header to help the server guard against executing an unnecessary <code>PUT</code>. You'll get a <code>412 Precondition Failed</code> if the <code>PUT</code> subsequently fails.  This approach depends either on slowly changing resources (1 second granularity) for <code>If-Unmodified-Since</code> or support for ETags for <code>If-Match</code>.</em></p>
+<p> <em>3. Immediately <code>PUT</code> the update and deal with any <code>409 Conflict </code>responses. Even if we use (1) and (2), we may have to deal with these responses, since our guards and checks are optimistic in nature.</em></p>
+<p> <em>The W3C has <font color="#0000ff"><u><a href="http://www.w3.org/1999/04/Editing/">a non-normative note</a></u></font> on detecting and dealing with inconsistent updates that argues for using ETag. ETags are our preferred approach.</em> </p>
+</blockquote>
+<p>After all that hard work updating our coffee order, it seems only fair that we get our extra shot. So for now let's go with our happy path, and assume we managed to get our additional shot of espresso. Of course, Starbucks won't hand our coffee over unless we pay (and it turns out they've already hinted as much!), so we need another story:</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/image6.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://image6.jpg" alt="" />
+<p>Remember the <code>&lt;next/&gt;</code> element in the response to our original order? This is where Starbucks embedded information about another resource in the order representation. We saw the tag earlier, but chose to ignore it while correcting our order. But now it's time to look more closely at it:</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/code6.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://code6.jpg" alt="" />
+<p>There are a few aspects to the <code>next</code> element worth pointing out. First is that it's in a different namespace because state transitions are not limited to Starbucks. In this case we've decided that such transition URIs should be held in a communal namespace to facilitate re-use (or even eventual standardisation).</p>
+<p>Then, there's the embedded semantic information (a private microformat, if you like) in the <code>rel</code> attribute. Consumers that understand the semantics of the <code>http://starbucks.example.org/payment </code>string<code> </code>can use the resource identified by the <code>uri</code> attribute to transition to the next state (payment) in the workflow.</p>
+<p>The <code>uri</code> in the <code>&lt;next/&gt;</code> element points to a payment resource. From the <code>type</code> attribute, we already know the expected resource representation is XML. We can work out what to do with the payment resource by asking the server which verbs that resource supports using <code>OPTIONS</code>. </p>
+<blockquote> <em>Microformats are a way to embed structured, semantically-rich data inside existing documents. Microformats are most common in the human readable Web, where they are used to add structured representations of information like calendar events to Web pages. However, they can just as readily be turned to integration purposes. Microformat terminology is agreed by the microformats community, but we are at liberty to create our own private microformats for domain-specific semantic markup.</em></blockquote>
+<p>Innocuous as they seem, simple links like the one of Figure 10 are the crux of what the REST community rather verbosely calls &ldquo;Hypermedia as the engine of application state.&rdquo; More simply, URIs represent the transitions within a state machine. Clients operate application state machines, like the ones we saw at the beginning of this article, by following links.</p>
+<p>Don't be surprised if that takes a little while to sink in. One of the most surprising things about this model is the way state machines and workflows gradually describe themselves as you navigate through them, rather than being described upfront through WS-BPEL or WS-CDL. But once your brain has stopped somersaulting, you'll see that following links to resources allows us to make forward progress in our application's various states. At each state transition the current resource representation includes links to the next set of possible resources and the states they represent. And because those next resources are just Web resources, we already know what to do with them.</p>
+<p>Our next step in the customer workflow is to pay for our coffee. We know the total cost from the <code>&lt;cost/&gt;</code> element in the order, but before we send payment to Starbucks we'll ask the payment resource how we're meant to interact with it, as shown in Figure 11.</p>
+<blockquote> <em>How much upfront knowledge of a service does a consumer need? We've already suggested that services and consumers will need to agree the semantics of the representations they exchange prior to interacting. Think of these representation formats as a set of possible states and transitions. As a consumer interacts with a service, the service chooses states and transitions from the available set and builds the next representation. The process &ndash; the &ldquo;how&rdquo; of getting to a goal &ndash; is discovered on the fly; what gets wired together as part of that process is, however, agreed upfront.</em>
+<p>&nbsp;</p>
+<p> <em>Consumers typically agree the semantics of representations and transitions with a service during design and development. But there's no guarantee that as service evolves, it won't confront the client with state representations and transitions the client had never anticipated but knows how to process &ndash; that's the nature of the loosely coupled Web. Reaching agreement on resource formats and representations under these circumstances is, however, outside the scope of this article.</em></p>
+</blockquote>
+<p>Our next step is to pay for our coffee. We know the total cost of our order from the <code>&lt;cost&gt;</code> element embedded in the order representation, and so our next step is to send a payment to Starbucks so the barista will hand over the drink. Firstly we'll ask the payment resource how we're meant to interact with it, as shown in Figure 11.</p>
+<table width="100%" cellspacing="0" cellpadding="4" border="1">
+    <tbody>
+        <tr valign="middle" align="left">
+            <td><small><strong>Request</strong></small></td>
+            <td><small><strong>Response</strong></small></td>
+        </tr>
+        <tr valign="middle" align="left">
+            <td><code>OPTIONS/payment/order/1234 HTTP 1.1 Host: starbucks.example.com</code></td>
+            <td><code>Allow: GET, PUT</code></td>
+        </tr>
+    </tbody>
+</table>
+<p><small><strong>Figure 11 Figuring out how to pay</strong></small></p>
+<p>The response indicates we can either read (via <code>GET</code>) the payment or update it (via <code>PUT</code>). Knowing the cost, we'll go ahead and <code>PUT</code> our payment to the resource identified by the <code>payment</code> link. Of course, payments are privileged information, so we'll protect access to the resource by requiring authentication<sup><a href="#sdfootnote2sym" name="sdfootnote2anc" class="sdfootnoteanc"><sup>2</sup></a></sup>.</p>
+<table width="100%" cellspacing="0" cellpadding="4" border="1">
+    <tbody>
+        <tr valign="middle" align="left">
+            <td><small><strong>Request</strong></small></td>
+        </tr>
+        <tr valign="middle" align="left">
+            <td><code>PUT /payment/order/1234 HTTP 1.1<br /> Host: starbucks.example.com<br /> Content-Type: application/xml<br /> Content-Length: ...<br /> Authorization: Digest username=&quot;Jane Doe&quot;<br /> realm=&quot;starbucks.example.org&ldquo; <br /> nonce=&quot;...&quot;<br /> uri=&quot;payment/order/1234&quot;<br /> qop=auth<br /> nc=00000001<br /> cnonce=&quot;...&quot;<br /> reponse=&quot;...&quot;<br /> opaque=&quot;...&quot;<br /><br /> &lt;payment xmlns=&quot;http://starbucks.example.org/&quot;&gt;<br /> &nbsp;&nbsp;&nbsp;&lt;cardNo&gt;123456789&lt;/cardNo&gt;<br /> &nbsp;&nbsp;&nbsp;&lt;expires&gt;07/07&lt;/expires&gt;<br /> &nbsp;&nbsp;&nbsp;&lt;name&gt;John Citizen&lt;/name&gt;<br /> &nbsp;&nbsp;&nbsp;&lt;amount&gt;4.00&lt;/amount&gt;<br /> &lt;/payment&gt;</code></td>
+        </tr>
+        <tr valign="middle" align="left">
+            <td><small><strong>Response</strong></small></td>
+        </tr>
+        <tr valign="middle" align="left">
+            <td><code>201 Created<br /> Location: https://starbucks.example.com/payment/order/1234<br /> Content-Type: application/xml<br /> Content-Length: ...<br /><br /> &lt;payment xmlns=&quot;http://starbucks.example.org/&quot;&gt;<br /> &nbsp;&nbsp;&nbsp;&lt;cardNo&gt;123456789&lt;/cardNo&gt;<br /> &nbsp;&nbsp;&nbsp;&lt;expires&gt;07/07&lt;/expires&gt;<br /> &nbsp;&nbsp;&nbsp;&lt;name&gt;John Citizen&lt;/name&gt;<br /> &nbsp;&nbsp;&nbsp;&lt;amount&gt;4.00&lt;/amount&gt;<br /> &lt;/payment&gt;<br /></code></td>
+        </tr>
+    </tbody>
+</table>
+<p><small><strong>Figure 12 Paying the bill</strong></small></p>
+<p>For successful payments, the exchange shown in Figure 12 is all we need. Once the authenticated <code>PUT</code> has returned a <code>201 Created</code> response, we can be happy the payment has succeeded, and can move on to pick up our drink.</p>
+<p>But things can go wrong, and when money is at stake we'd rather things either didn't go wrong or are recoverable when they do<sup><a href="#sdfootnote3sym" name="sdfootnote3anc" class="sdfootnoteanc"><sup>3</sup></a></sup>. A number of things can obviously go wrong with our payment:</p>
+<ul>
+    <li>We can't 	connect to the server because it is down or unreachable;</li>
+    <li>The connection to 	the server is severed at some point during the interaction;</li>
+    <li>The server returns 	an error status in the <code>4xx</code> 	or <code>5xx</code> 	range.</li>
+</ul>
+<p>Fortunately, the Web helps us in each of these scenarios. For the first two cases (assuming the connectivity issue is transient), we simply <code>PUT</code> the payment again until we receive a successful response. We can expect a <code>200 </code>response if a prior <code>PUT</code> had in fact succeeded (effectively an acknowledgement of a no-op from the server) or a <code>201</code> if the new <code>PUT</code> eventually succeeds in lodging the payment. The same holds true in the third case where the server responds with a <code>500</code>, <code>503</code> or <code>504</code> response code.</p>
+<p>Status codes in the <code>4xx</code> range are trickier, but they still indicate how to make forward progress. For example, a <code>400</code> response indicates that we <code>PUT</code> something the server doesn't understand, and should rectify our payload before <code>PUT</code>ing it again. Conversely, a <code>403</code> response indicates that the server understood our request but is refusing to fulfil it and doesn't want us to re-try. In such cases we'll have to look for other state transitions (links) in the response payload to make alternative forward progress.</p>
+<blockquote> <em>We've used status codes several times in this example to guide the client towards its next interaction with the service. Status codes are semantically rich acknowledgments. By implementing services that produce meaningful status codes and clients that know how to handle them, we can layer a coordination protocol on top of HTTP's simple request-response mechanism, adding a high degree of robustness and reliability to distributed systems.</em></blockquote>
+<p>Once we've paid for our drink we've reached the end of our workflow, and the end of the story as far as the consumer goes. But it's not the end of the whole story. Let's now go inside the service boundary, and look at Starbucks' internal implementation.</p>
+<h3>The Barista's Viewpoint</h3>
+<p>As customers we tend to put ourselves at the centre of the coffee universe, but we're not the only consumers of a coffee service. We know already from our &ldquo;race&rdquo; with the barista that the service serves at least one other set of interested parties, not the least of which is the barista. In keeping with our incremental delivery style, it's time for another story card.</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/image7.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://image7.jpg" alt="" />
+<p>Lists of drinks are easily modelled using Web formats and protocols. Atom feeds are a perfectly good format for lists of practically anything, including outstanding coffee orders, so we'll adopt them here. The barista can access the Atom feed with a simple <code>GET</code> on the feed's URI, which for outstanding orders is <code>http://starbucks.example.org/orders</code> in Figure 13.</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/code7.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://code7.jpg" alt="" />
+<p><small><strong>Figure 13 Atom feed for drinks to be made</strong></small></p>
+<p>Starbucks is a busy place and the Atom feed at <code>/orders</code> is updated frequently, so the barista will need to poll it to stay up to date. Polling is normally thought of as offering low scalability; the Web, however, supports an extremely scalable polling mechanism &ndash; as we'll see shortly. And with the sheer volume of coffees being manufactured by Starbucks every minute, scaling to meet load is an important issue.</p>
+<p>We have two conflicting requirements here. We want baristas to keep up-to-date by polling the order feed often, but we don't want to increase the load on the service or unnecessarily increase network traffic. To avoid crushing our service under load, we'll use a reverse proxy just outside our service to cache and serve frequently accessed resource representations, as shown in Figure 14.</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/image8.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://image8.jpg" alt="" />
+<p><small><strong>Figure 14 Caching for scalability</strong></small></p>
+<p>For most resources &ndash; especially those that are accessed widely, like our Atom feed for drinks &ndash; it makes sense to cache them outside of their host services. This reduces server load and improves scalability. Adding Web caches (reverse proxies) to our architecture, together with caching metadata, allows clients to retrieve resources without placing load on the origin server.</p>
+<blockquote> <em>A positive side effect of caching is that it masks intermittent failures of the server and helps crash recovery scenarios by improving the availability of resource state. That is, the barista can keep working even if the Starbucks service fails intermittently since the order information will have been cached by a proxy. And if the barista forgets an order (crashes) then recovery is made easier because the orders are highly available.</em></blockquote>
+<p>Of course, caching can keep old orders around longer than needed, which is hardly ideal for a high-throughput retailer like Starbucks. To make sure that cached orders are cleared, the Starbucks service uses the <code>Expires</code> header to declare how long a response can be cached. Any caches between the consumer and service (should) honour that directive and refuse to serve stale orders<sup><a href="#sdfootnote4sym" name="sdfootnote4anc" class="sdfootnoteanc"><sup>4</sup></a></sup>, instead forwarding the request onto the Starbucks service, which has up-to-date order information.</p>
+<p>The response in Figure 13 sets the <code>Expires</code> header on our Atom feed so that drinks turn stale 10 seconds into the future. Because of this caching behaviour, the server can expect at most 6 requests per minute, with the remainder handled by the cache infrastructure. Even for a relatively poorly performing service, 6 requests per minute is a manageable workload. In the happiest case (from Starbucks' point of view) the barista's polling requests are answered from a local cache, resulting in no increased network activity or server load.</p>
+<p>In our example, we use only one cache to help scale-out our master coffee list. Real Web-based scenarios, however, may benefit from several layers of caching. Taking advantage of existing Web caches is critical for scalability in high volume situations.</p>
+<blockquote> <em>The Web trades latency for massive scalability. If you have a problem domain that is highly sensitive to latency (e.g. foreign exchange trading), then Web-based solutions are not a great idea. If, however, you can accept latency in the order of seconds, or even minutes or hours, then the Web is likely a suitable platform.</em></blockquote>
+<p>Now that we've addressed scalability, let's return to more functional concerns. When the barista begins to prepare our coffee, the state of the order should change so that no further updates are allowed. From the point of view of a customer, this corresponds to the moment we're no longer allowed to <code>PUT</code> updates of our order (as in Figure 6, Figure 7, Figure 8, Figure 9, and Figure 10).</p>
+<p>Fortunately there is a well-defined protocol that we can use for this job: the Atom Publishing Protocol (also known as APP or AtomPub). AtomPub is a Web-centric (URI-based) protocol for managing entries in Atom feeds. Let's take a closer look at the entry representing our coffee in the <code>/orders</code> Atom feed.</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/code8.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://code8.jpg" alt="" />
+<p><small><strong>Figure 15 Atom entry for our coffee order</strong></small></p>
+<p>The XML in Figure 15 is interesting for a number of reasons. First, there's the Atom XML, which distinguishes our order from all the other orders in the feed. Then there's the order itself, containing all the information our barista needs to make our coffee &ndash; including our all-important extra shot! Inside the order <code>entry</code>, there's a <code>link</code> element that declares the <code>edit</code> URI for the <code>entry</code>. The <code>edit</code> URI links to an order resource that is editable via HTTP. (The address of the editable resource in this case happens to be the same address as the order resource itself, but it need not be.)</p>
+<p>When a barista wants to change the state of the resource so that our order can no longer be changed, they interact with it via the <code>edit</code> URI. Specifically they <code>PUT</code> a revised version of the resource state to the <code>edit</code> URI, as shown in Figure 16.</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/code9.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://code9.jpg" alt="" />
+<p><strong><small>Figure 16 Changing the order status via AtomPub</small></strong></p>
+<p>Once the server has processed the <code>PUT</code> request in Figure 16, it will reject anything other than <code>GET</code> requests to the <code>/orders/1234</code> resource.</p>
+<p>Now that the order is stable the barista can safely get on with making the coffee. Of course, the barista will need to know we've paid for the order before they release the coffee to us, so before handing the coffee over, the barista checks to make sure we've paid. In a real Starbucks, things are a little different: there are conventions, such as paying as you order, and other customers hanging around to make sure you don't run off with their drinks. But in our computerised version it's not much additional work to add this check, and so onto our penultimate story card:</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/image9.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://image9.jpg" alt="" />
+<p>The barista can easily check the payment status by <code>GET</code>ting the payment resource using the payment URI in the order.</p>
+<blockquote>
+<p><em>In this instance the customer and barista know about the payment resource from the link embedded in the order representation. But sometimes it's useful to access resources via URI templates. </em> </p>
+<p> <em>URI templates are a description format for well-known URIs. The templates allow consumers to vary parts of a URI to access different resources. </em> </p>
+<p> <em>A URI template scheme underpins Amazon's S3 storage service. Stored artefacts are manipulated using the HTTP verbs on URIs created from this template: <code>http://s3.amazonaws.com/{bucket_name}/{key_name}</code>.</em></p>
+<p> <em>It's easy to infer a similar scheme for payments in our model so that baristas (or other authorised Starbucks systems) can readily access each payment without having to navigate all orders: <code>http://starbucks.example.org/payment/order/{order_id}</code></em></p>
+<p> <em>URI templates form a contract with consumers, so service providers must take care to maintain them even as the service evolves. Because of this implicit coupling some Web integrators shy away from URI templates. Our advice is to use them only where inferable URIs are useful and unlikely to change.</em></p>
+<p> <em>An alternative approach in our example would be to expose a <code>/payments</code> feed containing (non-inferable) links to each payment resource. The feed would only be available to authorised systems. </em> </p>
+<p> <em>Ultimately it is up to the service designer to determine whether URI templates are a safe and useful shortcut through hypermedia. Our advice: use them sparingly!</em></p>
+</blockquote>
+<p>Of course, not everyone is allowed to look at payments. We'd rather not let the more creative (and less upstanding) members of the coffee community check each-others' credit card details, so like any sensible Web system, we protect our sensitive resources by requiring authentication.</p>
+<p>If an unauthenticated user or system tries to retrieve the details of a particular payment, the server will challenge them to provide credentials, as shown in Figure 17.</p>
+<table width="100%" cellspacing="0" cellpadding="4" border="1">
+    <tbody>
+        <tr valign="middle" align="left">
+            <td><small><strong>Request</strong></small></td>
+            <td><small><strong>Response</strong></small></td>
+        </tr>
+        <tr valign="middle" align="left">
+            <td><code>GET /payment/order/1234 HTTP 1.1 Host: starbucks.example.org</code></td>
+            <td><code>401 Unauthorized WWW-Authenticate: Digest realm=&quot;starbucks.example.org&quot;, qop=&quot;auth&quot;, nonce=&quot;ab656...&quot;, opaque=&quot;b6a9...&quot;</code></td>
+        </tr>
+    </tbody>
+</table>
+<p><strong><small>Figure 17 Unauthorised access to a payment resource is challenged</small></strong></p>
+<p>The <code>401</code> status (with helpful authentication metadata) tells us we should try the request again, but this time provide appropriate credentials. Retrying with the right credentials (Figure 18), we retrieve the payment and compare it with the resource representing the total value of the order at <code>http://starbucks.example.org/total/order/1234</code>.</p>
+<table width="100%" cellspacing="0" cellpadding="4" border="1">
+    <tbody>
+        <tr valign="middle" align="left">
+            <td><small><strong>Request</strong></small></td>
+            <td><small><strong>Response</strong></small></td>
+        </tr>
+        <tr valign="middle" align="left">
+            <td><code>GET /payment/order/1234 HTTP 1.1 Host: starbucks.example.org Authorization: Digest username=&quot;barista joe&quot; realm=&quot;starbucks.example.org&ldquo; nonce=&quot;...&quot; uri=&quot;payment/order/1234&quot; qop=auth nc=00000001 cnonce=&quot;...&quot; reponse=&quot;...&quot; opaque=&quot;...&quot; </code></td>
+            <td><code>200 OK<br /> Content-Type: application/xml<br /> Content-Length: ...<br /> &lt;payment xmlns=&quot;http://starbucks.example.org/&quot;&gt;<br /> &nbsp;&nbsp;&nbsp;&lt;cardNo&gt;123456789&lt;/cardNo&gt;<br /> &nbsp;&nbsp;&nbsp;&lt;expires&gt;07/07&lt;/expires&gt;<br /> &nbsp;&nbsp;&nbsp;&lt;name&gt;John Citizen&lt;/name&gt;<br /> &nbsp;&nbsp;&nbsp;&lt;amount&gt;4.00&lt;/amount&gt;<br /> &lt;/payment&gt;</code></td>
+        </tr>
+    </tbody>
+</table>
+<p><small><strong>Figure 18 Authorised access to a payment resource</strong></small></p>
+<p>Once the barista has prepared and dispatched the coffee and collected payment, they'll want to remove the completed order from the list of outstanding drinks. As always we'll capture this as a story:</p>
+<img src="/resource/articles/webber-rest-workflow/en/resources/image10.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://image10.jpg" alt="" />
+<p>Because each <code>entry</code> in our orders feed identifies an editable resource with its own URI, we can apply the HTTP verbs to each order resource individually. The barista simply <code>DELETE</code>s the resource referenced by the relevant <code>entry</code> to remove it from the list, as in Figure 19.</p>
+<table width="100%" cellspacing="0" cellpadding="4" border="1">
+    <tbody>
+        <tr valign="middle" align="left">
+            <td><small><strong>Request</strong></small></td>
+            <td><small><strong>Response</strong></small></td>
+        </tr>
+        <tr valign="middle" align="left">
+            <td><code>DELETE /order/1234 HTTP 1.1 Host: starbucks.example.org</code></td>
+            <td><code>200 OK</code></td>
+        </tr>
+    </tbody>
+</table>
+<p><small><strong>Figure 19 Removing a completed order</strong></small></p>
+<p>With the item <code>DELETE</code>d from the feed, a fresh <code>GET</code> of the feed returns a representation without the <code>DELETE</code>d resource. Assuming we have well behaved caches and have set the cache expiry metadata sensibly, trying to <code>GET</code> the order <code>entry</code> directly results in a <code>404 Not Found</code> response.</p>
+<p>You might have noticed that the Atom Publishing Protocol meets most of our needs for the Starbucks domain. If we'd exposed the <code>/orders</code> feed directly to customers, customers could have used AtomPub to publish drinks orders to the feed, and even change their orders over time.</p>
+<h2>Evolution: A fact of Life on the Web </h2>
+<p>Since our coffee shop is based around self-describing state machines, it's quite straightforward to evolve the workflows to meet changing business needs. For example Starbucks might choose to offer a free Internet promotion shortly after starting to serve coffee:</p>
+<ul>
+    <li>July 	&ndash; Our new Starbucks shop goes live offering the standard 	workflow with the state transitions and representations that we've 	explored throughout this article. Consumers are interacting with the 	service with these formats and representations in mind.</li>
+    <li>August 	&ndash; Starbucks introduces a new representation for a free 	wireless promotion. Our coffee workflow will be updated to contain 	links providing state transitions to the offer. Thanks to the magic 	of URIs, the links may be to a 3<sup>rd</sup> party partner just as 	easily as they could be to an internal Starbucks resource</li>
+    <p><img src="/resource/articles/webber-rest-workflow/en/resources/code10.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" _href="img://code10.jpg" alt="" /></p>
+    Because the representations still include the original transitions, existing consumers can still reach their goal, though they may not be able to take advantage of the promotion because they have not been explicitly programmed for it.<br /><br />
+    <li>September 	&ndash; Consumer applications and services are upgraded so that they 	can understand and use the free Internet promotion, and are 	instructed to follow such promotional transitions whenever they 	occur.</li>
+</ul>
+<p>The key to successful evolution is for consumers of the service to anticipate change by default. Instead of binding directly to resources (e.g. via URI templates), at each step the service provides URIs to named resources with which the consumer can interact. Some of these named resources will not be understood and will be ignored; others will provide known state transitions that the consumer wants to make. Either way this scheme allows for graceful evolution of a service while maintaining compatibility with consumers.</p>
+<h2>The Technology you're about to enjoy is extremely hot</h2>
+<p>Handing over the coffee brings us to the end of the workflow. We've ordered, changed (or been unable to change) our order, paid and finally received our coffee. On the other side of the counter Starbucks has been equally busy taking payment and managing orders.</p>
+<p>We were able to model all necessary interactions here using the Web. The Web allowed us to model some simple unhappy paths (e.g. not being able to change an in process order or one that's already been made) without us having to invent new exceptions or faults: HTTP provided everything we needed right out of the box. And even with the unhappy paths, clients were able to progress towards their goal. </p>
+<p> <em>The features HTTP provides might seem innocuous at first. But there is already worldwide agreement and deployment of this protocol, and every conceivable software agent and hardware device understands it to a degree.  When we consider the balkanised adoption of other distributed computing technologies (such as WS-*) we realise the remarkable success that HTTP has enjoyed, and the potential it releases for system-to-system integration.</em></p>
+<p>The Web even helped non-functional aspects of the solution. Where we had transient failures, a shared understanding of the idempotent behaviour of verbs like <code>GET</code>, <code>PUT</code> and <code>DELETE</code> allowed safe retries; baked-in caching masked failures and aided crash recovery (through enhanced availability); and HTTPs and HTTP Authentication helped with our rudimentary security needs.</p>
+<p>Although our problem domain was somewhat artificial, the techniques we've highlighted are just as applicable in traditional distributed computing scenarios. We won't pretend that the Web is simple (unless you are a genius), nor do we pretend that that it's a panacea (unless you are an unrelenting optimist or have caught REST religion), but the fact is that the Web is a robust framework for integrating systems at local, enterprise, and Internet scale. </p>
+<h2>Acknowledgements</h2>
+<p>The authors would like to thank Andrew Harrison of Cardiff University for the illuminating discussions around &ldquo;conversation descriptions&rdquo; on the Web.</p>
+<h2>About the Authors</h2>
+<p>Dr. Jim Webber is director of professional services for ThoughtWorks where he works on dependable distributed systems architecture for clients worldwide. Jim was formerly a senior researcher with the UK E-Science programme where he developed strategies for aligning Grid computing with Web Services practices and architectural patterns for dependable Service-Oriented computing and has extensive Web and Web Services architecture and development experience. As an architect with Hewlett-Packard, and later Arjuna Technologies, Jim was the lead developer on the industry's first Web Services Transaction solution. Jim is an active speaker and is invited to speak regularly at conferences across the globe. He is an active author and in addition to &quot;Developing Enterprise Web Services - An Architect's Guide&quot; he is working on a new book on Web-based integration. Jim holds a B.Sc. in Computing Science and Ph.D. in Parallel Computing both from the University of Newcastle upon Tyne. His blog is located at <a href="http://jim.webber.name">http://jim.webber.name </a>.</p>
+<p>Savas Parastatidis is a Software Philosopher, thinking about systems and software. He investigates the use of technology in eResearch and is particularly interested in Cloud Computing, knowledge representation and management, and social networking. He's currently with Microsoft Research's External Research team. Savas enjoys blogging at <a href="http://savas.parastatidis.name">http://savas.parastatidis.name</a>.</p>
+<p><a href="http://iansrobinson.com">Ian Robinson</a> helps clients create sustainable service-oriented capabilities that align business and IT from inception through to operation. He has written guidance for Microsoft on implementing service-oriented systems with Microsoft technologies, and has published articles on consumer-driven service contracts and their role in the software development lifecycle - most recently in <a href="http://www.pragprog.com/titles/twa">The ThoughtWorks Anthology</a>   (Pragmatic Programmers, 2008) and <a href="http://www.infoq.com/articles/consumer-driven-contracts;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D">elsewhere on InfoQ</a>. He speaks regularly at conferences on subjects that include RESTful enterprise development and the test-driven foundations of service-oriented delivery.</p>
+<hr />
+<div id="sdfootnote1">
+<p lang="en-GB" class="sdfootnote-western"><a href="#sdfootnote1anc" name="sdfootnote1sym" class="sdfootnotesym">1</a> 	An ETag (an abbreviation of Entity Tag) is a unique identifier for 	the state of a resource. An ETag for a resource is typically an MD5 	checksum or SHA1 hash of that resource's data.</p>
+</div>
+<div id="sdfootnote2">
+<p lang="en-GB" class="sdfootnote-western"><a href="#sdfootnote2anc" name="sdfootnote2sym" class="sdfootnotesym">2</a> 	We'll see how authentication works from Starbucks' point 	of view later.</p>
+</div>
+<div id="sdfootnote3">
+<p lang="en-GB" class="sdfootnote-western"><a href="#sdfootnote3anc" name="sdfootnote3sym" class="sdfootnotesym">3</a> 	When safety is at stake, of course, we just prevent things from 	going too far wrong in the first place! But receiving coffee isn't 	a safety critical task, even though it might seem that way for our 	co-workers most mornings!</p>
+</div>
+<div id="sdfootnote4">
+<p><a href="#sdfootnote4anc" name="sdfootnote4sym" class="sdfootnotesym">4</a> 	HTTP 1.1 offers some useful request directives, including <code>max-age</code>, 	<code>max-stale</code>, 	and <code>max-fresh</code>, 	which allow the client to indicate the level of staleness it is 	prepared to accept from a cache.</p>
+</div>
+       			
+		
+
+
+
+
+
+
+
+
+		
+		
+        
+        
+        	
+        
+
+
+
+
+
+
+<script type='text/javascript'>
+var replyEnabled=true;
+var forumID=1;
+var threadID=8102;
+var previewText='Preview';
+var pleaseWait='Please Wait ...';	
+var reply='Reply';
+var postMessage='Post Message';	
+var errorSubject='Please enter a subject.';	
+var errorBody='You can not post a blank message. Please type your message and try again.';
+var cancel='Cancel';
+var goBackOrEdit='Go Back/Edit';
+var re='Re:';
+var lastMessage=0;
+var stopWatchText='Stop Watching Thread';
+var startWatchText='Watch Thread';
+var descending='false';
+var ctxPath= '';
+var postAddress= ctxPath + '/forum/post!post.action?language=' + 'en';
+var postAddWatches= ctxPath + '/forum/watches!add.action';
+var postRemoveWatches= ctxPath + '/forum/watches!remove.action';
+var loggedIn=false;	
+
+
+var forumNotificationDefault=false;
+
+</script>
+
+<script src="/scripts/forum.js;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" type='text/javascript'></script>
+<script type="text/javascript" src='/dwr/interface/ForumNotifications.js;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D'></script>
+
+	<div class="comments-header">
+	    <h3><span id="comments-number">15</span> comments</h3>
+	    <p>
+			
+				
+				
+	                <span id="watch">
+	                    <a href="javascript:void(0)" class="comment-watch" onClick="javascript:loggedIn?startWatch():showLoginWindow(this,ALIGN_RIGHT,new Function('startWatch();'));">
+	                        Watch Thread
+	                    </a>
+	                </span>	
+				
+				
+			<a href="javascript:void(0)" class="comment-reply" onClick="javascript:loggedIn?replyFromTooltip(31967,true):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromTooltip(31967,true)'));">Reply</a>
+		</p>
+	</div>
+	
+	<span id="newMessage" style="display:none;"></span>
+	
+	<span id="replyTree_31967"></span>	  	
+	<span id="replyMessage_31967"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 0px; margin-right: 0px;">		
+			<a class="forum-list">
+			<span id="tooltip_33051" style="cursor:pointer; cursor:hand;">Very well done</span>		
+			</a>
+			by 
+			Ray Krueger 
+			Posted
+	        Oct 3, 2008 5:52 AM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_33051').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_33051').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_33051"></span>
+		<span id="replyMessage_33051"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 0px; margin-right: 0px;">		
+			<a class="forum-list">
+			<span id="tooltip_33052" style="cursor:pointer; cursor:hand;">&quot;Advanced&quot; REST</span>		
+			</a>
+			by 
+			Manish Bhatt 
+			Posted
+	        Oct 3, 2008 8:14 AM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_33052').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_33052').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_33052"></span>
+		<span id="replyMessage_33052"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 0px; margin-right: 0px;">		
+			<a class="forum-list">
+			<span id="tooltip_33078" style="cursor:pointer; cursor:hand;">Excellent work</span>		
+			</a>
+			by 
+			Oyku Gencay 
+			Posted
+	        Oct 4, 2008 4:04 AM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_33078').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_33078').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_33078"></span>
+		<span id="replyMessage_33078"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 0px; margin-right: 0px;">		
+			<a class="forum-list">
+			<span id="tooltip_33087" style="cursor:pointer; cursor:hand;">Two Questions</span>		
+			</a>
+			by 
+			Stephen Molitor 
+			Posted
+	        Oct 5, 2008 11:58 AM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_33087').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_33087').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_33087"></span>
+		<span id="replyMessage_33087"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 15px; margin-right: 15px;">		
+			<a class="forum-list">
+			<span id="tooltip_33089" style="cursor:pointer; cursor:hand;">Re: Two Questions</span>		
+			</a>
+			by 
+			Ian Robinson 
+			Posted
+	        Oct 5, 2008 5:16 PM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_33089').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_33089').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_33089"></span>
+		<span id="replyMessage_33089"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 0px; margin-right: 0px;">		
+			<a class="forum-list">
+			<span id="tooltip_33140" style="cursor:pointer; cursor:hand;">Excellent article gents...</span>		
+			</a>
+			by 
+			Christian MacLean 
+			Posted
+	        Oct 6, 2008 11:13 AM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_33140').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_33140').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_33140"></span>
+		<span id="replyMessage_33140"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 0px; margin-right: 0px;">		
+			<a class="forum-list">
+			<span id="tooltip_33141" style="cursor:pointer; cursor:hand;">Multipart vs. Atom vs. your own format</span>		
+			</a>
+			by 
+			Bill Burke 
+			Posted
+	        Oct 6, 2008 11:26 AM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_33141').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_33141').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_33141"></span>
+		<span id="replyMessage_33141"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 0px; margin-right: 0px;">		
+			<a class="forum-list">
+			<span id="tooltip_33207" style="cursor:pointer; cursor:hand;">One nit</span>		
+			</a>
+			by 
+			Mark Baker 
+			Posted
+	        Oct 7, 2008 11:28 AM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_33207').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_33207').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_33207"></span>
+		<span id="replyMessage_33207"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 0px; margin-right: 0px;">		
+			<a class="forum-list">
+			<span id="tooltip_33709" style="cursor:pointer; cursor:hand;">A few things</span>		
+			</a>
+			by 
+			Mark Nottingham 
+			Posted
+	        Oct 14, 2008 9:36 PM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_33709').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_33709').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_33709"></span>
+		<span id="replyMessage_33709"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 15px; margin-right: 15px;">		
+			<a class="forum-list">
+			<span id="tooltip_33968" style="cursor:pointer; cursor:hand;">Re: A few things</span>		
+			</a>
+			by 
+			Jim Webber 
+			Posted
+	        Oct 21, 2008 6:14 PM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_33968').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_33968').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_33968"></span>
+		<span id="replyMessage_33968"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 0px; margin-right: 0px;">		
+			<a class="forum-list">
+			<span id="tooltip_34218" style="cursor:pointer; cursor:hand;">A Restful BPM engine in SaaS mode</span>		
+			</a>
+			by 
+			Matthieu Hug 
+			Posted
+	        Oct 27, 2008 5:04 AM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_34218').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_34218').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_34218"></span>
+		<span id="replyMessage_34218"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 0px; margin-right: 0px;">		
+			<a class="forum-list">
+			<span id="tooltip_34227" style="cursor:pointer; cursor:hand;">Good but not enough</span>		
+			</a>
+			by 
+			Alexis Brouard 
+			Posted
+	        Oct 27, 2008 11:46 AM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_34227').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_34227').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_34227"></span>
+		<span id="replyMessage_34227"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 15px; margin-right: 15px;">		
+			<a class="forum-list">
+			<span id="tooltip_35160" style="cursor:pointer; cursor:hand;">Re: Good but not enough</span>		
+			</a>
+			by 
+			Tiberiu Fustos 
+			Posted
+	        Nov 16, 2008 1:01 PM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_35160').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_35160').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_35160"></span>
+		<span id="replyMessage_35160"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 0px; margin-right: 0px;">		
+			<a class="forum-list">
+			<span id="tooltip_34506" style="cursor:pointer; cursor:hand;">Great Article - Few Comments</span>		
+			</a>
+			by 
+			Colin Jack 
+			Posted
+	        Nov 3, 2008 11:05 AM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_34506').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_34506').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_34506"></span>
+		<span id="replyMessage_34506"></span>
+		
+		<div class="forum-list-tree" style="position: relative; left: 15px; margin-right: 15px;">		
+			<a class="forum-list">
+			<span id="tooltip_34565" style="cursor:pointer; cursor:hand;">Re: Great Article - Few Comments</span>		
+			</a>
+			by 
+			Colin Jack 
+			Posted
+	        Nov 4, 2008 5:34 AM
+			<script type="text/javascript" language="javascript">
+		    	$('#tooltip_34565').mouseover(function(e) {
+		    		initializeTooltip(e);
+		    	});
+		    	$('#tooltip_34565').mouseout(function(e) {
+		    		deintializeTooltip(e);
+		    	});
+		  	</script>  	
+	  	</div>
+		<span id="replyTree_34565"></span>
+		<span id="replyMessage_34565"></span>
+	
+	
+	<div class="comments-sort">
+		<span id="comments-sort"  >
+			
+			
+				<a class="comment-sort-desc" href="javascript:changeOrder(2);">Sort by date descending</a>
+			
+		</span>
+	</div>
+	
+	<ol class="comments">
+	
+	
+	
+		<li id="comment-33051">
+			<a name="view_33051"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_33051">
+	                <h4><a href="#view_33051" name="33051" onClick="javascript:hideTooltip();return true;">Very well done</a></h4>
+	                <p class="comment-author">
+	                    Oct 3, 2008 5:52 AM
+	                    by
+	                    <strong>
+	                        Ray Krueger 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_33051">
+			<p>
+				<span id="quote_33051">
+					You even mixed in some OPTIONS action, very nice. Now, if only we had a working sample :)
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(33051):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(33051);'));">Reply</a></p>			
+		<span id="replyFlat_33051"></span>
+		</li>
+		<span id="replyFlatMessage_33051"></span>	
+	
+		<li id="comment-33052">
+			<a name="view_33052"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_33052">
+	                <h4><a href="#view_33052" name="33052" onClick="javascript:hideTooltip();return true;">&quot;Advanced&quot; REST</a></h4>
+	                <p class="comment-author">
+	                    Oct 3, 2008 8:14 AM
+	                    by
+	                    <strong>
+	                        Manish Bhatt 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_33052">
+			<p>
+				<span id="quote_33052">
+					Very good presentation of some of the advanced aspects of RESTful design.<br>Good explanation of "ST" of REST.
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(33052):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(33052);'));">Reply</a></p>			
+		<span id="replyFlat_33052"></span>
+		</li>
+		<span id="replyFlatMessage_33052"></span>	
+	
+		<li id="comment-33078">
+			<a name="view_33078"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_33078">
+	                <h4><a href="#view_33078" name="33078" onClick="javascript:hideTooltip();return true;">Excellent work</a></h4>
+	                <p class="comment-author">
+	                    Oct 4, 2008 4:04 AM
+	                    by
+	                    <strong>
+	                        Oyku Gencay 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_33078">
+			<p>
+				<span id="quote_33078">
+					Great article. A very consise and non holistic approach to RESTful design. Looking forward to more like this. This is a must read.
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(33078):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(33078);'));">Reply</a></p>			
+		<span id="replyFlat_33078"></span>
+		</li>
+		<span id="replyFlatMessage_33078"></span>	
+	
+		<li id="comment-33087">
+			<a name="view_33087"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_33087">
+	                <h4><a href="#view_33087" name="33087" onClick="javascript:hideTooltip();return true;">Two Questions</a></h4>
+	                <p class="comment-author">
+	                    Oct 5, 2008 11:58 AM
+	                    by
+	                    <strong>
+	                        Stephen Molitor 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_33087">
+			<p>
+				<span id="quote_33087">
+					Great article.  It really helped me understand the notion of "hypermedia as the engine of application state".  Two questions:<br><br/><br/><br>1.  After paying for the order, what would the next state for the customer be and how would he/she get there?  In a real Starbucks the barista would notify the customer via a push - "Roy's drink is ready" and the customer would pick it up.  But that's not very RESTful.  Instead would the customer poll a feed of drinks that are ready?  And perhaps the feed could have a URL telling them where to pick up their drink(s).<br><br/><br/><br>2.  I was a little confused by your use of the 'rel' tag.  After placing an order the customer is directed to the payment URL via the 'next' tag.  The xml namespace describing the semantics of the next tag points to example.org/state-machine.  However the 'rel' tag points to starbucks.example.org/payment for the definition of the payment value.  I'm used to having all the possible values of the rel tag defined in the 'next' tag's xmlns, and the rel tag having one of those simple values like "payment", "alternate", etc.  Either example.org defines the complete semantics of 'next', or if starbucks has extended it both namespaces should be mentioned in the next tag.  At least that's how I understood things but maybe I'm wrong.  Anyway this is a minor detail.
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(33087):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(33087);'));">Reply</a></p>			
+		<span id="replyFlat_33087"></span>
+		</li>
+		<span id="replyFlatMessage_33087"></span>	
+	
+		<li id="comment-33089">
+			<a name="view_33089"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_33089">
+	                <h4><a href="#view_33089" name="33089" onClick="javascript:hideTooltip();return true;">Re: Two Questions</a></h4>
+	                <p class="comment-author">
+	                    Oct 5, 2008 5:16 PM
+	                    by
+	                    <strong>
+	                        Ian Robinson 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_33089">
+			<p>
+				<span id="quote_33089">
+					Hi Stephen<br><br/><br/><br>Thanks for your questions. A partial reply to your first only, for now:<br><br/><br/><br>I think, as you suggest, come form of client polling will work here. But note that the barista doesn't so much "push" the finished coffee as announce or publish its being completed: it's up to the customer then to fetch the coffee. In this way, some of there reliability issues surrounding the delivery of the coffee and the completion of the transaction are delegated to the customer. If the customer's still in the store and in earshot, he or she can act on the notification and get the coffee: there's no need for some expensive table service (bus) to guarantee delivery from the barista to the customer.<br><br/><br/><br>We could have the barista publish to some sort of feed of completed orders, an Atom feed for example, with each customer then polling the feed at intervals in order to determine the status of his or her order. Customers in this particular scenario don't require subsecond updates, but they might reasonably expect to learn their coffee's ready within say 10 seconds of its being completed. As George Malamidis has <a rel="nofollow" href="http://nutrun.com/weblog/anarchic-versus-controlled-scalability/">pointed out</a>, many clients polling a feed every 10 seconds or so poses some pretty significant challenges.<br><br/><br/><br>I don't think an Atom feed is appropriate here. A feed of events is useful when the feed consumers are interested in all or most of the events. But here, because they're only interested in the status of their own particular order, each customer will likely have to parse the feed and discard the majority of entries. (But see the FriendFeed update feed and <a rel="nofollow" href="http://blog.friendfeed.com/2008/08/simple-update-protocol-fetch-updates.html">Simple Update Protocol</a> for an example of using feeds to publish events to clients, each of which is interested in only a fraction of the events.)<br><br/><br/><br>Better to create an order status resource per order. Customers can GET (or conditionally GET) a representation of this resource at frequent intervals, and the barista can PUT to it as he or she makes the coffee. We let the customer know about this resource when they first place their order by returning 202 Accepted and setting the Location response header to the URI of the new order status resource.<br><br/><br/><br>We can create this order status resource wherever we like. That is, we can shard the order status URI space, with particular shards servicing particular geographies. Better still, we can cache each order status and use something like Mark Nottingham's <a rel="nofollow" href="http://www.mnot.net/blog/2008/01/04/cache_channels">cache channels</a> to control the freshness of these responses in a reasonably fine-grained manner. We might specify a max-age of only 5 seconds, but using cache channels, a cache can prolong the freshness of an order status as long as: <br><br/><br/><br>1) it (the cache) continues polling the cache channel at least as often as the cache channel's precision, and <br><br/><br>2) the cache doesn't receive a stale event related to that resource from the cache channel. <br><br/><br/><br>Note that cache channels use Atom feeds for communication between the origin server and the cache or cache hierarchy - which makes perfect sense since the cache is interested in all or at least a significant portion of events coming off the channel.<br><br/><br/><br>The result: many instances of customers hitting the caches, and many fewer instances of caches hitting the origin servers, either to revalidate stale responses or poll cache channels.
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(33089):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(33089);'));">Reply</a></p>			
+		<span id="replyFlat_33089"></span>
+		</li>
+		<span id="replyFlatMessage_33089"></span>	
+	
+		<li id="comment-33140">
+			<a name="view_33140"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_33140">
+	                <h4><a href="#view_33140" name="33140" onClick="javascript:hideTooltip();return true;">Excellent article gents...</a></h4>
+	                <p class="comment-author">
+	                    Oct 6, 2008 11:13 AM
+	                    by
+	                    <strong>
+	                        Christian MacLean 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_33140">
+			<p>
+				<span id="quote_33140">
+					and very timely!<br><br>CM
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(33140):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(33140);'));">Reply</a></p>			
+		<span id="replyFlat_33140"></span>
+		</li>
+		<span id="replyFlatMessage_33140"></span>	
+	
+		<li id="comment-33141">
+			<a name="view_33141"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_33141">
+	                <h4><a href="#view_33141" name="33141" onClick="javascript:hideTooltip();return true;">Multipart vs. Atom vs. your own format</a></h4>
+	                <p class="comment-author">
+	                    Oct 6, 2008 11:26 AM
+	                    by
+	                    <strong>
+	                        Bill Burke 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_33141">
+			<p>
+				<span id="quote_33141">
+					The values of Atom haven't really clicked with me yet.  In this particular example how is it better than something like "multipart/*".  On your client or server, you have the added complexity of having to support the Atom XML interaction format.  With multipart, we can have the same information(through Location, Content-Location, and Content-Type headers) in a much more condensed format.<br><br/><br>Even better than multipart, why not just send back a comma delimited list of order URIs?<br><br/><br><br>One of the things (but not the only thing) that attracted me to REST was that you could focus on the data format you were exchanging between your services and not tunnel your interactions with a intermediary protocol.  So far, Atom to me is just a sexier replacement to SOAP.<br><br/><br>BTW, I liked the article.<br>--<br/><br>Bill Burke<br/><br>JBoss, a division of Red Hat
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(33141):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(33141);'));">Reply</a></p>			
+		<span id="replyFlat_33141"></span>
+		</li>
+		<span id="replyFlatMessage_33141"></span>	
+	
+		<li id="comment-33207">
+			<a name="view_33207"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_33207">
+	                <h4><a href="#view_33207" name="33207" onClick="javascript:hideTooltip();return true;">One nit</a></h4>
+	                <p class="comment-author">
+	                    Oct 7, 2008 11:28 AM
+	                    by
+	                    <strong>
+	                        Mark Baker 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_33207">
+			<p>
+				<span id="quote_33207">
+					Nicely done, but application/xml isn't the media type you're looking for.
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(33207):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(33207);'));">Reply</a></p>			
+		<span id="replyFlat_33207"></span>
+		</li>
+		<span id="replyFlatMessage_33207"></span>	
+	
+		<li id="comment-33709">
+			<a name="view_33709"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_33709">
+	                <h4><a href="#view_33709" name="33709" onClick="javascript:hideTooltip();return true;">A few things</a></h4>
+	                <p class="comment-author">
+	                    Oct 14, 2008 9:36 PM
+	                    by
+	                    <strong>
+	                        Mark Nottingham 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_33709">
+			<p>
+				<span id="quote_33709">
+					Great article, very good illustration. A few points:<br><br>* It would be good to explicitly point out that the representations are just that -- representations of state. I've seen many services where the author feels the need to wrap things with "RequestFoo" and "ResponseFoo" elements, or "Message" elements.<br><br>* You say 404 means that the service is too lazy or secure to give a real reason for denying the request. Using 400 and 404 is more appropriate for those, respectively; 404 has defined semantics that some client sofware will act upon.<br><br>* Using OPTIONS seems a bit contrived here, and it should be pointed out that it isn't required; the client is allowed to just try the request and see if it succeeds.<br><br>* Expect/Continue is really for cases where you have a long request body and want to see if the URI, method and headers are acceptable before sending the whole thing. It also has some interop problems (i.e., it isn't widely well-supported), so again it's probably easier to just send the request. I understand you're trying to illustrate a point here, but again it's contrived and doesn't get to the heart of the real utility of E/C.<br><br>* You update an order with a PUT. My notes on the printout say "No, that's f**ked". This is a flagrant abuse of the semantics of PUT; if you want to combine a representation with the existing state of the resource, use POST or the emerging PATCH. <br><br>* You ask the service if it's still possible to PUT using OPTIONS. Again, this leads people to believe that they should OPTIONS before every request, which isn't good practice, or necessary. Furthermore, it's a poor indicator of whether the PUT will be allowed, because if you're updating state that quickly, it very well may change between requests. General consensus is that OPTIONS metadata isn't that fine-grained in time.<br><br>* You model your payment resources as /payment/order/1234; why not /order/1234/payment, to leverage relative URIs?<br><br>* It would be really nice to see the service interacting with a link that the client gives it (e.g., to a bank account for payment). A lot of service authors make the mistake of only defining the interfaces they provide, rather than the ones that they consume; playing both roles is much more powerful.<br><br>* Note that Expires isn't the only mechanism that will keep the order list up-to-date here; POST to the order list will invalidate any intervening caches (as per RFC2616 section 13.10). Unfortunately, this isn't widely implemented, but we've now got it in Squid 2.HEAD, and it should be in release tarballs soon. At Y! we've also been working on communicating invalidations generated in this fashion between peers to keep a cluster in sync, and doing stuff with the grouping mechanism to let them invalidate other URIs. But I digress.<br><br>* Intermediaries are one of the more powerful actors in this kind of deployment; not only for caching/acceleration, but also load balancing, routing, and other services. It would be nice to illustrate that (perhaps with an extra barista?).<br><br>* Webber, you wrote this whole article just so you could say "The Technology you're about to enjoy is extremely hot", didn't you? :)
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(33709):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(33709);'));">Reply</a></p>			
+		<span id="replyFlat_33709"></span>
+		</li>
+		<span id="replyFlatMessage_33709"></span>	
+	
+		<li id="comment-33968">
+			<a name="view_33968"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_33968">
+	                <h4><a href="#view_33968" name="33968" onClick="javascript:hideTooltip();return true;">Re: A few things</a></h4>
+	                <p class="comment-author">
+	                    Oct 21, 2008 6:14 PM
+	                    by
+	                    <strong>
+	                        Jim Webber 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_33968">
+			<p>
+				<span id="quote_33968">
+					Dear mnot,<br><br>You bet I did :-)<br><br>Jim<br><br>PS - Partial PUT is all I've got...
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(33968):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(33968);'));">Reply</a></p>			
+		<span id="replyFlat_33968"></span>
+		</li>
+		<span id="replyFlatMessage_33968"></span>	
+	
+		<li id="comment-34218">
+			<a name="view_34218"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_34218">
+	                <h4><a href="#view_34218" name="34218" onClick="javascript:hideTooltip();return true;">A Restful BPM engine in SaaS mode</a></h4>
+	                <p class="comment-author">
+	                    Oct 27, 2008 5:04 AM
+	                    by
+	                    <strong>
+	                        Matthieu Hug 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_34218">
+			<p>
+				<span id="quote_34218">
+					Hello<br><br>Interesting paper; I'd like to share a practial experience on this kind of approach. At RunMyProcess (<a rel="nofollow" href="http://www.runmyprocess.com" target="_blank">www.runmyprocess.com</a>) we propose a fully featured BPM engine which technically relies on ReST+Atom (this combination is extremely powerful IMHO). We started to build it 2 years ago, and it's been GA since June 2008. This platform is delivered as a "BPM as a service", meaning it is a "software as a service" platform.<br><br>Beyond ideology, what does ReST+Atom bring to a BPM engine? From the user point of view, mainly an extreme ease of integration. A process can be started by a standard HTML form (it's just a post); any data configured within the engine or computed by the engine can be added in any portal, they're all just "RSS" feeds. This last point includes workflow tasks, process monitoring reports, real time BAM data (business activity monitoring), etc. Just feeds; besides, imagine  that a feed is a resource like any other, meaning they can be used during process execution: typically useful to build control process in a couple of hours (minutes when you get skilled ;-).<br><br>Besides during execution we allow interactions with ReST "services", of course, but also with WS-SOAP, FTP servers or email smtp/pop. From the user point of view all the technical complexity is hidden, they become all equivalent, embedded into a restful process.<br><br>ReST+Atom is the technical stack which will contribute to democratize BPM:  together with BPMN and "as a service" model, it should put an end to over complicated and  endless BPM projects and large spendings.<br><br>That combination also opens the door for a largely new spectrum of BPM projects: multientreprise business process. <br><br>Enough blah-bah... You're all welcome to register and try, trial is fully featured and free ;-) (<a rel="nofollow" href="http://www.runmyprocess.com" target="_blank">www.runmyprocess.com</a>)
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(34218):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(34218);'));">Reply</a></p>			
+		<span id="replyFlat_34218"></span>
+		</li>
+		<span id="replyFlatMessage_34218"></span>	
+	
+		<li id="comment-34227">
+			<a name="view_34227"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_34227">
+	                <h4><a href="#view_34227" name="34227" onClick="javascript:hideTooltip();return true;">Good but not enough</a></h4>
+	                <p class="comment-author">
+	                    Oct 27, 2008 11:46 AM
+	                    by
+	                    <strong>
+	                        Alexis Brouard 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_34227">
+			<p>
+				<span id="quote_34227">
+					Hi Jim, Savas and Ian,<br><br>As far as I know, it is the first and most complete article on how to use REST and this is cool!<br>So first, thank you for describing such a sample!<br><br>I have however some points to address you.<br><br>About the <i>next</i> links system, how to handle more complex (and more real-life-business-like) cases like:<br><ul><br><li><br>* When you have a split with multiple paths to follow concurrently after one transition? (note this would have not much sense with the lifecycle of one resource but here we have three resources managed in the same workflow: order, payment and drink)<br>For instance, we could imagine that payment of the drink would set the order in the <i>paid</i> state (that's the process you've described) but also set the myStarbucks account in the <i>created</i> state (if the first order at Starbucks would automatically create a myStarBucks account for further loyalty or partnership offers)<br></li><br><li><br>* When you have a long-running process (which is not the case here as processes you've described all complete in a few minutes), how to ensure new <i>next</i> links will not set resources in odd states? (by long-running process, I mean several days, weeks, months or even years and versioning is a tough issue with such processes)<br>For instance, if we imagine a coffee takes some days to be ready (ok, it's not really realistic in the case of coffee but let's just imagine that as many real-life business processes act this way), if we change the process to enforce customers to fill in a customer service survey after having paid and before being able to receive its drink (i.e. the <i>next</i> link appearing on the payment resource points no more to <i>drink received</i> state but to a <i>survey completed</i> state)<br></li><br></ul><br>For the last <i>next</i> link (the free-offer link, should be figure 20...), from which resource is it extracted? Does this link bounds to the order resource or the payment resource?<br>If it bounds to the order resource, is there a way to determine programmatically which <i>next</i> link to follow? (the payment link or the free offer one)<br>If it bounds to the payment resource, will the barista be able to see this link when checking a customer payment? (and if the barista was not human, how to avoid him to follow to this - irrelevant - <i>next</i> link?)<br><br>The latter introduces issues about automation.<br>In the article, all is clear: we know what to do to go from one state to the other, we understand a conflict root cause, we could even understand a unknown state - a myStarbucks account created or a customer survey complete -.<br>But this is barely because we are humans and we natively understand the semantics of the process (as we know the process very well, at least, from a customer point of view).<br>What if we were programs? (i.e. a Java/JEE or PHP web application - I know, stating a such thing does not really promotes us ;-) ) <br>By this I mean, how distributed programs (and a program has a limited "smartness" capability) could conclude and act the same way we can do?<br>To take another sample than the previous one (aka the barista who should not follow the next link embedded in the resource it gets): <br>When updating an order, if there is a conflict and if I am a program, I can conclude the following:<br><ul><br><li>* The difference between what I want to PUT and what exists is a XML element <i>additions</i></li><br><li>* Since there is a conflict, I cannot PUT my <i>additions</i> XML element</li><br></ul><br>And that's all! I cannot conclude on what to do to go further: should I drop my update request (which is the case in the article) or should I send another update (a different addition) because I used a value for the <i>additions</i> element that cannot be proceed at this time? (the latter means that the additions we want is invalid only because of the actual state of the resource (and not for all states) and even if it was semantically valid) <br>Is there a way to accurately handle the discovered on the fly <i>next</i> link system in order to let a computer use it without blowing our resources out?<br><br>In the 3rd story, you indicate in this model, state-machines and workflows are discovered and described on the fly and, because agreements have been made on the semantics (i.e. the set of transitions and states to handle - whether now or in several years -), clients will always know what to do with every state.<br>I completely agree that semantics must be agreed upfront and, in your sample, processes are discovered - by the client - on the fly.<br>But I strongly disagree about the fact that processes are described on the fly! Even if they are not described in WS-BPEL or WS-CDL (or in a Java bean or in a C program or whatever), they are however described upfront (at least by your UML diagram). <br>And the best proof of this is that a set of states has been agreed in the first place (prior any coding). And what is a set of states if not an - underlying - process?<br>It is then, IMO, sad - as it weakens it - that your article tries to state that no process description is needed upfront.<br><br>Moreover, I think that integrating the process in the client (as the client knows all states - not only information it can send or transitions/functions/services it can call - and hold in some way the process description) leads to a big risk: coupling the two.<br>Coupling is not always a bad thing (there's a lot of coupling in all we've done the past decades and not all has problems). But in the case of processes, especially frequently-changing processes (as the business has to change and adapt itself), coupling processes and clients means that, changing the processes will leads to changing the client (not easy to manage, especially in an automated environment)<br>Your article seems to get rid of that issue and tend to state that coupling the two is good for every process. IMO, there's no silver bullet to every problem and it's highly risky to state so (or to not explicitly state the contrary).<br><br>Last thing of this long comment: why do the barista set the order status by hand?<br>In all previous stories in your article, the order doesn't carry its own state as the state-machine does for him!<br>Here, IMO, you left the "Representational State Transfer" (aka REST) principles - as there are no state transfer and no transition used - to go back (in time) to data update (aka the U of CRUD...)<br>To change the order status to preparing, I expected the barista to PUT a "prepare" resource...<br><br>This issue maybe also shows that, in your article, you've mixed cross-resources processes (workflows) and resources lifecycles (which are individual state-machines).<br>Workflows are not always driven by states (understand workflows are not necessarily state-machines) but lifecycles are always state-machines.<br>Here, you've described two workflows describing an order-to-drink process and involving three resources (order, payment and drink)<br>Each of the resource has its own lifecycles (order goes from placed to prepared, payment from tentative to confirmed, drink from ordered to received) which are all distinct from the order-to-drink process (including states when you make your process state-driven).<br>The order-to-drink process uses resources and makes them evolve (through transitions of their lifecycles) and its state is a combination of resources' states and order-specific information.<br>I think clearly and cleanly separating all of these is a critical element in REST... And I was disappointed to see it was not in the first and most complete article on how to use REST...<br><br>Alexis
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(34227):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(34227);'));">Reply</a></p>			
+		<span id="replyFlat_34227"></span>
+		</li>
+		<span id="replyFlatMessage_34227"></span>	
+	
+		<li id="comment-34506">
+			<a name="view_34506"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_34506">
+	                <h4><a href="#view_34506" name="34506" onClick="javascript:hideTooltip();return true;">Great Article - Few Comments</a></h4>
+	                <p class="comment-author">
+	                    Nov 3, 2008 11:05 AM
+	                    by
+	                    <strong>
+	                        Colin Jack 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_34506">
+			<p>
+				<span id="quote_34506">
+					Finally we're getting some enterprise oriented REST examples, good stuff. I have a few comments on the content but overall I found it very useful.<br><br>The use of PUT on the Order was slightly confusing, you are using it to update a portion of the existing resource and I thought this was a bit of a no-no. Instead I'd have expected a POST (or maybe in the futue a PATCH). I realize you have your reasons but I thought it was worth a bit more discussion, especially as an indisciplined client (not sending e-tags or if modified since) could re-POST and get another shot unexpectedly.<br><br>The PUT by the barista to update the Order state also seemed fine but I wondered if you'd considered handling this by POSTing a resource (perhaps OrderInProgress) to the Order? Just thinking that going in and updating part of a RESOURCE in this way is quite different to the other examples of RESTful workflow/process solutions that I've seen as they used more of a messaging paradigm (posting messages essentially) which seemed to result in a clearer approach (and allowed us to keep PUT idempotent).<br><br>The whole OPTIONS thing also seemed a bit contrived, its a pity its so early on in an example like this.<br><br>All in all though great stuff.
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(34506):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(34506);'));">Reply</a></p>			
+		<span id="replyFlat_34506"></span>
+		</li>
+		<span id="replyFlatMessage_34506"></span>	
+	
+		<li id="comment-34565">
+			<a name="view_34565"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_34565">
+	                <h4><a href="#view_34565" name="34565" onClick="javascript:hideTooltip();return true;">Re: Great Article - Few Comments</a></h4>
+	                <p class="comment-author">
+	                    Nov 4, 2008 5:34 AM
+	                    by
+	                    <strong>
+	                        Colin Jack 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_34565">
+			<p>
+				<span id="quote_34565">
+					Just re-reading my comments when I say "re-POST" I obviously mean resend the PUT.<br><br>I should also say that I recognise that using PUT to update the Order state is a valid (and maybe preferrable) approach, but I'm just not sure how well it works in more complex workflows.
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(34565):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(34565);'));">Reply</a></p>			
+		<span id="replyFlat_34565"></span>
+		</li>
+		<span id="replyFlatMessage_34565"></span>	
+	
+		<li id="comment-35160">
+			<a name="view_35160"></a>
+			<div class="comment-header">
+				<p class="comment-top">
+					<a style="position:relative;" href="#">Back to top</a>
+				</p>
+				
+				<div id="header_35160">
+	                <h4><a href="#view_35160" name="35160" onClick="javascript:hideTooltip();return true;">Re: Good but not enough</a></h4>
+	                <p class="comment-author">
+	                    Nov 16, 2008 1:01 PM
+	                    by
+	                    <strong>
+	                        Tiberiu Fustos 
+	                    </strong>
+	                </p>
+				</div>
+			</div>				
+			<div id="body_35160">
+			<p>
+				<span id="quote_35160">
+					Despite all the heavy-weights commenting on the article so far, I dare to agree with Alexis regarding the mixing of resources (and their states) with processes in the example. The fact that the Order resource contains process information (figure 5) seems suboptimal to me. Ok, the "next step" info is separated in its own namespace (microformat). I think Jean-Jaques' article  <a rel="nofollow" href="http://www.infoq.com/articles/seven-fallacies-of-bpm">The Seven Fallacies of BPM</a> explains the difference pretty well. <br><br>Nevertheless, I found the article very instructive and helpful to position REST in the "architecture toolbox" - a silver bullet is it not. Seems to me it still requires a lot of implicit agreements between the parties (see the comments about PUT vs. PATCH vs. POST) - a lot of this goes in the WS-* world in the explicit "contract" in case of cross-enterprise services (in form of WSDLs <b>and</b> documents...). Still it makes for a "round" and convincing example. I like <a rel="nofollow" href="http://jim.webber.name/downloads/presentations/2004-12-Secure-Reliable-Transacted-Service-Oriented-Architecture.ppt">MEST</a> better :-)
+				</span>
+			</p>
+			</div>
+			<p class="comment-footer"><a class="comment-reply" href="javascript:void(0)" onClick="javascript:loggedIn?replyFromFlat(35160):showLoginWindow(this,ALIGN_RIGHT,new Function('replyFromFlat(35160);'));">Reply</a></p>			
+		<span id="replyFlat_35160"></span>
+		</li>
+		<span id="replyFlatMessage_35160"></span>	
+	
+	
+	<span id="lastMessages"></span>
+	<span id="replyFlatMessage_31967"></span>
+	
+	</ol>
+
+
+    <div class="box-bottom"></div>
+    </div>
+    </div> 
+    <div class="bottom-corners"><div></div></div>
+    </div> 
+  
+
+			
+		</div>
+		
+	</div></div>
+	
+		
+	
+	<div id="sidebar">
+	<div id="sidebar-wrapper">
+		
+
+
+
+
+
+
+<div class="s-logo">
+	
+	<p class="r-logo"><a href="/;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D"><img src="http://cdn2.infoq.com/styles/i/logo.gif;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" alt="InfoQ"/></a></p>
+</div>
+
+
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span style="font-size: x-small;#font-size: xx-small;">
+
+    
+    
+516,020 Nov unique visitors
+</span>
+<div style="margin-top:5px; height:60px">
+	<a href="http://qconlondon.com/london-2011/?utm_source=infoq&utm_medium=banner&utm_campaign=buttonimage" target="_blank">
+	   <img src="http://cdn1.infoq.com/styles/i/qcon/london_2011/QCL2011_140x60_15.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" style="width:100%; height:60px"/>
+	</a>
+</div>
+
+
+		    
+		
+		
+
+
+
+
+
+
+
+
+	<div class="box-simple">
+		<div class="box-simple-top"></div>
+		<div id="mainLoginArea" class="box-simple-content">
+			
+			
+			<ul>
+	            <li><a href="/reginit.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D">Register</a></li>
+			    <li><a href="javascript:void(0)" onClick="javascript:showLoginWindow(this,ALIGN_LEFT,new Function('void(0);'));">Login</a></li>
+	            <li><a href="/about;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D">About us</a></li>
+	            
+	            
+				
+			    <li><a href='http://www.qconferences.com/'>QCon</a></li>
+			    
+			</ul>
+			
+		</div>
+		<div class="box-simple-bottom"></div>
+	</div>
+
+
+		
+
+
+
+
+
+
+
+
+
+<div id="mainCommunitiesArea" class="box">
+    <h2>Your Communities</h2>
+    <div class="top-corners"><div></div></div>
+    <div class="box-content">
+    <div class="box-content-2">
+    	
+
+
+
+
+
+
+<script language="JavaScript">
+var communityChangeMessage = 'Your new preferences will be used starting with the next refresh.';
+</script>	
+
+<div id="communities">
+    <ul>
+	
+		<li><input type="checkbox" name="java" value="true" checked="checked" id="community1" onclick="includeExcludeCommunity(this);"/>
+ <a href='/java/'>Java</a></li>
+	
+		<li><input type="checkbox" name="dotnet" value="true" checked="checked" id="community4" onclick="includeExcludeCommunity(this);"/>
+ <a href='/dotnet/'>.NET</a></li>
+	
+		<li><input type="checkbox" name="ruby" value="true" checked="checked" id="community5" onclick="includeExcludeCommunity(this);"/>
+ <a href='/ruby/'>Ruby</a></li>
+	
+		<li><input type="checkbox" name="soa" value="true" checked="checked" id="community2" onclick="includeExcludeCommunity(this);"/>
+ <a href='/soa/'>SOA</a></li>
+	
+		<li><input type="checkbox" name="agile" value="true" checked="checked" id="community3" onclick="includeExcludeCommunity(this);"/>
+ <a href='/agile/'>Agile</a></li>
+	
+		<li><input type="checkbox" name="architecture" value="true" checked="checked" id="community1389" onclick="includeExcludeCommunity(this);"/>
+ <a href='/architecture/'>Architecture</a></li>
+	
+		<li><input type="checkbox" name="operations" value="true" checked="checked" id="community5827" onclick="includeExcludeCommunity(this);"/>
+ <a href='/operations/'>Operations</a></li>
+	
+    </ul>
+</div>
+<div id="communitiesMessage"></div>
+    </div></div>
+    <div class="bottom-corners"><div></div></div>
+</div>
+
+
+
+
+		
+
+
+
+
+
+
+
+<script type="text/javascript">
+	function doSearch(countryCode){		
+		var searchString = document.getElementById("searchId").value;
+		document.getElementById("searchTerm").value =  searchString;		
+		document.getElementById("cse-search-box").submit();
+	}
+	
+	function clearSearchText(){	
+		var searchtext =  document.getElementById("searchId").value
+		if(searchtext==JSResource.search){
+			document.getElementById("searchId").value="";
+		}
+	}
+</script>
+
+	
+
+
+			
+<form id="cse-search-box" onsubmit="customOnsubmit(); return true;" action="/search.action;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" method="GET">
+<table class="wwFormTable">
+
+	<input type="hidden" name="queryString" size="20" id="searchTerm"/>
+</table>
+</form>
+
+
+<script>
+	function customOnsubmit() {
+		
+	}
+</script>
+
+
+
+
+	
+	<div style="background: url('http://cdn3.infoq.com/styles/i/bg-search.gif;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D') no-repeat 0 4px;">	
+			
+		
+			<input type="text" name="search" id="searchId" value="Search" style="width: 80%; border: 0px none; background-color: transparent; height: 19px; padding-left:5px; padding-right:0px; padding-top:3px; padding-bottom:0;" onclick="clearSearchText();" onkeypress="if ((event.which && event.which == 13)||(event.keyCode && event.keyCode == 13)){doSearch('');}" onblur="if(this.value=='') this.value=JSResource.search"/>
+				
+			<a href="#" onclick="doSearch('');return false;"><img src="http://cdn1.infoq.com/styles/i/btn-search.gif;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" alt="Search" /></a> 
+	</div>
+
+		
+
+
+
+
+
+
+
+<div class="box-simple">
+<div class="box-simple-top"></div>
+<div id="featuredTopics" class="box-simple-content">
+
+    <h2>Featured Topics</h2>
+    <div>
+		<ul>
+			<li><a href="/virtualization/;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D">Virtualization</a></li>
+            <li><hr style="width: 100%; height: 1px; border: 0; color: #C8C8C8; background-color: #C8C8C8;"/></li>
+			<li><a href="/agile_techniques/;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D">Agile Techniques</a></li>
+            <li><hr style="width: 100%; height: 1px; border: 0; color: #C8C8C8; background-color: #C8C8C8;"/></li>			
+			<li><a href="/scrum/;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D">Scrum</a></li>
+        </ul>
+	</div>
+		
+</div>
+<div class="box-simple-bottom"></div>
+</div>
+	
+		
+
+
+
+
+
+
+
+
+<!-- Widgets -->
+
+
+
+
+
+
+			
+
+
+<!-- /Widgets -->
+
+
+<div class="box-simple" id="leftskyscraper">
+	
+		
+	
+
+
+
+
+
+
+
+
+
+	<div class="box-simple-top"></div>
+	<div class="box-simple-content">
+		<p class="banner" id="bannerparagraph">
+			
+			
+					<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="120" height="600" id="0460FA_AppDyn_0910_bnr_120x600_lp3_TAG.swf" align="middle">
+	<param name="allowScriptAccess" value="sameDomain" />
+	<param name="allowFullScreen" value="false" />
+	<param name="movie" value="http://www.infoq.com/ads/0460FA_AppDyn_0910_bnr_120x600_lp3_TAG.swf?clickTAG=http://www.infoq.com/vendorcontent/show.action?vcr=1145" /><param name="quality" value="high" /><param name="bgcolor" value="#32abfe" />	<embed src="http://www.infoq.com/ads/0460FA_AppDyn_0910_bnr_120x600_lp3_TAG.swf?clickTAG=http://www.infoq.com/vendorcontent/show.action?vcr=1145" quality="high" bgcolor="#32abfe" width="120" height="600" name="0460FA_AppDyn_0910_bnr_120x600_lp3_TAG.swf" align="middle" allowScriptAccess="sameDomain" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflash" />
+               </object>
+			
+		</p>
+	</div>
+	<div class="box-simple-bottom"></div>
+
+</div>
+
+
+
+	<div class="box-simple">
+		<div class="box-simple-top"></div>
+		<div class="box-simple-content adsTower2">
+			<div style="width:120px;background:white;"  id="leftbartextlinks">
+				
+
+
+
+
+
+
+
+	<h3>Sponsored Links</h3>
+	
+		<p>Scaling Scrum<br/>in the enterprise?<br/>ScrumWorks Pro<br/>can help.<br/><a id="tl-173" href="/ads/textLinkUrlAction.action?i=173&url=http%3A%2F%2Fdanube.com%2Fscrumworks%2Fpro%2Ftrial" target="_blank">Start a trial today</a></p>
+	
+		<p><IMG SRC="http://ad.doubleclick.net/ad/N4270.InfoQ/B5065075;sz=1x1;ord=1292617692218?" BORDER=0 WIDTH=1 HEIGHT=1 ALT="Advertisement">Download<br/>new <a id="tl-219" href="/ads/textLinkUrlAction.action?i=219&url=http%3A%2F%2Fad.doubleclick.net%2Fclk%3B233482166%3B57451623%3Bh" target="_blank">Adobe&reg;<br/>Flash&reg; Builder&trade;</a></p>
+	
+		<p>Agile Practices to<br/>Improve <a id="tl-210" href="/ads/textLinkUrlAction.action?i=210&url=http%3A%2F%2Fwww.infoq.com%2Fvendorcontent%2Fshow.action%3Fvcr%3D1176" target="_blank">Project<br/>Management<br/>Organization (PMO)</a><br/>Effectiveness</p>
+	
+		<p>Do It Yourself<br/>Agile<br/><a id="tl-218" href="/ads/textLinkUrlAction.action?i=218&url=http%3A%2F%2Fwww.infoq.com%2Fvendorcontent%2Fshow.action%3Fvcr%3D1207" target="_blank">Download the<br/>Free eBook</a></p>
+	
+		<p>DataPower:<br/><a id="tl-212" href="/ads/textLinkUrlAction.action?i=212&url=http%3A%2F%2Fwww.infoq.com%2Fvendorcontent%2Fshow.action%3Fvcr%3D1178" target="_blank">Messaging, ESB,<br/>Cloud, Security<br/>as an Appliance</a></p>
+	
+
+			</div>
+		</div>
+		<div class="box-simple-bottom"></div>
+	</div>
+
+
+<div style="margin-top:5px;">
+	<a href="http://planet.infoq.com/" target="_blank">
+	   <img src="http://cdn3.infoq.com/styles/i/banners/banner-InfoQ_Planet.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" style="width:140px;"/>
+	</a>
+</div>
+
+<div class="box-simple">
+	<div class="box-simple-top"></div>
+	<div class="box-simple-content">
+		<p class="banner">
+			<img src="http://cdn3.infoq.com/styles/i/banners/books.jpg;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" usemap="#booksmap" alt="" />
+			<map name="booksmap">
+				  <area href="http://www.infoq.com/minibooks/scrum-xp-from-the-trenches" alt="Scrum and XP from the Trenches" title="Scrum and XP from the Trenches" shape=rect coords="0,104,120,129">
+				  <area href="http://www.infoq.com/minibooks/starting-struts2" alt="Starting Struts 2" title="Starting Struts 2" shape=rect coords="0,136,120,151">		     	
+				  <area href="http://www.infoq.com/minibooks/agile-patterns" alt="Agile Patterns: The Technical Cluster" title="Agile Patterns: The Technical Cluster" shape=rect coords="0,156,120,186">
+				  <area href="http://www.infoq.com/minibooks/grails" alt="Getting Started with Grails" title="Getting Started with Grails" shape=rect coords="-1,224,119,249">
+				  <area href="http://www.infoq.com/minibooks/domain-driven-design-quickly" alt="Domain Driven Design Quickly" title="Domain Driven Design Quickly" shape=rect coords="0,258,120,283">
+				  <area href="http://www.infoq.com/minibooks/scrum-checklists" alt="Scrum Checklists" title="Scrum Checklists" shape=rect coords="0,291,120,306">
+				  <area href="http://www.infoq.com/minibooks/enterprise-soa" alt="Enterprise SOA Adoption Strategies" title="Enterprise SOA Adoption Strategies" shape=rect coords="0,315,120,338">
+				  <area href="http://www.infoq.com/minibooks/vsnettt" alt="Visual Studio .NET Tips and Tricks" title="Visual Studio .NET Tips and Tricks" shape=rect coords="0,345,120,370">
+				  <area href="http://www.infoq.com/minibooks/JTDS" alt="Java Transaction Design Strategies" title="Java Transaction Design Strategies" shape=rect coords="0,379,120,404">
+				  <area href="http://www.infoq.com/minibooks/ruby" alt="Little Ruby Book" title="Little Ruby Book" shape="rect" coords="1,192,120,218" />
+				  <area href="http://www.infoq.com/minibooks/kanban-scrum-minibook" alt="Kanban and Scrum" title="Kanban and Scrum" shape="rect" coords="1,69,124,97"/>
+			</map>
+		</p>
+	</div>
+	<div class="box-simple-bottom"></div>
+</div>
+
+
+		
+		<div class="sidebar-bottom"></div>
+	</div>
+	</div>
+	
+
+	
+
+
+
+
+
+
+
+<div style="position: absolute; z-index: 1000; left: 0px; top: 0px; width: 100%; height: 100%; display: none;" id="disabledZone">
+	<div style="position: absolute; top: 0px; right: 0px; background: none repeat scroll 0% 0% red; color: white; font-family: Arial,Helvetica,sans-serif; padding: 4px;" id="messageZone">Loading...</div>
+</div>
+
+<!-- right side start -->
+
+	<div id="rightbar">
+	<div id="right-wrapper">
+	    <!-- box start -->
+	    <div class="box">
+	        <h2>Educational Content</h2>
+	        <ul class="menu" id="tabsmenu">
+	   			<li id="tab_ALL_EXCEPT_NEWS" class="m-ALL_EXCEPT_NEWS-on"><a href="#" onclick="ContentSummary.switchTab('ALL_EXCEPT_NEWS');return false;">All</a></li>
+	            <li id="tab_ARTICLE" class="m-ARTICLE-off"><a href="#" onclick="ContentSummary.switchTab('ARTICLE');return false;">Articles</a></li>
+	            <li id="tab_PRESENTATION" class="m-PRESENTATION-off"><a href="#" onclick="JSResource.presentationsTab();return false;">Presentations</a></li>
+	            <li id="tab_INTERVIEW" class="m-INTERVIEW-off"><a href="#" onclick="JSResource.interviewsTab();return false;">Interviews</a></li>
+	            <li id="tab_MINIBOOK" class="m-MINIBOOK-off"><a href="#" onclick="JSResource.minibooksTab();return false;">Minibooks</a></li>
+	        </ul>
+		    <div class="top-corners"><div></div></div>
+		    
+		    <div class="box-content">
+			    <div class="box-content-2">
+			    <div id="rightbarcontentbox" class="box-content-3">
+                    
+					
+                        
+						
+								
+<form id="tabstateform" onsubmit="customOnsubmit(); return true;" action="">
+<table class="wwFormTable">
+
+	<input id="startIndex" type="hidden" name="startIndex" value="0"/>
+	<input id="selectedTab" type="hidden" name="selectedTab" value="ALL_EXCEPT_NEWS"/>
+	<input id="rightBarLanguage" type="hidden" name="language" value="en" />
+</table>
+</form>
+
+
+<script>
+	function customOnsubmit() {
+		
+	}
+</script>
+
+
+
+
+
+	
+	
+		
+	
+	<div class="entry" id="entry1">
+    	<h1 class="ex-presentations"><a href="/presentations/Yes-SQL">Yes, SQL!</a></h1>
+    	
+        	<p class="image"><a href="/presentations/Yes-SQL"><img src="/resource/presentations/Yes-SQL/en/smallimage/cohen.JPG" alt="" /></a></p>
+        
+        <p>Uri Cohen reviews SQL and distributed data stores, presenting how various API’s – memcached, SQL/JDBC, JPA - can be used to interact with such data stores, specifying what jobs they are best used for.</p>
+        <ul class="info link-col" style="margin-left:0px;">
+            <li>
+							
+				<a href="/architecture" name="architecture" id="1,389" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Architecture</a>,				
+				
+			
+			</li>
+	        <li class="author">	        	
+	        	
+					
+				
+				<strong><a
+	
+	href="/author/Uri-Cohen"
+
+ class="editorlink">
+Uri Cohen</a>
+</strong>				
+				
+				Dec 17, 2010
+	        	
+	        </li>
+    	    
+    	    	 
+    		 
+        </ul>
+    </div>
+    
+    	
+    
+    
+        
+    <div class="clearer"></div>
+
+	
+	
+		
+	
+	<div class="entry" id="entry2">
+    	<h1 class="ex-interviews"><a href="/interviews/johanna-rothman-agile-mgt">Johanna Rothman: Managing Agile Teams</a></h1>
+    	
+        	<p class="image"><a href="/interviews/johanna-rothman-agile-mgt"><img src="/resource/interviews/johanna-rothman-agile-mgt/en/smallimage/rothman.JPG" alt="" /></a></p>
+        
+        <p>In this interview, Agile management expert Johanna Rothman talks about the process of managing in Agile environments, particularly for distributed teams.</p>
+        <ul class="info link-col" style="margin-left:0px;">
+            <li>
+							
+				<a href="/agile" name="agile" id="3" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Agile</a>,				
+				
+			
+			</li>
+	        <li class="author">	        	
+	        	
+					
+				
+				<strong><a
+	
+	href="/author/Johanna-Rothman"
+
+ class="editorlink">
+Johanna Rothman</a>
+</strong>				
+				
+				Dec 17, 2010
+	        	
+	        </li>
+    	    
+    	    	 
+    		 
+        </ul>
+    </div>
+    
+    	
+    	<div id="banner300x250" style="clear: both; padding-top: 5px;">
+	    	<div id="adIndex2" class="adContour">
+	    	</div>
+			<span class="banner_announcement">advertisement</span>
+		</div>
+		<script type="text/javascript">
+			ContentSummary.forceBannerDisplay=true;
+		</script>
+    	
+    
+    
+        
+    <div class="clearer"></div>
+
+	
+	
+		
+	
+	<div class="entry" id="entry3">
+    	<h1 class="ex-presentations"><a href="/presentations/Transforming-to-Groovy">Transforming to Groovy</a></h1>
+    	
+        	<p class="image"><a href="/presentations/Transforming-to-Groovy"><img src="/resource/presentations/Transforming-to-Groovy/en/smallimage/Venkat.JPG" alt="" /></a></p>
+        
+        <p>Venkat Subramaniam explains some of the Groovy syntax elements and its idioms by taking Java code examples and transforming them step by step into their more concise Groovy counterparts.</p>
+        <ul class="info link-col" style="margin-left:0px;">
+            <li>
+							
+				<a href="/java" name="java" id="1" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Java</a>,				
+				
+			
+			</li>
+	        <li class="author">	        	
+	        	
+					
+				
+				<strong><a
+	
+	href="/author/Venkat-Subramaniam"
+
+ class="editorlink">
+Venkat Subramaniam</a>
+</strong>				
+				
+				Dec 17, 2010
+	        	
+	        </li>
+    	    
+    	    	 
+    		 
+        </ul>
+    </div>
+    
+    	
+    
+    
+        
+    <div class="clearer"></div>
+
+	
+	
+		
+	
+	<div class="entry" id="entry4">
+    	<h1 class="ex-interviews"><a href="/interviews/josh-bloch-java-prog">Josh Bloch on Java and Programming</a></h1>
+    	
+        	<p class="image"><a href="/interviews/josh-bloch-java-prog"><img src="/resource/interviews/josh-bloch-java-prog/en/smallimage/bloch.JPG" alt="" /></a></p>
+        
+        <p>In this interview, Google’s Josh Bloch shares his views on the open-source Java landscape as well as on the future of the Java language, including changes being implemented via Project Coin. </p>
+        <ul class="info link-col" style="margin-left:0px;">
+            <li>
+							
+				<a href="/java" name="java" id="1" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Java</a>,				
+				
+			
+			</li>
+	        <li class="author">	        	
+	        	
+					
+				
+				<strong><a
+	
+	href="/author/Josh-Bloch"
+
+ class="editorlink">
+Josh Bloch</a>
+</strong>				
+				
+				Dec 17, 2010
+	        	
+	        </li>
+    	    
+    	    	 
+    		 
+        </ul>
+    </div>
+    
+    	
+    
+    
+        
+    <div class="clearer"></div>
+
+	
+	
+		
+	
+	<div class="entry" id="entry5">
+    	<h1 class="ex-presentations"><a href="/presentations/LMAX">LMAX - How to Do 100K TPS at Less than 1ms Latency</a></h1>
+    	
+        	<p class="image"><a href="/presentations/LMAX"><img src="/resource/presentations/LMAX/en/smallimage/yx.jpg" alt="" /></a></p>
+        
+        <p>Martin Thompson and Michael Barker talk about building a HPC financial system handling over 100K tps at less than 1ms latency by having a new approach to infrastructure and software. </p>
+        <ul class="info link-col" style="margin-left:0px;">
+            <li>
+							
+				<a href="/architecture" name="architecture" id="1,389" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Architecture</a>,				
+				
+			
+			</li>
+	        <li class="author">	        	
+	        	
+					
+				
+				<strong><a
+	
+	href="/author/Martin-Thompson-and-Michael-Barker"
+
+ class="editorlink">
+Martin Thompson and Michael Barker</a>
+</strong>				
+				
+				Dec 16, 2010
+	        	,
+	        </li>
+    	    
+    	    	
+	    	    	<li class="comments">
+	    	    		<a href="/presentations/LMAX"><span>&nbsp;</span>	    	    		
+	    		    		4    		    		    		    		
+	    		    	</a>
+	    		    </li>
+    		   	 
+    		 
+        </ul>
+    </div>
+    
+    	
+    
+    
+        
+    <div class="clearer"></div>
+
+	
+	
+		
+	
+	<div class="entry" id="entry6">
+    	<h1 class="ex-presentations"><a href="/presentations/Amazon-Websites-in-the-Cloud">High Performance Websites in the Cloud</a></h1>
+    	
+        	<p class="image"><a href="/presentations/Amazon-Websites-in-the-Cloud"><img src="/resource/presentations/Amazon-Websites-in-the-Cloud/en/smallimage/Matt Wood.JPG" alt="" /></a></p>
+        
+        <p>Matt Wood presents the most important AWS services, explaining how to scale up and out, how to extend the basic stack, how to use storage, and how to manage MySQL databases running on EC2.</p>
+        <ul class="info link-col" style="margin-left:0px;">
+            <li>
+							
+				<a href="/architecture" name="architecture" id="1,389" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Architecture</a>,				
+				
+							
+				<a href="/operations" name="operations" id="5,827" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Operations</a>,				
+				
+			
+			</li>
+	        <li class="author">	        	
+	        	
+					
+				
+				<strong><a
+	
+	href="/author/Matt-Wood"
+
+ class="editorlink">
+Matt Wood</a>
+</strong>				
+				
+				Dec 16, 2010
+	        	
+	        </li>
+    	    
+    	    	 
+    		 
+        </ul>
+    </div>
+    
+    	
+    
+    
+        
+    <div class="clearer"></div>
+
+	
+	
+		
+	
+	<div class="entry" id="entry7">
+    	<h1 class="ex-presentations"><a href="/presentations/HyperGraphDB">HyperGraphDB - Data Management for Complex Systems</a></h1>
+    	
+        	<p class="image"><a href="/presentations/HyperGraphDB"><img src="/resource/presentations/HyperGraphDB/en/smallimage/Borislav Iordanov.JPG" alt="" /></a></p>
+        
+        <p>Borislav Iordanov presents the architecture of HyperGraphDB, a special type of store based on hypergraphs – graphs with edges pointing to an arbitrary number of nodes and to other edges.</p>
+        <ul class="info link-col" style="margin-left:0px;">
+            <li>
+							
+				<a href="/architecture" name="architecture" id="1,389" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Architecture</a>,				
+				
+			
+			</li>
+	        <li class="author">	        	
+	        	
+					
+				
+				<strong><a
+	
+	href="/author/Borislav-Iordanov"
+
+ class="editorlink">
+Borislav Iordanov</a>
+</strong>				
+				
+				Dec 15, 2010
+	        	,
+	        </li>
+    	    
+    	    	
+	    	    	<li class="comments">
+	    	    		<a href="/presentations/HyperGraphDB"><span>&nbsp;</span>	    	    		
+	    		    		2    		    		    		    		
+	    		    	</a>
+	    		    </li>
+    		   	 
+    		 
+        </ul>
+    </div>
+    
+    	
+    
+    
+        
+    <div class="clearer"></div>
+
+	
+	
+		
+	
+	<div class="entry" id="entry8">
+    	<h1 class="ex-interviews"><a href="/interviews/hoeller-spring">Juergen Hoeller on the Past and Future of Spring</a></h1>
+    	
+        	<p class="image"><a href="/interviews/hoeller-spring"><img src="/resource/interviews/hoeller-spring/en/smallimage/hoeller.JPG" alt="" /></a></p>
+        
+        <p>Juergen Hoeller explains the past and future of the Spring framework: 
+how it will make use of Java 7 features like Fork/Join, work with JEE6 and PaaS platforms, and much more.</p>
+        <ul class="info link-col" style="margin-left:0px;">
+            <li>
+							
+				<a href="/java" name="java" id="1" onclick="try {CategoryPopup.showPopup(this);} catch(e) {}; return false;">Java</a>,				
+				
+			
+			</li>
+	        <li class="author">	        	
+	        	
+					
+				
+				<strong><a
+	
+	href="/author/Juergen-Hoeller"
+
+ class="editorlink">
+Juergen Hoeller</a>
+</strong>				
+				
+				Dec 15, 2010
+	        	
+	        </li>
+    	    
+    	    	 
+    		 
+        </ul>
+    </div>
+    
+    	
+    
+    
+        
+    <div class="clearer"></div>
+
+
+<ul class="newsnav link-col">
+
+
+    <li><a href="#" onclick="ContentSummary.setStartIndex('8');return false;">Older &gt;</a></li>
+
+</ul>
+
+	                <!-- Rightbar:7ms -->
+    
+    				<div class="clearer"></div>
+				    <div class="box-bottom"></div>
+				</div>
+				</div>
+				<div class="bottom-corners"><div></div></div>
+			</div>
+		</div>
+		<!-- box end -->
+		<script type="text/javascript">
+			ContentSummary.determine300x250BannerPosition();
+		</script>
+	</div>
+	</div>
+
+<!-- right side end -->
+
+	</div>
+
+	<div class="clearer"></div>
+
+	
+
+
+
+
+
+
+
+
+
+	<div id="footer">
+		<table cellspacing="2" cellpadding="0" width="68%">
+			<tr>
+				<th colspan="6">Contact us</th>
+			</tr>
+			<tr>
+				<td><a href="mailto:feedback@infoq.com" name="feedback">General Feedback</a><br /><span>feedback@infoq.com</span></td>
+				<td><a href="mailto:bugs@infoq.com" name="bugs">Bugs</a><br /><span>bugs@infoq.com</span></td>
+				<td><a href="mailto:sales@infoq.com" name="sales">Advertising</a><br /><span>sales@infoq.com</span></td>
+				<td><a href="mailto:editors@infoq.com" name="editors">Editorial</a><br /><span>editors@infoq.com</span></td>
+				<td><a href="http://twitter.com/infoq" target="_blank">Twitter</a><br /><span>http://twitter.com/infoq</span></td>
+				<td><a href="http://groups.google.com/group/infoq" target="_blank">InfoQ Discussion Group</a><br /><span>http://groups.google.com/group/infoq</span></td>
+			</tr>
+		</table>
+		<div class="copyright">
+	    	<th colspan="6">
+	    		InfoQ.com and all content copyright &#169; 2006-2010 C4Media Inc.
+				InfoQ.com hosted at <a href="http://www.contegix.com/">Contegix</a>, the best ISP we've ever worked with.
+				<a href="/PrivacyPolicy.jsp;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D">Privacy policy</a>
+	    	</th>
+		</div>
+	</div>
+
+
+</div>
+
+<script src="http://cdn4.infoq.com/scripts/__utm.js;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" type="text/javascript"></script>
+<script src="/dwr/engine.js;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" type="text/javascript"></script>
+<script src="/dwr/interface/UserCategoryUtil.js;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" type="text/javascript"></script>
+<script src="/dwr/interface/DWRRewriteAction.js;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" type="text/javascript"></script>
+<script type="text/javascript">
+	ContentSummary.setSelectedTab('en');
+</script>
+
+
+
+
+
+
+
+<script type="text/javascript">
+	var includeName = 'Include';
+	var excludeName = 'Exclude';
+	var includeHint = 'You can include this category.';
+	var excludeHint = 'You can exclude this category.';
+	var excludeCategoryMessage = 'You can re-include from your profile personalization, or right now.<BR />';
+	var viewallCategoryMessage = 'You can view all items that belong to this category.';
+	var busyMessage = 'Please wait...';
+	var contextPath = '' + '/';
+	var viewallCategoryPath= '';
+	var includeExcludeLink= true;
+</script>
+
+
+
+
+
+
+
+
+
+
+	<script src="/dwr/interface/UserConfirmation.js;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" type="text/javascript"></script>
+	<script type="text/javascript">UserConfirmation.confirm('Z5NcjIxtjwxLvFLo3KiQGHYGNs3d09aC');</script>
+
+<script src="http://cdn2.infoq.com/scripts/tracker.js;jsessionid=40DD26BCDBDE2B2F2D551A7D2CFA385D" type="text/javascript"></script>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-6608133-2");
+
+
+	pageTracker._setCustomVar(1, "userregistered", "false");
+
+pageTracker._setCustomVar(2, "userprefs", "0");
+} catch(err) {}
+pageTracker._trackPageview();
+Tracker.doTrackVcrImpressions();
+Tracker.doTrackPresentationDefaultDisplay();
+</script>
+
+</body>
+</html>
+
