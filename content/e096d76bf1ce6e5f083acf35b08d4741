@@ -1,0 +1,544 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>GeoCommons</title>
+
+  
+  <link href="/stylesheets/finder.min.css?1290021155" media="all" rel="stylesheet" type="text/css" />
+
+  
+    
+    
+    <script src="/javascripts/prototype.min.js?1290021155" type="text/javascript"></script>
+    <script src="/javascripts/jquery-1.3.2.min.js?1290021155" type="text/javascript"></script>
+    <script type="text/javascript" charset="utf-8">
+      var jq = jQuery.noConflict();
+    </script>
+    
+    
+    <script src="/javascripts/finder.min.js?1290021155" type="text/javascript"></script>
+  
+  <link href="/stylesheets/home.css?1290021155" media="all" rel="stylesheet" type="text/css" />
+<script src="/javascripts/f1.api.js?1290021155" type="text/javascript"></script>
+<script src="/javascripts/f1.pane.js?1290021155" type="text/javascript"></script>
+
+  <!--[if lt IE 7]>
+    <link href="/stylesheets/finder_ie6.min.css?1290021155" media="all" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/f1_ie6.css?1290021155" media="all" rel="stylesheet" type="text/css" />
+  <![endif]-->
+  <link rel="search" type="application/opensearchdescription+xml" title="GeoCommons" href="http://geocommons.com/opensearch.xml" />
+  <link rel="SHORTCUT ICON" href="http://geocommons.com/favicon.ico"/>
+</head>
+
+<body class="wide">
+  <div id="header_master" class="al_r env_public" >
+	<div class="l">	  
+	  
+		  <a href="http://geocommons.com/"><img alt="Logo" class="mhimg" id="mhlogo" src="/images/logo.geocommons.png?1290021155" /></a>
+		
+		
+	</div>
+	<div class="r">
+		
+
+<div id="user_header" class="fl_r mhmid logged_out">
+  
+    <div id="mh_info" class="rr">
+      <div id="logged_in_notice" style="display:none">
+        <div class="mh_userlinks">
+
+          <a href="/profile" class="mh_dd current_user_login clearfix"><img alt="G" src="/images/g.person.png?1290021155" /><span class='current_user_login_name'></span></a>
+          <a href="/maps/new" class="roll b_make_map">Make a Map</a>
+          <a href="http://geocommons.com/home" class="roll b_upload_data">Upload Data</a>
+        </div>
+      
+      </div>
+      <div id="logged_out_notice" style="">
+        <div class="mh_signin_links">
+          
+            New user? <a href="http://geocommons.com/register" class="show_signup">Sign up</a> | 
+          
+          
+            <a href="http://geocommons.com/login" class="show_login">Sign in</a>
+            
+        </div>
+      </div>
+    </div>
+    <div id="mh_search" class="rr">
+      <form action="/search" method="get">
+        <input class="nice" id="mh_query" name="mh_query" onblur="if(this.value == ''){this.value = 'Search'}" onfocus="if(this.value == 'Search'){this.value = ''}" type="text" value="Search" />
+        <a href="#" class="mh_find_icon" onclick="this.parentNode.submit()"><img alt="Mh" src="/images/mh.find.png?1290021155" /></a>        
+        <input style="display: none;" type="submit" value="Search" />
+      </form>
+    </div>
+    
+</div>
+
+	</div>
+</div>
+
+
+
+<div id="user_menu" style="display:none">
+  <ul class="user_menu_2"> 
+    <li><a href="/" title="Return to the home page">Home</a></li>
+    <li style="display:none">
+      <a href="http://geocommons.com/admin" title="Go to the Administration Panel">Admin</a>      
+    </li>
+    <li><a href="http://geocommons.com/profile" title="View your library of data and maps">Your Profile</a></li>
+    <li><a href="http://geocommons.com/library" title="View your library of data and maps">Your Library</a></li>
+    <li><a href="/logout" title="Log out of your account">Sign out</a></li>
+  </ul>
+</div>
+  <div id="d_overlay" style="display:none"></div>
+<div id="d_contain" style="display:none"><div id="d_contain_2"><div id="d_contain_3">
+  <div id="d_membership">
+    <a href="" class="close_dialog">cancel</a>
+    <div id="d_upper">
+      <h2 id="membership_heading">Just one moment...</h2>
+      <small id="membership_message"></small>
+    </div>
+    <div id="d_main">
+        <div id="signin">
+          <div id="session_message" class="notice" style="display:none"></div>
+<form action="http://geocommons.com/sessions" id="new_session" method="post">
+<div style="overflow:auto">  
+  
+<fieldset class="nice">
+  <label for="session_login">Login</label>
+  <span class="field"><input class="nice" id="session_login" label="Login" name="session[login]" size="30" type="text" /></span>
+  
+  <span id="session_login_good" class="field_good" style="display:none"><img alt="Valid" height="24" src="/images/field_good.png?1290021155" width="20" /></span>
+  <span id="session_login_bad" class="field_bad" style="display:none"><img alt="Incorrect" height="24" src="/images/field_bad.png?1290021155" width="20" /></span>
+  <span id="session_login_loading" class="field_loading" style="display:none"><img alt="loading" src="/images/tiny_spin.gif?1290021155" /></span>
+  <div id="session_login_tip" class="field_tip" style="display:none"></div>
+  
+</fieldset> 
+
+  
+<fieldset class="nice">
+  <label for="session_password">Password</label>
+  <span class="field"><input autocomplete="off" class="nice" id="session_password" label="Password" name="session[password]" size="30" type="password" /></span>
+  
+  <span id="session_password_good" class="field_good" style="display:none"><img alt="Valid" height="24" src="/images/field_good.png?1290021155" width="20" /></span>
+  <span id="session_password_bad" class="field_bad" style="display:none"><img alt="Incorrect" height="24" src="/images/field_bad.png?1290021155" width="20" /></span>
+  <span id="session_password_loading" class="field_loading" style="display:none"><img alt="loading" src="/images/tiny_spin.gif?1290021155" /></span>
+  <div id="session_password_tip" class="field_tip" style="display:none"></div>
+  
+</fieldset> 
+
+	<input class="destination_url" id="signin_destination_url" name="destination_url" type="hidden" value="" />
+  <a href="http://geocommons.com/users/forgot_password" class="fp_link">Forgot your password?</a>
+  
+  <a href="#" class="submit">Sign up</a>
+  <input class="button" id="session_submit" name="commit" type="submit" value="Sign In" />
+  <img alt="Loading" class="loading" id="new_session_loading" src="/images/loading.gif?1290021155" style="display:none" />
+</div>
+</form>
+          <div class="right">
+            
+              or...
+              <a href="" class="show_signup roll">Create a new account</a>
+            
+          </div>
+        </div>
+        
+          <div id="signup">
+            <div id="user_message" style="display:none"></div>
+<div> 
+<form action="/users" class="new_user" id="new_user" method="post">  
+<fieldset class="nice">
+  <label for="user_login">Login</label>
+  <span class="field"><input class="not_blank check_server nice" id="user_login" name="user[login]" size="30" type="text" /></span>
+  
+  <span id="user_login_good" class="field_good" style="display:none"><img alt="Valid" height="24" src="/images/field_good.png?1290021155" width="20" /></span>
+  <span id="user_login_bad" class="field_bad" style="display:none"><img alt="Incorrect" height="24" src="/images/field_bad.png?1290021155" width="20" /></span>
+  <span id="user_login_loading" class="field_loading" style="display:none"><img alt="loading" src="/images/tiny_spin.gif?1290021155" /></span>
+  <div id="user_login_tip" class="field_tip" style="display:none"></div>
+  
+</fieldset> 
+
+  
+<fieldset class="nice">
+  <label for="user_email">Email</label>
+  <span class="field"><input class="is_email check_server nice" id="user_email" name="user[email]" size="30" tip="We detest spam and will never give your email address to anyone." type="text" /></span>
+  
+  <span id="user_email_good" class="field_good" style="display:none"><img alt="Valid" height="24" src="/images/field_good.png?1290021155" width="20" /></span>
+  <span id="user_email_bad" class="field_bad" style="display:none"><img alt="Incorrect" height="24" src="/images/field_bad.png?1290021155" width="20" /></span>
+  <span id="user_email_loading" class="field_loading" style="display:none"><img alt="loading" src="/images/tiny_spin.gif?1290021155" /></span>
+  <div id="user_email_tip" class="field_tip" style="display:none"></div>
+  <div class="field_tip">We detest spam and will never give your email address to anyone.</div>
+</fieldset> 
+
+  
+<fieldset class="nice">
+  <label for="user_full_name">Full name</label>
+  <span class="field"><input class="not_blank nice" id="user_full_name" name="user[full_name]" size="30" type="text" /></span>
+  
+  <span id="user_full_name_good" class="field_good" style="display:none"><img alt="Valid" height="24" src="/images/field_good.png?1290021155" width="20" /></span>
+  <span id="user_full_name_bad" class="field_bad" style="display:none"><img alt="Incorrect" height="24" src="/images/field_bad.png?1290021155" width="20" /></span>
+  <span id="user_full_name_loading" class="field_loading" style="display:none"><img alt="loading" src="/images/tiny_spin.gif?1290021155" /></span>
+  <div id="user_full_name_tip" class="field_tip" style="display:none"></div>
+  
+</fieldset> 
+
+  
+<fieldset class="nice">
+  <label for="user_password">Password</label>
+  <span class="field"><input autocomplete="off" class="not_blank nice" id="user_password" name="user[password]" size="30" type="password" /></span>
+  
+  <span id="user_password_good" class="field_good" style="display:none"><img alt="Valid" height="24" src="/images/field_good.png?1290021155" width="20" /></span>
+  <span id="user_password_bad" class="field_bad" style="display:none"><img alt="Incorrect" height="24" src="/images/field_bad.png?1290021155" width="20" /></span>
+  <span id="user_password_loading" class="field_loading" style="display:none"><img alt="loading" src="/images/tiny_spin.gif?1290021155" /></span>
+  <div id="user_password_tip" class="field_tip" style="display:none"></div>
+  
+</fieldset> 
+
+  
+<fieldset class="nice">
+  <label for="user_password_confirmation">Confirm Password</label>
+  <span class="field"><input autocomplete="off" class="confirm nice" id="user_password_confirmation" label="Confirm Password" name="user[password_confirmation]" size="30" type="password" /></span>
+  
+  <span id="user_password_confirmation_good" class="field_good" style="display:none"><img alt="Valid" height="24" src="/images/field_good.png?1290021155" width="20" /></span>
+  <span id="user_password_confirmation_bad" class="field_bad" style="display:none"><img alt="Incorrect" height="24" src="/images/field_bad.png?1290021155" width="20" /></span>
+  <span id="user_password_confirmation_loading" class="field_loading" style="display:none"><img alt="loading" src="/images/tiny_spin.gif?1290021155" /></span>
+  <div id="user_password_confirmation_tip" class="field_tip" style="display:none"></div>
+  
+</fieldset> 
+
+  
+    <br/>
+    
+    <div class="tou_notice">
+      <table> 
+        <tr>
+          <td width="25px;"><input name="user[receive_emails]" type="hidden" value="false" /><input checked="checked" id="user_receive_emails" name="user[receive_emails]" type="checkbox" value="true" /></td>
+          <td>Email me about updates to GeoCommons & GeoIQ&nbsp;</td>
+        </tr> 
+      </table>
+    </div>
+    <br/>
+  
+  <input id="user_terms_of_use" name="user[terms_of_use]" type="hidden" value="1" />
+  
+  	
+  	<div class="tou_notice">By signing up you agree to the <a href="http://geocommons.com/about/tos" target="_gc_tou">GeoCommons Terms of Use</a>.</div>
+	
+	<input class="destination_url" id="signup_destination_url" name="destination_url" type="hidden" value="" />
+  
+  <a href="#" class="submit">Submit</a>
+</form></div>
+            <div class="right">
+              or...
+              <a href="" class="show_signin roll">Sign in with your account</a>
+            </div>
+          </div>
+        
+    </div>
+  </div>
+</div></div></div>
+
+    
+  <div class='pause_auto_advance' id='marketing'>
+<div class='marketing clearfix fl_r'>
+<div class='carousel l'>
+<img alt="Bg" class="frame" src="/images/bg.carousel_frame.png?1290021155" />
+<div id='carousel_panes'>
+<ul class='slide'>
+<li class='pane pane_0'><img alt="Home" src="/images/home.slide.0c.jpg?1290021155" /></li>
+<li class='pane pane_1'><img alt="Home" src="/images/home.slide.1b.jpg?1290021155" /></li>
+<li class='pane pane_2'><img alt="Home" src="/images/home.slide.2b.jpg?1290021155" /></li>
+<li class='pane pane_3'><img alt="Home" src="/images/home.slide.3c.jpg?1290021155" /></li>
+</ul>
+</div>
+<div class='carousel_dots_contain'>
+<div class='carousel_dots'>
+<a class='on open_pane' href='#' rel='0'>
+o
+</a>
+<a class='open_pane' href='#' rel='1'>
+o
+</a>
+<a class='open_pane' href='#' rel='2'>
+o
+</a>
+<a class='open_pane' href='#' rel='3'>
+o
+</a>
+</div>
+</div>
+</div>
+<a class='open_pane next' href='#' rel='next'>next</a>
+<a class='open_pane prev' href='#' rel='prev'>prev</a>
+<ul class='feature r'>
+<li>
+<h1>
+Create compelling maps that make a difference
+</h1>
+<p class='feature_body'>
+GeoCommons enables everyone to find, use and share geographic data and maps. Easily create rich interactive visualizations to solve problems without any experience using traditional mapping tools.
+</p>
+</li>
+<li style='display:none'>
+<h1 class='your_data'>
+Your Data, On the Map
+</h1>
+<p class='feature_body'>
+Visualize data from numerous sources to identify trends that were before unseen. Map your data with real-time social data and the over 50,000 open-source data sets in GeoCommons.
+</p>
+</li>
+<li style='display:none'>
+<h1 class='share'>
+Share Your Maps Across the Web
+</h1>
+<p class='feature_body'>
+Share your interactive maps and analysis with others. Maps are easily embedded in websites, blogs and wikis and with one click can be shared via Facebook, Twitter and many others.
+</p>
+</li>
+<li style='display:none'>
+<h1 class='enterprise'>
+Built for the Enterprise
+</h1>
+<p class='feature_body'>
+GeoIQ extends the functionality of GeoCommons by delivering advanced security, large enterprise data support and robust location analytics. Uncover complex trends to drive better business decisions.
+</p>
+</li>
+<p class='cta'>
+<a href="/" class="roll requires_signup">Sign up for Free</a>
+</p>
+</ul>
+</div>
+</div>
+<script type='text/javascript'>
+  //<![CDATA[
+    (new F1.Pane({
+      id:"carousel_panes", 
+      slide:'.slide', 
+      scope: '#marketing',
+      auto: 10000,
+      after: function() {
+        jq('.feature li').hide()
+        jq('.feature li').eq(this.current_index).show()
+        jq('.carousel_dots a').removeClass('on')
+        jq('.carousel_dots a').eq(this.current_index).addClass('on')
+      }
+    })).init()
+  //]]>
+</script>
+<div class='client_scroll'>
+<div class='clearfix'>
+<div class='logo'>
+<img src='images/huffpost.png' />
+</div>
+<div class='logo'>
+<img src='images/unep.png' />
+</div>
+<div class='logo'>
+<img src='images/worldbank.png' />
+</div>
+<div class='logo'>
+<img src='images/interaction.png' />
+</div>
+<div class='logo'>
+<img src='images/mris.png' />
+</div>
+<div class='logo'>
+<img src='images/usgs.png' />
+</div>
+<div class='banner'>
+<span>
+GeoIQ: Used by Organizations Worldwide
+</span>
+<a href='http://fortiusone.com/Customers/Enterprise'></a>
+<a href="http://www.fortiusone.com/Products-Services" target="new">Learn more about Enterprise Solutions</a>
+</div>
+</div>
+</div>
+<div id="big_search">
+  <div class="big_search">
+  	
+  	<form action="http://geocommons.com/searches" id="search_form" method="get" name="search_form">
+  		<input class="search_field nice l hinted" id="query" name="query" onblur="if(this.value == ''){this.value = 'Search for Maps and Data'; jq(this).addClass('hinted')}" onfocus="if(this.value == 'Search for Maps and Data'){this.value = ''; jq(this).removeClass('hinted')}" type="text" value="Search for Maps and Data" /> 							
+  	
+  		<input style="display:none" type="submit" value="Search" />
+  	
+  		<a href="#" class="roll r" id="submit_search" onclick="document.search_form.submit(); return false;">Search</a>
+  	</form>
+  	
+  	<div class="actions">
+  	  <div class="big_make_map">
+  	    <a href="/maps/new" class="roll b_make_map requires_signup">Make a Map</a>
+  	    <a href="/maps/new" class="requires_signup">to visualize and explore data</a>
+  	  </div>
+  	  <div class="big_upload_data">
+        <a href="/home" class="roll b_upload_data requires_signup">Upload Data</a>
+  	    <a href="/maps/new" class="requires_signup">to organize, share and map</a>
+      </div>
+    </div>
+  	
+  </div>
+</div>
+
+  
+  <div id="content" class="c_home a_index ">
+    <div id="header">
+    	<div class="float_right learn_how">
+    	  
+    	</div>
+      
+    </div>
+
+    
+
+    <div id="page">
+            <div id='homey'>
+<div class='featured_maps'>
+<h2>Featured Maps</h2>
+<ul class='feature_grid clearfix'>
+<li class='row_0 col_1'>
+<a href='http://geocommons.com/maps/19633'>
+<img alt="Bg" class="frame" src="/images/bg.feature_map_frame.png?1290021155" />
+<div class='feature_map'>
+<img alt="Featured_map_1" src="/images/featured_map_1.jpg?1290021155" />
+</div>
+<span class='map_title'>Temporal Map of Crime Incidents Linked to Colton Harris Moore</span>
+</a>
+</li>
+<li class='row_0 col_2'>
+<a href='http://geocommons.com/maps/19037'>
+<img alt="Bg" class="frame" src="/images/bg.feature_map_frame.png?1290021155" />
+<div class='feature_map'>
+<img alt="Featured_map_2" src="/images/featured_map_2.jpg?1290021155" />
+</div>
+<span class='map_title'>Waves Disrupting Oil Skimmers in GOM: July 07, 2010</span>
+</a>
+</li>
+<li class='row_0 col_3'>
+<a href='http://geocommons.com/maps/23356'>
+<img alt="Bg" class="frame" src="/images/bg.feature_map_frame.png?1290021155" />
+<div class='feature_map'>
+<img alt="Featured_map_3" src="/images/featured_map_3.jpg?1290021155" />
+</div>
+<span class='map_title'>Hurricane Earl:  Current Path & Projected Path, August 31, 2010</span>
+</a>
+</li>
+<li class='row_1 col_1'>
+<a href='http://geocommons.com/maps/22724'>
+<img alt="Bg" class="frame" src="/images/bg.feature_map_frame.png?1290021155" />
+<div class='feature_map'>
+<img alt="Featured_map_4" src="/images/featured_map_4.jpg?1290021155" />
+</div>
+<span class='map_title'>2010 Marathons, USA: State Count, City/State Locations, and Temporal Animation</span>
+</a>
+</li>
+<li class='row_1 col_2'>
+<a href='http://geocommons.com/maps/22388'>
+<img alt="Bg" class="frame" src="/images/bg.feature_map_frame.png?1290021155" />
+<div class='feature_map'>
+<img alt="Featured_map_5" src="/images/featured_map_5.jpg?1290021155" />
+</div>
+<span class='map_title'>Summary of Damages and Rescues by Province, Pakistan Floods, August 17, 2010</span>
+</a>
+</li>
+<li class='row_1 col_3'>
+<a href='http://geocommons.com/maps/23541'>
+<img alt="Bg" class="frame" src="/images/bg.feature_map_frame.png?1290021155" />
+<div class='feature_map'>
+<img alt="Featured_map_6" src="/images/featured_map_6.jpg?1290021155" />
+</div>
+<span class='map_title'>Tweets around Silver Spring During Discovery Channel Hostage Situation</span>
+</a>
+</li>
+</ul>
+</div>
+</div>
+
+    </div>
+    <div id="right">
+      
+    </div>
+    <br style="clear:both;" />
+  </div>
+
+  
+
+
+<div id="footer_p"><div id="footer" class="clearfix">
+  
+  <ul class="features">
+    <li>
+      <h3>Need Help?</h3>
+      <ul class="need_help">
+        <li><a href="http://geocommons.com/help/About">Dive into the User Manual</a></li>
+        
+          <li><a href="http://getsatisfaction.com/geocommons/products/geocommons_finder">Send us Feedback</a></li>
+        
+        <li><a href="mailto:support@geocommons.com">Contact Support</a></li>
+      </ul>
+    </li>
+    <li>
+      <h3>Follow Us</h3>
+      <ul>
+        <li><a href="http://twitter.com/geocommons">Twitter</a></li>
+        <li><a href="http://www.facebook.com/group.php?gid=29419194156">Facebook</a></li>
+        <li><a href="http://www.youtube.com/geoIQ">YouTube</a></li>
+        <li><a href="http://blog.fortiusone.com/">Our Blog</a></li>
+      </ul>
+    </li>
+    <li>
+      <h3>About Us</h3>
+      <ul>
+        <li><a href="http://www.fortiusone.com/">About FortiusOne Inc.</a></li>
+        <li><a href="http://www.fortiusone.com/Community">About GeoCommons</a></li>
+        <li><a href="http://geocommons.com/about/privacy">Privacy</a></li>
+        <li><a href="http://geocommons.com/about/tos">Terms of Service</a></li>
+      </ul>
+    </li>
+    
+    <li>
+      <h3>We Love Feedback</h3>
+      <p><a href="http://getsatisfaction.com/geocommons/products/geocommons_finder">Tell us what works and what doesn’t. Let us know what you think and what you would like to see.</a></p>
+    </li>
+    
+    
+    <li>
+      <h3>Enterprise Solutions</h3>
+      <p><a href="http://www.fortiusone.com/Products-Services">GeoIQ delivers the capabilities seen here paired with advanced security, data support, and analytics built for the Enterprise.</a></p>
+    </li>
+       
+  </ul>
+    
+  <ul class="f1foot">
+    <li class="textlinks">Copyright &copy;2010 FortiusOne Inc.
+      | public 1.7.0.4
+      
+    </li>
+  </ul>
+  
+  
+  <script type="text/javascript">
+  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script type="text/javascript">
+  var pageTracker = _gat._getTracker("UA-1836539-5");
+  pageTracker._initData();
+  pageTracker._trackPageview();
+  </script>
+
+
+
+
+<script type="text/javascript" language="javascript">llactid=13553</script>
+<script type="text/javascript" language="javascript" src="http://t1.trackalyzer.com/trackalyze.js"></script>
+
+  
+</div></div>
+
+  
+  
+
+  
+</body>
+</html>
