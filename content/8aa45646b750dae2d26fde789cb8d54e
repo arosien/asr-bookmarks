@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+<head>
+<title>Spock Proxy</title>
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.1/build/reset-fonts-grids/reset-fonts-grids.css"/>
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.1/build/base/base-min.css"/>
+<style type="text/css">
+h1 { font-size: 2em; text-align: right; }
+h2 { font-size: 1.7em; background-color: beige; border-bottom: 1px solid gray; }
+h3 { font-size: 1.3em; }
+h4 { font-size: 1em; }
+h2, h3, h4, h5 { font-weight: bold; text-align: left; }
+p, ol, ul, dd, dt { text-align: left; }
+dt { font-style: italic; }
+dd { padding-bottom: 0.5em; }
+body { padding-top: 0.5em; padding-bottom: 2em; padding-left: 3em; padding-right: 3em; }
+#box { float: right; background-color: beige; border: 1px solid gray; padding: 1.7em; }
+#box ul { line-height: 1.7em; }
+#credits_list li { padding-bottom: 0.7em; }
+</style>
+</head> 
+
+<body>
+<h1>Spock Proxy - a proxy for MySQL horizontal partitioning</h1>
+
+<div id="box">
+<ul>
+<li><a href="#what">What is Spock Proxy?</a></li>
+<li><a href="#design">Design Goal</a></li>
+<li><a href="#started">Getting Started</a></li>
+<li><a href="#different">How's It Different From...?</a></li>
+<li><a href="#limitations">Known Limitations</a></li>
+<li><a href="#implementation_considerations">Implementation Considerations</a></li>
+<li><a href="#internals">Internals</a></li>
+<li><a href="#involved">Get Involved</a></li>
+<li><a href="#credits">Credits</a></li>
+</ul>
+</div>
+
+<h2><a name="what">What is Spock Proxy?</a></h2>
+
+<p>
+Spock Proxy supports <a href="http://en.wikipedia.org/wiki/Partition_(database)">range-based horizontal paritioning</a> of a large <a href="http://www.mysql.com">MySQL</a> database.  The proxy intercepts SQL queries from the client, sends queries to the correct databases based on how the database is partitioned, then aggregates the results from each database and returns them to the client as a regular MySQL result set.
+</p>
+
+
+<h2><a name="design">Design Goal</a></h2>
+<p>
+Spock Proxy's original mandate was to horizontally partition <a href="http://www.spock.com">Spock</a>'s existing monolithic databases into multiple shards to improve performance and scalability.
+</p>
+
+<p>Whereas many web sites build sharding logic into the application, Spock is built on <a href="http://www.rubyonrails.com">Rails</a> and ActiveRecord.  We love Rails, but it doesn't make partitioning easy.  So, we preferred to partition at the MySQL level.  The application sends a SQL statement to the proxy.  The proxy then sends the statement to one or more databases based the value of a column in a predefined column.  Finally the proxy returns a merged result.
+</p>
+
+<p>
+We target applications that are interested in partitioning but want to avoid large changes to their existing application code.
+</p>
+
+
+
+<h2><a name="started">Getting Started</a></h2>
+
+<h3>Download</h3>
+<p>
+<a href="https://sourceforge.net/project/showfiles.php?group_id=224590">Grab a tarball release</a> from our SourceForge site.
+Or grab <a href="http://spockproxy.svn.sourceforge.net/viewvc/spockproxy/">the latest code from trunk</a>.
+</p>
+
+<h3>Build It</h3>
+
+<p>
+<tt>
+./autogen.sh<br/>
+./configure &amp;&amp; make<br/>
+</tt>
+</p>
+
+
+<h3>Sample</h3>
+
+<p>
+To see Spock Proxy in action, take a look at sample/README in the distribution.  It lets you quickly create some sample tables, populates them with data, and you can immediately start issuing queries.
+</p>
+
+<h3>Configuration Database Tables</h3>
+
+<p>
+Now that you've played with the sample, let's set this up for real.
+</p>
+
+<p>
+Supporting a dynamic connection pool requires connection information for each database.  Rather than add a gazillion command-line parameters, we opted for reading the configuration directly out of a MySQL database.   
+</p>
+
+<ol>
+<li>Create a MySQL database.  Name it whatever you want.</li>
+<li>Use the file "db_mapping.sql" included in the download to create the tables:<br/>
+
+<tt>mysql --user=database_user --password=abcdefg database_name_development &lt; db_mapping.sql</tt>
+</li>
+
+<li>Use INSERT statements to add rows to the configuration tables, documented here.  Someday maybe someone will create a snazzy UI for populating these.</li>
+</ol>
+<img src="images/proxy_schema.png" width="545" height="250" border="0" align="top" />
+<h4>shard_database_directory</h4>
+
+<p>
+Contains the list of hostnames, database names, ports, that define the database servers that Spock Proxy will connect to.  These are where the shards live (note: if you're just testing they do not have to be on seporate machines just give them different DB names). 
+<i>This schema is subject to change while Spock Proxy is in alpha.</i>
+</p>
+
+<dl>
+<dt>database_id</dt><dd>auto-incrementing, unique ID</dd>
+<dt>host_name</dt><dd>hostname</dd>
+<dt>port_num</dt><dd>port number</dd>
+<dt>database_name</dt><dd>database name</dd>
+</dl>
+
+<h4>shard_table_directory</h4>
+
+<p>
+Defines which tables and column names are partitioned and should be redirected to a specific database connection (status = 'federated') and which are not (status = 'universal').
+<i>This schema is subject to change while Spock Proxy is in alpha.</i>
+</p>
+
+<dl>
+<dt>table_id</dt><dd>auto-incrementing, unique ID</dd>
+<dt>table_name</dt><dd>table name</dd>
+<dt>status</dt><dd>federated (sharded) or universal (on one machine and replicated the all shards)</dd>
+<dt>column_name</dt><dd>column to federate on, or NULL if this table is consolidated</dd>
+<dt>next_id</dt><dd>the next id for this table (since auto_increment is different in the proxy)</dd>
+<dt>increment_column</dt><dd>the automaticly incremented column.</dd>
+</dl>
+
+<h4>shard_range_directory</h4>
+
+<p>
+A lookup table used to define ranges in a column's ID (defined in shard_table_directory) and which database (defined in the shard_database_directory) to send that command to.  Note that ranges are the same across all tables so that you can JOIN between tables on the same partition.
+<i>This schema is subject to change while Spock Proxy is in alpha.</i>
+</p>
+
+<dl>
+<dt>range_id</dt><dd>auto-incrementing, unique ID</dd>
+<dt>low_id</dt><dd>low boundary of the range for this shard</dd>
+<dt>high_id</dt><dd>high boundary of the range for this shard</dd>
+<dt>database_id</dt><dd>database ID from database_list table</dd>
+</dl>
+
+<h4>get_next_id</h4>
+<p>This is a stored function that will increment the shard_table_directory.increment_column.  It is used by the proxy for insert statements as a replacement for auto_increment.  But you can also call it yourself to get one or many id's for your table.  You might want to call this yourself it you wanted to bulk load data and needed some number of id's.  To call it:</p>
+<p>
+<tt>SELECT get_next_id('person', 10);</tt>
+</p>
+<p>The above would have returned the next id available in the person table and incremented it by 10.  It will always return a single integer, if you asked for 10 start at the one given and use the next 9.</p>
+
+
+<h3>Running It</h3>
+<p>
+Running Spock Proxy itself requires passing a few options:
+</p>
+
+<dl>
+<dt>--proxy-address</dt><dd>Where the proxy is running</dd>
+<dt>--admin-address</dt><dd>Where to connect for admin queries</dd>
+<dt>--partition-info-host</dt><dd>Host to read partition information</dd>
+<dt>--partition-info-database</dt><dd>Database on that host</dd>
+<dt>--db-user</dt><dd>Database username</dd>
+<dt>--db-user-password</dt><dd>Database password</dd>
+</dl>
+
+<p>
+<tt>
+./spockproxy --proxy-address=127.0.0.1:3325 --admin-address=127.0.0.1:3324 --partition-info-host=database_name --partition-info-database=database_universal_production --db-user=database_user --db-user-password=abcdefg > ./spockproxy.log 2> ./spockproxy.err
+</tt>
+</p>
+
+
+
+
+<h2><a name="different">How's It Different From...?</a></h2>
+
+<h3>MySQL Proxy</h3>
+
+<p>
+Spock Proxy is a fork of <a href="http://forge.mysql.com/wiki/MySQL_Proxy">MySQL Proxy</a>.
+
+Large portions of the code are unchanged, but the architecture is fundamentally different.
+</p>
+
+
+
+<h4>No Lua</h4>
+<p>
+MySQL Proxy supports using the <a href="http://www.lua.org/">Lua</a> scripting language for customization, but Spock Proxy does not.
+Although Lua is considered a good scripting language, we were concerned about performance, especially in consolidating result sets.  The time required to copy N database results sets into Lua structures, merge within Lua, and then copy them back out into 'C' space required too much overhead.  Lua was entirely abandoned and we hard-coded a C/C++ implementation.  The design however is to support the MySQL Proxy callback idea, but by passing mutable C structures to a shared library.  This shared library can then be implemented in C and of course if so desired in Lua again.  
+</p>
+
+<h4>Client Authentication</h4>
+<p>
+MySQL Proxy allows each client to directly authenticate with each database.  This is problematic because the client has to establish the minimum connections up-front before the proxy will work.  During normal operation, if any of those 'cached' connections is lost or disconnected, the client may not gain access to that database if a connection is not reestablished.   Spock Proxy is designed to separate server connections from the client.  Spock Proxy automatically authenticates clients using the username/password you specify at startup.
+</p>
+
+<h4>Dynamic Connection Pool</h4>
+<p>
+Spock Proxy separates the client from the server connections, allowing a minimum and maximum connection size to be managed.  Upon startup the proxy establishes a connection pool with the minimum number of connections.  After that, each time a client uses a connection, it is his for the life of the connection.  A new connection will be established to maintain that minimum connection pool on a per hostname/database/username basis.   In the event all connections are dropped a maximum is defined and connections above that count will be dropped if not used after a minimum time period.  If you expect a large number of random connections, you can change the minimum connection count to prevent waiting for the server to connect.
+</p>
+
+<h4>Multi-Server Send/Recv</h4>
+
+<p>
+We based Spock Proxy on MySQL Proxy because it sounded from the web site that it would meet our sharding requirements with some Lua coding.   We first started by trying to use the Read-Write Splitter Lua script; however, the code didn’t appear to work correctly.  After some struggles we realized that although MySQL Proxy managed existing connections it did not create them.  This would require a client to establish a bunch of connections before any web server could send a request.  Further analysis indicated only one database could be sent a request at a time.  This implementation would not work for Spock which required consolidation of data across multiple partitions.
+</p>
+
+<p>
+Sending multiple server requests and consolidating those results was part of our original design.  To ensure maximum speed, all of the sends are broadcasted at once and the reads performed asynchronously.  Upon read completion of all of the result sets from each database, if the count is greater then one (1), the merge code is called.  If there is only one (1) result set, the data is automatically forwarded to the client.  If any error is returned from any database, an error will be sent back to the client.
+</p>
+
+
+<h3>MySQL Cluster</h3>
+
+<p>
+<a href="http://www.mysql.com/products/database/cluster/">MySQL Cluster</a> was designed for high availability and performance, not for sharding.  All indices and the main data are stored in main memory, which causes problems if your combined dataset is larger than memory.  It also requires changing storage engines.
+</p>
+
+<h3>HiveDB</h3>
+
+<p>
+<a href="http://www.hivedb.org/">HiveDB</a> has similar goals as Spock Proxy but requires running a JVM in production and most of its functionality is behind a Java-based API, with multi-language support in its infancy.  Not ideal for Rails or PHP sites.
+</p>
+
+
+
+<h2><a name="limitations">Known Limitations</a></h2>
+
+<p>Not all queries supported by MySQL are fully supported by Spock Proxy. When the proxy fails in parsing the query, the caller will get an error or get relayed to the partition info database.</p>
+
+<p>Here are the known issues:</p>
+
+<ul>
+<li>We've excluded management SQL statements such as CREATE.</li>
+<li>Support for stored procedures and transactions is limited.</li>
+<li>Cannot run JOINs that run across databases.</li>
+<li>No nested queries are supported.</li>
+<li>For SELECT, at most 2 table JOINs are supported.  GROUP BY is not supported yet.</li>
+<li>For INSERT, the column list is always expected.</li>
+<li>For queries using MySQL functions, only MAX, MIN, SUM, AVERAGE are supported so far if the query involves data in multiple partitions.</li>
+<li>Spock Proxy does not understand read/write (master) as opposed to read only (slave).</li>
+<li>Spock Proxy does not properly set the insert_id and on tables that are split on a foreign key with an auto-increment primary key, id conflicts are possible.</li>
+<li>Load Data Infile is not tested.</li>
+</ul>
+
+
+<h2><a name="implementation_considerations">Implementation Considerations</a></h2>
+			
+<h3><a name="auto">auto_increment is different</a></h3>
+
+<p>
+Since the data is spread across several shards it is not possible for a shard to know what the last id that was assigned in a certain table.  If the record to be inserted is for the table who is federated on its primary key then we don't even know the value so we can't direct it to the correct shard.
+</p>
+<p>Even tables where the key might seem less important shards could generate duplicate values.  You could set auto_increment_increment and auto_increment_offset to avoid conflicts but rearranging the shards requires rearranging these values and it could be quite cumbersome.
+<p>
+Our solution is for the proxy to intercept INSERT statements and to handle the increment values for you.  We store the values and the increment column in the shard_table_directory table.  You will need to set them up with the correct values for this to work.  You can also access these values and get one id or as many as you want through the function get_next_id.</p>
+<p>
+<tt>
+SELECT get_next_id(&lt; table_name &gt;, &lt; number of id's you want &gt;);
+</tt>
+</p>
+<p>This can be very handy for bulk loading or other external processing, it might be necessary if you need the insert_id since that call doesn't work either.
+</p>
+
+<h3><a name="key">Tables without or with multiple federation keys</a></h3>
+<p>As you organize your tables to implement federation your tables will fall into one of four categories (below).  For example, if you had a dating web site and many many millions of users.  You decide to fererate the database on user_id.  Your user table has a user_id as primary key which you can use to divide this table.  The other table will be one of these:
+</p>
+<ul>
+	
+ <li>Tables with no user_id (specific or implied).  Something like city where any user might be in that city.  These "universal" tables will need to be in each shard in order to get joins to work.
+ </li>
+ <li>Tables with a specific user_id.  For example if your dating website has a blog where a user may post some text.  Since each text entry has a user_id you can use this divide these entries.
+ </li>
+ <li>Tables with an implied user_id.  To stay with the blog example if we allow replies to a blog entry that reply may not have a user_id but it has an original_post_id which does have a user_id.  Here you will either have to lookup the user_id from the original_post_id every time you want to find this record probably by searching each shard or de-normalize this table to contain the user_id.
+ </li>
+ <li>Tables with more than one user_id.  If we allowed one user to send a message to another user we'd probably have a message table with a to_user_id and a from_user_id column.  In these cases you will need to pick one of these columns to use to federate these records.   Pick the one you expect to do most often because the other one will have to search all the shards and combine the data.
+</ul>
+<p>The last case is the most difficult.  In the example here I choose to use from_user_id to federate because it is more likely that users will open their in box and want to see the messages joined to users on from_user_id.  The query:</p>
+<p>
+<tt>SELECT * FROM users, messages WHERE from_user_id = user_id AND to_user_id = 12345;</tt>
+</p>
+<p>will be sent to all shards and the results will be combined.  This is what we want.  If you want to show the sent mail for a particular user you will have to do the join in your application using multile queries:
+</p>
+<p>
+<tt>
+SELECT * FROM messages WHERE from_user_id = 12345;<br/>
+SELECT * FROM users WHERE user_id = 234;<br/>
+SELECT * FROM users WHERE user_id = 5678;<br/>
+SELECT * FROM users WHERE user_id = 9753;<br/>
+SELECT * FROM users WHERE user_id = 23435;<br/>
+SELECT * FROM users WHERE user_id = 5654;
+</tt>
+</p>
+
+<p>That list of user_id's came from the first query.  You might consider de-normalizing so you never have to do this.
+</p>
+
+<h3><a name="bulk">Bulk loading</a></h3>
+<p>Unlike a single insert which the proxy can pass to the appropriate shard a bulk load contains multiple rows and it is possible that these rows will belong in different shards.  <em>The proxy does not support bulk loading either INSERT statements with multiple rows or LOAD DATA INFILE.</em>
+</p>
+<p>The two ways to work around this are to either break the INSERT statements into single statements or to insert directly into the shards.  Splitting the inserts into separate statements is very straight forward but it can be slow as you loose all of the speed advantages of bulk loading.
+</p>
+<p>Inserting directly into the shards is currently the most practical option for large amounts of data.  We have found this method can be faster than bulk load into a single database as the writes are distributed over all of the shards.  One way to accomplish this is to use a perl script to divide the load 
+</p>
+<img src="images/load_file.png" width="457" height="146" border="0" align="top" />
+<h3><a name="universal">Universal Tables</a></h3>
+<p>As mentioned above some tables will need to be in each shard so joins will work.  In the example above we federated the database on the user_id so that all of the records related to a particular user_id would reside in the same shard.  Now imagine a table 'cities'; any user can live in any city so city_id does not imply a user_id and it is likely that a particular city_id is referenced from each shard.  The entire cities table must be included in each shard.
+</p>
+<p>There are several ways to accomplish this.  We have solved it by having a 'universal' database which contains all of these tables as well as some directory tables.  Each shard database is a slave of this universal database server and the universal database is replicated to each shard.  There are two databases on each shard, the shard itself which is unique to that shard (and perhaps it's slaves) and the universal database which is identical to all other universal databases.  Finally for compatibility there is a view for every table in the local universal database in the shard.  This allows the queries to work that join federated and universal tables.  This solution works well but there can be a slight lag in records showing up in the shard from when it's inserted into a universal table.
+</p>
+<img src="images/federation_design.png" width="587" height="419" border="0" align="top" />
+
+
+
+
+
+
+
+<h2><a name="internals">Internals</a></h2>
+
+<h3>Lookup Table</h3>
+<h4>Database Partitioning</h4>
+<p>
+Normally tables are partitioned on different columns, so they can be stored on different machines. Some tables are not partitioned, either because they are too small or otherwise will cause table join to not work properly. Partitioned tables usually are stored across all the machines in the partition cluster. Non-partition tables stay in one master node, but a read-only view for each non-partitioned table is available on each machine in the partition cluster.  Partitioned tables can be partitioned on different columns, but in order for join to work properly, they all share the same partition table in which you can specify which part of the tables to be stored on which hosts. 
+In our example, table database_list has the list of  all the databases in the partition cluster, table directory_table has the information about whether a table is partitioned or not, if so, what column it is based on,  table directory has list of id ranges telling which part of the partitioned tables should be stored on which database.
+</p>
+
+<h4>Fast lookup</h4>
+<p>
+Given an id, in order to find quickly which partition the query goes to, two levels of data structures is used. The underline level is a dynamic array sorted on the ranges, so we can do a binary search. In order to avoid doing a binary search on the whole list, we build another dynamic array in which for every M ids we build their start offset and end offset in the first array, search time in this array is O(1).
+</p>
+
+<h4>Insertion with auto-increment ids</h4>
+<p>
+When an insertion contains an id, and this id happens to be the partitioned column and its type is auto increment, we need to assign the id first, otherwise we do not know which partition this query should go to. In our implementation, we have a separate thread to prefetch a number of such IDs regularly so we can assign them later when needed.
+</p>
+
+
+
+<h3>Resultset merger</h3>
+
+<h4>Purpose</h4>
+<p>
+resultset_merge() merges multiple replies from servers into one reply. 
+</p>
+
+<p>
+On queries sending to multiple servers, Spock Proxy expects multiple replies from servers which could be OK packets, Error packets or resultset packets. However, the client wants a single reply.  resultset_merge merges results to give one valid result back to the client.
+</p>
+
+<h4>Implementation</h4>
+
+<p>
+The current interface between main body of proxy and resultset_merge is : 
+</p>
+<p>
+Input: 
+</p>
+<ul>
+<li>an array of recv_queues,</li>
+<li>token list from original SQL statement,</li>
+</ul>
+<p>
+Output: 
+</p>
+<ul>
+<li>send_queue</li>
+</ul>
+<p>
+And when there is only one server responding, the proxy handle it by itself instead of calling resultset_merge().  Only under following circumstances, resultset_merge() will be called:
+</p>
+<ol>
+<li>Multiple Error packets.</li>
+<li>Multiple OK packets.</li>
+<li>Multiple resultset packets.</li>
+</ol>
+<p>
+After calling resultset_merge(), the proxy does nothing but sending all packets in send_queue.
+</p>
+
+<p>
+On resultset packets, resultset_merge() is doing merge-sort in effect: 
+</p>
+<ol>
+<li>Parsing SQL statement to obtain Order By column names, DESC/AES and Limit numbers.</li>
+<li>Parsing resultset header packets to obtain offsets of the columns in each row, as well as the type of the columns. </li>
+<li>Parsing each row packet to obtain value of the column as text and convert them into corresponding types.</li>
+<li>Comparing values of columns and merge into new resultset.</li>
+<li>Appending the new resultset packets into send_queue.</li>
+<li>The comparing and appending are done on the fly, there is no extra buffer used in resultset_merge().</li>
+</ol>
+<p>
+On OK packets, resultset_merge() counts rows affected by scanning all OK packets and appends a new OK packet with total rows affected into send_queue.
+</p>
+
+<p>
+On Error packets, the very first incoming Error packet is appended into send_queue. 
+</p>
+
+<p>
+Space complexity: O(1)
+</p>
+<p>
+Time complexity: O( min(Limit in Query,  Total number of results * Number of recv_queues) )
+</p>
+
+<p>
+Policies: 
+</p>
+<ol>
+<li>resultset_merge() insert an Error packet into send_queue wherever it sees an Error packet regard less what the rest packets are.</li>
+<li>resultset_merge() insert an OK packet into send_queue when all packets in the array of recv_queues are OK packets.</li>
+<li>resultset_merge() merges all resultsets in the array of recv_queues into one new resultset and insert it into send_queue.</li>
+<li>resultset_merge() logs critical error when the sequence or contents of packets in recv_queues violating the definition in MySQL client/server protocol, and the behavior of resultset_merge() will be undefined.</li>
+</ol>
+ 
+<p>
+In this way, the client will always expect a single valid result as if it is always talking to a single server.
+</p>
+
+
+<h2><a name="involved">Get Involved</a></h2>
+
+<p>
+<a href="https://lists.sourceforge.net/lists/listinfo/spockproxy-devel">Join the spockproxy-devel mailing list</a> if you have questions or to submit a patch.
+</p>
+
+
+
+<h2><a name="credits">Credits</a></h2>
+
+<div style="float: right">
+<a href="http://www.spock.com"><img src="http://images.spock.com/images/splb_h.gif" width="125" height="45" alt="Spock" /></a>
+<br/>
+<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=224590&amp;type=5" width="210" height="62" alt="SourceForge.net" /></a>
+<br/>
+</div>
+
+<p>
+Spock Proxy was created by engineers at <a href="http://www.spock.com">Spock</a>, the leading people search engine that helps you find friends and colleagues on the Web.
+</p>
+
+<p>Coded by:</p>
+<ul id="credits_list">
+<li><a href="http://www.spock.com/Darren-Hamilton-MkTBj1yE">Darren Hamilton</a><br/>Mammoth Software consultant</li>
+<li><a href="http://www.spock.com/defa">Defa Sun</a><br/>Spock engineer</li>
+<li><a href="http://www.spock.com/michael">Michael Wang</a><br/>Spock engineer</li>
+<li><a href="http://www.spock.com/Jan-Kneschke">Jan Kneschke</a> and others who created MySQL Proxy, on which Spock Proxy is based</li>
+</ul>
+
+<p>
+Testing help from <a href="http://www.spock.com/frank">Frank Flynn</a> and <a href="http://www.spock.com/oleg">Oleg Polyakov</a>.  Moral support from <a href="http://www.spock.com/ravi">Ravi Someshwar</a>, <a href="http://www.spock.com/jeff">Jeff Winner</a>, and <a href="http://www.spock.com/wayne">Wayne Kao</a>.
+</p>
+
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-1587744-1";
+urchinTracker();
+</script>
+
+
+</body>
+</html>
