@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="en-us" http-equiv="Content-Language" />
+<meta name="keywords" content="variance, standard deviation" />
+<meta name="description" content="How to accurately compute running variance and standard deviation." />
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link href="prettify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="prettify.js"></script>
+<title>Accurately computing running variance</title>
+</head>
+	<body onload="prettyPrint()">
+	
+<div id="main">
+	
+	<h1>Accurately computing running variance</h1>
+
+	<p>The most direct way of computing sample variance or standard deviation 
+	can have severe numerical problems. Mathematically, sample variance can be 
+	computed as follows.</p>
+	<p class="mid">
+	<img alt="\sigma^2 = \frac{1}{ n(n-1)}\left(n \sum_{i=1}^n x_i^2 -\left(\sum_{i=1}^n x_k\right)^2\right)" height="61" src="variance.gif" width="287" /></p>
+	<p>The most obvious way to compute variance then would be to&nbsp;have two 
+	sums: one to accumulate the sum of the x&#39;s and another to accumulate the 
+	sums of the squares of the x&#39;s. If the x&#39;s are large and the differences 
+	between them small, direct evaluation of the equation above would require 
+	computing a small number as the difference of two large numbers, a red flag 
+	for numerical computing. The loss of precision can be so bad that the 
+	expression above evaluates to a <em>negative</em> number even though 
+	variance is always positive. See
+	<a href="http://www.johndcook.com/blog/2008/09/26/comparing-three-methods-of-computing-standard-deviation/">
+	Comparing three methods of computing standard deviation</a> for examples of 
+	just how bad the above formula can be.</p>
+	<p>There is a way to compute variance that is more accurate and is 
+	guaranteed to always give positive results. Furthermore, the method computes 
+	a running variance. That is, the method computes the variance as the x&#39;s 
+	arrive one at a time. The data do not need to be saved for a second pass.&nbsp;</p>
+	<p>This better way of computing variance goes back to a 1962 paper by B. P. 
+	Welford and is 
+	presented in Donald Knuth&#39;s 
+	<a href="http://www.amazon.com/gp/product/0201896842/104-5257411-2220725?ie=UTF8&amp;tag=theende-20&amp;linkCode=xm2&amp;camp=1789&amp;creativeASIN=0201896842">Art of Computer Programming</a>, Vol 2, page 232, 
+	3rd edition. Although this solution has been known for decades, not enough 
+	people know about it. Most people are probably unaware that computing sample 
+	variance can be difficult until the first time they compute a standard 
+	deviation and get an exception for taking the square root of a negative 
+	number.</p>
+	<p>It is not obvious that the method is correct even in exact 
+	arithmetic. It&#39;s even less obvious that the method has superior numerical 
+	properties, but it does. The algorithm is as follows.</p>
+	<p>Initialize M<sub>1</sub> = x<sub>1</sub> and S<sub>1</sub> = 0.
+	</p>
+	<p>For subsequent x&#39;s, use the recurrence formulas</p>
+	<p>M<sub>k</sub> = M<sub>k-1</sub>+ (x<sub>k</sub> - M<sub>k-1</sub>)/k <br />
+	S<sub>k</sub> = S<sub>k-1</sub> + (x<sub>k</sub> - M<sub>k-1</sub>)*(x<sub>k</sub> - M<sub>k</sub>).</p>
+
+	<p>For 2 ≤ k ≤ n, the k<sup>th</sup> estimate of the variance is s<sup>2</sup> = S<sub>k</sub>/(k - 1).</p>
+	<p>The C++ class <code>RunningStat</code> given below uses this method to compute the mean, sample variance, and 
+	standard deviation of a stream of data. This code sample shows how 
+	to use the class.</p>
+	<pre class="prettyprint">
+    int main()
+    {
+        RunningStat rs;
+
+        rs.Push(17.0);
+        rs.Push(19.0);
+        rs.Push(24.0);
+
+        double mean = rs.Mean();
+        double variance = rs.Variance();
+        double stdev = rs.StandardDeviation();
+    }
+	</pre>
+	
+	<p>As new values arrive, say from a simulation, they enter the <code>RunningStat</code>
+	class via the <code>Push</code> method.  To check on the mean, variance, or standard
+	deviation at any time, call the corresponding methods.</p>
+	
+	<p>The source code for the <code>RunningStat</code> class follows.</p>
+	
+	<pre class="prettyprint">
+    class RunningStat
+    {
+    public:
+        RunningStat() : m_n(0) {}
+
+        void Clear()
+        {
+            m_n = 0;
+        }
+
+        void Push(double x)
+        {
+            m_n++;
+
+            // See Knuth TAOCP vol 2, 3rd edition, page 232
+            if (m_n == 1)
+            {
+                m_oldM = m_newM = x;
+                m_oldS = 0.0;
+            }
+            else
+            {
+                m_newM = m_oldM + (x - m_oldM)/m_n;
+                m_newS = m_oldS + (x - m_oldM)*(x - m_newM);
+    
+                // set up for next iteration
+                m_oldM = m_newM; 
+                m_oldS = m_newS;
+            }
+        }
+
+        int NumDataValues() const
+        {
+            return m_n;
+        }
+
+        double Mean() const
+        {
+            return (m_n &gt; 0) ? m_newM : 0.0;
+        }
+
+        double Variance() const
+        {
+            return ( (m_n &gt; 1) ? m_newS/(m_n - 1) : 0.0 );
+        }
+
+        double StandardDeviation() const
+        {
+            return sqrt( Variance() );
+        }
+
+    private:
+        int m_n;
+        double m_oldM, m_newM, m_oldS, m_newS;
+    };
+	</pre>
+
+	<hr />	
+	<p>Here are a couple references on computing sample variance.</p>
+	<p>Chan, Tony F.; Golub, Gene H.; LeVeque, Randall J. (1983). Algorithms for Computing the Sample Variance: Analysis and Recommendations. The American Statistician 37, 242-247.</p>
+
+<p>Ling, Robert F. (1974). Comparison of Several Algorithms for Computing Sample Means and Variances. Journal of the American Statistical Association, Vol. 69, No. 348, 859-866.
+</p>
+	<p>&nbsp;</p>
+		
+<script type="text/javascript">addthis_pub  = 'johndcook';</script>
+<p><a href="http://www.addthis.com/bookmark.php" onmouseover="return addthis_open(this, '', '[URL]', '[TITLE]')" onmouseout="addthis_close()" onclick="return addthis_sendto()"><img src="http://s9.addthis.com/button1-share.gif" width="125" height="16" alt=""/></a></p><script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
+
+<ul class="nav">
+<li><a href="index.html" title="John D. Cook">Home</a> </li>
+<li><a href="blog" title="My blog, The Endeavour">Blog</a></li>
+<li><a href="/twitter/index.html" title="List of my Twitter accounts">Twitter</a> </li>
+<li><a href="contact.html" title="My contact information">Contact</a></li>
+</ul>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-3581291-2");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+
+	</body>
+</html>
