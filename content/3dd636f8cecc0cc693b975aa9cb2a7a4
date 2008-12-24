@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>PyCUDA | Andreas Klöckner's web page</title>
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="alternate" type="application/rss+xml" title="RSS - PyCUDA" href="/taxonomy/term/185/0/feed" />
+<link rel="shortcut icon" href="/misc/favicon.ico" type="image/x-icon" />
+    <link type="text/css" rel="stylesheet" media="all" href="/news.tiker.net/files/css/css_eb2bdc84138e076102e2bab271dc2e36.css" />
+      </head>
+
+<body>
+  <div id="document"> 
+    <div id="header">
+            
+      <div id="name">Andreas Kl&ouml;ckner</div>
+      <div id="dept"><a href="http://www.cims.nyu.edu">Courant Institute of Mathematical Sciences</a></div>
+      <div id="uni"><a href="http://www.nyu.edu">New York University</a></div>
+    </div> 
+    <div id="body"> 
+      <div id="sidebar">
+                    <div class="block block-user" id="block-user-1">
+  <!--<h2 class="title">Navigation</h2>-->
+    <div class="content"><ul class="menu"><li class="expanded first"><a href="/" title="">Home</a><ul class="menu"><li class="leaf first"><a href="/entry/cims">About Me</a></li>
+<li class="leaf"><a href="/academic/research" title="Research">Research</a></li>
+<li class="leaf"><a href="/academic/talks" title="Talks">Talks</a></li>
+<li class="leaf"><a href="/academic/notes" title="">Class Notes</a></li>
+<li class="leaf last"><a href="/academic/teaching" title="">Teaching</a></li>
+</ul></li>
+<li class="expanded active-trail"><a href="/software">Software</a><ul class="menu"><li class="leaf first"><a href="http://git.tiker.net" title="A browsable web interface to my (git-based) source code revision archives">Revision Control</a></li>
+<li class="expanded active-trail"><a href="/software" title="">Computing in Python</a><ul class="menu"><li class="expanded first active-trail"><a href="/software/pycuda" title="Wraps Nvidia CUDA into Python" class="active">PyCUDA</a><ul class="menu"><li class="leaf first"><a href="http://documen.tician.de/pycuda" title="">Docs</a></li>
+<li class="leaf last"><a href="http://pypi.python.org/pypi/pycuda" title="">Download</a></li>
+</ul></li>
+<li class="collapsed"><a href="/software/pyopencl" title="">PyOpenCL</a></li>
+<li class="collapsed"><a href="/software/hedge">Hedge</a></li>
+<li class="collapsed"><a href="/software/boostmpi" title="">BoostMPI</a></li>
+<li class="collapsed"><a href="/software/codepy" title="">CodePy</a></li>
+<li class="collapsed"><a href="/software/pyublas" title="Interoperability between Numpy and Boost Ublas.">PyUblas</a></li>
+<li class="collapsed"><a href="/software/meshpy">MeshPy</a></li>
+<li class="leaf"><a href="/software/pymetis">PyMetis</a></li>
+<li class="leaf last"><a href="/software/pylo" title="Python bindings for libsilo">Pylo</a></li>
+</ul></li>
+<li class="leaf"><a href="http://pypi.python.org/pypi/pudb" title="">PuDB</a></li>
+<li class="leaf"><a href="/software/boost-numeric-bindings" title="">Boost Numeric Bindings</a></li>
+<li class="leaf"><a href="/software/arpack" title="ARPACK with Autotools">Arpack with Autotools</a></li>
+<li class="leaf"><a href="/software/iterative-cuda" title="">Iterative CUDA</a></li>
+<li class="leaf"><a href="/software/synoptic" title="An AJAXy notes manager">Synoptic</a></li>
+<li class="leaf"><a href="/software/tagpy" title="">Tagpy</a></li>
+<li class="collapsed last"><a href="/software/madman" title="">Madman</a></li>
+</ul></li>
+<li class="leaf"><a href="http://gallery.tiker.net/v/andreas" title="">Gallery</a></li>
+<li class="leaf"><a href="http://wiki.tiker.net" title="">Wiki</a></li>
+<li class="leaf"><a href="/search">Search</a></li>
+<li class="leaf last"><a href="/user" title="">Log in</a></li>
+</ul></div>
+ </div>
+              </div> 
+      <div id="content"> 
+        <div id="breadcrumb">
+          <div class="breadcrumb"><a href="/">Home</a> » <a href="/taxonomy/term/2">Technology</a> » <a href="/taxonomy/term/7">My Software</a></div>        </div>
+
+                        
+                  <h1 class="title">PyCUDA</h1>
+                
+        <div class="node sticky">
+      <h2><a href="/node/470" title="PyCUDA">PyCUDA</a></h2>
+    <div class="content">
+   <p>PyCUDA lets you access Nvidia‘s CUDA parallel computation API from Python. Several wrappers of the CUDA API already exist–so what's so special about PyCUDA?</p>
+
+<ul>
+<li>Object cleanup tied to lifetime of objects. This idiom, often called <a href="http://en.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization">RAII</a> in C++, makes it much easier to write correct, leak- and crash-free code. PyCUDA knows about dependencies, too, so (for example) it won’t detach from a context before all memory allocated in it is also freed.</li>
+<li>Convenience. Abstractions like pycuda.driver.SourceModule and pycuda.gpuarray.GPUArray make CUDA programming even more convenient than with Nvidia’s C-based runtime.</li>
+<li>Completeness. PyCUDA puts the full power of CUDA’s driver API at your disposal, if you wish.</li>
+<li>Automatic Error Checking. All CUDA errors are automatically translated into Python exceptions.</li>
+<li>Speed. PyCUDA’s base layer is written in C++, so all the niceties above are virtually free.</li>
+<li>Helpful <a href="http://documen.tician.de/pycuda">Documentation</a>.</li>
+</ul>
+
+<h1>Documentation</h1>
+
+<p>See the <a href="http://documen.tician.de/pycuda">PyCUDA Documentation</a>.</p>
+
+<p>If you'd like to get an impression what PyCUDA is being used for in the real world, head over to the <a href="http://wiki.tiker.net/PyCuda/ShowCase">PyCUDA showcase</a>.</p>
+
+<h1>Support</h1>
+
+<p>Having trouble with PyCUDA? Maybe the nice people on the <a href="http://lists.tiker.net/listinfo/pycuda">PyCUDA mailing list</a> can help.</p>
+
+<h1>Download</h1>
+
+<p>PyCUDA may be downloaded from its <a href="http://pypi.python.org/pypi/pycuda">Python Package Index page</a> or obtained directly from my source code repository by typing</p>
+
+<pre><code>git clone http://git.tiker.net/trees/pycuda.git
+</code></pre>
+
+<p>You may also <a href="http://git.tiker.net/?p=pycuda.git;a=summary">browse the source</a>.</p>
+
+<p>Prerequisites:</p>
+
+<ul>
+<li><a href="http://www.boost.org">Boost</a> (any recent version should work)</li>
+<li><a href="http://nvidia.com/cuda">CUDA</a> (version 2.0 beta or newer)</li>
+<li><a href="http://numpy.org">Numpy</a> (version 1.0.4 or newer)</li>
+</ul>
+     </div>
+  <!--
+    -->
+</div>
+<div class="node">
+      <h2><a href="/node/510" title="PyCUDA and PyOpenCL at Nvidia GTC 2010">PyCUDA and PyOpenCL at Nvidia GTC 2010</a></h2>
+    <div class="content">
+   <p>Like last year, I had the honor of being invited to present PyCUDA and PyOpenCL along with a few examples of their use to a great crowd at <a href="http://nvidia.com">Nvidia</a>'s inaugural <a href="http://nvidia.com/gtc">GPU Technology Conference 2010</a>.</p>
+
+<p><div class="img_div"><div class="img_box " style="width:510px"><div class="img_image" style="width:500px;height:375px"><img src="http://mathema.tician.de/news.tiker.net/files/gtc-slide-1.png" alt="gtc-slide-1.png" title="gtc-slide-1.png"  class="img" width="500px" height="375px" /></div><div class="img_title_bottom">gtc-slide-1.png</div></div><div class="img_clear"></div></div></p>
+
+<p>Please click the following link to view the slides: <a href="http://mathema.tician.de/news.tiker.net/files/main.pdf">pycuda-pyopencl-gtc-2010.pdf</a>.</p>
+
+<p><strong>Update:</strong> Nvidia has posted a <a href="http://nvidia.fullviewmedia.com/gtc2010/0922-a3-2041.html">recording</a> of the session. There's also a <a href="http://developer.download.nvidia.com/compute/cuda/docs/GTC_2010_Archives.htm">full list of sessions</a>, with many talks that are worth being watched. In particular, I'd like to recommend the ones by <a href="http://embedded.eecs.berkeley.edu/mescal/people/catanzaro.html">Bryan Catanzaro</a> on <a href="http://nvidia.fullviewmedia.com/gtc2010/0922-n-2050.html">Copperhead</a>, which is built on top of PyCUDA, by <a href="http://www.caam.rice.edu/~timwar">Tim Warburton</a> on <a href="http://nvidia.fullviewmedia.com/gtc2010/0922-san-jose-2078.html">all things GPU-based discontinuous Galerkin</a>. Also check out the <a href="http://www.nvidia.com/object/I24-Atomic-Hedgehog-Productive-High-Performance-Computing-with-Python.pdf">poster on Atomic Hedgehog</a> by Cyrus Omar.</p>
+          <div class="links"><ul class="links inline"><li class="comment_forbidden first"></li>
+<li class="upload_attachments last"><a href="/node/510#attachments" title="Read full article to view attachments.">1 attachment</a></li>
+</ul></div>
+     </div>
+  <!--
+    -->
+</div>
+<div class="node">
+      <h2><a href="/node/507" title="PyCUDA at PyCon Quattro (Italy)">PyCUDA at PyCon Quattro (Italy)</a></h2>
+    <div class="content">
+   <p>At the recent PyCon Quattro, which took place in early May in the beautiful Tuscan city of Florence, Fabrizio Milo gave a talk on <a href="/software/pycuda">PyCUDA</a> entitled</p>
+
+<blockquote>
+  <p><a href="http://www.pycon.it/conference/talks/pycuda-come-sfruttare-la-potenza-delle-schede-vide">PyCuda: Come sfruttare la potenza delle schede video nelle applicazioni python</a>
+  (PyCUDA: How to make use of the power of graphics cards in Python applications)</p>
+</blockquote>
+
+<p>He made a set of rather nice slides (in English), which may be of interest. They are downloadable in PDF form at the link.</p>
+
+<p>Thanks Fabrizio for taking the time to talk about PyCUDA!</p>
+          <div class="links"><ul class="links inline"><li class="comment_forbidden first last"></li>
+</ul></div>
+     </div>
+  <!--
+    -->
+</div>
+<div class="node">
+      <h2><a href="/node/503" title="Why is GPU Computing significant?">Why is GPU Computing significant?</a></h2>
+    <div class="content">
+   <p>In my opinion, GPU computing is significant because I--as a grad student--can easily afford a machine that allows me to perform a simulation like the following in 40 minutes instead of a whole workday. That's why.</p>
+
+<p><object width="500" height="218"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=8005374&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00ADEF&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=8005374&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00ADEF&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="500" height="218"></embed></object></p>
+
+<p>If you're curious, this shows the density of a vortex shedding flow behind a square obstacle at Re=100 and Ma=0.1. The attentive viewer may notice a sound wave at the beginning as the system settles from uniform flow to flow around the obstacle, as well as the passing of a gentle density "nudge" intended to throw the system off balance and accelerate the onset of shedding. This was computed using my Discontinuous Galerkin solver <a href="/software/hedge">hedge</a> on an Nvidia GTX 260.</p>
+
+<p>This work owes a lot to Hendrik Riedmann from <a href="http://www.iag.uni-stuttgart.de">IAG, Uni Stuttgart</a> who wrote the initial version of the Navier-Stokes operator in hedge.</p>
+
+<p>(Btw: did you notice how the movie cleverly avoids the typical criticism of being "CFD"--<em>colorful</em> fluid dynamics? :-)</p>
+          <div class="links"><ul class="links inline"><li class="comment_forbidden first last"></li>
+</ul></div>
+     </div>
+  <!--
+    -->
+</div>
+<div class="node">
+      <h2><a href="/node/501" title="Submitted: PyCUDA: GPU Run-Time Code Generation for High-Performance Computing">Submitted: PyCUDA: GPU Run-Time Code Generation for High-Performance Computing</a></h2>
+    <div class="content">
+   <p><a href="http://pinto.scripts.mit.edu/">Nicolas Pinto</a>, <a href="http://www.eecs.berkeley.edu/~yunsup/">Yunsup Lee</a>, <a href="http://embedded.eecs.berkeley.edu/mescal/people/catanzaro.html">Bryan Catanzaro</a>, <a href="http://pirsquared.org/blog/">Paul Ivanov</a>, <a href="http://www.ece.osu.edu/~fasiha/">Ahmed Fasih</a> and I have recently submitted an article that explains how <a href="/software/pycuda">PyCUDA</a> allows the user to do <em>run-time code generation</em> ("RTCG"), and how that is an enormous boon to implementation efforts of most high-performance codes. Among many other things, PyCUDA also underlies our efforts to bring <a href="/node/476">discontinuous Galerkin PDE solvers onto the GPU</a>.</p>
+
+<p>Get it while it's hot: <a href="http://arxiv.org/abs/0911.3456">Arxiv</a>, <a href="http://www.dam.brown.edu/scicomp/reports/2009-40/">Brown SC</a></p>
+
+<p><strong>Update:</strong> Fixed arXiv link.</p>
+
+<h2>Abstract</h2>
+
+<p>High-performance scientific computing has recently seen a surge of interest in heterogeneous systems, with an emphasis on modern Graphics Processing Units (GPUs). These devices offer tremendous potential for performance and efficiency in important large-scale applications of computational science. However, exploiting this potential can be challenging, as one must adapt to the specialized and rapidly evolving computing environment currently exhibited by GPUs. One way of addressing this challenge is to embrace better techniques and develop tools tailored to their needs. This article presents one simple technique, GPU run-time code generation (RTCG), and PyCUDA, an open-source toolkit that supports this technique.</p>
+
+<p>In introducing PyCUDA, this article proposes the combination of a dynamic, high-level scripting language with the massive performance of a GPU as a compelling two-tiered computing platform, potentially offering significant performance and productivity advantages over conventional single-tier, static systems. It is further observed that, compared to competing techniques, the effort required to create codes using run-time code generation with PyCUDA grows more gently in response to growing needs. The concept of RTCG is simple and easily implemented using existing, robust tools. Nonetheless it is powerful enough to support (and encourage) the creation of custom application-specific tools by its users. The premise of the paper is illustrated by a wide range of examples where the technique has been applied with considerable success.</p>
+          <div class="links"><ul class="links inline"><li class="comment_forbidden first last"></li>
+</ul></div>
+     </div>
+  <!--
+    -->
+</div>
+<div class="node">
+      <h2><a href="/node/497" title="PyCUDA talk at Nvidia&#039;s GPU Technology Conference">PyCUDA talk at Nvidia&#039;s GPU Technology Conference</a></h2>
+    <div class="content">
+   <p>This past week, I had the honor of presenting a talk on <a href="/software/pycuda">PyCUDA</a> at <a href="http://nvidia.com">Nvidia</a>'s inaugural <a href="http://nvidia.com/gtc">GPU Technology Conference</a>.</p>
+
+<p><div class="img_div"><div class="img_box " style="width:410px"><div class="img_image" style="width:400px;height:300px"><img src="http://mathema.tician.de/news.tiker.net/files/pycuda-nvidia.png" alt="pycuda-nvidia.png" title="pycuda-nvidia.png"  class="img" width="400px" height="300px" /></div><div class="img_title_bottom">pycuda-nvidia.png</div></div><div class="img_clear"></div></div></p>
+
+<p>Please click the following link to view the slides: <a href="http://mathema.tician.de/news.tiker.net/files/pycuda-nvidia.pdf">pycuda-nvidia.pdf</a>.</p>
+
+<p><strong>Update:</strong> Nvidia has posted a <a href="http://nvidia.fullviewmedia.com/GPU2009/1002-empire-1400.html">recording</a> of the session that you may watch or <a href="http://www.nvidia.com/content/GTC/videos/GTC09-1400.flv">download</a>.</p>
+          <div class="links"><ul class="links inline"><li class="comment_forbidden first"></li>
+<li class="upload_attachments last"><a href="/node/497#attachments" title="Read full article to view attachments.">1 attachment</a></li>
+</ul></div>
+     </div>
+  <!--
+    -->
+</div>
+<div class="node">
+      <h2><a href="/node/495" title="SciPy&#039;09: Advanced Tutorial on PyCUDA">SciPy&#039;09: Advanced Tutorial on PyCUDA</a></h2>
+    <div class="content">
+   <p>The <a href="http://conference.scipy.org/">SciPy'09 conference</a> ended less than a week ago. At the invitation of the SciPy'09 organizers (especially <a href="https://cirl.berkeley.edu/fperez/index.html">Fernando Perez</a>), <a href="http://pinto.scripts.mit.edu/">Nicolas Pinto</a> gave a talk in the <a href="http://conference.scipy.org/advanced_tutorials">Advanced Tutorials track</a> on how to use <a href="/software/pycuda">PyCUDA</a> to do GPU scripting.</p>
+
+<p>First, I would like to use this opportunity to publicly thank Nicolas for all the work and time he put into making this tutorial a reality. Second, I would like to point out the <a href="http://www.archive.org/details/scipy09_advancedTutorial_7">video</a> of his session, which you can watch below:</p>
+
+<p><embed type="application/x-shockwave-flash" width="500"     height="400"    allowfullscreen="true"  allowscriptaccess="always"  src="http://www.archive.org/flow/flowplayer.commercial-3.0.5.swf"   w3c="true"  flashvars='config={"key":"#$b6eb72a0f2f1e29f3d4","playlist":[{"url":"http://www.archive.org/download/scipy09_advancedTutorial_7/format=Thumbnail?.jpg","autoPlay":true,"scaling":"fit"},{"url":"http://www.archive.org/download/scipy09_advancedTutorial_7/scipy09_advancedTutorial_7_512kb.mp4","autoPlay":false,"accelerated":true,"scaling":"fit","provider":"h264streaming"}],"clip":{"autoPlay":false,"accelerated":true,"scaling":"fit","provider":"h264streaming"},"canvas":{"backgroundColor":"0x000000","backgroundGradient":"none"},"plugins":{"audio":{"url":"http://www.archive.org/flow/flowplayer.audio-3.0.3-dev.swf"},"controls":{"playlist":false,"fullscreen":true,"gloss":"high","backgroundColor":"0x000000","backgroundGradient":"medium","sliderColor":"0x777777","progressColor":"0x777777","timeColor":"0xeeeeee","durationColor":"0x01DAFF","buttonColor":"0x333333","buttonOverColor":"0x505050"},"h264streaming":{"url":"http://www.archive.org/flow/flowplayer.h264streaming-3.0.5.swf"}},"contextMenu":[{"Item scipy09_advancedTutorial_7 at archive.org":"function()"},"-","Flowplayer 3.0.5"]}'> </embed></p>
+     </div>
+  <!--
+    -->
+</div>
+<div class="node">
+      <h2><a href="/node/477" title="Talk slides: PyCuda@MIT">Talk slides: PyCuda@MIT</a></h2>
+    <div class="content">
+   <p><a href="http://pinto.scripts.mit.edu/">Nicolas Pinto</a> at MIT was nice enough to invite me over to give a talk in their <a href="http://sites.google.com/site/cudaiap2009/">CUDA class</a>. I made a bunch of slides that I think are of general interest to people who are interested in PyCuda. You can find them <a href="/dl/pub/pycuda-mit.pdf">here</a>.</p>
+          <div class="links"><ul class="links inline"><li class="comment_forbidden first last"></li>
+</ul></div>
+     </div>
+  <!--
+    -->
+</div>
+<div class="node">
+      <h2><a href="/node/476" title="Submitted: &quot;Nodal Discontinuous Galerkin Methods on Graphics Processors&quot;">Submitted: &quot;Nodal Discontinuous Galerkin Methods on Graphics Processors&quot;</a></h2>
+    <div class="content">
+   <p><a href="http://www.caam.rice.edu/~timwar/">Tim Warburton</a>, Jeff Bridge, my advisor <a href="http://www.cfm.brown.edu/people/jansh">Jan Hesthaven</a> and I have recently submitted an article detailing our efforts to accelerate Discontinuous Galerkin computations by using <a href="http://nvidia.com/cuda">Nvidia CUDA</a> GPUs. DG seems to be a good fit for these machines.</p>
+
+<p>Get it while it's hot: <a href="http://arxiv.org/abs/0901.1024">Arxiv</a>, <a href="http://www.dam.brown.edu/scicomp/reports/2008-27/">Brown SC reports</a>, <a href="http://dx.doi.org/10.1016/j.jcp.2009.06.041">JCP</a></p>
+
+<h2>Abstract</h2>
+
+<p>Discontinuous Galerkin (DG) methods for the numerical solution of partial differential equations have enjoyed considerable success because they are both flexible and robust: They allow arbitrary unstructured geometries and easy control of accuracy without compromising simulation stability. Lately, another property of DG has been growing in importance: The majority of a DG operator is applied in an element-local way, with weak penalty-based element-to-element coupling.</p>
+
+<p>The resulting locality in memory access is one of the factors that enables DG to run on off-the-shelf, massively parallel graphics processors (GPUs). In addition, DG's high-order nature lets it require fewer data points per represented wavelength and hence fewer memory accesses, in exchange for higher arithmetic intensity. Both of these factors work significantly in favor of a GPU implementation of DG.</p>
+
+<p>Using a single US$400 Nvidia GTX 280 GPU, we accelerate a solver for Maxwell's equations on a general 3D unstructured grid by a factor of 40 to 60 relative to a serial computation on a current-generation CPU. In many cases, our algorithms exhibit full use of the device's available memory bandwidth. Example computations achieve and surpass 200 gigaflops/s of net application-level floating point work.</p>
+
+<p>In this article, we describe and derive the techniques used to reach this level of performance. In addition, we present comprehensive data on the accuracy and runtime behavior of the method.</p>
+          <div class="links"><ul class="links inline"><li class="comment_comments first last"><a href="/node/476#comments" title="Jump to the first comment of this posting.">1 comment</a></li>
+</ul></div>
+     </div>
+  <!--
+    -->
+</div>
+<div class="node">
+      <h2><a href="/node/473" title="PyCuda 0.91">PyCuda 0.91</a></h2>
+    <div class="content">
+   <p>I'm happy to announce the availability of <a href="http://pypi.python.org/pypi/pycuda/0.91">PyCuda 0.91</a>. There is full, up-to-date <a href="http://documen.tician.de/pycuda/">documentation</a> available.</p>
+
+<p>The following exciting stuff is in PyCuda 0.91:</p>
+
+<ul>
+<li>Support for Windows and MacOS X, in addition to Linux. (Gert Wohlgemuth, 
+Cosmin Stejerean, Znah on the Nvidia forums, and David Gadling)</li>
+<li>Support more arithmetic operators on pycuda.gpuarray.GPUArray. (Gert 
+Wohlgemuth)</li>
+<li>Add pycuda.gpuarray.arange(). (Gert Wohlgemuth)</li>
+<li>Add pycuda.curandom. (Gert Wohlgemuth)</li>
+<li>Add pycuda.cumath. (Gert Wohlgemuth)</li>
+<li>Add pycuda.autoinit.</li>
+<li>Add pycuda.tools.</li>
+<li>Add pycuda.tools.DeviceData and pycuda.tools.OccupancyRecord.
+pycuda.gpuarray.</li>
+<li>GPUArray parallelizes properly on GTX200-generation devices.</li>
+<li>Add support for compiling on CUDA 1.1. Added version query 
+pycuda.driver.get_version(). Updated documentation to show 2.0-only 
+functionality.</li>
+<li>Make pycuda.driver.Function resource usage available to the program. (See, 
+e.g. pycuda.driver.Function.registers.)
+Cache kernels compiled by pycuda.driver.SourceModule.</li>
+<li>Allow for faster, prepared kernel invocation. See 
+pycuda.driver.Function.prepare().</li>
+<li>Added memory pools, at pycuda.tools.DeviceMemoryPool as experimental, 
+undocumented functionality. For some workloads, this can cure the slowness of 
+pycuda.driver.mem_alloc().</li>
+<li>Fix the memset family of functions.</li>
+<li>Improve Error Reporting.</li>
+</ul>
+
+<p>Check the <a href="http://documen.tician.de/pycuda/faq.html#version-0-91">docs change list</a> for a fully hyperlinked version of the above.</p>
+
+<p>Have fun,
+Andreas</p>
+          <div class="links"><ul class="links inline"><li class="comment_forbidden first last"></li>
+</ul></div>
+     </div>
+  <!--
+    -->
+</div>
+      </div>
+    </div> 
+    <div id="footer">
+      <div id="footercontainer">
+         <div class="block block-block" id="block-block-5">
+  <!--<h2 class="title"></h2>-->
+    <div class="content"><a rel="license" href="http://creativecommons.org/licenses/by-sa/2.5/"><img alt="Creative Commons License" style="border-width: 0" src="http://creativecommons.org/images/public/somerights20.png" /></a>
+
+All content bearing the &ldquo;inducer&rdquo; username is hereby licensed under 
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/2.5/">Creative Commons Attribution-Share Alike 2.5  License</a>.
+
+For the purposes of German law: I am not repsonsible for material on pages linked to from this site.</div>
+ </div>
+             </div>
+    </div> 
+  </div> 
+</body>
+</html>
