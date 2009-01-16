@@ -1,0 +1,485 @@
+<html>
+
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Brendan Gregg">
+   <meta name="GENERATOR" content="Vim">
+   <meta name="KeyWords" content="solaris 10 network performance monitoring">
+   <title>Network Monitoring</title>
+</head>
+
+<body text="#000000" bgcolor="#FFFFFF" link="#2222FF" vlink="#2222CC" alink="#FF2222">
+<font face="Times New Roman,Times">
+
+
+<! TOP>
+
+<font size=+3>Documentation: Network Monitoring</font><br>
+<p>The following is a guide to monitoring network interfaces and
+the network from the <b>Solaris</b> operating system. 
+<br>
+<i>Note: This document is not written by Sun.  </i> <br>
+Brendan Gregg, 09-Oct-2005, version 0.70.</p>
+
+<p><br><font size=+2>Is your network busy?</font></p>
+<p>The network often gets blamed when things are performing poorly,
+and perhaps this is correct - your network interfaces may be running at
+100% utilisation.</p>
+<p>What command will tell you how busy the network interface is? 
+Many sysadmins suggest using netstat -i to find out,</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080">$ <b>netstat -i 1</b>
+    input   hme0      output           input  (Total)    output
+<b>packets</b> errs  <b>packets</b> errs  colls  packets errs  packets errs  colls
+70820498 6     73415337 0     0      113173825 6     115768664 0     0   
+242     0     149     0     0      246     0     153     0     0
+1068    0     552     0     0      1075    0     559     0     0
+[...]
+</font></pre></td></tr></table></ul>
+<p>This shows packet counts per second, the first line is the summary since
+boot. How many packets would mean the interface is busy? 100/sec, 1000/sec?</p>
+<p>
+What we do know is the speed of the network interface, for this one it is 
+100 Mb/sec. However we have no way of telling the size of the packets - they
+may be 56 byte packets or 1500 bytes. This means that <b>the packet count
+is not useful</b>, perhaps it is useful as a yardstick of activity only.
+What we really need is Kb/sec...</p>
+
+
+
+<p><br><font size=+2>Contents</font></p>
+<ul>
+<font color="#000080">
+<li><a href="#system">By System</a> 
+ - monitoring network interface usage.</li>
+<ul><li><a href="#netstat">netstat</a> 
+ - netstat, the Solaris kitchen sink network tool.</li>
+<li><a href="#kstat">kstat</a>
+ - the Kernel Statistics framework.</li>
+<li><a href="#nx">nx.se</a>
+ - SE Toolkit's nx.se.</li>
+<li><a href="#nicstat">nicstat</a>
+ - nicstat for network interface utilisation.</li>
+<li><a href="#snmp">SNMP</a>
+ - SNMP based tools include MRTG.</li></ul>
+<li><a href="#network">Across Network</a> 
+ - analysing external network performance.</li>
+<ul><li><a href="#ping">ping</a> 
+ - the classic network probe tool.</li>
+<li><a href="#traceroute">traceroute</a> 
+ - timing hops to destination.</li>
+<li><a href="#ttcp">TTCP</a> 
+ - creates test load between two hosts.</li>
+<li><a href="#pathchar">pathchar</a>
+ - traceroute with throughputs, an amazing tool.</li>
+<li><a href="#ntop">ntop</a>
+ - comprhensive statistics for snooped traffic.</li></ul>
+<li><a href="#process">By Process</a> 
+ - determining the process responsible for traffic.</li>
+<ul><li><a href="#tcptop">tcptop</a> 
+ - TCP PID summary.</li>
+<li><a href="#tcpsnoop">tcpsnoop</a>
+ - watch TCP traffic live with PID.</li></ul>
+</ul>
+</font>
+</ul>
+<p>
+
+
+<a name="system"></a>
+<br><p><font size=+2>By System</font></p>
+<p>How to monitor network usage for the entire system, usually 
+by network interface.</p>
+<ul>
+
+
+<a name="netstat"></a>
+<hr><p><font color="#0000C0" size=+2><b>netstat</b></font></p>
+<p>The Solaris netstat command is where a number of different network status 
+programs have been dropped, it's the kitchen sink of network tools.</p>
+<p><b>netstat -i</b> as mentioned earlier, only prints packet counts. We
+don't know if they are big packets or small packets, and we can't use them
+to accurately determine how utilised the network interface is. There are
+other performance monitoring tools that plot this as a "be all and end all"
+value - this is wrong.</b>
+ 
+<p><b>netstat -s</b> dumps various network related counters from Kstat,
+the Kernel Statistics framework. This shows that Kstat does track at least
+some details in terms of bytes,</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080">$ <b>netstat -s | grep Bytes</b>
+        tcpOutDataSegs      =37367847   <b>tcpOutDataBytes     =166744792</b>
+        tcpRetransSegs      =153437     tcpRetransBytes     =72298114
+        tcpInAckSegs        =25548715   tcpInAckBytes       =148658291
+        tcpInInorderSegs    =35290928   <b>tcpInInorderBytes   =3637819567</b>  
+        tcpInUnorderSegs    =324309     tcpInUnorderBytes   =406912945
+        tcpInDupSegs        =152795     tcpInDupBytes       =73998299
+        tcpInPartDupSegs    =  7896     tcpInPartDupBytes   =5821485
+        tcpInPastWinSegs    =    38     tcpInPastWinBytes   =971347352
+</font></pre></td></tr></table></ul>
+<p>However the byte values above are for TCP in total, including 
+loopback traffic that never travelled via the network interfaces.</p>
+ 
+<p><b>netstat -k</b> on Solaris 9 and earlier dumped all Kstat counters,</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080">$ <b>netstat -k | awk '/^hme0/,/^$/'</b>
+<font size=-1>hme0:
+ipackets 70847004 ierrors 6 opackets 73438793 oerrors 0 collisions 0
+defer 0 framing 0 crc 0 sqe 0 code_violations 0 len_errors 0
+ifspeed 100000000 buff 0 oflo 0 uflo 0 missed 6 tx_late_collisions 0
+retry_error 0 first_collisions 0 nocarrier 0 nocanput 0
+allocbfail 0 runt 0 jabber 0 babble 0 tmd_error 0 tx_late_error 0
+rx_late_error 0 slv_parity_error 0 tx_parity_error 0 rx_parity_error 0
+slv_error_ack 0 tx_error_ack 0 rx_error_ack 0 tx_tag_error 0
+rx_tag_error 0 eop_error 0 no_tmds 0 no_tbufs 0 no_rbufs 0
+rx_late_collisions 0 rbytes 289601566 obytes 358304357 multircv 558 multixmt 73411 
+brdcstrcv 3813836 brdcstxmt 1173700 norcvbuf 0 noxmtbuf 0   newfree 0
+ipackets64 70847004 opackets64 73438793 <b>rbytes64 47534241822 obytes64 51897911909</b> align_errors 0
+fcs_errors 0   sqe_errors 0 defer_xmts 0 ex_collisions 0
+macxmt_errors 0 carrier_errors 0 toolong_errors 0 macrcv_errors 0
+link_duplex 0 inits 31 rxinits 0 txinits 0 dmarh_inits 0
+dmaxh_inits 0 link_down_cnt 0 phy_failures 0 xcvr_vendor 524311
+asic_rev 193 link_up 1
+</font></font></pre></td></tr></table></ul>
+<p>Great - so bytes by network interface are indeed tracked. However netstat -k
+was an undocumented switch that has now been dropped in Solaris 10. That's
+ok, as there are better ways to get to Kstat, including the C library that
+tools such as vmstat use - libkstat.</p>
+<p><br></p>
+
+
+
+
+<a name="kstat"></a>
+<hr><p><font color="#0000C0" size=+2><b>kstat</b></font></p>
+<p>The Solaris Kernel Statistics framework does track network usage,
+and as of Solaris 8 there has been a /usr/bin/kstat command to 
+fetch Kstat details,</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080">$ <b>kstat -p 'hme:0:hme0:*bytes64' 1</b>
+hme:0:hme0:obytes64     51899673435   
+hme:0:hme0:rbytes64     47536009231
+ 
+hme:0:hme0:obytes64     51899673847
+hme:0:hme0:rbytes64     47536009709
+[...]
+</font></pre></td></tr></table></ul>
+<p>Now we just need a tool to present this in a more
+meaningful way.</p>
+<p><br></p>
+
+
+
+
+<a name="nx"></a>
+<hr><p><font color="#0000C0" size=+2><b>nx.se</b></font></p>
+<p>The 
+<a href="http://www.sunfreeware.com/setoolkit.html">SE Toolkit</a> 
+provides a language, SymbEL, that lets us write our own
+performance monitoring tools. It also contained a collection of example
+tools, including nx.se which lets us identify network utilisation,</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080">$ <b>se nx.se 1</b>
+Current tcp RtoMin is 400, interval 1, start Sun Oct  9 10:36:42 2005
+ 
+10:36:43 Iseg/s Oseg/s InKB/s OuKB/s Rst/s  Atf/s  Ret%  Icn/s  Ocn/s
+tcp      841.6    4.0  74.98   0.27   0.00   0.00   0.0   0.00   0.00
+<b>Name</b>    Ipkt/s Opkt/s <b>InKB/s OuKB/s</b> IErr/s OErr/s Coll% NoCP/s Defr/s
+<b>hme0</b>     845.5  420.8 <b>119.91  22.56</b>  0.000  0.000   0.0   0.00   0.00
+ 
+10:36:44 Iseg/s Oseg/s InKB/s OuKB/s Rst/s  Atf/s  Ret%  Icn/s  Ocn/s
+tcp      584.2    5.0  77.97   0.60   0.00   0.00   0.0   0.00   0.00
+<b>Name</b>    Ipkt/s Opkt/s <b>InKB/s OuKB/s</b> IErr/s OErr/s Coll% NoCP/s Defr/s
+<b>hme0</b>     579.2  297.1 <b>107.95  16.16</b>  0.000  0.000   0.0   0.00   0.00   
+[...]
+</font></pre></td></tr></table></ul>
+<p>Having KB/s values lets us determine exactly how busy our network
+interfaces are. There is other useful information printed above, 
+including Coll% - collisions, NoCP/s - no can puts, and Defr/s defers, which
+may be evidence of network saturation.</p>
+<p><br></p>
+
+
+
+
+
+<a name="nicstat"></a>
+<hr><p><font color="#0000C0" size=+2><b>nicstat</b></font></p>
+<p><a href="../K9Toolkit/nicstat.c">nicstat</a> is a freeware tool written
+in C to print out network utilisation and saturation by interface,</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080">$ <b>nicstat 1</b>
+    Time   Int <b>  rKb/s   wKb/s</b>   rPk/s   wPk/s    rAvs    wAvs   <b>%Util     Sat</b>
+10:48:30  hme0 <b>   4.02    4.39</b>    6.14    6.36  670.73  706.50   <b> 0.07    0.00</b>
+10:48:31  hme0 <b>   0.29    0.50</b>    3.00    4.00   98.00  127.00   <b> 0.01    0.00</b>
+10:48:32  hme0 <b>   1.35    4.23</b>   14.00   15.00   98.79  289.00   <b> 0.05    0.00</b>
+10:48:33  hme0 <b>  67.73   19.08</b>  426.00  207.00  162.81   94.39   <b> 0.71    0.00</b>
+10:48:34  hme0 <b> 315.22  128.91</b> 1249.00  723.00  258.44  182.58   <b> 3.64    0.00</b>
+10:48:35  hme0 <b> 529.96   67.53</b> 2045.00 1046.00  265.37   66.11   <b> 4.89    0.00</b>
+10:48:36  hme0 <b> 454.14   62.16</b> 2294.00 1163.00  202.72   54.73   <b> 4.23    0.00</b>
+10:48:37  hme0 <b>  93.55   15.78</b>  583.00  295.00  164.31   54.77   <b> 0.90    0.00</b>
+10:48:38  hme0 <b>  74.84   32.41</b>  516.00  298.00  148.52  111.38   <b> 0.88    0.00</b>
+10:48:39  hme0 <b>   0.76    4.17</b>    7.00    9.00  111.43  474.00   <b> 0.04    0.00</b>   
+[...]
+</font></pre></td></tr></table></ul>
+<p>Fantastic. There is also an older Perl version of
+<a href="../K9Toolkit/nicstat">nicstat</a> available.</p>
+<p>The following are the switches available from version 0.90 of the 
+C version,</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080">$ <b>nicstat -h</b>
+USAGE: nicstat [-hsz] [-i int[,int...]] | [interval [count]]
+ 
+         -h              # help
+         -i interface    # track interface only
+         -s              # summary output
+         -z              # skip zero value lines
+    eg,
+       nicstat           # print summary since boot only
+       nicstat 1         # print every 1 second
+       nicstat 1 5       # print 5 times only
+       nicstat -z 1      # print every 1 second, skip zero lines   
+       nicstat -i hme0 1 # print hme0 only every 1 second
+</font></pre></td></tr></table></ul>
+<p>The utilisation measurement is based on the maximum speed of the interface
+(if available via Kstat), divided by the current throughput. The saturation
+measurement is a value that reflects errors due to saturation (no can puts,
+etc).</p>
+<p><br></p>
+
+
+
+
+<a name="snmp"></a>
+<hr><p><font color="#0000C0" size=+2><b>SNMP</b></font></p>
+<p>It's worth mentionining that there is also useful data available in
+SNMP, which is used by software such as 
+<a href="http://mrtg.hdl.com/mrtg.html">MRTG</a>.
+Here we use Net-SNMP's snmpget to fetch some interface values,</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080">$ <b>snmpget -v1 -c public localhost ifOutOctets.2 ifInOctets.2</b>   
+IF-MIB::ifOutOctets.2 = Counter32: 10016768
+IF-MIB::ifInOctets.2 = Counter32: 11932165
+</font></pre></td></tr></table></ul>
+<p>These values are the outbound and inbound bytes for our main interface.
+In Solaris 10 a full description of the IF-MIB values can be found at
+/etc/sma/snmp/mibs/IF-MIB.txt.</p>
+<p><br><hr></p>
+
+
+
+</ul>
+<a name="network"></a>
+<br><p><font size=+2>Across Network</font></p>
+<p>Analysing the performance of the external network.</p>
+<ul>
+
+
+<a name="ping"></a>
+<hr><p><font color="#0000C0" size=+2><b>ping</b></font></p>
+<p>ping is the classic network probe tool,</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080">$ <b>ping -s mars</b>
+PING mars: 56 data bytes
+64 bytes from mars (192.168.1.1): icmp_seq=0. <b>time=0.623 ms</b>
+64 bytes from mars (192.168.1.1): icmp_seq=1. <b>time=0.415 ms</b>
+64 bytes from mars (192.168.1.1): icmp_seq=2. <b>time=0.464 ms</b>
+^C
+----mars PING Statistics----
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip (ms)  min/avg/max/stddev = 0.415/0.501/0.623/0.11   
+</font></pre></td></tr></table></ul>
+<p>So I discover that mars is up, and it responds within 1 ms. Solaris 10
+enhanced ping to print 3 decimal places for the times.</p>
+<p>ping is handy to see if a host is up, but that's about all. Some 
+people use it to test whether their application server is ok. Hmm. ICMP
+is handled in the kernel without needing to call a user based process,
+so it's possible that a server will ping ok while the application 
+either responds slowly or not at all.</p>
+<p><br></p>
+
+
+<a name="traceroute"></a>
+<hr><p><font color="#0000C0" size=+2><b>traceroute</b></font></p>
+<p>traceroute sends a series of UDP packets with an increasing TTL, and 
+by watching the ICMP time expired replies can discover the hops to a host
+(assuming the hops actually decrement the TTL),</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080">$ <b>traceroute www.sun.com</b>
+traceroute: Warning: Multiple interfaces found; using 260.241.10.2 @ hme0:1
+traceroute to www.sun.com (209.249.116.195), 30 hops max, 40 byte packets
+ 1  tpggate (260.241.10.1)  21.224 ms  25.933 ms  25.281 ms
+ 2  172.31.217.14 (172.31.217.14)  49.565 ms  27.736 ms  25.297 ms
+ 3  syd-nxg-ero-zeu-2-gi-3-0.tpgi.com.au (220.244.229.9)  25.454 ms  22.066 ms  26.237 ms
+ 4  syd-nxg-ibo-l3-ge-0-2.tpgi.com.au (220.244.229.132)  42.216 ms *  37.675 ms
+ 5  220-245-178-199.tpgi.com.au (220.245.178.199)  40.727 ms  38.291 ms  41.468 ms
+ 6  syd-nxg-ibo-ero-ge-1-0.tpgi.com.au (220.245.178.193)  37.437 ms  38.223 ms  38.373 ms   
+ 7  Gi11-2.gw2.syd1.asianetcom.net (202.147.41.193) <b> 24.953 ms</b>  25.191 ms  26.242 ms
+ 8  po2-1.gw1.nrt4.asianetcom.net (202.147.55.110)  <b>155.811 ms</b>  169.330 ms  153.217 ms
+ 9  Abovenet.POS2-2.gw1.nrt4.asianetcom.net (203.192.129.42)  150.477 ms  157.173 ms *
+10  so-6-0-0.mpr3.sjc2.us.above.net (64.125.27.54)  240.077 ms  239.733 ms  244.015 ms
+11  so-0-0-0.mpr4.sjc2.us.above.net (64.125.30.2)  224.560 ms  228.681 ms  221.149 ms
+12  64.125.27.102 (64.125.27.102)  241.229 ms  235.481 ms  238.868 ms
+13  * *^C
+</font></pre></td></tr></table></ul>
+<p>The times may give me some idea where a network bottleneck is. We must
+also remember that networks are dynamic, and this may not be the permanent
+path to that host.</p>
+<p><br></p>
+
+
+<a name="ttcp"></a>
+<hr><p><font color="#0000C0" size=+2><b>TTCP</b></font></p>
+<p>Test TCP is a freeware tool to test the throughput 
+between two hops. It needs to be run on both the source and destination,
+and there is a Java version of
+<a href="http://www.ccci.com/tools/ttcp/">TTCP</a>
+ which will run on many different operating systems. Beware, it will
+flood the network with traffic to perform it's test. </p>
+<p>The following is run on one host as a reciever. The options used make
+the test run for a reasonable duration - around 60 seconds,</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080">$ <b>java ttcp -r -n 65536</b>
+Receive: buflen= 8192  nbuf= 65536 port= 5001
+</font></pre></td></tr></table></ul>
+<p>Then the following was run on the second host as the transmitter,</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080">$ <b>java ttcp -t jupiter -n 65536</b>
+Transmit: buflen= 8192  nbuf= 65536 port= 5001
+Transmit connection:
+  Socket[addr=jupiter/192.168.1.5,port=5001,localport=46684].
+Transmit: 536870912 bytes in 46010 milli-seconds = <b>11668.57 KB/sec</b> (93348.56 Kbps).   
+</font></pre></td></tr></table></ul>
+<p>This shows the speed between these hosts for this test is around 11.6
+Megabytes per second.</p>
+<p><br></p>
+
+
+
+<a name="pathchar"></a>
+<hr><p><font color="#0000C0" size=+2><b>pathchar</b></font></p>
+<p>After writing traceroute, Van Jacobson then went on to write 
+<a href="ftp://ftp.ee.lbl.gov/pathchar/">pathchar</a> - 
+an amazing tool that identifys network bottlenecks. It operates like 
+traceroute, but rather than printing response time to each hop it prints
+bandwidth <b>between</b> each pair of hops.</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080"># <b>pathchar 192.168.1.10</b>
+pathchar to 192.168.1.1 (192.168.1.1)
+ doing 32 probes at each of 64 to 1500 by 32
+ 0 localhost
+ |    <b>30 Mb/s</b>,   79 us (562 us)
+ 1 neptune.drinks.com (192.168.2.1)
+ |    44 Mb/s,   195 us (1.23 ms)
+ 2 mars.drinks.com (192.168.1.1)
+2 hops, rtt 547 us (1.23 ms), <b>bottleneck  30 Mb/s</b>, pipe 7555 bytes   
+</font></pre></td></tr></table></ul>
+<p>This tool works by sending "shaped" traffic over a long interval
+ and carefully measuring the response times. It doesn't flood the network
+like TTCP does.</p>
+<p><br></p>
+
+
+<a name="ntop"></a>
+<hr><p><font color="#0000C0" size=+2><b>ntop</b></font></p>
+<p><a href="http://www.ntop.org/ntop.html">ntop</a> is a tool that sniffs
+network traffic and provides comprehensive reports via a web interface.
+It is also available on 
+<a href="http://www.sunfreeware.com">sunfreeware.com</a>. 
+</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080"># <b>ntop</b>
+ntop v.1.3.1 MT [sparc-sun-solaris2.8] listening on [hme0,hme0:0,hme0:1].
+Copyright 1998-2000 by Luca Deri &lt;deri@ntop.org&gt;
+Get the freshest ntop from http://www.ntop.org/
+ 
+Initialising...
+Loading plugins (if any)...
+WARNING: Unable to find the plugins/ directory.
+Waiting for HTTP connections on port 3000...
+Sniffying...
+</font></pre></td></tr></table></ul>
+<p>Now you connect via a web browser to localhost:3000.</p>
+<p><br><hr></p>
+
+
+
+
+
+</ul>
+<a name="process"></a>
+<br><p><font size=+2>By Process</font></p>
+<p>How to monitor network usage by process. Recently
+the addition of DTrace to Solaris 10 has allowed the creation of the first
+network by process tools.</p>
+<ul>
+
+
+<a name="tcptop"></a>
+<hr><p><font color="#0000C0" size=+2><b>tcptop</b></font></p>
+<p>This is a DTrace based tool from the freeware 
+<a href="../dtrace.html#DTraceToolkit">DTraceToolkit</a> which gives a summary
+of TCP traffic by system and by process,
+</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080"># <b>tcptop 10</b>
+Sampling... Please wait.
+2005 Jul  5 04:55:25,  load: 1.11,  TCPin:      2 Kb,  TCPout:    110 Kb
+ 
+ UID <b>   PID</b> LADDR           LPORT FADDR           FPORT  <b>    SIZE NAME</b>
+ 100 <b> 20876</b> 192.168.1.5     36396 192.168.1.1        79  <b>    1160 finger</b>
+ 100 <b> 20875</b> 192.168.1.5     36395 192.168.1.1        79  <b>    1160 finger</b>
+ 100 <b> 20878</b> 192.168.1.5     36397 192.168.1.1        23  <b>    1303 telnet</b>
+ 100 <b> 20877</b> 192.168.1.5       859 192.168.1.1       514  <b>  115712 rcp</b>      
+</font></pre></td></tr></table></ul>
+<p>This version of tcptop will examine newly connected sessions (while tcptop
+has been running). In the above we can see PID and SIZE columns, this is
+tracking TCP traffic that has travelled on external interfaces. The
+TCPin and TCPout summaries also tracks localhost TCP traffic.</p>
+<p><br></p>
+
+
+<a name="tcpsnoop"></a>
+<hr><p><font color="#0000C0" size=+2><b>tcpsnoop</b></font></p>
+<p>This is a DTrace based tool from the 
+<a href="../dtrace.html#DTraceToolkit">DTraceToolkit</a> which prints
+TCP packets live by process,
+</p>
+<ul><table border=1 bordercolor="0000FF" bgcolor="#E8E8FF"><tr><td><pre>
+<font color="#204080"># <b>tcpsnoop</b>
+     UID  <b>  PID</b> LADDR           LPORT DR RADDR           RPORT  SIZE CMD
+     100  <b>20892</b> 192.168.1.5     36398 -&gt; 192.168.1.1        79    54 finger
+     100  <b>20892</b> 192.168.1.5     36398 &lt;- 192.168.1.1        79    66 finger
+     100  <b>20892</b> 192.168.1.5     36398 -&gt; 192.168.1.1        79    54 finger
+     100  <b>20892</b> 192.168.1.5     36398 -&gt; 192.168.1.1        79    56 finger
+     100  <b>20892</b> 192.168.1.5     36398 &lt;- 192.168.1.1        79    54 finger
+     100  <b>20892</b> 192.168.1.5     36398 &lt;- 192.168.1.1        79   606 finger
+     100  <b>20892</b> 192.168.1.5     36398 -&gt; 192.168.1.1        79    54 finger
+     100  <b>20892</b> 192.168.1.5     36398 &lt;- 192.168.1.1        79    54 finger
+     100  <b>20892</b> 192.168.1.5     36398 -&gt; 192.168.1.1        79    54 finger
+     100  <b>20892</b> 192.168.1.5     36398 -&gt; 192.168.1.1        79    54 finger
+     100  <b>20892</b> 192.168.1.5     36398 &lt;- 192.168.1.1        79    54 finger
+       0  <b>  242</b> 192.168.1.5        23 &lt;- 192.168.1.1     54224    54 inetd
+       0  <b>  242</b> 192.168.1.5        23 -&gt; 192.168.1.1     54224    54 inetd    
+[...]
+</font></pre></td></tr></table></ul>
+<p>This version of tcpsnoop will examine newly connected sessions (while tcpsnoop
+has been running). In the above we can see a PID column and packet details, this is
+tracking TCP traffic that has travelled on external interfaces. </p>
+<p><br><hr></p>
+
+
+
+
+
+
+</ul>
+<br>
+<a href="../index.html">Back</a> to Brendan Gregg's Homepage<p>
+<hr>
+Created: 09-Oct-2005<br>
+Last updated: 09-Oct-2005<br>
+Copyright (c) 2005 Brendan Gregg<br>
+
+</body>
+</html>
