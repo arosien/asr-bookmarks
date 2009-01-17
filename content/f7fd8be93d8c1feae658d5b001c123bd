@@ -1,0 +1,1461 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html dir="ltr">
+<head>
+    <title>Vuze Forums: Start Vuze 4.0 on MacOs Leo10.5.5 ...</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/style/style.jsp;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3"/>
+
+
+
+    <link rel="alternate" type="application/rss+xml" title="RSS"
+              href="http://forum.vuze.com/rss/rssmessages.jspa?threadID=78283">
+        
+
+        
+        
+        
+        <script language="JavaScript" type="text/javascript" 
+                src="/resources/scripts/prototype/prototype.js;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3"></script>
+        <script language="JavaScript" type="text/javascript" 
+                src="/resources/scripts/scriptaculous/effects.js;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3"></script>
+        <script language="JavaScript" type='text/javascript'
+                src="/dwr/engine.js;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3"></script>
+        <script language="JavaScript" type='text/javascript'
+                src="/dwr/util.js;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3"></script>
+        <script language="JavaScript" type='text/javascript'
+                src="/dwr/interface/TagValidator.js;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3"></script>            
+        <script language="JavaScript" type='text/javascript'
+                src="/resources/scripts/tag-validator.js;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3"></script>
+        <script type="text/javascript">
+            // i18n error message
+            tagHandlerMessage = "The was an error with one or more of your tags. Please ensure that your tags contain only alphanumeric characters and are less than 10 characters.";
+        </script>
+</head>
+<body>
+
+
+
+
+    <div id="jive-header" class="jive-clearfix">
+        <h1>Community Forums</h1>
+        <p id="jive-breadcrumbs">
+    <em>
+
+        <a href="http://forum.vuze.com"
+         >Home</a>
+        <span class="bidi">
+        &raquo;
+        </span>
+
+
+
+    <a href="/index.jspa;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3?categoryID=1">Vuze Forums</a>
+
+
+            <span class="bidi">
+            &raquo;
+            <a href="/category.jspa;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3?categoryID=2">Support</a>
+            </span>
+
+            <span class="bidi">
+            &raquo;
+            <a href="/forum.jspa;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3?forumID=3&start=0">Open Support</a>
+            </span>
+
+
+    </em>
+</p>
+
+    </div>
+
+
+
+
+
+<br />
+
+
+<div id="jive-accountbox" class="clearfix">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td align="right" class="account-box-wrapper">
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td>Welcome, Guest</td>
+                        <td><a class="jive-acc-login" href="/login!withRedirect.jspa;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3">Login / Register</a></td>
+                <td><a href="/guestsettings!default.jspa;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3" class="jive-acc-cp">Guest Settings</a></td>
+
+                <td><a href="/help.jspa;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3" class="jive-acc-help" title="Help"><img src="/images/help-16x16.gif;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3" border="0" alt="Help" /></a></td>
+            </tr>
+            </table>
+        </td>
+    </tr>
+    </table>
+</div>
+
+
+
+
+<style type="text/css">
+#jive-history .wrap1 {
+    float : left;
+    background:url(images/ds_shadow.gif) right bottom no-repeat;
+}
+#jive-history .wrap2 {
+    background : url(images/ds_corner_bl.gif) left bottom no-repeat;
+}
+#jive-history .wrap3 {
+    padding : 0px 5px 5px 0px;
+    background : url(images/ds_corner_tr.gif) right top no-repeat;
+}
+#jive-history .wrap3 img {
+    display : block;
+}
+</style>
+
+<div id="jive-history" style="position:absolute; z-index:1000; display:none;">
+    <div class="wrap1"><div class="wrap2"><div class="wrap3">
+        <iframe id="rhframe" src="/recent-history.jspa;jsessionid=C41313F47CEA8719B0EE2ECA23CC6DB3" width="400" height="300" frameborder="0"
+                style="background-color:#fff; border: 1px #000 solid;"></iframe>
+    </div></div></div>
+</div>
+
+<script type="text/javascript" language="JavaScript">
+    if (document.layers) {
+        document.captureEvents(Event.KEYDOWN);
+    }
+
+    document.onkeydown = function (evt) {
+        var keyCode = document.layers ?
+            evt.which : document.all ? event.keyCode : document.getElementById ? evt.keyCode : 0;
+        if (keyCode == 27) { // esc - close recent history
+            var history = document.getElementById('jive-history');
+            if (history.style.display != "none") {
+                new Effect.toggle('jive-history', 'blind', {duration: 0.2});
+            }
+        }
+    }
+
+    document.body.onclick  = function (evt) {
+        var history = document.getElementById('jive-history');
+        if (history.style.display != "none") {
+            new Effect.toggle('jive-history', 'blind', {duration: 0.2});
+        }
+    }
+
+    var elemx = 0;
+    var elemy = 0;
+    function XYpos(event){
+        // do not set the position of the element more than once
+        if (elemx == 0 && elemy == 0) {
+            if (event.pageX || event.pageY) {
+                elemx = window.innerWidth - event.pageX - 20;
+                elemy = event.pageY + 10;
+            }
+            else if (event.clientX || event.clientY) {
+                elemx = document.body.offsetWidth - event.clientX - 20;
+                elemy = event.clientY + 10;
+            }
+            var elem = document.getElementById('jive-history');
+            elem.style.right = elemx;
+            elem.style.top = elemy;
+        }
+    }
+</script>
+
+
+
+
+<p class="jive-page-title">
+    
+        
+        Thread: Start Vuze 4.0 on MacOs Leo10.5.5
+    
+    
+</p>
+<p class="jive-description">
+    
+</p>
+
+<br/>
+
+<div id="jive-flatpage">
+
+    
+
+
+
+
+    
+        
+        
+
+        
+        
+
+
+
+    
+        
+
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+     
+
+
+
+
+
+    
+
+    <div class="jive-buttons">
+    <table summary="Buttons" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        
+                <td class="jive-icon">
+                    <a href="post!reply.jspa?threadID=78283"
+                     ><img src="images/reply-16x16.gif" width="16" height="16" border="0" alt="Reply to this Thread"></a></td>
+                <td class="jive-icon-label">
+                    
+                    <a id="jive-reply-thread" href="post!reply.jspa?threadID=78283"
+                     >Reply to this Thread</a>
+                </td>
+        
+                <td class="jive-icon">
+                     <img src="images/search-16x16.gif" width="16" height="16" border="0" alt="Search Forum"></a></td>
+                <td class="jive-icon-label">
+                    
+                    <a href="search!default.jspa?objID=f3"
+                     >Search Forum</a>
+                </td>
+        
+
+        
+
+        
+
+        
+
+        <td class="jive-icon">
+            <a href="forum.jspa?forumID=3"
+             ><img src="images/arrow-left-16x16.gif" width="16" height="16" border="0" alt="Back to Thread List"></a>
+        </td>
+        <td class="jive-icon-label">
+            
+            <a href="forum.jspa?forumID=3"
+             >Back to Thread List</a>
+        </td>
+
+    </tr>
+    </table>
+    </div>
+
+
+
+
+    <br />
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+    <tr valign="top">
+    <td width="99%">
+
+    
+    
+
+
+
+<div class="jive-message-list">
+<div class="jive-table">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<thead>
+    <tr>
+        <th class="jive-first-last">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tbody>
+                <tr>
+                    <td width="1%">
+                        <a href="thread.jspa?threadID=78283"
+                         title="Permlink"
+                         ><img src="images/permlink-16x16.gif" width="16" height="16" border="0" alt="Permlink"></a>
+                    </td>
+                    <td width="97%">
+
+                        
+                        <nobr>
+                        <span class="bidi">
+                        Replies:
+                        </span>
+                        3
+                        </nobr>
+                        
+                            -
+                            
+
+                                
+
+                                <nobr>
+                                    <span class="bidi">
+                                        Pages:
+                                    </span>
+                                    <span class="bidi">
+                                        1
+                                    </span>
+                                
+                                </nobr>
+
+                            
+
+                        
+
+                        
+                        
+                                -
+                                <nobr>
+                                <span class="bidi">
+                                <a href="thread.jspa?threadID=78283&tstart=0&messageID=180356#180356"
+                                 title="Last Post By: ekzeb"
+                                 >Last Post</a>:
+                                </span>
+                                <span class="bidi">
+                                Nov 4, 2008 10:36 PM
+                                </span>
+                                Last Post By: ekzeb
+
+
+                                </nobr>
+
+                        
+                    </td>
+                    <td width="1%" nowrap>
+                        
+                            
+                        
+                    </td>
+                </tr>
+            </tbody>
+            </table>
+        </th>
+    </tr>
+</thead>
+</table>
+</div>
+</div>
+
+
+    <div id="jive-message-holder">
+        
+
+        <div class="jive-message-list">
+            <div class="jive-table">
+
+                
+
+
+
+
+
+
+
+<div class="jive-messagebox">
+<table summary="Message" cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr id="jive-message-179954" valign="top" class="jive-even">
+<td width="1%" class="jive-first">
+<table cellpadding="0" cellspacing="0" border="0" width="150">
+<tr>
+<td>
+
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+        <tr valign="top">
+            <td width="1%" style="padding:0px;">
+                <nobr>
+                    <a href="profile.jspa?userID=4385"
+                       title="ekzeb"
+                            >ekzeb</a>
+                </nobr>
+            </td>
+            <td width="99%" style="padding:0px;">
+                
+                <img class="jive-status-level-image" src="images/status/ball-00.gif" border="0"
+                     title="Newbie" alt=""/><br />
+
+                
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+<br />
+
+
+
+            <span class="jive-description">
+
+
+            
+            <span class="bidi">Posts:</span>
+            2
+            <br />
+
+            
+            
+                <span class="bidi">Registered:</span>
+                11/01/08
+            
+
+            </span>
+
+
+</td>
+</tr>
+</table>
+</td>
+<td width="99%" class="jive-last">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr valign="top">
+<td width="1%">
+    
+</td>
+<td width="97%">
+
+                    <span class="jive-subject">
+                    <a name="179954"></a>
+                    Start Vuze 4.0 on MacOs Leo10.5.5
+                    </span>
+
+    <br />
+
+    
+                    <span class="jive-description">
+                    Posted:
+                    Oct 31, 2008 11:32 PM
+
+                    
+
+                        
+
+                    </span>
+</td>
+
+    <td width="1%" class="jive-rating-buttons" nowrap>
+
+        
+
+    </td>
+
+<td width="1%">
+
+<div class="jive-buttons">
+<table cellpadding="0" cellspacing="0" border="0">
+<tr>
+
+
+
+
+
+
+
+
+
+<td>&nbsp;</td>
+<td class="jive-icon">
+    <a href="post!reply.jspa?messageID=179954"
+       title="Click to reply to this thread"
+            ><img src="images/reply-16x16.gif" width="16" height="16" border="0"
+                  alt="Click to reply to this thread"></a>
+</td>
+<td class="jive-icon-label">
+    <a href="post!reply.jspa?messageID=179954"
+       title="Click to reply to this thread"
+            >Reply</a>
+</td>
+
+
+</tr>
+</table>
+</div>
+
+</td>
+</tr>
+
+<tr>
+    <td colspan="4">
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" class="jive-message-body-wrapper">
+        <tr>
+			<td>
+                <div class="jive-message-body">Hi, i've Java6 64-bit and of course Java5 32-bit on board. by default the first is set.<br />
+the question is, how can i set the second for Vuze to start? something like -vm /java5/Home/bin/javaw, where can i set this option?<br />
+sorry, i im very new in mac os and don't know where can i set this option, or whether it is possible at all<br />
+thanks<br />
+<br />
+Edited by: ekzeb on Nov 1, 2008 1:21 AM</div>
+			</td>
+		</tr>
+		</table>
+    </td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+
+
+
+
+            </div>
+        </div>
+
+        
+
+        <div class="jive-message-list">
+            <div class="jive-table">
+
+                
+
+
+
+
+
+
+
+<div class="jive-messagebox">
+<table summary="Message" cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr id="jive-message-179963" valign="top" class="jive-odd">
+<td width="1%" class="jive-first">
+<table cellpadding="0" cellspacing="0" border="0" width="150">
+<tr>
+<td>
+
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+        <tr valign="top">
+            <td width="1%" style="padding:0px;">
+                <nobr>
+                    <a href="profile.jspa?userID=3803"
+                       title="justanotheruser"
+                            >justanotheruser</a>
+                </nobr>
+            </td>
+            <td width="99%" style="padding:0px;">
+                
+                <img class="jive-status-level-image" src="images/status/ball-00.gif" border="0"
+                     title="Newbie" alt=""/><br />
+
+                
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+<br />
+
+
+
+            <span class="jive-description">
+
+
+            
+            <span class="bidi">Posts:</span>
+            1,472
+            <br />
+
+            
+            
+                <span class="bidi">Registered:</span>
+                10/19/08
+            
+
+            </span>
+
+
+</td>
+</tr>
+</table>
+</td>
+<td width="99%" class="jive-last">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr valign="top">
+<td width="1%">
+    
+</td>
+<td width="97%">
+
+                    <span class="jive-subject">
+                    <a name="179963"></a>
+                    Re: Start Vuze 4.0 on MacOs Leo10.5.5
+                    </span>
+
+    <br />
+
+    
+                    <span class="jive-description">
+                    Posted:
+                    Nov 1, 2008 2:14 AM
+
+                    
+                        &nbsp;
+                        <nobr>
+                            <a href="message.jspa?messageID=179954#179954"
+                               title="in response to: ekzeb"
+                                    ><img src="images/up-10x10.gif" width="10" height="10" border="0"
+                                          alt="in response to: ekzeb"
+                                          title="in response to: ekzeb"/></a>
+                            
+                            in response to: <a href="message.jspa?messageID=179954#179954"
+                               title="Go to message"
+                                    >ekzeb</a>
+                            </nobr>
+                                
+
+                        
+
+                    </span>
+</td>
+
+    <td width="1%" class="jive-rating-buttons" nowrap>
+
+        
+
+    </td>
+
+<td width="1%">
+
+<div class="jive-buttons">
+<table cellpadding="0" cellspacing="0" border="0">
+<tr>
+
+
+
+
+
+
+
+
+
+<td>&nbsp;</td>
+<td class="jive-icon">
+    <a href="post!reply.jspa?messageID=179963"
+       title="Click to reply to this thread"
+            ><img src="images/reply-16x16.gif" width="16" height="16" border="0"
+                  alt="Click to reply to this thread"></a>
+</td>
+<td class="jive-icon-label">
+    <a href="post!reply.jspa?messageID=179963"
+       title="Click to reply to this thread"
+            >Reply</a>
+</td>
+
+
+</tr>
+</table>
+</div>
+
+</td>
+</tr>
+
+<tr>
+    <td colspan="4">
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" class="jive-message-body-wrapper">
+        <tr>
+			<td>
+                <div class="jive-message-body">Well if you're not bothered about which Java you use right now you should find a Java folder in Utilities (at least on Tiger) where you can change the default Java being used. This does affect all Java programs though.<br />
+<br />
+-Edit-<br />
+<br />
+Okay, I can't check this because I don't have J2SE 6.0 (I'm on Tiger), and so the only older version I could try it with would be 1.4.2 and that won't work because Vuze doesn't support 1.4 any more. So you're going to have to see if this works and report back.<br />
+<br />
+Assuming you have a program that needs to use Java 6 put it back at the top of the list (instructions from before). Then right click on Vuze and <b>Show Package Contents</b>. In the Contents folder you will find a Info.plist file. Open that in any text editor and try changing the JVMVersion from 1.5+ to 1.5. This might force it to use 1.5 in favour of 1.6, but I can't verify this because I don't have a machine with Leopard on it.<br />
+<br />
+Edited by: justanotheruser on Nov 1, 2008 2:20 AM</div>
+			</td>
+		</tr>
+		</table>
+    </td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+
+
+
+
+            </div>
+        </div>
+
+        
+
+        <div class="jive-message-list">
+            <div class="jive-table">
+
+                
+
+
+
+
+
+
+
+<div class="jive-messagebox">
+<table summary="Message" cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr id="jive-message-180015" valign="top" class="jive-even">
+<td width="1%" class="jive-first">
+<table cellpadding="0" cellspacing="0" border="0" width="150">
+<tr>
+<td>
+
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+        <tr valign="top">
+            <td width="1%" style="padding:0px;">
+                <nobr>
+                    <a href="profile.jspa?userID=4271"
+                       title="GanetMarV"
+                            >GanetMarV</a>
+                </nobr>
+            </td>
+            <td width="99%" style="padding:0px;">
+                
+                <img class="jive-status-level-image" src="images/status/ball-00.gif" border="0"
+                     title="Newbie" alt=""/><br />
+
+                
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+<br />
+
+
+
+            <span class="jive-description">
+
+
+            
+            <span class="bidi">Posts:</span>
+            7
+            <br />
+
+            
+            
+                <span class="bidi">Registered:</span>
+                10/29/08
+            
+
+            </span>
+
+
+</td>
+</tr>
+</table>
+</td>
+<td width="99%" class="jive-last">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr valign="top">
+<td width="1%">
+    
+</td>
+<td width="97%">
+
+                    <span class="jive-subject">
+                    <a name="180015"></a>
+                    Re: Start Vuze 4.0 on MacOs Leo10.5.5
+                    </span>
+
+    <br />
+
+    
+                    <span class="jive-description">
+                    Posted:
+                    Nov 1, 2008 6:55 PM
+
+                    
+                        &nbsp;
+                        <nobr>
+                            <a href="message.jspa?messageID=179954#179954"
+                               title="in response to: ekzeb"
+                                    ><img src="images/up-10x10.gif" width="10" height="10" border="0"
+                                          alt="in response to: ekzeb"
+                                          title="in response to: ekzeb"/></a>
+                            
+                            in response to: <a href="message.jspa?messageID=179954#179954"
+                               title="Go to message"
+                                    >ekzeb</a>
+                            </nobr>
+                                
+
+                        
+
+                    </span>
+</td>
+
+    <td width="1%" class="jive-rating-buttons" nowrap>
+
+        
+
+    </td>
+
+<td width="1%">
+
+<div class="jive-buttons">
+<table cellpadding="0" cellspacing="0" border="0">
+<tr>
+
+
+
+
+
+
+
+
+
+<td>&nbsp;</td>
+<td class="jive-icon">
+    <a href="post!reply.jspa?messageID=180015"
+       title="Click to reply to this thread"
+            ><img src="images/reply-16x16.gif" width="16" height="16" border="0"
+                  alt="Click to reply to this thread"></a>
+</td>
+<td class="jive-icon-label">
+    <a href="post!reply.jspa?messageID=180015"
+       title="Click to reply to this thread"
+            >Reply</a>
+</td>
+
+
+</tr>
+</table>
+</div>
+
+</td>
+</tr>
+
+<tr>
+    <td colspan="4">
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" class="jive-message-body-wrapper">
+        <tr>
+			<td>
+                <div class="jive-message-body">If you want to use Java 5.0 on the command line, the Java binary is here:<br />
+&lt;address&gt;/System/Library/Frameworks/JavaVM.framework/Versions/A/Commands/java&lt;/address&gt;<br />
+If you want to change the default Java on you system:<br />
+<ul>
+<li>Launch <b>Java Preferences</b> (Applications &gt; Utilities &gt; Java)</li>
+<li>Move up <b>J2SE 5.0 32-bits</b> on the top of the 2 lists</li>
+</ul>
+</div>
+			</td>
+		</tr>
+		</table>
+    </td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+
+
+
+
+            </div>
+        </div>
+
+        
+
+        <div class="jive-message-list">
+            <div class="jive-table">
+
+                
+
+
+
+
+
+
+
+<div class="jive-messagebox">
+<table summary="Message" cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr id="jive-message-180356" valign="top" class="jive-odd">
+<td width="1%" class="jive-first">
+<table cellpadding="0" cellspacing="0" border="0" width="150">
+<tr>
+<td>
+
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+        <tr valign="top">
+            <td width="1%" style="padding:0px;">
+                <nobr>
+                    <a href="profile.jspa?userID=4385"
+                       title="ekzeb"
+                            >ekzeb</a>
+                </nobr>
+            </td>
+            <td width="99%" style="padding:0px;">
+                
+                <img class="jive-status-level-image" src="images/status/ball-00.gif" border="0"
+                     title="Newbie" alt=""/><br />
+
+                
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+<br />
+
+
+
+            <span class="jive-description">
+
+
+            
+            <span class="bidi">Posts:</span>
+            2
+            <br />
+
+            
+            
+                <span class="bidi">Registered:</span>
+                11/01/08
+            
+
+            </span>
+
+
+</td>
+</tr>
+</table>
+</td>
+<td width="99%" class="jive-last">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr valign="top">
+<td width="1%">
+    
+</td>
+<td width="97%">
+
+                    <span class="jive-subject">
+                    <a name="180356"></a>
+                    Re: Start Vuze 4.0 on MacOs Leo10.5.5
+                    </span>
+
+    <br />
+
+    
+                    <span class="jive-description">
+                    Posted:
+                    Nov 4, 2008 10:36 PM
+
+                    
+                        &nbsp;
+                        <nobr>
+                            <a href="message.jspa?messageID=180015#180015"
+                               title="in response to: GanetMarV"
+                                    ><img src="images/up-10x10.gif" width="10" height="10" border="0"
+                                          alt="in response to: GanetMarV"
+                                          title="in response to: GanetMarV"/></a>
+                            
+                            in response to: <a href="message.jspa?messageID=180015#180015"
+                               title="Go to message"
+                                    >GanetMarV</a>
+                            </nobr>
+                                
+
+                        
+
+                    </span>
+</td>
+
+    <td width="1%" class="jive-rating-buttons" nowrap>
+
+        
+
+    </td>
+
+<td width="1%">
+
+<div class="jive-buttons">
+<table cellpadding="0" cellspacing="0" border="0">
+<tr>
+
+
+
+
+
+
+
+
+
+<td>&nbsp;</td>
+<td class="jive-icon">
+    <a href="post!reply.jspa?messageID=180356"
+       title="Click to reply to this thread"
+            ><img src="images/reply-16x16.gif" width="16" height="16" border="0"
+                  alt="Click to reply to this thread"></a>
+</td>
+<td class="jive-icon-label">
+    <a href="post!reply.jspa?messageID=180356"
+       title="Click to reply to this thread"
+            >Reply</a>
+</td>
+
+
+</tr>
+</table>
+</div>
+
+</td>
+</tr>
+
+<tr>
+    <td colspan="4">
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" class="jive-message-body-wrapper">
+        <tr>
+			<td>
+                <div class="jive-message-body">thanks a lot</div>
+			</td>
+		</tr>
+		</table>
+    </td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+
+
+
+
+            </div>
+        </div>
+
+        
+
+        
+
+    <div class="jive-message-list-footer">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tbody>
+                <tr>
+                    <td width="1%" nowrap>
+
+                        <span class="jive-paginator-bottom">
+                        
+
+                                
+
+                                <nobr>
+                                    <span class="bidi">
+                                        Pages:
+                                    </span>
+                                    <span class="bidi">
+                                        1
+                                    </span>
+                                
+                                </nobr>
+
+                            
+                        </span>
+
+                    </td>
+                    <td width="98%" align="center">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td>
+                                    <a href="forum.jspa?forumID=3"
+                                            ><img src="images/arrow-left-16x16.gif" width="16" height="16" border="0"
+                                                  hspace="6" alt="Back to Thread List"></a>
+                                </td>
+                                <td>
+                                    
+                                    <a href="forum.jspa?forumID=3"
+                                            >Back to Thread List</a>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="1%" nowrap>
+
+                        
+                            
+                        
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    </td>
+    <td width="1%">
+
+        
+
+
+
+
+
+
+
+<div class="jive-portlet-box">
+<table cellpadding="0" cellspacing="0" border="0" width="200">
+    <thead>
+        <tr>
+            <th colspan="2">
+                
+                    <a href="help.jspa#questions"
+                     ><img src="images/help-16x16.gif" width="16" height="16" border="0" align="right" alt="" /></a>
+                    Legend
+                
+            </th>
+        </tr>
+    </thead>
+
+
+
+
+    
+
+        <tbody class="jive-status-legend-points">
+
+            
+                <tr>
+                    <td width="1%">
+                        <img src="images/status/ball-05.gif" border="0" title="Master" alt="" />
+                    </td>
+                    <td width="99%">
+
+                        Master: 800
+
+                        
+
+                            - 9999
+
+                        
+
+                        pts
+                    </td>
+                </tr>
+
+            
+                <tr>
+                    <td width="1%">
+                        <img src="images/status/ball-04.gif" border="0" title="Expert" alt="" />
+                    </td>
+                    <td width="99%">
+
+                        Expert: 400
+
+                        
+
+                            - 799
+
+                        
+
+                        pts
+                    </td>
+                </tr>
+
+            
+                <tr>
+                    <td width="1%">
+                        <img src="images/status/ball-03.gif" border="0" title="Advanced" alt="" />
+                    </td>
+                    <td width="99%">
+
+                        Advanced: 200
+
+                        
+
+                            - 399
+
+                        
+
+                        pts
+                    </td>
+                </tr>
+
+            
+                <tr>
+                    <td width="1%">
+                        <img src="images/status/ball-02.gif" border="0" title="Intermediate" alt="" />
+                    </td>
+                    <td width="99%">
+
+                        Intermediate: 100
+
+                        
+
+                            - 199
+
+                        
+
+                        pts
+                    </td>
+                </tr>
+
+            
+                <tr>
+                    <td width="1%">
+                        <img src="images/status/ball-01.gif" border="0" title="Beginner" alt="" />
+                    </td>
+                    <td width="99%">
+
+                        Beginner: 50
+
+                        
+
+                            - 99
+
+                        
+
+                        pts
+                    </td>
+                </tr>
+
+            
+                <tr>
+                    <td width="1%">
+                        <img src="images/status/ball-00.gif" border="0" title="Newbie" alt="" />
+                    </td>
+                    <td width="99%">
+
+                        Newbie: 0
+
+                        
+
+                            - 49
+
+                        
+
+                        pts
+                    </td>
+                </tr>
+
+            
+
+        </tbody>
+
+    
+
+    
+
+        <tbody class="jive-status-legend-groups">
+
+            
+                <tr>
+                    <td width="1%" class="jive-first-row">
+                        <img src="images/status/Vuze_Blue_24.png" border="0" title="Vuze Staff Member" alt="" />
+                    </td>
+                    <td width="99%" class="jive-first-row">
+                        Vuze Staff Member
+                    </td>
+                </tr>
+
+            
+                <tr>
+                    <td width="1%" class="">
+                        <img src="images/status/moderator24.png" border="0" title="Vuze Community Moderator" alt="" />
+                    </td>
+                    <td width="99%" class="">
+                        Vuze Community Moderator
+                    </td>
+                </tr>
+
+            
+
+        </tbody>
+
+    
+
+    
+
+    <tbody class="jive-status-legend-points">
+        <tr>
+            <td width="1%" class="jive-first-row">
+                <img src="images/answer-helpful-16x16.gif" border="0" title="3 points" alt="" />
+            </td>
+            <td width="99%" class="jive-first-row">
+                
+                Helpful Answer
+                
+                    
+                    (3 pts)
+                
+            </td>
+        </tr>
+        <tr>
+            <td width="1%">
+                <img src="images/answer-correct-16x16.gif" border="0" title="5 points" alt="" />
+            </td>
+            <td width="99%">
+                
+                Correct Answer
+                
+                    
+                    (5 pts)
+                
+            </td>
+        </tr>
+    </tbody>                                                                    
+
+
+
+
+
+</table>
+</div>
+
+
+
+
+    </td>
+    </tr>
+    </tbody>
+    </table>
+
+    
+    <br />
+    <a href="rss.jspa?feed=rss/rssmessages.jspa?threadID=78283"
+       title="Point your RSS reader here for a feed of the latest messages in this thread"><img src="images/feed-icon-16x16.gif" width="16" height="16" border="0"
+                                                          alt="Point your RSS reader here for a feed of the latest messages in all forums"></a> <br /><br />
+    
+
+    
+    
+
+
+
+    </div>
+
+<br /><br />
+
+
+    <table id="jive-footer" cellpadding="6" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td>
+            
+            <a href="/index.jspa">Forum Home</a>
+
+            
+                |
+                
+                <a href="/login!default.jspa">Login / Register</a>
+            
+
+            
+                |
+                
+                <a href="/account!input.jspa">Create Account</a>
+            
+
+            
+                |
+                
+                <a href="/help.jspa">Help</a>
+            
+
+            
+            |
+            
+            <a href="/search!default.jspa">Search</a>
+            
+
+            
+                <br />
+                
+                <a href="http://www.jivesoftware.com/poweredby/" target="_blank">Powered by Jive Software</a>
+            
+        </td>
+    </tr>
+    </table>
+
+<script src="http://www.google-analytics.com/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-1474242-9");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+
+<script type="text/javascript" src="http://edge.quantserve.com/quant.js"></script>
+<script type="text/javascript">_qacct="p-64Ix1G_SXwOa-";quantserve();</script>
+<noscript>
+<img src="http://pixel.quantserve.com/pixel/p-64Ix1G_SXwOa-.gif" style="display: none;" border="0" height="1" width="1" alt="Quantcast"/>
+</noscript>
+
+
+
+</body>
+</html>
