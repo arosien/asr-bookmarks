@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Integrity | Continuous Integration server</title>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link href=integrity.css rel=stylesheet type="text/css">
+</head>
+<body>
+<p><a href="http://github.com/integrity">
+<img style="position: absolute; top: 0; right: 0; border: 0;"
+src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+alt="Fork me on GitHub" /></a></p>
+<div id=header>
+<h1><a href="/">Integrity</a></h1>
+<p>Continuous Integration server</p>
+</div>
+<div id=content>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>As soon as you push your commits, Integrity builds your code, run your tests
+and makes sure everything works fine. It then reports the build status using
+various notifiers back to you and your team so everyone is on the same page
+and problems can be fixed right away.</p></div>
+<div class="paragraph"><p>Checkout Integrity watching itself at <a href="http://builder.integrityapp.com">http://builder.integrityapp.com</a>.</p></div>
+<div class="paragraph"><p>Read more about about Continuous Integration on
+<a href="http://martinfowler.com/articles/continuousIntegration.html">Martin Fowler&#8217;s
+website</a> and <a href="http://en.wikipedia.org/wiki/Continuous_Integration">Wikipedia</a>.</p></div>
+</div>
+</div>
+<h2 id="_installation">Installation</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Make sure your system meet these prerequisites:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Ruby &gt;= 1.8.6 (currently doesn&#8217;t work on 1.9.X)
+</p>
+</li>
+<li>
+<p>
+RubyGems &gt;= 1.3.5
+</p>
+</li>
+<li>
+<p>
+git &gt;= 1.6
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Then grab Integrity via git, install its dependencies and create the database:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>$ gem install bundler
+$ git clone git<span style="color: #990000">:</span>//github<span style="color: #990000">.</span>com/integrity/integrity
+$ cd integrity
+$ git checkout -b deploy v22
+$ bundle install
+$ bundle lock
+$ rake db</tt></pre></div></div>
+<div class="paragraph"><p>To give it a quick try before going any further, run <tt>bundle exec rackup</tt> and
+navigate to <a href="http://0.0.0.0:9292">http://0.0.0.0:9292</a>.</p></div>
+<div class="paragraph"><p>Upgrade:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>$ git fetch origin
+$ git merge origin/v<span style="color: #993399">22</span></tt></pre></div></div>
+</div>
+<h2 id="_configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Integrity is configured via the <tt>init.rb</tt> file using Ruby.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>Integrity<span style="color: #990000">.</span>configure <span style="font-weight: bold"><span style="color: #0000FF">do</span></span> <span style="color: #990000">|</span>c<span style="color: #990000">|</span>
+  c<span style="color: #990000">.</span>database  <span style="color: #FF0000">"sqlite3:integrity.db"</span>
+  c<span style="color: #990000">.</span>directory <span style="color: #FF0000">"builds"</span>
+  c<span style="color: #990000">.</span>base_url  <span style="color: #FF0000">"http://ci.example.org"</span>
+  c<span style="color: #990000">.</span>log       <span style="color: #FF0000">"integrity.log"</span>
+  c<span style="color: #990000">.</span>builder   <span style="color: #990000">:</span>threaded<span style="color: #990000">,</span> <span style="color: #993399">5</span>
+  c<span style="color: #990000">.</span>build_all!
+<span style="font-weight: bold"><span style="color: #0000FF">end</span></span></tt></pre></div></div>
+<h3 id="_basic_settings">Basic settings</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+database
+</dt>
+<dd>
+<p>
+Any valid database URI supported by
+<a href="http://datamapper.rubyforge.org/dm-core/DataMapper.html">DataMapper</a>.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<tt>sqlite3:integrity.db</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>mysql://user:password@localhost/integrity</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>postgres://user:password@localhost/integrity</tt>
+</p>
+</li>
+</ul></div>
+</dd>
+</dl></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">You need to install the appropriate <tt>data_objects</tt> adapter as well.
+The SQLite3 adapter (<tt>do_sqlite3</tt>) is installed by default.</td>
+</tr></table>
+</div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+directory
+</dt>
+<dd>
+<p>
+This is where your projects' code will be checked out. Make sure it
+is writable by the user who runs Integrity.
+</p>
+</dd>
+<dt class="hdlist1">
+base_url
+</dt>
+<dd>
+<p>
+Absolute URL to your Integrity instance, <strong>without</strong> a trailing slash.
+This setting is optional but is required to have proper links in notifications.
+</p>
+</dd>
+<dt class="hdlist1">
+log
+</dt>
+<dd>
+<p>
+Path to the Integrity log file; mostly useful for troubleshooting
+</p>
+</dd>
+<dt class="hdlist1">
+build_all!
+</dt>
+<dd>
+<p>
+Tells Integirty to build every single commit it is notified about.
+Only builds the newest otherwise.
+</p>
+</dd>
+<dt class="hdlist1">
+auto_branch!
+</dt>
+<dd>
+<p>
+Say the project <em>Integrity</em> is tracking the master branch, and
+I push my <em>build-duration</em> topic branch to GitHub, Integrity will create and
+build a new project named <em>Integrity (build-duration)</em> using the same build
+command and notifiers.
+</p>
+</dd>
+<dt class="hdlist1">
+HTTP authentication
+</dt>
+<dd>
+<p>
+If both the <tt>user</tt> and <tt>pass</tt> settings are set then only
+the logged-in users can administer the projects and see the private ones.
+</p>
+</dd>
+</dl></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>c<span style="color: #990000">.</span>user <span style="color: #FF0000">"admin"</span>
+c<span style="color: #990000">.</span>pass <span style="color: #FF0000">"password"</span></tt></pre></div></div>
+<div class="paragraph"><p>To protect the whole Integrity instance do this in your <tt>config.ru</tt> file:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>use Rack<span style="color: #990000">::</span>Auth<span style="color: #990000">::</span>Basic <span style="font-weight: bold"><span style="color: #0000FF">do</span></span> <span style="color: #990000">|</span>user<span style="color: #990000">,</span> pass<span style="color: #990000">|</span>
+  user <span style="color: #990000">==</span> <span style="color: #FF0000">"admin"</span> <span style="color: #990000">&amp;&amp;</span> pass <span style="color: #990000">==</span> <span style="color: #FF0000">"secret"</span>
+<span style="font-weight: bold"><span style="color: #0000FF">end</span></span>
+run Integrity<span style="color: #990000">.</span>app</tt></pre></div></div>
+<h3 id="_automating_the_builds">Automating the builds</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Integrity provides two HTTP endpoints to trigger new builds:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+POST /:project/builds
+</dt>
+<dd>
+<p>
+Causes Integrity to fetch the HEAD of the remote
+repository and build it. Note that HTTP authentication applies to it if set.
+This endpoint can&#8217;t be disabled.
+</p>
+</dd>
+<dt class="hdlist1">
+POST /github/:token
+</dt>
+<dd>
+<p>
+Supports GitHub&#8217;s
+<a href="http://github.com/guides/post-receive-hooks">Post-Receive Hook</a>. Enable it:
+</p>
+</dd>
+</dl></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>c<span style="color: #990000">.</span>github <span style="color: #FF0000">"TOKEN"</span></tt></pre></div></div>
+<h3 id="_choosing_a_builder">Choosing a builder</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Integrity ships with two ways of building your codes in the background.</p></div>
+<h4 id="_threaded">Threaded</h4>
+<div class="paragraph"><p>The <tt>threaded</tt> builder pushes the build job to an in-memory queue and processes
+them as soon as possible. It relies on Ruby&#8217;s thread so it doesn&#8217;t have any
+dependency nor requires to run other processes.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>c<span style="color: #990000">.</span>builder <span style="color: #990000">:</span>threaded<span style="color: #990000">,</span> <span style="color: #993399">5</span></tt></pre></div></div>
+<div class="paragraph"><p>The second argument is the size of the thread pool.</p></div>
+<h4 id="_delayed_job">Delayed::Job</h4>
+<div class="paragraph"><p>The <tt>dj</tt> builder queue up the builds into a SQL database using
+<a href="http://github.com/tobi/delayed_job">Delayed::Job</a>. To use it, install its
+dependencies by uncommenting the relevant lines in the <tt>Gemfile</tt> and run
+<tt>bundle lock &amp;&amp; bundle install</tt>.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>c<span style="color: #990000">.</span>builder <span style="color: #990000">:</span>dj<span style="color: #990000">,</span> <span style="color: #990000">:</span>adapter <span style="color: #990000">=&gt;</span> <span style="color: #FF0000">"sqlite3"</span><span style="color: #990000">,</span> <span style="color: #990000">:</span>database <span style="color: #990000">=&gt;</span> <span style="color: #FF0000">"dj.db"</span></tt></pre></div></div>
+<div class="paragraph"><p>The second argument must be a valid
+<a href="http://api.rubyonrails.org/classes/ActiveRecord/Base.html#M002364">ActiveRecord
+connection hash</a>.</p></div>
+<div class="paragraph"><p>Run a worker with <tt>rake jobs:work</tt>. See
+<a href="http://github.com/tobi/delayed_job#readme">Delayed::Job&#8217;s documentation</a>
+for more details.</p></div>
+</div>
+<h2 id="_notification">Notification</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>After a build status is available, you want to know it <strong>immediately</strong>,
+Integrity currently supports three notification mediums: Email, IRC and
+<a href="http://campfirenow.com">Campfire</a>. To set it up and use one of these with
+your projects:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Open the <tt>Gemfile</tt>, uncomment the relevant lines and run
+   <tt>bundle lock &amp;&amp; bundle install</tt> to install the notifier&#8217;s dependencies.
+</p>
+</li>
+<li>
+<p>
+Edit the <tt>init.rb</tt> file to require it. Example:
+</p>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000080">require</span></span> <span style="color: #FF0000">"integrity"</span>
+<span style="font-style: italic"><span style="color: #9A1900"># You need to add this line:</span></span>
+<span style="font-weight: bold"><span style="color: #000080">require</span></span> <span style="color: #FF0000">"integrity/notifier/email"</span></tt></pre></div></div>
+</li>
+<li>
+<p>
+Restart Integrity and go to the project settings screen where you can
+   enable and configure the notifier.
+</p>
+</li>
+</ol></div>
+</div>
+<h2 id="_deployment">Deployment</h2>
+<div class="sectionbody">
+<h3 id="_a_href_http_heroku_com_heroku_a"><a href="http://heroku.com">Heroku</a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>Heroku is the easiest and fastest way to deploy Integrity.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>$ cp doc/heroku<span style="color: #990000">.</span>rb init<span style="color: #990000">.</span>rb
+$ <span style="color: #009900">$EDITOR</span> Gemfile <span style="font-style: italic"><span style="color: #9A1900"># un-comment the postgres gem</span></span>
+$ git commit -am <span style="color: #FF0000">"Configured for Heroku"</span>
+$ gem install heroku
+$ heroku create
+$ git push heroku master
+$ heroku rake db
+$ heroku open</tt></pre></div></div>
+<div class="paragraph"><p>You can manually edit your Github Token in init.rb</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>c<span style="color: #990000">.</span>github    ENV<span style="color: #990000">[</span><span style="color: #FF0000">"GITHUB_TOKEN"</span><span style="color: #990000">]</span> <span style="color: #990000">||</span> <span style="color: #FF0000">"TOKEN"</span></tt></pre></div></div>
+<div class="paragraph"><p>Or create a <a href="http://docs.heroku.com/config-vars">Heroku Config vars</a></p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>$ heroku config<span style="color: #990000">:</span>add <span style="color: #009900">GITHUB_TOKEN</span><span style="color: #990000">=</span>secret</tt></pre></div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">It isn&#8217;t possible to access repositories over SSH on Heroku</td>
+</tr></table>
+</div>
+<h3 id="_a_href_http_modrails_com_phusion_passenger_a"><a href="http://modrails.com">Phusion Passenger</a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>Please see Passenger&#8217;s documentation for
+<a href="http://www.modrails.com/documentation/Users%20guide%20Apache.html">Apache</a> and
+<a href="http://www.modrails.com/documentation/Users%20guide%20Nginx.html">Nginx</a>.</p></div>
+<h3 id="_a_href_http_code_macournoyer_com_thin_thin_a"><a href="http://code.macournoyer.com/thin/">Thin</a></h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>$ gem install thin
+$ <span style="color: #009900">$EDITOR</span> doc/thin<span style="color: #990000">.</span>yml
+$ thin -C doc/thin<span style="color: #990000">.</span>yml start</tt></pre></div></div>
+<div class="paragraph"><p>Then, configure a web proxy. Examples:</p></div>
+<div class="listingblock">
+<div class="title">Nginx as a reverse-proxy</div>
+<div class="content">
+<pre><tt>http {
+  upstream builder-integrityapp-com {
+  server 127.0.0.1:8910;
+  server 127.0.0.1:8911;
+}
+
+server {
+  server_name builder.integrityapp.com;
+  location / {
+    proxy_pass http://builder-integrityapp-com;
+  }
+}</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Apache acting as reverse proxy to a cluster of thin instances</div>
+<div class="content">
+<pre><tt>&lt;VirtualHost *&gt;
+  &lt;Proxy&gt;
+    Order deny,allow
+    Allow from all
+  &lt;/Proxy&gt;
+
+  RedirectMatch ^/integrity$ /integrity/
+  ProxyRequests Off
+  ProxyPass /integrity/ http://localhost:8910/
+  ProxyHTMLURLMap http://localhost:8910 /integrity
+
+  &lt;Location /integrity&gt;
+    ProxyPassReverse /
+    SetOutputFilter proxy-html
+    ProxyHTMLURLMap / /integrity/
+    ProxyHTMLURLMap /integrity/ /integrity
+  &lt;/Location&gt;
+&lt;/VirtualHost&gt;</tt></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">If you run Integrity with another deployment strategy please drop us
+      us a line at &lt;<a href="mailto:info@integrityapp.com">info@integrityapp.com</a>&gt; and let us know what config
+      worked for you so we can include it here.</td>
+</tr></table>
+</div>
+</div>
+<h2 id="_support_contributing">Support / Contributing</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>You can get in touch via IRC at <a href="irc://irc.freenode.net/integrity">#integrity on
+freenode</a>. If no one happens to be around, you can ask our mailing list at
+<a href="mailto:integrity@librelist.com">integrity@librelist.com</a>. (<a href="http://librelist.com/browser/integrity/">Archives</a>)</p></div>
+<div class="paragraph"><p>If you find a bug, or want to give us a feature request, log it into our
+<a href="http://github.com/integrity/integrity/issues">bug tracker</a>.</p></div>
+<div class="paragraph"><p>To start hacking, grab the code from our git repository at
+<tt>git://github.com/integrity/integrity.git</tt> and setup the dependencies with
+<tt>bundle install &amp;&amp; bundle lock</tt>. Finally, hack and <tt>bundle exec rake</tt> as
+usual ;-)</p></div>
+<div class="paragraph"><p>Once you&#8217;re done, make sure your changes are rebased on on top of the <tt>master</tt>
+branch and open a new ticket in our bug tracker to let us know where we can
+pull from.</p></div>
+</div>
+<h2 id="_faq">FAQ</h2>
+<div class="sectionbody">
+<h3 id="_does_it_support_subversion_or_any_other_scm">Does it support Subversion or any other SCM?</h3><div style="clear:left"></div>
+<div class="paragraph" id="faq-scm"><p>No. Integrity only works with <a href="http://git-scm.org">git</a>.</p></div>
+<h3 id="_but_does_it_work_with_lt_insert_tech_here_gt">But does it work with &lt;insert tech here&gt;?</h3><div style="clear:left"></div>
+<div class="paragraph" id="faq-tech"><p><strong>Absolutely!</strong> As long as your build process can be run from an UNIX-y
+environment and that it returns a <strong>zero</strong> status code for success and
+<strong>non-zero</strong> for failure, then Integrity works for you.</p></div>
+</div>
+</div>
+<div id=footer>
+  <div class=credits>
+    Integrity is &copy; 2008, 2009
+    <a href="http://nicolassanguinetti.info">Nicolás Sanguinetti</a>
+    and <a href="http://atonie.org">Simon Rozet</a>
+  </div>
+  <div class=links>
+    <a href="http://integrity.lighthouseapp.com/projects/14308-integrity">Bugs / Support</a>
+        |
+    <a href="http://github.com/integrity/integrity">Source Code</a>
+  </div>
+</div>
+<script type="text/javascript">
+  //<![CDATA[
+  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  //]]>
+  </script>
+  <script type="text/javascript">
+    //<![CDATA[
+      try {
+      var pageTracker = _gat._getTracker("UA-6377994-1");
+      pageTracker._trackPageview();
+      } catch(err) {}
+    //]]>
+  </script>
+  </body>
+</html>
