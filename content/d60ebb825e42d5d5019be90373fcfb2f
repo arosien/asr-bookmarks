@@ -1,0 +1,139 @@
+<html>
+  <head>
+    <meta content='text/html;charset=UTF-8' http-equiv='Content-Type'>
+    <title>buildr &mdash; Apache Buildr</title>
+    <style type='text/css'>
+      @import 'css/default.css';
+      @import 'css/syntax.css';
+    </style>
+    <style media='print' type='text/css'>
+      @import 'css/print.css';
+    </style>
+    <meta content='Official Buildr documentation from the people in the know' name='subject'>
+    <link href='images/favicon.png' rel='shortcut icon'>
+  </head>
+  <body>
+    <div id='wrap'>
+      <div id='header'>
+        <a href='http://buildr.apache.org/' title="Build like you code"><img alt='buildr' src='images/buildr.png'></a>
+        <div class='tagline'>Build like you code</div>
+      </div>
+      <div id='pages'>
+        <ol class='toc'>
+          <li>Start Here
+            <ol class="toc">
+              <li><a href='index.html'>Welcome</a></li>
+              <li><a href='quick_start.html'>Quick Start</a></li>
+              <li><a href='installing.html'>Installing & Running</a></li>
+              <li><a href='http://cwiki.apache.org/confluence/display/BUILDR/Index'>Community Wiki</a></li>
+            </ol>
+          </li>
+          <li>Using Buildr
+            <ol class="toc">
+              <li><a href='buildr.pdf'>This Guide (PDF)</a></li>
+              <li><a href='projects.html'>Projects</a></li>
+              <li><a href='building.html'>Building</a></li>
+              <li><a href='artifacts.html'>Artifacts</a></li>
+              <li><a href='packaging.html'>Packaging</a></li>
+              <li><a href='testing.html'>Testing</a></li>
+              <li><a href='releasing.html'>Releasing</a></li>
+              <li><a href='settings_profiles.html'>Settings/Profiles</a></li>
+              <li><a href='languages.html'>Languages</a></li>
+              <li><a href='more_stuff.html'>More Stuff</a></li>
+              <li><a href='extending.html'>Extending Buildr</a></li>
+              <li><a href='http://cwiki.apache.org/confluence/display/BUILDR/Buildr+HowTos'>How-Tos</a></li>
+            </ol>
+          </li>
+          <li>Reference
+            <ol class="toc">
+              <li><a href='rdoc'>API</a></li>
+              <li><a href='http://docs.rubyrake.org'>Rake</a></li>
+              <li><a href='http://antwrap.rubyforge.org'>Antwrap</a></li>
+              <li><a href='http://cwiki.apache.org/confluence/display/BUILDR/Common+Problems+and+Solutions'>Troubleshooting</a></li>
+            </ol>
+          </li>
+          <li>Get Involved
+            <ol class="toc">
+              <li><a href='download.html'>Download</a></li>
+              <li><a href='mailing_lists.html'>Mailing Lists</a></li>
+              <li><a href='http://www.twitter.com/buildr'>Twitter</a></li>
+              <li><a href='http://issues.apache.org/jira/browse/Buildr'>Issues/Bugs</a></li>
+              <li><a href='contributing.html'>Contributing</a></li>
+              <li><a href='specs.html'>Specs</a></li>
+              <li><a href='coverage/index.html'>Coverage</a></li>
+            </ol>
+          </li>
+          <li>
+            <form action='http://www.google.com/cse' id='searchbox_003673095760649043902:ogcgrzu0l2y'>
+              <input name='cx' type='hidden' value='003673095760649043902:ogcgrzu0l2y'>
+              <input name='cof' type='hidden' value='FORID:0'>
+              <input name='q' size='20' type='text'>
+              <input name='sa' type='submit' value='Search'>
+              <img alt='Google Custom Search' src='http://www.google.com/coop/images/google_custom_search_smnar.gif'>
+            </form>
+          </li>
+          <li>The Buildr Book
+            <p><a href='http://www.amazon.com/Buildr/dp/1442160942/'><img src='images/1442160941-frontcover.jpg' style='width:120px'></a></p>
+            <p>Based on the Buildr documentation, available from <a href='http://www.amazon.com/Buildr/dp/1442160942/'>Amazon</a> and
+            <a href='http://www.createspace.com/3382199'>CreateSpace</a></p>
+          </li>
+        </ol>
+      </div>
+      <div id='content'>
+        <h1 id='apache buildr'>Apache Buildr</h1>
+        <ol class="toc"><li><a href="#why">Why Buildr Rocks</a></li><li><a href="#what">What You Get</a></li><li><a href="#news">What&#8217;s New</a></li><li><a href="#notices">Credits &amp; Notices</a></li></ol>
+        <p>Apache Buildr is a build system for Java-based applications, including support for Scala, Groovy and a growing number of <span class="caps">JVM</span> languages and tools.  We wanted something that&#8217;s simple and intuitive to use, so we only need to tell it what to do, and it takes care of the rest.  But also something we can easily extend for those one-off tasks, with a language that&#8217;s a joy to use.  And of course, we wanted it to be fast, reliable and have outstanding dependency management.</p>
+<h2 id="why">Why Buildr Rocks</h2>
+<p><a href="http://www.codecommit.com/blog">Daniel Spiewak</a>:</p>
+<blockquote>
+<p>If you think about it, the question isn’t “Why use Buildr?”, it’s really “Why use anything else?” The advantages afforded by Buildr are so substantial, I really can’t see myself going with any other tool, at least not when I have a choice.</p>
+</blockquote>
+<p><a href="http://tristanhunt.com/">Tristan Juricek</a>:</p>
+<blockquote>
+<p>That’s still the strongest sell: it builds everything I need, and as I’ve needed more, I just got things working without a lot of fuss.</p>
+</blockquote>
+<p><a href="http://offthelip.org/">Matthieu Riou</a>:</p>
+<blockquote>
+<p>We used to rely on Ant, with a fairly extensive set of scripts. It worked but was expensive to maintain. The biggest mistake afterward was to migrate to Maven2. I could write pages of rants explaining all the problems we ran into and we still ended up with thousands of lines of <span class="caps">XML</span>.</p>
+</blockquote>
+<p><a href="http://www.javakaffee.de/blog/">Martin Grotzke</a>:</p>
+<blockquote>
+<p>The positive side effect for me as a java user is that I learn a little ruby, and that’s easy but lots of fun… :-)</p>
+</blockquote>
+<p><a href="http://twitter.com/ijonas/statuses/4134103928">Ijonas Kisselbach</a>:</p>
+<blockquote>
+<p>I&#8217;ve cleaned up &amp; migrated the Vamosa build process from 768 lines of Ant build.xml to 28 lines of Buildr.</p>
+</blockquote>
+<h2 id="what">What You Get</h2>
+<ul>
+	<li>A simple way to specify projects, and build large projects out of smaller sub-projects.</li>
+	<li>Pre-canned tasks that require the least amount of configuration, keeping the build script <span class="caps">DRY</span> and simple.</li>
+	<li>Compiling, copying and filtering resources, JUnit/TestNG test cases, <span class="caps">APT</span> source code generation, Javadoc and more.</li>
+	<li>A dependency mechanism that only builds what has changed since the last release.</li>
+	<li>A drop-in replacement for Maven 2.0, Buildr uses the same file layout, artifact specifications, local and remote repositories.</li>
+	<li>All your Ant tasks are belong to us! Anything you can do with Ant, you can do with Buildr.</li>
+	<li>No overhead for building &#8220;plugins&#8221; or configuration. Just write new tasks or functions.</li>
+	<li>Buildr is Ruby all the way down.  No one-off task is too demanding when you write code using variables, functions and objects.</li>
+	<li>Simple way to upgrade to new versions.</li>
+	<li>Did we mention fast?</li>
+</ul>
+<p>So let&#8217;s get started.  You can <a href="quick_start.html">read the documentation online</a>, or <a href="buildr.pdf">download the <span class="caps">PDF</span></a>.</p>
+<h2 id="news">What&#8217;s New</h2>
+<p>New in Buildr 1.4.4 (Nov. 16th, 2010)</p>
+<ul>
+	<li>Change: <span class="caps">BUILDR</span>-549 Upgrade to <span class="caps">RJB</span> 1.3.3 to address &#8220;Cannot create <span class="caps">JVM</span>&#8221; issue<br />
+with Java Update 3 on Mac OS X.  Win32 platform upgraded to <span class="caps">RJB</span> 1.3.2.</li>
+	<li>Change: RSpec gem dependency ~&gt; 1.3.1</li>
+	<li>Change: Upgrade to JtestR 0.6</li>
+</ul>
+<p>See the <a href="CHANGELOG"><span class="caps">CHANGELOG</span></a> for full details.</p>
+<h2 id="notices">Credits &amp; Notices</h2>
+<p><a href="http://www.apache.org"><img src="http://www.apache.org/images/asf-logo.gif" title="A project of the Apache Software Foundation" alt="A project of the Apache Software Foundation" /></a></p>
+<p>The Apache Software Foundation is a non-profit organization, consider <a href="http://www.apache.org/foundation/sponsorship.html">sponsoring</a> and check the <a href="http://www.apache.org/foundation/thanks.html">thanks</a> page.</p>
+<p><a href="http://www.mouserunner.com/Spheres_ColoCons1_Free_Icons.html">ColorCons</a>, copyright of Ken Saunders.  <a href="http://dejavu.sourceforge.net">DejaVu fonts</a>, copyright of Bitstream, Inc.</p>
+<p>Community member quotes from a thread on <a href="http://stackoverflow.com/questions/1015525/why-use-buildr-instead-of-ant-or-maven/1055864">Stack Overflow</a>.</p>
+      </div>
+      <div id='footer'>Copyright &copy; 2007-2010 The Apache Software Foundation</div>
+    </div>
+  </body>
+</html>
