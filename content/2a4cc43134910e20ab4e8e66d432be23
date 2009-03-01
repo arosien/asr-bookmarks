@@ -1,0 +1,600 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <base href="http://opensource.plurk.com/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Plurk Open Source - LightCloud - Distributed and persistent key value database</title>
+  <script type="text/javascript">
+  var PageOracle = {
+    view_edit_mode: 'on',
+    page_hidden: '0',
+
+    getPageId: function() {
+      return '2';
+    },
+
+    isCmsPage: function() {
+      return 'True' == 'True';
+    },
+
+    getMenuId: function() {
+      return 1;
+    },
+
+    getBaseURL: function() {
+      return 'http://opensource.plurk.com';
+    },
+
+    hasEditPermission: function() {
+      return 'False' == 'True';
+    },
+
+    isAdmin: function() {
+      return 'False' == 'True';
+    },
+    
+    isHiddenToPublic: function() {
+      return PageOracle.page_hidden == '1';
+    },
+
+    getViewEditMode: function() {
+      return PageOracle.view_edit_mode;
+    },
+
+    isLoggedIn: function() {
+        return 'True' == 'False';
+    }
+  };
+
+  function getPageOracle() {
+    return PageOracle;
+  }
+  </script>
+
+  <link rel="stylesheet" type="text/css" href="http://opensource.plurk.com/generated/SiteHeader_styles.css" />
+  <script src="http://opensource.plurk.com/generated/SiteHeader_scripts.js" type="text/javascript"></script>
+    <style type="text/css">/*
+ * Manage
+ */
+.CMS_BlogManage {
+  margin: 0 0 10px 0;
+}
+
+/*
+ * Blog entry
+ */
+.CMS_BlogEntry {
+  padding: 0;
+  margin: 0 0 30px 0;
+}
+
+.CMS_BlogEntry h1 {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+.CMS_BlogEntry hr {
+  margin: 15px 0 0px 0;
+  border: 1px dashed #ccc;
+}
+
+.CMS_BlogText {
+  padding: 10px 0 0px 0;
+}
+
+.CMS_BlogText p {
+  margin: 12px 0 12px 0 !important;
+  padding: 0 !important;
+}
+
+.CMS_BlogEntryInfo, .CMS_BlogEntryInfo a, .CMS_BlogEntryInfo a:hover, .CMS_BlogEntryInfo a:visited {
+  padding: 7px 0 0px 0;
+  color: #777;
+}
+
+/*
+ * Blog labels
+ */
+.CMS_BlogLabels {
+  font-size: 11px;
+  padding: 0px 2px 3px 2px;
+}
+
+.CMS_BlogLabels a, .CMS_BlogLabels a:hover, .CMS_BlogLabels a:visited {
+  color: #555;
+  margin: 0 8px 0 0;
+}
+
+/*
+ * Blog comments
+ */
+.CMS_BlogComments {
+  padding: 20px 0 0 0;
+}
+
+.CMS_BlogComments dt {
+  font-weight: bold;
+  color: #555;
+  padding: 0 0 3px 0;
+  margin: 0;
+}
+
+.CMS_BlogComments label.latest, .CMS_BlogComments label.latest a {
+  color: #999;
+  font-size: 12px;
+}
+
+
+.CMS_BlogComments label.author, .CMS_BlogComments label.author a {
+  font-size: 13px;
+  color: #333;
+}
+
+.CMS_BlogComments label.author a {
+  text-decoration: underline;
+  border: none;
+}
+
+.CMS_BlogComments label.date {
+  font-weight: normal;
+  font-size: 13px;
+  color: #999;
+}
+
+.CMS_BlogComments dd {
+  padding: 0 0 8px 8px;
+  margin: 0;
+}
+
+.CMS_BlogInner {
+  margin: 0;
+  padding: 0px 8px 0 8px;
+}
+
+/*
+ * Blog post comment
+ */
+.CMS_BlogPostComment {
+  background-color: #eee;
+}
+
+.CMS_BlogPostComment dt {
+  font-weight: bold;
+  padding: 0 0 2px 0;
+  margin: 0;
+}
+
+.CMS_BlogPostComment dd {
+  padding: 0 0 8px 8px;
+  margin: 0;
+}
+
+.CMS_BlogPostComment .desc {
+  color: #555;
+  font-size: 11px;
+}
+
+.CMS_BlogPostComment form, .CMS_BlogPostComment dl {
+  margin: 0 !important;
+  padding: 0 0 5px 0 !important;
+}
+
+.CMS_BlogPostComment .input {
+  border: 1px solid #999;
+}
+
+.CMS_BlogPostComment textarea, .CMS_Comment_TA {
+  width: 500px;
+  height: 250px;
+  border: 1px solid #999;
+}
+
+.CMS_BlogTitle {
+  background-color: #DDDDFF;
+  font-size: 13px;
+  border-bottom: 1px solid #999;
+  margin: 0 0 15px 0;
+  padding: 5px;
+}
+
+
+/*
+ * Blog info
+ */
+.CMS_BlogInfo {
+  float: right;
+  border-left: 1px dashed #ccc;
+  border-bottom: 1px dashed #ccc;
+  padding: 10px 25px;
+  margin: 0 3px 3px 10px;
+}
+
+.CMS_BlogInfo ul {
+  list-style: none none;
+  margin: 0;
+  padding: 0 5px 0 10px;
+}
+
+.CMS_BlogInfo ul {
+  padding: 3px 4px 3px 6px;
+}
+
+.CMS_BlogInfo .head {
+  font-weight: bold;
+  font-size: 14px;
+  padding: 0 0 5px 0;
+}
+
+.CMS_BlogInfo .caption {
+  text-decoration: underline;
+  padding: 3px 0 2px 0;
+}
+
+.post_list li {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+</style>
+    <script type="text/javascript">var Cookies = {
+    get: function(name) {
+       if(document.cookie.length>0) {
+           var c_start = document.cookie.indexOf(name + "=");
+           if(c_start != -1) { 
+               c_start = c_start + name.length+1;
+               c_end=document.cookie.indexOf(";",c_start);
+               if(c_end==-1) 
+                   c_end = document.cookie.length;
+               return unescape(document.cookie.substring(c_start,c_end));
+           } 
+       }
+       return '';
+    },
+
+    set: function(name, value, /*optional*/ expire_days) {
+        var str_exp_date = '';
+        if(expire_days) {
+            var exdate = new Date();
+            exdate.setDate(exdate.getDate() + expire_days);
+            str_exp_date = ';expires=' + exdate.toGMTString();
+        }
+        document.cookie = name + "=" + escape(value) + str_exp_date;
+    }
+}
+
+function fillInCookieInfo() {
+    if(Cookies.get('sk_bp_name')) {
+        var form = document.getElementById('CMS_CommentForm');
+
+        var name = Cookies.get('sk_bp_name');
+        var email = Cookies.get('sk_bp_email');
+        var website = Cookies.get('sk_bp_website');
+
+        form.author.value = name;
+        form.email.value = email;
+        form.website.value = website;
+    }
+}
+
+if(!Blog)
+    var Blog = {};
+
+Blog.postComment_real = function() {
+        var form = AJS.$('CMS_CommentForm');
+        var name = AJS.$f(form, 'author');
+        var email = AJS.$f(form, 'email');
+        var website = AJS.$f(form, 'website');
+
+        var comment = AJS.$f(form, 'content');
+        var btn_submit = AJS.$('btn_submit');
+
+        btn_submit.disabled = true;
+
+        var d = AJS.getRequest('blog/addComment');
+        d.addCallback(function(cmnt_html) {
+            Cookies.set('sk_bp_name', name.value, 30);
+            Cookies.set('sk_bp_email', email.value, 30);
+            Cookies.set('sk_bp_website', website.value, 30);
+
+            var post_comment = $bytc('div', 'CMS_BlogPostComment')[0];
+            var flash_div;
+            ACN(post_comment, flash_div = DIV({s: 'padding: 10px 0 10px 0'}, B('Comment posted!')));
+            AJS.fx.highlight(flash_div, {duration: 5000, onComplete: function() {
+                removeElement(flash_div);
+            }});
+
+
+            var cmnts = AJS.$bytc('div', 'CMS_BlogInner')[0];
+
+            var dom = AJS.HTML2DOM(cmnt_html);
+            AJS.ACN(cmnts, dom);
+            AJS.fx.highlight(dom, {duration: 5000});
+
+            btn_submit.disabled = false;
+            comment.value = '';
+
+            //Update count
+            var counts = AJS.$bytc('span', 'CMS_CmntLen');
+            AJS.map(counts, function(c) {
+                AJS.setHTML(c, parseInt(c.innerHTML) + 1);
+            });
+
+            var no_cmnt = AJS.$('CMS_noCmnt');
+            if(no_cmnt) {
+                AJS.setHTML(no_cmnt, '<span class="CMS_CmntLen">1</span> comment so far');
+            }
+        });
+        d.sendReq(AJS.formContents(form));
+        return false;
+}
+
+Blog.validateCaptcha_real = function() {
+    var form = AJS.$('CMS_CommentForm');
+
+    if($f(form, 'author').value == '' || $f(form, 'content').value == '') {
+        alert("Name or comment can't be empty.")
+        return false;
+    }
+
+    var url = AJS.BASE_URL + '/blog/showCaptcha';
+    url = url.replace(/([^:])\/\//g, '$1/');
+    return GB_show('Are you a human test?', url, 500, 500);
+}
+
+Blog.previewComment_real = function() {
+    var url = AJS.BASE_URL + '/blog/previewComment';
+    url = url.replace(/([^:])\/\//g, '$1/');
+    return GB_show('Preview your comment', url, 500, 500);
+}
+
+Blog.renderComment = function(holder) {
+    var content = AJS.$('comment_content').value;
+    var req = AJS.getRequest('blog/renderComment');
+    req.addCallback(function(html) {
+        holder.innerHTML = html;
+    });
+    req.sendReq({content: content});
+}
+
+Blog.postComment = onDemand("Blog.postComment_real", path_ajs);
+Blog.validateCaptcha = onDemand("Blog.validateCaptcha_real", path_ajs);
+Blog.previewComment = onDemand("Blog.previewComment_real", path_ajs.concat(path_greybox));
+</script>
+    <style type="text/css">
+
+        #navigation {
+          display: none;
+        }
+        </style>
+    <style type="text/css">
+  /**
+    Set style on current selected menu item
+    **/
+  #CMS_Menu li#LightCloud a {
+    background-color: #fff;
+    color: #333;
+    border-top: 2px solid #D27060;
+    border-bottom: 1px solid #fff;
+    background-image: none;
+    padding-top: 3px;
+   }
+</style>
+
+</head>
+<body class="LightCloud">
+
+<center>
+<div id="top">
+    <a href=""><img src="static_tmpl/images/logo.gif" alt="skeletonz - The simple Python CMS system" /></a>
+</div>
+
+<div id="CMS_Menu">
+  <ul class="CMS_ListMenu">
+            <li id="Overview"><a href="Overview/">Overview</a></li>
+        <li id="LightCloud"><a href="LightCloud/">LightCloud</a></li>
+        <li id="Solace"><a href="Solace/">Solace</a></li>
+        <li id="Translation_Tool"><a href="Translation_Tool/">Translation Tool</a></li>
+        <li id="MySQL_Tools"><a href="MySQL_Tools/">MySQL Tools</a></li>
+
+  </ul>
+</div>
+
+<div id="content">
+
+
+  <div id="CMS_ContentText">
+      <span class="Content"><div class="CMS_PageTabs" id="pagetabs_ LightCloud">
+  <a href="LightCloud/" class="current">Overview</a>
+
+      | <a href="LightCloud/Installation/">Installation</a>
+      | <a href="LightCloud/Tyrant_manager/">Tyrant manager</a>
+      | <a href="LightCloud/Redis_manager/">Redis manager</a>
+      | <a href="LightCloud/Usage_from_Python/">Usage from Python</a>
+      | <a href="LightCloud/Design_spec/">Design spec</a>
+</div>
+<p>
+<div style="float: right"> <img src="http://opensource.plurk.com/uploads/rss_icon.png" alt="RSS icon" /> <a href="http://feeds2.feedburner.com/PlurkOpensourceNews" target="_blank">RSS feed for updates</a></div>
+</p>
+
+<p>
+<img src="http://opensource.plurk.com/uploads/lightcloud.png" alt="LightCloud logo" /><br />
+<b>Distributed and persistent key-value database</b>
+</p>
+<h3>Features</h3>
+<ul>
+<li>
+Built on <a href="http://tokyocabinet.sourceforge.net/tyrantdoc/" target="_blank">Tokyo Tyrant</a>. One of the fastest key-value databases [<a href="http://tokyocabinet.sourceforge.net/benchmark.pdf" target="_blank">benchmark</a>]. Tokyo Tyrant has been in development for many years and is used in production by <a href="http://plurk.com" target="_blank">Plurk.com</a>, <a href="http://mixi.jp" target="_blank">mixi.jp</a> and <a href="http://scribd.com" target="_blank">scribd.com</a> (to name a few)...
+</li>
+<li>
+Great performance (comparable to memcached!)
+</li>
+<li>
+Can store millions of keys on very few servers - tested in production
+</li>
+<li>
+Scale out by just adding nodes
+</li>
+<li>
+Nodes are replicated via master-master replication. Automatic failover and load balancing is supported from the start
+</li>
+<li>
+Ability to script and extend using <a href="http://lua.org" target="_blank">Lua</a>. Included extensions are incr and a fixed list
+</li>
+<li>
+Hot backups and restore: Take backups and restore servers without shutting them down
+</li>
+<li>
+LightCloud manager can control nodes, take backups and give you a status on how your nodes are doing
+</li>
+<li>
+Very small foot print (lightcloud client is around ~500 lines and manager about ~400)
+</li>
+<li>
+Python only, but LightCloud should be easy to port to other languages.
+</li>
+<li>
+<a href="http://github.com/mitchellh/lightcloud/tree/master" target="_blank">Ruby port under development</a>!
+</li>
+</ul>
+
+<p>
+But that's not all, we also support <a href="http://code.google.com/p/redis/" target="_blank">Redis</a> (as an alternative to Tokyo Tyrant)!:
+</p>
+<ul>
+<li>
+Check benchmarks and more details about Redis in <a href="http://amix.dk/blog/viewEntry/19458" target="_blank">LightCloud adds support for Redis</a>.
+</li>
+</ul>
+<h3>Stability</h3>
+
+<p>
+It's production ready and <a href="http://plurk.com" target="_blank">Plurk.com</a> is using it to store millions of keys on only two servers that run 3 lookup nodes and 6 storage nodes (these servers also run MySQL).
+</p>
+<h3>How LightCloud differs from memcached and MySQL?</h3>
+
+<p>
+<a href="http://www.danga.com/memcached/" target="_blank">memcached</a> is used for caching, meaning that after some time items saved to memcached are deleted. LightCloud is persistent, meaning that once you save an item, it will be there forever (or until you delete/update it).
+</p>
+
+<p>
+<a href="http://www.mysql.com/" target="_blank">MySQL</a> and other relational databases are not efficient for storing key-value pairs, a key-value database like LightCloud is.
+</p>
+
+<p>
+The bottom line is that LightCloud is not a replacement for memcached or MySQL - it's a complement that can be used in situations where your data does not fit that well into the relational model.
+</p>
+<h3>How LightCloud differs from redis and memcachedb?</h3>
+
+<p>
+LightCloud is a distributed and horizontal scaleable database. <a href="http://memcachedb.org/" target="_blank">memcachedb</a> or <a href="http://code.google.com/p/redis/" target="_blank">redis</a> aren't. This is pretty crucial to understand and we can read that many have not really understood this.
+</p>
+
+<p>
+Basically, LightCloud could be built on top of memcachedb or redis - where the nodes would be memcachedb or redis instead of <a href="http://tokyocabinet.sourceforge.net/tyrantdoc/" target="_blank">Tokyo Tyrant</a>. The reason why Tokyo Tyrant was chosen is because it's the fastest key-value database around with the ability to do 1 million SETs and GETs under 1 second (see <a href="http://tokyocabinet.sourceforge.net/benchmark.pdf" target="_blank">benchmark</a>).
+</p>
+<h3>Benchmark against memcached</h3>
+
+<p>
+Please do note that comparing to memcached is unfair as memcached is memory only - LightCloud has to hit the disk. That said, here is what it takes to do 10.000 gets and sets:
+</p>
+
+<pre>
+Elapsed for 10000 gets: 1.74538516998 seconds [memcache]
+Elapsed for 10000 gets: 3.57339096069 seconds [lightcloud]
+
+Elapsed for 10000 sets: 1.88236999512 seconds [memcache]
+Elapsed for 10000 sets: 9.23674893379 seconds [lightcloud]
+</pre>
+
+<p>
+<a href="http://opensource.plurk.com/LightCloud/Benchmark_program/">Benchmark program</a>
+</p>
+
+<p>
+If things were done in batches and time wasn't spent in Python and network layer, then Tokyo Tyrant would be able to perform much better. From the official Tokyo Cabinet <a href="http://tokyocabinet.sourceforge.net/benchmark.pdf" target="_blank">benchmark</a> you can see following stats:
+</p>
+<ul>
+<li>
+1 million GETS in < 0.5 seconds
+</li>
+<li>
+1 million SETS in < 0.5 seconds
+</li>
+</ul>
+
+<p>
+These updates are not that realistic in practice.
+</p>
+<h3>Useful links</h3>
+
+<p>
+Some useful links to LightCloud related sites:
+</p>
+<ul>
+<li>
+<a href="http://opensource.plurk.com/trac/">Plurk Open Source Trac</a>
+</li>
+<li>
+<a href="http://news.ycombinator.com/item?id=498581" target="_blank">Hacker news discussion</a>
+</li>
+</ul>
+
+<p>
+Also do subscribe to LightCloud's mailing list:
+</p>
+<table style="border:1px solid #ccc; font-size:small; width: 500px;">  <tr>    <td rowspan="3">     <img src="http://groups.google.com/groups/img/groups_medium.gif" height="58" width="150" alt="Google Groups" />    </td>    <td colspan="2" align="center"><b>Subscribe to LightCloud Mailing list</b></td>  </tr>  <form action="http://groups.google.com/group/lightcloud/boxsubscribe" style="display: block !important">  <tr>    <td>Email: <input type="text" name="email" /></td>    <td>      <table style="padding:2px">      <tr>        <td>         <input type="submit" name="sub" value="Subscribe" />        </td>      </tr>      </table>    </td>  </tr>   </form>  <tr><td colspan="2" align="center">   <a href="http://groups.google.com/group/lightcloud">Browse Archives</a>  </td></tr></table><h3>Lua extension</h3>
+
+<p>
+Like stated above you can script LightCloud nodes via Tokyo Tyrant's Lua extension support. This basically means that you can create your own extensions in a very easy manner (the speed is comparable to C).
+</p>
+
+<p>
+Here is how you extend with a <span class="hl">incr</span> command:
+</p>
+<div class="highlight"><pre><span class="k">function</span> <span class="nf">incr</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+   <span class="n">value</span> <span class="o">=</span> <span class="nf">tonumber</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+   <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span> <span class="k">then</span>
+      <span class="k">return</span> <span class="kc">nil</span>
+   <span class="k">end</span>
+   <span class="kd">local</span> <span class="n">old</span> <span class="o">=</span> <span class="nf">tonumber</span><span class="p">(</span><span class="n">_get</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+   <span class="k">if</span> <span class="n">old</span> <span class="k">then</span>
+      <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">+</span> <span class="n">old</span>
+   <span class="k">end</span>
+   <span class="k">if</span> <span class="ow">not</span> <span class="n">_put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">then</span>
+      <span class="k">return</span> <span class="kc">nil</span>
+   <span class="k">end</span>
+   <span class="k">return</span> <span class="n">value</span>
+<span class="k">end</span>
+</pre></div>
+<p>
+And for something a bit more crazy:
+</p>
+<ul>
+<li>
+<a href="http://opensource.plurk.com/LightCloud/Inverted_index_by_the_Lua_extension_of_Tokyo_Tyrant/">Inverted index by the Lua extension of Tokyo Tyrant</a>
+</li>
+</ul>
+<h3>License</h3>
+
+<p>
+LightCloud is copyrighted by Plurk Inc and is licensed under <a href="http://creativecommons.org/licenses/BSD/" target="_blank">the BSD license</a>.
+</p>
+
+<p>
+LightCloud development is lead by <a href="http://amix.dk/" target="_blank">amix</a>.
+</p>
+</span>
+  </div>
+</div>
+
+<div id="bottom">
+  <div class="login">
+    <img src="static_core/images/lock_open.png" alt="" /> <a href="#" onclick="return showLogin()" id="login_link">Login</a>
+
+  </div>
+  <a href="http://orangoo.com/skeletonz/">Powered by Skeletonz</a>
+</div>
+</center>
+
+</body>
+</html>
+
