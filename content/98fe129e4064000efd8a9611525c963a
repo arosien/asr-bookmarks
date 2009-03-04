@@ -1,0 +1,667 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> <html><head><meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/><meta content="all" name="robots"/><meta content="no-cache" http-equiv="cache-control"/><meta content="no-cache" http-equiv="pragma"/><link href="/theme/favicon.ico" rel="Shortcut Icon"/><title>Netty - the Java NIO Client Server Socket Framework - JBoss Community</title><script src="/docroot/siteDesigner/js/functions.js" type="text/javascript"></script><script src="/docroot/siteDesigner/js/form.js" type="text/javascript"></script>
+   <script type="text/javascript" src="http://static.jboss.org/theme/js/magnolia/allinone-20101019.js"> </script> 
+<script type="text/javascript" src="http://static.jboss.org/theme/includes/org_header.js"> </script> 
+<!--[if lt IE 7]><script type="text/javascript" src="http://static.jboss.org/theme/js/magnolia/maxWidthFixForIE6.js"></script><![endif]-->
+<script type="text/javascript">
+    // initialise Superfish
+    $(document).ready(function() {
+        $('ul.sf-menu').superfish({
+            delay:       300,                            // one second delay on mouseout
+            animation:   {opacity:'show',height:'show'},  // fade-in and slide-down animation
+            speed:       'fast',                          // faster animation speed
+            autoArrows:  false,                           // disable generation of arrow mark-up
+            dropShadows: false                            // disable drop shadows
+        });
+        setupPrimaryMenuItemActive();
+    });
+</script>
+
+<style type="text/css">
+      @import "/netty.css";
+      @import "/netty.nav";
+    </style></head><body id="" onload=""><a name="mgnlTop"></a><div style="position:absolute;top:0px;left:0px;width:5%;padding:0px;margin:0px;"><div style="position:relative;height:28px;"></div></div><div id="container"><div id="ORGheader">
+<h1><a href="http://www.jboss.org/">JBoss Community</a></h1>
+  <!-- Primary Navigation -->
+  <div id="primarynav">
+    <ul class="sf-menu">
+      <li id="primary-nav-home"> <a class="menu-title sf-with-ul" href="http://www.jboss.org/">Home</a>
+        <ul class="level1">
+        <span>
+        <li class="leaf"><a id="primary-nav-home-community" href="http://community.jboss.org/">Community</a></li>
+        <li class="leaf"><a id="primary-nav-home-user-groups" href="http://www.jboss.org/usergroups">User Groups</a></li>
+        <li class="leaf"><a id="primary-nav-home-events" href="http://www.jboss.org/events">Events</a></li>
+        <li class="leaf"><a id="primary-nav-home-feeds" href="http://planet.jboss.org/">Blogs</a></li>
+        <li class="leaf"><a id="primary-nav-home-articles" href="http://java.dzone.com/category/tags/jboss">Articles</a></li>
+        <li class="leaf"><a id="primary-nav-home-books" href="http://www.jboss.org/books">Books</a></li>       
+        <li class="leaf"><a id="primary-nav-home-help" href="http://www.jboss.org/help">Help</a></li>
+</span>
+
+        </ul>
+      </li>
+      <li id="primary-nav-members"> <a class="menu-title" href="http://community.jboss.org/people">Members</a>
+        <ul class="level1">
+            <span>
+        <li class="leaf"><a id="primary-nav-members-new-members" href="http://community.jboss.org/people?sort=creationDate&amp;showDisabledUsers=false&amp;showExternalUsers=false&amp;resultTypes=COMMUNITY&amp;start=0&amp;onlineOnly=false&amp;recentlyAddedOnly=true">Recently joined</a></li>
+        <li class="leaf"><a id="primary-nav-members-developers" href="http://community.jboss.org/groups/developers">Developers</a></li>
+        <li class="leaf"><a id="primary-nav-members-testers" href="http://community.jboss.org/groups/testers">Testers</a></li>
+        <li class="leaf"><a id="primary-nav-members-writers" href="http://community.jboss.org/groups/writers">Writers</a></li>
+        <li class="leaf"><a id="primary-nav-members-speakers" href="http://community.jboss.org/groups/speakers">Speakers</a></li>
+        <li class="leaf"><a id="primary-nav-members-groups" href="http://community.jboss.org/groups">Groups</a></li>
+        <li class="leaf"><a id="primary-nav-members-contributor" href="https://cla.jboss.org">Sign CLA</a></li>
+</span>
+        </ul>
+      </li>
+      <li id="primary-nav-projects"> <a class="menu-title sf-with-ul" href="http://www.jboss.org/projects">Projects</a>
+        <ul class="level1">
+        <span>
+        <li class="leaf"><a id="primary-nav-projects-matrix" href="http://www.jboss.org/projects/matrix">Index</a></li>
+        <li class="open"><a id="primary-nav-projects-web-interface" class="sf-with-ul unlinked">Web Interface</a>                
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-gatein" href="http://www.jboss.org/gatein"><span class="project-icon-med gatein_icon_16x"></span>GateIn</a></li>
+            <li class="leaf"><a id="primary-nav-projects-richfaces" href="http://www.jboss.org/richfaces"><span class="project-icon-med richfaces_icon_16x"></span>RichFaces</a></li>
+            <li class="leaf"><a id="primary-nav-projects-portletbridge" href="http://www.jboss.org/portletbridge"><span class="project-icon-med jbossportal_icon_16x"></span>Portlet Bridge</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-programming-model" class="sf-with-ul unlinked">Programming Model</a>
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-switchyard" href="http://www.jboss.org/switchyard"><span class="project-icon-med switchyard_icon_16x"></span>SwitchYard</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossesb" href="http://www.jboss.org/jbossesb"><span class="project-icon-med blank_icon_16x"></span>ESB</a></li>
+            <li class="leaf"><a id="primary-nav-projects-weld" href="http://seamframework.org/Weld"><span class="project-icon-med weld_icon_16x"></span>Weld</a></li>
+            <li class="leaf"><a id="primary-nav-projects-seam" href="http://seamframework.org/"><span class="project-icon-med seam_icon_16x"></span>Seam</a></li>
+            <li class="leaf"><a id="primary-nav-projects-ejb3" href="http://www.jboss.org/ejb3"><span class="project-icon-med blank_icon_16x"></span>EJB3</a></li>
+            <li class="leaf"><a id="primary-nav-projects-snowdrop" href="http://www.jboss.org/snowdrop"><span class="project-icon-med snowdrop_icon_16x"></span>Snowdrop</a></li>
+            <li class="leaf"><a id="primary-nav-projects-resteasy" href="http://www.jboss.org/resteasy"><span class="project-icon-med resteasy_icon_16x"></span>RESTEasy</a></li>
+            <li class="leaf"><a id="primary-nav-projects-torquebox" href="http://torquebox.org/"><span class="project-icon-med torquebox_icon_16x"></span>TorqueBox</a></li>
+            <li class="leaf"><a id="primary-nav-projects-errai" href="http://www.jboss.org/errai"><span class="project-icon-med errai_icon_16x"></span>Errai</a></li>
+            <li class="leaf"><a id="primary-nav-projects-railo" href="http://www.getrailo.org/"><span class="project-icon-med railo_icon_16x"></span>Railo</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-services" class="sf-with-ul unlinked">Services</a>
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-drools" href="http://www.jboss.org/drools"><span class="project-icon-med drools_icon_16x"></span>Drools</a></li>
+            <li class="open"><a id="primary-nav-projects-hibernate" class="sf-with-ul" href="http://core.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Hibernate Core</a>
+              <ul>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-annotations" href="http://annotations.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Annotations</a></li>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-entity-manager" href="http://entitymanager.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Entity Manager</a></li>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-shards" href="http://shards.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Shards</a></li>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-validator" href="http://validator.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Validator</a></li>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-search" href="http://search.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Search</a></li>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-envers" href="http://www.jboss.org/envers"><span class="project-icon-med hibernate_icon_16x"></span>Envers</a></li>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-tools" href="http://tools.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Tools</a></li>
+              </ul>
+            </li>
+            <li class="leaf"><a id="primary-nav-projects-infinispan" href="http://www.jboss.org/infinispan"><span class="project-icon-med infinispan_icon_16x"></span>Infinispan</a></li>
+            <li class="leaf"><a id="primary-nav-projects-hornetq" href="http://www.jboss.org/hornetq"><span class="project-icon-med hornetQ_icon_16x"></span>HornetQ</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbpm" href="http://www.jboss.org/jbpm"><span class="project-icon-med jbpm_icon_16x"></span>jBPM</a></li>
+            <li class="leaf"><a id="primary-nav-projects-riftsaw" href="http://www.jboss.org/riftsaw"><span class="project-icon-med riftsaw_icon_16x"></span>RiftSaw</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jgroups" href="http://www.jgroups.org/"><span class="project-icon-med jgroups_icon_16x"></span>JGroups</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbosstm" href="http://www.jboss.org/jbosstm"><span class="project-icon-med blank_icon_16x"></span>Transactions</a></li>
+            <li class="leaf"><a id="primary-nav-projects-blacktie" href="http://www.jboss.org/blacktie"><span class="project-icon-med blacktie_icon_16x"></span>Blacktie</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossws" href="http://www.jboss.org/jbossws"><span class="project-icon-med blank_icon_16x"></span>Web Services</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossremoting" href="http://www.jboss.org/jbossremoting"><span class="project-icon-med blank_icon_16x"></span>Remoting</a></li>
+            <li class="leaf"><a id="primary-nav-projects-picketbox" href="http://www.jboss.org/picketbox"><span class="project-icon-med picketbox_icon_16x"></span>PicketBox</a></li>
+            <li class="leaf"><a id="primary-nav-projects-picketlink" href="http://www.jboss.org/picketlink"><span class="project-icon-med picketlink_icon_16x"></span>PicketLink</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbosssso" href="http://www.jboss.org/jbosssso"><span class="project-icon-med blank_icon_16x"></span>Federated SSO</a></li>
+            <li class="leaf"><a id="primary-nav-projects-ironjacamar" href="http://www.jboss.org/ironjacamar"><span class="project-icon-med ironjacamar_icon_16x"></span>IronJacamar</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossclustering" href="http://www.jboss.org/jbossclustering"><span class="project-icon-med blank_icon_16x"></span>Clustering</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossmarshalling" href="http://www.jboss.org/jbossmarshalling"><span class="project-icon-med blank_icon_16x"></span>Marshalling</a></li>
+            <li class="leaf"><a id="primary-nav-projects-serialization" href="http://www.jboss.org/serialization"><span class="project-icon-med blank_icon_16x"></span>Serialization</a></li>
+            <li class="leaf"><a id="primary-nav-projects-tohu" href="http://www.jboss.org/tohu"><span class="project-icon-med tohu_icon_16x"></span>Tohu</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-servers" class="sf-with-ul unlinked">Servers</a>
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-jbossas" href="http://www.jboss.org/jbossas"><span class="project-icon-med blank_icon_16x"></span>Application Server</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossweb" href="http://www.jboss.org/jbossweb"><span class="project-icon-med blank_icon_16x"></span>Web</a></li>
+            <li class="leaf"><a id="primary-nav-projects-teiid" href="http://www.jboss.org/teiid"><span class="project-icon-med teiid_icon_16x"></span>Teiid</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mobicentsjainslee" href="http://www.mobicents.org/slee/intro.html"><span class="project-icon-med mobicents_icon_16x"></span>Mobicents JAIN SLEE</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mobicentssipservlets" href="http://www.mobicents.org/products_sip_servlets.html"><span class="project-icon-med mobicents_icon_16x"></span>Mobicents Sip Servlets</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mobicentsmedia" href="http://www.mobicents.org/mms/mms-main.html"><span class="project-icon-med mobicents_icon_16x"></span>Mobicents Media</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mobicentssippresence" href="http://www.jboss.org/mobicents"><span class="project-icon-med mobicents_icon_16x"></span>Mobicents SIP Presence</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mobicentsdiameter" href="http://www.jboss.org/mobicents"><span class="project-icon-med mobicents_icon_16x"></span>Mobicents Diameter</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossmc" href="http://www.jboss.org/jbossmc"><span class="project-icon-med jbossmc_icon_16x"></span>Microcontainer</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-management" class="sf-with-ul unlinked">Management</a>
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-jopr" href="http://www.jboss.org/jopr"><span class="project-icon-med jopr_icon_16x"></span>Jopr</a></li>
+            <li class="leaf"><a id="primary-nav-projects-embjopr" href="http://www.jboss.org/embjopr"><span class="project-icon-med embeddedjopr_icon_16x"></span>Embedded Jopr</a></li>
+            <li class="leaf"><a id="primary-nav-projects-modeshape" href="http://www.jboss.org/modeshape"><span class="project-icon-med modeshape_icon_16x"></span>ModeShape</a></li>
+            <li class="leaf"><a id="primary-nav-projects-overlord" href="http://www.jboss.org/overlord"><span class="project-icon-med overlord_icon_16x"></span>Overlord</a></li>
+            <li class="leaf"><a id="primary-nav-projects-guvnor" href="http://www.jboss.org/guvnor"><span class="project-icon-med guvnor_icon_16x"></span>Guvnor</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-cloud" class="sf-with-ul unlinked">Cloud</a>
+          <ul class="level2">
+            <li class="open"><a id="primary-nav-projects-stormgrind" class="sf-with-ul" href="http://www.jboss.org/stormgrind"><span class="project-icon-med blank_icon_16x"></span>StormGrind</a>
+              <ul>
+                <li class="leaf"><a id="primary-nav-projects-cirras" href="http://www.jboss.org/stormgrind/projects/cirras"><span class="project-icon-med cirras_icon_16x"></span>CirrAS</a></li>
+              </ul>
+	           </li>
+            <li class="leaf"><a id="primary-nav-projects-boxgrinder" href="http://www.jboss.org/boxgrinder"><span class="project-icon-med boxgrinder_icon_16x"></span>BoxGrinder</a></li>
+            <li class="leaf"><a id="primary-nav-projects-steamcannon" href="http://steamcannon.org"><span class="project-icon-med blank_icon_16x"></span>SteamCannon</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-tools-testing" class="sf-with-ul unlinked">Tools &amp; Testing</a>
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-tools" href="http://www.jboss.org/tools"><span class="project-icon-med tools_icon_16x"></span>Tools</a></li>
+            <li class="leaf"><a id="primary-nav-projects-teiiddesigner" href="http://www.jboss.org/teiiddesigner"><span class="project-icon-med teiid_icon_16x"></span>Teiid Designer</a></li>
+            <li class="leaf"><a id="primary-nav-projects-arquillian" href="http://www.jboss.org/arquillian"><span class="project-icon-med arquillian_icon_16x"></span>Arquillian</a></li>
+            <li class="leaf"><a id="primary-nav-projects-shrinkwrap" href="http://www.jboss.org/shrinkwrap"><span class="project-icon-med shrinkwrap_icon_16x"></span>ShrinkWrap</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jsfunit" href="http://www.jboss.org/jsfunit"><span class="project-icon-med blank_icon_16x"></span>JSFUnit</a></li>
+            <li class="leaf"><a id="primary-nav-projects-tattletale" href="http://www.jboss.org/tattletale"><span class="project-icon-med tattletale_icon_16x"></span>Tattletale</a></li>
+            <li class="leaf"><a id="primary-nav-projects-byteman" href="http://www.jboss.org/byteman"><span class="project-icon-med blank_icon_16x"></span>Byteman</a></li>
+            <li class="leaf"><a id="primary-nav-projects-scribble" href="http://www.jboss.org/scribble"><span class="project-icon-med scribble_icon_16x"></span>Scribble</a></li>
+            <li class="leaf"><a id="primary-nav-projects-savara" href="http://www.jboss.org/savara"><span class="project-icon-med savara_icon_16x"></span>Savara</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossprofiler" href="http://www.jboss.org/jbossprofiler"><span class="project-icon-med blank_icon_16x"></span>Profiler</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mass" href="http://www.jboss.org/mass"><span class="project-icon-med mass_icon_16x"></span>Mass</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossdtf" href="http://www.jboss.org/jbossdtf"><span class="project-icon-med blank_icon_16x"></span>Distributed Test Framework</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-other" class="sf-with-ul unlinked">Other</a>
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-pressgang" href="http://www.jboss.org/pressgang"><span class="project-icon-med pressgang_icon_16x"></span>PressGang</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mod_cluster" href="http://www.jboss.org/mod_cluster"><span class="project-icon-med blank_icon_16x"></span>mod_cluster</a></li>
+            <li class="leaf"><a id="primary-nav-projects-netty" href="http://www.jboss.org/netty"><span class="project-icon-med blank_icon_16x"></span>Netty</a></li>
+            <li class="leaf"><a id="primary-nav-projects-xnio" href="http://www.jboss.org/xnio"><span class="project-icon-med xnio_icon_16x"></span>XNIO</a></li>
+            <li class="leaf"><a id="primary-nav-projects-javassist" href="http://www.jboss.org/javassist"><span class="project-icon-med blank_icon_16x"></span>Javassist</a></li>
+            <li class="leaf"><a id="primary-nav-projects-wise" href="http://www.jboss.org/wise"><span class="project-icon-med wise_icon_16x"></span>Wise</a></li>
+            <li class="leaf"><a id="primary-nav-projects-maven-jdocbook" href="http://www.jboss.org/maven-jdocbook-plugin"><span class="project-icon-med blank_icon_16x"></span>maven-jdocbook-plugin</a></li>
+            <li class="leaf"><a id="primary-nav-projects-maven-jdocbook-style" href="http://www.jboss.org/maven-jdocbook-style-plugin"><span class="project-icon-med blank_icon_16x"></span>maven-jdocbook-style-plugin</a></li>
+            <li class="leaf"><a id="primary-nav-projects-maven-retro-plugin" href="http://www.jboss.org/maven-jboss-retro-plugin"><span class="project-icon-med blank_icon_16x"></span>maven-jboss-retro-plugin</a></li>
+            <li class="leaf"><a id="primary-nav-projects-maven-buildmagic-thirdparty" href="http://www.jboss.org/maven-buildmagic-thirdparty-plugin"><span class="project-icon-med blank_icon_16x"></span>maven-buildmagic-thirdparty-plugin</a></li>
+            <li class="leaf"><a id="primary-nav-projects-apiviz" href="http://www.jboss.org/apiviz"><span class="project-icon-med blank_icon_16x"></span>APIviz</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbosscommon" href="http://www.jboss.org/jboss-common"><span class="project-icon-med blank_icon_16x"></span>Common</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossretro" href="http://www.jboss.org/jbossretro"><span class="project-icon-med blank_icon_16x"></span>Retro</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossforums" href="http://www.jboss.org/jbossforums"><span class="project-icon-med jbossportal_icon_16x"></span>Forums</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbosswiki" href="http://www.jboss.org/jbosswiki"><span class="project-icon-med jbossportal_icon_16x"></span>Wiki</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossblog" href="http://www.jboss.org/jbossblog"><span class="project-icon-med jbossportal_icon_16x"></span>Blog</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-archive" class="sf-with-ul unlinked">Archive</a>
+          <ul class="level2">
+            <li class="open"><a id="primary-nav-projects-jbossportal" href="http://www.jboss.org/jbossportal" class="sf-with-ul unlinked"><span class="project-icon-med jbossportal_icon_16x"></span>Portal</a>
+              <ul>
+                <li class="leaf"><a id="primary-nav-projects-portlet-container" href="http://www.jboss.org/portletcontainer"><span class="project-icon-med jbossportal_icon_16x"></span>Portlet Container</a></li>
+              </ul>
+      	    </li>
+            <li class="leaf"><a id="primary-nav-projects-jbossmessaging" href="http://www.jboss.org/jbossmessaging"><span class="project-icon-med blank_icon_16x"></span>Messaging</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbosscache" href="http://www.jboss.org/jbosscache"><span class="project-icon-med blank_icon_16x"></span>Cache</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossaop" href="http://www.jboss.org/jbossaop"><span class="project-icon-med blank_icon_16x"></span>AOP</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossiiop" href="http://www.jboss.org/jbossiiop"><span class="project-icon-med blank_icon_16x"></span>IIOP</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jdcom" href="http://www.jboss.org/jdcom"><span class="project-icon-med blank_icon_16x"></span>jDCOM</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossjmx" href="http://www.jboss.org/jbossjmx"><span class="project-icon-med blank_icon_16x"></span>JMX</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jrunit" href="http://www.jboss.org/jrunit"><span class="project-icon-med blank_icon_16x"></span>JRunit</a></li>
+            <li class="leaf"><a id="primary-nav-projects-gravel" href="http://www.jboss.org/gravel"><span class="project-icon-med blank_icon_16x"></span>Gravel</a></li>
+            <li class="leaf"><a id="primary-nav-projects-kosmos" href="http://www.jboss.org/kosmos"><span class="project-icon-med blank_icon_16x"></span>Kosmos</a></li>
+            <li class="leaf"><a id="primary-nav-projects-shotoku" href="http://www.jboss.org/shotoku"><span class="project-icon-med blank_icon_16x"></span>Shotoku</a></li>
+            <li class="leaf"><a id="primary-nav-projects-davcache" href="http://www.jboss.org/davcache"><span class="project-icon-med blank_icon_16x"></span>DavCache</a></li>
+            <li class="leaf"><a id="primary-nav-projects-reportingservices" href="http://www.jboss.org/reportingservices"><span class="project-icon-med blank_icon_16x"></span>Reporting Services</a></li>
+            <li class="leaf"><a id="primary-nav-projects-portletswap" href="http://www.jboss.org/portletswap"><span class="project-icon-med blank_icon_16x"></span>Portlet Swap</a></li>
+            <li class="leaf"><a id="primary-nav-projects-metajizer" href="http://www.jboss.org/metajizer"><span class="project-icon-med blank_icon_16x"></span>Metajizer</a></li>
+          </ul>
+        </li>
+</span>
+
+        </ul>
+      </li>
+      <li class="enterprise"> <a class="menu-title" href="http://www.jboss.com/products">Products</a>
+        <ul class="level1">
+        <span>
+        <li class="open"><a class="sf-with-ul unlinked">Enterprise Platforms</a>
+          <ul class="level2">
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/application">Application Platform</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/webplatform">Web Platform</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/webserver">Web Server</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/portals">Portal Platform</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/soa">SOA Platform</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/brms">Business Rules Management System</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/dataservices">Data Services Platform</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/communications">Communications Platform</a></li>
+          </ul>
+        </li>
+        <li class="open"><a class="sf-with-ul unlinked">Development Tools and Frameworks</a>
+          <ul class="level2">
+            <li class="leaf"><a href="http://www.jboss.com/products/devstudio">Developer Studio</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/hibernate">Hibernate Framework</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/seam">Seam Framework</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/wfk">JBoss Web Framework Kit</a></li>
+          </ul>
+        </li>
+        <li class="open"><a class="sf-with-ul unlinked">Management</a>
+          <ul class="level2">
+            <li class="leaf"><a href="http://www.jboss.com/products/jbosson">JBoss Operations Network</a></li>
+          </ul>
+        </li>
+        <li class="leaf"><a href="http://www.jboss.com/downloads/">Downloads</a></li>
+</span>
+
+        </ul>
+      </li>
+    </ul>
+  </div><!-- END of primarynav -->
+  <!-- Utility controls -->
+<div id='utilitynav' style="vertical-align: top">
+
+  <form class="nomargin" id="TopSearch" action="" onsubmit="" method="get" >
+    <input type="hidden" id="searchArea" name="searchArea" value="" />
+    <input type="hidden" id="as_sitesearch" name="as_sitesearch" value="jboss.org" />
+    <ul>
+      
+      
+      <li><a href="https://community.jboss.org/login.jspa">Login</a> | </li>
+      
+      <li><a href="http://www.jboss.org/index.html?op=checkage&module=user">Register</a> | </li>
+      <li id="storelink"><a href="http://www.jboss.org/coolstuff">Cool Stuff</a></li>
+      <li id="search-field">
+        <input 
+                            style="width:143px; height:14px;" 
+                            id="q" 
+                            name="q" 
+                            type="text" 
+                            onfocus="this.value= (this.value=='Search Project Pages' || this.value=='Search the Community') ? '' : this.value" 
+                            onblur="this.value= (this.value=='') ? 'Search the site' : (this.value; setSelected();)" 
+                            onmouseover="dropdownmenu(this, event, search, '150px')" 
+                            onmouseout="delayhidemenu()"
+                            onkeydown="submitonEnter(event);"
+                            value="Search the Community" />
+        <input 
+                            style="width:16px; height:16px;" 
+                            type="image" 
+                            value="go" 
+                            src="http://static.jboss.org/theme/images/common/ico_searcharrow.png" 
+                            align="middle"  />
+      </li>
+    </ul>
+  </form>
+</div>
+
+</div><!-- END of ORGheader -->
+
+
+<!-- ORG header javascript -->
+<script type="text/javascript" src="/theme/includes/org_header.js"></script>
+<!-- END of ORG header javascript -->
+<div id="contentcontainer"><div id="container_grey"><table width="945" class="contentTable" cellspacing="0" cellpadding="0" border="0"><tr><td align="left" width="945" class="header" colspan="2"><div id="header"><div id="">
+			<div id="proj_announce"> <div id="proj_logo"> <h2>Netty Project</h2> </div> <div id="proj_tagline"><!--<h3>Branding area + project tagline.</h3>--></div> </div>
+		</div><div style="clear:both;"></div>
+         
+
+<div id="proj_nav" class="" >
+<ul class="sf-menu" >
+
+
+    <li class="current">
+
+
+        <a href="/netty" class="menu-title">Overview</a>
+            
+                <ul class="level1" >
+           <li class="leaf"><a href="/netty/performance">        Performance
+</a></li>
+           <li class="leaf"><a href="/netty/testimonials">        Testimonials
+</a></li>
+           <li class="leaf"><a href="/netty/related-projects">        Related Projects
+</a></li>
+                </ul>
+
+
+    </li>
+
+
+    <li class="open">
+
+
+        <a href="/netty/downloads" class="menu-title">Downloads</a>
+        
+                <ul class="level1" >
+           <li class="leaf"><a href="/netty/downloads/releases">        Releases
+</a></li>
+           <li class="leaf"><a href="/netty/downloads/nightly-builds">        Nightly Builds
+</a></li>
+           <li class="leaf"><a href="/netty/downloads/previous-releases">        Previous Releases
+</a></li>
+                </ul>
+
+
+    </li>
+    
+
+    <li class="open">
+
+
+        <a href="/netty/documentation" class="menu-title">Documentation</a>
+        
+                <ul class="level1" >
+           <li class="leaf"><a href="/netty/documentation/user-guide">        User Guide
+</a></li>
+           <li class="leaf"><a href="/netty/documentation/examples">        Examples
+</a></li>
+                </ul>
+
+
+    </li>
+    
+
+    <li class="open">
+        
+
+        <a href="/netty/community" class="menu-title">Community</a>
+            
+          
+                <ul class="level1">
+
+            <li class="leaf"><a href="http://www.jboss.org/community/docs/DOC-13205">Wiki</a></li>
+            <li class="leaf"><a href="/netty/community">User Forum</a></li>
+            <li class="leaf"><a href="/netty/community">Mailing Lists</a></li>
+            <li class="leaf"><a href="http://twitter.com/netty_project">Twitter</a></li>
+                
+
+                </ul>
+                
+            
+        
+    </li>
+
+
+    <li class="open">
+
+
+        <a href="https://jira.jboss.org/jira/browse/NETTY" class="menu-title">Issue Tracker</a>
+
+            
+                <ul class="level1 jiralink">
+                
+            <li class="leaf"><a href="https://jira.jboss.org/jira/browse/NETTY">JIRA</a></li>
+                
+
+                </ul>
+            
+
+
+    </li>
+    
+
+    <li class="open">
+
+
+        <a href="http://github.com/netty/" class="menu-title">Source Code</a>
+
+
+
+    </li>
+
+
+    <li id="buildmenu" class="open">
+
+
+        <a href="/netty/build" class="menu-title">Build</a>
+            
+            
+                <ul class="level1">
+                
+            <li class="leaf"><a href="http://hudson.jboss.org/hudson/view/Netty/">Hudson</a></li>
+
+
+                </ul>
+                
+
+
+    </li>
+
+        <li class="" id="search-field">
+            <form action="http://www.google.com/search?" method="get" class="nomargin"><input
+                   value="Search project pages" 
+                   onblur="this.value= (this.value=='') ? 'Search project pages' : this.value" 
+                   onfocus="this.value= (this.value=='Search project pages') ? '' : this.value" name="q" id="q" 
+                   style="width: 146px; height: 14px;" type="text"><input value="jboss.org" name="as_sitesearch" type="hidden"><input
+                   src="http://www.jboss.org/theme/images/common/ico_searcharrow.png" 
+                   value="go" style="width: 16px; height: 16px; margin-top: -6px;" 
+                   type="image" align="middle">
+            </form>
+        </li>
+</ul>
+</div>
+
+         
+<div id="">
+			<p style="padding-bottom: 0px; line-height: 0; margin: 0px; padding-left: 0px; padding-right: 0px; height: 0px; padding-top: 0px"><style type="text/css">h1 { color: #88201b !important; margin-top:0; margin-bottom:0; } h2 { margin-bottom:0; } pre { overflow: visible; width: 100%; padding: 0.7em; }pre, pre *, code, code *, tt, tt *, textarea, .message-text, .message-text * { font-family: "Liberation Mono", "DejaVu Sans Mono", "Consolas", "Monaco", "Courier New", monospace; } cite { padding-left: 1.6em; } .quotebubble { color: #666; font-style: normal; font-size: 9pt; } .proj_briefs strong { font-size: 100%; }</style></p>
+		</div><div style="clear:both;"></div></div></td></tr><tr id="proj-contentwrapper"><td valign="top" style="background-color: #${mainColumnBackgroundColor}; padding-left:30px;padding-right:30px;padding-bottom:2px;" align="left" width="695" class="mainColumn"><div id="proj_main-content"><div class="overhang-white"> &nbsp; </div><div id="commonContent">
+			<div class="proj_callout"><em>The Netty project</em> is an effort to provide <span class="highlight">an asynchronous event-driven network application framework and tools</span> for rapid development of maintainable <a href="/netty/performance.html">high performance &amp; high scalability</a> protocol servers &amp; clients.</div> <div class="text-align: center"><img alt="" src="http://docs.jboss.org/netty/3.2/guide/html/images/architecture.png" /></div>
+		</div><div style="clear:both;"></div><div id="">
+			<p style="text-align: justify">Netty is a NIO client server framework which enables quick and easy development of network applications such as protocol servers and clients. It greatly simplifies and streamlines network programming such as TCP and UDP socket server.</p> <p style="text-align: justify">'Quick and easy' doesn't mean that a resulting application will suffer from a maintainability or a performance issue. Netty has been designed carefully with the experiences earned from the implementation of a lot of protocols such as FTP, SMTP, HTTP, and various binary and text-based legacy protocols. As a result, Netty has succeeded to find a way to achieve ease of development, performance, stability, and flexibility without a compromise.</p>
+		</div><div style="clear:both;"></div><div id="">
+			<h4>
+Status and Road Map</h4>
+<p style="text-align: justify"><!-- <a href="/netty/downloads.html"><strong>3.2.0.CR1</strong> and <strong>3.1.5.GA</strong></a> have been released on 07-May-2010 and 12-Oct-2009 respectively. --> <a href="/netty/downloads.html"><strong>3.2.3.Final</strong></a> has been released on 25-Oct-2010. Please feel free to browse the <a href="/netty/documentation.html">documentation</a>, compare the <a href="/netty/performance.html">performance</a> to other NIO frameworks, read the <a href="/testimonials.html">testimonials</a> from the satisfied, grab a <a href="/netty/downloads.html">download</a>, and join us on our <a href="/netty/community.html">community</a> to open the future of network application development!</p> <p>The complete road map is found in <a href="https://jira.jboss.org/jira/browse/NETTY?report=com.atlassian.jira.plugin.system.project:roadmap-panel">our issue tracking system</a>, and you are always welcome to request and contribute a new feature.</p>
+		</div><div style="clear:both;"></div><div id="">
+			<h4>
+Features</h4>
+<p>Netty was designed and written from scratch to provide the best experience in network application development:</p>  <table cellspacing="0" width="75%" style="clear: both;" class="deftable">      <tbody>          <tr>              <td width="90" class="termFirst">Design</td>              <td class="defFirst"> 	    	<ul>         		<li>Unified API for various transport types - blocking and non-blocking socket</li>         		<li>Based on a flexible and extensible event model which allows clear separation of concerns</li>         		<li>Highly customizable thread model - single thread, one or more thread pools such as <a href="http://en.wikipedia.org/wiki/Staged_event-driven_architecture">SEDA</a></li>         		<li>True connectionless datagram socket support (since 3.1)</li>     		</ul> 	     </td>          </tr>          <tr>              <td class="term">Ease of use</td>              <td class="def"> 		<ul>         		<li>Well-documented Javadoc, user guide and examples</li>         		<li>No more big fat monolithic core which has unnecessary features</li>         		<li>No additional dependencies but JDK 1.5 (or above)</li>     		</ul>              </td>          </tr>          <tr>              <td class="term">Performance</td>              <td class="def">     		<ul>         		<li>Better throughput, lower latency</li>         		<li>Less resource consumption</li>         		<li>Minimized unnecessary memory copy</li>     		</ul>              </td>          </tr>          <tr>              <td class="term">Robustness</td>              <td class="def">     		<ul>         		<li>No more <tt>OutOfMemoryError</tt> due to fast, slow or overloaded connection.</li>         		<li>No more unfair read / write ratio often found in a NIO application under high speed network</li>         		<li>Tested against various JDK versions and operating systems (see the <a href="http://hudson.jboss.org/hudson/view/Netty/">live report</a>)</li>     		</ul>              </td>          </tr>          <tr>              <td class="term">Security</td>              <td class="def">     		<ul>         		<li>Complete SSL/TLS and StartTLS support</li>         		<li>Runs OK in a restricted environment such as Applet and <a href="http://www.android.com/">Google Android</a></li>     		</ul>              </td>          </tr>          <tr>              <td class="term">Community</td>              <td class="def">     		<ul>         		<li>Release early, release often</li>         		<li>The author has been writing similar frameworks since 2003 and he still finds <a href="/netty/community.html">your feed back</a> precious!</li>     		</ul>              </td>          </tr>      </tbody>  </table>
+		</div><div style="clear:both;"></div></div></td><td valign="top" style="background-color: #${rightColumnBackgroundColor};padding-left:20px;padding-right:20px;padding-bottom:2px;" align="left" width="250" class="rightColumn"><div id="proj_sub-content"><div class="overhang-grey"> &nbsp; </div><div  id="proj_quick-start"  >
+<h3>Quick Links</h3><ul><li><a href="http://www.jboss.org:80/netty.html">Overview</a></li><li><a href="http://www.jboss.org:80/netty/downloads.html">Downloads</a></li><li><a href="http://www.jboss.org:80/netty/testimonials.html">Testimonials</a></li><li><a href="http://www.jboss.org:80/netty/performance.html">Performance</a></li><li><a href="http://www.jboss.org:80/netty/documentation.html">Documentation</a></li><li><a href="http://jira.jboss.org/jira/browse/NETTY">Issue Tracker</a></li><li><a href="http://www.jboss.org:80/netty/community.html">Community</a></li><li><a href="http://www.jboss.org:80/netty/related-projects.html">Related Projects</a></li></ul></div>
+<div id="">
+			<h3 style="padding-left: 10px; letter-spacing: -0.01em; color: #515151; font-size: 20px">Testimonial</h3> <div id="proj_quote"> <div class="quotebubble"><q style="line-height: 1.5em; font-size: 90%">Netty proved instrumental in the architecture of a replacement of an existing high-speed server that parses and caches live streaming quotes. Under stress tests, the new server could parse and store in excess of 260,000 quotes/sec, a figure not remotely possible with blocking I/O. Netty's well-documented API, excellent examples and first-class support made development a pleasure and unlocked the power of Java NIO. It is, hands-down, my first choice for a networking library.</q></div> </div> <div id="proj_cite"><cite><strong>Greg Haines</strong> Ned Davis Research, Inc. <div style="text-align: right; margin-top: 0.3em"><a href="/netty/testimonials.html">(Read more...)</a></div> </cite></div>
+		</div><div style="clear:both;"></div><div id="">
+			<div id="twitter" style="width:210px;"> <p><a href="http://twitter.com/netty_project"> Twitter </a></p> </div>
+		</div><div style="clear:both;"></div>
+				<div style="margin-left:4px;"><script type="text/javascript" src="http://www.ohloh.net/p/16267/widgets/project_thin_badge.js"></script></div>
+				<div style="clear:both;"><br/></div><div id="badges"><ul><li class="license-asl"><a href="http://www.apache.org/licenses/LICENSE-2.0"><em>Apache License, Version 2.0</em></a></li></ul><div style="clear: both; height:1px;"> </div></div><br/></div></td></tr><tr><td colspan="2"><div id="two-col-corners"/></td></tr><tr><td align="left" width="945" colspan="2">
+         
+
+<div id="projsubnav_footer" class="clearfix" >
+<ul class="" >
+
+
+    <li class="open">
+
+
+        <a href="/netty" class="menu-title">Overview</a>
+            
+                <ul class="level1" >
+           <li class="leaf"><a href="/netty/performance">        Performance
+</a></li>
+           <li class="leaf"><a href="/netty/testimonials">        Testimonials
+</a></li>
+           <li class="leaf"><a href="/netty/related-projects">        Related Projects
+</a></li>
+                </ul>
+
+
+    </li>
+
+
+    <li class="open">
+
+
+        <a href="/netty/downloads" class="menu-title">Downloads</a>
+        
+                <ul class="level1" >
+           <li class="leaf"><a href="/netty/downloads/releases">        Releases
+</a></li>
+           <li class="leaf"><a href="/netty/downloads/nightly-builds">        Nightly Builds
+</a></li>
+           <li class="leaf"><a href="/netty/downloads/previous-releases">        Previous Releases
+</a></li>
+                </ul>
+
+
+    </li>
+    
+
+    <li class="open">
+
+
+        <a href="/netty/documentation" class="menu-title">Documentation</a>
+        
+                <ul class="level1" >
+           <li class="leaf"><a href="/netty/documentation/user-guide">        User Guide
+</a></li>
+           <li class="leaf"><a href="/netty/documentation/examples">        Examples
+</a></li>
+                </ul>
+
+
+    </li>
+    
+
+    <li class="open">
+        
+
+        <a href="/netty/community" class="menu-title">Community</a>
+            
+          
+                <ul class="level1">
+
+            <li class="leaf"><a href="http://www.jboss.org/community/docs/DOC-13205">Wiki</a></li>
+            <li class="leaf"><a href="/netty/community">User Forum</a></li>
+            <li class="leaf"><a href="/netty/community">Mailing Lists</a></li>
+            <li class="leaf"><a href="http://twitter.com/netty_project">Twitter</a></li>
+                
+
+                </ul>
+                
+            
+        
+    </li>
+
+
+    <li class="open">
+
+
+        <a href="https://jira.jboss.org/jira/browse/NETTY" class="menu-title">Issue Tracker</a>
+
+            
+                <ul class="level1 jiralink">
+                
+            <li class="leaf"><a href="https://jira.jboss.org/jira/browse/NETTY">JIRA</a></li>
+                
+
+                </ul>
+            
+
+
+    </li>
+    
+
+    <li class="open">
+
+
+        <a href="http://github.com/netty/" class="menu-title">Source Code</a>
+
+
+
+    </li>
+
+
+    <li id="buildmenu" class="open">
+
+
+        <a href="/netty/build" class="menu-title">Build</a>
+            
+            
+                <ul class="level1">
+                
+            <li class="leaf"><a href="http://hudson.jboss.org/hudson/view/Netty/">Hudson</a></li>
+
+
+                </ul>
+                
+
+
+    </li>
+
+</ul>
+</div>
+
+         
+
+				<!-- Start of Google Analytics Code -->
+<script type="text/javascript"> 
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script> 
+<script type="text/javascript"> 
+var pageTracker = _gat._getTracker('UA-95307-3');
+pageTracker._trackPageview();
+</script>
+<!-- End of Google Analytics Code -->
+<!-- Start of StatCounter Code -->
+<script type="text/javascript">
+var sc_project=5428017; 
+var sc_invisible=1; 
+var sc_partition=47; 
+var sc_click_stat=1; 
+var sc_security="c005ec6e"; 
+</script>
+<script type="text/javascript"
+src="http://www.statcounter.com/counter/counter.js"></script><noscript><div
+class="statcounter"><a title="blogger web statistics"
+href="http://www.statcounter.com/blogger/"
+target="_blank"><img class="statcounter"
+src="http://c.statcounter.com/5428017/0/c005ec6e/1/"
+alt="blogger web statistics" ></a></div></noscript>
+<!-- End of StatCounter Code -->
+				<div style="clear:both;"></div></td></tr></table></div><div class="footer">
+  <p>
+    <a href="http://www.jboss.org/about.html">About Us</a>   |   
+    <a href="http://www.jboss.org/contact.html">Contact Us</a>   |   
+    <a href="http://www.redhat.com/about/careers">Careers</a>   |   
+    <a href="http://www.jboss.com/">JBoss Enterprise</a>   |   
+    <a href="http://www.redhat.com/">Red Hat</a>  
+  </p>
+  <p>Powered by 
+    <a href="http://www.magnolia-cms.com">Magnolia</a>,  
+    <a href="http://www.jivesoftware.com/poweredby/">SBS</a>,  
+    <a href="http://www.jboss.com/products/platforms/application">JBoss EAP</a>, and 
+    <a href="http://www.redhat.com/rhel/">RHEL</a>.
+  </p>
+</div></div></div>
+
+<!-- SiteCatalyst code version: H.21.
+Copyright 1996-2010 Adobe, Inc. All Rights Reserved
+More info available at http://www.omniture.com -->
+<div id="oTags">
+<!-- // **************************** CHANGE PAT BELOW TO YOUR SERVERS PATH -->
+<script type="text/javascript" src="http://www.redhat.com/j/s_code.js"></script>
+
+<script><!--
+/* You may give each page an identifying name, server, and channel on
+the next lines. */
+/* E-commerce Variables */
+
+/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+var s_code=s.t();if(s_code)document.write(s_code)//--></script>
+
+<script language="JavaScript" type="text/javascript"><!--
+if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')
+
+//--></script><noscript><a href="http://www.omniture.com" title="Web
+Analytics"><img src="https://smtrcs.redhat.com/b/ss/redhatjbossorg/1/H.21--NS/0?[AQB]&cdp=3&[AQE]"
+height="1" width="1" border="0" alt="" /></a></noscript>
+
+<!--/DO NOT REMOVE/-->
+</div>
+
+<!-- End SiteCatalyst code version: H.21. -->
+
+<script src="https://inquiries.redhat.com/wt/m2lwst.js" id="m2lwst"/><script language="javascript">
+_m2lTracker.tenantId ='108';
+_m2lTracker.tenantCode ='redhat';
+_m2lTracker.category['1']='jboss.org';
+_m2lTracker.track();
+</script>
+
+<!-- Google Analytics part -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-10656779-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body></html>
