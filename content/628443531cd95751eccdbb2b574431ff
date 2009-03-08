@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /~plonka/fincore</title>
+ </head>
+ <body>
+<h1>Index of /~plonka/fincore</h1>
+<table><tr><th><img src="/icons/blank.gif" alt="[ICO]"></th><th><a href="?C=N;O=D">Name</a></th><th><a href="?C=M;O=A">Last modified</a></th><th><a href="?C=S;O=A">Size</a></th><th><a href="?C=D;O=A">Description</a></th></tr><tr><th colspan="5"><hr></th></tr>
+<tr><td valign="top"><img src="/icons/back.gif" alt="[DIR]"></td><td><a href="/~plonka/">Parent Directory</a></td><td>&nbsp;</td><td align="right">  - </td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="COPYING">COPYING</a></td><td align="right">17-Dec-1996 14:59  </td><td align="right"> 18K</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="fincore">fincore</a></td><td align="right">23-May-2007 16:18  </td><td align="right">8.3K</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="fincore_pod.html">fincore_pod.html</a></td><td align="right">23-May-2007 16:19  </td><td align="right">4.2K</td></tr>
+<tr><th colspan="5"><hr></th></tr>
+</table>
+<p>
+<kbd>fincore</kbd> is
+a command that shows which pages (blocks) of a file are in core
+memory.<br>
+It is particularly useful for determining the contents of the buffer-cache.<br>
+The name means "File IN CORE" and I pronounce it "eff in core".
+</p>
+
+Here is some sample output:
+<blockquote>
+<pre>
+$ fincore foo.rrd
+foo.rrd: no incore pages.
+
+$ cat foo.rrd >/dev/null # read the whole file
+$ fincore foo.rrd
+foo.rrd: 26 incore pages: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
+
+$ ls |grep '\.rrd$' |~/perl/fincore --stdin --justsummarize
+page size: 4096 bytes
+2214049 pages, 8.4 Gbytes in core for 268994 files; 8.23 pages, 32.9 kbytes per file.
+</pre>
+</blockquote>
+
+And the usage information:
+<blockquote>
+<pre>
+Usage:
+    fincore [options] <-stdin | file [...]>
+
+     Options:
+      -help - brief help message
+      -man - full documentation
+      -summary - report summary statistics for the files
+      -justsummarize - just report summary statistics for the files
+      -stdin - read file names from standard input
+</pre>
+</blockquote>
+
+<p>
+
+<hr>
+
+The fincore command was introduced in the paper, <b>"Application Buffer-Cache Management for Performance: Running the World's Largest MRTG"</b>, that appears
+in the proceedings of the <a href="http://www.usenix.org/event/lisa07/tech/">LISA 2007</a> conference in Dallas, November, 2007.<br>
+It is available online here:
+<br>
+<kbd><a href="http://www.usenix.org/events/lisa07/tech/plonka.html">http://www.usenix.org/events/lisa07/tech/plonka.html</a></kbd>
+
+<p>
+
+You may also be interested in the related
+<a href="../fadvise/"><kbd>fadvise</kbd></a> command.
+
+<hr>
+Dave Plonka, May 21 2007
+</body></html>
