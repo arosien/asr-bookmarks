@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>ROCR: Classifier Visualization in R</title>
+  <meta content="Tobias Sing" name="author">
+</head>
+<body>
+<div style="text-align: center;"><img alt="" src="ROCR_small.png"
+ style="width: 236px; height: 84px;" align="middle">&nbsp; &nbsp;&nbsp;
+<font size="+2"><span style="font-family: helvetica,arial,sans-serif;"><br>
+</span></font><font size="+2"><span
+ style="font-family: helvetica,arial,sans-serif;"><span
+ style="font-family: courier new,courier,monospace;">prediction -
+performance - plot<br>
+<br>
+</span></span></font><font size="+2"><span
+ style="font-family: helvetica,arial,sans-serif;">[visualizing
+classifier performance in R, with only 3 commands]<br>
+<span style="font-family: courier new,courier,monospace;"></span></span></font><br>
+<hr style="width: 100%; height: 2px;"><span style="font-weight: bold;">
+</span>
+<table style="text-align: left; width: 100%;" border="0"
+ cellspacing="20" cellpadding="2">
+  <tbody>
+    <tr>
+      <td colspan="2" rowspan="1"
+ style="vertical-align: top; width: 50%; text-align: center;"><img
+ alt="Demo plot" src="ourplot_website.gif"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><span
+ style="font-weight: bold;">Performance
+measures that ROCR knows:</span><span style="font-style: italic;"></span><br>
+      <span style="font-style: italic;"></span><br>
+      <span style="font-style: italic;">Accuracy, error rate, true
+positive rate,
+false positive rate, true negative rate, false negative rate,
+sensitivity, specificity, recall, positive predictive value, negative
+predictive value, precision, fallout, miss, phi correlation
+coefficient, Matthews correlation coefficient, mutual information, chi
+square statistic, odds ratio, lift value, precision/recall F measure,
+ROC convex hull, area under the ROC curve, precision/recall break-even
+point, calibration error, mean cross-entropy, root mean squared error,
+SAR measure, expected cost, explicit cost.</span></td>
+      <td style="vertical-align: top; text-align: left;"><span
+ style="font-weight: bold;">ROCR
+features:</span><br>
+      <span style="font-style: italic;"><br>
+ROC curves, precision/recall plots, lift
+charts, cost curves, custom curves by freely selecting one performance
+measure for the x axis and one for the y axis, handling of data from
+cross-validation or bootstrapping, curve averaging (vertically,
+horizontally, or by threshold), standard error bars, box plots, curves
+that are color-coded by cutoff, printing threshold values on the curve,
+tight integration with Rs plotting facilities (making it easy to adjust
+plots or to combine multiple plots), fully customizable, easy to use
+(only 3 commands).</span></td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<hr style="width: 100%; height: 2px;"><br>
+</div>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+  <td 
+ style="width: 10%; vertical-align: top; font-family: helvetica,arial,sans-serif;"> 
+      <h4>Examples</h4> 
+      </td> 
+      <td style="width: 40%; vertical-align: top;"> 
+      <ul> 
+        <li>Using
+ROCR's 3 commands to produce a simple ROC plot:<br>
+pred &lt;- prediction(predictions, labels)<br>
+perf &lt;- performance(pred, measure = "tpr", x.measure =
+"fpr") <br>
+plot(perf, col=rainbow(10))</li>
+        <li><a href="rocr_gallery.html">Gallery</a><br>
+        </li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="width: 10%; vertical-align: top; font-family: helvetica,arial,sans-serif;">
+      <h4>About</h4>
+      </td>
+      <td style="width: 40%; vertical-align: top;">
+      <ul>
+        <li>ROCR (with obvious
+pronounciation) is an <a href="http://www.r-project.org/">R</a>
+package
+for evaluating and visualizing classifier performance. It is...<br>
+          <span style="font-style: italic;"></span></li>
+        <li><span style="font-style: italic;">...easy to use:</span>
+adds only three new commands to R.</li>
+        <li><span style="font-style: italic;">...flexible:</span>
+integrates tightly with R's built-in graphics facilities.</li>
+        <li><span style="font-style: italic;">...powerful:</span>
+Currently, 28 performance measures are implemented, which can be freely
+combined to form parametric curves such as ROC curves, precision/recall
+curves, or lift curves. Many options such as curve averaging (for
+cross-validation or bootstrap), augmenting the averaged curves by
+standard error bar or boxplots, labeling cutoffs to the curve, or
+coloring curves according to cutoff.</li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; font-family: helvetica,arial,sans-serif;">
+      <h4>ROCRs</h4>
+      </td>
+      <td style="vertical-align: top;">
+      <ul>
+        <li><a href="http://www.tobiassing.net">Tobias Sing</a>, <a
+ href="http://www.mpi-sb.mpg.de/%7Eosander">Oliver Sander</a>, <a
+ href="http://www.mpi-sb.mpg.de/%7Eniko">Niko Beerenwinkel</a>, <a
+ href="http://www.mpi-sb.mpg.de/%7Elengauer">Thomas Lengauer</a></li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <h4><span style="font-family: helvetica,arial,sans-serif;">Citing<br>
+      </span></h4>
+      </td>
+      <td style="vertical-align: top;">
+      <ul>
+        <li><b> We have invested a lot of time and effort into this package. You can give us something back by citing the following paper:</b><br>
+Tobias Sing, Oliver Sander, Niko Beerenwinkel, Thomas Lengauer.<br>ROCR: visualizing classifier performance in R.<br><i>Bioinformatics</i> 21(20):3940-3941 (2005). &nbsp;<br>
+<a href="http://bioinformatics.oxfordjournals.org/cgi/content/abstract/21/20/3940">Paper at Bioinformatics</a>
+</li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; font-family: helvetica,arial,sans-serif;">
+      <h4>Download</h4>
+      </td>
+      <td style="vertical-align: top;">
+      <ul>
+        <li>Package source (use this for
+Linux / Solaris): <a href="ROCR_1.0-2.tar.gz">ROCR_1.0.2.tar.gz</a></li>
+        <li>Windows binary: <a href="ROCR_1.0-2.zip">ROCR_1.0-2.zip</a></li>
+	<li>MacOS X binary: <a href="ROCR_1.0-2.tgz">ROCR_1.0-2.tgz</a></li>
+        <li>Note: ROCR is also available from <a
+ href="http://cran.r-project.org">CRAN</a>, the Comprehensive R Archive
+Network.<br>
+        </li>
+      </ul>
+      <span style="font-style: italic;"></span> </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <h4><span style="font-family: helvetica,arial,sans-serif;">Installation</span></h4>
+      </td>
+      <td style="vertical-align: top;">
+      <ul>
+        <li>Linux: Simply type <span
+ style="font-family: courier new,courier,monospace;">"R CMD INSTALL
+ROCR_1.0-1.tar.gz".</span></li>
+        <li><span style="font-family: courier new,courier,monospace;"><span
+ style="font-family: times new roman,times,serif;">Windows:</span> </span>From
+the pull-down menu, click on <span
+ style="font-family: courier new,courier,monospace;">"Packages-&gt;Install
+Packages from local zip file"</span>, and then select the downloaded
+file ROCR_1.0-1.zip</li>
+        <li>Note that you need to have R installed on your computer. It
+is freely available on <a href="http://www.r-project.org">http://www.r-project.org</a>.
+If for some reason you should have problems installing the package, the
+manual "<a href="http://cran.r-project.org/doc/manuals/R-admin.pdf">R
+Installation and Administration</a>" might be helpful. You will also
+need <span style="font-style: italic;">gplots</span> from the R
+package bundle <em>gregmisc (</em>available from the <a
+ href="http://cran.r-project.org">Comprehensive R Archive
+Network</a>).<br>
+        </li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; font-family: helvetica,arial,sans-serif;">
+      <h4>Getting started</h4>
+      </td>
+      <td style="vertical-align: top;">
+      <ul>
+        <li>Loading ROCR: <span
+ style="font-family: courier new,courier,monospace;">library(ROCR)</span>
+(from within R).</li>
+        <li>Short demo: <span
+ style="font-family: courier new,courier,monospace;">demo(ROCR)</span>
+(after loading).</li>
+        <li>List of available help pages: <span
+ style="font-family: courier new,courier,monospace;">help(package=ROCR)</span>.</li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; font-family: helvetica,arial,sans-serif;">
+      <h4>Documentation</h4>
+      </td>
+      <td style="vertical-align: top;">
+      <ul>
+        <li>Reference Manual [<a href="ROCR.pdf">PDF</a>]</li>
+        <li>Slide deck for a tutorial talk (feel free to re-use for teaching, but please give appropriate credits and write us an email) [<a href="ROCR_Talk_Tobias_Sing.ppt">PPT</a>]</li>
+      </ul>
+   <ul> 
+        <li>A few <a href="evaluation_literature.html">pointers</a> to 
+the literature on classifier evaluation<br> 
+        </li> 
+      </ul> 
+
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; font-family: helvetica,arial,sans-serif;">
+      <h4>Studies using and citing ROCR (please notify us of any others!)</h4>
+      </td>
+      <td style="vertical-align: top;">
+      <ul>
+<li>CH Lemon, DV Smith (2006) <i>The Journal of Neuroscience</i>: Influence of response variability on the coding performance of central gustatory neurons.</li>
+<li>S Hartley, R Harris, PJ Lester (2006) <i>Ecology Letters</i>: Quantifying uncertainty in the potential distribution of an invasive species: climate and the Argentine ant.</li>
+<li>SJ Li, BS Liu, Zeng R, et al (2006) <i>Computational Biology and Chemistry</i>: Predicting O-glycosylation sites in mammalian proteins by using SVMs</li>
+<li>K Roomp, N Beerenwinkel, T Sing, et al (2006) <i>Springer Lecture Notes in Computer Science 4075</i>: Arevir: A secure platform for designing personalized antiretroviral therapies against HIV</li>
+        <li>I Antes, SWI Siu, T Lengauer (2006) <i>Bioinformatics</i>: DynaPred: A structure and sequence based method for the prediction of MHC class I binding peptide</li>
+	      <li>X Guo, R Liu, CD Shriver et al (2006) <i>Bioinformatics</i>: Assessing semantic similarity measures for the characterization of human regulatory pathways</li> 
+<li>N Beerenwinkel, T Sing, T Lengauer et al (2005) <i>Bioinformatics</i>: Computational methods for the design of effective therapies against drug resistant HIV strains</li> 
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; font-family: helvetica,arial,sans-serif;">
+      <h4>Software by other groups which has components for classifier
+evaluation<br>
+      </h4>
+      </td>
+      <td style="vertical-align: top;">
+      <ul>
+        <li><a href="http://www.r-project.org/">BioConductor</a> has a
+ROC package.</li>
+        <li><a href="http://www.cs.waikator.ac.nz/%7Eml/">Weka</a> has
+an evaluation package, with a couple of performance measures.</li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <h4><span style="font-family: helvetica,arial,sans-serif;">Contact</span></h4>
+      </td>
+      <td style="vertical-align: top;">
+      <ul>
+        <li>Just send a mail to <a
+ href="mailto:tobias.sing@mpi-sb.mpg.de">Tobias Sing</a> or <a
+ href="mailto:osander@mpi-sb.mpg.de">Oliver Sander</a>. Questions,
+comments, and suggestions are very welcome. We are also interested in
+seeing how ROCR is used in publications. Thus, if you have prepared a
+paper using ROCR we'd be happy to know. <br>
+        </li>
+      </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
