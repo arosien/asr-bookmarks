@@ -1,0 +1,609 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<head profile="http://gmpg.org/xfn/11">
+	<title>peeping into memcached &laquo; snax</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" href="http://s.wordpress.com/blank.css" type="text/css" media="screen" />
+	<link rel="pingback" href="http://blog.evanweaver.com/xmlrpc.php" />
+				<script src='http://wordpress.com/remote-login.php?action=js&amp;host=blog.evanweaver.com&amp;id=18067431&amp;t=1292617504&amp;back=blog.evanweaver.com%2F2009%2F04%2F20%2Fpeeping-into-memcached%2F' type="text/javascript"></script>
+		<script type="text/javascript">
+		/* <![CDATA[ */
+			if ( 'function' === typeof WPRemoteLogin ) {
+				document.cookie = "wordpress_test_cookie=test; path=/";
+				if ( document.cookie.match( /(;|^)\s*wordpress_test_cookie\=/ ) ) {
+					WPRemoteLogin();
+				}
+			}
+		/* ]]> */
+		</script>
+		<link rel="alternate" type="application/rss+xml" title="snax &raquo; Feed" href="http://blog.evanweaver.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="snax &raquo; Comments Feed" href="http://blog.evanweaver.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="snax &raquo; peeping into&nbsp;memcached Comments Feed" href="http://blog.evanweaver.com/2009/04/20/peeping-into-memcached/feed/" />
+<script type="text/javascript">
+/* <![CDATA[ */
+function addLoadEvent(func){var oldonload=window.onload;if(typeof window.onload!='function'){window.onload=func;}else{window.onload=function(){oldonload();func();}}}
+/* ]]> */
+</script>
+<link rel="stylesheet" href="http://s0.wp.com/wp-content/themes/h4/global.css?m=1291749258g" type="text/css" />
+<script type='text/javascript' src='http://s2.wp.com/wp-includes/js/l10n.js?m=1290133841g&amp;ver=20101110'></script>
+<script type='text/javascript' src='http://s1.wp.com/wp-includes/js/jquery/jquery.js?m=1290133841g&amp;ver=1.4.4'></script>
+<script type='text/javascript' src='http://s0.wp.com/wp-includes/js/comment-reply.js?m=1244646335g&amp;ver=20090102'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://evanweaver.wordpress.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://evanweaver.wordpress.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='index' title='snax' href='http://blog.evanweaver.com/' />
+<link rel='prev' title='ruby gc&nbsp;tuning' href='http://blog.evanweaver.com/2009/04/09/ruby-gc-tuning/' />
+<link rel='next' title='distributed systems&nbsp;primer' href='http://blog.evanweaver.com/2009/05/04/distributed-systems-primer/' />
+<meta name="generator" content="WordPress.com" />
+<link rel='canonical' href='http://blog.evanweaver.com/2009/04/20/peeping-into-memcached/' />
+<link rel='shortlink' href='http://wp.me/p1dOab-1M' />
+<link rel="shortcut icon" type="image/x-icon" href="http://s1.wp.com/i/favicon-stacked.ico?m=1284002170g" sizes="16x16 24x24 32x32 48x48" />
+<link rel="icon" type="image/x-icon" href="http://s1.wp.com/i/favicon-stacked.ico?m=1284002170g" sizes="16x16 24x24 32x32 48x48" />
+<link rel="apple-touch-icon" href="http://s0.wp.com/wp-content/themes/h4/i/webclip.png?m=1250548519g" />
+	<style type="text/css">
+	/* <![CDATA[ */
+				div#likes { margin-top: 15px; }
+		.like-button { border: 1px solid #eee; padding: 2px 6px; font-size: 13px; font-family: arial, tahoma, sans-serif; }
+		#wpl-likebox { clear: left; font-size: 11px; font-family: arial, tahoma, verdana, sans-serif !important; min-height: 30px; margin: 10px 0 !important; padding: 5px 0 10px 0 !important; }
+		#wpl-button { float: left; background: url( /i/buttonbg.png ) top left repeat-x; margin-right: 7px; border: 1px solid #d4d4d4; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
+		#wpl-button a { color: #666 !important; line-height: 130% !important; text-decoration: none !important; outline: none; float: left; padding: 3px 6px 2px 24px !important; font-size: 11px !important; background: url( /i/likestar.png ) 6px 49.8% no-repeat; }
+		#wpl-button.liked { background: #feffce; border: 1px solid #f3e389; }
+		#wpl-button.liked a { color: #ba871b !important; }
+		#wpl-likebox #wpl-count { min-height: 25px; line-height: 130% !important; float: left; padding-top: 4px; }
+		#wpl-likebox #wpl-avatars { clear: left; max-height: 98px; overflow: hidden; margin-top: 15px; line-height: 130% !important; }
+		#wpl-likebox #wpl-avatars img { border: none !important; }
+		#wpl-likebox #wpl-mustlogin { line-height: 14px !important; font-size: 11px; clear: left; margin-top: 5px; background: #f0f0f0; padding: 10px; width: 65%; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
+		#wpl-likebox #wpl-mustlogin a { color: #888; text-decoration: underline; }
+		#wpl-likebox #wpl-mustlogin p { margin: 5px 0; padding: 0 }
+		#wpl-likebox #wpl-mustlogin input.input { padding: 2px; background: #fff; font-size: 11px; font-family: inherit; border: 1px solid #ccc; -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1) inset; -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1) inset; line-height: 12px; }
+		#wpl-likebox #wpl-mustlogin input#wp-submit { border: 1px solid #ccc; font-size: 11px; background: #fafafa; repeat-x; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; padding: 2px 4px !important; line-height: 12px; }
+		#wpl-likebox #wpl-mustlogin label { position: relative; cursor: text; }
+		#wpl-likebox #wpl-mustlogin label span { position: absolute; top: 0px; left: 5px; padding: 0 !important; }
+		#wpl-likebox #wpl-mustlogin label span { top /*\**/: -10px\9; }
+	/* ]]> */
+	</style>
+	<link rel='openid.server' href='http://evanweaver.wordpress.com/?openidserver=1' />
+<link rel='openid.delegate' href='http://evanweaver.wordpress.com/' />
+<link rel="search" type="application/opensearchdescription+xml" href="http://blog.evanweaver.com/osd.xml" title="snax" />
+<link rel="search" type="application/opensearchdescription+xml" href="http://wordpress.com/opensearch.xml" title="WordPress.com" />
+<meta name="application-name" content="snax" /><meta name="msapplication-window" content="width=device-width;height=device-height" /><meta name="msapplication-tooltip" content="on software" /><meta name="msapplication-task" content="name=Subscribe;action-uri=http://blog.evanweaver.com/feed/;icon-uri=http://s1.wp.com/i/favicon-stacked.ico" /><meta name="msapplication-task" content="name=Sign up for a free blog;action-uri=http://wordpress.com/signup/;icon-uri=http://s2.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=WordPress.com Support;action-uri=http://support.wordpress.com/;icon-uri=http://s2.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=WordPress.com Forums;action-uri=http://forums.wordpress.com/;icon-uri=http://s2.wp.com/i/favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="http://blog.evanweaver.com?custom-css=1&#038;csblog=1dOab&#038;cscache=5&#038;csrev=95" />
+</head>
+
+<body class="wordpress y2010 m12 d17 h12 single postid-110 s-y2009 s-m04 s-d19 s-h16 s-category-uncategorized s-author-evanweaver">
+
+<div id="wrapper" class="hfeed">
+
+	<div id="header">
+		<h1 id="blog-title"><span><a href="http://blog.evanweaver.com/" title="snax" rel="home">snax</a></span></h1>
+		<div id="blog-description">on software</div>
+	</div><!--  #header -->
+
+	<div id="access">
+		<div class="skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+		<div id="menu"><ul><li class="page_item page-item-2"><a href="http://blog.evanweaver.com/about/" title="about">about</a></li><li class="page_item page-item-461"><a href="http://blog.evanweaver.com/resume/" title="resume">resume</a></li></ul></div>
+	</div><!-- #access -->
+
+	<div id="container">
+		<div id="content">
+
+
+			<div id="nav-above" class="navigation">
+				<div class="nav-previous"><a href="http://blog.evanweaver.com/2009/04/09/ruby-gc-tuning/" rel="prev"><span class="meta-nav">&laquo;</span> ruby gc&nbsp;tuning</a></div>
+				<div class="nav-next"><a href="http://blog.evanweaver.com/2009/05/04/distributed-systems-primer/" rel="next">distributed systems&nbsp;primer <span class="meta-nav">&raquo;</span></a></div>
+			</div>
+
+			<div id="post-110" class="hentry p1 post publish author-evan category-uncategorized untagged y2009 m04 d19 h16">
+				<h2 class="entry-title">peeping into&nbsp;memcached</h2>
+				<div class="entry-content">
+<p><a href="http://code.google.com/p/memcached/">Memcached</a> is generally treated as a black box. But what if you really need to know what&#8217;s in there? Not for runtime purposes, but for optimization and capacity planning?</p>
+<h2>demo</h2>
+<pre>
+$ sudo peep --pretty 2479
+
+time | exptime | nbytes | clsid |                 key | exprd | flushd
+8658 |  613458 |    272 |     5 |      "c3RhdH:171:5" | false |  false
+8658 |       0 |      6 |     1 |  "current_c3RhdH:3" | false |  false
+8658 |  613458 |    281 |     5 |     "c3RhdH:171:26" | false |  false
+8678 |   95078 |      6 |     1 |  "User:1:auth:m4Uq" | false |  false
+8658 |       0 |      8 |     2 |   "user_dGltZWxp:4" | false |  false
+8686 |  613486 |   1278 |     9 |          "User:1:6" | false |  false
+8658 |  613458 |   1286 |     9 |          "User:1:4" | false |  false
+...
+8658 |  613458 |    283 |     5 |     "c3RhdH:171:28" | false |  false
+8658 |  613458 |    277 |     5 |     "c3RhdH:171:30" | false |  false
+</pre>
+<p>Peep uses <code>ptrace</code> to freeze a running memcached server, dump the internal key metadata, and return the server to a running state. If you have a good host ejection mechanism in your client, such as in the Twitter <a href="http://blog.evanweaver.com/articles/2009/01/24/secret-codes/">libmemcached builds</a>, you won&#8217;t even have to change the production server pool. The instance is not restarted, and no data is lost.</p>
+<p>Installation instructions are <a href="http://evanweaver.files.wordpress.com/2010/12/doc/fauna/peep/files/README.html">here</a>. Requires Linux.</p>
+<h2>a note about heap management</h2>
+<p>Memcached has two separate memory management strategies:</p>
+<ul>
+<li>On read, if a key is past its expiry time, return <code>NOT FOUND</code>.</li>
+<li>On write, choose an appropriate slab class for the value; if it&#8217;s full, replace the oldest-used (read or written) key with the new one.</li>
+</ul>
+<p>Note that the second strategy, LRU eviction, does not check the expiry time at all. This makes eviction an O(1) operation, because the tail of the LRU linked list is immediately available; checking within that list for evicted keys first would raise the order to O(N). This optimization has subtle implications.</p>
+<h2>the problem</h2>
+<p>In the bad old days, we added a page cache to Twitter via memcached. We used a generational key scheme: a piece of user metadata was incremented on every change, and used to construct dependent keys. This eliminated direct invalidation concerns.</p>
+<p>However, because of the orthogonal expiry and LRU strategies, we knew that the generational keys were affecting our evictions of direct keys. The continual massive onslaught of new generational keys would sweep out older direct keys, even when the generational keys were expired, but the direct keys were fresh.</p>
+<p>But how could we prove it was happening? Eventually we ran peep on a representative server. Aggregate results showed that 75% of our cache pool was spent on expired page caches, and our cache horizon was only 5 hours. Moving the generational keys to a separate pool raised our cache horizon to two days, a 10x improvement.</p>
+<h2>aggregating results</h2>
+<p>The best way to aggregate peep results is to use MySQL&#8217;s excellent grouping abilities. Run peep with the <code>--ugly</code> (unformatted) switch, and pipe it to a file. Then you can load it into an approprate MySQL schema:</p>
+<pre>
+CREATE TABLE entries (
+  lru_time int(11) default NULL,
+  expires_at_time int(11) default NULL,
+  value_size int(11) default NULL,
+  suffix_size int(11) default NULL,
+  it_flag varchar(255) default NULL,
+  class_id int(11) default NULL,
+  key_size int(11) default NULL,
+  key_name varchar(255) default NULL,
+  is_expired varchar(255) default NULL,
+  is_flushed varchar(255) default NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE '/tmp/peep.txt' INTO TABLE entries
+  FIELDS TERMINATED BY ' | ' LINES TERMINATED BY '\n';
+</pre>
+<p>This will load very fast, even for millions of keys on a laptop;  <code>LOAD LOCAL INFILE</code> is an optimized pipeline.</p>
+<p>Here are some handy queries for revealing cache properties:</p>
+<p><strong>fresh vs. expired values, by count and size</strong></p>
+<pre>
+SELECT
+  is_expired,
+  COUNT(*),
+  SUM(value_size)
+FROM entries
+GROUP BY is_expired;
+
++------------+----------+-----------------+
+| is_expired | COUNT(*) | SUM(value_size) |
++------------+----------+-----------------+
+|  false     |   688883 |       759401296 |
+|  true      |   472755 |      2430092660 |
++------------+----------+-----------------+
+</pre>
+<p><strong>histogram of values by size</strong></p>
+<pre>
+SELECT
+  ROUND(ROUND(LOG10(value_size) * 5, 0) / 5, 1) AS log,
+  ROUND(AVG(value_size), 0) AS size,
+  COUNT(*),
+  RPAD('', COUNT(*) / 6500, '*') AS bar
+FROM entries
+GROUP BY log
+ORDER BY log DESC;
+
++------+--------+----------+----------------------------------------+
+| log  | size   | COUNT(*) | bar                                    |
++------+--------+----------+----------------------------------------+
+|  5.6 | 422238 |        3 |                                        |
+...
+|  1.6 |     39 |     3652 | *                                      |
+|  1.4 |     23 |   103434 | ************************************** |
+|  1.2 |     14 |     6369 | *                                      |
+|  1.0 |     11 |    36588 | ******                                 |
+|  0.8 |      6 |    55795 | *********                              |
+|  0.6 |      4 |    90332 | **************                         |
+|  0.4 |      2 |      239 |                                        |
++------+--------+----------+----------------------------------------+
+</pre>
+<p><strong>histogram of values by LRU age</strong></p>
+<pre>
+SELECT
+  ROUND(ROUND(LOG10(
+    (SELECT MAX(lru_time) FROM entries)
+    - lru_time) * 5, 0) / 5, 1) AS log,
+  ROUND(AVG(
+    (SELECT MAX(lru_time) FROM entries)
+    - lru_time), -2) AS lru_age,
+  COUNT(*),
+  RPAD('', COUNT(*) / 6500, '*') AS bar
+FROM entries
+GROUP BY log
+ORDER BY log DESC;
+
++------+-----------+----------+-------------------------------------+
+| log  |   lru_age | COUNT(*) | bar                                 |
++------+-----------+----------+-------------------------------------+
+|  4.6 |     34800 |    18064 | ***                                 |
+|  4.4 |     24200 |    96739 | ***************                     |
+|  4.2 |     15700 |   212865 | *********************************   |
+|  4.0 |     10200 |   224703 | *********************************** |
+|  3.8 |      6500 |   158067 | ************************            |
+|  3.6 |      4100 |   108034 | *****************                   |
+...
+|  0.4 |         0 |      672 |                                     |
+|  0.0 |         0 |      319 |                                     |
+| NULL |         0 |    13400 | **                                  |
++------+-----------+----------+-------------------------------------+
+</pre>
+<p><strong>histogram of values by size for a namespace</strong></p>
+<pre>
+SELECT
+  key_name,
+  ROUND(ROUND(LOG10(value_size) * 5, 0) / 5, 1) AS log,
+  ROUND(AVG(value_size), 0) AS size,
+  COUNT(*),
+  RPAD('', COUNT(*) / 10000, '*') AS bar
+FROM entries
+WHERE key_name LIKE '%chunk:%'
+GROUP BY log
+ORDER BY log desc;
+
++----------------------+------+-------+----------+----------------------+
+| key_name             | log  | size  | COUNT(*) | bar                  |
++----------------------+------+-------+----------+----------------------+
+|  reply_chunk:69913   |  3.4 |  2511 |     1032 | **                   |
+|  user_chunk:1868495  |  3.2 |  1530 |      972 | **                   |
+...
+|  user_chunk:1405137  |  1.6 |    40 |     2822 | ******               |
+|  reply_chunk:2084579 |  1.4 |    24 |     4361 | *********            |
+|  user_chunk:2455162  |  1.2 |    14 |     6141 | ************         |
+|  user_chunk:5989656  |  1.0 |    12 |     2477 | *****                |
+|  user_chunk:2268781  |  0.8 |     6 |    16527 | ******************** |
++----------------------+------+-------+----------+----------------------+
+</pre>
+<p><strong>slab allocation counts by class</strong></p>
+<pre>
+SELECT
+  class_id AS slab_class,
+  MAX(value_size) AS slab_size,
+  CEIL(COUNT(*) / ((1024 * 1024) / MAX(value_size))) AS allocated,
+  (
+    (SELECT COUNT(*) FROM entries
+     WHERE class_id = slab_class AND is_expired = "true")
+   * 100
+   /
+    (SELECT COUNT(*)
+     FROM entries
+     WHERE class_id = slab_class)
+  ) AS `%_expired`
+FROM entries
+GROUP BY class_id
+ORDER BY class_id;
+
++------------+-----------+-----------+-----------+
+| slab_class | slab_size | allocated | %_expired |
++------------+-----------+-----------+-----------+
+|          1 |         8 |         1 |   99.8938 |
+|          2 |        32 |         5 |    6.0320 |
+|          3 |        71 |         9 |   36.4859 |
+...
+|         34 |    187783 |        28 |   61.2903 |
+|         35 |    234205 |       130 |    1.8998 |
+|         36 |    286110 |         7 |    0.0000 |
+|         37 |    309832 |         2 |   75.0000 |
+|         38 |    397500 |         1 |  100.0000 |
+|         39 |    496014 |         1 |  100.0000 |
++------------+-----------+-----------+-----------+
+</pre>
+<p>This is comparable to the memcached <code>stats slabs</code> command, but lets you investigate things like expired ratio by slab, etc.</p>
+<p>Play around and see what else you can come up with.</p>
+<h2>conclusion</h2>
+<p>Generational keys are often presented as the easy way to cache, but consider their implications. How else are you abusing your cache? Some suggested things to check:</p>
+<ul>
+<li>Keys without expiry times (which will bite you when you alter the server pool)</li>
+<li>Excessive use of very large slabs</li>
+<li>Uneven LRU age by slab (indicating poor slab allocation)</li>
+<li>Unexpected namespaces (revealing invalidation bugs)</li>
+</ul>
+<p>The only unfortunate thing about peep right now is that it blocks the memcached server. I could do an incremental version, but it would be quite slow. The current version is already CPU-intensive, taking 15 minutes to dump a 4GB memcached on modern hardware (turn off your client-facing processes if you run mixed front-ends!). A version in C would be much quicker, if someone is up for it, but for now the Ruby version is sufficient.</p>
+<p>Happy peeping.</p>
+
+				</div>
+				<div class="entry-meta">
+					This entry was written by <span class="author vcard"><a class="url fn n" href="http://blog.evanweaver.com/author/evanweaver/" title="View all posts by evan">evan</a></span>, posted on <abbr class="published" title="2009-04-20T00:00:00-0800">April 20, 2009 at 12:00 AM</abbr>, filed under <a href="http://blog.evanweaver.com/category/uncategorized/" title="View all posts in Uncategorized" rel="category tag">Uncategorized</a>. Bookmark the <a href="http://blog.evanweaver.com/2009/04/20/peeping-into-memcached/" title="Permalink to peeping into&nbsp;memcached" rel="bookmark">permalink</a>. Follow any comments here with the <a href="http://blog.evanweaver.com/2009/04/20/peeping-into-memcached/feed/" title="Comments RSS to peeping into&nbsp;memcached" rel="alternate" type="application/rss+xml">RSS feed for this post</a>.
+					Both comments and trackbacks are currently closed.
+				</div>
+			</div><!-- .post -->
+
+			<div id="nav-below" class="navigation">
+				<div class="nav-previous"><a href="http://blog.evanweaver.com/2009/04/09/ruby-gc-tuning/" rel="prev"><span class="meta-nav">&laquo;</span> ruby gc&nbsp;tuning</a></div>
+				<div class="nav-next"><a href="http://blog.evanweaver.com/2009/05/04/distributed-systems-primer/" rel="next">distributed systems&nbsp;primer <span class="meta-nav">&raquo;</span></a></div>
+			</div>
+
+			<div id="comments">
+
+
+		<div id="comments-list" class="comments">
+		<h3><span>10</span> Comments</h3>
+		<ol>
+									<li id="comment-8227" class="comment c c-y2009 c-m04 c-d20 c-h01 alt">
+							<div class="comment-author vcard"> <span class="fn n"><a href='http://github.com/defunkt' rel='external nofollow' class='url url'>Chris Wanstrath</a></span></div>
+							<div class="comment-meta">Posted April 20, 2009 at 9:30 AM <span class="meta-sep">|</span> <a href="#comment-8227" title="Permalink to this comment">Permalink</a></div>
+							<p>Pure awesomeness, thanks for sharing this.</p>
+</li>
+						<li id="comment-8228" class="comment c1 c-y2009 c-m04 c-d20 c-h03">
+							<div class="comment-author vcard"> <span class="fn n"><a href='http://github.com/defunkt' rel='external nofollow' class='url url'>lepine</a></span></div>
+							<div class="comment-meta">Posted April 20, 2009 at 11:49 AM <span class="meta-sep">|</span> <a href="#comment-8228" title="Permalink to this comment">Permalink</a></div>
+							<p>Nice! Thanks for sharing. I was considering writing an ugly hack in the form of a wrapper to keep tabs. Clearly, this is a much better way.</p>
+</li>
+						<li id="comment-8229" class="comment c2 c-y2009 c-m04 c-d20 c-h04 alt">
+							<div class="comment-author vcard"> <span class="fn n"><a href='http://kitchensoap.com' rel='external nofollow' class='url url'>allspaw</a></span></div>
+							<div class="comment-meta">Posted April 20, 2009 at 12:16 PM <span class="meta-sep">|</span> <a href="#comment-8229" title="Permalink to this comment">Permalink</a></div>
+							<p>By doing this, you have won many beers, bought by me.</p>
+<p>Out of curiosity: how long does it take to dump, with say, a 16GB memcached instance?</p>
+</li>
+						<li id="comment-8230" class="comment c3 c-y2009 c-m04 c-d20 c-h04">
+							<div class="comment-author vcard"> <span class="fn n"><a href='http://blog.evanweaver.com' rel='external nofollow' class='url url'>evan</a></span></div>
+							<div class="comment-meta">Posted April 20, 2009 at 12:25 PM <span class="meta-sep">|</span> <a href="#comment-8230" title="Permalink to this comment">Permalink</a></div>
+							<p>I assume it&#8217;s linear. To be safe, you could remove the server from your cache pool ahead of time. The queries will still be correct, since they use the server&#8217;s most-recently-used time, not the wall clock, for comparisons.</p>
+<p>Here&#8217;s what happens when you peep in production:</p>
+<p>No big deal. :-)</p>
+</li>
+						<li id="comment-8231" class="comment c4 c-y2009 c-m04 c-d20 c-h06 alt">
+							<div class="comment-author vcard"> <span class="fn n"><a href='http://twitter-buzz.blogspot.com' rel='external nofollow' class='url url'>Jack</a></span></div>
+							<div class="comment-meta">Posted April 20, 2009 at 2:13 PM <span class="meta-sep">|</span> <a href="#comment-8231" title="Permalink to this comment">Permalink</a></div>
+							<p>Great post; please keep them coming.</p>
+<p>It&#8217;s interesting to see how few tools like peep we have today for memcached, the most popular cache solution in today&#8217;s big sites.</p>
+</li>
+						<li id="comment-8232" class="comment c5 c-y2009 c-m04 c-d20 c-h07">
+							<div class="comment-author vcard"> <span class="fn n"><a href='http://twitter-buzz.blogspot.com' rel='external nofollow' class='url url'>Chris</a></span></div>
+							<div class="comment-meta">Posted April 20, 2009 at 3:41 PM <span class="meta-sep">|</span> <a href="#comment-8232" title="Permalink to this comment">Permalink</a></div>
+							<p>Why does memcached evict non-expired LRU keys before expired keys? That surprises me.</p>
+<p>Why is checking two properties (expiry and timestamp) an expensive operation? I assume that (if memcached tracks keys with linked lists) checking for expired keys (as well as LRU keys) would be O(1).</p>
+</li>
+						<li id="comment-8233" class="comment c6 c-y2009 c-m04 c-d20 c-h11 alt">
+							<div class="comment-author vcard"> <span class="fn n"><a href='http://blog.evanweaver.com' rel='external nofollow' class='url url'>evan</a></span></div>
+							<div class="comment-meta">Posted April 20, 2009 at 7:31 PM <span class="meta-sep">|</span> <a href="#comment-8233" title="Permalink to this comment">Permalink</a></div>
+							<p><strong>Chris:</strong> I was wrong on this issue. The problem is that the free (expired) linked list is passive—elements are only inserted if they happen to be expired on an attempted read. This avoids a GC thread.</p>
+<p>However, it means a guaranteed search for an expired key would require walking the entire LRU linked list, an O(N) operation. Instead, if the free list is empty, the LRU tail is used; that process finds a freeable item in O(1).</p>
+<p>I updated the post.</p>
+</li>
+						<li id="comment-8234" class="comment c7 c-y2009 c-m04 c-d20 c-h15">
+							<div class="comment-author vcard"> <span class="fn n"><a href='http://blog.evanweaver.com' rel='external nofollow' class='url url'>Chris</a></span></div>
+							<div class="comment-meta">Posted April 20, 2009 at 11:09 PM <span class="meta-sep">|</span> <a href="#comment-8234" title="Permalink to this comment">Permalink</a></div>
+							<p>Thanks for the explanation! You learn something new every day. &lt;:)</p>
+</li>
+						<li id="comment-8235" class="comment c8 c-y2009 c-m04 c-d26 c-h19 alt">
+							<div class="comment-author vcard"> <span class="fn n"><a href='http://blog.evanweaver.com' rel='external nofollow' class='url url'>David</a></span></div>
+							<div class="comment-meta">Posted April 27, 2009 at 3:58 AM <span class="meta-sep">|</span> <a href="#comment-8235" title="Permalink to this comment">Permalink</a></div>
+							<p>Can you explain what the feature in your libmemcached builds that makes this better is? Are the changes you&#8217;ve made documented somewhere?</p>
+</li>
+						<li id="comment-8236" class="comment c9 c-y2009 c-m04 c-d30 c-h00">
+							<div class="comment-author vcard"> <span class="fn n"><a href='http://blog.evanweaver.com' rel='external nofollow' class='url url'>evan</a></span></div>
+							<div class="comment-meta">Posted April 30, 2009 at 8:28 AM <span class="meta-sep">|</span> <a href="#comment-8236" title="Permalink to this comment">Permalink</a></div>
+							<p>The big change is <code>AUTO_EJECT_HOSTS</code> support, which lets libmemcached itself manage temporary server failure (useful in this case because peep induces such a failure).</p>
+<p>This work is getting integrated into the next version of libmemcached, finally.</p>
+<p>If you have further issues, please put them in the <a href="http://github.com/fauna/peep/issues" rel="nofollow">peep tracker</a>.</p>
+</li>
+		</ol>
+
+		<div class="navigation">
+			<div class="alignleft"></div>
+			<div class="alignright"></div>
+		</div>
+	</div><!-- #comments-list .comments -->
+
+<div class="navigation">
+  
+</div>
+
+			</div><!-- #comments -->
+
+		</div><!-- #content -->
+	</div><!-- #container -->
+
+	<div id="primary" class="sidebar">
+		<ul class="xoxo">
+
+			<li id="nav_menu-2" class="widget widget_nav_menu">
+				<h3 class="widgettitle">meta</h3>
+<div class="menu-meta-container"><ul id="menu-meta" class="menu"><li id="menu-item-423" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-423"><a href="http://blog.evanweaver.com/about/">about</a></li>
+<li id="menu-item-463" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-463"><a href="http://blog.evanweaver.com/resume/">resume</a></li>
+<li id="menu-item-425" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-425"><a href="https://github.com/fauna">github</a></li>
+<li id="menu-item-426" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-426"><a href="http://cloudbur.st">cloudburst</a></li>
+</ul></div>
+			</li>
+
+			<li id="text-4" class="widget widget_text">
+				<h3 class="widgettitle">subscribe</h3>
+			<div class="textwidget"><p><a href="http://feeds.feedburner.com/snax" title="Subscribe to Posts" rel="alternate"><img src="http://blog.evanweaver.com/i/rss/orange-small.png" alt="Posts RSS Feed" /></a>&nbsp;<a href="http://feeds.feedburner.com/snax" title="Subscribe to Posts" rel="alternate">posts</a></p><p><a href="http://feeds.feedburner.com/snax_comments" title="Subscribe to Comments" rel="alternate"><img src="http://blog.evanweaver.com/i/rss/orange-small.png" alt="Comments RSS Feed" /></a>&nbsp;<a href="http://feeds.feedburner.com/snax_comments" title="Subscribe to Comments" rel="alternate">comments</a></p></div>
+		
+			</li>
+		
+			<li id="recent-posts-2" class="widget widget_recent_entries">		
+				<h3 class="widgettitle">recent articles</h3>
+		<ul>
+				<li><a href="http://blog.evanweaver.com/2010/08/12/distributed-systems-primer-update/" title="distributed systems primer,&nbsp;updated">distributed systems primer,&nbsp;updated</a></li>
+				<li><a href="http://blog.evanweaver.com/2009/10/21/object-allocations-on-the-web/" title="object allocations on the&nbsp;web">object allocations on the&nbsp;web</a></li>
+				<li><a href="http://blog.evanweaver.com/2009/09/30/scribe-client-gem/" title="scribe&nbsp;client">scribe&nbsp;client</a></li>
+				<li><a href="http://blog.evanweaver.com/2009/09/24/ree/" title="ree">ree</a></li>
+				<li><a href="http://blog.evanweaver.com/2009/08/04/memcached-gem-release/" title="memcached gem&nbsp;release">memcached gem&nbsp;release</a></li>
+				<li><a href="http://blog.evanweaver.com/2009/07/06/up-and-running-with-cassandra/" title="up and running with&nbsp;cassandra">up and running with&nbsp;cassandra</a></li>
+				</ul>
+		
+			</li>
+		
+			<li id="top-posts" class="widget widget_stats_topposts">			
+				<h3 class="widgettitle">popular</h3>
+			<ul><li><a href='http://blog.evanweaver.com/2009/07/06/up-and-running-with-cassandra/'>up and running with cassandra</a></li><li><a href='http://blog.evanweaver.com/2007/08/15/svn-branching-best-practices-in-practice/'>svn branching best practices (in practice)</a></li><li><a href='http://blog.evanweaver.com/2007/04/28/bleak_house/'>bleak_house</a></li><li><a href='http://blog.evanweaver.com/2010/08/12/distributed-systems-primer-update/'>distributed systems primer, updated</a></li></ul>		
+			</li>
+
+			<li id="nav_menu-3" class="widget widget_nav_menu">
+				<h3 class="widgettitle">projects</h3>
+<div class="menu-projects-container"><ul id="menu-projects" class="menu"><li id="menu-item-428" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-428"><a href="http://fauna.github.com/fauna/memcached">memcached 1.0</a></li>
+<li id="menu-item-429" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-429"><a href="http://fauna.github.com/fauna/zookeeper">zookeeper 0.3</a></li>
+<li id="menu-item-480" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-480"><a href="http://fauna.github.com/fauna/cassandra">cassandra 0.8</a></li>
+<li id="menu-item-481" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-481"><a href="http://fauna.github.com/fauna/thrift_client">thrift_client 0.4</a></li>
+<li id="menu-item-482" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-482"><a href="http://fauna.github.com/fauna/bleak_house">bleak_house 4.5</a></li>
+<li id="menu-item-483" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-483"><a href="http://fauna.github.com/fauna/peep">peep 0.6</a></li>
+<li id="menu-item-484" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-484"><a href="http://fauna.github.com/fauna/allison">allison 2.0</a></li>
+<li id="menu-item-485" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-485"><a href="http://fauna.github.com/fauna/echoe">echoe 4.0</a></li>
+<li id="menu-item-486" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-486"><a href="http://fauna.github.com/fauna/raspell">raspell 1.2</a></li>
+<li id="menu-item-487" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-487"><a href="http://fauna.github.com/fauna/simple_uuid">simple_uuid 0.1</a></li>
+</ul></div>
+			</li>
+
+			<li id="twitter-2" class="widget widget_twitter">
+				<h3 class="widgettitle"><a href='http://twitter.com/evan'>twitter</a></h3>
+<ul class='tweets'>
+<li>&quot;At a moment&#039;s notice ops can summon somebody that &#039;knows ruby&#039;. As awesome as the poster for that sounds...&quot; <a href="http://twitter.com/evan/statuses/15838983942569984" class="timesince">1&nbsp;hour&nbsp;ago</a></li>
+</ul>
+
+			</li>
+			
+			<li id="search" class="widget widget_search">				
+				<h3 class="widgettitle"><label for="s">search</label></h3>
+				<form id="searchform" class="blog-search" method="get" action="http://blog.evanweaver.com">
+					<div>
+						<input id="s" name="s" type="text" class="text" value="" size="10" tabindex="1" />
+						<input type="submit" class="button" value="ok" tabindex="2" />
+					</div>
+				</form>
+			
+			</li>
+		</ul>
+	</div><!-- #primary .sidebar -->
+
+	<div id="secondary" class="sidebar">
+		<ul class="xoxo">
+
+			<li id="text-3" class="widget widget_text">			<div class="textwidget"></div>
+		
+			</li>
+		</ul>
+	</div><!-- #secondary .sidebar -->
+
+	<div id="footer">
+		<span id="generator-link"><a href="http://wordpress.com/?ref=footer" rel="generator">Blog at WordPress.com</a>.</span>
+		<span class="meta-sep">|</span>
+		<span id="theme-link">Theme: <a href="http://www.plaintxt.org/themes/sandbox/" rel="designer">Sandbox 1.6.1</a>.</span>
+	</div><!-- #footer -->
+
+</div><!-- #wrapper .hfeed -->
+
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script>	<script type="text/javascript">
+	/* <![CDATA[ */
+		jQuery( function() {
+			
+			jQuery('#wpl-button > a.like').click( function(e) {
+				e.preventDefault();
+				
+				jQuery('#wpl-mustlogin').remove();
+
+				jQuery.post( 'http://evanweaver.wordpress.com/wp-admin/admin-ajax.php', { 
+					'action': 'wpl_record_stat',
+					'stat_name': 'loggedout_like_click'
+				} );
+
+				var tenMins = new Date();
+				tenMins.setTime( tenMins.getTime() + 600000 );
+				document.cookie = 'wpl_rand=ba3857819e; expires=' + tenMins.toGMTString() + '; domain=wordpress.com; path=/;';
+				
+				jQuery('#wpl-count').after( '\
+					<div id="wpl-mustlogin"> \
+						<form action="http://evanweaver.wordpress.com/wp-login.php" method="post"> \
+							<p>Just one more step to like this post:</p> \
+							<label><span>Username</span> <input type="text" name="log" id="user_login" class="input" value="" size="20" tabindex="80" /></label> \
+							<label><span>Password</span> <input type="password" name="pwd" id="user_pass" class="input" value="" size="20" tabindex="81" /></label> \
+							<input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="Log In" tabindex="82" /> \
+							<input type="hidden" name="redirect_to" value="http://blog.evanweaver.com/2009/04/20/peeping-into-memcached/?like=1" /> \
+							<input type="hidden" name="wpl_rand" value="ba3857819e" /> \
+							<p>Not a member yet? <a href="http://wordpress.com/signup/?ref=likebox" id="wpl-signup-link">Sign up with WordPress.com</a></p> \
+						</form> \
+					</div> \
+				');
+				
+				jQuery('#wpl-mustlogin').hide().slideDown('fast');
+			} );
+			
+			jQuery('#wpl-mustlogin input.input').live( 'focus', function() {
+				jQuery(this).prev().hide();
+			}).live( 'blur', function() {
+				if ( jQuery(this).val() == '' )
+					jQuery(this).prev().show();
+			});
+			
+			jQuery('#wpl-mustlogin input#wp-submit').live( 'click', function(e) {
+				e.preventDefault();
+				
+				jQuery.post( 'http://evanweaver.wordpress.com/wp-admin/admin-ajax.php', { 
+					'action': 'wpl_record_stat',
+					'stat_name': 'loggedout_login_submit'
+				}, function() {
+					jQuery('#wpl-mustlogin form').submit();
+				} );
+			});			
+			
+			jQuery('#wpl-mustlogin a#wpl-signup-link').live( 'click', function(e) {
+				e.preventDefault();
+				
+				var link = jQuery(this).attr('href');
+				
+				jQuery.post( 'http://evanweaver.wordpress.com/wp-admin/admin-ajax.php', { 
+					'action': 'wpl_record_stat',
+					'stat_name': 'loggedout_signup_click'
+				}, function() {
+					location.href = link;
+				} );
+			});					
+			
+		});
+	/* ]]> */
+	</script>
+<script type="text/javascript">_qoptions={qacct:'p-18-mFEk4J448M',labels:'language.en,type.wpcom'};</script>
+<script type="text/javascript" src="http://edge.quantserve.com/quant.js"></script>
+<noscript><p><img class="robots-nocontent" src="http://pixel.quantserve.com/pixel/p-18-mFEk4J448M.gif?labels=language.en%2Ctype.wpcom" style="display:none" height="1" width="1" alt="" /></p></noscript>
+<script type='text/javascript' src='http://s.gravatar.com/js/gprofiles.js?n&#038;ver=MU'></script>
+	<script type="text/javascript">	
+	// <![CDATA[
+	WPGroHo = {
+		data: {},
+		renderers: {},
+		syncProfileData: function( hash, id ) {
+			if ( !WPGroHo.data[hash] ) {
+				WPGroHo.data[hash] = {};
+				a = jQuery( 'div.grofile-hash-map-' + hash + ' span' ).each( function() {
+					WPGroHo.data[hash][this.className] = jQuery( this ).text();
+				} );
+			}
+
+			WPGroHo.appendProfileData( WPGroHo.data[hash], hash, id );
+		},
+		appendProfileData: function( data, hash, id ) {
+			for ( var key in data ) {
+				if ( jQuery.isFunction( WPGroHo.renderers[key] ) ) {
+					return WPGroHo.renderers[key]( data[key], hash, id, key );
+				}
+
+				jQuery( '#' + id ).find( 'h4' ).after( jQuery( '<p class="grav-extra ' + key + '" />' ).html( data[key] ) );
+			}
+		}
+	};
+	jQuery(document).ready(function($){
+		Gravatar.profile_cb = function( h, d ) {
+			WPGroHo.syncProfileData( h, d );
+		};
+		Gravatar.attach_profiles();
+	});
+	// ]]>
+	</script>
+	<div style="display:none">
+	</div>
+<script type="text/javascript" src="http://b.scorecardresearch.com/beacon.js"></script><script type="text/javascript">try{COMSCORE.beacon({c1:2,c2:7518284});}catch(e){}</script><noscript><p class="robots-nocontent"><img src="http://b.scorecardresearch.com/p?cj=1c1=2&#038;c2=7518284" alt="" style="display:none" width="1" height="1" /></p></noscript><script src="http://s.stats.wordpress.com/w.js?19" type="text/javascript"></script>
+<script type="text/javascript">
+st_go({'blog':'18067431','v':'wpcom','user_id':'0','post':'110','subd':'evanweaver'});
+ex_go({'crypt':'RDZ8LFkxbXFOeC15QSsxaTNDWXZUUnldZEdZQSw3eUp1TGxUOHlibE9jM2FfMXJneCtySCtuRURmT2JRUCZjaHNNbWVSLHp8eFd8aXVLV25aJW51VGh6b1YyV3Z2di5wdjZiUkssX0JULTc5YUQtYm8/TT94WUc0P3pwOWdlQktnJWhaNl8rJitJX0MueDFCNmIvUWgreFlxRyYzcjdwVGtacF8sbXBzMytiK3JmOHRYUS1hXWdwQm13NS5ra29oOTItMUNPcSVteVFEW09tW0hPQ0YtNy5qaHJpaFclSXJTfHIvWS18cV81OTJhb3QrSGdhdi1dOQ=='});
+addLoadEvent(function(){linktracker_init('18067431',110);});
+	</script>
+
+</body>
+</html>
