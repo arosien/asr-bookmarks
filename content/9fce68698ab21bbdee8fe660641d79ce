@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <title>Cache-Oblivious Search Trees
+     Home Page</title>
+  </head>
+  <body bgcolor="#ffffff" text="#000000" link="#3661a1" vlink="#6f6c81" alink="#d5aa83">
+    <br />
+    <center>
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="center">
+            <h1 style="font-size=200%; color:#3661a1">Cache-Oblivious Search Trees
+     Project</h1>
+          </td>
+        </tr>
+      </table>
+    </center>
+    <br />
+    <center>
+      <h4><a href="index.html">SuperTech Home</a>
+	   &nbsp;|&nbsp;
+	<a href="index.html#intro">About SuperTech</a>
+	   	   &nbsp;|&nbsp;
+		<a href="index.html#member">Group Members</a>
+	   	   &nbsp;|&nbsp;
+		<a href="cilk/">Cilk</a>
+	   	   &nbsp;|&nbsp;
+		<a href="papers.html">Papers</a>
+	   	   &nbsp;|&nbsp;
+		<a href="index.html#opportunity">Opportunities For Students</a>
+	   	   &nbsp;|&nbsp;
+		<a href="index.html#contact">Contact Us</a>
+	   	   &nbsp;|&nbsp;
+		<a href="index.html#news">News</a>
+	   	   &nbsp;|&nbsp;
+		<a href="http://www.google.com/calendar/embed?src=dm1h51h84cs349s27gtv4372kg%40group.calendar.google.com&amp;ctz=America/New_York">Group Calendar</a></h4>
+    </center>
+    <br />
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+      <tr>
+        <td align="center" bgcolor="#adccff">
+          <b>
+            <font style="color:white">.: This is the Home Page for Cache-Oblivious Search Trees
+     :. </font>
+          </b>
+        </td>
+      </tr>
+    </table>
+    <br />
+    <center>
+      <table width="90%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="left">
+            <h2 style="color:#3661a1">
+              <a name="intro" id="intro">About This Project</a>
+            </h2>
+            <center>
+              <table border="0" width="90%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="left">
+		We implemented a cache-oblivious dynamic search tree as 
+		an alternative to the ubiquitious B-tree. We used a binary tree 
+		with a "van Emde Boas" layout whose leaves point to intervals 
+		in a "packed memory structure".  The search tree supports 
+		efficient lookup, as well as efficient amortized insertion 
+		and deletion.  Efficient implementation of a B-tree requires 
+		understanding the cache-line size and page size and is 
+		optimized for a specific memory hierarchy. In contrast, a 
+		cache-oblivious dynamic search tree contains no 
+		machine-dependent variables, performs well on any memory 
+		hierarchy, and requires minimal user-level memory management. 
+		For random insertion of data, the data structure performs 
+		better than the Berkeley DB and a good implementation of 
+		B-trees. Another advantage of my data structure is that 
+		the packed memory array maintains data in sorted order, 
+		allows sequential reads at high speeds, and data insertions 
+		and deletions with few data writes on average. In addition, 
+		the data structure is easy to implement because he employed 
+		memory mapping rather than making the data stored on disk be 
+		a single level store.
+            <br /><br />
+                 We also have designed cache-oblivious search trees
+                 for which the keys can be very long (imagine a key,
+                 such as a DNA sequence, that is larger than main
+                 memory), and trees into which data can be quickly
+                 inserted.
+            <br /></td>
+                </tr>
+              </table>
+            </center>
+            <br />
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
+            <h2 style="color:#3661a1">
+              <a name="people" id="people">People to Contact</a>
+            </h2>
+            <center>
+              <table border="0" width="90%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="left"><a href="http://bradley.csail.mit.edu/~bradley/">Bradley C. Kuszmaul</a> (Faculty)<br /><a href=" http://supertech.csail.mit.edu/~jfineman/">Jeremy T. Fineman</a> (Alumni)</td>
+                </tr>
+              </table>
+            </center>
+            <br />
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
+            <h2 style="color:#3661a1">
+              <a name="papers" id="papers">Papers</a>
+            </h2>
+            <center>
+              <table border="0" width="90%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="left"><b>Cache-Oblivious Streaming B-trees</b><br /> by Michael A. Bender, Martin Farach-Colton, Jeremy T. Fineman, Yonatan Fogel, Bradley Kuszmaul, and Jelani Nelson<br /><i>Proceedings of the Nineteenth ACM Symposium on Parallelism in Algorithms and Architectures</i><br />San Diego, CA, USA<br />
+    Pages: 81&#8211;92<br />June 9&#8211;11,
+    2007<br /><b>To download the paper: </b>
+        <a href="papers/sbtree.ps">
+        ps format</a>&nbsp;
+    
+        <a href="papers/sbtree.pdf">
+        pdf format</a>&nbsp;
+     <br /><a href="cgi-bin/bibtex.cgi?key=BenderFaFi07"><b>BibTeX</b></a><br /><hr /></td>
+                </tr>
+                <tr>
+                  <td align="left"><b>Cache-Oblivious String B-Trees</b><br /> by Michael A. Bender, Martin Farach-Colton, and Bradley C. Kuszmaul<br /><i>Proceedings of the Twenty-Fifth ACM SIGMOD-SIGACT-SIGART Symposium on Principles of Database Systems</i><br />Chicago, IL<br />
+    Pages: 223&#8211;242<br />June,
+    2006<br /><b>To download the paper: </b>
+        <a href="papers/BenderFaKu06.pdf">
+        pdf format</a>&nbsp;
+     <br /><a href="cgi-bin/bibtex.cgi?key=BenderFaKu06"><b>BibTeX</b></a><br /><hr /></td>
+                </tr>
+                <tr>
+                  <td align="left">
+                    <hr />
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left"><b>Concurrent Cache-Oblivious B-Trees</b><br /> by Michael A. Bender, Jeremy T. Fineman, Seth Gilbert, and Bradley C. Kuszmaul<br /><i>Proceedings of the Seventeenth ACM Symposium on Parallelism in Algorithms and Architectures (SPAA)</i><br />Las Vegas, NV, USA<br />
+    Pages: 228&#8211;237<br />July 17&#8211;20,
+    2005<br /><b>To download the paper: </b>
+        <a href="papers/cobtree.ps">
+        ps format</a>&nbsp;
+    
+        <a href="papers/cobtree.pdf">
+        pdf format</a>&nbsp;
+     <br /><a href="cgi-bin/bibtex.cgi?key=BenderFiGi05"><b>BibTeX</b></a><br /><hr /></td>
+                </tr>
+                <tr>
+                  <td align="left"><b>Cache-Oblivious Dynamic Search Trees</b><br /> by Zardosht Kasheff<br />
+  Master's Thesis, Department of Electrical Engineering and Computer Science, Massachusetts Institute of Technology<br />June,
+    2004<br /><b>To download the paper: </b>
+        <a href="papers/Kasheff04.pdf">
+        pdf format</a>&nbsp;
+     <br /><a href="cgi-bin/bibtex.cgi?key=Kasheff04"><b>BibTeX</b></a><br /><hr /></td>
+                </tr>
+                <tr>
+                  <td align="left">
+                    <hr />
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left"><b>Cache-Oblivious Algorithms</b><br /> by Harald Prokop<br />
+  Master's Thesis, Department of Electrical Engineering and Computer Science, Massachusetts Institute of Technology<br />June,
+    1999<br /><b>To download the paper: </b>
+        <a href="papers/Prokop99.ps">
+        ps format</a>&nbsp;
+    
+        <a href="papers/Prokop99.pdf">
+        pdf format</a>&nbsp;
+     <br /><a href="cgi-bin/bibtex.cgi?key=Prokop99"><b>BibTeX</b></a><br /></td>
+                </tr>
+              </table>
+            </center>
+            <br />
+          </td>
+        </tr>
+        <tr>
+          <td align="left"></td>
+        </tr>
+        <tr>
+          <td align="left"></td>
+        </tr>
+        <tr>
+          <td align="left"></td>
+        </tr>
+      </table>
+    </center>
+    <br />
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+      <tr>
+        <td align="center" bgcolor="#adccff">
+          <font style="color:white">
+			    &nbsp;
+			</font>
+        </td>
+      </tr>
+    </table>
+    <br />
+    <center>(c) Copyright 2004 Massachusetts Institute of Technology</center>
+    <center>
+            Last updated:  
+            14:47:18 Fri Oct  8, 2010<br />
+            by neboat</center>
+    <center>
+      <p>
+        <a href="http://validator.w3.org/check?uri=referer">
+          <img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" />
+        </a>
+      </p>
+    </center>
+  </body>
+</html>
