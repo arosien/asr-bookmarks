@@ -1,0 +1,621 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+            <title>Jetty HTTP Client - Jetty - Codehaus</title>
+    
+        
+
+                        
+    
+                        
+    
+    
+            
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="atlassian-token" name="atlassian-token" content="nDv2mk0Sm1">
+<meta id="confluence-space-key" name="confluence-space-key" content="JETTY">
+
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+<link type="text/css" rel="stylesheet" href="/s/1911/11/1/_/download/superbatch/css/batch.css" media="all">
+<!--[if IE]>
+<link type="text/css" rel="stylesheet" href="/s/1911/11/1/_/download/superbatch/css/batch.css?ieonly=true" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="/s/1911/11/1/_/download/superbatch/css/batch.css?media=print" media="print">
+<link type="text/css" rel="stylesheet" href="/s/1911/11/1.0/_/download/resources/confluence.web.resources:aui-forms/confluence-forms.css" media="all">
+<!--[if IE]>
+<link type="text/css" rel="stylesheet" href="/s/1911/11/1.0/_/download/batch/confluence.web.resources:aui-forms/confluence.web.resources:aui-forms.css?ieonly=true" media="all">
+<![endif]-->
+
+<!-- end system css resources -->
+
+    <link rel="stylesheet" href="/s/1911/11/12/_/styles/combined.css?spaceKey=JETTY" type="text/css">
+
+    <meta name="confluence-request-time" content="1292617496872">
+
+<meta name="loggedInUsername" content="">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" href="/s/1911/11/_/images/logo/confluence_16.png">
+
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch/osd.action" title="Codehaus"/>
+
+        <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" src="/s/1911/11/1/_/download/superbatch/js/batch.js" ></script>
+<script type="text/javascript" src="/s/1911/11/1.2/_/download/batch/com.atlassian.confluence.plugins.doctheme:splitter/com.atlassian.confluence.plugins.doctheme:splitter.js" ></script>
+<script type="text/javascript" src="/s/1911/11/1.0/_/download/batch/legacy.confluence.web.resources:prototype/legacy.confluence.web.resources:prototype.js" ></script>
+
+    <!-- end system javascript resources -->
+
+    
+
+    
+</head>
+
+<body             onload="placeFocus()"
+     id="com-atlassian-confluence" class="">
+<ul id="assistive-skip-links" class="assistive">
+    <li><a href="#title-heading">Skip to content</a></li>
+    <li><a href="#breadcrumbs">Skip to breadcrumbs</a></li>
+    <li><a href="#header-menu-bar">Skip to header menu</a></li>
+    <li><a href="#navigation">Skip to action menu</a></li>
+    <li><a href="#quick-search-query">Skip to quick search</a></li>
+</ul>
+<div id="page">
+<div id="full-height-container">
+
+
+
+<fieldset class="hidden parameters">
+    <input type="hidden" id="statusDialogHeading" value="What are you working on?">
+    <input type="hidden" id="statusDialogAccessibilityLabel" value="Enter your status (140 character limit)">
+    <input type="hidden" id="statusDialogLatestLabel" value="Last update:">
+    <input type="hidden" id="statusDialogUpdateButtonLabel" value="Update">
+    <input type="hidden" id="statusDialogCancelButtonLabel" value="Cancel">
+</fieldset>
+
+<fieldset class="hidden parameters">
+    <input type="hidden" id="globalSettingsAttachmentMaxSize" value="10485760">
+    <input type="hidden" id="userLocale" value="en_GB">
+    <input type="hidden" id="staticResourceUrlPrefix" value="/s/1911/11/_">
+    <input type="hidden" id="contextPath" value="">
+</fieldset>
+
+    
+<div id="header" class="">
+        <form id="quick-search" class="quick-search" method="get" action="/dosearchsite.action">
+        <fieldset>
+            <legend>Quick Search</legend>
+            <input class="quick-search-query" id="quick-search-query" type="text" accessKey="q" autocomplete="off" name="queryString" size="25" />
+            <input class="quick-search-submit" id="quick-search-submit" type="submit" value="Search" />
+            <div class="aui-dd-parent quick-nav-drop-down"><!-- Quick nav appears here --></div>
+        </fieldset>
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="quickNavEnabled" value="true" />
+                    </fieldset>
+    </form>
+    <ul id="header-menu-bar" class="ajs-menu-bar">
+                    
+        
+            <li class="normal ajs-menu-item">
+        <a id="browse-menu-link" class="browse trigger ajs-menu-title" href="#"><span><span>Browse</span></span></a>         <div class="hidden ajs-drop-down">
+                        <ul  id="browse-menu-link-leading"                 class="section-leading first">
+                                        <li>
+    
+        
+    
+    <a  id="space-pages-link" href="/pages/listpages.action?key=JETTY"  class=""   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Pages</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-blogposts-link" href="/pages/viewrecentblogposts.action?key=JETTY"  class=""   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Blog</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-labels-link" href="/labels/listlabels-heatmap.action?key=JETTY"  class=""   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Labels</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-attachments-link" href="/spaces/listattachmentsforspace.action?key=JETTY"  class=""   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Attachments</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  href="/spaces/space-bookmarks.action?spaceKey=JETTY"  class=""   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Bookmarks</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-mail-link" href="/spaces/viewmailarchive.action?key=JETTY"  class=""   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Mail</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="space-advanced-link" href="/spaces/viewspacesummary.action?key=JETTY"  class=""   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Advanced</span></a>        </li>
+                            </ul>
+                        <ul  id="browse-menu-link-global"                 class="section-global">
+                                        <li>
+    
+            
+    
+    <a  id="gadget-directory-link" href="#"  class="user-item administration-link"   title="Browse gadgets provided by Confluence">
+                   <span>Confluence Gadgets</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+        
+                                                         <li class="ajs-menu-item normal">
+        
+        
+    
+    <a  id="login-link" href="/login.action?os_destination=%2Fdisplay%2FJETTY%2FJetty%2BHTTP%2BClient"  class="user-item login-link"  >
+                   <span>Log In</span></a>        </li>
+                            <li class="ajs-menu-item normal">
+    
+        
+    
+    <a  id="signup-link" href="/signup.action"  class="user-item signup-link"  >
+                   <span>Sign Up</span></a>        </li>
+                            </ul>
+    
+    
+    <ol id="breadcrumbs">
+                    
+        <li class="first" >
+                                    <span><a href="/dashboard.action">Dashboard</a></span>
+                </li>
+                    
+        <li>
+                                    <span><a href="/display/JETTY">Jetty</a></span>
+                </li>
+                                        <li id="ellipsis" title="    &#8230;
+                    Jetty Wiki
+        &#8230;
+"><span><strong>&#8230;</strong></span></li>
+                                    
+        <li class="hidden-crumb" >
+                                    <span><a href="/display/JETTY/Jetty+Wiki">Jetty Wiki</a></span>
+                </li>
+                    
+        <li>
+                                    <span><a href="/display/JETTY/Jetty+Documentation">Jetty Documentation</a></span>
+                </li>
+                    
+        <li>
+                                    <span>Jetty HTTP Client</span>
+                </li>
+        </ol>
+
+</div><!-- \#header -->
+
+<div id="main" >
+    
+    
+    <div id="navigation" class="content-navigation view">
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="pageId" value="95780964">
+        </fieldset>
+        <ul class="ajs-menu-bar">
+                                
+                        
+            <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action trigger ajs-menu-title" href="#"><span><span>Tools</span></span></a>         <div class="hidden ajs-drop-down">
+                        <ul  id="action-menu-link-primary"                 class="section-primary first">
+                                        <li>
+    
+        
+    
+    <a  id="view-attachments-link" href="/pages/viewpageattachments.action?pageId=95780964"  class="action-view-attachments"  accessKey="a" >
+                   <span><u>A</u>ttachments (0)</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-history-link" href="/pages/viewpreviousversions.action?pageId=95780964"  class="action-view-history"  >
+                   <span>Page History</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-page-permissions-link" href="/pages/viewinfo.action?pageId=95780964"  class="action-page-permissions"  >
+                   <span>Restrictions</span></a>        </li>
+                            </ul>
+                        <ul  id="action-menu-link-secondary"                 class="section-secondary">
+                                        <li>
+    
+        
+    
+    <a  id="view-page-info-link" href="/pages/viewinfo.action?pageId=95780964"  class="action-view-info"  >
+                   <span>Info</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="link-to-page-link" href="/pages/viewinfo.action?pageId=95780964"  class=""  >
+                   <span>Link to this Page&hellip;</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="view-in-hierarchy-link" href="/pages/listpages-dirview.action?key=JETTY&amp;openId=95780964#selectedPageInHierarchy"  class=""  >
+                   <span>View in Hierarchy</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-view-source-link" href="/pages/viewpagesrc.action?pageId=95780964"  class="action-view-source popup-link"  >
+                   <span>View Wiki Markup</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-export-pdf-link" href="/spaces/flyingpdf/pdfpageexport.action?pageId=95780964"  class=""  >
+                   <span>Export to PDF</span></a>        </li>
+                                        <li>
+    
+        
+    
+    <a  id="action-export-word-link" href="/exportword?pageId=95780964"  class="action-export-word"  >
+                   <span>Export to Word</span></a>        </li>
+                            </ul>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+    
+    <h1 id="title-heading" class="pagetitle">
+                    <a href="/display/JETTY"><img class="logo space custom" src="/download/attachments/38481/JETTY?version=2&amp;modificationDate=1240794269573" alt=""></a>        
+		<span id="title-text">
+					            <a href="/display/JETTY/Jetty+HTTP+Client">Jetty HTTP Client</a>
+    				</span>
+    </h1>
+
+    
+
+                        
+    <div id="content" class="page view">
+     
+          
+     
+     
+  <div style="background-color: #DFF2FD; text-align: left; font-size:100%; font-family: arial, sans; border:thin dotted blue; padding: 4px; ">
+    <span style="font-variant: small-caps; font-weight: bold">
+        <a href="http://www.webtide.com/support.jsp" style="text-decoration:none">Contact the core Jetty developers at 
+          <span style="color:#fd360b"> www.webtide.com</span>
+        </a>
+    </span>
+    <br/>
+    <span  style="font-style:oblique;font-size: 80%">
+ private support for your internal/customer projects ... custom extensions and distributions ... versioned snapshots for indefinite support ...
+ scalability guidance for your apps and Ajax/Comet projects ... development services from 1 day to full product delivery
+    </span>
+   </div>
+
+
+                      
+
+         
+         <a href="#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a  id="content-metadata-page-restrictions" href="#"  class="page-metadata-icon page-restrictions hidden"   title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="/display/~gregwilkins"
+                          class="url fn"
+                   >Greg Wilkins</a>, last edited by <a href="/display/~sbordet"
+                          class="url fn"
+                   >Simone Bordet</a> on Sep 15, 2009
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="/pages/diffpages.action?pageId=95780964&originalId=129564806">view change</a>)</span>
+                                                </li>
+                    </ul>
+          <div id="version-comment" class="noteMacro" style="display: none;">
+      <strong>Comment:</strong>
+      <br />
+  </div>
+    </div>
+
+
+<a href="#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+         
+         <div class="wiki-content">
+            <!-- wiki content -->
+            <h1><a name="JettyHTTPClient-JettyHTTPClient"></a>Jetty HTTP Client</h1>
+<div class='panelMacro'><table class='infoMacro'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="/images/icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b>Improved Tutorial at Eclipse</b><br />Jetty 6 and Jetty 7 HTTP clients are very similar, almost identical.<br/>
+You may want to follow a detailed tutorial <a href="http://wiki.eclipse.org/Jetty/Tutorial/HttpClient" class="external-link" rel="nofollow">here</a> for Jetty 7, which will be mostly valid for Jetty 6 too.</td></tr></table></div>
+
+<p>The <a href="http://jetty.mortbay.org/jetty-7/apidocs/org/mortbay/jetty/client/HttpClient.html" class="external-link" rel="nofollow">HttpClient</a> is an implementation of the client API. It makes it easy to conduct exchanges with a server, and to process the responses. It can use either blocking or non-blocking connectors, the default is to use non-blocking. The HttpClient can also do SSL, use proxies and authentication.</p>
+
+<p>By nature it is asynchronous. To begin a request, create an <a href="http://jetty.mortbay.org/jetty-7/apidocs/org/mortbay/jetty/client/HttpExchange.html" class="external-link" rel="nofollow">HttpExchange</a> instance (or a subclass of it). HttpExchange provides a number of callback methods that you implement in order to receive reply. You can be notified of the receipt of particular parts of the response, such as the headers or just the content. To start the request, call<br/>
+<tt><a href="http://jetty.mortbay.org/jetty-7/apidocs/org/mortbay/jetty/client/HttpClient.html" class="external-link" rel="nofollow">HttpClient.send</a>(<a href="http://jetty.mortbay.org/jetty-7/apidocs/org/mortbay/jetty/client/HttpExchange.html" class="external-link" rel="nofollow">HttpExchange</a>)</tt> method.  A single HttpClient can have many exchanges outstanding.</p>
+
+<h2><a name="JettyHTTPClient-AsynchronousRequestExample"></a>Asynchronous Request Example</h2>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+HttpClient client = <span class="code-keyword">new</span> HttpClient();
+client.setConnectorType(HttpClient.CONNECTOR_SELECT_CHANNEL);
+<span class="code-keyword">try</span>
+{
+  client.start();
+}
+<span class="code-keyword">catch</span> (Exception e)
+{
+  <span class="code-keyword">throw</span> <span class="code-keyword">new</span> ServletException(e);
+}
+
+<span class="code-comment">// create the exchange object, which lets you define where you want to go
+</span><span class="code-comment">// and what you want to <span class="code-keyword">do</span> once you get a response
+</span>ContentExchange exchange = <span class="code-keyword">new</span> ContentExchange()
+{
+  <span class="code-comment">// define the callback method to process the response when you get it back
+</span>  <span class="code-keyword">protected</span> void onResponseComplete() <span class="code-keyword">throws</span> IOException
+  {
+    <span class="code-keyword">super</span>.onResponseComplete();
+    <span class="code-object">String</span> responseContent = <span class="code-keyword">this</span>.getResponseContent();
+
+    <span class="code-comment">// <span class="code-keyword">do</span> something with the response content
+</span>    ...
+  }
+};
+
+exchange.setMethod(<span class="code-quote">"GET"</span>);
+exchange.setURL(<span class="code-quote">"http:<span class="code-comment">//www.example.com/"</span>);
+</span>
+<span class="code-comment">// start the exchange
+</span>client.send(exchange);
+</pre>
+</div></div>
+
+<h2><a name="JettyHTTPClient-SynchronousRequestExample"></a>Synchronous Request Example</h2>
+
+<p>You can perform a synchronous request by using the <a href="http://jetty.mortbay.org/jetty-7/apidocs/org/mortbay/jetty/client/HttpExchange.html" class="external-link" rel="nofollow">HttpExchange.waitForDone()</a> method.</p>
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+<span class="code-keyword">public</span> <span class="code-keyword">static</span> void main(<span class="code-object">String</span>[] args)
+        {
+		HttpClient httpClient = <span class="code-keyword">new</span> HttpClient();
+                <span class="code-comment">//set up httpClient
+</span>                httpClient.start();
+		ContentExchange contentExchange = <span class="code-keyword">new</span> ContentExchange();
+                httpClient.setConnectorType(HttpClient.CONNECTOR_SELECT_CHANNEL);
+		contentExchange.setURL(<span class="code-quote">"http:<span class="code-comment">//slashdot.org"</span>);
+</span>                httpClient.send(contentExchange);
+                contentExchange.waitForDone();
+		<span class="code-object">System</span>.err.println(<span class="code-quote">"Response status: "</span>+contentExchange.getResponseStatus());
+	}
+</pre>
+</div></div>
+         </div>
+
+         <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="http://docs.codehaus.org/display/JETTY/Jetty+HTTP+Client"
+    dc:identifier="http://docs.codehaus.org/display/JETTY/Jetty+HTTP+Client"
+    dc:title="Jetty HTTP Client"
+    trackback:ping="http://docs.codehaus.org/rpc/trackback/95780964"/>
+</rdf:RDF>
+-->
+
+             
+    
+
+
+<fieldset class="hidden parameters">
+    <legend>Labels parameters</legend>
+    <input type="hidden" id="editLabel" value="Edit">
+    <input type="hidden" id="addLabel" value="Add Labels">
+    <input type="hidden" id="domainName" value="http://docs.codehaus.org">
+    <input type="hidden" id="pageId" value="95780964">
+    <input type="hidden" id="spaceKey" value="JETTY">
+</fieldset>
+
+<div id="labels-section" class="pageSection">
+    <div id="default-labels-header" class="section-header">
+        <h2 id="labels-section-title" class="section-title  hidden ">Labels</h2>
+            </div>
+
+    <div class="labels-editor">
+        <div id="labelsList">
+                    </div>
+
+        <span class="errorMessage error" id="errorSpan"></span>
+        <form method="GET" action="" id="add-labels-form">
+            <div id="labelInputSpan" class="labels-input">
+                <div id="labelOperationErrorContainer" class="hidden">
+                    <span class="error"><span class="errorMessage" id="labelOperationErrorMessage"></span></span>
+                </div>
+
+                <div class="caption">Enter labels to add to this page:</div>
+                <div id="label-input-fields">
+                    <input autocomplete="off" id="labelsString" name="labelsString" value="" size="40">
+                    <input id="add-labels-editor-button" type="submit" class="add-labels" value="Add">
+                    <input id="close-labels-editor-button" type="submit" class="hide-labels-editor" value="Done">
+                </div>
+                <div id="waitImageAndStatus">
+                    <img class="waiting" alt="Please wait" src="/s/1911/11/_/images/icons/wait.gif">&nbsp;
+                    <span id="labelOperationStatus" class="smalltext"></span>
+                </div>
+                <div id="labelsAutocompleteList" class="aui-dd-parent"></div>
+                <div class="labels-tip">
+                    <div id="suggestedLabelsSpan"></div>
+                    Looking for a label? Just start typing.
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+             
+             
+
+
+
+
+            
+    
+
+        
+<fieldset class="parameters hidden">
+    <input type="hidden" id="deleteCommentConfirmMessage" value="Are you sure you want to remove the comment?">
+    <input type="hidden" id="collapseTooltip" value="Click to toggle the display of this comment.">
+        </fieldset>
+
+
+
+
+
+
+<div id="comments-section" class="pageSection">
+    
+    
+    
+    
+                                    </div>
+
+
+               
+</div>
+
+
+  <div style="background-color: #DFF2FD; text-align: left; font-size:100%; font-family: arial, sans; border:thin dotted blue; padding: 4px; ">
+    <span style="font-variant: small-caps; font-weight: bold">
+        <a href="http://www.webtide.com/support.jsp" style="text-decoration:none">Contact the core Jetty developers at 
+          <span style="color:#fd360b"> www.webtide.com</span>
+        </a>
+    </span>
+    <br/>
+    <span  style="font-style:oblique;font-size: 80%">
+ private support for your internal/customer projects ... custom extensions and distributions ... versioned snapshots for indefinite support ...
+ scalability guidance for your apps and Ajax/Comet projects ... development services from 1 day to full product delivery
+    </span>
+   </div>
+
+
+    
+
+
+
+
+        
+        
+
+    
+    
+    
+
+
+<fieldset class="hidden parameters">
+        <input type="hidden" id="i18n.manage.watchers.dialog.title" value="Manage Watchers">
+        <input type="hidden" id="i18n.manage.watchers.unable.to.remove.error" value="Failed to remove watcher. Refresh page to see latest status.">
+        <input type="hidden" id="i18n.manage.watchers.status.adding.watcher" value="Adding watcher&amp;hellip;">
+</fieldset>
+<script type="text/x-template" title="manage-watchers-dialog">
+<div class="dialog-content">
+    <div class="column page-watchers">
+        <h3>Watching this page</h3>
+        <p class="description">These people are notified when the page is changed. You can add or remove people from this list.</p>
+        <form action="/json/addwatch.action" method="POST">
+                <input type="hidden" name="atl_token" value="nDv2mk0Sm1">
+            <input type="hidden" name="pageId" value="95780964"/>
+            <input type="hidden" id="add-watcher-username" name="username" value=""/>
+            <label for="add-watcher-user">User</label>
+            <input id="add-watcher-user" name="userFullName" type="search" class="has-placeholder autocomplete-user"
+               value="" placeholder="Full name or username" autocomplete="off"
+               data-max="10" data-target="#add-watcher-username" data-dropdown-target="#add-watcher-dropdown"
+               data-template="{title}" data-none-message="No matching users found.">
+            <input id="add-watcher-submit" type="submit" name="add" value="Add">
+            <div id="add-watcher-dropdown" class="aui-dd-parent autocomplete"></div>
+            <div class="status hidden"></div>
+        </form>
+        <ul class="user-list">
+            <li class="loading">Loading&hellip;</li>
+            <li class="no-users hidden">No page watchers</li>
+        </ul>
+    </div>
+    <div class="column space-watchers">
+        <h3>Watching this space</h3>
+        <p class="description">These people are notified when any content in the space is changed. You cannot modify this list.</p>
+        <ul class="user-list">
+            <li class="loading">Loading&hellip;</li>
+            <li class="no-users hidden">No space watchers</li>
+        </ul>
+    </div>
+</div>
+</script>
+<script type="text/x-template" title="manage-watchers-user">
+    <li class="watch-user">
+        <img class="profile-picture confluence-userlink" src="{iconUrl}" data-username="{username}">
+        <a class="confluence-userlink" href="{url}" data-username="{username}">{fullName} <span class="username">({username})</span></a>
+        <span class="remove-watch" title="Remove"
+            data-username="{username}">Remove</span>
+    </li>
+</script>
+<script type="text/x-template" title="manage-watchers-help-link">
+    <div class="dialog-help-link">
+            <a href="http://docs.atlassian.com/confluence/docs-33/Managing+Watchers" target="_blank">Help</a>
+    </div>
+</script>
+    <br class="clear">
+</div><!-- \#main -->
+
+<div id="footer">
+                                                <p class="license license-opensource">
+                  Powered by a free <b>Atlassian Confluence Open Source Project License</b> granted to Codehaus. <a href="http://www.atlassian.com/c/conf/11461">Evaluate Confluence today</a>.<br>
+                </p>
+                        
+    <ul id="poweredby">
+        <li class="noprint">Powered by <a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> 3.3, the <a href="http://www.atlassian.com/software/confluence/tour/enterprise-wiki.jsp" class="hover-footer-link">Enterprise Wiki</a></li>
+        <li class="print-only">Printed by Atlassian Confluence 3.3, the Enterprise Wiki.</li>        
+        <li class="noprint"> &nbsp; |&nbsp; <a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">Report a bug</a></li>
+        <li class="noprint"> &nbsp;|&nbsp; <a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian News</a></li>
+    </ul>
+
+    
+
+            <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5294457-2");
+pageTracker._trackPageview();
+</script>
+    </div>    <!-- include system javascript resources -->
+                        
+    
+    
+    <!-- end system javascript resources -->
+</div><!-- \#full-height-container -->
+</div><!-- \#page -->
+</body>
+</html>
