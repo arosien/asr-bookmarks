@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>lzop file compressor (oberhumer.com OpenSource)</title>
+  <meta name="description"
+        content="lzop homepage. lzop is a very fast file compressor distributed under the GNU GPL." />
+  <meta name="keywords"
+        content="opensource, LZO, lzop, compression, compression library, archiver, communication, gzip, bzip2" />
+    <link rev="made" href="mailto:webmaster@oberhumer.com" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="pragma" content="no-cache" />
+  <meta name="author" content="oberhumer.com &lt;spambait@oberhumer.com&gt;" />
+  <meta name="revisit-after" content="30 days" />
+  <meta name="robots" content="noarchive, index, follow" />
+</head>
+
+<body background="images/fader401.png"
+      text="#000000"
+      bgcolor="#F0F0FF"
+      link="#0000FF"
+      vlink="#660099"
+      alink="#FF0000">
+    <!-- start of page table -->
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+
+      <!-- start of sidebar cell -->
+      <td width="100" valign="top">&nbsp;&nbsp;</td>
+      <!-- end of sidebar cell -->
+
+      <!-- spacer -->
+      <td width="15">&nbsp;&nbsp;</td>
+
+      <!-- start of body cell -->
+      <td valign="top" width="90%"><br />
+
+  <center><img src="images/lzop12.png" alt="&lt;lzop logo&gt;" width="430" height="230" /></center>
+  
+      <!-- end of body cell -->
+      </td>
+
+    <!-- end of page row -->
+    </tr>
+
+
+    <tr>
+
+      <!-- start of sidebar cell -->
+      <td width="100" valign="top"> &nbsp;
+
+        <!-- start of sidebar table -->
+        <table width="100%" border="0" cellspacing="0" cellpadding="1">
+
+          <tr>
+            <td><b>Data<br />
+            Compression</b></td>
+          </tr>
+
+          <tr>
+            <td><b><a href="http://www.oberhumer.com/opensource/lzo/">LZO</a></b></td>
+          </tr>
+
+          <tr>
+            <td><b><a href="http://www.lzop.org/">lzop</a></b></td>
+          </tr>
+
+          <tr>
+            <td><b><a href="http://www.oberhumer.com/products/nrv/">NRV</a></b></td>
+          </tr>
+
+          <tr>
+            <td><b><a href="http://www.oberhumer.com/opensource/ucl/">UCL</a></b></td>
+          </tr>
+
+          <tr>
+            <td><b><a href="http://www.oberhumer.com/opensource/upx/">UPX</a></b></td>
+          </tr>
+
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+
+          <tr>
+            <td><b>Links</b></td>
+          </tr>
+
+          <tr>
+            <td><a href="http://www.oberhumer.com/opensource/">Projects</a></td>
+          </tr>
+
+          <tr>
+            <td><a href="http://www.oberhumer.com/technology/compression_resources/">Compression Links</a></td>
+          </tr>
+
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+
+          <tr>
+            <td><b>Contact</b></td>
+          </tr>
+
+          <tr>
+            <td><a href="http://www.oberhumer.com/">oberhumer.com</a></td>
+          </tr>
+
+        </table>
+        <!-- end of sidebar table -->
+      </td>
+      <!-- end of sidebar cell -->
+
+      <!-- spacer -->
+      <td width="15">&nbsp;&nbsp;</td>
+
+      <!-- start of body cell -->
+      <td valign="top" width="90%"><br />
+
+
+  <center>
+    <font size="+3">Version 1.03</font><br />
+    01 Nov 2010<br />
+    <br />
+    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,<br />
+    2004, 2005, 2006, 2007, 2008, 2009, 2010<br />
+    <a href="http://www.oberhumer.com/">Markus F.X.J. Oberhumer</a>
+  </center><br />
+  <br />
+  
+
+  <h3><font size="+3">N</font>ews</h3>
+
+  <dl>
+    <dd>
+      <p><font size="+2"><pre>$ parallel lzop ::: *.tar</pre></font></p>
+      <p>lzop 1.03 is still a single-threaded program (multithreading is
+      planned for v2), but you can easily achieve process-level
+      parallelism by using the amazing
+      <a href="http://savannah.gnu.org/projects/parallel/">GNU Parallel</a> tool.
+      Also, I do recommend watching the
+      <a href="http://www.youtube.com/watch?v=OpaiGYxkSuQ">GNU Parallel tutorial video</a>
+      at YouTube, which demonstrates a number of nice features.
+      </p>
+    </dd>
+    <dd><p>
+      lzop compares favorably in a number of reviews, including
+      a nice article from the Linux Journal called
+      <a href="http://www.linuxjournal.com/node/8051/print">Compression Tools Compared</a>
+      and the
+      <a href="http://aliver.wordpress.com/2010/06/22/huge-unix-file-compresser-shootout-with-tons-of-datagraphs/">Huge Unix File Compresser Shootout</a>.
+      </p>
+    </dd>
+  </dl>
+
+
+  <h3><a name="abstract" id="abstract"><font size="+3">A</font>bstract</a></h3>
+
+  <dl>
+    <dd>
+      <p>lzop is a file compressor which is very similar to
+      <a href="http://www.gzip.org/">gzip</a>. lzop uses the <a href="http://www.oberhumer.com/opensource/lzo/">LZO data
+      compression library</a> for compression services, and its main
+      advantages over gzip are much higher compression and decompression
+      speed (at the cost of some compression ratio).</p>
+    </dd>
+
+
+    <dd>
+      <p>lzop is copyrighted OpenSource software distributed under the
+      terms of the
+      <a href="lzop-license.html">GNU General Public License (GPL)</a>.</p>
+    </dd>
+  </dl>
+
+
+  <h3><font size="+3">F</font>eatures</h3>
+
+  <dl>
+    <dd>
+      <p>lzop is the fastest compressor and decompressor around. See the
+      well-known <a href="http://compression.ca/act/act-summary.html">Archive
+      Comparison Test</a> for details.</p>
+    </dd>
+
+    <dd>
+      <p>On modern systems, when making backups of terrabyte of data, lzop
+      is usually <i>IO-bound</i> and not <i>CPU-bound</i>, which means that
+      you can both decrease storage requirements and effectively reduce
+      backup time by quite an amount.</p>
+    </dd>
+
+    <dd>
+      <p>lzop was designed with the following goals in mind:</p>
+
+      <ul type="disc">
+        <li>speed (both compression and decompression)</li>
+
+        <li>reasonable drop-in compatibility to gzip</li>
+
+        <li>portability</li>
+      </ul>
+    </dd>
+
+    <dd>
+      <p>General functionality and behaviour has been modelled very closely
+      after gzip. The main differences between lzop and gzip are:</p>
+
+      <ul type="disc">
+        <li>files compressed by lzop will have the suffix `.lzo'</li>
+
+        <li>lzop does not delete the input file(s) by default.</li>
+      </ul>
+    </dd>
+  </dl>
+
+  <h3><font size="+3">R</font>ead the</h3>
+
+  <ul type="disc">
+    <li><a href="lzop_man.php">Documentation</a></li>
+
+    <li><a href="lzop_news.php">ChangeLog</a></li>
+  </ul>
+
+  <h3><font size="+3">D</font>ownload</h3>
+
+  <ul type="disc">
+    <li><a href="download/lzop-1.03.tar.gz">source code</a><br /></li>
+
+    <br />
+    <li>
+      Precompiled binaries are available for
+      <ul>
+        <li><a href="download/lzop-1.03-i386_linux.tar.gz">Linux/i386
+        (statically linked)</a></li>
+        <li><a href="download/lzop103w.zip">Windows (Win32 console
+        version)</a></li>
+        <li><a href="download/lzop101d.zip">32-bit DOS</a></li>
+        <li><a href="download/lzop101o.zip">OS/2</a></li>
+        <li><a href="download/lzop101a.zip">Atari TOS/MiNT</a></li>
+      </ul>
+    </li>
+
+    <br />
+    <li>
+      Official lzop packages are available for
+      <ul>
+      <li><a href="http://www.archlinux.org/packages/?q=lzop">Arch Linux</a></li>
+      <li><a href="http://www.bebits.com/app/3487">BeOS</a></li>
+      <li><a href="http://lzop.darwinports.com/">Darwin (Apple Mac OS X)</a></li>
+      <li><a href="http://packages.debian.org/search?keywords=lzop">Debian GNU/Linux</a></li>
+      <li><a href="https://admin.fedoraproject.org/pkgdb/acls/name/lzop">Fedora Linux</a></li>
+      <li><a href="http://www.freebsd.org/cgi/ports.cgi?query=lzop">FreeBSD</a></li>
+      <li><a href="http://packages.gentoo.org/package/app-arch/lzop">Gentoo Linux</a></li>
+      <li><a href="ftp://ftp.netbsd.org/pub/NetBSD/packages/pkgsrc/archivers/lzop/README.html">NetBSD</a></li>
+      <li><a href="http://www.openbsd.org/cgi-bin/cvsweb/ports/archivers/lzop/">OpenBSD</a></li>
+      <li><a href="https://admin.fedoraproject.org/pkgdb/acls/name/lzop">Red Hat Enterprise Linux</a></li>
+      <li><a href="http://software.opensuse.org/search?baseproject=ALL&amp;p=1&amp;q=lzop">SUSE Linux</a></li>
+      <li><a href="http://packages.ubuntu.com/search?keywords=lzop">Ubuntu Linux</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3><font size="+3">N</font>avigate to</h3>
+
+  <ul type="disc">
+    <li><a href="http://www.oberhumer.com/opensource/lzo/">the LZO Home Page</a></li>
+    <br />
+    <li><a href="http://www.gzip.org/">the gzip file compressor</a></li>
+    <li><a href="http://www.bzip.org/">the bzip2 file compressor</a></li>
+    <li><a href="http://tukaani.org/xz/">the xz file compressor</a></li>
+  </ul>
+
+        </td> <!-- end of body cell -->
+    </tr>   <!-- end of page row -->
+  </table>  <!-- end of page table -->
+  <br /><hr /><font size="-1"><i>The term <b>lzop</b> is a shorthand for "the Lempel-Ziv-Oberhumer Packer" and holds no connection with potential owners of registered trademarks or other rights. All trademarks, brands, and names are the property of their respective owners.<br /><br />Last modified Sun Nov 07 16:37:05 CET 2010.</i></font>
+
+</body>
+</html>
