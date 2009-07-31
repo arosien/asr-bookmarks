@@ -1,0 +1,1712 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" id="sixapart-standard">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Movable Type Pro 4.25" />
+    <link rel="stylesheet" href="http://alestic.com/styles.css" type="text/css" />
+    <link rel="start" href="http://alestic.com/" title="Home" />
+    <link rel="alternate" type="application/atom+xml" title="Recent Entries" href="http://feeds.alestic.com/alestic" />
+    <script type="text/javascript" src="http://alestic.com/mt.js"></script>
+    
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://alestic.com/rsd.xml" />
+
+    <script type="text/javascript">
+    var adminurl = 'http://alestic.com/mt/' + 'mt.cgi';
+    var blog_id = '1';
+    var page_id = '3';
+    </script>
+    
+    <title>EC2 and Ubuntu - Alestic.com</title>
+
+<link rel="icon"          href="/img/alestic-favicon.png" type="image/png">
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-93723-8");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+
+</head>
+<body id="professional-website" class="mt-main-index layout-wm">
+    <div id="container">
+        <div id="container-inner">
+            <div id="header">
+                <div id="header-inner">
+                    <div id="header-content">
+<div class="header-right">
+          <div>
+            Sponsored in part by...<br />
+
+
+  <a href="http://www.canonical.com/enterprise-services/ubuntu-advantage/trial?utm_source=Alestic&utm_medium=banner&utm_campaign=UA"
+               onmousedown="this.href='/go?'+this.href"
+               onclick="javascript:pageTracker._trackPageview('/analytics-goal/clickthrough/sponsor/www.canonical.com/ubuntu-advantage/');"
+               ><img width="190" height="60"
+               src="/img/sponsor/canonical-ubuntu-advantage-sponsor.png" border="0"
+               alt="Canonical"></a
+    >
+  <a href="http://aws.amazon.com/"
+               onmousedown="this.href='/go?'+this.href"
+               onclick="javascript:pageTracker._trackPageview('/analytics-goal/clickthrough/sponsor/aws.amazon.com/');"
+               ><img width="190" height="60"
+               src="/img/sponsor/amazon-web-services-sponsor.png" border="0"
+               alt="Amazon Web Services"></a
+    >
+  <a href="http://bitnami.org/bitnami_cloud_hosting?utm_source=alestic&utm_medium=banner&utm_campaign=alestic"
+               onmousedown="this.href='/go?'+this.href"
+               onclick="javascript:pageTracker._trackPageview('/analytics-goal/clickthrough/sponsor/www.bitnami.org/');"
+               ><img width="190" height="60"
+               src="/img/sponsor/bitnami-sponsor.png" border="0"
+               alt="BitNami"></a
+    >
+
+
+
+         </div>
+</div>
+
+                        <a href="http://alestic.com/" accesskey="1"><h1 id="header-name">Alestic.com</h1>
+</a>                        <h2 id="header-description"><a href="http://alestic.com/">Ubuntu on Amazon EC2</a></h2>
+
+                        <div class="widget-sign-in widget">
+    <h3 class="widget-header">Sign In</h3>
+    <div id="signin-widget-content" class="widget-content"></div>
+</div>
+<script type="text/javascript">
+/* <![CDATA[ */
+function mtUpdateSignInWidget(u) {
+    var el = document.getElementById('signin-widget-content');
+    var content = '';
+    if (!el) return;
+    if (u) {
+        if (u && u.is_authenticated) {
+            user = u;
+            mtSaveUser();
+        } else {
+            // user really isn't logged in; so let's do this!
+            return mtSignIn();
+        }
+    } else {
+        u = mtGetUser();
+    }
+    if (u && u.name) {
+        var url;
+        if (u.is_authenticated) {
+            if (u.is_author) {
+                url = 'http://alestic.com/mt/mt-comments.cgi?__mode=edit_profile&blog_id=1';
+                url += '&static=' + encodeURIComponent( location.href );
+            } else {
+                url = u.url;
+            }
+        } else if (u.url) {
+            url = u.url;
+        } else {
+            url = null;
+        }
+        var content = 'You are signed in as ';
+        if (url)
+            content += '<a href="' + url + '">' + u.name + '</a>';
+        else
+            content += u.name;
+        content += '.  (<a href="javascript:void(0)" onclick="return mtSignOutOnClick()">sign out</a>)';
+    } else if (u && u.is_banned) {
+        content = 'You do not have permission to sign in to this blog.';
+    } else {
+        content = '<a href="javascript:void(0)" onclick="return mtSignInOnClick(\'signin-widget-content\')">Sign In</a>';
+    }
+    el.innerHTML = content;
+}
+mtAttachEvent('usersignin', mtUpdateSignInWidget);
+mtUpdateSignInWidget();
+/* ]]> */
+</script>
+
+                    </div>
+                </div>
+            </div>
+            <div id="main-navigation">
+                <div id="main-navigation-inner">
+                    <ul>
+    <li class="first on"><a href="http://alestic.com/index.html">Home</a></li>
+    <li class=""><a href="http://alestic.com/blog/">Blog</a></li>
+    
+    
+    
+    
+    
+    <li class="last"><a href="http://alestic.com/sponsors">Sponsors</a></li>
+    
+
+    
+    
+    <li class="last"><a href="http://alestic.com/support">Support</a></li>
+    
+    
+</ul>
+
+
+                    <div class="widget-search widget">
+    <h3 class="widget-header">Search</h3>
+    <div class="widget-content">
+        <form method="get" action="http://alestic.com/mt/mt-search.cgi">
+            <input type="text" id="search" class="ti" name="search" value="" />
+
+            <input type="hidden" name="IncludeBlogs" value="1" />
+
+            <input type="hidden" name="limit" value="20" />
+            <input type="submit" accesskey="4" value="Search" />
+        </form>
+    </div>
+</div>
+
+                </div>
+            </div>
+            <div id="content">
+                <div id="content-inner">
+
+                    <div id="homepage-image">&nbsp;</div>
+
+                    <div id="alpha">
+                        <div id="alpha-inner">
+
+
+
+
+<h1 id="page-title" class="asset-name">Ubuntu and Debian AMIs for Amazon EC2</h1>
+<script type="text/javascript">//<![CDATA[
+var ON=function(region){
+  document.getElementById('select-a-region').style.display     = 'none';
+  document.getElementById('ami-comments').style.display        = 'block';
+  document.getElementById('tab-us-east-1').style.display       = 
+    (region == 'us-east-1' ? 'block' : 'none');
+  document.getElementById('tab-us-west-1').style.display       = 
+    (region == 'us-west-1' ? 'block' : 'none');
+  document.getElementById('tab-eu-west-1').style.display       = 
+    (region == 'eu-west-1' ? 'block' : 'none');
+  document.getElementById('tab-ap-southeast-1').style.display  = 
+    (region == 'ap-southeast-1' ? 'block' : 'none');
+}
+//]]></script>
+
+<!-- ###################################################################### -->
+
+<div id="select-a-region" style="display:block;">
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('us-east-1')">
+                 &nbsp;&nbsp;&nbsp;us-east-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('us-west-1');">
+                 &nbsp;&nbsp;&nbsp;us-west-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('eu-west-1');">
+                 &nbsp;&nbsp;&nbsp;eu-west-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('ap-southeast-1');">
+                 &nbsp;&nbsp;&nbsp;ap-southeast-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+
+            <table class="amis">
+              <tbody>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+              <tr>
+                <th></th>
+                <th colspan="3">
+                To view Ubuntu and Debian AMIs available for Amazon EC2:<br />
+                Click on a tab above to select an Amazon EC2 region.
+                </th>
+                <th></th>
+              </tr>
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+            </tbody></table>
+</div>
+
+<!-- ###################################################################### -->
+<div id="tab-us-east-1" style="display:none;">
+            <div class="tabselected">
+              &nbsp;&nbsp;&nbsp;us-east-1&nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('us-west-1');">
+                 &nbsp;&nbsp;&nbsp;us-west-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('eu-west-1');">
+                 &nbsp;&nbsp;&nbsp;eu-west-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('ap-southeast-1');">
+                 &nbsp;&nbsp;&nbsp;ap-southeast-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+
+            <table class="amis">
+              <tbody>
+
+              <tr>
+                <th class="first">Ubuntu Release</th>
+                <th>Publisher</th>
+                <th>User</th>
+                <th>server<br>32-bit</th>
+                <th>server<br>64-bit</th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 10.10 Maverick<br />
+                EBS boot</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-508c7839</tt></td>
+<td><tt>ami-548c783d</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 10.10 Maverick<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-1a837773</tt></td>
+<td><tt>ami-688c7801</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 10.04 LTS Lucid<br />
+                EBS boot</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-480df921</tt></td>
+<td><tt>ami-4a0df923</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 10.04 LTS Lucid<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-a403f7cd</tt></td>
+<td><tt>ami-da0cf8b3</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 9.10 Karmic<br />
+                EBS boot</td>
+                <td>Alestic</td>
+                <td>ubuntu@</td>
+<td><tt>ami-6743ae0e</tt></td>
+<td><tt>ami-7d43ae14</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 9.10 Karmic<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-563dd73f</tt></td>
+<td><tt>ami-6832d801</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 8.04 LTS Hardy<br />
+                EBS boot</td>
+                <td>Alestic</td>
+                <td>ubuntu@</td>
+<td><tt>ami-cb8d61a2</tt></td>
+<td><tt>ami-cf8d61a6</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 8.04 LTS Hardy<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-6836dc01</tt></td>
+<td><tt>ami-0c36dc65</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 6.06 LTS Dapper<br />
+                instance-store</td>
+                <td>Alestic</td>
+                <td>root@</td>
+<td><tt>ami-c6f615af</tt></td>
+<td><tt>ami-f8f61591</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <th class="first">Debian Release</th>
+                <th>Publisher</th>
+                <th>User</th>
+                <th>server<br>32-bit</th>
+                <th>server<br>64-bit</th>
+              </tr>
+
+              <tr>
+                <td class="first">Debian 5.0 Lenny<br />
+                instance-store</td>
+                <td>Alestic</td>
+                <td>root@</td>
+<td><tt>ami-dcf615b5</tt></td>
+<td><tt>ami-f0f61599</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Debian 4.0 Etch<br />
+                instance-store</td>
+                <td>Alestic</td>
+                <td>root@</td>
+<td><tt>ami-def615b7</tt></td>
+<td><tt>ami-f2f6159b</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+
+            </tbody></table>
+</div>
+<!-- ###################################################################### -->
+<div id="tab-us-west-1" style="display:none;">
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('us-east-1');">
+                 &nbsp;&nbsp;&nbsp;us-east-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+            <div class="tabselected">
+              &nbsp;&nbsp;&nbsp;us-west-1&nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('eu-west-1');">
+                 &nbsp;&nbsp;&nbsp;eu-west-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('ap-southeast-1');">
+                 &nbsp;&nbsp;&nbsp;ap-southeast-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+
+            <table class="amis">
+              <tbody>
+
+              <tr>
+                <th class="first">Ubuntu Release</th>
+                <th>Publisher</th>
+                <th>User</th>
+                <th>server<br>32-bit</th>
+                <th>server<br>64-bit</th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 10.10 Maverick<br />
+                EBS boot</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-c81f4f8d</tt></td>
+<td><tt>ami-ca1f4f8f</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 10.10 Maverick<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-2a1f4f6f</tt></td>
+<td><tt>ami-cc1f4f89</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 10.04 LTS Lucid<br />
+                EBS boot</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-8c0c5cc9</tt></td>
+<td><tt>ami-880c5ccd</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 10.04 LTS Lucid<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-e80c5cad</tt></td>
+<td><tt>ami-860c5cc3</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 9.10 Karmic<br />
+                EBS boot</td>
+                <td>Alestic</td>
+                <td>ubuntu@</td>
+<td><tt>ami-fd5100b8</tt></td>
+<td><tt>ami-ff5100ba</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 9.10 Karmic<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-6ef0a12b</tt></td>
+<td><tt>ami-0af0a14f</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 8.04 LTS Hardy<br />
+                EBS boot</td>
+                <td>Alestic</td>
+                <td>ubuntu@</td>
+<td><tt>ami-ed5405a8</tt></td>
+<td><tt>ami-ef5405aa</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 8.04 LTS Hardy<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-96f0a1d3</tt></td>
+<td><tt>ami-a6f0a1e3</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 6.06 LTS Dapper<br />
+                instance-store</td>
+                <td>Alestic</td>
+                <td>root@</td>
+<td><tt>ami-9b3a6bde</tt></td>
+<td><tt>ami-a13a6be4</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <th class="first">Debian Release</th>
+                <th>Publisher</th>
+                <th>User</th>
+                <th>server<br>32-bit</th>
+                <th>server<br>64-bit</th>
+              </tr>
+
+              <tr>
+                <td class="first">Debian 5.0 Lenny<br />
+                instance-store</td>
+                <td>Alestic</td>
+                <td>root@</td>
+<td><tt>ami-b33a6bf6</tt></td>
+<td><tt>ami-4d3d6c08</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Debian 4.0 Etch<br />
+                instance-store</td>
+                <td>Alestic</td>
+                <td>root@</td>
+<td><tt>ami-ab3a6bee</tt></td>
+<td><tt>ami-473d6c02</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+
+            </tbody></table>
+</div>
+<!-- ###################################################################### -->
+<div id="tab-eu-west-1" style="display:none;">
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('us-east-1');">
+                 &nbsp;&nbsp;&nbsp;us-east-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('us-west-1');">
+                 &nbsp;&nbsp;&nbsp;us-west-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+            <div class="tabselected">
+              &nbsp;&nbsp;&nbsp;eu-west-1&nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('ap-southeast-1');">
+                 &nbsp;&nbsp;&nbsp;ap-southeast-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+
+            <table class="amis">
+              <tbody>
+
+              <tr>
+                <th class="first">Ubuntu Release</th>
+                <th>Publisher</th>
+                <th>User</th>
+                <th>server<br>32-bit</th>
+                <th>server<br>64-bit</th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 10.10 Maverick<br />
+                EBS boot</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-465c6932</tt></td>
+<td><tt>ami-405c6934</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 10.10 Maverick<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-7e5c690a</tt></td>
+<td><tt>ami-505c6924</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 10.04 LTS Lucid<br />
+                EBS boot</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-f4340180</tt></td>
+<td><tt>ami-f6340182</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 10.04 LTS Lucid<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-4a34013e</tt></td>
+<td><tt>ami-1e34016a</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 9.10 Karmic<br />
+                EBS boot</td>
+                <td>Alestic</td>
+                <td>ubuntu@</td>
+<td><tt>ami-b3c0ebc7</tt></td>
+<td><tt>ami-bdc0ebc9</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 9.10 Karmic<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-24b99350</tt></td>
+<td><tt>ami-28b9935c</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 8.04 LTS Hardy<br />
+                EBS boot</td>
+                <td>Alestic</td>
+                <td>ubuntu@</td>
+<td><tt>ami-63d8f317</tt></td>
+<td><tt>ami-61d8f315</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 8.04 LTS Hardy<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-beb993ca</tt></td>
+<td><tt>ami-a0b993d4</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 6.06 LTS Dapper<br />
+                instance-store</td>
+                <td>Alestic</td>
+                <td>root@</td>
+<td><tt>ami-8a446ffe</tt></td>
+<td><tt>ami-705b7004</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <th class="first">Debian Release</th>
+                <th>Publisher</th>
+                <th>User</th>
+                <th>server<br>32-bit</th>
+                <th>server<br>64-bit</th>
+              </tr>
+
+              <tr>
+                <td class="first">Debian 5.0 Lenny<br />
+                instance-store</td>
+                <td>Alestic</td>
+                <td>root@</td>
+<td><tt>ami-b8446fcc</tt></td>
+<td><tt>ami-80446ff4</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Debian 4.0 Etch<br />
+                instance-store</td>
+                <td>Alestic</td>
+                <td>root@</td>
+<td><tt>ami-be446fca</tt></td>
+<td><tt>ami-86446ff2</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+
+            </tbody></table>
+</div>
+<!-- ###################################################################### -->
+<div id="tab-ap-southeast-1" style="display:none;">
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('us-east-1');">
+                 &nbsp;&nbsp;&nbsp;us-east-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('us-west-1');">
+                 &nbsp;&nbsp;&nbsp;us-west-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+            <div class="tabunselected">
+              <a href="javascript:void(0);" onClick="return ON('eu-west-1');">
+                 &nbsp;&nbsp;&nbsp;eu-west-1&nbsp;&nbsp;&nbsp;
+               </a>
+            </div>
+            <div class="tabselected">
+              &nbsp;&nbsp;&nbsp;ap-southeast-1&nbsp;&nbsp;&nbsp;
+            </div>
+
+            <table class="amis">
+              <tbody>
+
+              <tr>
+                <th class="first">Ubuntu Release</th>
+                <th>Publisher</th>
+                <th>User</th>
+                <th>server<br>32-bit</th>
+                <th>server<br>64-bit</th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 10.10 Maverick<br />
+                EBS boot</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-6a136d38</tt></td>
+<td><tt>ami-68136d3a</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 10.10 Maverick<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-7c136d2e</tt></td>
+<td><tt>ami-64136d36</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 10.04 LTS Lucid<br />
+                EBS boot</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-00067852</tt></td>
+<td><tt>ami-06067854</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 10.04 LTS Lucid<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-60067832</tt></td>
+<td><tt>ami-14067846</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 9.10 Karmic<br />
+                EBS boot</td>
+                <td>Alestic</td>
+                <td>ubuntu@</td>
+<td><tt>ami-c3f28d91</tt></td>
+<td><tt>ami-dff28d8d</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 9.10 Karmic<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-e6344ab4</tt></td>
+<td><tt>ami-90344ac2</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 8.04 LTS Hardy<br />
+                EBS boot</td>
+                <td>Alestic</td>
+                <td>ubuntu@</td>
+<td><tt>ami-29f28d7b</tt></td>
+<td><tt>ami-2bf28d79</tt></td>
+              </tr>
+              <tr>
+                <td class="first">Ubuntu 8.04 LTS Hardy<br />
+                instance-store</td>
+                <td>Canonical</td>
+                <td>ubuntu@</td>
+<td><tt>ami-70354b22</tt></td>
+<td><tt>ami-18354b4a</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Ubuntu 6.06 LTS Dapper<br />
+                instance-store</td>
+                <td>Alestic</td>
+                <td>root@</td>
+<td><tt>ami-43f28d11</tt></td>
+<td><tt>ami-79f28d2b</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <th class="first">Debian Release</th>
+                <th>Publisher</th>
+                <th>User</th>
+                <th>server<br>32-bit</th>
+                <th>server<br>64-bit</th>
+              </tr>
+
+              <tr>
+                <td class="first">Debian 5.0 Lenny<br />
+                instance-store</td>
+                <td>Alestic</td>
+                <td>root@</td>
+<td><tt>ami-b1f38ce3</tt></td>
+<td><tt>ami-a3f38cf1</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+              <tr>
+                <td class="first">Debian 4.0 Etch<br />
+                instance-store</td>
+                <td>Alestic</td>
+                <td>root@</td>
+<td><tt>ami-8df38cdf</tt></td>
+<td><tt>ami-b9f38ceb</tt></td>
+              </tr>
+
+              <tr>
+                <th colspan="5"></th>
+              </tr>
+
+
+            </tbody></table>
+</div>
+
+<p><br /></p>
+
+<div id="ami-comments" style="display:none;">
+
+<p>
+<a href="http://aws.amazon.com/ec2">Amazon Elastic Compute Cloud (EC2)]</a>
+provides self-serve,
+on-demand servers where you pay for the capacity you use.  The Ubuntu
+and Debian images listed above are publicly available for use by the
+EC2 community.
+</p>
+
+<p>
+AMIs listed as &#8220;Canonical&#8221; are published by Canonical, the commercial
+sponsor of Ubuntu.  AMIs listed as &#8220;Alestic&#8221; are published by 
+<a href="http://www.anvilon.com">Eric Hammond</a>.
+</p>
+
+<p>
+Each row indicates the ssh account which should be used to access a
+new instance of the AMIs, either &#8220;ubuntu@&#8221; or &#8220;root@&#8221;.
+</p>
+
+<p>
+The &#8220;<b>EBS boot</b>&#8221; AMIs use the corresponding image in the AMI built by
+Canonical, but the root disk is a persistent EBS volume instead of
+ephemeral storage.
+</p>
+
+</div>
+
+<p><br /></p>
+
+<div id="ami-comments" style="display:none;">
+
+<p>
+<a href="http://aws.amazon.com/ec2">Amazon Elastic Compute Cloud (EC2)]</a>
+provides self-serve,
+on-demand servers where you pay for the capacity you use.  The Ubuntu
+and Debian images listed above are publicly available for use by the
+EC2 community.
+</p>
+
+<p>
+AMIs listed as &#8220;Canonical&#8221; are published by Canonical, the commercial
+sponsor of Ubuntu.  AMIs listed as &#8220;Alestic&#8221; are published by 
+<a href="http://www.anvilon.com">Eric Hammond</a>.
+</p>
+
+<p>
+Each row indicates the ssh account which should be used to access a
+new instance of the AMIs, either &#8220;ubuntu@&#8221; or &#8220;root@&#8221;.
+</p>
+
+<p>
+The &#8220;<b>EBS boot</b>&#8221; AMIs use the corresponding image in the AMI built by
+Canonical, but the root disk is a persistent EBS volume instead of
+ephemeral storage.
+</p>
+
+</div>
+
+
+
+<div class="asset-footer"></div>
+
+
+    <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rdf:Description
+    rdf:about="http://alestic.com/2010/12/ec2-ssh-port-80"
+    trackback:ping="http://alestic.com/mt/mt-tb.cgi/98"
+    dc:title="Boot EC2 Instance With ssh on Port 80"
+    dc:identifier="http://alestic.com/2010/12/ec2-ssh-port-80"
+    dc:subject="EC2"
+    dc:description="In a thread on the EC2 forum, Marko describes a situation where an outbound firewall prevents the ability to ssh to port 22, which is the default port on all EC2 instances. In that thread, Shlomo Swidler proposes creating a..."
+    dc:creator="Eric Hammond"
+    dc:date="2010-12-04T12:57:01-08:00" />
+</rdf:RDF>
+-->
+
+<div id="entry-107" class="entry-asset asset hentry">
+    <div class="asset-header">
+        <h2 class="asset-name entry-title"><a href="http://alestic.com/2010/12/ec2-ssh-port-80" rel="bookmark">Boot EC2 Instance With ssh on Port 80</a></h2>
+        <div class="asset-meta">
+    <span class="byline">
+
+        By <span class="vcard author"><a class="fn url" href="http://www.anvilon.com/">Eric Hammond</a></span> on <abbr class="published" title="2010-12-04T12:57:01-08:00">December  4, 2010 12:57 PM</abbr>
+
+    </span>
+
+    <span class="separator">|</span> <a href="http://alestic.com/2010/12/ec2-ssh-port-80#comments">4 Comments</a>
+    <span class="separator">|</span> <a href="http://alestic.com/2010/12/ec2-ssh-port-80#trackbacks">0 TrackBacks</a>
+
+
+</div>
+
+    </div>
+    <div class="asset-content entry-content">
+
+        <div class="asset-body">
+            <p>In a <a href="https://forums.aws.amazon.com/thread.jspa?threadID=51816">thread on the EC2 forum</a>, Marko describes a situation
+where an outbound firewall prevents the ability to ssh to port 22,
+which is the default port on all EC2 instances.</p>
+
+<p>In that thread, Shlomo Swidler proposes creating a <a href="http://alestic.com/2009/06/ec2-user-data-scripts">user-data
+script</a> that changes sshd to listen on a port the firewall
+permits.</p>
+
+<p>Here&#8217;s a simple example of a user-data script that does just that.
+Most outbound firewalls allow traffic to port 80 (web/HTTP), so I use
+it in this example.</p>
+
+<p>The first step is to create a file containing the user-data script:</p>
+
+<pre><code>cat &lt;&lt;'EOM' &gt;user-data-ssh-port-80.txt
+#!/bin/bash -ex
+perl -pi -e 's/^#?Port 22$/Port 80/' /etc/ssh/sshd_config
+service sshd restart || service ssh restart
+EOM
+</code></pre>
+
+<p>The first statement changes the sshd config to listen on port 80
+instead of port 22, and the second statement restarts sshd so it will
+start using this new configuration.</p>
+
+<p>Now you can run a new instance on Amazon EC2, passing in this
+user-data script.  Since the AWS APIs use standard web ports, most
+outbound firewalls will let through these types of requests.  In this
+example, I use a 64-bit Ubuntu 10.04 Lucid AMI from Canonical which was
+current as of this article.  Please use the most recent AMIs
+available.</p>
+
+<pre><code>ec2-run-instances --key YOURKEYPAIR --region us-east-1 --instance-type t1.micro --user-data-file user-data-ssh-port-80.txt ami-4a0df923
+</code></pre>
+
+<p>Save the instance id created and make a note of the IP address once it
+starts.  Now you can ssh in to port 80 using the keypair you
+specified:</p>
+
+<pre><code>ssh -p 80 -i YOURKEYPAIR.pem ubuntu@IPADDRESS
+</code></pre>
+
+<p>If you don&#8217;t get through right away, make sure your EC2 security group allows
+access on port 80, and wait long enough for the instance to boot.  If you&#8217;re connecting to an Amazon Linux AMI, ssh to ec2-user@ instead.</p>
+
+<p>To avoid having to include &#8220;-i YOURKEYPAIR.pem&#8221; in every ssh, <a href="http://alestic.com/2010/10/ec2-ssh-keys">upload your personal ssh key to EC2</a>.</p>
+
+<p>After testing this, don&#8217;t forget to terminate your EC2 instance.</p>
+
+<p>See also: <a href="http://alestic.com/2009/05/openvpn-ec2">Escaping Restrictive/Untrusted Networks with OpenVPN on EC2</a></p>
+
+<h2>Disclaimer</h2>
+
+<p>These instructions are not intended to assist in illegal
+activities. If you are breaking the laws or rules of your government
+or college or company or ISP, then you should understand the
+implications and be willing to accept consequences of your actions.</p>
+
+<p>[Update 2010-12-06: Enhanced user-data script to work on both Ubuntu 10.04+ and Amazon Linux (CentOS).  Updated AMI id.]</p>
+
+        </div>
+
+
+
+    </div>
+    <div class="asset-footer"></div>
+</div>
+
+
+    <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rdf:Description
+    rdf:about="http://alestic.com/2010/10/ec2-ami-copy"
+    trackback:ping="http://alestic.com/mt/mt-tb.cgi/96"
+    dc:title="Copying EBS Boot AMIs Between EC2 Regions"
+    dc:identifier="http://alestic.com/2010/10/ec2-ami-copy"
+    dc:subject="EC2"
+    dc:description="Using Amazon EC2, you created an EBS boot AMI and it&#8217;s working fine, but now you want to run instances of that AMI in a different EC2 region. Since AMIs are region specific, you need a copy of the image..."
+    dc:creator="Eric Hammond"
+    dc:date="2010-10-27T05:07:50-08:00" />
+</rdf:RDF>
+-->
+
+<div id="entry-105" class="entry-asset asset hentry">
+    <div class="asset-header">
+        <h2 class="asset-name entry-title"><a href="http://alestic.com/2010/10/ec2-ami-copy" rel="bookmark">Copying EBS Boot AMIs Between EC2 Regions</a></h2>
+        <div class="asset-meta">
+    <span class="byline">
+
+        By <span class="vcard author"><a class="fn url" href="http://www.anvilon.com/">Eric Hammond</a></span> on <abbr class="published" title="2010-10-27T05:07:50-08:00">October 27, 2010  5:07 AM</abbr>
+
+    </span>
+
+    <span class="separator">|</span> <a href="http://alestic.com/2010/10/ec2-ami-copy#comments">4 Comments</a>
+    <span class="separator">|</span> <a href="http://alestic.com/2010/10/ec2-ami-copy#trackbacks">0 TrackBacks</a>
+
+
+</div>
+
+    </div>
+    <div class="asset-content entry-content">
+
+        <div class="asset-body">
+            <p>Using Amazon EC2, you created an EBS boot AMI and it&#8217;s working fine,
+but now you want to run instances of that AMI in a different EC2
+region.  Since AMIs are region specific, you need a copy of the image
+in each region where instances are required.</p>
+
+<p>This article presents one method you can use to copy an EBS boot from
+one EC2 region to another.</p>
+
+<h2>Setup</h2>
+
+<p>Define the region from which we are copying the EBS boot AMI (source)
+and the region to which we are copying (target).  Define the EBS boot
+AMI that we are copying from the source region.</p>
+
+<p>We also need to determine which ids to use in the target region for
+the AKI (kernel image) and ARI (ramdisk image).  These must correspond
+to the AKI and ARI in the source region or the new AMI may not work
+correctly.  This is probably the trickiest step of the process and one
+which is not trivial to automate for the general case.</p>
+
+<pre><code>source_region=us-west-1  # replace with your regions
+target_region=eu-west-1
+source_ami=[AMI_ID_TO_COPY]
+target_aki=[AKI_ID]
+target_ari=[ARI_ID]
+</code></pre>
+
+<p>To make things easier, we&#8217;ll <a href="http://alestic.com/2010/10/ec2-ssh-keys">upload our own ssh public key</a> 
+to both regions.  We could also do this with ssh keys generated by
+EC2, but that it is slightly more complex as EC2 generates unique keys
+for each region.</p>
+
+<pre><code>ssh_key_file=$HOME/.ssh/id_rsa
+tmp_keypair=copy-ami-keypair-$$
+ec2-import-keypair --region $source_region    --public-key-file $ssh_key_file.pub $tmp_keypair
+ec2-import-keypair --region $target_region    --public-key-file $ssh_key_file.pub $tmp_keypair
+</code></pre>
+
+<p>Find the Ubuntu 10.04 LTS Lucid AMI in each of our regions of interest
+using the REST API provided by Ubuntu.  Pick up some required
+information about the EBS boot AMI we are going to copy.</p>
+
+<pre><code>instance_type=c1.medium
+source_run_ami=$(wget -q -O-   http://uec-images.ubuntu.com/query/lucid/server/released.current.txt |
+  egrep "server.release.*ebs.i386.$source_region" | cut -f8)
+target_run_ami=$(wget -q -O-   http://uec-images.ubuntu.com/query/lucid/server/released.current.txt |
+  egrep "server.release.*ebs.i386.$target_region" | cut -f8)
+architecture=$(ec2-describe-images --region $source_region   $source_ami | egrep ^IMAGE | cut -f8)
+ami_name=$(ec2-describe-images --region $source_region   $source_ami | egrep ^IMAGE | cut -f3 | cut -f2 -d/)
+source_snapshot=$(ec2-describe-images --region $source_region   $source_ami | egrep ^BLOCKDEVICEMAPPING | cut -f4)
+ami_size=$(ec2-describe-snapshots --region $source_region   $source_snapshot | egrep ^SNAPSHOT | cut -f8)
+</code></pre>
+
+<h2>Image Copy</h2>
+
+<p>Start an instance in each region.  Have EC2 create a new volume from
+the AMI to copy and attach it to the source instance.  Have EC2
+create a new, blank volume and attach it to the target instance.</p>
+
+<pre><code>dev=/dev/sdi
+mount=/image
+
+source_instance=$(ec2-run-instances                    --region $source_region                              --instance-type $instance_type                       --key $tmp_keypair                                   --block-device-mapping $dev=$source_snapshot::true   $source_run_ami |
+  egrep ^INSTANCE | cut -f2)
+
+target_instance=$(ec2-run-instances                    --region $target_region                              --instance-type $instance_type                       --key $tmp_keypair                                   --block-device-mapping $dev=:$ami_size:true          $target_run_ami |
+  egrep ^INSTANCE | cut -f2)
+
+while ! ec2-describe-instances --region $source_region   $source_instance | grep -q running; do sleep 1; done
+while ! ec2-describe-instances --region $target_region   $target_instance | grep -q running; do sleep 1; done
+
+source_ip=$(ec2-describe-instances --region $source_region   $source_instance | egrep "^INSTANCE" | cut -f17)
+target_ip=$(ec2-describe-instances --region $target_region   $target_instance | egrep "^INSTANCE" | cut -f17)
+target_volume=$(ec2-describe-instances --region $target_region   $target_instance | egrep "^BLOCKDEVICE.$dev" | cut -f3)
+</code></pre>
+
+<p>Copy the file system from the EBS volume in the source region to the
+to the EBS volume in the target region.</p>
+
+<pre><code>ssh -i $ssh_key_file ubuntu@$source_ip         "sudo mkdir -m 000 $mount &amp;&amp; sudo mount $dev $mount"
+
+ssh -i $ssh_key_file ubuntu@$target_ip         "sudo mkfs.ext3 -F -L uec-rootfs $dev &amp;&amp;
+ sudo mkdir -m 000 $mount &amp;&amp; sudo mount $dev $mount"
+
+ssh -A -i $ssh_key_file ubuntu@$source_ip      "sudo -E rsync                                    -PazSHAX                                       --rsh='ssh -o \"StrictHostKeyChecking no\"'    --rsync-path 'sudo rsync'                      $mount/                                        ubuntu@$target_ip:$mount/"
+
+ssh -i $ssh_key_file ubuntu@$target_ip         "sudo umount $mount"
+</code></pre>
+
+<p>The <code>uec-rootfs</code> file system label is required for Ubuntu 10.10 and above to boot correctly on EC2.  It can be left off for other distributions and earlier versions of Ubuntu.</p>
+
+<h2>AMI Creation</h2>
+
+<p>Snapshot the target EBS volume and register it as a new AMI in the
+target region.  If the source AMI included parameters like block
+device mappings for ephemeral storage, then add these options to the
+ec2-register command.</p>
+
+<pre><code>target_snapshot=$(ec2-create-snapshot --region $target_region   $target_volume | egrep ^SNAPSHOT | cut -f2)
+
+target_ami=$(ec2-register        --region $target_region        --snapshot $target_snapshot    --architecture $architecture   --name "$ami_name"             --kernel $target_aki           --ramdisk $target_ari |
+  cut -f2)
+
+echo "Make a note of the new AMI id in $target_region: $target_ami"
+</code></pre>
+
+<p>Make a note of the new AMI id.</p>
+
+<h2>Cleanup</h2>
+
+<p>Terminate the EC2 instances that were used to copy the AMI.  Since we
+let EC2 create the EBS volumes on instance run, EC2 will automatically
+delete those volumes when the instances terminate.  Delete the
+temporary keypairs we used to access the instances.  Clean up the
+temporary files we created on the local system.</p>
+
+<pre><code>ec2-terminate-instances --region $source_region $source_instance
+ec2-terminate-instances --region $target_region $target_instance
+
+ec2-delete-keypair --region $source_region $tmp_keypair
+ec2-delete-keypair --region $target_region $tmp_keypair
+
+rm $tmp_private_key $user_data
+</code></pre>
+
+<p>OPTIONAL: If you don&#8217;t want to keep the AMI you created, you can
+remove it with commands like:</p>
+
+<pre><code>ec2-deregister --region $target_region $target_ami
+ec2-delete-snapshot --region $target_region $target_snapshot
+</code></pre>
+
+<h2>Other People&#8217;s AMIs</h2>
+
+<p>In order to follow this procedure you need to have read access to the
+snapshot associated with the source AMI, which generally means it must
+be an EBS boot AMI that you created and registered.</p>
+
+<p>If you want to copy a public EBS boot AMI that somebody else created
+and you don&#8217;t have read access to the EBS snapshot for that AMI (the
+common case) then you can&#8217;t create a volume directly from the
+snapshot.</p>
+
+<p>However, you should be able to play a little trick where you run an
+instance of that AMI and immediately stop the instance.  Detach the
+EBS root volume from that instance, and attach it to another instance
+to perform the copy as above.</p>
+
+<p>The new AMI might not be exactly the same if it had a chance to start
+the actual boot processes, but it should be pretty close.</p>
+
+<h2>Cost</h2>
+
+<p>The AWS fees for copying an EBS boot AMI following the instructions in
+this article will include a couple hours of instance time, a small
+amount for the temporary EBS volumes, and some EBS I/O request
+charges.  You will also be charged a nominal amount each month for the
+S3 storage of the EBS snapshot for the new AMI in the target region.</p>
+
+<p>[Update 2010-11-01: Added <code>uec-rootfs</code> label for Ubuntu 10.10 thanks to Scott Moser]</p>
+
+        </div>
+
+
+
+    </div>
+    <div class="asset-footer"></div>
+</div>
+
+
+    <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rdf:Description
+    rdf:about="http://alestic.com/2010/10/ec2-ubuntu-jaunty-eol"
+    trackback:ping="http://alestic.com/mt/mt-tb.cgi/95"
+    dc:title="Ubuntu 9.04 Jaunty End Of Life"
+    dc:identifier="http://alestic.com/2010/10/ec2-ubuntu-jaunty-eol"
+    dc:subject="EC2"
+    dc:description="Ubuntu 9.04 Jaunty has reached EOL (End Of Life). It is no longer supported by Ubuntu with security updates and patches. You have known this day was coming for 1.5 years, as all non-LTS Ubuntu releases are supported for only..."
+    dc:creator="Eric Hammond"
+    dc:date="2010-10-25T17:38:15-08:00" />
+</rdf:RDF>
+-->
+
+<div id="entry-104" class="entry-asset asset hentry">
+    <div class="asset-header">
+        <h2 class="asset-name entry-title"><a href="http://alestic.com/2010/10/ec2-ubuntu-jaunty-eol" rel="bookmark">Ubuntu 9.04 Jaunty End Of Life</a></h2>
+        <div class="asset-meta">
+    <span class="byline">
+
+        By <span class="vcard author"><a class="fn url" href="http://www.anvilon.com/">Eric Hammond</a></span> on <abbr class="published" title="2010-10-25T17:38:15-08:00">October 25, 2010  5:38 PM</abbr>
+
+    </span>
+
+    <span class="separator">|</span> <a href="http://alestic.com/2010/10/ec2-ubuntu-jaunty-eol#comments">0 Comments</a>
+    <span class="separator">|</span> <a href="http://alestic.com/2010/10/ec2-ubuntu-jaunty-eol#trackbacks">0 TrackBacks</a>
+
+
+</div>
+
+    </div>
+    <div class="asset-content entry-content">
+
+        <div class="asset-body">
+            <p>Ubuntu 9.04 Jaunty has reached EOL (End Of Life).  It is no longer supported by Ubuntu with security updates and patches.  You have known this day was coming for 1.5 years, as all non-LTS Ubuntu releases are supported for only 18 months.</p>
+
+<p>I have no plans to delete the Ubuntu 9.04 Jaunty AMIs for EC2 published under the Alestic name in the foreseeable future, but I request, recommend, and urge you to please stop using them and upgrade to an officially supported, active, kernel-consistent release of Ubuntu on EC2 like 10.04 LTS Lucid or 10.10 Maverick.</p>
+
+<p>I have removed Jaunty from the list of public Ubuntu AMIs at the top of <a href="http://alestic.com/">Alestic.com</a> and you can see that we are getting that much closer to having all the main, active Ubuntu AMIs created by and officially supported by Canonical (and not me). Yay!</p>
+
+<p>If you are running on EC2 with Jaunty, I believe the cleanest way to upgrade to Lucid or Maverick would be to start a new instance (preferably EBS boot) with the latest AMI from Canonical, apply your software installation and configuration changes, and copy your data over from the old instance.  Since Jaunty was never officially supported by Canonical on EC2, it was using non-standard kernels and init software, so an in-place upgrade is not likely to go smoothly.</p>
+
+<p>Don&#8217;t terminate your old instances until you&#8217;re sure you have everything functioning on the new ones.  EC2 is fantastic for use-cases like this where you can double your hardware temporarily for low cost.</p>
+
+<p>Farewell Jaunty, you served us well.</p>
+
+        </div>
+
+
+
+    </div>
+    <div class="asset-footer"></div>
+</div>
+
+
+    <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rdf:Description
+    rdf:about="http://alestic.com/2010/10/ec2-stop-start"
+    trackback:ping="http://alestic.com/mt/mt-tb.cgi/94"
+    dc:title="EBS Boot Instance Stop+Start Begins a New Hour of Charges on EC2"
+    dc:identifier="http://alestic.com/2010/10/ec2-stop-start"
+    dc:subject="EC2"
+    dc:description="Scott Moser and I were wondering if stopping and starting an EBS boot instance on EC2 would begin a new hour&#8217;s worth of charges or if AWS would not increase your costs if the stop/start were done a few minutes..."
+    dc:creator="Eric Hammond"
+    dc:date="2010-10-14T11:28:07-08:00" />
+</rdf:RDF>
+-->
+
+<div id="entry-103" class="entry-asset asset hentry">
+    <div class="asset-header">
+        <h2 class="asset-name entry-title"><a href="http://alestic.com/2010/10/ec2-stop-start" rel="bookmark">EBS Boot Instance Stop+Start Begins a New Hour of Charges on EC2</a></h2>
+        <div class="asset-meta">
+    <span class="byline">
+
+        By <span class="vcard author"><a class="fn url" href="http://www.anvilon.com/">Eric Hammond</a></span> on <abbr class="published" title="2010-10-14T11:28:07-08:00">October 14, 2010 11:28 AM</abbr>
+
+    </span>
+
+    <span class="separator">|</span> <a href="http://alestic.com/2010/10/ec2-stop-start#comments">2 Comments</a>
+    <span class="separator">|</span> <a href="http://alestic.com/2010/10/ec2-stop-start#trackbacks">0 TrackBacks</a>
+
+
+</div>
+
+    </div>
+    <div class="asset-content entry-content">
+
+        <div class="asset-body">
+            <p><a href="http://ubuntu-smoser.blogspot.com/">Scott Moser</a> and I were wondering if stopping and starting an EBS boot instance on EC2 would begin a new hour&#8217;s worth of charges or if AWS would not increase your costs if the stop/start were done a few minutes apart in the same hour.</p>
+
+<p>For some reason, I had assumed that it would start a new hour of fees, possibly because of my experience with the somewhat unrelated terminating old instances and starting new instances.  However, we decided it would be easy to test, so here are the results.</p>
+
+<p>I tested with an Ubuntu 10.10 Maverick 32-bit server EBS boot AMI on the <code>m1.small</code> instance type in the <code>ap-southeast-1</code> (Singapore) region.  The AMI should have no effect on charges, so these results should apply to any OS you run on EC2.</p>
+
+<p>I used an AWS account that did not have any EC2 instance fees in the Singapore region that month (Scott&#8217;s idea) so that this activity would be easy to see as the only charges on that account.</p>
+
+<pre><code>$ ec2-run-instances --region ap-southeast-1 --key KEYPAIR ami-6a136d38
+RESERVATION r-48370d1a  063491364108    default
+INSTANCE    i-908782c2  ami-6a136d38            pending KEYPAIR 0   m1.small    2010-10-14T16:38:17+0000    ap-southeast-1a aki-13d5aa41    monitoring-disabled                 ebs         paravirtual 
+$ ec2-stop-instances --region ap-southeast-1 i-908782c2
+INSTANCE    i-908782c2  running stopping
+
+$ ec2-start-instances --region ap-southeast-1 i-908782c2
+INSTANCE    i-908782c2  stopped pending
+$ ec2-stop-instances --region ap-southeast-1 i-908782c2
+INSTANCE    i-908782c2  running stopping
+
+$ ec2-start-instances --region ap-southeast-1 i-908782c2
+INSTANCE    i-908782c2  stopped pending
+$ ec2-stop-instances --region ap-southeast-1 i-908782c2
+INSTANCE    i-908782c2  running stopping
+
+$ ec2-start-instances --region ap-southeast-1 i-908782c2
+INSTANCE    i-908782c2  stopped pending
+$ ec2-terminate-instances --region ap-southeast-1 i-908782c2
+INSTANCE    i-908782c2  running shutting-down
+</code></pre>
+
+<p>You can see that I had four begin/end sessions where the instance was running; all of these took place in a single real time hour.  Before stopping, I waited each time for the instance to move to <code>running</code>, and I waited each time for the instance to move to <code>stopped</code> before starting it again.</p>
+
+<p>I then waited for a while (hours) for the results of this activity to show up on the <a href="http://ec2activity.notlong.com/">AWS account activity page</a>.</p>
+
+<p align="center">
+<img width="473" height="92" src="/img/blog/2010-10-14-activity.png" alt="activity snapshot">
+</p>
+
+<p>If Amazon considered all of this activity to be taking place by a single instance in a single hour real time hour then the charge would have been $0.095 (<code>m1.small</code> in the <code>ap-east-1</code> region).  However, Amazon considers each of these run sessions to be starting a new hour of charges, so I was charged for 4 hours of instance time at $0.38.</p>
+
+<p>In general, this additional charge is not a big deal.  After all, for the smaller instance types we are only talking pennies or dimes for an hour of instance time.  However, if you set up some sort of system where you are constantly stopping and starting instances within a single hour of wall clock time, then the effects of this policy could multiply your costs.  You might want to investigate ways to keep your instances running more continuously and only stopping them if the anticipated down time is more than an hour.</p>
+
+<p>Update: After I ran this test I found that <a href="http://shlomoswidler.com/">Shlomo Swidler</a> answered this question on the <a href="http://developer.amazonwebservices.com/connect/message.jspa?messageID=191668">EC2 forum</a>, but it&#8217;s still fun to prove it.</p>
+
+        </div>
+
+
+
+    </div>
+    <div class="asset-footer"></div>
+</div>
+
+
+    <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rdf:Description
+    rdf:about="http://alestic.com/2010/10/ec2-ssh-keys"
+    trackback:ping="http://alestic.com/mt/mt-tb.cgi/93"
+    dc:title="Uploading Personal ssh Keys to Amazon EC2"
+    dc:identifier="http://alestic.com/2010/10/ec2-ssh-keys"
+    dc:subject="EC2"
+    dc:description="Amazon recently launched the ability to upload your own ssh public key to EC2 so that it can be passed to new instances when they are launched. Prior to this you always had to use an ssh keypair that was..."
+    dc:creator="Eric Hammond"
+    dc:date="2010-10-14T06:23:42-08:00" />
+</rdf:RDF>
+-->
+
+<div id="entry-102" class="entry-asset asset hentry">
+    <div class="asset-header">
+        <h2 class="asset-name entry-title"><a href="http://alestic.com/2010/10/ec2-ssh-keys" rel="bookmark">Uploading Personal ssh Keys to Amazon EC2</a></h2>
+        <div class="asset-meta">
+    <span class="byline">
+
+        By <span class="vcard author"><a class="fn url" href="http://www.anvilon.com/">Eric Hammond</a></span> on <abbr class="published" title="2010-10-14T06:23:42-08:00">October 14, 2010  6:23 AM</abbr>
+
+    </span>
+
+    <span class="separator">|</span> <a href="http://alestic.com/2010/10/ec2-ssh-keys#comments">2 Comments</a>
+    <span class="separator">|</span> <a href="http://alestic.com/2010/10/ec2-ssh-keys#trackbacks">2 TrackBacks</a>
+
+
+</div>
+
+    </div>
+    <div class="asset-content entry-content">
+
+        <div class="asset-body">
+            <p>Amazon recently launched the ability to upload your own ssh public key to EC2 so that it can be passed to new instances when they are launched.  Prior to this you always had to use an ssh keypair that was generated by Amazon.</p>
+
+<p>The benefits of using your own ssh key include:</p>
+
+<ul>
+<li><p>Amazon never sees the private part of the ssh key (though they promise they do not save a copy after you downloaded it and we all trust them with this)</p></li>
+<li><p>The private part of the ssh key is never transmitted over the network (though it always goes over an encrypted connection and we mostly trust this)</p></li>
+<li><p>You can now upload the same public ssh key to all EC2 regions, so you no longer have to keep track of a separate ssh key for each region.</p></li>
+<li><p>You can use your default personal ssh key with brand new EC2 instances, so you no longer have to remember to specify options like <code>-i EC2KEYPAIR</code> in every <code>ssh</code>, <code>scp</code>, <code>rsync</code> command.</p></li>
+</ul>
+
+<p>If you haven&#8217;t yet created an ssh key for your local system, it can be done with the command:</p>
+
+<pre><code>ssh-keygen
+</code></pre>
+
+<p>You can accept the default file locations, and I recommend using a secure passphrase to keep the key safe.</p>
+
+<p>Here are some sample commands that will upload to all existing regions your personal ssh public key from the default file location on Ubuntu, giving it an EC2 keypair name of your current username.  Adjust to suit your preferences:</p>
+
+<pre><code>keypair=$USER  # or some name that is meaningful to you
+publickeyfile=$HOME/.ssh/id_rsa.pub
+regions=$(ec2-describe-regions | cut -f2)
+
+for region in $regions; do
+  echo $region
+  ec2-import-keypair --region $region --public-key-file $publickeyfile $keypair
+done
+</code></pre>
+
+<p>When you start new instances, you can now specify this new keypair name and EC2 will provide the previously uploaded public ssh key to the instance, allowing you to ssh in.  For example:</p>
+
+<pre><code>ec2-run-instances --key $USER ami-508c7839
+[...]
+ec2-describe-instances i-88eb15e5
+[...]
+ssh ubuntu@ec2-184-73-107-172.compute-1.amazonaws.com
+</code></pre>
+
+<p>Don&#8217;t forget to terminate the instance if you started one to test this.</p>
+
+<p>[Update]</p>
+
+<p>Based on a Twitter question, I tested uploading a DSA public ssh key (instead of RSA) and got this error from Amazon:</p>
+
+<p>Client.InvalidKeyPair.Format: Invalid DER encoded key material</p>
+
+<p>I don&#8217;t see why DSA would not work since it&#8217;s just a blurb of text being stored by EC2 and passed to the instance to add to <code>$HOME/.ssh/authorized_keys</code> but there you have it.</p>
+
+        </div>
+
+
+
+    </div>
+    <div class="asset-footer"></div>
+</div>
+
+
+
+</div>
+                    </div>
+                <div id="beta">
+    <div id="beta-inner">
+
+        <div class="widget-recent-entries widget-archives widget">
+    <h3 class="widget-header">Stay Updated</h3>
+    <div class="widget-content">
+      <dl>
+
+        <dt>Subscribe with email address:</dh>
+        <dd>
+<form action="http://feedburner.google.com/fb/a/mailverify" 
+method="post" target="popupwindow" 
+onsubmit="window.open('http://feedburner.google.com/fb/a/mailverify?uri=alestic', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+<input type="text" style="width:190px" name="email"/>
+<input type="hidden" value="alestic" name="uri"/><input type="hidden" name="loc" value="en_US"/>
+<input type="submit" value="Subscribe" />
+</form>
+        </dd>
+
+        <dt><a href="http://feeds.alestic.com/alestic" rel="alternate" type="application/rss+xml"><img src="http://www.feedburner.com/fb/images/pub/feed-icon16x16.png" alt="" style="vertical-align:middle;border:0"/></a>&nbsp;<a href="http://feeds2.feedburner.com/alestic" rel="alternate" type="application/rss+xml">Subscribe with a reader</a></dt>
+        <dd class="entry-meta"></dd>
+
+        <dt>Join the <a href="http://ec2ubuntu-group.notlong.com">EC2 Ubuntu Google Group</a></dh>
+        <dd class="entry-meta"></dd>
+
+        <dt>Follow <a href="http://twitter.com/esh">Eric Hammond on Twitter</a></dh>
+
+      </dl>
+</div>
+</div>
+
+<div class="widget-recent-entries widget-archives widget">
+    <h3 class="widget-header">More Entries</h3>
+    <div class="widget-content">
+        <dl>
+        
+            <dt><a href="http://alestic.com/2010/10/ec2-ubuntu-maverick">Ubuntu 10.10 Maverick Released for Amazon EC2</a></dt>
+            <dd>Does anybody really need me to tell them that you can now run a copy of the newly released Ubuntu&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (20)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/10/ec2-consistent-snapshot-035">ec2-consistent-snapshot: New release 0.35</a></dt>
+            <dd>ec2-consistent-snapshot version 0.35 has been released on the Alestic PPA. This software is a wrapper around the EBS create-snapshot API&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (6)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/09/ec2-bug-mountall">mountall Bug and Workaround in Ubuntu 10.04 Lucid on EC2</a></dt>
+            <dd>The Ubuntu 10.04 Lucid AMis for Amazon EC2 dated 20100923 have a known bug which causes the mountall process to&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (5)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/09/ec2-ami-canonical-t1micro">New Release of Ubuntu AMIs Solves t1.micro Rebooting Issue</a></dt>
+            <dd>Canonical has released an updated series of Ubuntu AMIs for EC2. When starting new EC2 instances, you should use the&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (4)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/09/ec2-instance-termination">Automatic Termination of Temporary Instances on Amazon EC2</a></dt>
+            <dd>I frequently fire up a temporary Ubuntu server on Amazon EC2 to test out some package feature, installation process, or&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (6)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/09/aws-iam">Improving Security on EC2 With AWS Identity and Access Management (IAM)</a></dt>
+            <dd>A few hours ago, Amazon launched a public preview of AWS Identity and Access Management (IAM) which is a powerful&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (0)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/08/ec2-ami-canonical">Updated Ubuntu AMIs for EC2 released by Canonical</a></dt>
+            <dd>As Scott Moser announced, Canonical has released updated AMIs (Amazon Machine Images) for running Ubuntu 10.04 Lucid, Ubuntu 9.10 Karmic,&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (0)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/08/alestic-sponsorship">Alestic.com Sponsorship</a></dt>
+            <dd>For information on sponsoring Alestic.com, please see: http://alestic.com/sponsors A quick but heartfelt note of thanks to Ben Cherian at ServiceCloud,&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (0)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/05/ec2-move-ebs-boot-instance">Move a Running EBS Boot Instance to New Hardware on Amazon EC2</a></dt>
+            <dd>Amazon EC2 has been experiencing some power issues in a portion of one of their many data centers. Even though&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (11)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/05/crowdphoto-net">One Weekend to Prototype CrowdPhoto.net using AWS Technologies</a></dt>
+            <dd>On Friday evening (2 days ago) I and a number of other high octane LA individuals came to LA StartupWeekend&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (0)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/04/ec2-ubuntu-ap-southeast-1">Ubuntu AMIs available for Amazon EC2 in Asia Pacific (Singapore)</a></dt>
+            <dd>Amazon EC2 just launched the Asia Pacific region with data centers in Singapore. The standard Ubuntu and Debian AMIs (Amazon&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (3)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/04/ec2-ubuntu-lucid-amis">Ubuntu 10.04 Lucid Released for Amazon EC2</a></dt>
+            <dd>Ubuntu 10.04 Lucid was released on Amazon EC2 right on schedule today along with the rest of the normal Ubuntu&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (4)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/04/upgrading-servers-to-ubuntu-1004-lucid-on-amazon-ec2">Upgrading Servers to Ubuntu 10.04 Lucid on Amazon EC2</a></dt>
+            <dd>Ubuntu 10.04 Lucid is expected to be released this Thursday (April 29, 2010). This is the first LTS (long term&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (2)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/03/ebs-volume-initialization-from-snapshot">Identifying When a New EBS Volume Has Completed Initialization From an EBS Snapshot</a></dt>
+            <dd>On Amazon EC2, you can create a new EBS volume from an EBS snapshot using a command like ec2-create-volume --availability-zone&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (1)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/03/ec2-ubuntu-ami-release">New releases of Ubuntu and Debian Images for Amazon EC2 (20100319)</a></dt>
+            <dd>Note: I do not recommend that new users start with these AMIs. These AMIs run with older versions of Amazon&#8217;s&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (2)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/02/scale-8x-talk-notes-ec2-beginners-workshop">SCALE 8x Talk Notes: EC2 Beginners Workshop</a></dt>
+            <dd>At SCALE 8x (Southern California Linux Expo, Feb 2010) I did a walkthrough demonstrating how to use the AWS console&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (0)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/02/ec2-scale-interview">The BitSource Interview of Eric Hammond (SCALE, EC2)</a></dt>
+            <dd>Matthew Sacks, of The BitSource, made the mistake of asking me some questions about Amazon EC2, so I rambled on&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (0)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/02/ec2-resize-running-ebs-root">Resizing the Root Disk on a Running EBS Boot EC2 Instance</a></dt>
+            <dd>In a previous article I described how to run an EBS boot AMI with a larger root disk size than&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (11)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/01/ec2-ubuntu-ami-release-hardy">New Ubuntu 8.04.3 Hardy AMIs for Amazon EC2</a></dt>
+            <dd>Scott Moser (Canonical) built and released new Ubuntu 8.04.3 LTS Hardy images and AMIs for Amazon EC2. I also published&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (0)</dd>
+        
+    
+        
+            <dt><a href="http://alestic.com/2010/01/scale-ec2-tutorial">Southern California Linux Expo - Februrary 19-21, 2010 at the Westin LAX</a></dt>
+            <dd> The 8th Southern California Linux Expo (aka SCaLE 8x) is a community organized, non-profit event. Those words and the&hellip;</dd>
+            <dd class="entry-meta">By Eric Hammond | Comments (0)</dd>
+        
+        </dl>
+    </div>
+</div>
+        
+    
+
+
+
+
+    </div>
+</div>
+
+
+
+                </div>
+            </div>
+            <div id="footer">
+                <div id="footer-inner">
+                    <div id="footer-content">
+Copyright &copy;2007-2010 <a href="http://www.anvilon.com/">Eric Hammond</a>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
