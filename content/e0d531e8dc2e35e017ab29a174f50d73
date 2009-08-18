@@ -1,0 +1,108 @@
+<!DOCTYPE html 
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Audioscrobbler - The Music Technology Playground from Last.fm</title>
+<meta name="description" content="Audioscrobbler is a database that tracks music listening habits and calculates relationships and recommendations."/>
+<link rel="stylesheet" type="text/css" media="screen" href="/styles/Main.css" />
+</head>
+<body>
+<div id="website">
+
+    <div id="header">
+        <a href="/" class="homelink">
+            <h1>Audioscrobbler - The Music Technology Playground from Last.fm</h1>
+        </a>
+        
+        <ul id="navigation">
+        <li class="current"><a href="/development/">Development</a></li>
+        <li><a href="/">Home</a></li>   
+        </ul>
+    </div>
+    <div id="content"><div id="secondaryNav">
+            <ul>
+            <li class="title">Development navigation:</li>
+            <li ><a href="/development/">Overview</a></li>
+            <li class="current"><a href="/development/ketama/">Ketama</a></li>
+            <li ><a href="/development/ivysvn/">Ivy-svn</a></li>
+            <li ><a href="/development/dumbo/">Dumbo</a></li>
+            </ul>
+</div>
+
+<h2>Ketama: Consistent Hashing</h2>
+<p>
+libketama is a consistent hashing library written in C. You supply a list of servers
+and ketama will map keys to servers in a consistent way, even after adding or removing
+servers from the list.
+</p>
+<p>
+It is a generic library, but was initially written to replace how our <a href="http://www.danga.com/memcached/">memcached</a>
+clients mapped keys to servers.
+<br/>
+Previously, clients mapped keys-&gt;servers like this:
+<pre>
+ server = serverlist[hash(key)%serverlist.length];
+</pre>
+This meant that whenever we added or removed servers from the pool, everything
+hashed to different servers, which effectively wiped the entire cache.
+</p>
+<p>
+Ketama solves this problem in the following way:
+<ul>
+ <li> Take your list of servers (eg: 1.2.3.4:11211, 5.6.7.8:11211, 9.8.7.6:11211)
+ <li> Hash each server string to several (100-200) unsigned ints
+ <li> Conceptually, these numbers are placed on a circle called the continuum.
+  (imagine a clock face that goes from 0 to 2^32)
+ <li> Each number links to the server it was hashed from, so servers appear
+  at several points on the continuum, by each of the numbers they hashed to.
+ <li> To map a key->server, hash your key to a single unsigned int, and find the
+  next biggest number on the continuum. The server linked to that number is
+  the correct server for that key.
+ <li> If you hash your key to a value near 2^32 and there are no points on the
+   continuum greater than your hash, return the first server in the continuum.
+</ul>
+If you then add or remove a server from the list, only a small proportion of
+keys end up mapping to different servers.
+</p>
+
+<h2>Implementation details</h2>
+<p>
+The server list is stored in a file, whenever the file mtime is changed, libketama
+will rebuild the continuum data structure. This structure is stored in shared 
+memory and used every time you lookup the mapping for a key. You can have all your 
+machines using memcache pull down the latest copy of the file periodically (if it changed) and 
+libketama will rebuild the continuum automatically.
+</p>
+<p>
+See the README and test scripts for examples and additional information.
+</p>
+
+<h2>Source Code</h2>
+<p>
+Latest code is in our public svn repo here:
+<pre>
+    svn://svn.audioscrobbler.net/misc/ketama
+</pre>
+libketama is BSD licensed, the php extension uses the php license, and the java code is TODO(same as the official java client).
+</p>
+
+<h2>References</h2>
+<p>
+<a href="http://www.akamai.com/dl/technical_publications/ConsistenHashingandRandomTreesDistributedCachingprotocolsforrelievingHotSpotsontheworldwideweb.pdf">Consistent Hashing and Random Trees:
+Distributed Caching Protocols for Relieving Hot Spots on the World Wide Web</a><br/>
+<a href="http://www8.org/w8-papers/2a-webserver/caching/paper2.html">Web Caching with Consistent Hashing</a>
+</p>
+        
+    
+
+<br style="clear: both;" />
+</div>
+</div>
+    <div id="footer">
+        <br />
+        &copy; 2002–2008 Audioscrobbler Ltd. 
+        <br/><br/>
+    </div>
+</body>
+</html>
