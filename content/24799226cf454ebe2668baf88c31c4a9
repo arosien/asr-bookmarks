@@ -1,0 +1,404 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<title>  How to Build a Popularity Algorithm You can be Proud of</title>
+
+<meta name="generator" content="WordPress 2.9.2" /> <!-- leave this for stats -->
+
+<link rel="stylesheet" href="http://blog.linkibol.com/wp-content/themes/itheme/itheme/style.css" type="text/css" media="all" />
+<link rel="stylesheet" href="http://blog.linkibol.com/wp-content/themes/itheme/itheme/print.css" type="text/css" media="print" />
+
+<!-- Sidebar docking boxes (dbx) by Brothercake - http://www.brothercake.com/ -->
+<script type="text/javascript" src="http://blog.linkibol.com/wp-content/themes/itheme/itheme/dbx.js"></script>
+<script type="text/javascript" src="http://blog.linkibol.com/wp-content/themes/itheme/itheme/dbx-key.js"></script>
+<link rel="stylesheet" type="text/css" href="http://blog.linkibol.com/wp-content/themes/itheme/itheme/dbx.css" media="screen, projection" />
+
+<!--[if lt IE 7]>
+<link rel="stylesheet" href="http://blog.linkibol.com/wp-content/themes/itheme/itheme/ie-gif.css" type="text/css" />
+<![endif]-->
+
+<link rel="alternate" type="application/rss+xml" title="linkiblog RSS Feed" href="http://blog.linkibol.com/feed/" />
+<link rel="pingback" href="http://blog.linkibol.com/xmlrpc.php" />
+
+<link rel="alternate" type="application/rss+xml" title="linkiblog &raquo; How to Build a Popularity Algorithm You can be Proud of Comments Feed" href="http://blog.linkibol.com/2010/05/07/how-to-build-a-popularity-algorithm-you-can-be-proud-of/feed/" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://blog.linkibol.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://blog.linkibol.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='index' title='linkiblog' href='http://blog.linkibol.com' />
+<link rel='start' title='linkiblog has a new home :)' href='http://blog.linkibol.com/2010/05/07/hello-world/' />
+<link rel='prev' title='linkiblog has a new home :)' href='http://blog.linkibol.com/2010/05/07/hello-world/' />
+<link rel='next' title='Did You Know that jQuery Leaks Memory like a Fountain? &#8212; and there&#8217;s a solution for it.' href='http://blog.linkibol.com/2010/05/07/did-you-know-that-jquery-leaks-memory-like-a-fountain/' />
+<meta name="generator" content="WordPress 2.9.2" />
+<link rel='canonical' href='http://blog.linkibol.com/2010/05/07/how-to-build-a-popularity-algorithm-you-can-be-proud-of/' />
+</head>
+<body>
+<div id="page">
+  <div id="wrapper">
+    <div id="header">
+      <h1><a href="http://blog.linkibol.com">linkiblog</a></h1>
+      <div class="description">the Official Weblog of linkibol.com</div>
+      <form method="get" id="searchform" action="http://blog.linkibol.com/">
+<div><input type="text" value="Search" name="s" id="s" onfocus="if (this.value == 'Search') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search';}" />
+<input type="submit" id="searchsubmit" value="Go" />
+</div>
+</form>
+    </div><!-- /header -->
+
+    <div id="left-col">
+      <div id="nav">
+        <ul>
+          <li class="page_item "><a href="http://blog.linkibol.com/" title="Home">Home</a></li>
+		          </ul>
+      </div><!-- /nav -->
+
+    	  <div id="content">
+  
+  <div class="post-nav"> <span class="previous"><a href="http://blog.linkibol.com/2010/05/07/hello-world/" rel="prev">linkiblog has a new home :)</a></span> <span class="next"><a href="http://blog.linkibol.com/2010/05/07/did-you-know-that-jquery-leaks-memory-like-a-fountain/" rel="next">Did You Know that jQuery Leaks Memory like a Fountain? &#8212; and there&#8217;s a solution for it.</a></span></div>
+  
+    
+    <div class="post" id="post-16">
+        <h2><a href="http://blog.linkibol.com/2010/05/07/how-to-build-a-popularity-algorithm-you-can-be-proud-of/" rel="bookmark" title="Permanent Link: How to Build a Popularity Algorithm You can be Proud of">How to Build a Popularity Algorithm You can be Proud of</a></h2>
+		
+		<div class="postdata"><span class="left mini-category">Filed in: <a href="http://blog.linkibol.com/category/software-architecture/" title="View all posts in Software Architecture" rel="category tag">Software Architecture</a></span> <span class="right mini-add-comment"><a href="#respond">Add comments</a></span></div>
+		
+		<div class="entry">
+		<p>Many web sites allow users to casts vote on items. These visitors&#8217; votes are then often used to detect the items&#8217; &#8220;popularity&#8221; and hence rank the rated items accordingly.</p>
+<p>And when &#8220;rank&#8221; comes into play things gets tricky:</p>
+<ul>
+<li>The system can have inherent deficiencies in ranking items.</li>
+<li>That is mostly because developers tend to &#8220;re-invent the wheel&#8221; and throw in their own algorithms instead of basing their calculations on well-established statistical formulae (I&#8217;ll come to that in a moment, just bear with me <img src='http://blog.linkibol.com/wp-includes/images/smilies/icon_wink.gif' alt=';)' class='wp-smiley' />  ).</li>
+<li>There will be people (i.e. spammers) trying to fool the system and try to take their submissions to top.</li>
+<li>There will be system inefficiencies due to computational complexity.</li>
+</ul>
+<p>In this article,</p>
+<ul>
+<li>I&#8217;ll try to give examples on how to approach the problem;</li>
+<li>describe the weakness of each particular approach;</li>
+<li>and explain how some well-known social community sites implement their ranking algorithms.</li>
+<li>Finally I&#8217;ll discuss the current ranking algorithm we use in <a href="http://linkibol.com/">linkibol</a>.</li>
+</ul>
+<p>So let us begin with the most straigh-forward (and thus the most error-prone) approach:</p>
+<h3>Votes Determine Popularity</h3>
+<p>We have a database record, whether it be a news story, picture, video, podcast, whatever.</p>
+<p>We could order the &#8220;Popular&#8221; item by number of votes and be done with it.</p>
+<p><strong>Popularity = Votes</strong></p>
+<p>This algorithm is far from being perfect.</p>
+<p>Let me try to explain why:</p>
+<p>Say last month was a very active month and popular records in that month received around 100 votes.</p>
+<p>This month is not very active in terms of traffic (assume it&#8217;s a holiday season and your user base is rushing to beaches instead of hysterically seeking for items and casting votes) and as a result you&#8217;ve received an avarage of 30 votes for each item.</p>
+<p>Therefore, popular items from last month will probably never see the front page.</p>
+<h3>Aging Records</h3>
+<p>Let’s introduce the age of the record as another variable. If the record is newer it should have a higher prominence on the front page, yes?</p>
+<p><strong>Popularity = Votes / Record Age</strong></p>
+<p>The older the record, the more votes it requires to achieve popularity. But that&#8217;s not fair:</p>
+<p>Again assume someone woke up at 3am and submitted an excellent item to the site, where the rest of community are sleeping instead of being on-line an frantically casting votes.</p>
+<p>This excellent item, which has caused our beloved user to wake up in the middle of the night, will not receive the credit it deserves as it fades away due to the dampening effect of time.</p>
+<p>So let&#8217;s look at the age of each record:</p>
+<p><strong>Popularity = (V1/A1) + (V2/A2) + … + (Vn/An)</strong></p>
+<p>Where</p>
+<ul>
+<li><strong>Vn</strong> is a vote,</li>
+<li><strong>An</strong> is the age of that vote (for example, in minutes).</li>
+</ul>
+<p>All the values of all the votes are added to achieve a popularity score.</p>
+<p>This seems to solve the previous problem, but introduces a new one:</p>
+<p>If a single person votes on a record a year old, his vote will be worh more than 200 votes casted a year ago when the record was created. Old material comes back to haunt the front page.</p>
+<p>Let’s take a look again at the age of the record…</p>
+<h3>Dampening The Weighted Votes By Record Age</h3>
+<p>So let us introduce the age of the record into the equation:</p>
+<p><strong>Popularity = [ (V1/A1) + (V2/A2) + … + (Vn/An) ] / Record Age</strong></p>
+<p>This formula dampens votes we&#8217;ve calculated above basd on the items&#8217;s age, which prevents old stories from leaping back to the front page.</p>
+<p>It seems to solve our problem but it&#8217;s computationally inefficient:</p>
+<p>It is difficult to implement in a practical system.</p>
+<p>Moreover it&#8217;s overly-dependent on time, which also adds to the algorithm&#8217;s inefficiency:</p>
+<p>Every second, both the age of votes and the record age change. Thus, the popularity needs to be calculated for all the records in the database for every few seconds (or minutes depending on how active the site is). That&#8217;s intolerable in a high-traffic system where resource utilization is of premium importance.</p>
+<p>Since this algorithm is inapplicable let&#8217;s look at another basic example:</p>
+<h3>Using simple + and &#8211; Votes</h3>
+<p>If you like an item, rate it “plus”. If you don’t like it, give it a “minus”.</p>
+<p>The rating of an item would then be: number of positive votes divided by number of total votes.</p>
+<p>Now if you want to rank the items based on this simple equation, the following happens:</p>
+<p>Assume you have on item with a rating of 0.93, based on hundreds of votes.</p>
+<p>Now another new item is rated by a total of 2 visitors (or even just one), and they rate it +. The vote goes straight to the first position in the ranking, as its rating is 100%!</p>
+<p>What we want is this:</p>
+<ul>
+<li>If there is only few votes, then these votes should count less,</li>
+<li>when there are many votes and we can trust that this is how the public feels about it.</li>
+</ul>
+<p>That is &#8220;certainty&#8221; or &#8220;believability&#8221; of the vote should depend on the number of votes that record has received.</p>
+<p>Thus, we want to calculate a corrected rating that somehow takes the weight of votes into account:</p>
+<p>The more votes an item has, the closer the corrected rating value would be to the uncorrected rating value.</p>
+<p>That&#8217;s not a new thing though. The math for this has been worked out hundreds of years ago. It is called <strong>&#8220;bayesian average&#8221;</strong>.</p>
+<p>The bayesian rating can be given as:</p>
+<p><strong>br = ( (C* avg_rating) + (this_num_votes * this_rating) ) / (C + this_num_votes)</strong></p>
+<p>Where</p>
+<ul>
+<li><strong>C:</strong> is an ad-hoc constant. If it&#8217;s high. It will require more votes for the adjusted  (dampened) rating of an item to approach its original unadjusted value.</li>
+<li><strong>avg_rating:</strong> The average rating of each item (again, of those that have num_votes>0)</li>
+<li><strong>this_num_votes:</strong> number of votes for this item</li>
+<li><strong>this_rating:</strong> the rating of this item</li>
+</ul>
+<p>There is no point requiring 1000 votes for the item to rank 60% when each item only gets a handful of votes in average. So if the system receives less votes in general, C should be smaller.</p>
+<p>To make the system adaptive we can assign C a self-adjusting value, such as &#8220;average number of votes&#8221;. Which makes our formula.</p>
+<p><strong>br = ( (avg_num_votes * avg_rating) + (this_num_votes * this_rating) ) / (avg_num_votes + this_num_votes)</strong></p>
+<p>This formula works statistically better than the former one (i.e. dampenint the votes by record age).</p>
+<p>That damping by record age algorithm was very dependent on time. On the contrary, this rating formula is totally independent of time.</p>
+<p>It can be fine-tuned by adding</p>
+<ul>
+<li>Dampening effect of time,</li>
+<li>Trustablility (karma) of voters</li>
+<li>Page views and site activity at the time of vote</li>
+<li>If we&#8217;re voting a link, metadata for that link such as google pagerank, alexa rank etc.</li>
+</ul>
+<p>Let&#8217;s move to another approach:</li>
+<p><strong>Popularity = Lower bound of Wilson score confidence interval for a Bernoulli parameter</strong></p>
+<p>Lower bound of <strong>what?!</strong></p>
+<p>We need to balance the proportion of positive ratings with the uncertainty of a small number of observations.  Fortunately, <a href="http://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval">the math for this was worked out in 1927 by Edwin B. Wilson</a></p>
+<p>:</p>
+<p>Popularity is:</p>
+<p><img src="/resource/wilson.PNG" alt="" title="Binomial Proportion Confidence Interval" width="412" height="46" /></p>
+<p>Where:</p>
+<ul>
+<li><strong>p:</strong> is the average rating of the item normalized to [0, 1] interval.</li>
+<li><strong>z(alpha/2):</strong> is the 1-(alpha/2) th quantile of the standard normal distribution.
+<p>It can be calculated easily using the following ruby method:</p>
+<p><strong>Statistics2.pnormaldist(1-alpha/2)</strong></p>
+<li><strong>n:</strong> is the number of votes.</li>
+</ul>
+<p>The algorithm is sound, and computationally feasible. You can adjust the dampening effect of the normal distribution by changing alpha.</p>
+<h3>How Do We Rank Things in <a href="http://linkibol.com">linkibol</a>?</h3>
+<p>Our preference in linkibol is to use an adjusted Bayesian Rating algorithm.</p>
+<p>I&#8217;ll be explaining linkibol&#8217;s popularity algorithm in a moment, but before that let&#8217;s how a look at how other giants calculate popularity.</p>
+<h3>Y Combinator&#8217;s Hacker News:</h3>
+<p><strong>Popularity = (p &#8211; 1) / (t + 2)^1.5</strong></p>
+<p>Votes divided by age factor.</p>
+<p>Where</p>
+<ul>
+<li><strong>p :</strong> votes (points) from users.</li>
+<li><strng>t :</strong> time since submission in hours.</li>
+</ul>
+<p>p is subtracted by 1 to negate submitter&#8217;s vote.</p>
+<p>Age factor is (time since submission in hours plus two) to the power of 1.5.</p>
+<h3>Reddit:</h3>
+<p><img src="/resource/reddit.PNG" alt="" title="Reddit CF Algorithm" width="399" height="381" /> </p>
+<p>Description:</p>
+<p>First of all, the time 7:46:43 am on December 8th 2005 is a constant used to determine the relative age of a submission.</p>
+<p>The time the story was submitted minus the constant date is ts. ts works as the force that pulls the stories down the frontpage.</p>
+<p>y represents the relationship of up votes to down votes.</p>
+<p>45000 is the amount of seconds in 12.5 hours. This constant is used in combination with yts to &#8220;water down&#8221; votes as they are made farther and farther from the time the article was submitted.</p>
+<p>The issue is <a href="http://news.ycombinator.com/item?id=231168">discussed thoroughly in Y Combinator</a>.</p>
+<h3>StumbleUpon</h3>
+<p><strong>Popularity = (Initial stumbler audience / # domain) + ((% stumbler audience / # domain) + organic bonus – nonfriend) – (% stumbler audience + organic bonus) + N</strong></p>
+<p>Description:</p>
+<p>The initial stumbler &#8220;power&#8221; (Audience of the initial stumbler divided by the amount of times that stumbler has stumbled the given domain) is added to the sum of all the subsequent stumblers&#8217; powers.</p>
+<p>Subsequent stumbler power is ((Percentage of audience stumbler makes up divided by the number of times given stumbler has stumbled domain) + a predetermined power boost for using the toolbar &#8211; a predetermined power drain if stumblers are connected)  + (% of the stumbler audience + a predetermined boost for using the toolbar)</p>
+<p>N is a &#8220;safety variable&#8221; so that the assumed algorithm is flexible. It represents a random number.</p>
+<h3>Del.icio.us:</h3>
+<p>Del.icio.us has the simplest formula of all.</p>
+<p><strong>Popularity = (Amount of times story has been bookmarked in the last 3600 seconds)</strong></p>
+<p>The algorithm is self explanatory. The more people bookmark an item in a given time window, the more popular it is.</p>
+<h3>How Do We Implement Popularity in <a href="http://linkibol.com">linkibol</a>?</h3>
+<p>To answer this question we need to give some details on how voting works in <a href="http://linkibol.com">linkibol</a>:</p>
+<ul>
+<li>Votes are not absolute in <strong>linkibol</strong>. Each <strong>linkibol</strong> user&#8217;s vote weight depend on their <strong>karma</strong>.</li>
+<li>Users who have more karma (i.e. popular and active users) can cast more points for votes.</li>
+<li>The sum of all vote points given to a link is that link&#8217;s &#8220;linkipoint&#8221;.</li>
+<li>Users can cast negative votes, as well as positive votes.</li>
+</ul>
+<p>Here&#8217;s <strong>linkibol</strong>&#8217;s popularity calculation formula:</p>
+<p><a href="/resource/linkibol.PNG"><img src="/resource/linkibol.PNG" title="linkibol's popularity algorithm" width="512" height="94" /></a></p>
+<p>(click on the image for an enlarged version)</p>
+<p>A bit mouthful I know <img src='http://blog.linkibol.com/wp-includes/images/smilies/icon_smile.gif' alt=':)' class='wp-smiley' /> .  It took us years to simplify it to this form.</p>
+<p>But it&#8217;s a robust algorithm. And it&#8217;s computatioanly efficient once you cache certain non-dynamic parts of it.</p>
+<p>Let me explain the terms in this equation:</p>
+<ul>
+<li><strong>nvotes :</strong> total number of votes so far</li>
+<li><strong>nlinks :</strong> total number of links</li>
+<li><strong>nvotes(r) :</strong> number of votes cast to rth link.</li>
+<li><strong>deltarank(k, m) :</strong>  rank increment caused by kth vote that is casted to mth link.</li>
+<li><strong>nsaves(i) :</strong> number of users that save ith link to their linkibol.</li>
+<li><strong>a :</strong> save exponent (an ad-hoc value close to 1)</li>
+<li><strong>age(i) :</strong> the difference (in days) between date link added and current date.</li>
+<li><strong>b :</strong> decay exponent (an ad-hoc value close to 0)</li>
+</ul>
+<p>When you examine the formula closely you&#8217;ll see that it&#8217; nothing more than an adaptive bayesian rating formula multiplied by two coefficients.</p>
+<ul>
+<li>the number of users who save the link. The more an item is shared, the more popular it is.</li>
+<li>and the age of the link: the older an item the less popular it becomes.</li>
+</ul>
+<p>Ideally the adjusted ratings should be calculated regularly for &#8220;all&#8221; the links in linkibol. However, since this will bring a huge computational burden, we eliminate the problem by discarding unaltered links.</p>
+<p>That is: if a link&#8217;s linkipoint does not change at all, we don&#8217;t calculate its popularity rank. In other words, if a link does not receive any votes, we trust its most recently calculated rank.</p>
+<p>For this we have a &#8220;dirty&#8221; flag on the links table. When someone (even someone anonymous) casts a vote to a link, it becomes dirty.</p>
+<p>Then a batch thread scans all dirty links and recalculates and updates their ranks periodically.</p>
+<h3>Bottom Line:</h3>
+<p>Calculating popularity is not as easy as it sems  <img src='http://blog.linkibol.com/wp-includes/images/smilies/icon_wink.gif' alt=';)' class='wp-smiley' /> .</p>
+		
+				
+				
+		</div><!--/entry -->
+		
+		
+<!-- You can start editing here. -->
+
+	<h3 id="comments">6 Responses to &#8220;How to Build a Popularity Algorithm You can be Proud of&#8221;</h3> 
+
+	<ol class="commentlist">
+
+	
+		<li class="alt" id="comment-17">
+			<cite><a href='http://kylo.tv/community/member/583/' rel='external nofollow' class='url'>cash code</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-17" title="">May 10th, 2010 at 1:01 pm</a> </small>
+
+			<p>Wonderful write-up! It&#8217;s unquestionably the most all-embracing site within the topic. Thank you your time and effort, I will revisit read the revisions <img src='http://blog.linkibol.com/wp-includes/images/smilies/icon_smile.gif' alt=':)' class='wp-smiley' /> </p>
+
+		</li>
+
+	
+	
+		<li class="" id="comment-31">
+			<cite><a href='http://www.cozymbtshoes.com' rel='external nofollow' class='url'>mbt shoes</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-31" title="">May 11th, 2010 at 1:38 am</a> </small>
+
+			<p>Nice post&#8230;Thank you for sharing some good things!!</p>
+
+		</li>
+
+	
+	
+		<li class="alt" id="comment-33">
+			<cite>Tim</cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-33" title="">May 11th, 2010 at 5:43 am</a> </small>
+
+			<p>Brilliantly written.  Many thanks.</p>
+
+		</li>
+
+	
+	
+		<li class="" id="comment-34">
+			<cite><a href='http://www.newbooksmonthly.com/blog/?p=3883' rel='external nofollow' class='url'>Gerrys Blog &raquo; Blog Archive &raquo; Importance of Link Building to Your Website</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-34" title="">May 11th, 2010 at 5:50 am</a> </small>
+
+			<p>[...] How to Build a Popularity Algorithm You can be Proud of [...]</p>
+
+		</li>
+
+	
+	
+		<li class="alt" id="comment-40">
+			<cite><a href='http://www.newbooksmonthly.com/blog/?p=3921' rel='external nofollow' class='url'>Gerrys Blog &raquo; Blog Archive &raquo; Traffic Building With Social Marketing &#8211; How You Can Create an Endless Wave of Traffic From Twitter</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-40" title="">May 12th, 2010 at 12:27 am</a> </small>
+
+			<p>[...] How to Build a Popularity Algorithm You can be Proud of [...]</p>
+
+		</li>
+
+	
+	
+		<li class="" id="comment-55">
+			<cite><a href='http://www.simplysuris.co.uk' rel='external nofollow' class='url'>alpacas for sale</a></cite> Says:
+						<br />
+
+			<small class="commentmetadata"><a href="#comment-55" title="">May 13th, 2010 at 7:22 am</a> </small>
+
+			<p>Fantastic article !</p>
+
+		</li>
+
+	
+	
+	</ol>
+
+ 
+
+
+<h3 id="respond">Leave a Reply</h3>
+
+
+<form action="http://blog.linkibol.com/wp-comments-post.php" method="post" id="commentform">
+
+
+<p><input type="text" name="author" id="author" value="" size="22" tabindex="1" />
+<label for="author"><strong>Name</strong> (required)</label></p>
+
+<p><input type="text" name="email" id="email" value="" size="22" tabindex="2" />
+<label for="email"><strong>Mail</strong> (will not be published) (required)</label></p>
+
+<p><input type="text" name="url" id="url" value="" size="22" tabindex="3" />
+<label for="url"><strong>Website</strong></label></p>
+
+
+<p><textarea name="comment" id="comment" cols="100%" rows="10" tabindex="4"></textarea></p>
+
+<p><input name="submit" type="submit" id="submit" tabindex="5" value="Submit Comment" />
+<input type="hidden" name="comment_post_ID" value="16" />
+</p>
+
+</form>
+
+
+		
+			
+	</div><!--/post -->
+
+  </div><!--/content -->
+  
+  <div id="footer"><a href="http://www.ndesign-studio.com/resources/wp-themes/">WP Theme</a> &amp; <a href="http://www.ndesign-studio.com/stock-icons/">Icons</a> by <a href="http://www.ndesign-studio.com">N.Design Studio</a></div>
+</div><!--/left-col -->
+
+<div class="dbx-group" id="sidebar">
+
+  		<!--sidebox start --><div id="recent-posts-3" class="dbx-box widget_recent_entries">		<h3 class="dbx-handle">Recent Posts</h3><div class="dbx-content">		<ul>
+				<li><a href="http://blog.linkibol.com/2010/05/07/did-you-know-that-jquery-leaks-memory-like-a-fountain/" title="Did You Know that jQuery Leaks Memory like a Fountain? &#8212; and there&#8217;s a solution for it.">Did You Know that jQuery Leaks Memory like a Fountain? &#8212; and there&#8217;s a solution for it. </a></li>
+				<li><a href="http://blog.linkibol.com/2010/05/07/how-to-build-a-popularity-algorithm-you-can-be-proud-of/" title="How to Build a Popularity Algorithm You can be Proud of">How to Build a Popularity Algorithm You can be Proud of </a></li>
+				<li><a href="http://blog.linkibol.com/2010/05/07/hello-world/" title="linkiblog has a new home :)">linkiblog has a new home :) </a></li>
+				</ul>
+		</div></div><!--sidebox end --><!--sidebox start --><div id="categories-3" class="dbx-box widget_categories"><h3 class="dbx-handle">Categories</h3><div class="dbx-content">		<ul>
+	<li class="cat-item cat-item-13"><a href="http://blog.linkibol.com/category/front-end/" title="View all posts filed under Front-End">Front-End</a> (1)
+</li>
+	<li class="cat-item cat-item-3"><a href="http://blog.linkibol.com/category/general/" title="View all posts filed under General">General</a> (1)
+</li>
+	<li class="cat-item cat-item-5"><a href="http://blog.linkibol.com/category/software-architecture/" title="View all posts filed under Software Architecture">Software Architecture</a> (1)
+</li>
+		</ul>
+</div></div><!--sidebox end --><!--sidebox start --><div id="tag_cloud-3" class="dbx-box widget_tag_cloud"><h3 class="dbx-handle">Tags</h3><div class="dbx-content"><div><a href='http://blog.linkibol.com/tag/ajax/' class='tag-link-14' title='1 topic' style='font-size: 8pt;'>ajax</a>
+<a href='http://blog.linkibol.com/tag/algorithm/' class='tag-link-8' title='1 topic' style='font-size: 8pt;'>algorithm</a>
+<a href='http://blog.linkibol.com/tag/best-practice/' class='tag-link-9' title='1 topic' style='font-size: 8pt;'>best practice</a>
+<a href='http://blog.linkibol.com/tag/bug/' class='tag-link-19' title='1 topic' style='font-size: 8pt;'>bug</a>
+<a href='http://blog.linkibol.com/tag/bugfix/' class='tag-link-18' title='1 topic' style='font-size: 8pt;'>bugfix</a>
+<a href='http://blog.linkibol.com/tag/front-end/' class='tag-link-13' title='1 topic' style='font-size: 8pt;'>Front-End</a>
+<a href='http://blog.linkibol.com/tag/howto/' class='tag-link-10' title='1 topic' style='font-size: 8pt;'>howto</a>
+<a href='http://blog.linkibol.com/tag/javascript/' class='tag-link-21' title='1 topic' style='font-size: 8pt;'>javascript</a>
+<a href='http://blog.linkibol.com/tag/jquery/' class='tag-link-15' title='1 topic' style='font-size: 8pt;'>jquery</a>
+<a href='http://blog.linkibol.com/tag/leak/' class='tag-link-16' title='1 topic' style='font-size: 8pt;'>leak</a>
+<a href='http://blog.linkibol.com/tag/memory-leak/' class='tag-link-17' title='1 topic' style='font-size: 8pt;'>memory leak</a>
+<a href='http://blog.linkibol.com/tag/popularity/' class='tag-link-7' title='1 topic' style='font-size: 8pt;'>popularity</a>
+<a href='http://blog.linkibol.com/tag/programming/' class='tag-link-6' title='1 topic' style='font-size: 8pt;'>programming</a>
+<a href='http://blog.linkibol.com/tag/ranking/' class='tag-link-11' title='1 topic' style='font-size: 8pt;'>ranking</a>
+<a href='http://blog.linkibol.com/tag/reference/' class='tag-link-20' title='1 topic' style='font-size: 8pt;'>reference</a>
+<a href='http://blog.linkibol.com/tag/sorting/' class='tag-link-12' title='1 topic' style='font-size: 8pt;'>sorting</a>
+<a href='http://blog.linkibol.com/tag/welcome/' class='tag-link-4' title='1 topic' style='font-size: 8pt;'>welcome</a></div>
+</div></div><!--sidebox end --><!--sidebox start --><div id="archives-3" class="dbx-box widget_archive"><h3 class="dbx-handle">Archives</h3><div class="dbx-content">		<ul>
+			<li><a href='http://blog.linkibol.com/2010/05/' title='May 2010'>May 2010</a></li>
+		</ul>
+</div></div><!--sidebox end -->
+</div><!--/sidebar -->  
+    <hr class="hidden" />
+
+  </div><!--/wrapper -->
+
+</div><!--/page -->
+
+</body>
+</html>
