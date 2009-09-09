@@ -1,0 +1,136 @@
+<HTML>
+<BODY>
+<TITLE>The `Bow' Toolkit</TITLE>
+
+
+
+<h2>Bow: A Toolkit for Statistical Language Modeling, 
+            Text Retrieval, Classification and Clustering</h2>
+
+<p> <i>Bow</i> (or <i>libbow</i>) is a library of C code useful for
+writing statistical text analysis, language modeling and information
+retrieval programs.  The current distribution includes the library, as
+well as front-ends for document classification (<i>rainbow</i>),
+document retrieval (<i>arrow</i>) and document clustering
+(<i>crossbow</i>).
+
+<p> The library and its front-ends were designed and written by <a
+href="http://www.cs.cmu.edu/~mccallum">Andrew McCallum</a>, with some
+contributions from <a href="contributions.html">several graduate
+and undergraduate students</a>.
+
+<p> The name of the library rhymes with `low', not `cow'.
+
+<h3>About the library</h3>
+
+<p> The library provides facilities for:
+<ul>
+<li> Recursively descending directories, finding text files.
+<li> Finding `document' boundaries when there are multiple documents per file.
+<li> Tokenizing a text file, according to several different methods.
+<li> Including N-grams among the tokens.
+<li> Mapping strings to integers and back again, very efficiently.
+<li> Building a sparse matrix of document/token counts.
+<li> Pruning vocabulary by word counts or by information gain.
+<li> Building and manipulating word vectors.
+<li> Setting word vector weights according to Naive Bayes, TFIDF, and
+          several other methods.
+<li> Smoothing word probabilities according to Laplace (Dirichlet
+          uniform), M-estimates, Witten-Bell, and Good-Turning.
+<li> Scoring queries for retrieval or classification.
+<li> Writing all data structures to disk in a compact format.
+<li> Reading the document/token matrix from disk in an efficient,
+          sparse fashion.
+<li> Performing test/train splits, and automatic classification tests.
+<li> Operating in server mode, receiving and answering queries over a
+     socket. 
+</ul>
+
+<p>The library does not:
+<ul>
+<li> Have English parsing or part-of-speech tagging facilities.
+<li> Do smoothing across N-gram models.
+<li> Claim to be finished.
+<li> Have good documentation.
+<li> Claim to be bug-free.
+</ul>
+
+<p> It is known to compile on most UNIX systems, including Linux,
+Solaris, SUNOS, Irix and HPUX.  Over a year ago, it compiled on
+WindowsNT (with a GNU build environment); it doesn't do this any more,
+but probably could with small fixes.  Patches to the code are most
+welcome.  It is developed on a <a
+href="http://www.linux.org">Linux</a> system.
+
+<p> The code conforms to the <a href="http://www.gnu.org">GNU</a> <a
+href="ftp://ftp.gnu.org/pub/gnu/GNUinfo/standards/standards.text">coding
+standards</a>.  It is released under the <a
+href="http://www.gnu.org/copyleft/lgpl.html">Library GNU Public
+License (LGPL)</a>.
+
+<h3>Citation</h3>
+
+You are welcome to use the code under the terms of the licence for
+research or commercial purposes, however please acknowledge its use
+with a citation:
+
+<p><pre>
+   McCallum, Andrew Kachites.  "Bow: A toolkit for statistical language
+   modeling, text retrieval, classification and clustering."
+   http://www.cs.cmu.edu/~mccallum/bow.  1996.
+</pre>
+
+<p> Here is a BiBTeX entry:
+
+<p><pre>
+   @unpublished{McCallumLibbow,
+      author = "Andrew Kachites McCallum",
+      title = "Bow: A toolkit for statistical language modeling, 
+               text retrieval, classification and clustering",
+      note = "http://www.cs.cmu.edu/~mccallum/bow",
+      year = 1996}
+</pre>
+
+
+
+<h3>Obtaining the Source</h3>
+
+<p> Source code for the library can be downloaded from <a
+href="src">this directory</a>.  Different versions are indicated by
+eight digit sequences that indicate year, month and day.  Thus, the most
+recent version is the one with the largest version number.
+
+<p><b>Unfortunately I do not have time to help rainbow's many users
+with all their compilation and usage problems.  Feel free to send me
+mail asking for help, but please do not necessarily expect me to have
+time to help.  Most appreciated are bug reports accompanied by
+fixes.</b> 
+
+<h3>Bow Library Front-Ends</h3>
+
+Provided in the library source distribution, there are currently three
+executable programs based on the library.  
+
+<ul>
+
+<li> <a href="rainbow">Rainbow</a> is an executable program that does
+document classification.  While mostly designed for classification by
+naive Bayes, it also provides TFIDF/Rocchio, Probabilistic Indexing
+and K-nearest neighbor.
+
+<li> <a href="arrow">Arrow</a> is an executable program that does
+document retrieval.  It currently only performs simple TFIDF-based
+retrieval. 
+
+<li> <a href="crossbow">Crossbow</a> is a an executable program that
+does document clustering (and also classification).
+
+</ul>
+
+
+<hr>
+Last updated: 12 September 1998,
+<i><a href="mailto:mccallum@cs.cmu.edu">mccallum@cs.cmu.edu</a></i>
+
+</BODY>
+</HTML>
