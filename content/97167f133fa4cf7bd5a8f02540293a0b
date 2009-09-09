@@ -1,0 +1,123 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><meta name="title" content="Mixpanel | Analytics for startups - You're invited to join Mixpanel and get extra free data points" /><meta name="description" content="Mixpanel is a real-time analytics service that can help you understand how people interact with your web application. Try our funnel analysis tool!" /><meta name="keywords" content="web analytics, real time web analytics, web stats, web statistics, blog stats, blog statistics business intelligence" /><meta name="google-site-verification" content="tsZsW96SOx_V4rvR4jaXnPAyPBERKkNr7RMAwMb5emo" /><link rel="icon" href="/site_media/images/favicon.ico" type="image/x-icon" /><link rel="shortcut icon" href="/site_media/images/favicon.ico" type="image/x-icon" /><link href="/site_media/css/base.css?v=142" rel="stylesheet" type="text/css" /><link href="/site_media/css/mvp.css?v=142" rel="stylesheet" type="text/css" /><link href="/site_media/css/tooltip.css?v=142" rel="stylesheet" type="text/css" /><link href="/site_media/css/thickbox.css?v=142" rel="stylesheet" type="text/css" /><link href="/site_media/css/api/base.css?v=142" rel="stylesheet" type="text/css" /><link href="/site_media/css/api/sidebar.css?v=142" rel="stylesheet" type="text/css" /><link href="/site_media/css/api/console.css?v=142" rel="stylesheet" type="text/css" /><link href="/site_media/css/api/walkthrough.css?v=142" rel="stylesheet" type="text/css" /><link href="/site_media/css/api/gist.css?v=142" rel="stylesheet" type="text/css" /><title>API Overview - Mixpanel | Real-time Web Analytics, Funnel Analysis</title></head><body><div id="wrapper"><div id="header"><a href="/"><img class="logo" src="/site_media/images/main/logo2.png" alt="Mixpanel logo"/></a><div class="info"><a href="/user/login/">Login</a><a href="/api/docs/">Documentation</a><a href="/pricing/">Pricing</a><a href="/demo/?from=nav">Demo</a><a href="/user/register/">Sign up</a><div class="clear"></div></div></div><div id="content"><div id="alpha-bar"></div><div id="api"><div class="api-wrapper"><div id="doc-content"><h1>API Overview</h1><h2>A quick summary</h2><p>
+            The Mixpanel API breaks down into two fundamental things: events and properties. Properties 
+            describe events - you can think of them as adjectives for your events.
+        </p><p>
+            Events are actions your users take such as a song being played or a poke. Properties are used 
+            to describe events, so if you know the age or gender of this user, you can easily attach that 
+            information to that event. Properties make the information you send to Mixpanel really valuable 
+            and allow us to then provide great analysis.
+        </p><p>
+            Mixpanel accepts data across our REST API, you simply GET/POST us the data and we'll take care 
+            of the processing, storage, and analysis of that "data point".
+        </p><h2>What are events?</h2><p>
+            Events are actionable things that occur, and that you use to organize your data.  On Mixpanel 
+            you will see a real-time view of the events as you log them, updated immediately when a user 
+            interacts with your content. Events are just strings and they can be called anything you want.
+        </p><a name="properties"></a><h2>What are properties?</h2><p>
+            Properties are attributes that describe the event that is taking place. Imagine you were building 
+            a music site, a common event you might want to keep track of is every time a user plays a song.
+        </p><p>
+            Properties let you take this a step further by attaching descriptive data to this event such as 
+            the genre of the song being played. Properties are key-value based pairs, so we could define our 
+            key as "genre" and our value as the genre of the song being played, such as hip-hop.
+        </p><h2>Putting it all together in one line of code</h2><p>
+            This is where the beauty of Mixpanel lies - in a single line of code:
+        </p><p>
+            Javascript: 
+            <br /><code class="syntax js">mpmetrics.track('song-played', {'genre' : 'hip-hop', 'gender' : 'male', 'age' : 18});</code></p><p>
+            You can of course extend this to anything you are building. A photo sharing site may track uploads, 
+            an MMO gaming application may track items bought by users, a dating site tracking male/female sign 
+            ups, and a real-time search engine may be wondering where people click on links.
+        </p><p>
+            Check out our <a href="/api/docs/guides/integration/js">Javascript integration guide</a> to get started.
+        </p><a name="uniques"></a><h2>How do you track unique visitors?</h2><p>
+		    If you are using the Javascript we automatically track unique visitors via that user's IP Address or 
+		    you can be explicit by calling: 
+		    <code class="syntax js">mpmetrics.identify("USERNAME_HERE_OR_ANY_STRING")</code>. If IPs are not 
+		    accurate enough for you or you want to just test, we offer a special property called 
+		    <code>distinct_id</code> which mpmetrics.identify sets.
+		</p><p><code>distinct_id</code> can be any string-based unique identifier (e.g. user id, php session string, 
+		    hashed facebook id, etc.). In funnels we'll use an ip address by default however you can always pass us 
+		    a <code>distinct_id</code>. For more information on special properties check out our 
+		    <a href="/api/docs/specification">specification page</a>.
+		</p><h2>What makes us different?</h2><p>
+            Tracking actionable data specific to your application is important and Mixpanel provides a level of 
+            granularity and analysis you won't find anywhere else. Please check out our 
+            <a href="/demo/">demo</a> to see Mixpanel in action.
+        </p></div><div id="disqus_thread"></div><script type="text/javascript">
+            var disqus_shortname = 'mixpanel';
+            var disqus_identifier = '/api/docs/';
+            var disqus_url = 'http://mixpanel.com/api/docs/';
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script></div><div class="docs-sidebar"><h3>Overview</h3><ul class="docs"><li  class="selected" ><a href="/api/docs/tour">Basics</a></li><li ><a href="/api/docs/walkthrough">Tutorial</a></li><li ><a href="/api/docs/faq">FAQ</a></li></ul><h3>Integration APIs</h3><ul class="docs"><li ><a href="/api/docs/specification">HTTP (Specification)</a></li><li ><a href="/api/docs/guides/integration/js">Javascript</a></li><li ><a href="/api/docs/guides/integration/python">Python</a></li><li ><a href="/api/docs/guides/integration/php">PHP</a></li><li ><a href="/api/docs/guides/integration/ruby">Ruby</a></li><li ><a href="/api/docs/guides/flash">Actionscript</a></li><li><p><h4>Mobile</h4><ul class="docs"><li ><a href="/api/docs/guides/iphone">iPhone</a></li><li ><a href="/api/docs/guides/android">Android</a></li></ul></p></li></ul><h3>Advanced</h3><ul class="docs"><li ><a href="/api/docs/guides/api">Data API (Export)</a></li><li ><a href="/api/docs/console">API Console</a></li><li ><a href="/api/docs/guides/super-properties">Super properties</a></li><li ><a href="/api/docs/guides/email-analytics">Email Analytics</a></li></ul><h3>Funnel Analysis</h3><ul class="docs"><li ><a href="/api/docs/guides/funnel-analysis">Funnel analysis</a></li><li ><a href="/api/docs/guides/funnel-analysis-faq">Funnel FAQ</a></li></ul><h3>Platform</h3><ul class="docs"><li ><a href="/api/docs/guides/platform">Basics</a></li><li ><a href="/api/docs/guides/platform-ui">Charts / UI</a></li></ul></div><div style="clear: both;"></div></div><div style="clear: both;"></div></div><div id="footer"><div class="footer-column-1 narrow"><p><h3>Sitemap</h3></p><p><a href="/about/">About</a></p><p><a href="/api/docs/faq">FAQ</a></p><p><a href="http://blog.mixpanel.com/">Blog</a></p><p><a href="http://code.mixpanel.com/">Dev blog</a></p><p><a href="/pricing/">Pricing</a></p></div><div class="footer-column-2 narrow"><p><h3>Company</h3></p><p><a href="/terms/">Terms</a></p><p><a href="/privacy/">Privacy</a></p><p><a href="/jobs/">Jobs</a></p><p><a href="/internships/">Internships</a></p><p><a href="/feedback/type/5/">Contact</a></p></div><div class="footer-column-2"><p><h3>Products</h3></p><p><a href="/iphone-analytics/">iPhone Analytics</a></p><p><a href="/android-analytics/">Android Analytics</a></p><p><a href="/email-analytics/">Email Analytics</a></p><p><a href="/platform/">Platform</a></p></div><div class="footer-column-2"><p><h3>Web Analytics</h3></p><p><a href="http://blog.mixpanel.com/3-new-ways-to-measure-the-social-web-11">Measuring the Social Web</a></p><p><a href="http://blog.mixpanel.com/how-to-make-viral-startups-with-analytics">Creating Viral Startups</a></p><p><a href="http://blog.mixpanel.com/using-analytics-to-understand-visitor-retenti">Visitor Retention</a></p><p><a href="http://blog.mixpanel.com/mixpanel-ruby-on-rails-wonderful">Ruby on Rails Analytics</a></p></div><div class="footer-column-2"><p><h3>Funnel Analysis</h3></p><p><a href="http://blog.mixpanel.com/introduction-to-analytics-funnel-analysis">Intro to Funnel Analysis</a></p><p><a href="http://blog.mixpanel.com/funnel-analysis-with-mixpanel">Funnel Analysis Guide</a></p><p><a href="http://blog.mixpanel.com/how-to-analyze-traffic-funnels-and-retention-0">Facebook Funnel Analysis</a></p></div><!--
+    <div class="footer-column-2"><p><h3>Split Testing</h3></p><p><a href="http://blog.mixpanel.com/releasing-mixpanel-tests-a-way-to-ab-test-you">Intro to Split Testing</a></p><p><a href="http://blog.mixpanel.com/ab-testing-to-increase-user-engagement">A/B Testing for Engagement</a></p><p><a href="http://blog.mixpanel.com/ab-testing-to-increase-your-conversions-the-e">Increasing Conversions</a></p><p><a href="/labs/split-test-calculator">A/B Split Testing Calculator</a></p></div>
+    --><div class="clear"></div></div><div class="clear"></div></div></body><script type="text/javascript">
+        // Declare namespace
+        var mp = {};
+        
+        // Declare any application globals
+        mp.globals = {
+            img_dir: '/site_media/images',
+            domain: 'http://mixpanel.com'
+        };
+    </script><script type="text/javascript">
+        document.write(unescape('%3Cscript src="' + ((document.location.protocol == 'https:') ? 'https:' : 'http:') + '//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"%3E%3C/script%3E'));
+    </script><script type="text/javascript" src="/site_media/js/extensions/jquery.tooltip.js?v=142"></script><script type="text/javascript" src="/site_media/js/extensions/jquery.json-1.3.min.js?v=142"></script><script type="text/javascript" src="/site_media/js/api/mixpanel_dev.js?v=142"></script><script type="text/javascript" src="/site_media/js/cookie.js?v=142"></script><script type="text/javascript" src="/site_media/js/mvp.js?v=142"></script><script type="text/javascript" src="/site_media/js/utility.js?v=142"></script><script type="text/javascript" src="/site_media/js/swfobject.js?v=142"></script><script type="text/javascript" src="/site_media/js/modules/module.js?v=142"></script><script type="text/javascript">
+    try {
+		var mpmetrics = new MixpanelLib("metrics-1");   
+    } catch(err) {
+        null_fn = function () {};
+        var mpmetrics = { track: null_fn, track_funnel: null_fn, register: null_fn, register_once: null_fn };
+    }
+    mpmetrics.set_config({store_google: true});
+</script><script type="text/javascript">
+    // Yep, we use GA too, we do two very different things...for now. =)
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-1223110-13");
+        pageTracker._trackPageview();
+    } catch(err) {}
+</script><script type="text/javascript">
+    document.write(unescape('%3Cscript src="/site_media/js/re_.js" type="text/javascript"%3E%3C/script%3E'));
+</script><script type="text/javascript">
+        var re_name_tag = 'Guest  - None';
+    	var re_context_tag = '';
+        $(document).ready(function() {
+            try {
+    			reinvigorate.track("79m3k-ol7tc45cw0");
+    		} catch(err) {}
+        });
+</script><script src="/site_media/plugins/jquery.syntax/jquery.syntax.js" type="text/javascript" charset="utf-8"></script><script src="/site_media/plugins/jquery.syntax/jquery.syntax.cache.js" type="text/javascript" charset="utf-8"></script><script type="text/javascript" charset="utf-8">
+    $(function() {
+        // This function does all the setup and then highlights (by default) pre and code tags which are annotated correctly.
+        $.syntax({root: "/site_media/plugins/jquery.syntax/"});
+    });
+</script><script type="text/javascript">
+var uservoiceJsHost = ("https:" == document.location.protocol) ? "https://uservoice.com" : "http://cdn.uservoice.com";
+document.write(unescape("%3Cscript src='" + uservoiceJsHost + "/javascripts/widgets/tab.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+    UserVoice.Tab.show({ 
+      /* required */
+      key: 'mixpanel',
+      host: 'mixpanel.uservoice.com', 
+      forum: '29579', 
+      /* optional */
+      alignment: 'left',
+      background_color:'#f00', 
+      text_color: 'white',
+      hover_color: '#06C',
+      lang: 'en'
+    });
+</script><script type="text/javascript">
+    $(document).ready(function() {
+        mpmetrics.track("View docs");
+    }); 
+</script>
+</html>
