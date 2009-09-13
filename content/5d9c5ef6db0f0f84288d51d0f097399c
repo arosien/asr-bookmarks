@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+<head>
+    <title>vxargs</title>
+    <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type"/>
+    <meta http-equiv="Pragma" content="no-cache" />
+</head>
+<body>
+<h1>vxargs: running arbitrary command with explicit parallelism,
+visualization and redirection</h1>
+<div align="right">
+    provided by <a href="http://www.cis.upenn.edu/~maoy">Yun Mao</a>, 
+<a href="http://www.cis.upenn.edu">University of Pennsylvania</a> in
+LGPL License
+</div>
+<p>
+</p>
+<table style="border-top:1px solid #ffcc33;border-bottom:1px solid #ffcc33;" width="100%" border="0" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#fff4c2">
+  <b>Overview</b></td>
+</tr>
+</table>
+<p>
+
+vxargs is inspired by <a href="http://unixhelp.ed.ac.uk/CGI/man-cgi?xargs">xargs</a>
+ and <a href="http://www.theether.org/pssh/">pssh</a>. It provides the parallel
+versions of <b>any arbitrary command</b>, including ssh, rsync, scp,
+wget, curl, and whatever. One reason to use it is to control a large
+set of machines in the wide-area network. For example, I use vxargs on
+<a href="http://www.planet-lab.org">PlanetLab</a> to control hundreds
+of machines spreading around the globe when I'm working on <a
+href="http://dharma.cis.upenn.edu">DHARMA project</a>.
+</p>
+
+<p>
+The main features are:
+<ul>
+ <li> parallelism: run many jobs at the same time</li>
+ <li> flexibility: arbitrary command with arbitrary options </li>
+ <li> visualization: monitor the total/per job progress in a
+ curses-based UI </li>
+ <li>redirection: stdout and stderr of each individual job are redirected to files respectively for further analysis.</li>
+</ul>
+</p>
+
+<table style="border-top:1px solid #ffcc33;border-bottom:1px solid #ffcc33;" width="100%" border="0" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#fff4c2">
+  <b>FAQs</b></td>
+</tr>
+</table>
+<ul>
+<li><b>Why not use <a href="http://www.theether.org/pssh/">pssh</a>
+?</b></li>
+There are a couple of reasons:<br/>
+ (1) with pssh, you can only run limited
+command, e.g. ssh, rsync, and with limited command-line options. It
+is not flexible. With vxargs you can run everything in the way you
+like it. 
+<br />
+(2) vxargs has a curses-based user interface that can dynamically
+monitor the execution process. 
+<br />(3) vxargs is only 1 python script,
+which is extremely simple to install.
+</p>
+<p>
+<li><b>Why not use xargs? </b></li>
+xargs could do some of the work. Check out the (rarely used) options of
+--max-procs (-P)
+and --replace (-i). However, there seems to be no easy way to track of which 
+individual process is running and output from all processes are mixed
+together. xargs also can't specify the maximal life time for each
+process to run. vxargs addresses these issues.
+</p>
+</ul>
+
+<table style="border-top:1px solid #ffcc33;border-bottom:1px solid #ffcc33;" width="100%" border="0" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#fff4c2">
+  <b>Download</b></td>
+</tr>
+</table>
+<p>
+<a href="ChangeLog">ChangeLog</a>
+</p>
+<ul>
+<li><a href="vxargs-0.3.3.py">vxargs 0.3.3</a>, released Jul 27, 2005</li>
+<li><a href="vxargs-0.3.2.py">vxargs 0.3.2</a>, released Jun 22, 2005</li>
+<li><a href="vxargs-0.3.1.py">vxargs 0.3.1</a>, released March 13, 2005</li>
+<li><a href="vxargs-0.3.py">vxargs 0.3</a>, released Feb 19, 2005</li>
+<li><a href="vxargs-0.2.1.py">vxargs 0.2.1</a>, released Jan 7, 2005</li>
+<li><a href="vxargs-0.2.py">vxargs 0.2</a>, released Dec 12, 2004</li>
+<li><a href="vxargs-0.1.py">vxargs 0.1</a>, released Dec 6, 2004</li>
+</ul>
+In vxargs 0.4, multiple arguments will be supported. Send email to me to obtain the latest development version. 
+Thanks to <a href="http://www.net-glyph.org/~lgh/">Guohan Lu</a> for the patch.
+<p>
+<a href="http://ahorvath.home.cern.ch/ahorvath/rpms/vxargs/">RPM
+package of vxargs</a> maintained by Andras Horvath
+</p>
+<p>
+<a href="http://freshmeat.net/projects/vxargs/">vxargs link on freshmeat</a>
+</p>
+
+<table style="border-top:1px solid #ffcc33;border-bottom:1px solid #ffcc33;" width="100%" border="0" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#fff4c2">
+  <b>HOWTO</b></td>
+</tr>
+</table>
+<p>
+To install vxargs, simply download the <a
+href="vxargs-latest.py">latest vxargs python script</a>, rename it to
+your favorite name (e.g. vxargs), make sure it has the executable
+permission (e.g. <code>chmod +x /home/username/bin/vxargs</code>) and
+its dir is in your PATH. Of course, make sure you have Python 2.2 or
+above installed.
+</p>
+<p>
+Read the <a href="man.html">man page</a> or type <code>vxargs
+--help</code> for the detailed usage. Here I'll show several examples
+to explain how it works. Suppose the iplist.txt file has following
+content:
+
+<table width="100%" border="1" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#EEEEEE">
+<pre>
+$ cat iplist.txt
+216.165.109.79
+#planetx.scs.cs.nyu.edu
+158.130.6.254
+#planetlab1.cis.upenn.edu
+158.130.6.253
+#planetlab2.cis.upenn.edu
+128.232.103.203
+#planetlab3.xeno.cl.cam.ac.uk
+</pre>
+</tr>
+</table>
+The IP addresses will be used as <em>dynamic arguments</em> for the
+following examples. The hostnames preceded by '#' is a comment for
+previous IP address, which will be used for eye candy purpose only and
+can be omitted. 
+</p>
+<p>
+
+</p>
+<ul>
+<p>
+<li>check the uptime of every node in iplist.txt using ssh in parallel.
+</li> <br />
+<table width="100%" border="1" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#EEEEEE">
+<code>vxargs -a iplist.txt -o /tmp/result ssh {} uptime</code><br />
+</td></tr></table>
+
+Note: {} is replaced by the dynamic arguments (IP addresses) respectively for each
+job. This is equivallent to run 
+<pre>
+ssh 216.165.109.79 uptime
+ssh 158.130.6.254 uptime 
+ssh 158.130.6.253 uptime 
+ssh 128.232.103.203 uptime
+</pre>
+but in parallel. If you are not sure, checkout the <code>-n</code>
+option to make sure you get what you wanted. Furthermore, the output from stdout and stderr of each
+individual process is redirected to the corresponding files in
+/tmp/result/ directory. <br />
+In addition, use
+<table width="100%" border="1" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#EEEEEE">
+<code>cat /tmp/result/abnormal_list</code><br />
+</td></tr></table>
+to examine the hosts that failed ssh command.
+</p>
+
+<p>
+<li>Synchronize the local directory <code>mirror</code> with all
+current PlanetLab production nodes
+</li><br />
+<table width="100%" border="1" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#EEEEEE">
+<code>curl --silent https://www.planet-lab.org/db/nodes/production_hosts.php | vxargs -P 2 -y rsync -az -e ssh --delete mirror $SLICE@{}:</code><br />
+</td></tr></table>
+Note: No "-a" argument file is specified, so vxargs reads it from
+stdin. because output dir is also not specified, output is redirected to
+/dev/null. -P 2 means run up to 2 processes at a time.
+</p>
+
+<p>
+<li>Run <code>startjob</code> on every
+cluster node named from cluster001 to cluster128 (<font color="green">New!</font>)
+</li><br />
+<table width="100%" border="1" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#EEEEEE">
+<code><a href="pattern.py">pattern</a> cluster[001-128] | vxargs -P 2
+-o cluster/result/`<a href="safepath.py">safepath</a>` ssh {} startjob</code><br />
+</td></tr></table>
+Note: The pattern program was found from 
+<a
+href="http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/355531">Python
+cookbook</a>.
+safepath is a tiny program that generates maildir-style folder names. In
+this case you don't have to worry about overwriting previous results.
+</p>
+
+<p>
+<li>Download cotop information from every node in the list</li><br />
+
+<table width="100%" border="1" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#EEEEEE">
+<code>
+vxargs.py -a iplist.txt --timeout=20 curl http://{}:3120/cotop?sort=9
+</code><br />
+</td></tr></table>
+Note: --timeout=20 will enforce every process to be terminated in 20 seconds.
+</p>
+
+<p>
+<li>run a <a href="http://codeen.cs.princeton.edu/codns/">CoDNS</a> query on every node against
+"www.google.com"</li><br />
+<table width="100%" border="1" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#EEEEEE">
+<code>
+vxargs.py -a iplist.txt -o /tmp/codns/ -y -t 20 bash -c 'echo www.google.com| nc {} 4119'
+</code><br />
+</td></tr></table>
+Note: use cat /tmp/codns/*.out to examine the results.
+
+</p>
+</ul>
+<table style="border-top:1px solid #ffcc33;border-bottom:1px solid #ffcc33;" width="100%" border="0" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#fff4c2">
+  <b>Known Bugs</b></td>
+</tr>
+</table>
+<p>
+<ul>
+Note: the following bug is fixed in 0.3
+<li>
+When a command spawns multiple processes, e.g. <code>bash -c 'echo
+www.google.com| nc {} 4119'</code>, after timeout, only the main
+process will be terminated or killed (in the example, <code>bash</code> will be
+killed but <code>nc</code> may still be alive). 
+</li>
+</ul>
+</p>
+<table style="border-top:1px solid #ffcc33;border-bottom:1px solid #ffcc33;" width="100%" border="0" cellspacing="0" cellpadding="3">
+<tr>
+  <td bgcolor="#fff4c2">
+  <b>Feedback</b></td>
+</tr>
+</table>
+<p>
+Send me email if you encounter problems, find bugs, or have any
+random comments: maoy AT cis.upenn.edu
+</p>
+<p>
+Last Modified: $Id: index.html,v 1.27 2005/07/27 21:04:02 maoy Exp $
+</p>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-3327304-2");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+</body>
+</html>
