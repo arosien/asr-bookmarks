@@ -1,0 +1,158 @@
+
+
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Start page &ndash; collectd &ndash; The system statistics collection daemon</title>
+    <link href="/css/table.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" href="/images/shortcut-icon.png" type="image/png" />
+    <meta name="Robots" content="index,follow" />
+  </head>
+  <body>
+    <table id="layout-table">
+      <tr>
+        <td id="l00" class="layout-cell" colspan="2"><a href="/"><h1>collectd</h1></a></td>
+        <td id="l02" class="layout-cell" colspan="2">
+          <div id="l02-wrapper">
+            <div id="btn-homepage" class="top-button">Homepage</div>
+	    <a id="btn-wiki" class="top-button" href="/wiki/">Wiki</a>
+          </div>
+        </td>
+	<td id="l04" class="layout-cell"></td>
+      </tr>
+      <tr>
+	<td id="l10" class="layout-cell"></td>
+	<td id="l11" class="layout-cell"></td>
+	<td id="l12" class="layout-cell"></td>
+	<td id="l13" class="layout-cell"></td>
+	<td id="l14" class="layout-cell"></td>
+      </tr>
+      <tr>
+	<td id="l20" class="layout-cell"></td>
+	<td id="l21" class="layout-cell">
+              <h4>Navigation</h4>
+              <ul>
+                <li><a href="/index.shtml" title="Start page">Start page</a></li>
+                <li><a href="/features.shtml" title="Features">Features</a></li>
+		<li><a href="/news.shtml" title="News">News</a></li>
+                <li><a href="/download.shtml" title="Download">Download</a></li>
+                <li><a href="/faq.shtml" title="FAQs">FAQs</a></li>
+                <li><a href="/documentation.shtml" title="Documentation">Documentation</a></li>
+		<li><a href="/dev-info.shtml" title="Development">Development</a></li>
+                <li><a href="/contact.shtml" title="Contact">Contact</a></li>
+                <li><a href="/related.shtml" title="Related sites">Related sites</a></li>
+              </ul>
+
+              <hr />
+              <h4>Download</h4>
+              <ul>
+                <li><a href="/files/collectd-4.10.2.tar.bz2">collectd-4.10.2.tar.bz2</a></li>
+                <li><a href="/files/collectd-4.10.2.tar.gz">collectd-4.10.2.tar.gz</a></li>
+                <li><a href="/files/collectd-4.9.4.tar.bz2">collectd-4.9.4.tar.bz2</a></li>
+                <li><a href="/files/collectd-4.9.4.tar.gz">collectd-4.9.4.tar.gz</a></li>
+		<li><a href="/download.shtml">more&nbsp;…</a></li>
+              </ul>
+
+
+
+              <hr />
+              <h4>News</h4>
+              <ul class="news">
+                <li><span class="date">2010-11-27</span>
+                <span class="title"><a href="/news.shtml#news86">Versions 4.9.4 and 4.10.2 available.</a></span></li>
+
+                <li><span class="date">2010-07-09</span>
+                <span class="title"><a href="/news.shtml#news85">Happy anniversary: Versions 4.9.3 and 4.10.1 available.</a></span></li>
+
+                <li><span class="date">2010-05-01</span>
+                <span class="title"><a href="/news.shtml#news84">Version 4.10.0 available.</a></span></li>
+
+                <li><span class="date">2010-04-22</span>
+                <span class="title"><a href="/news.shtml#news83">Versions 4.8.5 and 4.9.2 available.</a></span></li>
+
+                <li><span class="date">2010-04-10</span>
+                <span class="title"><a href="/news.shtml#news82">Talk about collectd at Grazer Linuxtage 2010, Austria</a></span></li>
+
+              </ul>
+
+
+
+	</td>
+	<td id="l22" class="layout-cell"></td>
+	<td id="l23" class="layout-cell">
+          <div id="content-cell">
+
+              <h1>collectd &ndash; The system statistics collection daemon</h1>
+              <p class="summary"><span class="collectd">collectd</span> is a
+              <a href="http://en.wikipedia.org/wiki/Daemon_(computer_software)">daemon</a> which collects system
+              performance statistics periodically and provides mechanisms to store the values in a variety of ways, for
+              example in
+              <a href="http://oss.oetiker.ch/rrdtool/"><acronym title="Round Robin Database">RRD</acronym> files</a>.</p>
+
+              <h2>What does <span class="collectd">collectd</span> do?</h2>
+              <p><span class="collectd">collectd</span> gathers statistics about the system it is running on and stores
+              this information. Those statistics can then be used to find current performance bottlenecks (i.e.
+              <em>performance analysis</em>) and predict future system load (i.e. <em>capacity planning</em>). Or
+              if you just want pretty graphs of your private server and are fed up with some homegrown solution you're
+              at the right place, too&nbsp;;).</p>
+
+              <p>Usually one graph says more than a thousand words, so here's a graph showing the 
+              <a href="/wiki/index.php/Plugin:CPU">CPU utilization</a> of a system over the last 60&nbsp;minutes:</p>
+              <img style="display: block; margin: 10px auto;" src="images/graph-cpu.png" width="497" height="272"
+                alt="Graph of CPU utilization" title="Pretty, ain't it?" />
+
+              <h2>Why <span class="collectd">collectd</span>?</h2>
+              <p>There are other free, open source projects that are similar to
+              <span class="collectd">collectd</span>&nbsp;– a few links are listed on the
+              <a href="/related.shtml">related sites</a> page. So why should you use
+              <span class="collectd">collectd</span>? There are some key differences we think set
+              <span class="collectd">collectd</span> apart. For one, it's written in C for performance and portability,
+              allowing it to run on systems without scripting language or cron daemon, such as embedded systems. At the
+              same time it includes optimizations and features to handle hundreds of thousands of data sets. It comes
+              with <a href="/wiki/index.php/Table_of_Plugins" title="List of plugins">over 90&nbsp;plugins</a> which
+              range from standard cases to very specialized and advanced topics. It provides powerful networking
+              features and is extensible in numerous ways. Last but not least: <span class="collectd">collectd</span> is
+              actively developed and supported and well documented. A more complete
+              <a href="/features.shtml">list of features</a> is available.</p>
+
+              <h3>Limitations</h3>
+              <p>While <span class="collectd">collectd</span>
+              <a href="/features.shtml">can do a lot for you</a> and your administrative needs,
+              there are <strong>limits</strong> to what it does:</p>
+              <ul>
+                <li>It does not generate graphs. It can write to <a href="http://oss.oetiker.ch/rrdtool/"><acronym
+                    title="Round Robin Database">RRD</acronym> files</a>, but it cannot generate graphs from these
+                files. There's a tiny <a href="/wiki/index.php/First_steps#Creating_graphs">sample script</a> included
+                in <code>contrib/</code>, though. Take a look at
+                <a href="http://www.forwiss.uni-passau.de/~berberic/Linux/kcollectd.html">kcollectd</a>, an
+                X&nbsp;frontend, and <a href="http://web.taranis.org/drraw/">drraw</a>, a very generic solution, though.
+                More utility programs are listed on the
+                <a href="/related.shtml">related projects</a> page.</li>
+
+                <li>Monitoring functionality has been added in version&nbsp;4.3, but is so far limited to simple
+                threshold checking. The document
+                <a href="/wiki/index.php/Notifications_and_thresholds">“Notifications and thresholds”</a> describes
+                <span class="collectd">collectd</span>'s monitoring concept and has some details on the limitations,
+                too. Also, there's a plugin for <a href="http://nagios.org/">Nagios</a>, so it can use the values
+                collected by <span class="collectd">collectd</span>.</li>
+              </ul>
+          </div>
+	</td>
+	<td id="l24" class="layout-cell"></td>
+      </tr>
+      <tr>
+	<td id="l30" class="layout-cell" colspan="3"></td>
+	<td id="l33" class="layout-cell"></td>
+	<td id="l34" class="layout-cell"></td>
+      </tr>
+    </table>
+  </body>
+</html>
+<!-- vim: set sw=2 sts=2 et : -->
+
+<!-- vim: set sw=2 sts=2 ts=8 et tw=120 : -->
