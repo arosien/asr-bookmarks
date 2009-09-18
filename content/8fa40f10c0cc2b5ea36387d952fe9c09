@@ -1,0 +1,1807 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="ctl00_Head1"><title>
+	Heatmaps, Visitor Movies, Web Analytics | Customer Experience Analytics by ClickTale
+</title><base href="http://www.clicktale.com/" /><link rel="alternate" type="application/rss+xml" title="ClickTale Blog (RSS 2.0)" href="http://blog.clicktale.com/?feed=rss2" /><link rel="alternate" type="application/atom+xml" title="ClickTale Blog (Atom 0.3)" href="http://blog.clicktale.com/?feed=atom" /><meta http-equiv="X-UA-Compatible" content="IE=8" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta id="ctl00_MetaKeywords" name="keywords" content="heatmap, mouse move, mouse click, video, analytics, usability,  " /><meta id="ctl00_MetaDescription" name="description" content="Customer Experience Analytics by ClickTale - discover everything visitors do on your website. Watch Visitor Recordings, Mouse Move Heatmaps, and Form Analytics." /><link rel="alternate" type="application/rss+xml" title="ClickTale Blog (RSS 2.0)" href="http://blog.clicktale.com/?feed=rss2" /><link rel="alternate" type="application/atom+xml" title="ClickTale Blog (Atom 0.3)" href="http://blog.clicktale.com/?feed=atom" />
+		<link rel="icon" href="favicon.ico?_ts=634024497903780064" type="image/x-icon" />
+		<script src="res/2/3rd-party/yui-2.8.0r4-module.js?_ts=634254324163582320" type="text/javascript"></script>
+		<link rel="stylesheet" href="res/2/css/style-min.css?_ts=634272685030926560" type="text/css" media="screen" charset="utf-8" />
+		<link href="res/2/3rd-party/yui/2.8.0r4/assets/skins/sam/container.css?_ts=634254322312019904" rel="stylesheet" type="text/css" />
+		<link href="res/2/skins-yui/2.8.0r4/autocomplete-min.css?_ts=634043369214843168" rel="stylesheet" type="text/css" />
+		<!--[if IE 8]><link rel="stylesheet" href="res/2/css/style_ie8-min.css?_ts=634255248178721248" type="text/css" media="screen" charset="utf-8" /><![endif]--> 
+		<!--[if lt IE 8]><link rel="stylesheet" href="res/2/css/style_ie7-min.css?_ts=634255248172111744" type="text/css" media="screen" charset="utf-8" /><![endif]--> 
+		<script src="res/2/js/Base-Js-module.js?_ts=634146308418783040" type="text/javascript"></script>
+	
+		<script src="res/2/js/cookies-min.js?_ts=634024526531064528" type="text/javascript"></script>
+		<script src="res/2/js/querystring-min.js?_ts=634024526624799312" type="text/javascript"></script>
+	
+	
+	
+		<script src="res/2/3rd-party/swfobject/swfobject.js?_ts=634024497451395552" type="text/javascript"></script>
+		<link href="res/2/3rd-party/yui/2.8.0r4/carousel/assets/carousel-core.css?_ts=634254322321333296" rel="stylesheet" type="text/css" />
+		<link href="res/2/skins-yui/2.8.0r4/tooltip-min.css?_ts=634042715670812608" rel="stylesheet" type="text/css" />
+	
+
+
+
+
+
+
+
+
+	<script type="text/javascript">
+		// adds tags to the homepage move
+		CT.MovieTaggingHelper.TagMovieStartAndEnd("HomepageVideo", "HPMovie");
+		CT.MovieTaggingHelper.TagMovieTimeline("HomepageVideo", "HPMovie", 10);
+	
+		// tags to testimonial video
+		CT.MovieTaggingHelper.TagMovieStartAndEnd("HomepageTestimonialVideo", "TMovie");
+		CT.MovieTaggingHelper.TagMovieTimeline("HomepageTestimonialVideo", "TMovie", 30);
+
+		CT.MoviePlayerHelper.addEventListener("HomepageVideo", "PLAYBACK_COMPLETED", function(obj) {
+			//complete event.
+		});
+
+		var CTIsPlayback = true;
+		try {
+			if (!parent || !parent.WebPlayer) // if there is no WebPlayer or if the above frame is not accessible
+				throw false;
+		} catch (e) { CTIsPlayback = false; }
+		
+		function showCarousels()
+		{
+			function pageChangeEvtHandler(e, obj)
+			{
+				var pageIndex = e;
+				ShowDefaultQuote(pageIndex);
+			}		
+
+			YUD.addClass(CT.GetByClass("home-grid1"), "visible");
+			var ctc = new CT.Carousel("ProductTourCarousel");
+			ctc.init({ animation: { speed: 0.5 }, numVisible: 5, isCircular: true });
+			ctc.render();
+			YUD.addClass("ProductTourCarousel", "visible");
+
+			var ctc_customers = new CT.Carousel("CoustomersCarousel");
+			ctc_customers.init({ animation: { speed: 0.5 }, numVisible: 4, isCircular: true });
+			ctc_customers.render();
+			YUD.addClass("CoustomersCarousel", "visible");
+
+			var MediaBuzzCarousel = new CT.Carousel("MediaBuzzCarouselEL");
+			var MediaCarousel = MediaBuzzCarousel.init({ numVisible: 1, isCircular: true });
+			MediaBuzzCarousel.render();
+			MediaCarousel.addListener("pageChange", pageChangeEvtHandler);
+
+			var Resourcesarousel = new CT.Carousel("ResourcesCarouseEl");
+			Resourcesarousel.init({ animation: { speed: 0.5 }, numVisible: 1, isCircular: true });
+			Resourcesarousel.render();
+
+			var Blogcesarousel = new CT.Carousel("BlogCarouseEl");
+			Blogcesarousel.init({ animation: { speed: 0.5 }, numVisible: 1, isCircular: true });
+			Blogcesarousel.render();
+		}
+		
+		// execution of showCarousels is done best once the elements are available and not on DOMReady (which also includes any 3rd party analytics and services)
+		//YAHOO.util.Event.onDOMReady(showCarousels);
+
+		function isFirstOrLast(elID, index) {
+			var el = YUD.get(elID);
+			if (index == "0" || index == "4") {
+				YUD.addClass(el, "buzz-content-first");
+			}
+			if (index == "3" || index == "7") {
+				YUD.addClass(el, "buzz-content-last");
+			}
+		}
+		
+		
+	</script>
+
+
+	
+	 
+	<noscript>
+		<style type="text/css">
+			#ProductTourCarousel,
+			.home-grid1{
+				display:block !important;
+			}
+			#CustomerLogoQuoteWrap{
+				display:none;
+			}
+		</style>
+	</noscript>
+	<style type="text/css">
+			#doc #bd{
+				margin-top:-10px !important;
+			}
+			#doc .hd{
+				margin-bottom:0px;
+			}
+			body{
+				background:#f8f7f9 url(res/2//img/homepage_new_background.jpg) repeat-x 0px 0px;
+			}
+	</style>
+
+	
+	<script type="text/javascript">
+
+		var YUD = YAHOO.util.Dom;
+		var BASE = 'http://www.clicktale.com/';
+
+		YAHOO.util.Event.onDOMReady(function(ev) {
+			CT.Base.initPanels();
+			CT.ZoomEl(document.body);
+
+			/* Search show/hide text in input field section*/
+			var SearchField = YUD.get("SearchField");
+			YAHOO.util.Event.on(SearchField, "focus", function() {
+				if (SearchField.value == "Search") {
+					SearchField.value = "";
+				}
+			});
+			YAHOO.util.Event.on(SearchField, "blur", function() {
+				if (SearchField.value == "") {
+					SearchField.value = "Search";
+					SearchField.style.color = "#bca9bf";
+				}
+			});
+			YAHOO.util.Event.on(SearchField, "keyup", function() {
+					SearchField.style.color = "black";
+			});
+			
+		});
+
+		YAHOO.util.Event.onContentReady("TopSiteNavigationYUI", function() {
+
+			var oMenuBar = new YAHOO.widget.MenuBar("TopSiteNavigationYUI", {
+				autosubmenudisplay: true,
+				shadow: true, showdelay: 0, hidedelay: 100
+			});
+			oMenuBar.render();
+
+
+		});
+		
+		function onMouseOverOut(cssClassToFind, hoverCssClass) {
+			var el = YUD.getElementsByClassName(cssClassToFind);
+			
+			YAHOO.util.Event.on(el, "mouseout", function() {
+				YUD.removeClass(this, hoverCssClass);
+			});
+
+			YAHOO.util.Event.on(el, "mouseover", function() {
+			YUD.addClass(this, hoverCssClass);	
+			});
+		}
+		
+	</script>
+	
+	
+	
+	<!-- Start Kampyle Css -->
+	<link rel="stylesheet" type="text/css" media="screen" href="http://cf.kampyle.com/k_button.css" />
+	<!-- End Kampyle Css -->
+	</head>
+<body id="ctl00_Body" class="yui-skin-sam">
+<!-- ClickTale Top part -->
+<script type="text/javascript">
+var WRInitTime=(new Date()).getTime();
+</script>
+<!-- ClickTale end of Top part -->
+
+
+
+
+	<!-- ClickTale start -->
+
+	<script type="text/javascript">
+		var WRInitTime = (new Date()).getTime();
+	</script>
+
+	<!-- ClickTale end -->
+	
+	
+
+	
+	<script src="res/2/js/marketing-min.js" type="text/javascript"></script>
+
+	
+	<script type="text/javascript">
+		if (typeof papTrack == "function") // depends on loading of an external script
+			papTrack();
+	</script>
+
+	<script type="text/javascript">
+		if (typeof papTrack == "function") // depends on sending the notification in papTrack, must use separate script section
+			EvacFrame("a_aid"); // evac frame while hiding id
+	</script>
+	
+	
+	
+    
+    <!--[if lt IE 7]>
+									<div class="upgrade-notice">
+										<h1>This site has been optimized for Internet Explorer 7+ and Firefox 1.5+.</h1>
+										<h2>If you are using an earlier browser version, please update your software to view this site correctly.</h2>
+										<br/><br/>
+										
+										<ul>
+											<li><a href="http://www.mozilla.com/firefox/">Firefox Upgrade</a></li>
+											<li><a href="http://www.microsoft.com/windows/internet-explorer/worldwide-sites.aspx">Internet Explorer Upgrade</a></li>
+										</ul>
+									</div>
+								<![endif]--> 
+    <div id="doc">
+			<div id="hd" class="hd clearfix">
+						<div class="hd-lc"></div>
+						<div class="hd-c">
+								
+								<a href="/" class="hd-logo">ClickTale.com</a>
+								
+								<div class="hd-c-inner">
+									<div id="productsandservices" class="yuimenubar yuimenubarnav">
+									
+										<noscript>
+											<div class="yuimenu" style="display:block !important;">
+												<div class="bd">
+													<ul class="hd-navigation hd-navigation-noscript first-of-type">
+													
+													
+													
+														<li class="yuimenuitem yuimenubaritem-hassubmenu yuimenubaritem first-of-type "><a
+															href="/pricing" class="yuimenuitemlabel  yuimenubaritemlabel-hassubmenu yuimenubaritemlabel">
+															Pricing</a> </li>
+														
+														<li class="yuimenuitem yuimenubaritem-hassubmenu yuimenubaritem first-of-type "><a
+															href="/product" class="yuimenuitemlabel  yuimenubaritemlabel-hassubmenu yuimenubaritemlabel">
+															Product</a> </li>
+														
+														<li class="yuimenuitem yuimenubaritem-hassubmenu yuimenubaritem first-of-type "><a
+															href="/resources" class="yuimenuitemlabel  yuimenubaritemlabel-hassubmenu yuimenubaritemlabel">
+															Resources</a> </li>
+														
+														<li class="yuimenuitem yuimenubaritem-hassubmenu yuimenubaritem first-of-type "><a
+															href="/company" class="yuimenuitemlabel  yuimenubaritemlabel-hassubmenu yuimenubaritemlabel">
+															Company</a> </li>
+														
+														<li class="yuimenuitem yuimenubaritem-hassubmenu yuimenubaritem first-of-type "><a
+															href="/contact" class="yuimenuitemlabel  yuimenubaritemlabel-hassubmenu yuimenubaritemlabel">
+															Contact</a> </li>
+														
+														
+														
+													
+													
+													</ul>
+												</div>
+											</div>
+										</noscript>
+														
+										
+											<div id="TopSiteNavigationYUI" class="yuimenu hidden">
+												<div class="bd">
+														
+													<ul id="ctl00_NavigationPlaceHolder_TopSiteNavigation" class="hd-navigation first-of-type">
+													
+														
+															
+																
+																	
+																	<li class="yuimenuitem Pricing"><a class="yuimenuitemlabel "
+																		href="/pricing">Pricing</a>
+																		<div id="Pricing" class="yuimenu">
+																			<div class="bd"><ul class="first-of-type sub-menu-step1">
+																					
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/pricing/plans" >
+																								 Plans</a>
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/pricing/enterprise" >
+																								 Enterprise Solution</a>
+																								
+																							</li>
+																						
+																				</ul>
+																			</div>
+																		</div>
+																	</li>
+																
+															
+															
+																
+																	
+																	<li class="yuimenuitem Product"><a class="yuimenuitemlabel "
+																		href="/product">Product</a>
+																		<div id="Product" class="yuimenu">
+																			<div class="bd"><ul class="first-of-type sub-menu-step1">
+																					
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/tour" >
+																								 Product Tour</a>
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/mouse_tracking" onclick="ClickTaleHelper.tag('Prod_MouseTracking');">
+																								 Mouse Tracking</a><div id="Mouse Tracking" class="yuimenu"> 
+																								<div class="bd"><ul class="first-of-type sub-menu-step2">
+																									<li class="yuimenuitem top-rc"></li>
+																									
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/visitor_recordings" >
+																												Visitor Recordings</a> </li>
+																										
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/real_time_monitor" >
+																												Real Time Monitor</a> </li>
+																										
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/campaign_tracking" >
+																												Campaign Tracking</a> </li>
+																										
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/page_reports" >
+																												Page Reports</a> </li>
+																										
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/demographics" >
+																												Demographics</a> </li>
+																										
+																								</ul>
+																								</div>
+																								</div>
+																								
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/heatmap_suite" onclick="ClickTaleHelper.tag('Prod_HeatmapSuite');">
+																								 Heatmap Suite</a><div id="Heatmap Suite" class="yuimenu"> 
+																								<div class="bd"><ul class="first-of-type sub-menu-step2">
+																									<li class="yuimenuitem top-rc"></li>
+																									
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/mouse_move_heatmaps" >
+																												Mouse Move Heatmaps</a> </li>
+																										
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/mouse_click_heatmaps" >
+																												Click Heatmaps</a> </li>
+																										
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/attention_heatmaps" >
+																												Attention Heatmaps</a> </li>
+																										
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/scroll_reach_heatmaps" >
+																												Scroll-Reach Heatmaps</a> </li>
+																										
+																								</ul>
+																								</div>
+																								</div>
+																								
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/conversion_analytics" onclick="ClickTaleHelper.tag('Prod_ConversionAna');">
+																								 Conversion Analytics</a><div id="Conversion Analytics" class="yuimenu"> 
+																								<div class="bd"><ul class="first-of-type sub-menu-step2">
+																									<li class="yuimenuitem top-rc"></li>
+																									
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/conversion_funnels" >
+																												Conversion Funnels</a> </li>
+																										
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/form_analytics" >
+																												Form Analytics</a> </li>
+																										
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/advanced_filtering" >
+																												Advanced Filtering</a> </li>
+																										
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/link_analytics" >
+																												Link Analytics</a> </li>
+																										
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/product/custom_alerts" >
+																												Custom Alerts</a> </li>
+																										
+																								</ul>
+																								</div>
+																								</div>
+																								
+																								
+																							</li>
+																						
+																				</ul>
+																			</div>
+																		</div>
+																	</li>
+																
+															
+															
+																
+																	
+																	<li class="yuimenuitem Resources"><a class="yuimenuitemlabel "
+																		href="/resources">Resources</a>
+																		<div id="Resources" class="yuimenu">
+																			<div class="bd"><ul class="first-of-type sub-menu-step1">
+																					
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/resources/faq" >
+																								 FAQ</a>
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="http://blog.clicktale.com" onclick="ClickTaleHelper.tag('TMBlog');">
+																								 Blog</a>
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="http://wiki.clicktale.com" onclick="ClickTaleHelper.tag('TMWiki');">
+																								 Wiki</a>
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="http://forums.clicktale.com/" onclick="ClickTaleHelper.tag('TMForums');">
+																								 Forums</a>
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/resources/video_tutorials" >
+																								 Video Tutorials</a>
+																								
+																							</li>
+																						
+																				</ul>
+																			</div>
+																		</div>
+																	</li>
+																
+															
+															
+																
+																	
+																	<li class="yuimenuitem Company"><a class="yuimenuitemlabel "
+																		href="/company">Company</a>
+																		<div id="Company" class="yuimenu">
+																			<div class="bd"><ul class="first-of-type sub-menu-step1">
+																					
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/company/about" >
+																								 About</a>
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/company/management" >
+																								 Management</a>
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/company/jobs" >
+																								 Job Opportunities</a>
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/company/customers" >
+																								 Customers</a>
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/company/media_buzz" >
+																								 Media Buzz</a>
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/company/partners" >
+																								 Partners</a><div id="Partners" class="yuimenu"> 
+																								<div class="bd"><ul class="first-of-type sub-menu-step2">
+																									<li class="yuimenuitem top-rc"></li>
+																									
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/company/partners/solution_partners" >
+																												Solution Partners</a> </li>
+																										
+																											<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/company/partners/affiliate_program" >
+																												Affiliate Program</a> </li>
+																										
+																								</ul>
+																								</div>
+																								</div>
+																								
+																								
+																							</li>
+																						
+																				</ul>
+																			</div>
+																		</div>
+																	</li>
+																
+															
+															
+																
+																	
+																	<li class="yuimenuitem Contact"><a class="yuimenuitemlabel "
+																		href="/contact">Contact</a>
+																		<div id="Contact" class="yuimenu">
+																			<div class="bd"><ul class="first-of-type sub-menu-step1">
+																					
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/contact/contact_us" >
+																								 Contact Us</a>
+																								
+																							</li>
+																						
+																							<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/resources/request_demo" >
+																								 Request a Demo</a>
+																								
+																							</li>
+																						
+																				</ul>
+																			</div>
+																		</div>
+																	</li>
+																
+															
+															
+																
+															
+													</ul>
+												</div>
+											</div>
+											
+										
+
+
+											
+									</div>
+									<div class="hd-right-wrapper clearfix">
+										<div class="search-box">
+											<input type="text" id="SearchField" class="SearchField"  value="Search"
+											 onkeydown="if((this.value != '') && (event.which || event.keyCode)){ if ((event.which == 13) || (event.keyCode == 13)) { CT.Base.SearchBox(CT.GetByClass('SearchField')[0].value);return false; } }else {return true}; " />
+											<a href=""  ID="SearchButton" onclick="CT.Base.SearchBox(CT.GetByClass('SearchField')[0].value);return false;" class="search-mag-icon"></a>
+											<div id="SearchSuggestionsContainer"></div>
+										</div>
+										
+										<a href="http://subs.clicktale.net/" id="ctl00_CustomerLoginBtn" onclick="ClickTaleHelper.tag('CustomerLogin'); if( typeof pageTracker != 'undefined' ) {pageTracker._link(this.href); return false;}" class="customer-login-button">Customer Login</a>
+									</div>
+								</div>
+						</div>
+						<div class="hd-rc"></div>
+						<div class="chat-wrap">
+							
+						</div>
+				        
+										
+			</div><!-- hd -->
+			
+			<div id="bd" class="clearfix">
+						
+						
+						
+										
+				        
+
+	
+	<div class="home-top clearfix">
+		<div class="video-wrap">
+			<div id="VideoCornerWrap" class="corner tl hidden">
+				<div class="corner tr">
+					<div class="corner bl">
+						<div class="corner br">
+							<div class="side ls">
+								<div class="side rs clearfix">
+									<div id="VideoSwfWrap">
+									<!-- no js variant -->
+									<noscript>
+										
+									</noscript>
+									<!-- no flash variant -->
+									<a href="http://get.adobe.com/flashplayer/" target="_blank">
+										No flash player, Click here to install.
+									</a>
+				
+									</div>
+									<a href="" onclick="CT.VideoManager.hideHomeVideoPlayer();return false;" id="VideoCloseButton" class="hidden">Close</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="VideoButtonWrap">
+		<div class="video-wrap-content" title="Customer Experience Analytics by ClickTale">
+			<h1>Customer<em>Experience Analytics</em></h1>
+			<ul>
+				<li><strong>Watch</strong> <span>actual browsing behavior</span></li>
+				<li><strong>Optimize</strong> <span>website usability</span></li>
+				<li><strong>Boost</strong> <span>conversion rates</span></li>
+			</ul>
+		</div>
+		
+			<a href="" class="play-button" onclick="ClickTaleHelper.tag('Play_Movie_1');CT.VideoManager.showHomeVideoPlayer();return false;">
+				<span class="play-video-text">Watch Now</span>
+				<span class="subline">Just 1 minute</span>
+			</a>
+		
+		
+		</div>
+		</div>
+		<ul class="home-top-navigation clearfix">
+			<li><a href="pricing" class="home-top-navigation-button-A" onclick="ClickTaleHelper.tag('HP_Pricingbutton_3_months')">Plans & Pricing <span>3 months Free inside</span></a></li>
+			<li><a href="pricing/enterprise" onclick="ClickTaleHelper.tag('HPtoEnterprise')" class="home-top-navigation-button-B"><span>Enterprise Solution</span></a></li>
+			<li><a href="resources/request_demo" onclick="ClickTaleHelper.tag('HPtoLiveWebinars')" class="home-top-navigation-button-B"><span>Request a Demo</span></a></li>
+		</ul>
+	</div>
+	
+	<div class="carousel-container">
+		<h2><a href="product/tour">Take Product Tour</a> <span class="arr-rtl">>></span></h2>
+		<div id="ProductTourCarousel">
+			
+					<ol>
+				
+					<li>
+						
+							<a  title="Optimize your site's conversion rates by visualizing where customers convert and where they leave the conversion process." class="conversion_funnels" href="product/conversion_funnels" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="Watch recordings of your visitors and customers on your website." class="visitor_recordings" href="product/visitor_recordings" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="An eye tracking alternative heatmap of your customers mouse moves and attention." class="mouse_move_heatmaps" href="product/mouse_move_heatmaps" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="Easily improve and fix your online forms and webforms." class="form_analytics" href="product/form_analytics" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="See where your customers click their mouse on your homepage." class="mouse_click_heatmaps" href="product/mouse_click_heatmaps" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="Want to know how far down your customers scroll? Now you can see your page fold." class="scroll_reach_heatmaps" href="product/scroll_reach_heatmaps" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="Look at what your visitors see on your webpages." class="attention_heatmaps" href="product/attention_heatmaps" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="Filter, search and segment your customers and visitors based on their user experience." class="advanced_filtering" href="product/advanced_filtering" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="Know how well each of you image and text links do, see how many clicks they get." class="link_analytics" href="product/link_analytics" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="Get Customer Experience Analytics immediately in real time." class="real_time_monitor" href="product/real_time_monitor" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="Get alerted when a customer or visitor performs a certain action." class="custom_alerts" href="product/custom_alerts" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="You can find out how well your email campaigns and marketing campaings are performing." class="campaign_tracking" href="product/campaign_tracking" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="Understand all the web analytics and statistics about your website." class="page_reports" href="product/page_reports" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="Collect demographic information about your visitors." class="demographics" href="product/demographics" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="" class="mouse_tracking" href="product/mouse_tracking" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="" class="conversion_analytics" href="product/conversion_analytics" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					<li>
+						
+							<a  title="" class="heatmap_suite" href="product/heatmap_suite" style="text-decoration:none;"  class="image-wrap">
+							</a>
+						
+					</li>
+				
+					</ol>
+				
+		</div>
+	</div>
+	
+	<div class="home-grid1 clearfix">
+		<div class="col-a col-grid2-container">
+		
+			<div class="customers-container">
+				<div class="carousel-container">
+					<h2>
+						<a href="company/customers" onclick="ClickTaleHelper.tag('HPtoCustomers')">50,000 Customers and Counting</a> <span class="arr-rtl">>></span></h2>
+					<div id="CoustomersCarousel">
+						
+								<ol>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_18748312" title="Vegas.com" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl01_Image1" src="res/2/img/customers_logos/h30_png/vegas_com_logo.png" alt="Vegas.com" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_18748312"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_6830152" title="simon and schuster" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl02_Image1" src="res/2/img/customers_logos/h30_png/sands.png" alt="simon and schuster" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_6830152"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_63856702" title="mint" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl03_Image1" src="res/2/img/customers_logos/h30_png/mint-logo.png" alt="mint" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_63856702"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_39905049" title="o2" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl04_Image1" src="res/2/img/customers_logos/h30_png/O2_Logo_blue.png" alt="o2" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_39905049"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_16395747" title="Autoglass" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl05_Image1" src="res/2/img/customers_logos/h30_png/Autoglass.png" alt="Autoglass" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_16395747"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_5714629" title="FINN" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl06_Image1" src="res/2/img/customers_logos/h30_png/FINN.png" alt="FINN" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_5714629"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_31506541" title="Hallmark" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl07_Image1" src="res/2/img/customers_logos/h30_png/gnav_hallmark_logo.png" alt="Hallmark" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_31506541"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_41274460" title="WeBuyAnyCar" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl08_Image1" src="res/2/img/customers_logos/h30_png/WeBuyAnyCar.png" alt="WeBuyAnyCar" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_41274460"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_56108657" title="booking" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl09_Image1" src="res/2/img/customers_logos/h30_png/Booking.png" alt="booking" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_56108657"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_16538330" title="888" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl10_Image1" src="res/2/img/customers_logos/h30_png/888logo.png" alt="888" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_16538330"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_9849526" title="bhphotovideo" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl11_Image1" src="res/2/img/customers_logos/h30_png/B_H-logo.png" alt="bhphotovideo" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_9849526"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_17200813" title="chip" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl12_Image1" src="res/2/img/customers_logos/h30_png/CHIPLogo.png" alt="chip" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_17200813"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_29061554" title="getprice" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl13_Image1" src="res/2/img/customers_logos/h30_png/logo-getprice.png" alt="getprice" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_29061554"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_37478709" title="edulocator" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl14_Image1" src="res/2/img/customers_logos/h30_png/EduLocator-logo.png" alt="edulocator" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_37478709"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_13140746" title="Belron" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl15_Image1" src="res/2/img/customers_logos/h30_png/Belron.png" alt="Belron" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_13140746"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_45537342" title="hallmark" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl16_Image1" src="res/2/img/customers_logos/h30_png/gnav_hallmark_logo.png" alt="hallmark" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_45537342"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_45514518" title="diversityjobs" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl17_Image1" src="res/2/img/customers_logos/h30_png/diversityjobscome-logo.png" alt="diversityjobs" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_45514518"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_44852615" title="tripbase" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl18_Image1" src="res/2/img/customers_logos/h30_png/Tripbase-logo-home.png" alt="tripbase" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_44852615"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_25657434" title="digigifts" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl19_Image1" src="res/2/img/customers_logos/h30_png/DigiGifts-logo.png" alt="digigifts" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_25657434"});	
+										</script>
+									
+								</li>
+							
+								<li>
+									
+										<a href="/company/customers" id="el_5868094" title="familysearch" onclick="ClickTaleHelper.tag('HPtoCustomers')">
+											<img id="ctl00_MainContentPlaceHolder_CustomersCarousel_ctl20_Image1" src="res/2/img/customers_logos/h30_png/FamilySearch-logo.png" alt="familysearch" style="border-width:0px;" />
+										</a>
+										<script type="text/javascript">
+											//CT.Tooltip.init({el:"el_5868094"});	
+										</script>
+									
+								</li>
+							
+								</ol>
+							
+						
+						<script type="text/javascript">
+							//CT.Tooltip.init("testTool");
+						</script>
+										
+					</div>
+				</div>
+			</div>
+			
+		<div class="home-grid2 clearfix">
+				<div class="col-b buzz-container carousel-container">
+				
+				<h2><a href="company/media_buzz" onclick="ClickTaleHelper.tag('HPtoMedia')">Media Buzz</a>  <span class="arr-rtl">>></span></h2>
+				
+				<div class="corner tl">
+					<div class="corner tr">
+						<div class="corner bl">
+							<div class="corner br">
+								<div class="side ls">
+									<div class="side rs clearfix">
+											
+										<div id="MediaBuzzCarouselEL">
+											
+													<ol>
+														
+													<li>
+														<div class="clearfix MediaBuzzContant">
+															<div class="buzz-logo-list">
+																
+													<div class="buzz-content" id="buzzItem0">
+														<script type="text/javascript">
+															isFirstOrLast('buzzItem0', '0');
+														</script>
+														
+														<em class="buzz-text">
+				
+				
+				<span class="quotes-icn"></span>
+				Be warned, you may end up 
+				paying for a web service that actually delivers, real quantifiable value."
+				
+				<em class="subline">Roi Carthy, TechCrunch </em>
+				
+			</em>
+														
+														
+															<span class="buzz-logo-container">
+																<table border="0" cellpadding="0" cellspacing="0">
+																<tbody>
+																<tr>
+																<td>
+																	<span class="buzz-hover-arrow"></span>
+																	
+																	<a href="company/media_buzz" id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl0_ctl00_A1" onclick="ClickTaleHelper.tag('HPtoMedia')">
+																		<img id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl0_ctl00_Image1" src="res/2/img/buzz_logos/techcrunch.jpg" style="border-width:0px;" />
+																	</a>
+																</td>
+																</tr>
+																</tbody>
+																</table>
+															</span>
+														
+													</div>
+												
+													<div class="buzz-content" id="buzzItem1">
+														<script type="text/javascript">
+															isFirstOrLast('buzzItem1', '1');
+														</script>
+														
+														<em class="buzz-text">
+				
+				<span class="quotes-icn"></span>
+				
+				What the Pros Use."
+				
+				<em class="subline">Mikal E. Belicove,<br/> Entrepreneur Magazine</em>
+				
+			</em>
+														
+														
+															<span class="buzz-logo-container">
+																<table border="0" cellpadding="0" cellspacing="0">
+																<tbody>
+																<tr>
+																<td>
+																	<span class="buzz-hover-arrow"></span>
+																	
+																	<a href="company/media_buzz" id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl0_ctl01_A1" onclick="ClickTaleHelper.tag('HPtoMedia')">
+																		<img id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl0_ctl01_Image1" src="res/2/img/buzz_logos/entrepreneur.jpg" style="border-width:0px;" />
+																	</a>
+																</td>
+																</tr>
+																</tbody>
+																</table>
+															</span>
+														
+													</div>
+												
+													<div class="buzz-content" id="buzzItem2">
+														<script type="text/javascript">
+															isFirstOrLast('buzzItem2', '2');
+														</script>
+														
+														<em class="buzz-text">
+				
+				<span class="quotes-icn"></span>
+				
+				ClickTale gives you extremely detailed insights into exactly what visitors are doing on your site."
+				
+				<em class="subline">Pete Cashmore, Mashable</em>
+				
+			</em>
+														
+														
+															<span class="buzz-logo-container">
+																<table border="0" cellpadding="0" cellspacing="0">
+																<tbody>
+																<tr>
+																<td>
+																	<span class="buzz-hover-arrow"></span>
+																	
+																	<a href="company/media_buzz" id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl0_ctl02_A1" onclick="ClickTaleHelper.tag('HPtoMedia')">
+																		<img id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl0_ctl02_Image1" src="res/2/img/buzz_logos/mashable.jpg" style="border-width:0px;" />
+																	</a>
+																</td>
+																</tr>
+																</tbody>
+																</table>
+															</span>
+														
+													</div>
+												
+													<div class="buzz-content" id="buzzItem3">
+														<script type="text/javascript">
+															isFirstOrLast('buzzItem3', '3');
+														</script>
+														
+														<em class="buzz-text">
+				
+				<span class="quotes-icn"></span>
+				
+				Using ClickTale’s analytics pays off — really."
+				
+				<em class="subline">Anthony Ha,<br/> VentureBeat</em>
+				
+			</em>
+														
+														
+															<span class="buzz-logo-container">
+																<table border="0" cellpadding="0" cellspacing="0">
+																<tbody>
+																<tr>
+																<td>
+																	<span class="buzz-hover-arrow"></span>
+																	
+																	<a href="company/media_buzz" id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl0_ctl03_A1" onclick="ClickTaleHelper.tag('HPtoMedia')">
+																		<img id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl0_ctl03_Image1" src="res/2/img/buzz_logos/venturebeat.jpg" style="border-width:0px;" />
+																	</a>
+																</td>
+																</tr>
+																</tbody>
+																</table>
+															</span>
+														
+													</div>
+												
+															</div>
+														</div>
+													</li>
+												
+													<li>
+														<div class="clearfix MediaBuzzContant">
+															<div class="buzz-logo-list">
+																
+													<div class="buzz-content" id="buzzItem4">
+														<script type="text/javascript">
+															isFirstOrLast('buzzItem4', '4');
+														</script>
+														
+														<em class="buzz-text">
+				
+				<span class="quotes-icn"></span>
+				
+				The best web analytics solution on the market today!"
+				
+				<em class="subline">Jeff Parks,<br/> i.a. consultants</em>
+				
+			</em>
+														
+														
+															<span class="buzz-logo-container">
+																<table border="0" cellpadding="0" cellspacing="0">
+																<tbody>
+																<tr>
+																<td>
+																	<span class="buzz-hover-arrow"></span>
+																	
+																	<a href="company/media_buzz" id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl1_ctl00_A1" onclick="ClickTaleHelper.tag('HPtoMedia')">
+																		<img id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl1_ctl00_Image1" src="res/2/img/buzz_logos/iaconsultants.jpg" style="border-width:0px;" />
+																	</a>
+																</td>
+																</tr>
+																</tbody>
+																</table>
+															</span>
+														
+													</div>
+												
+													<div class="buzz-content" id="buzzItem5">
+														<script type="text/javascript">
+															isFirstOrLast('buzzItem5', '5');
+														</script>
+														
+														<em class="buzz-text">
+				
+				<span class="quotes-icn"></span>
+				
+				Warning: watching users in action is strangely addictive."
+				
+				<em class="subline">Alex Walker,<br/> SitePoint Design View</em>
+				
+			</em>
+														
+														
+															<span class="buzz-logo-container">
+																<table border="0" cellpadding="0" cellspacing="0">
+																<tbody>
+																<tr>
+																<td>
+																	<span class="buzz-hover-arrow"></span>
+																	
+																	<a href="company/media_buzz" id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl1_ctl01_A1" onclick="ClickTaleHelper.tag('HPtoMedia')">
+																		<img id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl1_ctl01_Image1" src="res/2/img/buzz_logos/sitepoint.jpg" style="border-width:0px;" />
+																	</a>
+																</td>
+																</tr>
+																</tbody>
+																</table>
+															</span>
+														
+													</div>
+												
+													<div class="buzz-content" id="buzzItem6">
+														<script type="text/javascript">
+															isFirstOrLast('buzzItem6', '6');
+														</script>
+														
+														<em class="buzz-text">
+				
+				<span class="quotes-icn"></span>
+				
+				It's Click-T-A-L-E and that word is crucial. It tells you a story...we really learned a lot!"
+				
+				<em class="subline">John Marshall, WebMarketingToday</em>
+				
+			</em>
+														
+														
+															<span class="buzz-logo-container">
+																<table border="0" cellpadding="0" cellspacing="0">
+																<tbody>
+																<tr>
+																<td>
+																	<span class="buzz-hover-arrow"></span>
+																	
+																	<a href="company/media_buzz" id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl1_ctl02_A1" onclick="ClickTaleHelper.tag('HPtoMedia')">
+																		<img id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl1_ctl02_Image1" src="res/2/img/buzz_logos/webmarketingtoday.jpg" style="border-width:0px;" />
+																	</a>
+																</td>
+																</tr>
+																</tbody>
+																</table>
+															</span>
+														
+													</div>
+												
+													<div class="buzz-content" id="buzzItem7">
+														<script type="text/javascript">
+															isFirstOrLast('buzzItem7', '7');
+														</script>
+														
+														<em class="buzz-text">
+				
+				<span class="quotes-icn"></span>
+				
+				If you really need to maximize online conversions, this is the tool to use."
+				
+				<em class="subline">Mathew Carpenter, [Re]Encoded.com</em>
+				
+			</em>
+														
+														
+															<span class="buzz-logo-container">
+																<table border="0" cellpadding="0" cellspacing="0">
+																<tbody>
+																<tr>
+																<td>
+																	<span class="buzz-hover-arrow"></span>
+																	
+																	<a href="company/media_buzz" id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl1_ctl03_A1" onclick="ClickTaleHelper.tag('HPtoMedia')">
+																		<img id="ctl00_MainContentPlaceHolder_MediaBuzzCarousel_ctrl1_ctl03_Image1" src="res/2/img/buzz_logos/reencodeed.jpg" style="border-width:0px;" />
+																	</a>
+																</td>
+																</tr>
+																</tbody>
+																</table>
+															</span>
+														
+													</div>
+												
+															</div>
+														</div>
+													</li>
+												
+													</ol>
+													<div id="CustomerLogoQuoteWrap" class="CustomerLogoQuoteWrap">
+																
+													</div>
+												
+											
+											
+											<script type="text/javascript">
+											/* initialize mouseOver capabilities to the logo images */
+											ShowDefaultQuote(0);
+											
+											var buzzLogosEl = YUD.getElementsByClassName("buzz-content");
+											YUE.on(buzzLogosEl, "mouseover", function() {
+												//remove all selected nodes (reset view) and set current selected.
+												var selected_elements = YUD.getElementsByClassName("buzz-logo-hover");
+												YUD.removeClass(selected_elements, "buzz-logo-hover");
+												YUD.addClass(this, "buzz-logo-hover");
+												var buzzQuote = this.getElementsByTagName("em");
+												var CustomerLogoQuoteWrap = YUD.get("CustomerLogoQuoteWrap");
+												CustomerLogoQuoteWrap.innerHTML = buzzQuote[0].innerHTML;
+
+											});
+
+											var MediaBuzzContant = YUD.getElementsByClassName("MediaBuzzContant");
+											YUE.on(MediaBuzzContant, "click", function() {
+												window.location = BASE + "company/media_buzz";
+											});
+											
+											/*YUE.on(buzzLogosEl,"mouseout",function(){
+												YUD.removeClass(this,"buzz-logo-hover");
+												YUD.get("CustomerLogoQuoteWrap").innerHTML = "";
+												ShowDefaultQuote();
+											});*/
+
+
+											function ShowDefaultQuote(pageIndex) {
+												var self = null;
+												var buzzLogosEl = YUD.getElementsByClassName("buzz-content");
+												if (pageIndex == 0) {
+													self = buzzLogosEl[0]
+												}
+												else {
+													self = buzzLogosEl[4]
+												}
+												var buzzQuote = self.getElementsByTagName("em");
+												
+												var selected_elements = YUD.getElementsByClassName("buzz-logo-hover");
+												YUD.removeClass(selected_elements, "buzz-logo-hover");
+												YUD.addClass(self, "buzz-logo-hover");
+
+												var CustomerLogoQuoteWrap  = YUD.get("CustomerLogoQuoteWrap");
+												CustomerLogoQuoteWrap.innerHTML = buzzQuote[0].innerHTML;
+												/*YUE.on(CustomerLogoQuoteWrap, "click", function() {
+													alert('');
+												});*/
+												
+											}
+
+
+											
+											
+											</script>
+											
+										</div>
+																						
+											
+											
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+				
+				</div>
+				<div class="col-b blog-container carousel-container">
+				
+				<h2><a href="http://blog.clicktale.com" onclick="ClickTaleHelper.tag('HPtoBlog')">Popular Blog Posts </a><span class="arr-rtl">>></span></h2>
+				
+				<div class="corner tl">
+					<div class="corner tr">
+						<div class="corner bl">
+							<div class="corner br">
+								<div class="side ls">
+									<div class="side rs clearfix">
+											
+											
+											
+											<div id="BlogCarouseEl" class="BlogCarouseEl">
+												 
+														<ol>
+															
+														<li>
+															<div class="blog-headline-page-wrap">
+															 
+														
+														<div class="blog-headline-content">
+															<span class="title ct-text-color">
+																<a href="http://blog.clicktale.com/2009/12/23/clicktales-holiday-give-away-winners/" target="_blank" onclick="ClickTaleHelper.tag('HPtoBlog')">
+																	Best Heatmaps from Our 2009 Holiday Content
+																</a>
+															</span>
+															<span class="date ct-text-color">
+																December 23,2009
+															</span>
+														</div>
+													
+													
+														
+														<div class="blog-headline-content">
+															<span class="title ct-text-color">
+																<a href="http://blog.clicktale.com/2009/06/04/8-brilliant-tips-that-boost-conversions/" target="_blank" onclick="ClickTaleHelper.tag('HPtoBlog')">
+																	8 Brilliant Tips That Boost Conversions
+																</a>
+															</span>
+															<span class="date ct-text-color">
+																June 4, 2009
+															</span>
+														</div>
+													
+													
+														
+														<div class="blog-headline-content">
+															<span class="title ct-text-color">
+																<a href="http://blog.clicktale.com/2006/12/23/unfolding-the-fold/" target="_blank" onclick="ClickTaleHelper.tag('HPtoBlog')">
+																	Unfolding the Fold
+																</a>
+															</span>
+															<span class="date ct-text-color">
+																December 23, 2006
+															</span>
+														</div>
+													
+													
+															</div>
+														</li>
+													
+														<li>
+															<div class="blog-headline-page-wrap">
+															 
+														
+														<div class="blog-headline-content">
+															<span class="title ct-text-color">
+																<a href="http://blog.clicktale.com/2009/11/23/eye-tracking-for-everyone/" target="_blank" onclick="ClickTaleHelper.tag('HPtoBlog')">
+																	Eye Tracking for Everyone
+																</a>
+															</span>
+															<span class="date ct-text-color">
+																November 23,2009
+															</span>
+														</div>
+													
+													
+														
+														<div class="blog-headline-content">
+															<span class="title ct-text-color">
+																<a href="http://blog.clicktale.com/2009/11/11/how-to-fix-your-funnels/" target="_blank" onclick="ClickTaleHelper.tag('HPtoBlog')">
+																	How to Fix Your Funnels!
+																</a>
+															</span>
+															<span class="date ct-text-color">
+																November 11, 2009
+															</span>
+														</div>
+													
+													
+														
+														<div class="blog-headline-content">
+															<span class="title ct-text-color">
+																<a href="http://blog.clicktale.com/2009/09/17/we-increased-our-bookings-by-345/" target="_blank" onclick="ClickTaleHelper.tag('HPtoBlog')">
+																	We Increased our Bookings by 345%
+																</a>
+															</span>
+															<span class="date ct-text-color">
+																September 17, 2009
+															</span>
+														</div>
+													
+													
+															</div>
+														</li>
+													
+														</ol>
+													
+											</div>
+											
+											
+											
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+				
+				
+				</div>
+			</div>
+		
+		</div>
+		<div class="col-a resources-container carousel-container">
+			
+			<h2><a href="resources">Resources</a> <span class="arr-rtl">>></span></h2>
+			
+				<div class="corner tl">
+					<div class="corner tr">
+						<div class="corner bl">
+							<div class="corner br">
+								<div class="side ls">
+									<div class="side rs clearfix">
+											
+											
+											<div id="ResourcesCarouseEl">
+												 
+														<ol>
+															
+														<li>
+															<div class="resource-page-wrap">
+															 
+																<div class="resource-content clearfix">
+																	<a href="javascript:CT.VideoManager.openVideoWindow('screencasts/testimonial.flv','Video Testimonial', 'HomepageTestimonialVideo');" target="_blank" class="title" onclick="CT.VideoManager.openVideoWindow('screencasts/testimonial.flv','Video Testimonial', 'HomepageTestimonialVideo');return false;">
+																		<span>Video Testimonial</span>
+																		<em class="icon "></em>
+																	</a>
+																	
+																	
+																		<div class="image-wrap">
+																		<div class="corner tl">
+																			<div class="corner tr">
+																				<div class="corner bl">
+																					<div class="corner br">
+																						<div class="side ls">
+																							<div class="side rs clearfix">
+																									<a href="javascript:CT.VideoManager.openVideoWindow('screencasts/testimonial.flv','Video Testimonial', 'HomepageTestimonialVideo');" class="title">
+																										<em class="video-play-symbol"></em>
+																										<img src="res/2/img/about_clicktale_video_thumb.png" style="border-width:0px;" />
+																									</a>
+																							</div>
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		</div>
+																		<p class="description float-description clearfix">
+																			<a href="javascript:CT.VideoManager.openVideoWindow('screencasts/testimonial.flv','Video Testimonial', 'HomepageTestimonialVideo');" onclick="CT.VideoManager.openVideoWindow('screencasts/testimonial.flv','Video Testimonial', 'HomepageTestimonialVideo');return false;" target="_blank" class="title ct-text-color no-underline-fix">
+																				
+			
+				Dr. Ralph Wilson and John Marshall on the benefits of using ClickTale<em>3:04 minutes</em>
+			
+			
+																			</a>
+																		</p>
+																	
+																	
+																	
+																	
+																	
+																	
+																</div>
+													
+																<div class="resource-content clearfix">
+																	<a href="docs/ClickTale Quick Start Guide.pdf" target="_blank" class="title" onclick="ClickTaleHelper.tag('QSGuide_Download')">
+																		<span>Quick Start Guide</span>
+																		<em class="icon pdf-icon"></em>
+																	</a>
+																	
+																	
+																	
+																	
+																	<p class="description no-float">
+																		<a href="docs/ClickTale Quick Start Guide.pdf" target="_blank" class="title ct-text-color no-underline-fix" onclick="ClickTaleHelper.tag('QSGuide_Download')">
+																			Get up and running in less than 5 min
+																		</a>
+																	</p>
+																	
+																	
+																</div>
+													
+																<div class="resource-content clearfix">
+																	<a href="http://wiki.clicktale.com" target="_blank" class="title" onclick="ClickTaleHelper.tag('HPtoWiki')">
+																		<span>ClickTale Wiki</span>
+																		<em class="icon webpage-icon"></em>
+																	</a>
+																	
+																	
+																	
+																	
+																	<p class="description no-float">
+																		<a href="http://wiki.clicktale.com" target="_blank" class="title ct-text-color no-underline-fix" onclick="ClickTaleHelper.tag('HPtoWiki')">
+																			Comprehensive knowledge-base about all things ClickTale
+																		</a>
+																	</p>
+																	
+																	
+																</div>
+													
+															</div>
+														</li>
+													
+														</ol>
+													
+											</div>
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
+			
+	</div>
+	
+	<script type="text/javascript">
+		showCarousels();
+	</script>	
+
+
+
+
+						
+						
+						
+						<script type="text/javascript">
+							onMouseOverOut("navigation-menu-item", "navigation-menu-item-hover");
+							onMouseOverOut("hover-enabled-rounded-corners", "rounded-corners-hover");
+							onMouseOverOut("img-wrap", "img-wrap-hover");
+							onMouseOverOut("resource-content", "resource-content-hover");
+						</script>
+	
+							
+			</div><!--bd -->
+			
+			
+			
+				<!-- BEGIN LivePerson Monitor. -->
+				<script language='javascript' type="text/javascript">
+					var lpMTagConfig = {
+						sendCookies: false /*KEEP THIS LINE WHEN UPDATING THE CODE!!! This was customised by ClickTale so the user cookies will not be sent to Live Support*/,
+						'lpServer': "server.iad.liveperson.net",
+						'lpNumber': "74423849",
+						'lpProtocol': "https"
+					};
+
+					function lpAddMonitorTag(src) {
+						if (typeof(src) == 'undefined' || typeof(src) == 'object') {
+							src = lpMTagConfig.lpMTagSrc ? lpMTagConfig.lpMTagSrc : '/hcp/html/mTag.js';
+						}
+						if (src.indexOf('http') != 0) {
+							src = lpMTagConfig.lpProtocol + "://" + lpMTagConfig.lpServer + src + '?site=' + lpMTagConfig.lpNumber;
+						} else {
+							if (src.indexOf('site=') < 0) {
+								if (src.indexOf('?') < 0) src = src + '?';
+								else src = src + '&';
+								src = src + 'site=' + lpMTagConfig.lpNumber;
+							}
+						};
+						var s = document.createElement('script');
+						s.setAttribute('type', 'text/javascript');
+						s.setAttribute('charset', 'iso-8859-1');
+						s.setAttribute('src', src);
+						document.getElementsByTagName('head').item(0).appendChild(s);
+					}
+					if (window.attachEvent) window.attachEvent('onload', lpAddMonitorTag);
+					else window.addEventListener("load", lpAddMonitorTag, false);
+				</script>
+				<!-- END LivePerson Monitor. -->
+
+				<!-- BEGIN Monitor Tracking Variables  -->
+				<script language="JavaScript1.2">
+					if (typeof(lpMTagConfig.sessionVar) == "undefined"){ lpMTagConfig.sessionVar = new Array();}
+					lpMTagConfig.sessionVar[lpMTagConfig.sessionVar.length] = 'skill=Technical Support';
+				</script>
+				<!-- End Monitor Tracking Variables  -->
+				<!-- END LivePerson Monitor. -->
+			
+			
+			<div class="ft">
+			
+						<ul class="ft-links clearfix">
+							<li><a href="./">Home</a></li>
+							<li class="sep">|</li>
+							<li><a href="company/about">About</a></li>
+							<li class="sep">|</li>
+							<li><a href="company/partners">Partners</a></li>
+							<li class="sep">|</li>
+							<li><a href="privacy">Privacy Policy</a></li>
+							<li class="sep">|</li>
+							<li><a href="terms">Terms of Use</a></li>
+							<li class="sep">|</li>
+							<li><a href="http://blog.clicktale.com">Blog</a></li>
+							<li class="sep">|</li>
+							<li><a href="sitemap">Site Map</a></li>
+							<li class="sep">|</li>
+							<li><a href="contact">Contact</a></li>
+						</ul>
+						
+						<div class="ft-content clearfix">
+							<div class="c ie7Fix">
+								<ul class="social-links clearfix">
+									<li><a href="http://www.facebook.com/group.php?gid=50660208079" class="fb-icn">FaceBook</a></li>
+									<li><a href="http://twitter.com/ClickTale" class="tw-icn">Twitter.com</a></li>
+									<li><a href="http://www.linkedin.com/groups?home=&gid=2493082&trk=anet_ug_hm" class="lnk-icn">Linkdin.com</a></li>
+									<li><a href="http://blog.clicktale.com/feed/" class="rss-icn">Rss</a></li>
+								</ul>
+							</div>
+							<div class="c copyright-text">© 2006-2010 ClickTale Ltd. </div>
+							<a class="c truste-logo" title="ClickTale is a member of the Web Analytics Association" href="http://www.webanalyticsassociation.org/">Webanalytics</a>
+							<a href="http://privacy-policy.truste.com/click-with-confidence/wps/en/www.clicktale.com" target="_blank">
+							<script language="javascript">
+								document.write("<img style=\"border: none;display:block;left:25px;position:relative;top:10px;\" src=\"" + (location.protocol == "https:" ? "https" : "http") + "://privacy-policy.truste.com/certified-seal/wps/en/www.clicktale.com/seal.png\"/>");
+							</script>
+							</a>
+						</div>
+			
+				        
+						
+		</div><!--ft-->
+
+		
+
+		
+			<!-- ClickTale bottom customization start -->
+			
+<!-- ClickTale Bottom part -->
+<div id="ClickTaleDiv" style="display: none;"></div>
+<script type='text/javascript'>
+document.write(unescape("%3Cscript%20src='"+
+ (document.location.protocol=='https:'?
+  'https://clicktale.pantherssl.com/':
+  'http://s.clicktale.net/')+
+ "WRb6.js'%20type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+if(typeof ClickTale=='function')
+{
+	var ClickTaleSSL=1;
+	ClickTaleFetchFrom="http://www.clicktale.com//ClickTaleCache.ashx?t=c5793bfc159bbbcbffe933b52176949dacd21839";
+	ClickTale(36424,1);
+}
+</script>
+<!-- ClickTale end of Bottom part -->
+<!-- ClickTale Bottom part Here -->
+			<!-- ClickTale bottom customization end -->
+			
+		
+		
+			<!-- Set Clicktale Tag -->
+			<script type="text/javascript">
+				if (typeof ClickTaleTag == "function")
+					ClickTaleTag("HomePage"); 
+			</script>
+			
+		
+		<!-- GA -->
+		<script type="text/javascript">
+			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+
+		<script type="text/javascript">
+			if (typeof _gat != "undefined") {
+				var pageTracker = _gat._getTracker("UA-1911294-1");
+				pageTracker._setAllowHash(false);
+				pageTracker._setDomainName("none");
+				pageTracker._setAllowLinker(true);
+				pageTracker._initData();
+				pageTracker._trackPageview();
+			}
+		</script>
+		<!-- GA end -->	
+		
+		
+
+
+<!-- ClickTaleExcludeBlock -->
+
+  <!-- EndClickTaleExcludeBlock -->
+
+
+	
+
+
+		
+		
+		<!--Start Kampyle Feedback Form Button-->
+		<div id="k_close_button" class="k_float kc_bottom kc_right"></div>
+		<div>
+			<!--<a href="http://www.kampyle.com" id="kampylink"></a>-->
+			<a href="contact.aspx" id="kampylink" class="k_float k_bottom k_right" onclick="javascript:k_button.open_ff('site_code=9544534&amp;form_id=15452&amp;lang=en');return false;">
+				<img src="http://cf.kampyle.com/buttons/en/orange/en-orange-corner-low-right.gif" alt="Feedback Form"/>
+			</a>
+		</div>
+		<script src="http://cf.kampyle.com/k_button.js" type="text/javascript"></script>
+		<!--End Kampyle Feedback Form Button-->
+		
+		
+			
+	
+	</div><!-- doc -->      
+    
+</body>
+</html>
