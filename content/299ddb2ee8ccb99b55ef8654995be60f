@@ -1,0 +1,567 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Ohm &mdash; Object-hash mapping library for Redis</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html" title="Index">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><div id='filecontents'><h1 id='ohm_'>Ohm ॐ</h1>
+
+<p>Object-hash mapping library for Redis.</p>
+
+<h2 id='description'>Description</h2>
+
+<p>Ohm is a library for storing objects in <a href='http://redis.io'>Redis</a>, a persistent key-value database. It includes an extensible list of validations and has very good performance.</p>
+
+<h2 id='community'>Community</h2>
+
+<p>Join the mailing list: <a href='http://groups.google.com/group/ohm-ruby'>http://groups.google.com/group/ohm-ruby</a></p>
+
+<p>Meet us on IRC: <a href='irc://chat.freenode.net/#ohm'>#ohm</a> on <a href='http://freenode.net/'>freenode.net</a></p>
+
+<h2 id='related_projects'>Related projects</h2>
+
+<p>These are libraries in other languages that were inspired by Ohm.</p>
+
+<ul>
+<li><a href='https://github.com/xetorthio/johm'>JOhm</a> for Java, created by xetorthio</li>
+
+<li><a href='https://github.com/maritz/nohm'>Nohm</a> for Node.js, created by maritz</li>
+
+<li><a href='https://github.com/iamteem/redisco'>Redisco</a> for Python, created by iamteem</li>
+</ul>
+
+<h2 id='getting_started'>Getting started</h2>
+
+<p>Install <a href='http://redis.io'>Redis</a>. On most platforms it&#8217;s as easy as grabbing the sources, running make and then putting the <code>redis-server</code> binary in the PATH.</p>
+
+<p>Once you have it installed, you can execute <code>redis-server</code> and it will run on <code>localhost:6379</code> by default. Check the <code>redis.conf</code> file that comes with the sources if you want to change some settings.</p>
+
+<p>If you don&#8217;t have Ohm, try this:</p>
+
+<pre class="code">$ [sudo] gem install ohm</pre>
+
+<p>Or you can grab the code from <a href='http://github.com/soveran/ohm'>http://github.com/soveran/ohm</a>.</p>
+
+<p>Now, in an irb session you can test the Redis adapter directly:</p>
+
+<pre class="code">&gt;&gt; require &quot;ohm&quot;
+=&gt; true
+&gt;&gt; Ohm.connect
+=&gt; []
+&gt;&gt; Ohm.redis.set &quot;Foo&quot;, &quot;Bar&quot;
+=&gt; &quot;OK&quot;
+&gt;&gt; Ohm.redis.get &quot;Foo&quot;
+=&gt; &quot;Bar&quot;</pre>
+
+<h2 id='connecting_to_the_redis_database'>Connecting to the Redis database</h2>
+
+<p>There are a couple of different strategies for connecting to your Redis database. The first is to explicitly set the <code>:host</code>, <code>:port</code>, <code>:db</code> and <code>:timeout</code> options. You can also set only a few of them, and let the other options fall back to the default.</p>
+
+<p>The other noteworthy style of connecting is by just doing <code>Ohm.connect</code> and set the environment variable <code>REDIS_URL</code>.</p>
+
+<p>Here are the options for <span class='object_link'><a href="Ohm.html#connect-class_method" title="Ohm.connect (method)">Ohm.connect</a></span> in detail:</p>
+
+<dl>
+<dt><strong>:url</strong></dt>
+
+<dd>A Redis URL of the form <code>redis://:&lt;passwd&gt;@&lt;host&gt;:&lt;port&gt;/&lt;db&gt;</code>. Note that if you specify a URL and one of the other options at the same time, the other options will take precedence. Also, if you try and do <code>Ohm.connect</code> without any arguments, it will check if <code>ENV[&quot;REDIS_URL&quot;]</code> is set, and will use it as the argument for <code>:url</code>.</dd>
+
+<dt><strong>:host</strong></dt>
+
+<dd>Host where the Redis server is running, defaults to <code>&quot;127.0.0.1&quot;</code>.</dd>
+
+<dt><strong>:port</strong></dt>
+
+<dd>Port number, defaults to <code>6379</code>.</dd>
+
+<dt><strong>:db</strong></dt>
+
+<dd>Database number, defaults to <code>0</code>.</dd>
+
+<dt><strong>:password</strong></dt>
+
+<dd>It is the secret that will be sent to the Redis server. Use it if the server configuration requires it. Defaults to <code>nil</code>.</dd>
+
+<dt><strong>:timeout</strong></dt>
+
+<dd>Database timeout in seconds, defaults to <code>0</code>.</dd>
+
+<dt><strong>:thread_safe</strong></dt>
+
+<dd>Initializes the client with a monitor. It has a small performance penalty, and it&#8217;s off by default. For thread safety, it is recommended to use a different instance per thread. I you have no choice, then pass <code>:thread_safe =&gt; true</code> when connecting.</dd>
+</dl>
+
+<h2 id='models'>Models</h2>
+
+<p>Ohm&#8217;s purpose in life is to map objects to a key value datastore. It doesn&#8217;t need migrations or external schema definitions. Take a look at the example below:</p>
+
+<h3 id='example'>Example</h3>
+
+<pre class="code"><span class='kw'>class</span> <span class='const'>Event</span> <span class='op'>&lt;</span> <span class='const'>Ohm</span><span class='op'>::</span><span class='const'>Model</span>
+  <span class='id attribute'>attribute</span> <span class='symbol'>:name</span>
+  <span class='id reference'>reference</span> <span class='symbol'>:venue</span><span class='comma'>,</span> <span class='const'>Venue</span>
+  <span class='id set'>set</span> <span class='symbol'>:participants</span><span class='comma'>,</span> <span class='const'>Person</span>
+  <span class='id counter'>counter</span> <span class='symbol'>:votes</span>
+
+  <span class='id index'>index</span> <span class='symbol'>:name</span>
+
+  <span class='kw'>def</span> <span class='id validate'>validate</span>
+    <span class='id assert_present'>assert_present</span> <span class='symbol'>:name</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
+
+<span class='kw'>class</span> <span class='const'>Venue</span> <span class='op'>&lt;</span> <span class='const'>Ohm</span><span class='op'>::</span><span class='const'>Model</span>
+  <span class='id attribute'>attribute</span> <span class='symbol'>:name</span>
+  <span class='id collection'>collection</span> <span class='symbol'>:events</span><span class='comma'>,</span> <span class='const'>Event</span>
+<span class='kw'>end</span>
+
+<span class='kw'>class</span> <span class='const'>Person</span> <span class='op'>&lt;</span> <span class='const'>Ohm</span><span class='op'>::</span><span class='const'>Model</span>
+  <span class='id attribute'>attribute</span> <span class='symbol'>:name</span>
+<span class='kw'>end</span></pre>
+
+<p>All models have the <code>id</code> attribute built in, you don&#8217;t need to declare it.</p>
+
+<p>This is how you interact with IDs:</p>
+
+<pre class="code"><span class='id event'>event</span> <span class='op'>=</span> <span class='const'>Event</span><span class='period'>.</span><span class='id create'>create</span> <span class='symbol'>:name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Ohm Worldwide Conference 2031</span><span class='tstring_end'>&quot;</span></span>
+<span class='id event'>event</span><span class='period'>.</span><span class='id id'>id</span>
+<span class='comment'># =&gt; 1
+</span>
+<span class='comment'># Find an event by id
+</span><span class='id event'>event</span> <span class='op'>==</span> <span class='const'>Event</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
+<span class='comment'># =&gt; true
+</span>
+<span class='comment'># Trying to find a non existent event
+</span><span class='const'>Event</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span>
+<span class='comment'># =&gt; nil</span></pre>
+
+<p>This example shows some basic features, like attribute declarations and validations. Keep reading to find out what you can do with models.</p>
+
+<h2 id='attribute_types'>Attribute types</h2>
+
+<p>Ohm::Model provides four attribute types: <span class='object_link'><a href="Ohm/Model.html#attribute-class_method" title="Ohm::Model.attribute (method)">attribute</a></span>, <span class='object_link'><a href="Ohm/Model.html#set-class_method" title="Ohm::Model.set (method)">set</a></span>, <span class='object_link'><a href="Ohm/Model.html#list-class_method" title="Ohm::Model.list (method)">list</a></span> and <span class='object_link'><a href="Ohm/Model.html#counter-class_method" title="Ohm::Model.counter (method)">counter</a></span>; and two meta types: <span class='object_link'><a href="Ohm/Model.html#reference-class_method" title="Ohm::Model.reference (method)">reference</a></span> and <span class='object_link'><a href="Ohm/Model.html#collection-class_method" title="Ohm::Model.collection (method)">collection</a></span>.</p>
+
+<h3 id='attribute'>attribute</h3>
+
+<p>An <code>attribute</code> is just any value that can be stored as a string. In the example above, we used this field to store the event&#8217;s <code>name</code>. You can use it to store numbers, but be aware that Redis will return a string when you retrieve the value.</p>
+
+<h3 id='set'>set</h3>
+
+<p>A <code>set</code> in Redis is an unordered list, with an external behavior similar to that of Ruby arrays, but optimized for faster membership lookups. It&#8217;s used internally by Ohm to keep track of the instances of each model and for generating and maintaining indexes.</p>
+
+<h3 id='list'>list</h3>
+
+<p>A <code>list</code> is like an array in Ruby. It&#8217;s perfectly suited for queues and for keeping elements in order.</p>
+
+<h3 id='counter'>counter</h3>
+
+<p>A <code>counter</code> is like a regular attribute, but the direct manipulation of the value is not allowed. You can retrieve, increase or decrease the value, but you can not assign it. In the example above, we used a counter attribute for tracking votes. As the incr and decr operations are atomic, you can rest assured a vote won&#8217;t be counted twice.</p>
+
+<h3 id='reference'>reference</h3>
+
+<p>It&#8217;s a special kind of attribute that references another model. Internally, Ohm will keep a pointer to the model (its ID), but you get accessors that give you real instances. You can think of it as the model containing the foreign key to another model.</p>
+
+<h3 id='collection'>collection</h3>
+
+<p>Provides an accessor to search for all models that <code>reference</code> the current model.</p>
+
+<h2 id='persistence_strategy'>Persistence strategy</h2>
+
+<p>The attributes declared with <code>attribute</code> are only persisted after calling <code>save</code>. If the object is in an invalid state, no value is sent to Redis (see the section on <strong>Validations</strong> below).</p>
+
+<p>Operations on attributes of type <code>list</code>, <code>set</code> and <code>counter</code> are possible only after the object is created (when it has an assigned <code>id</code>). Any operation on these kinds of attributes is performed immediately, without running the object validations. This design yields better performance than running the validations on each operation or buffering the operations and waiting for a call to <code>save</code>.</p>
+
+<p>For most use cases, this pattern doesn&#8217;t represent a problem. If you need to check for validity before operating on lists, sets or counters, you can use this pattern:</p>
+
+<pre class="code"><span class='kw'>if</span> <span class='id event'>event</span><span class='period'>.</span><span class='id valid?'>valid?</span>
+  <span class='id event'>event</span><span class='period'>.</span><span class='id comments'>comments</span> <span class='op'>&lt;&lt;</span> <span class='const'>Comment</span><span class='period'>.</span><span class='id create'>create</span><span class='lparen'>(</span><span class='symbol'>:body</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Great event!</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+
+<p>If you are saving the object, this will suffice:</p>
+
+<pre class="code"><span class='kw'>if</span> <span class='id event'>event</span><span class='period'>.</span><span class='id save'>save</span>
+  <span class='id event'>event</span><span class='period'>.</span><span class='id comments'>comments</span> <span class='op'>&lt;&lt;</span> <span class='const'>Comment</span><span class='period'>.</span><span class='id create'>create</span><span class='lparen'>(</span><span class='symbol'>:body</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Wonderful event!</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+
+<h2 id='working_with_sets'>Working with Sets</h2>
+
+<p>Given the following model declaration:</p>
+
+<pre class="code"><span class='kw'>class</span> <span class='const'>Event</span> <span class='op'>&lt;</span> <span class='const'>Ohm</span><span class='op'>::</span><span class='const'>Model</span>
+  <span class='id attribute'>attribute</span> <span class='symbol'>:name</span>
+  <span class='id set'>set</span> <span class='symbol'>:attendees</span><span class='comma'>,</span> <span class='const'>Person</span>
+<span class='kw'>end</span></pre>
+
+<p>You can add instances of <code>Person</code> to the set of attendees with the <code>&lt;&lt;</code> method:</p>
+
+<pre class="code"><span class='id event'>event</span><span class='period'>.</span><span class='id attendees'>attendees</span> <span class='op'>&lt;&lt;</span> <span class='const'>Person</span><span class='period'>.</span><span class='id create'>create</span><span class='lparen'>(</span><span class='symbol'>:name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Albert</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+
+<span class='comment'># And now...
+</span><span class='id event'>event</span><span class='period'>.</span><span class='id attendees'>attendees</span><span class='period'>.</span><span class='id each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id person'>person</span><span class='op'>|</span>
+  <span class='comment'># ...do what you want with this person.
+</span><span class='kw'>end</span></pre>
+
+<h2 id='sorting'>Sorting</h2>
+
+<p>Since <code>attendees</code> is a <span class='object_link'><a href="Ohm/Model/Set.html" title="Ohm::Model::Set (class)">Set</a></span>, it exposes two sorting methods: <span class='object_link'><a href="Ohm/Model/Collection.html#sort-instance_method" title="Ohm::Model::Collection#sort (method)">sort</a></span> returns the elements ordered by <code>id</code>, and <span class='object_link'><a href="Ohm/Model/Collection.html#sort_by-instance_method" title="Ohm::Model::Collection#sort_by (method)">sort_by</a></span> receives a parameter with an attribute name, which will determine the sorting order. Both methods receive an options hash which is explained below:</p>
+
+<dl>
+<dt><strong>:order</strong></dt>
+
+<dd>
+<p>Order direction and strategy. You can pass in any of the following:</p>
+
+<ol>
+<li>ASC</li>
+
+<li>ASC ALPHA (or ALPHA ASC)</li>
+
+<li>DESC</li>
+
+<li>DESC ALPHA (or ALPHA DESC)</li>
+</ol>
+
+<p>It defaults to <code>ASC</code>.</p>
+</dd>
+
+<dt><strong>:start</strong></dt>
+
+<dd>
+<p>The offset from which we should start with. Note that this is 0-indexed. It defaults to <code>0</code>.</p>
+</dd>
+
+<dt><strong>:limit</strong></dt>
+
+<dd>
+<p>The number of entries to get. If you don&#8217;t pass in anything, it will get all the results from the LIST or SET that you are sorting.</p>
+</dd>
+
+<dt><strong>:by</strong></dt>
+
+<dd>
+<p>Key or Hash key with which to sort by. An important distinction with using <span class='object_link'><a href="Ohm/Model/Collection.html#sort-instance_method" title="Ohm::Model::Collection#sort (method)">sort</a></span> and <span class='object_link'><a href="Ohm/Model/Collection.html#sort_by-instance_method" title="Ohm::Model::Collection#sort_by (method)">sort_by</a></span> is that <code>sort_by</code> automatically converts the passed argument with the assumption that it is a hash key and it&#8217;s within the current model you are sorting.</p>
+
+<pre class="code"> <span class='const'>Post</span><span class='period'>.</span><span class='id all'>all</span><span class='period'>.</span><span class='id sort_by'>sort_by</span><span class='lparen'>(</span><span class='symbol'>:title</span><span class='rparen'>)</span>     <span class='comment'># SORT Post:all BY Post:*-&gt;title
+</span> <span class='const'>Post</span><span class='period'>.</span><span class='id all'>all</span><span class='period'>.</span><span class='id sort'>sort</span><span class='lparen'>(</span><span class='symbol'>:by</span> <span class='op'>=&gt;</span> <span class='symbol'>:title</span><span class='rparen'>)</span> <span class='comment'># SORT Post:all BY title</span></pre>
+</dd>
+
+<dt><strong>:get</strong></dt>
+
+<dd>
+<p>A key pattern to return, e.g. <code>Post:*-&gt;title</code>. As is the case with the <code>:by</code> option, using <span class='object_link'><a href="Ohm/Model/Collection.html#sort-instance_method" title="Ohm::Model::Collection#sort (method)">sort</a></span> and <span class='object_link'><a href="Ohm/Model/Collection.html#sort_by-instance_method" title="Ohm::Model::Collection#sort_by (method)">sort_by</a></span> has distinct differences in that <code>sort_by</code> does much of the hand-coding for you.</p>
+
+<pre class="code"> <span class='const'>Post</span><span class='period'>.</span><span class='id all'>all</span><span class='period'>.</span><span class='id sort_by'>sort_by</span><span class='lparen'>(</span><span class='symbol'>:title</span><span class='comma'>,</span> <span class='symbol'>:get</span> <span class='op'>=&gt;</span> <span class='symbol'>:title</span><span class='rparen'>)</span>
+ <span class='comment'># SORT Post:all BY Post:*-&gt;title GET Post:*-&gt;title
+</span>
+ <span class='const'>Post</span><span class='period'>.</span><span class='id all'>all</span><span class='period'>.</span><span class='id sort'>sort</span><span class='lparen'>(</span><span class='symbol'>:by</span> <span class='op'>=&gt;</span> <span class='symbol'>:title</span><span class='comma'>,</span> <span class='symbol'>:get</span> <span class='op'>=&gt;</span> <span class='symbol'>:title</span><span class='rparen'>)</span>
+ <span class='comment'># SORT Post:all BY title GET title</span></pre>
+</dd>
+
+<dt><strong>:store</strong></dt>
+
+<dd>
+<p>An optional key which you may use to cache the sorted result. The key may or may not exist.</p>
+
+<p>This option can only be used together with <code>:get</code>.</p>
+
+<p>The type that is used for the STORE key is a LIST.</p>
+
+<p>Post.all.sort_by(:title, :store =&gt; &#8220;FOO&#8221;)</p>
+
+<p># Get all the results stored in FOO. Post.db.lrange(&#8220;FOO&#8221;, 0, -1)</p>
+
+<p>When using temporary values, it might be a good idea to use a <code>volatile</code> key. In Ohm, a volatile key means it just starts with a <code>~</code> character.</p>
+
+<pre class="code"> <span class='const'>Post</span><span class='period'>.</span><span class='id all'>all</span><span class='period'>.</span><span class='id sort_by'>sort_by</span><span class='lparen'>(</span><span class='symbol'>:title</span><span class='comma'>,</span> <span class='symbol'>:get</span> <span class='op'>=&gt;</span> <span class='symbol'>:title</span><span class='comma'>,</span>
+                  <span class='symbol'>:store</span> <span class='op'>=&gt;</span> <span class='const'>Post</span><span class='period'>.</span><span class='id key'>key</span><span class='period'>.</span><span class='id volatile'>volatile</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>FOO</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
+
+ <span class='const'>Post</span><span class='period'>.</span><span class='id key'>key</span><span class='period'>.</span><span class='id volatile'>volatile</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>FOO</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id lrange'>lrange</span> <span class='int'>0</span><span class='comma'>,</span> <span class='op'>-</span><span class='int'>1</span></pre>
+</dd>
+</dl>
+
+<h2 id='associations'>Associations</h2>
+
+<p>Ohm lets you declare <code>references</code> and <code>collections</code> to represent associations.</p>
+
+<pre class="code"><span class='kw'>class</span> <span class='const'>Post</span> <span class='op'>&lt;</span> <span class='const'>Ohm</span><span class='op'>::</span><span class='const'>Model</span>
+  <span class='id attribute'>attribute</span> <span class='symbol'>:title</span>
+  <span class='id attribute'>attribute</span> <span class='symbol'>:body</span>
+  <span class='id collection'>collection</span> <span class='symbol'>:comments</span><span class='comma'>,</span> <span class='const'>Comment</span>
+<span class='kw'>end</span>
+
+<span class='kw'>class</span> <span class='const'>Comment</span> <span class='op'>&lt;</span> <span class='const'>Ohm</span><span class='op'>::</span><span class='const'>Model</span>
+  <span class='id attribute'>attribute</span> <span class='symbol'>:body</span>
+  <span class='id reference'>reference</span> <span class='symbol'>:post</span><span class='comma'>,</span> <span class='const'>Post</span>
+<span class='kw'>end</span></pre>
+
+<p>After this, every time you refer to <code>post.comments</code> you will be talking about instances of the model <code>Comment</code>. If you want to get a list of IDs you can use <code>post.comments.key.smembers</code>.</p>
+
+<h3 id='references_explained'>References explained</h3>
+
+<p>Doing a <span class='object_link'><a href="Ohm/Model.html#reference-class_method" title="Ohm::Model.reference (method)">reference</a></span> is actually just a shortcut for the following:</p>
+
+<pre class="code"><span class='comment'># Redefining our model above
+</span><span class='kw'>class</span> <span class='const'>Comment</span> <span class='op'>&lt;</span> <span class='const'>Ohm</span><span class='op'>::</span><span class='const'>Model</span>
+  <span class='id attribute'>attribute</span> <span class='symbol'>:body</span>
+  <span class='id attribute'>attribute</span> <span class='symbol'>:post_id</span>
+  <span class='id index'>index</span> <span class='symbol'>:post_id</span>
+
+  <span class='kw'>def</span> <span class='id post='>post=</span><span class='lparen'>(</span><span class='id post'>post</span><span class='rparen'>)</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id post_id'>post_id</span> <span class='op'>=</span> <span class='id post'>post</span><span class='period'>.</span><span class='id id'>id</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>def</span> <span class='id post'>post</span>
+    <span class='const'>Post</span><span class='lbracket'>[</span><span class='id post_id'>post_id</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+
+<p><em>(The only difference with the actual implementation is that the model is memoized.)</em></p>
+
+<p>The net effect here is we can conveniently set and retrieve <code>Post</code> objects, and also search comments using the <code>post_id</code> index.</p>
+
+<pre class="code"><span class='const'>Comment</span><span class='period'>.</span><span class='id find'>find</span><span class='lparen'>(</span><span class='symbol'>:post_id</span> <span class='op'>=&gt;</span> <span class='int'>1</span><span class='rparen'>)</span></pre>
+
+<h3 id='collections_explained'>Collections explained</h3>
+
+<p>The reason a <span class='object_link'><a href="Ohm/Model.html#reference-class_method" title="Ohm::Model.reference (method)">reference</a></span> and a <span class='object_link'><a href="Ohm/Model.html#collection-class_method" title="Ohm::Model.collection (method)">collection</a></span> go hand in hand, is that a collection is just a macro that defines a finder for you, and we know that to find a model by a field requires an <span class='object_link'><a href="Ohm/Model.html#index-class_method" title="Ohm::Model.index (method)">index</a></span> to be defined for the field you want to search.</p>
+
+<pre class="code"><span class='comment'># Redefining our post above
+</span><span class='kw'>class</span> <span class='const'>Post</span> <span class='op'>&lt;</span> <span class='const'>Ohm</span><span class='op'>::</span><span class='const'>Model</span>
+  <span class='id attribute'>attribute</span> <span class='symbol'>:title</span>
+  <span class='id attribute'>attribute</span> <span class='symbol'>:body</span>
+
+  <span class='kw'>def</span> <span class='id comments'>comments</span>
+    <span class='const'>Comment</span><span class='period'>.</span><span class='id find'>find</span><span class='lparen'>(</span><span class='symbol'>:post_id</span> <span class='op'>=&gt;</span> <span class='kw'>self</span><span class='period'>.</span><span class='id id'>id</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+
+<p>The only &#8220;magic&#8221; happening is with the inference of the <code>index</code> that was used in the other model. The following all produce the same effect:</p>
+
+<pre class="code"><span class='comment'># easiest, with the basic assumption that the index is `:post_id`
+</span><span class='id collection'>collection</span> <span class='symbol'>:comments</span><span class='comma'>,</span> <span class='const'>Comment</span>
+
+<span class='comment'># we can explicitly declare this as follows too:
+</span><span class='id collection'>collection</span> <span class='symbol'>:comments</span><span class='comma'>,</span> <span class='const'>Comment</span><span class='comma'>,</span> <span class='symbol'>:post</span>
+
+<span class='comment'># finally, we can use the default argument for the third parameter which
+</span><span class='comment'># is `to_reference`.
+</span><span class='id collection'>collection</span> <span class='symbol'>:comments</span><span class='comma'>,</span> <span class='const'>Comment</span><span class='comma'>,</span> <span class='id to_reference'>to_reference</span>
+
+<span class='comment'># exploring `to_reference` reveals a very interesting and simple concept:
+</span><span class='const'>Post</span><span class='period'>.</span><span class='id to_reference'>to_reference</span> <span class='op'>==</span> <span class='symbol'>:post</span>
+<span class='comment'># =&gt; true</span></pre>
+
+<h2 id='indexes'>Indexes</h2>
+
+<p>An <span class='object_link'><a href="Ohm/Model.html#index-class_method" title="Ohm::Model.index (method)">index</a></span> is a set that&#8217;s handled automatically by Ohm. For any index declared, Ohm maintains different sets of objects IDs for quick lookups.</p>
+
+<p>In the <code>Event</code> example, the index on the name attribute will allow for searches like <code>Event.find(:name =&gt; &quot;some value&quot;)</code>.</p>
+
+<p>Note that the <span class='object_link'><a href="Ohm/Model/Validations.html#assert_unique-instance_method" title="Ohm::Model::Validations#assert_unique (method)">assert_unique</a></span> validation and the methods <span class='object_link'><a href="Ohm/Model/Set.html#find-instance_method" title="Ohm::Model::Set#find (method)">find</a></span> and <span class='object_link'><a href="Ohm/Model/Set.html#except-instance_method" title="Ohm::Model::Set#except (method)">except</a></span> need a corresponding index in order to work.</p>
+
+<h3 id='finding_records'>Finding records</h3>
+
+<p>You can find a collection of records with the <code>find</code> method:</p>
+
+<pre class="code"><span class='comment'># This returns a collection of users with the username &quot;Albert&quot;
+</span><span class='const'>User</span><span class='period'>.</span><span class='id find'>find</span><span class='lparen'>(</span><span class='symbol'>:username</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Albert</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span></pre>
+
+<h3 id='filtering_results'>Filtering results</h3>
+
+<pre class="code"><span class='comment'># Find all users from Argentina
+</span><span class='const'>User</span><span class='period'>.</span><span class='id find'>find</span><span class='lparen'>(</span><span class='symbol'>:country</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Argentina</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+
+<span class='comment'># Find all activated users from Argentina
+</span><span class='const'>User</span><span class='period'>.</span><span class='id find'>find</span><span class='lparen'>(</span><span class='symbol'>:country</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Argentina</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='symbol'>:status</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>activated</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+
+<span class='comment'># Find all users from Argentina, except those with a suspended account.
+</span><span class='const'>User</span><span class='period'>.</span><span class='id find'>find</span><span class='lparen'>(</span><span class='symbol'>:country</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Argentina</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id except'>except</span><span class='lparen'>(</span><span class='symbol'>:status</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>suspended</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span></pre>
+
+<p>Note that calling these methods results in new sets being created on the fly. This is important so that you can perform further operations before reading the items to the client.</p>
+
+<p>For more information, see <a href='http://code.google.com/p/redis/wiki/SinterstoreCommand'>SINTERSTORE</a> and <a href='http://code.google.com/p/redis/wiki/SdiffstoreCommand'>SDIFFSTORE</a>.</p>
+
+<h2 id='validations'>Validations</h2>
+
+<p>Before every save, the <code>validate</code> method is called by Ohm. In the method definition you can use assertions that will determine if the attributes are valid. Nesting assertions is a good practice, and you are also encouraged to create your own assertions. You can trigger validations at any point by calling <code>valid?</code> on a model instance.</p>
+
+<h2 id='assertions'>Assertions</h2>
+
+<p>Ohm ships with some basic assertions. Check Ohm::Validations to see the method definitions.</p>
+
+<h3 id='assert'>assert</h3>
+
+<p>The <code>assert</code> method is used by all the other assertions. It pushes the second parameter to the list of errors if the first parameter evaluates to false.</p>
+
+<pre class="code"><span class='kw'>def</span> <span class='id assert'>assert</span><span class='lparen'>(</span><span class='id value'>value</span><span class='comma'>,</span> <span class='id error'>error</span><span class='rparen'>)</span>
+  <span class='id value'>value</span> <span class='kw'>or</span> <span class='id errors'>errors</span><span class='period'>.</span><span class='id push'>push</span><span class='lparen'>(</span><span class='id error'>error</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='kw'>false</span>
+<span class='kw'>end</span></pre>
+
+<h3 id='assert_present'>assert_present</h3>
+
+<p>Checks that the given field is not nil or empty. The error code for this assertion is :not_present.</p>
+
+<pre class="code"><span class='id assert_present'>assert_present</span> <span class='symbol'>:name</span></pre>
+
+<h3 id='assert_format'>assert_format</h3>
+
+<p>Checks that the given field matches the provided format. The error code for this assertion is :format.</p>
+
+<pre class="code"><span class='id assert_format'>assert_format</span> <span class='symbol'>:username</span><span class='comma'>,</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^\w+$</span><span class='regexp_end'>/</span></span></pre>
+
+<h3 id='assert_numeric'>assert_numeric</h3>
+
+<p>Checks that the given field holds a number as a Fixnum or as a string representation. The error code for this assertion is :not_numeric.</p>
+
+<pre class="code"><span class='id assert_numeric'>assert_numeric</span> <span class='symbol'>:votes</span></pre>
+
+<h3 id='assert_unique'>assert_unique</h3>
+
+<p>Validates that the attribute or array of attributes are unique. For this, an index of the same kind must exist. The error code is :not_unique.</p>
+
+<pre class="code"><span class='id assert_unique'>assert_unique</span> <span class='symbol'>:email</span></pre>
+
+<h2 id='errors'>Errors</h2>
+
+<p>When an assertion fails, the error report is added to the errors array. Each error report contains two elements: the field where the assertion was issued and the error code.</p>
+
+<h3 id='validation_example'>Validation example</h3>
+
+<p>Given the following example:</p>
+
+<pre class="code"><span class='kw'>def</span> <span class='id validate'>validate</span>
+  <span class='id assert_present'>assert_present</span> <span class='symbol'>:foo</span>
+  <span class='id assert_numeric'>assert_numeric</span> <span class='symbol'>:bar</span>
+  <span class='id assert_format'>assert_format</span> <span class='symbol'>:baz</span><span class='comma'>,</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^\d{2}$</span><span class='regexp_end'>/</span></span>
+  <span class='id assert_unique'>assert_unique</span> <span class='symbol'>:qux</span>
+<span class='kw'>end</span></pre>
+
+<p>If all the assertions fail, the following errors will be present:</p>
+
+<pre class="code"><span class='id obj'>obj</span><span class='period'>.</span><span class='id errors'>errors</span>
+<span class='comment'># =&gt; [[:foo, :not_present], [:bar, :not_numeric], [:baz, :format], [:qux, :not_unique]]</span></pre>
+
+<h2 id='presenting_errors'>Presenting errors</h2>
+
+<p>Unlike other ORMs, that define the full error messages in the model itself, Ohm encourages you to define the error messages outside. If you are using Ohm in the context of a web framework, the views are the proper place to write the error messages.</p>
+
+<p>Ohm provides a presenter that helps you in this quest. The basic usage is as follows:</p>
+
+<pre class="code"><span class='id error_messages'>error_messages</span> <span class='op'>=</span> <span class='ivar'>@model</span><span class='period'>.</span><span class='id errors'>errors</span><span class='period'>.</span><span class='id present'>present</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id e'>e</span><span class='op'>|</span>
+  <span class='id e'>e</span><span class='period'>.</span><span class='id on'>on</span> <span class='lbracket'>[</span><span class='symbol'>:name</span><span class='comma'>,</span> <span class='symbol'>:not_present</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Name must be present</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id e'>e</span><span class='period'>.</span><span class='id on'>on</span> <span class='lbracket'>[</span><span class='symbol'>:account</span><span class='comma'>,</span> <span class='symbol'>:not_present</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must supply an account</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span>
+
+<span class='id error_messages'>error_messages</span>
+<span class='comment'># =&gt; [&quot;Name must be present&quot;, &quot;You must supply an account&quot;]</span></pre>
+
+<p>Having the error message definitions in the views means you can use any sort of helpers. You can also use blocks instead of strings for the values. The result of the block is used as the error message:</p>
+
+<pre class="code"><span class='id error_messages'>error_messages</span> <span class='op'>=</span> <span class='ivar'>@model</span><span class='period'>.</span><span class='id errors'>errors</span><span class='period'>.</span><span class='id present'>present</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id e'>e</span><span class='op'>|</span>
+  <span class='id e'>e</span><span class='period'>.</span><span class='id on'>on</span> <span class='lbracket'>[</span><span class='symbol'>:email</span><span class='comma'>,</span> <span class='symbol'>:not_unique</span><span class='rbracket'>]</span> <span class='kw'>do</span>
+    <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>The email </span><span class='embexpr_beg'>#{</span><span class='ivar'>@model</span><span class='period'>.</span><span class='id email'>email</span><span class='rbrace'>}</span><span class='tstring_content'> is already registered.</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
+
+<span class='id error_messages'>error_messages</span>
+<span class='comment'># =&gt; [&quot;The email foo@example.com is already registered.&quot;]</span></pre>
+
+<h1 id='ohm_extensions'>Ohm Extensions</h1>
+
+<p>Ohm is rather small and can be extended in many ways.</p>
+
+<p>A lot of amazing contributions are available at <a href='http://labs.sinefunc.com/ohm-contrib/doc/'>Ohm Contrib</a>, make sure to check them if you need to extend Ohm&#8217;s functionality.</p>
+
+<h1 id='tutorials'>Tutorials</h1>
+
+<p>Check the examples to get a feeling of the design patterns for Redis.</p>
+
+<ol>
+<li><a href='http://ohm.keyvalue.org/examples/activity-feed.html'>Activity Feed</a></li>
+
+<li><a href='http://ohm.keyvalue.org/examples/chaining.html'>Chaining finds</a></li>
+
+<li><a href='http://ohm.keyvalue.org/examples/json-hash.html'>Serialization to JSON</a></li>
+
+<li><a href='http://ohm.keyvalue.org/examples/one-to-many.html'>One to many associations</a></li>
+
+<li><a href='http://ohm.keyvalue.org/examples/philosophy.html'>Philosophy behind Ohm</a></li>
+
+<li><a href='http://ohm.keyvalue.org/examples/redis-logging.html'>Learning Ohm internals</a></li>
+
+<li><a href='http://ohm.keyvalue.org/examples/slug.html'>Slugs and permalinks</a></li>
+
+<li><a href='http://ohm.keyvalue.org/examples/tagging.html'>Tagging</a></li>
+</ol>
+
+<h1 id='versions'>Versions</h1>
+
+<p>Ohm uses features from Redis &gt; 1.3.10. If you are stuck in previous versions, please use Ohm 0.0.35 instead.</p>
+
+<h2 id='upgrading_from_00x_to_01'>Upgrading from 0.0.x to 0.1</h2>
+
+<p>Since Ohm 0.1 changes the persistence strategy (from 1-key-per-attribute to Hashes), you&#8217;ll need to run a script to upgrade your old data set. Fortunately, it is built in:</p>
+
+<pre class="code"><span class='id require'>require</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ohm/utils/upgrade</span><span class='tstring_end'>&quot;</span></span>
+
+<span class='const'>Ohm</span><span class='period'>.</span><span class='id connect'>connect</span> <span class='symbol'>:port</span> <span class='op'>=&gt;</span> <span class='int'>6380</span>
+
+<span class='const'>Ohm</span><span class='op'>::</span><span class='const'>Utils</span><span class='op'>::</span><span class='const'>Upgrade</span><span class='period'>.</span><span class='id new'>new</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='symbol'>:User</span><span class='comma'>,</span> <span class='symbol'>:Post</span><span class='comma'>,</span> <span class='symbol'>:Comment</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='period'>.</span><span class='id run'>run</span></pre>
+
+<p>Yes, you need to provide the model names. The good part is that you don&#8217;t have to load your application environment. Since we assume it&#8217;s very likely that you have a bunch of data, the script uses <a href='http://github.com/djanowski/batch'>Batch</a> to show you some progress while the process runs.</p></div></div>
+    
+    <div id="footer">
+  Generated on Thu Nov  4 12:18:41 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.1 (ruby-1.9.2).
+</div>
+
+        <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+      </script>
+      <script type="text/javascript">
+      try {
+      var pageTracker = _gat._getTracker("UA-11356145-1");
+      pageTracker._trackPageview();
+      } catch(err) {}</script>
+      </body>
+
+</html>
