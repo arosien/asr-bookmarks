@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>gits: git push over Amazon S3</title>
+
+<link rel="stylesheet" href="../../style.css" type="text/css" />
+<link rel="stylesheet" href="../../local.css" type="text/css" />
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="http://wiki.cs.pdx.edu/oss2009/ikiwiki.cgi?page=index%2Fprojects%2Fgits3&amp;do=edit" />
+
+
+
+</head>
+<body>
+
+<div class="pageheader">
+<div class="header">
+<span>
+<span class="parentlinks">
+
+<a href="./../../index.html">oss2009</a>/ 
+
+<a href="./../../projects.html">projects</a>/ 
+
+</span>
+<span class="title">
+gits: git push over Amazon S3
+</span>
+</span><!--.header-->
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="http://wiki.cs.pdx.edu/oss2009/ikiwiki.cgi?page=index%2Fprojects%2Fgits3&amp;do=edit" rel="nofollow">Edit</a></li>
+
+
+<li><a href="./../../recentchanges.html">RecentChanges</a></li>
+
+
+<li><a href="http://wiki.cs.pdx.edu/cgi-bin/gitweb.cgi?p=oss2009.git;a=history;f=index/projects/gits3.mdwn">History</a></li>
+
+
+<li><a href="http://wiki.cs.pdx.edu/oss2009/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+<li><span class="createlink"><a href="http://wiki.cs.pdx.edu/oss2009/ikiwiki.cgi?page=discussion&amp;from=index%2Fprojects%2Fgits3&amp;do=create" rel="nofollow">?</a>Discussion</span><br /></li>
+
+</ul>
+</div>
+
+</div> <!-- .pageheader -->
+
+
+
+<div id="content">
+<p>By: Abdelhalim Ragab /abdelhalim (at) gmail.com/</p>
+
+<div class="toc">
+	<ol>
+		<li class="L2"><a href="#index1h2">Description:</a>
+		</li>
+		<li class="L2"><a href="#index2h2">License</a>
+		</li>
+		<li class="L2"><a href="#index3h2">News</a>
+		</li>
+		<li class="L2"><a href="#index4h2">Project Plan</a>
+		</li>
+		<li class="L2"><a href="#index5h2">Source code</a>
+		</li>
+		<li class="L2"><a href="#index6h2">Quick Howto</a>
+		<ol>
+			<li class="L3"><a href="#index1h3">Dependencies</a>
+			</li>
+			<li class="L3"><a href="#index2h3">Amazon S3</a>
+			</li>
+			<li class="L3"><a href="#index3h3">gits3</a>
+			</li>
+		</ol>
+		</li>
+		<li class="L2"><a href="#index7h2">Reporting Bugs</a>
+		</li>
+		<li class="L2"><a href="#index8h2">Resources and Links</a>
+		</li>
+	</ol>
+</div>
+
+<h2><a name="index1h2"></a>Description:</h2>
+
+<p><strong><em>gits3</em></strong> is an implementation for git push to use Amazon Simple Storage Services S3 as a remote repository storage</p>
+
+<h2><a name="index2h2"></a>License</h2>
+
+<p>gits is licensed under GNU General Public License <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a></p>
+
+<h2><a name="index3h2"></a>News</h2>
+
+<p>08/12/2009 demo gits3 at PSU.  <a href="http://cloud.github.com/downloads/abdelhalim/gits3/gits3.pdf">presentation link</a> <br>
+08/10/2009 gits3 finally worked. Push some changes to S3 repo then cloning the repo over HTTP<br>
+07/26/2009 Using dulwich git object model as it's already implemented in Python<br>
+07/26/2009 Generate the pack name from the list of objects to be pushed<br>
+07/26/2009 Traversed the commit graph, and get list of objects to be pushed<br>
+06/28/2009 Started gits3 project<br></p>
+
+<h2><a name="index4h2"></a>Project Plan</h2>
+
+<p><a href="./gits3/plan.html">plan</a></p>
+
+<h2><a name="index5h2"></a>Source code</h2>
+
+<p>git repository:
+<br>
+<a href="http://github.com/abdelhalim/gits3">http://github.com/abdelhalim/gits3</a><br></p>
+
+<h2><a name="index6h2"></a>Quick Howto</h2>
+
+<h3><a name="index1h3"></a>Dependencies</h3>
+
+<ul>
+<li>boto
+<ul><li><a href="http://code.google.com/p/boto/">web page</a></li>
+<li>gits3 has been tested with boto <a href="http://boto.googlecode.com/files/boto-1.8d.tar.gz">1.8d</a></li></ul></li>
+<li>dulwich
+<ul><li><a href="http://samba.org/~jelmer/dulwich/">web page</a></li>
+<li>gits3 has been tested with dulwich <a href="http://samba.org/~jelmer/dulwich/dulwich-0.3.3.tar.gz">0.3.3</a></li></ul></li>
+<li>Amazon S3
+<ul><li>Setup Amazon S3 account </li>
+<li>Read S3 documentation to understand S3 concepts</li></ul></li>
+</ul>
+
+<h3><a name="index2h3"></a>Amazon S3</h3>
+
+<h4><a name="index1h4"></a>Amazon S3 URLs</h4>
+
+<ul>
+<li>git push URL<br>
+<code>amazon-s3://$config@$bucket/$prefix</code></li>
+<li>git fetch/pull URL<br>
+<code>http://$bucket.s3.amazonaws.com/$prefix</code></li>
+</ul>
+
+<h4><a name="index2h4"></a>Amazon S3 JGIT config file</h4>
+
+<ul>
+<li>create properties file with the Amazon S3 AWSAccessKeyid, and AWSSecretAccessKey, similar to the one <a href="http://www.spearce.org/2008/07/using-jgit-to-publish-on-amazon-s3.html">used by jgit</a> <br>
+<code>
+$ touch ~/.jgit<em>s3</em>public <br>
+$ chmod 600 ~/.jgit<em>s3</em>public <br>
+$ cat &gt;&gt;~/.jgit<em>s3</em>public <br>
+accesskey: AWSAccessKeyId <br>
+secretkey: AWSSecretAccessKey <br>
+acl: public <br>
+EOF <br>
+</code></li>
+</ul>
+
+<h4><a name="index3h4"></a>Amazon S3 bucket</h4>
+
+<p>You have to create the bucket using any S3 tool like <a href="https://addons.mozilla.org/en-US/firefox/addon/3247">S3 Firefox Organizer S3Fox</a><br></p>
+
+<h3><a name="index3h3"></a>gits3</h3>
+
+<ul>
+<li>get the sources<br>
+<code>$ git clone git://github.com/abdelhalim/gits3.git</code></li>
+<li>set PYTHONPATH environment variable to point to <em>&lt;gits3&gt;</em>/src/gits3<br>
+<code>$ export GITS3=<code>pwd</code>/gits3<br>
+$ export PYTHONPATH=$GITS3/src/gits3</code></li>
+<li>Add Amazon S3 URL to your repo configuration, the example uses a bucket called <code>test_bucket</code>. The bucket must be created before the push command using any S3 tool<br>
+<code>    $ cd &lt;local_repo&gt;<br>
+$ git remote add s3 amazon-s3://.jgit<em>s3</em>public@test_bucket/projects/scratch.git/</code></li>
+<li>push the repo to Amazon S3<br>
+<code>$ python $GITS3/src/gits3/gits3.py push s3 refs/heads/master</code></li>
+<li><p>Further pushes uses the last command only</p></li>
+<li><p>git cloning<br>
+<code>git clone http://test_bucket.s3.amazonaws.com/projects/scratch.git</code></p></li>
+</ul>
+
+<h2><a name="index7h2"></a>Reporting Bugs</h2>
+
+<p>use git hub <a href="http://github.com/abdelhalim/gits3/issues">tracker issue</a></p>
+
+<h2><a name="index8h2"></a>Resources and Links</h2>
+
+<ul>
+<li><a href="http://www.jgit.org/">jgit</a>: Pure java git implementation that supports S3</li>
+<li><a href="http://aws.amazon.com/s3/">Amazon S3</a></li>
+<li><a href="http://repo.or.cz/w/libgit2.git">libgit2</a>: git library take 2</li>
+<li><a href="https://launchpad.net/dulwich">dulwich</a>: Pure Python git implementation.</li>
+<li><a href="http://code.google.com/p/boto/">boto</a> Python library for Amazon Web Services including S3</li>
+</ul>
+
+<p>Copyright (C) 2009 Abdelhalim Ragab</p>
+
+</div>
+
+<div id="footer" class="pagefooter">
+<div id="pageinfo">
+
+
+
+
+<div id="backlinks">
+Links:
+
+<a href="./../projects.html">projects</a>
+
+
+</div><!-- #backlinks -->
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Aug 16 19:30:23 2009</span>
+<!-- Created <span class="date">Tue Jun 30 23:13:04 2009</span> -->
+</div>
+
+</div><!-- #pageinfo -->
+
+<!-- from oss2009 -->
+</div><!-- .pagefooter #footer -->
+
+</body>
+</html>
