@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+
+
+
+
+
+
+
+  
+  
+  
+  
+  <title>SUPERMON</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+
+
+
+
+
+  
+  
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+
+<body>
+
+
+
+
+<div class="container">
+<div class="titleblock">
+<h1>SUPERMON</h1>
+
+
+
+
+
+
+</div>
+
+
+
+
+<div>
+<ul class="navbar">
+
+
+  <li><a href="index.html" class="style5 nav">Home</a></li>
+
+
+  <li><a href="element.html" class="style5 nav">Elements</a></li>
+
+<li><a href="SupermonPerformance.html" class="style5 nav">Performance</a></li>
+
+
+
+  <li><a href="LowPerturbation.html" class="style5 nav">Low Perturbation</a></li>
+
+
+
+
+  <li><a href="SamplingRates.html" class="style5 nav style1">Sampling Rates</a></li>
+
+
+
+
+  <li><a href="DataProtocol.html" class="style5 nav style1">Data Protocol</a></li>
+
+
+  <li><a href="ProgrammingInterface.html" class="style5 nav">Programming Interface</a></li>
+
+<li><a href="SupermonArchitecture.html" class="style5 nav">Architecture</a></li>
+<li><a href="ExampleClients.html" class="style5 nav">Example Clients</a></li>
+
+<li><a href="FrequentlyAskedQuestions.html" class="style5 nav">FAQ</a></li>
+
+<li><a href="PublishedPapers.html" class="style5 nav">Published Papers</a></li>
+</ul>
+
+
+</div>
+
+
+
+
+<div class="content">
+
+
+  
+<h3>SUPERMON</h3>
+
+
+
+
+</div>
+<h4>Welcome to the supermon web page. This page has been revised from
+it's older format to allow easier updating and cross referencing for
+iusers
+who are wishing to quickly seek answers to their questions.
+</p>
+<p>
+Supermon is a high-speed cluster monitoring system that emphasizes
+<a href="LowPerturbation.html"><b>LowPerturbation</b></a>,
+high <a href="SamplingRates.html"><b>SamplingRates</b></a>,
+and an extensible <a href="DataProtocol.html"><b>DataProtocol</b></a>
+and <a href="ProgrammingInterface.html"><b>ProgrammingInterface</b></a>.
+It has been shown to scale from the most basic
+single processor machines to large scale, 1024 (2048) processor
+clusters.
+Although it is most frequently used on Linux-based clusters, the
+infrastructure
+is in no way limited to this operating system provided that data can be
+extracted from the operating system and presented in the correct
+format.
+</p>
+<p>
+The project page containing file downloads and the CVS repository is
+<a href="http://sf.net/projects/supermon/"><b>here</b></a>.
+</p>
+<p>
+A list of <a href="FrequentlyAskedQuestions.html"><b>FrequentlyAskedQuestions</b></a>
+is available. Some <a href="PublishedPapers.html"><b>PublishedPapers</b></a>
+(and presentations) are also available. We are currently in the process
+of
+compiling performance results and comparisons with other monitoring
+systems
+to help users choose which monitoring system best fits their needs.
+</p>
+</font>
+<div style="text-align: left;"><font size="-1">Supermon
+is a exible set of tools for high speed, scalable cluster
+monitoring. Node behavior can be monitored much faster than with other
+commonly used methods (e.g., rstatd). In addition, Supermon uses a data
+protocol based on symbolic expressions (S-expressions) at all levels of
+Supermon, from individual nodes to entire clusters. This contributes to
+Supermon's scalability and allows it to function in a heterogeneous
+environment.</font><font size="-2"><br>
+</font>
+<div style="text-align: left;">
+<h3 style="text-align: center;">Mon
+and Supermon</h2>
+<h4><p><font size="-2"><font size="-1">Two
+small server programs move
+data from the kernel to clients, and
+provide that data via TCP at both single and multiple node levels. At a
+single node, a kernel module provides data in its two /proc entries
+(see above). The <em>mon</em> server acts as a filter
+between /proc
+and the TCP clients: It parses the s-expressions found in /proc, adds a
+minimal amount of information, and passes that data to clients on
+demand. For each client that connects to it, mon maintains a bitmask
+reflecting the data fields that particular client requests in a sample.
+That way, mon filters data and reduces wasteful network traffic. A
+second server - <em>Supermon</em> - lets clients see a
+snapshot of a <em>set of nodes</em>
+in each sample. Supermon connects to nodes that run mon servers, and
+concentrates their data. It then presents the data sampled from many
+mon servers in a single data sample. The data format provided to
+clients by Supermon is identical to mon's data format. That allows many
+Supermon servers to be created, each sampling from a subset of the
+nodes within a cluster. New Supermon servers could then be started to
+connect to the Supermon servers already monitoring portions of the
+cluster.<br>
+<br>
+<br>
+Hierarchical Supermon servers improve performance in situations
+where a cluster has many nodes and sampling rates are high. Supermon
+provides a bitmask-based filter for each client (similar to mon), which
+is then used to improve efficiency between the Supermon/mon and
+Supermon/client connections.</font>
+</font></p>
+
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title></title>
+</head>
+<body>
+<h4><div style="text-align: center;">Updated 08-13-2008</div></h4>
+</body>
+</html>
+
+
+
+</div>
+
+
+
+
+<p>&nbsp;</p>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+</body>
+</html>
