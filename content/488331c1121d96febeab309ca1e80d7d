@@ -1,0 +1,178 @@
+
+<html>
+<head>
+  <meta name="google-site-verification" content="vzMAja1O_KFjC912G1_t_cD4iX7K06a27iUkl1cGSjI" />
+  <link rel=stylesheet href="style.css" type="text/css">
+  <title>collectl</title>
+</head>
+
+<body>
+<center>
+<table cellspacing=0 width=100%>
+    <tr>
+        <td align=left width=10%></td>
+        <td align=center><h1>Collectl</h1>
+        </td>
+        <td valign=middle width=10%><a href="http://sourceforge.net/projects/collectl"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=196536&type=11" width="120" height="30" border="0" alt="Get collectl at SourceForge.net. Fast, secure and Free Open Source software downloads" /></a></td>
+    </tr>
+    <tr>
+	<td>&nbsp;</td>
+	<td align=center><h3>Latest Version: 3.4.3-3 Sept 8, 2010</h3></td>
+    </tr>
+    <tr>
+	<td>&nbsp;</td>
+	<td align=center><a href=http://sourceforge.net/project/showfiles.php?group_id=196536><img src=DownloadNow.gif border="0"></a></td>
+    </tr>
+</table>
+</center>
+
+<p>
+<center>
+<b><font face="Arial">
+<a href=index.html>Home</a> | 
+<a href=Architecture.html>Architecture</a> | 
+<a href=Features.html>Features</a> | 
+<a href=Documentation.html>Documentation</a> |
+<a href=Releases.html>Releases</a> |
+<a href=http://collectl.sourceforge.net/FAQ-collectl.html>FAQ</a> |
+<a href=Support.html>Support</a>
+</h3></font></b>
+<br><img src=new.gif border=0>OFED 1.5 Support
+</center>
+
+<p>
+There are a number of times in which you find yourself needing performance data.
+These can include benchmarking, monitoring a system's general heath or trying
+to determine what your system was doing at some time in the past.  Sometimes you
+just want to know what the system is doing right now.  Depending on what you're doing,
+you often end up using different tools, each designed to for that specific situation.
+<p>
+Unlike most monitoring tools that either focus on a small set of 
+statistics, format their output in only one way, run either interatively
+or as a daemon but not both, collectl tries to do it all.  You can choose
+to monitor any of a broad set of subsystems which currently include buddyinfo, cpu, disk, inodes,
+infiniband, lustre, memory, network, nfs, processes, quadrics, slabs,
+sockets and tcp.
+<p>
+The following is an example taken while writing a large file and running the collectl command
+with no arguments.  By default it shows cpu, network and disk stats in
+<i>brief format</i>.  The key point of this format is all output appears on a single line
+making it much easier to spot spikes or other anomalies in the output:
+
+<div class=terminal>
+<pre>
+#<--------CPU--------><-----------Disks-----------><-----------Network---------->
+#cpu sys inter  ctxsw KBRead  Reads  KBWrit Writes netKBi pkt-in  netKBo pkt-out
+  37  37   382    188      0      0   27144    254     45     68       3      21
+  25  25   366    180     20      4   31280    296      0      1       0       0
+  25  25   368    183      0      0   31720    275      2     20       0       1
+</pre>
+</div>
+
+In this example, taken while writing to an NFS mounted filesystem, collectl displays
+interrupts, memory usage and nfs activity with timestamps.  Keep in mind that 
+you can mix and match any data and in the case of <i>brief format</i> you simply 
+need to have a window wide enough to accommodate your output.
+
+<div class=terminal>
+<pre>
+#         <-------Int--------><-----------Memory-----------><------NFS Totals------>
+#Time     Cpu0 Cpu1 Cpu2 Cpu3 Free Buff Cach Inac Slab  Map  Reads Writes Meta Comm
+08:36:52  1001   66    0    0   2G 201M 609M 363M 219M 106M      0      0    5    0
+08:36:53   999 1657    0    0   2G 201M   1G 918M 252M 106M      0  12622    0    2
+08:36:54  1001 7488    0    0   1G 201M   1G   1G 286M 106M      0  20147    0    2
+</pre>
+</div>
+
+You can also display the same information in <i>verbose format</i>, in which case
+you get a single line for each type of data at the expense of more screen real estate,
+as can be seen in this example of network data during NFS writes.  Note how you can
+actually see the network traffic stall while waiting for the server to physically
+write the data.
+
+<div class=terminal>
+<pre>
+# NETWORK SUMMARY (/sec)
+#              KBIn  PktIn SizeIn  MultI   CmpI  ErrIn  KBOut PktOut  SizeO   CmpO ErrOut
+08:46:35.002   3255  41000     81      0      0      0 112015  78837   1454      0      0
+08:46:36.003      0      9     70      0      0      0     29     25   1174      0      0
+08:46:37.003      0      2     70      0      0      0      0      2    134      0      0
+</pre>
+</div>
+
+In this last example we see what <i>detail format</i> looks like where we see 
+multiple lines of output for a partitular type of data, which in this case is 
+interrupts.
+
+<div class=terminal>
+<pre>
+#              Int    Cpu0   Cpu1   Cpu2   Cpu3   Type            Device(s)
+08:52:32.002   225       0      4      0      0   IO-APIC-level   ioc0
+08:52:32.002   000    1000      0      0      0   IO-APIC-edge    timer
+08:52:32.002   014       0      0     18      0   IO-APIC-edge    ide0
+08:52:32.002   090       0      0      0  15461   IO-APIC-level   eth1
+</pre>
+</div>
+
+Output can also be saved in a rolling set of logs for later
+playback or displayed interactively in a variety of formats.
+If all that isn't enough there are additional mechanisms for supplying data to external tools 
+by generating output as <a href=http://en.wikipedia.org/wiki/S-expression>
+s-expressions</a>, a format of choice for some tools such as 
+<a href=http://supermon.sourceforge.net/>supermon</a> <i>or</i> in another format
+called list-expressions.  This output can be written to a file or sent over a socket.
+You can even create files in space-separated formats for plotting
+with external packages like the one below which was done with gnuplot
+using 1 second samples.
+<p>
+<center><img src="http://collectl.sourceforge.net/graph.png"></center>
+<p>
+Collectl runs on all linux distros (it's included as part of Fedora)
+and only requires perl.  If the perl
+<a href=http://search.cpan.org/dist/Time-HiRes/>
+Time::Hires</a> module is installed, you will be able to use fractional
+intervals and display timestamps in msecs.  If the
+<a href=http://search.cpan.org/dist/Compress-Zlib/>Compress::Zlib</a>
+module is installed the recorded data will be compressed and therefore
+use on average 90% less storage when recording to a file.  Also note that
+the above links are <i>not</i> for RPMs.  If you'd rather work with RPMs there
+are far too many versions out there to link to and so I'm sorry to say
+you're on your own.
+<p>
+Did you know there was an inconsistency in the way Linux reported
+disk metrics that wasn't even noticed/fixed until the 2.6-14 kernel
+was released?  <a href=DiskStats.html>Collectl did.</a>
+Or how about the fact that network stats may not accurately reported by most
+network monitoring tools at one second intervals?  
+See <a href=NetworkStats.html>this page</a> for a description of the problem 
+and how you <i>can</i> get more accurate stats by simply running collectl at
+a sub-second interval.
+<p>
+If you're still not sure if collectl is right for you, take a couple in minutes
+to look at the <a href=Tutorial.html>tutorial</a> to get a better feel for what
+collectl can do.  Also be sure to check back and see what's new on the website,
+sign up for a <a href=http://sourceforge.net/mail/?group_id=196536>Mailing List</a>
+or watch the <a href=http://sourceforge.net/forum/?group_id=196536>Forums</a>.
+<p>
+<center>
+<table>
+<tr><td><h3><i>"I absolutely love it and have been using it extensively for months."</i><h3></td></tr>
+<tr align=right><td>Kevin Closson: Performance Architect, Oracle Corporation</td></tr>
+<tr></tr>
+<tr align=right><td><h3><i>"Collectl is indispensable to any system admin."</i><h3></td></tr>
+<tr align=right><td>Matt Heaton: President, Bluehost.com</td></tr>
+</table>
+</center>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-6408045-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+      
+</body>
+</html>
