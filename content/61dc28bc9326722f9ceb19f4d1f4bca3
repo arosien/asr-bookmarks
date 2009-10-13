@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>The GNU MPFR Library</title>
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="stylesheet" type="text/css" href="styles/screen.css" media="screen,tv,projection" />
+<link rel="stylesheet" type="text/css" href="styles/print.css" media="print" />
+</head>
+
+<body>
+
+<h1><img src="mpfr500.png" alt="" width="250" height="100" style="float: right" />
+The <cite><acronym>GNU</acronym> <acronym>MPFR</acronym></cite> Library</h1>
+
+<div class="page-navbar">
+<map id="contents" title="Page Contents"><p>
+[<a href="#mpfr-links"><cite><acronym>MPFR</acronym></cite> links</a>]
+[<a href="#intro">introduction</a>]
+[<a href="#interfaces">interfaces</a>]
+[<a href="#mpfr-sw">software using <cite><acronym>MPFR</acronym></cite></a>]
+[<a href="#free-sw">related free software</a>]
+[<a href="#other-links">links</a>]
+</p></map>
+</div>
+
+<!--
+<div style="border: solid 2px; background: #f0f0f0;
+            margin: 2ex 1em; padding: 1ex; float: left">
+<p style="margin: 0; padding: 0" lang="fr" xml:lang="fr"><a href="http://cnc2.loria.fr/">École d'été <acronym>CNC</acronym>'2 (Calcul Numérique Certifié)</a> sur <acronym>MPFR</acronym> et <acronym>MPC</acronym><br />
+25-26 juin 2009 &ndash; <acronym title="Laboratoire lorrain de recherche en informatique et ses applications">LORIA</acronym>, Nancy, France</p>
+<p style="margin: 0; padding: 0; padding-top: 1ex"><acronym>CNC</acronym>'2 Summer School on <acronym>MPFR</acronym> and <acronym>MPC</acronym><br />
+June 25-26, 2009 &ndash; <acronym title="Laboratoire lorrain de recherche en informatique et ses applications" lang="fr" xml:lang="fr">LORIA</acronym>, Nancy, France</p>
+</div>
+
+<div style="border: solid 2px; background: #f0f0f0;
+            margin: 2ex 1em; padding: 1ex; float: left">
+<p style="margin: 0; padding: 0"><a href="http://www.inria.fr/actualites/colloques/cea-edf-inria/2007/cnc/index.en.html"><span lang="fr" xml:lang="fr"><acronym title="Commissariat à l'Énergie Atomique">CEA</acronym>-<acronym title="Électricité de France">EDF</acronym>-<acronym title="Institut National de Recherche en Informatique et en Automatique">INRIA</acronym></span> School <cite>Certified Numerical Computation</cite></a><br />
+October 25-26, 2007 &ndash; <acronym title="Laboratoire lorrain de recherche en informatique et ses applications" lang="fr" xml:lang="fr">LORIA</acronym>, Nancy, France</p>
+<p style="margin: 0; padding: 0; padding-top: 1ex" lang="fr" xml:lang="fr"><a href="http://www.inria.fr/actualites/colloques/cea-edf-inria/2007/cnc/index.fr.html">École <acronym title="Commissariat à l'Énergie Atomique">CEA</acronym>-<acronym title="Électricité de France">EDF</acronym>-<acronym title="Institut National de Recherche en Informatique et en Automatique">INRIA</acronym> <cite>Calcul numérique certifié</cite></a><br />
+25-26 octobre 2007 &ndash; <acronym title="Laboratoire lorrain de recherche en informatique et ses applications">LORIA</acronym>, Nancy, France</p>
+</div>
+
+<div style="border: solid 2px; background: #f0f0f0; width: 50%;
+            margin: 2ex 1em; padding: 1ex; float: left">
+<p style="margin: 0; padding: 0">The <cite><acronym>MPFR</acronym></cite> team
+has won the
+<a href="http://www.cs.ru.nl/~milad/manydigits/"><cite>Many Digits</cite>
+Friendly Competition</a>, that took place on 3 and 4 October 2005 at
+Radboud University, Nijmegen, The Netherlands.</p>
+<ul style="margin: 0; padding: 0 0 0 3em">
+<li style="margin: 0; padding: 0.5ex 0 0 0">The <a href="http://www.cs.ru.nl/~milad/manydigits/results.php">results</a> and the detailed <a href="http://www.cs.ru.nl/~milad/manydigits/final_timings_rankings.html">final timings and rankings</a>.</li>
+<li style="margin: 0; padding: 0.5ex 0 0 0"><a href="http://www.loria.fr/~zimmerma/mpfr/manydigits/competition.html">Programs used by the <cite><acronym>MPFR</acronym></cite> team</a>.</li>
+<li style="margin: 0; padding: 0.5ex 0 0 0"><a href="http://www.loria.fr/~zimmerma/mpfr/manydigits/press_release.txt">Press release</a>.</li>
+</ul>
+</div>
+-->
+
+<h2 id="mpfr-links" style="clear: both"><cite><acronym>MPFR</acronym></cite> Links</h2>
+
+<p>Internal links:</p>
+<ul>
+<li><a href="mpfr-current/">Latest release</a>:
+<a href="mpfr-current/#download">download</a> &ndash;
+<a href="mpfr-current/#doc">documentation</a> &ndash;
+<a href="mpfr-current/#bugs">bugs</a> &ndash;
+<a href="mpfr-current/#changes">changes</a>.</li>
+<li><a href="gforge.html">Gforge</a>: information to use the anonymous access to the Subversion repository.</li>
+<li><a href="sample.html">Sample</a>: to start with the <cite><acronym>MPFR</acronym></cite> library.</li>
+<li><a href="faq.html"><acronym title="Frequently Asked Questions">FAQ</acronym></a>: frequently asked questions.</li>
+<li><a href="credit.html">Credit</a>: involved projects and developers.</li>
+<li><a href="history.html">History</a>: links to all <cite><acronym>MPFR</acronym></cite> versions and past events.</li>
+<li><a href="algo.html">Algorithms</a>: documents describing algorithms used in <cite><acronym>MPFR</acronym></cite>.</li>
+<li><a href="pub.html"><cite><acronym>MPFR</acronym></cite> in the world</a>: publications citing <cite><acronym>MPFR</acronym></cite> and various links about <cite><acronym>MPFR</acronym></cite>.</li>
+<li><a href="contrib.html">How to contribute to <cite><acronym>MPFR</acronym></cite></a>.</li>
+</ul>
+
+<p>External links on <cite><acronym>MPFR</acronym></cite>:</p>
+<ul>
+<li><a href="http://ex-cs.sist.ac.jp/~tkouya/try_mpfr.html">Try <cite><acronym>MPFR</acronym></cite> online</a>, thanks to Tomonori Kouya.</li>
+<li><a href="http://websympa.loria.fr/wwsympa/arc/mpfr-announce">Mailing-list for announces</a> (moderated).</li>
+<li><a href="http://websympa.loria.fr/wwsympa/arc/mpfr">Mailing-list for users and developers</a>
+(<a href="http://dir.gmane.org/gmane.comp.lib.mpfr.general">Gmane mirror</a>).</li>
+</ul>
+
+<h2 id="intro">Introduction</h2>
+
+<p>The <cite><acronym>MPFR</acronym></cite> library is a C library for
+multiple-precision floating-point computations with <em>correct rounding</em>.
+<cite><acronym>MPFR</acronym></cite> has continuously been supported by the
+<a href="http://www.inria.fr/"><acronym title="Institut National de Recherche en Informatique et en Automatique">INRIA</acronym></a> and the current main
+authors come from the
+<a href="http://caramel.loria.fr/"><acronym>Caramel</acronym></a>
+and
+<a href="http://www.ens-lyon.fr/LIP/Arenaire/" lang="fr" xml:lang="fr">Arénaire</a>
+project-teams at
+<a href="http://www.loria.fr/"><acronym title="Laboratoire lorrain de recherche en informatique et ses applications" lang="fr" xml:lang="fr">Loria</acronym></a>
+(Nancy, France) and
+<a href="http://www.ens-lyon.fr/LIP/"><acronym title="Laboratoire de l'Informatique du Parallélisme" lang="fr" xml:lang="fr">LIP</acronym></a>
+(Lyon, France) respectively; see more on the
+<a href="credit.html">credit page</a>.
+<cite><acronym>MPFR</acronym></cite> is based on the
+<a href="http://gmplib.org/"><cite><acronym>GMP</acronym></cite></a>
+multiple-precision library.</p>
+
+<p>The main goal of <cite><acronym>MPFR</acronym></cite> is to provide a
+library for multiple-precision floating-point computation which is both
+efficient and has a well-defined semantics. It copies the good ideas from
+the <acronym>ANSI</acronym>/<acronym>IEEE</acronym>-754 standard for
+double-precision floating-point arithmetic (53-bit mantissa).</p>
+
+<p><cite><acronym>MPFR</acronym></cite> is free. It is distributed under
+the <a href="http://www.gnu.org/copyleft/lesser.html"><acronym>GNU</acronym>
+Lesser General Public License</a> (<acronym>GNU</acronym> Lesser
+<acronym>GPL</acronym>), version 3 or later (2.1 or later for
+<cite><acronym>MPFR</acronym></cite> versions until 2.4.x).
+The library has been registered in France by the
+<cite lang="fr" xml:lang="fr">Agence de Protection des Programmes</cite>
+under the number IDDN FR 001 120020 00 R P 2000 000 10800, on 15 March 2000.
+This license guarantees your freedom to share and change
+<cite><acronym>MPFR</acronym></cite>, to make sure
+<cite><acronym>MPFR</acronym></cite> is free for all its users. Unlike the
+ordinary General Public License, the Lesser <acronym>GPL</acronym> enables
+developers of non-free programs to use <cite><acronym>MPFR</acronym></cite>
+in their programs. If you have written a new function for
+<cite><acronym>MPFR</acronym></cite> or improved an existing one, please
+share your work!</p>
+
+<h2 id="interfaces">Interfaces for <cite><acronym>MPFR</acronym></cite> and Extensions</h2>
+
+<ul>
+
+<li>The following four C++ interfaces for <cite><acronym>MPFR</acronym></cite>,
+<em>very different</em> in their design (and in particular, in the strategies
+for intermediate precisions, so that they can yield different results), are
+available:
+<ul>
+<li><a href="http://beshenov.ru/mpfrcpp/"><cite>MPFRCPP</cite></a>,
+written by Alexey V. Beshenov. This interface uses a modern C++ design
+with using of classes, templates and function objects.</li>
+<li>Another
+<a href="http://www.holoborodko.com/pavel/?page_id=12"><cite><acronym>MPFR</acronym></cite> C++ wrapper</a>,
+written by Pavel Holoborodko. The precision of the temporary results in
+an expression is chosen as the maximum precision of its arguments, and
+the final result is rounded to the precision of the target variable.</li>
+<li><a href="http://perso.ens-lyon.fr/nathalie.revol/software.html"><cite><acronym>MPFR++</acronym></cite></a>,
+developed in the
+<a href="http://www.ens-lyon.fr/LIP/Arenaire/" lang="fr" xml:lang="fr">Arénaire</a>
+project. Warning! The version currently available (2004-02-27) is not
+up-to-date, is not compatible with the latest releases of
+<cite><acronym>MPFR</acronym></cite> and has several bugs.
+News from 2007-05-02: Changes have been done on this interface since,
+but they are not published yet.</li>
+<li>The
+<a href="http://math.berkeley.edu/~wilken/code/gmpfrxx/"><cite>gmpfrxx</cite></a>
+C++ interface for both <cite><acronym>GMP</acronym></cite> and
+<cite><acronym>MPFR</acronym></cite>, written by Jon Wilkening.</li>
+<li>The
+<a href="http://packages.debian.org/unstable/libdevel/libmpfr-dev">Debian
+package <samp>libmpfr-dev</samp></a> provides the <samp>mpfrxx.h</samp>
+file. However it is quite old and very limited.</li>
+<!-- The development of libmplite <http://www.losderover.be/old/libmplite/>
+     has been discontinued, and libmplite doesn't work with the latest
+     MPFR version. -->
+</ul></li>
+
+<li>The multiple-precision arithmetic is very useful for
+<a href="http://www.cs.utep.edu/interval-comp/main.html">interval
+arithmetic</a>. Get a multiple-precision interval arithmetic library
+<a href="http://gforge.inria.fr/projects/mpfi/"><cite><acronym>MPFI</acronym></cite></a>,
+based on <cite><acronym>MPFR</acronym></cite> (note: due to
+<acronym title="Application Program Interface">API</acronym> and
+internal changes in <cite><acronym>MPFR</acronym></cite>, you should
+take <cite><acronym>MPFI</acronym></cite>&nbsp;1.3.4-RC1 or above).
+This library <cite><acronym>MPFI</acronym></cite> is developed by
+<a href="http://perso.ens-lyon.fr/nathalie.revol/">Nathalie Revol</a> from the
+<a href="http://www.ens-lyon.fr/LIP/Arenaire/" lang="fr" xml:lang="fr">Arénaire</a>
+project and <a href="http://fabrice.rouillier.fr/">Fabrice Rouillier</a>,
+a former <a href="http://www.inria.fr/recherche/equipes/spaces.en.html"><acronym>SPACES</acronym></a>
+member. This library implements basic operators {+,-,*,/} and the same
+functions as <cite><acronym>MPFR</acronym></cite> {<code>sqrt</code>,
+<code>exp</code>, comparison functions, etc.}, except sine and cosine
+functions applied on intervals. Read
+<a href="http://perso.ens-lyon.fr/nathalie.revol/software.html">more
+explanations</a> on Nathalie Revol's software page.</li>
+
+<li>The
+<a href="http://www.multiprecision.org/mpc/"><cite><acronym>MPC</acronym></cite> library</a>,
+a library for multiple-precision complex arithmetic with correct rounding,
+based on the <cite><acronym>MPFR</acronym></cite> and
+<a href="http://gmplib.org/"><cite><acronym>GMP</acronym></cite></a>
+libraries.</li>
+
+<li>The Perl interface
+<a href="http://search.cpan.org/~sisyphus/Math-MPFR/">Math::MPFR</a>.</li>
+
+<li>The Python interface
+<a href="http://pypi.python.org/pypi/bigfloat/"><cite>bigfloat</cite></a>
+(<a href="http://packages.python.org/bigfloat/">documentation</a>),
+written by Mark Dickinson.</li>
+
+<li>A <a href="http://www.cs.berkeley.edu/~fateman/generic/mpfr.lisp"><acronym>LISP</acronym>
+interface</a>, written by Richard Fateman. This package also contains a
+<acronym title="Fast Fourier Transform">FFT</acronym> implementation.</li>
+
+<!--
+Commented out since the GEE project no longer exists - see
+  http://lists.gnu.org/archive/html/bug-guile/2008-04/msg00003.html
+  https://gna.org/support/?1913
+
+<li><a href="https://gna.org/projects/gee"><cite><acronym title="Guile Extension Examples">GEE</acronym></cite></a>,
+which includes a Guile extension for <cite><acronym>MPFR</acronym></cite>.</li>
+-->
+
+<li>The functional programming language
+<a href="http://www.basis.netii.net/ursala/"><cite><acronym title="UniveRSal Applicative LAnguage">Ursala</acronym></cite></a>
+includes an <cite><acronym>MPFR</acronym></cite> interface.</li>
+
+<li><a href="http://hackage.haskell.org/package/hmpfr">Haskell binding to
+<cite><acronym>MPFR</acronym></cite> (<cite>hmpfr</cite>)</a>, written by
+Ale&#353; Bizjak.</li>
+
+<li>Marco Maggi's
+<a href="http://marcomaggi.github.com/nausicaa.html"><cite>Nausicaa</cite>
+project</a>, in particular <cite>Nausicaa/<acronym>MP</acronym></cite>,
+which implements bindings to the <cite><acronym>GMP</acronym></cite>,
+<cite><acronym>MPFR</acronym></cite>, <cite><acronym>MPFI</acronym></cite>,
+<cite><acronym>MPC</acronym></cite> and <cite><acronym>MPFRCX</acronym></cite>
+libraries.</li>
+
+<li><a href="http://rubygems.org/gems/gmp">Ruby bindings for
+<cite><acronym>GMP</acronym></cite> and
+<cite><acronym>MPFR</acronym></cite></a>.</li>
+
+<li><a href="http://community.eiffel.com/room/node/407">Eiffel interface
+to <cite><acronym>MPFR</acronym></cite></a>.</li>
+
+</ul>
+
+<h2 id="mpfr-sw">Software Using <cite><acronym>MPFR</acronym></cite></h2>
+
+<ul>
+
+<li>The <acronym title="K Destop Environment">KDE</acronym> calculator
+<a href="http://purinchu.net/abakus/">Abakus</a> by Michael Pyne
+(supporting arbitrary precision thanks to <cite><acronym>MPFR</acronym></cite>
+as of version 0.90).</li>
+
+<li>The <a href="http://www.alglib.net/">ALGLIB.NET</a> project
+implements multiple-precision linear algebra using
+<cite><acronym>MPFR</acronym></cite>.</li>
+
+<li>The <a href="http://apron.cri.ensmp.fr/library/"><cite><acronym title="Analyse de PROgrammes Numériques">APRON</acronym></cite></a>
+library, dedicated to the static analysis of the numerical variables
+of a program by Abstract Interpretation.</li>
+
+<li>The numerical analysis library
+<a href="http://na-inet.jp/na/bnc/"><cite>BNCpack</cite></a> can be compiled
+with <cite><acronym>MPFR</acronym></cite>.</li>
+
+<li><a href="http://www.cgal.org/"><acronym>CGAL</acronym></a>
+(Computational Geometry Algorithms Library).</li>
+
+<li><a href="http://gappa.gforge.inria.fr/"><cite><acronym title="Génération automatique de preuves de propriétés arithmétiques">Gappa</acronym></cite></a>,
+a tool intended to help verifying and formally proving properties on
+numerical programs, by Guillaume Melquiond.</li>
+
+<li><a href="http://www.jirka.org/genius.html"><cite>Genius</cite> Math Tool</a>
+and the <acronym title="Genius Extension Language">GEL</acronym> language,
+by Jiri Lebl.</li>
+
+<li><a href="http://gcc.gnu.org/"><acronym title="GNU Compiler Collection">GCC</acronym></a>:
+first in <a href="http://gcc.gnu.org/wiki/GFortran"><cite>GFortran</cite></a>,
+then in the <a href="http://gcc.gnu.org/wiki/MiddleEnd">middle-end</a> phase
+as of <acronym>GCC</acronym> 4.3,
+to <a href="http://gcc.gnu.org/bugzilla/show_bug.cgi?id=29335">resolve
+math functions with constant arguments</a>.
+<a href="http://gcc.gnu.org/gcc-4.3/changes.html#mpfropts">More
+information</a>.</li>
+
+<li><a href="http://www-fourier.ujf-grenoble.fr/~parisse/giac.html"><cite>Giac/Xcas</cite></a>,
+a free computer algebra system, by Bernard Parisse.</li>
+
+<li>The <a href="http://www.informatik.uni-trier.de/iRRAM/">iRRAM - Exact
+Arithmetic in C++</a> implementation from Norbert Müller (University of
+Trier, Germany).</li>
+
+<li>The <a href="http://www.losderover.be/old/libcff/">C++ continued
+fractions toolkit <cite>libcff</cite></a> by Johan Vervloet.</li>
+
+<li><a href="http://www.math.uiuc.edu/Macaulay2/"><cite>Macaulay 2</cite></a>,
+a software system devoted to supporting research in algebraic geometry and
+commutative algebra (as of
+<a href="http://www.math.uiuc.edu/Macaulay2/Changes/1.1/">version 1.1</a>).</li>
+
+<li>The <a href="http://magma.maths.usyd.edu.au/magma/"><cite>Magma</cite></a>
+computational algebra system.</li>
+
+<li>The <a href="http://www.maplesoft.com/">Maple</a> computer algebra system
+<a href="http://www.maplesoft.com/products/Maple11/new/Pro/root_finder.aspx">via
+the <acronym>RS</acronym> library</a>, since version 11
+(<a href="http://www.maplesoft.com/support/help/Maple/view.aspx?path=copyright">reference</a>).</li>
+
+<li><a href="http://www.mathemagix.org/">Mathemagix</a>, a free
+computer algebra system, in the numerix package.</li>
+
+<li><a href="http://code.google.com/p/mcas/"><acronym>MCAS</acronym>/libivl</a>
+(computational algebra and plot system / interval computations library), by
+Mateusz Paprocki.</li>
+
+<li>The <a href="http://www.multiprecision.org/index.php?prog=mpfrcx"><cite>MPFRCX</cite></a>
+library for the arithmetic of univariate polynomials over arbitrary precision
+real (<cite><acronym>MPFR</acronym></cite>) or complex
+(<cite><acronym>MPC</acronym></cite>) numbers, without control on the
+rounding.</li>
+
+<li>The <a href="http://keithbriggs.info/mpfs.html"><cite>mpfs</cite></a>
+library, an experiment in stochastic lazy floating-point arithmetic, from
+Keith Briggs.</li>
+
+<li>The <a href="http://marcomaggi.github.com/#mpgsl"><cite><acronym>MPGSL</acronym></cite>
+(<cite>Multiple Precision <acronym title="GNU Scientific Library">GSL</acronym></cite>)</a>,
+a collection of routines for numerical computing. This is a partial rewrite of
+the <cite><acronym title="GNU Scientific Library">GSL</acronym></cite> using
+<cite><acronym>MPFR</acronym></cite>, by Marco Maggi.</li>
+
+<li>The <a href="http://librdf.org/rasqal/"><cite>Rasqal</cite>
+<acronym title="Resource Description Framework">RDF</acronym> Query
+Library</a> optionally uses <cite><acronym>MPFR</acronym></cite> for
+accurate <samp>xsd:decimal</samp> implementation.</li>
+
+<li><a href="http://reactos.freedoors.org/Reactos%200.3.8/ReactOS-0.3.8-REL-src/base/applications/calc/">ReactOS Calc</a>
+uses <cite><acronym>MPFR</acronym></cite> when multiple-precision support
+is enabled.</li> <!-- see whatsnew.txt -->
+
+<li><cite><acronym>MPFR</acronym></cite> is one of the components of
+<a href="http://modular.math.washington.edu/sage/"><acronym title="Software for Algebra and Geometry Experimentation">SAGE</acronym></a>.</li>
+
+<li><a href="http://sollya.gforge.inria.fr"><cite>Sollya</cite></a>,
+a tool environment for safe floating-point code development,
+written by Christoph Lauter and Sylvain Chevillard in the
+<span lang="fr" xml:lang="fr">Arénaire</span> project.</li>
+
+<li><a href="http://www.sxemacs.org/"><cite>SXEmacs</cite></a> can be compiled
+with <cite><acronym>MPFR</acronym></cite> support (as of version 22.1.3).</li>
+
+<li><a href="http://www.imcce.fr/Equipes/ASD/trip/trip.php"><cite>TRIP</cite></a>,
+a general computer algebra system dedicated to celestial mechanics.</li>
+
+<li>The <a href="http://w-calc.sourceforge.net/"><cite>Wcalc</cite>
+calculator</a> by Kyle Wheeler (supporting arbitrary precision thanks
+to <cite><acronym>MPFR</acronym></cite> as of version 2.0).</li>
+
+<li><cite><acronym>MPFR</acronym></cite> is also used by the
+<a href="http://www-list.cea.fr/labos/fr/LSL/fluctuat/index.html"><cite>Fluctuat</cite></a>
+tool developed and used internally at the
+<acronym title="Commissariat à l'Énergie Atomique">CEA</acronym> (France).</li>
+
+</ul>
+
+<h2 id="free-sw">Other Related Free Software</h2>
+
+<ul>
+
+<li><a href="http://www.tc.umn.edu/~ringx004/mapm-main.html">MAPM</a>,
+a portable arbitrary precision math library in C, by Michael C. Ring.</li>
+
+<li><a href="http://iamlasun8.mathematik.uni-karlsruhe.de/~ae16/CoStLy.html"><acronym>CoStLy</acronym></a>,
+a Complex interval Standard functions Library developed by Markus Neher
+(Karlsruhe).</li>
+
+<li>The
+<a href="http://www2.math.uni-wuppertal.de/~xsc/software_en.html">XSC-Languages,
+FI_LIB, FILIB++ and intpak</a> software developed at University of Wuppertal
+(Germany).</li>
+
+<li>The <a href="http://www.cs.nyu.edu/exact/core/">Core library</a>:
+a library for robust numerical and geometric computation.</li>
+
+<li>The <a href="http://www.ginac.de/CLN/"><cite><acronym title="Class Library for Numbers">CLN</acronym></cite></a>
+C++ library (<acronym title="General Public License">GPL</acronym>).</li>
+
+<li>The <a href="http://crd.lbl.gov/~dhbailey/mpdist/">Quad-Double
+package</a> by David Bailey, Yozo Hida and Sherry Li.</li>
+
+<li>The <a href="http://www.math.utah.edu/~beebe/software/ndiff/">numerical
+difference utility</a> from Nelson Beebe, similar to <cite>diff</cite> but
+for numerical files.</li>
+
+<li>The <a href="http://code.google.com/p/gmpy/">Python bindings for
+<cite><acronym>GMP</acronym></cite> (<acronym>gmpy</acronym>)</a>.</li>
+
+<li>The <a href="http://code.google.com/p/mpmath/">mpmath</a> Python library
+for arbitrary-precision floating-point arithmetic.</li>
+
+<li>The <a href="http://code.google.com/p/fastfunlib/">fastfunlib</a>
+library (fast multiprecision transcendental functions).</li>
+
+<li>The
+<a href="http://www.hpl.hp.com/personal/Hans_Boehm/crcalc/">Constructive
+Reals Calculator</a> from Hans Boehm.</li>
+
+<li>The
+<a href="http://keithbriggs.info/xrc.html"><acronym>xrc</acronym>
+- exact reals in C</a> from Keith Briggs.</li>
+
+<li>The <a href="http://www.math.tamu.edu/~oliver.aberth/soft.html">precise
+computation software</a> from Oliver Aberth.</li>
+
+<li>The <code>RR</code> class from
+<a href="http://www.shoup.net/ntl/"><cite><acronym>NTL</acronym></cite></a>,
+which implements a <q>smooth extension</q> of <acronym>IEEE</acronym>
+floating point to arbitrary precision and guarantees a platform-independent
+behaviour.</li>
+
+<li>A
+<a href="http://fbalsalobre.free.fr/cfc.html">continued-fraction
+package</a> based on <cite><acronym>GMP</acronym></cite>, by François
+Balsalobre.</li>
+
+<li><a href="http://www.ens-lyon.fr/LIP/Arenaire/Ware/SCSLib/"><acronym title="Software Carry-Save Library">SCSLib</acronym></a>,
+a fast and lightweight multiple-precision library supporting the
+four arithmetic operations, developed in the
+<span lang="fr" xml:lang="fr">Arénaire</span> project; the precision
+(210 bits by default) is fixed at compile time.
+<a href="https://lipforge.ens-lyon.fr/projects/crlibm/">CRlibm</a>,
+a correctly-rounded elementary function library.</li>
+
+<li><a href="http://www.sun.com/download/products.xml?id=41797765">Sun's
+libmcr</a>, a correctly-rounded library of basic double-precision
+transcendental elementary functions.</li>
+
+<li>The <a href="http://sourceforge.net/projects/precisefloating">PreciseFloating
+(floating-point arithmetic library) project</a> in Java, by Daniel Aioanei:
+directed rounding, rational arithmetic and arbitrary precision arithmetic
+based on regular continued fraction expansions.</li>
+
+<li>The <a href="http://speleotrove.com/decimal/#decNumber"><cite>decNumber</cite>
+package</a> by Mike Cowlishaw (<acronym>IBM</acronym>): arbitrary-precision
+decimal arithmetic.</li>
+
+<li>The <a href="http://softwarecommunity.intel.com/articles/eng/3687.htm">Intel®
+Decimal Floating-Point BID Library for the IEEE 754r Standard</a>.</li>
+
+<li>The <a href="http://www.isthe.com/chongo/tech/comp/calc/"><cite>calc</cite>
+calculator</a> by Landon Curt Noll. This calculator implements a rational
+arithmetic, with a fallback to some kind of multiple-precision fixed-point
+arithmetic (integer multiplied by a configurable epsilon).</li>
+
+<li>The <a href="http://qalculate.sourceforge.net/"><cite>Qalculate</cite>
+calculator</a> by Niklas Knutsson, based on
+<a href="http://www.ginac.de/CLN/"><cite><acronym title="Class Library for Numbers">CLN</acronym></cite></a>.</li>
+
+<li>The <a href="http://mplapack.sourceforge.net/">MPACK</a>
+by Nakata Maho: multiple precision arithmetic
+<acronym title="Basic Linear Algebra Subprograms">BLAS</acronym> and
+<acronym title="Linear Algebra PACKage">LAPACK</acronym>.</li>
+
+<li>The <a href="http://ftp.math.utah.edu/pub/mathcw/">MathCW</a>
+mathematical function library (supporting binary and decimal
+floating-point arithmetic) by Nelson H. F. Beebe.</li>
+
+</ul>
+
+<h2 id="other-links">Related References and Links</h2>
+
+<ul>
+
+<li>The <a href="http://www.open-std.org/jtc1/sc22/wg14/">C standard</a>:
+the <a href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf">N1256
+draft</a> (C99 with <acronym title="Technical Corrigendum">TC</acronym>3)
+and the
+<a href="http://www.open-std.org/jtc1/sc22/wg14/www/C99RationaleV5.10.pdf">C99
+rationale</a> (especially Section 7.12 and Annex F).
+<a href="http://home.datacomm.ch/t_wolf/tw/c/c9x_changes.html">New in
+C99</a>.
+</li>
+
+<li><a href="http://en.wikipedia.org/wiki/ISO/IEC_10967"><acronym title="Language Independent Arithmetic">LIA</acronym></a>
+stuff. These standards are
+<a href="http://standards.iso.org/ittf/PubliclyAvailableStandards/index.html">freely available</a>.</li>
+
+<li>The <a href="http://speleotrove.com/decimal/"><cite>General
+Decimal Arithmetic</cite></a> pages from Mike Cowlishaw.</li>
+
+<li>The <a href="http://dlmf.nist.gov/"><cite>Digital Library of
+Mathematical Functions</cite></a> project, whose aim is to develop an
+electronic version of the <cite>Handbook of Mathematical Functions</cite>
+from Abramowitz and Stegun.</li>
+
+<li>The <a href="http://cant.ua.ac.be/"><cite>Computer Arithmetic &amp; Numerical Techniques</cite> (<acronym>CANT</acronym>)</a> research group at University of Antwerp, Belgium.</li>
+
+<li>The <a href="http://perso.ens-lyon.fr/jean-michel.muller/Intro-to-TMD.htm">Table
+Maker's Dilemma</a> page from the
+<span lang="fr" xml:lang="fr">Arénaire</span> project at
+<acronym lang="fr" xml:lang="fr" title="École Normale Supérieure">ENS</acronym>-Lyon,
+France.</li>
+
+<li><a href="http://numbers.computation.free.fr/Constants/constants.html"><cite>Mathematical
+constants and computation</cite></a> by Xavier Gourdon and Pascal Sebah.</li>
+
+<li>The <a href="http://www.validlab.com/754R/">754R standard revision
+group</a>.</li>
+
+<li>The <a href="http://www-lipn.univ-paris13.fr/CerPAN/"><cite lang="fr" xml:lang="fr" title="Certification de Programmes d'Analyse Numérique">CerPAN</cite></a> <acronym lang="fr" xml:lang="fr" title="Agence Nationale de la Recherche">ANR</acronym> project.</li>
+
+<li>The <a href="http://www.ens-lyon.fr/LIP/Arenaire/EVA-Flo/EVA-Flo.html"><cite lang="fr" xml:lang="fr" title="Évaluation et Validation Automatique pour le calcul Flottant">EVA-Flo</cite></a> <acronym lang="fr" xml:lang="fr" title="Agence Nationale de la Recherche">ANR</acronym> project.</li>
+
+<li><a href="http://www.loria.fr/~roegel/locomat.html"><acronym title="LOria COllection of MAthematical Tables">LOCOMAT</acronym></a> (the <acronym title="Laboratoire lorrain de recherche en informatique et ses applications" lang="fr" xml:lang="fr">Loria</acronym> Collection of Mathematical Tables).</li>
+
+</ul>
+
+<hr />
+
+<div class="footer"><a href="http://validator.w3.org/check/referer"><img
+  src="http://www.w3.org/Icons/valid-xhtml10"
+  alt="Valid XHTML 1.0!" height="31" width="88" /></a></div>
+
+</body>
+
+</html>
