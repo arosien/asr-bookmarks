@@ -1,0 +1,503 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+<head profile="http://gmpg.org/xfn/11">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Using statpack with SHOW STATUS | MySQL Expert | MySQL Performance | MySQL Consulting</title>
+  <link rel="stylesheet" href="http://ronaldbradford.com/styles.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="http://ronaldbradford.com/blog/wp-content/themes/rb_red/style.css" type="text/css" media="screen" /> 
+  <meta name="revisit-after" content="1 days" />
+  <meta name="copyright" content="Copyright. Ronald Bradford (c) 2007-2009" />
+  <meta name="author" content="Ronald Bradford" />
+  <meta name="publisher" content="Ronald Bradford" />
+  <link rel="shortcut icon" href="http://ronaldbradford.com/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="http://ronaldbradford.com/favicon.ico" type="image/x-icon" /> 
+ 
+
+<link rel="alternate" type="application/rss+xml" title="MySQL Expert | MySQL Performance | MySQL Consulting RSS Feed" href="http://ronaldbradford.com/blog/feed/" />
+<link rel="alternate" type="application/atom+xml" title="MySQL Expert | MySQL Performance | MySQL Consulting Atom Feed" href="http://ronaldbradford.com/blog/feed/atom/" />
+<link rel="pingback" href="http://ronaldbradford.com/blog/xmlrpc.php" />
+
+<link rel="alternate" type="application/rss+xml" title="MySQL Expert | MySQL Performance | MySQL Consulting &raquo; Using statpack with SHOW STATUS Comments Feed" href="http://ronaldbradford.com/blog/using-statpack-with-show-status-2009-06-18/feed/" />
+<script type='text/javascript' src='http://ronaldbradford.com/blog/wp-includes/js/comment-reply.js?ver=20090102'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://ronaldbradford.com/blog/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://ronaldbradford.com/blog/wp-includes/wlwmanifest.xml" /> 
+<link rel='index' title='MySQL Expert | MySQL Performance | MySQL Consulting' href='http://ronaldbradford.com/blog' />
+<link rel='start' title='Changing A Server&#8217;s Timezone' href='http://ronaldbradford.com/blog/changing-a-servers-timezone-2004-06-19/' />
+<link rel='prev' title='The value of multi insert values' href='http://ronaldbradford.com/blog/the-value-of-multi-insert-values-2009-06-16/' />
+<link rel='next' title='MiFi Introduction' href='http://ronaldbradford.com/blog/mifi-introduction-2009-06-27/' />
+<meta name="generator" content="WordPress 2.8.4" />
+
+<!-- All in One SEO Pack 1.6.5 by Michael Torbert of Semper Fi Web Design[303,402] -->
+<meta name="description" content="Mark Leith, on of the MySQL Support Team managers wrote some time ago a very nice utility I use often called Statpack. My use of Statpack is very simple. Take" />
+<link rel="canonical" href="http://ronaldbradford.com/blog/using-statpack-with-show-status-2009-06-18/" />
+<!-- /all in one seo pack -->
+
+	<!-- Added by EventCalendar plugin. Version 3.1.4 -->
+	<script type='text/javascript' src='http://ronaldbradford.com/blog/wp-content/plugins/event-calendar/xmlhttprequest.js'></script>
+	<script type='text/javascript' src='http://ronaldbradford.com/blog/wp-content/plugins/event-calendar/ec3.js'></script>
+	<script type='text/javascript'><!--
+	ec3.start_of_week=1;
+	ec3.month_of_year=new Array('January','February','March','April','May','June','July','August','September','October','November','December');
+	ec3.month_abbrev=new Array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+	ec3.myfiles='http://ronaldbradford.com/blog/wp-content/plugins/event-calendar';
+	ec3.home='http://ronaldbradford.com/blog';
+	ec3.hide_logo=1;
+	ec3.viewpostsfor="View posts for %1$s %2$s";
+	// --></script>
+
+<style type='text/css' media='screen'>
+@import url(http://ronaldbradford.com/blog/wp-content/plugins/event-calendar/ec3.css);
+.ec3_ec {
+ background-image:url(http://ronaldbradford.com/blog/wp-content/plugins/event-calendar/ec.png) !IMPORTANT;
+ background-image:none;
+ filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://ronaldbradford.com/blog/wp-content/plugins/event-calendar/ec.png');
+}
+#ec3_shadow0 {
+ background-image:url(http://ronaldbradford.com/blog/wp-content/plugins/event-calendar/shadow0.png) !IMPORTANT;
+ background-image:none;
+}
+#ec3_shadow0 div {
+ filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://ronaldbradford.com/blog/wp-content/plugins/event-calendar/shadow0.png',sizingMethod='scale');
+}
+#ec3_shadow1 {
+ background-image:url(http://ronaldbradford.com/blog/wp-content/plugins/event-calendar/shadow1.png) !IMPORTANT;
+ background-image:none;
+ filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://ronaldbradford.com/blog/wp-content/plugins/event-calendar/shadow1.png',sizingMethod='crop');
+}
+#ec3_shadow2 {
+ background-image:url(http://ronaldbradford.com/blog/wp-content/plugins/event-calendar/shadow2.png) !IMPORTANT;
+ background-image:none;
+}
+#ec3_shadow2 div {
+ filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://ronaldbradford.com/blog/wp-content/plugins/event-calendar/shadow2.png',sizingMethod='scale');
+}
+</style>
+
+</head>
+<body>
+<div id="page">
+
+<ul id="header"> 
+  <li><a title="MySQL Expert Ronald Bradford" href="/" class="home"></a></li> 
+  <li><a title="MySQL Consulting Expert Ronald Bradford" href="/mysql-consulting" class="consult"><span class="consult"></span><strong>Consulting</strong></a></li> 
+  <li><a title="MySQL Technical Presentations by Ronald Bradford" href="/mysql-presentations" class="present"><span class="present"></span><strong>Presenting</strong></a></li> 
+ 
+  <li><a title="MySQL Professional Writings by Ronald Bradford" href="/blog" class="active"><span class="write"></span><strong>Writing</strong></a></li> 
+  <li><a title="MySQL Performance Expert Ronald Bradford About Details" href="/about" class="about"><span class="about"></span><strong>About</strong></a></li> 
+  <li><a title="Contact MySQL Expert Ronald Bradford" href="/contact" class="contact"><span class="contact"></span><strong>Contact</strong></a></li> 
+</ul><!-- end header --> 
+<div style="clear: both"></div>
+<div id="ronaldbradford"><a title="Ronald Bradford" href="/">Ronald Bradford</a></div>
+<div id="ronaldbradford-mysql-expert"><a title="MySQL Expert" href="/">MySQL Expert</a></div>
+<div class="content" id="mysql-writing-blog">
+<p id="top">
+MySQL Expert Ronald Bradford shares valuable input in MySQL Performance Tuning, MySQL Scalability and general MySQL Help from his 
+two decades of working with MySQL, Oracle, Ingres and development technologies.
+
+</p>
+<span class="grad"></span>
+<div style="text-align:center; font-size: 14pt; font-weight:bold; margin-bottom: 5px; color: #000000; border: 2px solid #000000; background-color: gold" id="mysql-consulting-availability">I am available now for MySQL consulting and contract opportunities.</div> 
+
+
+<div id="wrapper">
+
+
+	<div id="content" class="widecolumn">
+
+
+	
+		<div class="navigation">
+			<div class="alignleft">&laquo; <a href="http://ronaldbradford.com/blog/the-value-of-multi-insert-values-2009-06-16/">The value of multi insert values</a></div>
+			<div class="alignright"><a href="http://ronaldbradford.com/blog/mifi-introduction-2009-06-27/">MiFi Introduction</a> &raquo;</div>
+		</div>
+
+		<div class="post-1664 post hentry category-databases category-general category-mysql category-open-source category-professional" id="post-1664">
+			<h2>Using statpack with SHOW STATUS</h2>
+
+			<div class="entry">
+				<p>Mark Leith, on of the MySQL Support Team managers wrote some time ago a very nice utility I use often called <a href="http://www.markleith.co.uk/?p=21">Statpack</a>.</p>
+<p>My use of Statpack is very simple. Take two snaphots of SHOW GLOBAL STATUS and compare to produce a text based version of the statistics.</p>
+<p>Over time I&#8217;ve grown to love it&#8217;s simplicity, but notice a number of shortcomings.  Being open source there is always the ability to modify, improve and give back. This post is more about detailing those little annoyances that I&#8217;d like to improve, or see improved. It is also a means to collate points into one location that I often forget about over time.</p>
+<p>I welcome any input, and specifically help in this open source venture.</p>
+<p>Here is my wish list that I can currently remember. I do plan to action, time permitting.</p>
+<ol>
+<li>In Statement Activity, the total percentages are great to determine Read/Write ratio, however the ratio is for the Total, not for the period. I&#8217;m not sure how best to present, but would be good to know.  See Exhibit 1 for a good example.</li>
+<li>When sections are not used, e.g. all ZERO values, then suppress for ease of reading. See Exhibit 2 for examples of Prepared Statements and Query Cache, where a simple line like No Prepared Statements activity, or Query Cache not enabled.</li>
+<li>Incorporating SHOW VARIABLES output.  If this is included in one file, then adding some information may be very valuable when reviewing these audit files. For example in the InnoDB Buffer Pool show innodb_buffer_pool_size. In InnoDB Log Files show innodb_log_file_size, innodb_log_files_in_group, innodb_log_buffer_size. This can be used in most sections. See Exhibit 3 for an example. </li>
+<li>Incorporate a Date/Time in the report output. Again for historical purposes, at worst it could be the time the output is generated, however this is only an approximation.  With SHOW GLOBAL STATUS output from my <a href="http://ronaldbradford.com/blog/my-hourly-mysql-monitor-script-version-005-2007-06-22/">hourly.sh</a> monitoring I include the following line before each SHOW STATUS output.   &#8216;| date_time                        | 090611.161511 |&#8217;.  Note to Drizzle Development team, please add date/time output to SHOW GLOBAL STATUS and SHOW GLOBAL VARIABLES.</li>
+<li>Negative numbers. There are occurrences when negative numbers occur, due to the wrapping of status numbers. See Exhibit 4 for example.</li>
+<li>Bug I&#8217;ve raised about divide by zero error when the same file (operator error) is specified.</li>
+</ol>
+<h3>Exhibit 1 &#8211; Percentages on Period/Total</h3>
+<pre>
+                     SELECT:           56,019                    28.11              281,456,428 (41.00%)
+                     INSERT:          420,083                   210.78              325,218,748 (47.38%)
+                     UPDATE:               46                     0.02                  138,206 (0.02%)
+                     DELETE:           48,590                    24.38               79,170,553 (11.53%)
+</pre>
+<h3>Exhibit 2 &#8211; Suppress sections</h3>
+<pre>
+ ====================================================================================================
+                                        Prepared Statements
+====================================================================================================
+
+   Prepared Statement Count:                0                     0.00                        0
+                    PREPARE:                0                     0.00                        0
+                    EXECUTE:                0                     0.00                        0
+         DEALLOCATE PREPARE:                0                     0.00                        0
+           Fetch Roundtrips:                0                     0.00                        0
+             Send Long Data:                0                     0.00                        0
+
+====================================================================================================
+                                            Query Cache
+====================================================================================================
+
+       QCache Hits / SELECT:           0.00%
+   QCache Hit/Qcache Insert:           0.00%
+  Qcache Hits/Invalidations:           0.00%
+                    SELECTs:       13,503,876                 3,798.56            4,298,170,239
+           Query Cache Hits:                0                     0.00                        0
+        Query Cache Inserts:                0                     0.00                        0
+         Queries Not Cached:                0                     0.00                        0
+    Cache Low Memory Prunes:                0                     0.00                        0
+         Total Cache Blocks:                0                     0.00                        0
+           Queries In Cache:                0                     0.00                        0
+          Cache Free Blocks:                0                     0.00                        0
+</pre>
+<h3>Exhibit 3 &#8211; Including Variables</h3>
+<pre>
+
+====================================================================================================
+                                         InnoDB Buffer Pool
+====================================================================================================
+
+Variables: innodb_buffer_pool_size = 10G, innodb_additional_mem_pool_size = 20M, innodb_file_per_table
+
+Buffer Pool Read Efficiency:          99.89%
+                  Data Read:              17G                                            4,892G
+               Data Written:              29M                                            6,167G
+...
+
+====================================================================================================
+                                          InnoDB Log Files
+====================================================================================================
+
+Variables: innodb_log_file_size=256M; innodb_log_files_in_group=2;innodb_log_buffer_size=1M;innodb_flush_log_at_trx_commit=2
+
+           Log Data Written:               1G                                              327G
+                 Log Writes:            4,756                     1.34                1,785,842
+         Log Write Requests:        4,195,878                 1,180.28              773,981,459
+                  Log Waits:                0                     0.00                       13
+</pre>
+<h3>Exhibit 4- Negative Numbers</h3>
+<pre>
+====================================================================================================
+                                            Index Usage
+====================================================================================================
+
+           Index Efficiency:           51.09%
+           Full Index Scans:            7,056                     0.08                  142,549
+           Full Table Scans:          191,051                     2.21                4,739,205
+            Full Join Scans:              374                     0.00                    9,601
+         Handler_read_first:            7,056                     0.08                  142,549 (0.00%)
+           Handler_read_key:      136,956,475                 1,585.20            3,698,727,203 (47.29%)
+          Handler_read_next:       55,431,938                   641.60              290,189,865 (3.71%)
+          Handler_read_prev:          210,418                     2.44                7,283,443 (0.09%)
+           Handler_read_rnd:       58,241,824                   674.12            1,862,365,188 (23.81%)
+      Handler_read_rnd_next:   -1,682,312,703               -19,471.89            1,963,342,385 (25.10%)
+</pre>
+<h3>A Full output Example</h3>
+<pre>
+====================================================================================================
+              Uptime: 17 days 17 hours 22 mins Snapshot Period 1: 59 minute interval
+====================================================================================================
+                    Variable	Delta/Percentage 	    Per Second			  Total
+====================================================================================================
+                                         Database Activity
+====================================================================================================
+
+          Threads Connected:               -5                                               115
+            Threads Running:               -4                                                51
+                  Questions:       24,190,027                 6,804.51            7,366,339,778
+             Bytes Recieved:               1G                     501K                     522G
+                 Bytes Sent:              11G                       3M                   2,808G
+            Aborted Clients:                0                     0.00                      237
+           Aborted Connects:              240                     0.07                  102,090
+
+====================================================================================================
+                                         Statement Activity
+====================================================================================================
+
+                     SELECT:       13,503,876                 3,798.56            4,298,170,239 (94.25%)
+                     INSERT:           91,101                    25.63               25,327,062 (0.56%)
+                     UPDATE:          782,004                   219.97              220,640,296 (4.84%)
+                     DELETE:            9,674                     2.72                2,485,643 (0.05%)
+                    REPLACE:                0                     0.00                    4,980 (0.00%)
+          INSERT ... SELECT:                0                     0.00                        0 (0.00%)
+         REPLACE ... SELECT:                0                     0.00                        0 (0.00%)
+               Multi UPDATE:                0                     0.00                        0 (0.00%)
+               Multi DELETE:                0                     0.00                        0 (0.00%)
+                     COMMIT:           46,422                    13.06               13,700,478 (0.30%)
+                   ROLLBACK:                0                     0.00                       13 (0.00%)
+
+====================================================================================================
+                                        Prepared Statements
+====================================================================================================
+
+   Prepared Statement Count:                0                     0.00                        0
+                    PREPARE:                0                     0.00                        0
+                    EXECUTE:                0                     0.00                        0
+         DEALLOCATE PREPARE:                0                     0.00                        0
+           Fetch Roundtrips:                0                     0.00                        0
+             Send Long Data:                0                     0.00                        0
+
+====================================================================================================
+                                           Admin Commands
+====================================================================================================
+
+                       KILL:                0                     0.00                       21
+                      FLUSH:                0                     0.00                       34
+              ANALYZE TABLE:                0                     0.00                        0
+             OPTIMIZE TABLE:                0                     0.00                        0
+                CHECK TABLE:                0                     0.00                       51
+               REPAIR TABLE:                0                     0.00                        0
+
+====================================================================================================
+                                            Thread Cache
+====================================================================================================
+
+          Thread Efficiency:           100.00%
+                Connections:        2,404,601                   676.40              691,324,391
+            Threads Created:                0                     0.00                    1,015
+
+====================================================================================================
+                                            Table Cache
+====================================================================================================
+
+     table_cache Efficiency:           12.94%
+                Open Tables:               18                     0.01                    1,100
+              Opened Tables:               18                     0.01                    8,501
+
+====================================================================================================
+                                          MyISAM Key Cache
+====================================================================================================
+
+      Cache Read Efficiency:           75.56%
+     Cache Write Efficiency:           2.50%
+                Memory Used:               0B                                               24B
+                Memory Free:               0B                                               13K
+                  Key Reads:                0                     0.00                       44
+          Key Read Requests:                0                     0.00                      179
+                 Key Writes:                0                     0.00                       39
+         Key Write Requests:                0                     0.00                       39
+         Blocks Not Flushed:                0                     0.00                        0
+
+====================================================================================================
+                                         InnoDB Buffer Pool
+====================================================================================================
+
+Buffer Pool Read Efficiency:          99.89%
+               Memory Total:               0B                                               11G
+                Memory Free:               0B                                                0B
+                Memory Data:     -12,910,592B                                               10G
+               Memory Dirty:             245M                                                3G
+                  Data Read:              17G                                            4,892G
+               Data Written:              29M                                            6,167G
+          Buffer Pool Reads:          864,166                   243.08              234,058,329
+  Buffer Pool Read Requests:      674,921,081               189,851.22          213,974,254,498
+ Buffer Pool Write Requests:       34,337,556                 9,658.95            5,907,928,452
+
+====================================================================================================
+                                          InnoDB Log Files
+====================================================================================================
+
+           Log Data Written:               1G                                              327G
+                 Log Writes:            4,756                     1.34                1,785,842
+         Log Write Requests:        4,195,878                 1,180.28              773,981,459
+                  Log Waits:                0                     0.00                       13
+
+====================================================================================================
+                                            Query Cache
+====================================================================================================
+
+       QCache Hits / SELECT:           0.00%
+   QCache Hit/Qcache Insert:           0.00%
+  Qcache Hits/Invalidations:           0.00%
+                    SELECTs:       13,503,876                 3,798.56            4,298,170,239
+           Query Cache Hits:                0                     0.00                        0
+        Query Cache Inserts:                0                     0.00                        0
+         Queries Not Cached:                0                     0.00                        0
+    Cache Low Memory Prunes:                0                     0.00                        0
+         Total Cache Blocks:                0                     0.00                        0
+           Queries In Cache:                0                     0.00                        0
+          Cache Free Blocks:                0                     0.00                        0
+
+====================================================================================================
+                                            Index Usage
+====================================================================================================
+
+           Index Efficiency:           96.38%
+           Full Index Scans:                0                     0.00                    3,685
+           Full Table Scans:           26,468                     7.45                9,336,473
+            Full Join Scans:                0                     0.00                        0
+         Handler_read_first:                0                     0.00                    3,685 (0.00%)
+           Handler_read_key:       60,313,973                16,965.96           18,840,285,973 (14.08%)
+          Handler_read_next:      284,810,290                80,115.41          109,257,639,924 (81.68%)
+          Handler_read_prev:        2,524,541                   710.14              822,756,210 (0.62%)
+           Handler_read_rnd:       10,268,347                 2,888.42            3,230,517,410 (2.42%)
+      Handler_read_rnd_next:          780,215                   219.47            1,612,883,644 (1.21%)
+
+====================================================================================================
+                                          Temporary Space
+====================================================================================================
+
+  tmp_table_size Efficiency:           2.10%
+         Memory Temp Tables:           26,467                     7.45                9,335,030
+           Disk Temp Tables:           25,951                     7.30                9,138,705
+                 Temp Files:                2                     0.00                      601
+
+====================================================================================================
+                                          Lock Contention
+====================================================================================================
+
+    Percent of Locks Waited:            0.00%
+         Table Locks Waited:                0                     0.00                      230
+      Table Locks Immediate:       14,411,359                 4,053.83            4,555,498,747
+
+====================================================================================================
+                                              Sorting
+====================================================================================================
+
+                Rows Sorted:          790,892                   222.47              251,683,065
+                 Sort Range:            3,767                     1.06                  983,825
+                  Sort Scan:           25,952                     7.30                9,137,325
+          Sort Merge Passes:                1                     0.00                      298
+           Full Range Joins:                0                     0.00                        0
+</pre>
+
+								
+				<p class="postmetadata alt">
+					<small>
+						This entry was posted
+												on Thursday, June 18th, 2009 at 8:40 pm						and is filed under <a href="http://ronaldbradford.com/blog/category/professional/databases/" title="View all posts in Databases" rel="category tag">Databases</a>,  <a href="http://ronaldbradford.com/blog/category/professional/general/" title="View all posts in General" rel="category tag">General</a>,  <a href="http://ronaldbradford.com/blog/category/professional/databases/mysql/" title="View all posts in MySQL" rel="category tag">MySQL</a>,  <a href="http://ronaldbradford.com/blog/category/professional/open-source/" title="View all posts in Open Source" rel="category tag">Open Source</a>,  <a href="http://ronaldbradford.com/blog/category/professional/" title="View all posts in Professional" rel="category tag">Professional</a>.
+						You can follow any responses to this entry through the <a href='http://ronaldbradford.com/blog/using-statpack-with-show-status-2009-06-18/feed/'>RSS 2.0</a> feed.
+
+													You can skip to the end and leave a response. Pinging is currently not allowed.
+
+						
+					</small>
+				</p>
+
+			</div>
+		</div>
+
+	
+<!-- You can start editing here. -->
+
+	<h3 id="comments">2 Responses to &#8220;Using statpack with SHOW STATUS&#8221;</h3>
+
+	<div class="navigation">
+		<div class="alignleft"></div>
+		<div class="alignright"></div>
+	</div>
+
+	<ol class="commentlist">
+			<li class="comment even thread-even depth-1" id="comment-583">
+				<div id="div-comment-583" class="comment-body">
+				<div class="comment-author vcard">
+		<img alt='' src='http://www.gravatar.com/avatar/4a81ad68d36ab4fdbf830ccb4db35769?s=32&amp;d=http%3A%2F%2Fwww.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D32&amp;r=G' class='avatar avatar-32 photo' height='32' width='32' />		<cite class="fn"><a href='http://openquery.com' rel='external nofollow' class='url'>Arjen Lentz</a></cite> <span class="says">says:</span>		</div>
+
+		<div class="comment-meta commentmetadata"><a href="http://ronaldbradford.com/blog/using-statpack-with-show-status-2009-06-18/comment-page-1/#comment-583">June 18, 2009 at 10:48 pm</a></div>
+
+		<p>20G additional memory pool?</p>
+
+		<div class="reply">
+				</div>
+				</div>
+		</li>
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-584">
+				<div id="div-comment-584" class="comment-body">
+				<div class="comment-author vcard">
+		<img alt='' src='http://www.gravatar.com/avatar/ee89751f7eca1f7a1e3d18ec1f075445?s=32&amp;d=http%3A%2F%2Fwww.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D32&amp;r=G' class='avatar avatar-32 photo' height='32' width='32' />		<cite class="fn"><a href='http://www.markleith.co.uk' rel='external nofollow' class='url'>Mark Leith</a></cite> <span class="says">says:</span>		</div>
+
+		<div class="comment-meta commentmetadata"><a href="http://ronaldbradford.com/blog/using-statpack-with-show-status-2009-06-18/comment-page-1/#comment-584">June 22, 2009 at 6:56 am</a></div>
+
+		<p>Hey Ronald!</p>
+<p>Thanks for the write up, I know we&#8217;ve talked about some of these in the past &#8211; and in fact, I&#8217;ve already started working on #2 (a variable to list the sections you want to print).</p>
+<p>I&#8217;ll try and work on the others as time permits as well! <img src='http://ronaldbradford.com/blog/wp-includes/images/smilies/icon_smile.gif' alt=':)' class='wp-smiley' /> </p>
+<p>Cheers,</p>
+<p>Mark</p>
+
+		<div class="reply">
+				</div>
+				</div>
+		</li>
+	</ol>
+
+	<div class="navigation">
+		<div class="alignleft"></div>
+		<div class="alignright"></div>
+	</div>
+ 
+
+
+<div id="respond">
+
+<h3>Leave a Reply</h3>
+
+<div class="cancel-comment-reply">
+	<small><a rel="nofollow" id="cancel-comment-reply-link" href="/blog/using-statpack-with-show-status-2009-06-18/#respond" style="display:none;">Click here to cancel reply.</a></small>
+</div>
+
+
+<form action="http://ronaldbradford.com/blog/wp-comments-post.php" method="post" id="commentform">
+
+
+<p><input type="text" name="author" id="author" value="" size="22" tabindex="1" aria-required='true' />
+<label for="author"><small>Name (required)</small></label></p>
+
+<p><input type="text" name="email" id="email" value="" size="22" tabindex="2" aria-required='true' />
+<label for="email"><small>Mail (will not be published) (required)</small></label></p>
+
+<p><input type="text" name="url" id="url" value="" size="22" tabindex="3" />
+<label for="url"><small>Website</small></label></p>
+
+
+<!--<p><small><strong>XHTML:</strong> You can use these tags: <code>&lt;a href=&quot;&quot; title=&quot;&quot;&gt; &lt;abbr title=&quot;&quot;&gt; &lt;acronym title=&quot;&quot;&gt; &lt;b&gt; &lt;blockquote cite=&quot;&quot;&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=&quot;&quot;&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=&quot;&quot;&gt; &lt;strike&gt; &lt;strong&gt; </code></small></p>-->
+
+<p><textarea name="comment" id="comment" cols="100%" rows="10" tabindex="4"></textarea></p>
+
+<p><input name="submit" type="submit" id="submit" tabindex="5" value="Submit Comment" />
+<input type='hidden' name='comment_post_ID' value='1664' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p>
+
+</form>
+
+</div>
+
+
+	
+	</div>
+
+</div> <!-- wrapper -->
+<div id="footer">
+	<p>
+		MySQL Expert | MySQL Performance | MySQL Consulting is proudly powered by
+		<a href="http://wordpress.org/">WordPress</a>
+	</p>
+</div> <!-- footer -->
+</div> <!-- page -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-1035567-7");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+
+</body>
+</html>
