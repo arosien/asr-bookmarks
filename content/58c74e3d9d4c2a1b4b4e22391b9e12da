@@ -1,0 +1,444 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <title>MySQL DBA Tools - MySQL Expert - MySQL Consulting</title>
+  <meta name="keywords" content="mysql,mysql consulting,mysql advising,mysql advisor,mysql performance,mysql performance tuning,mysql scalability,mysql dba,mysql optimization,mysql training,mysql help,mysql education,mysql mentoring,mysql mentor,mysql load balancing,mysql cluster,mysql enterprise,mysql community,knowledge transfer,mysql migration,disaster recovery,mysql disaster recovery,cloud computing,drizzle,simpledb,google app engine,GAE,AWS" />
+  <meta name="description" content="The essential MySQL DBA tools, scripts and SQL that MySQL Expert Ronald Bradford uses day to day for MySQL Database Administration, MySQL Performance Tuning  and MySQL Architecture." />
+  <meta name="revisit-after" content="1 days" />
+  <meta name="copyright" content="Copyright. Ronald Bradford (c) 2007-2010" />
+  <meta name="author" content="Ronald Bradford" />
+  <meta name="publisher" content="Ronald Bradford" />
+  <meta name="google-site-verification" content="N4xwtcO8VWjzWZNHf35HXfXMBp1rXMMt6K5Bp7ryNZY" />
+  <link rel="stylesheet" type="text/css" href="/styles.css" />
+  <link rel="stylesheet" type="text/css" media="print" href="/print.css" />
+  <link rel="shortcut icon" href="http://ronaldbradford.com/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="http://ronaldbradford.com/favicon.ico" type="image/x-icon" /> 
+  <link rel="alternate" type="application/atom+xml" title="MySQL Expert Ronald Bradford's Professional Blog Atom Feed" href="http://ronaldbradford.com/blog/?feed=atom" />
+  <link rel="alternate" type="application/rss+xml" title="MySQL Expert Ronald Bradford's Professional Blog RSS Feed" href="http://ronaldbradford.com/blog/?feed=rss2" />
+  <script type="text/javascript" src="/niftycube.js"></script>
+
+</head>
+<style type="text/css">
+h3 { border-bottom: 1px solid #000000; }
+</style>
+<body>
+<ul id="header">
+  <li><a title="MySQL Expert Ronald Bradford" href="/" class="home"></a></li>
+  <li><a title="MySQL Consulting Expert Ronald Bradford" href="/mysql-consulting" class="active"><span class="consult"></span><strong>Consulting</strong></a></li>
+  <li><a title="MySQL Technical Presentations by Ronald Bradford" href="/mysql-presentations" class="present"><span class="present"></span><strong>Presenting</strong></a></li>
+
+  <li><a title="MySQL Professional Writings by Ronald Bradford" href="/blog" class="write"><span class="write"></span><strong>Writing</strong></a></li>
+  <li><a title="MySQL Performance Expert Ronald Bradford About Details" href="/about" class="about"><span class="about"></span><strong>About</strong></a></li>
+  <li><a title="Contact MySQL Expert Ronald Bradford" href="/contact" class="contact"><span class="contact"></span><strong>Contact</strong></a></li>
+</ul><!-- end header -->
+<div style="clear: both"></div>
+<div id="ronaldbradford"><a title="Ronald Bradford" href="/">Ronald Bradford</a></div>
+<div id="ronaldbradford-mysql-expert"><a title="MySQL Expert" href="/">MySQL Expert</a></div>
+<div class="content" id="mysql-dba">
+<p id="top">The essential MySQL DBA tools, scripts and SQL that MySQL Expert Ronald Bradford uses day to day for MySQL Database Administration, MySQL Performance Tuning  and MySQL Architecture.</p>
+<span class="grad"></span>
+
+<div id="wrapper">
+
+
+
+
+<h2>MySQL DBA scripts</h2>
+<p>The following various scripts as used for various different tasks when reviewing MySQL installations.</p>
+
+<ul>
+<li><a href="#allschemas">Calculate Your MySQL Database Size</a></li>
+<li><a href="#perschema">Calculate Your Individual MySQL Schema Size</a></li>
+<li><a href="#log-stats">Log various MySQL statistics</a></li>
+<li><a href="#log-analysis">Analyze MySQL statistics</a></li>
+<li><a href="#mysql-sessions">Gather Long/Locked MySQL Sessions</a></li>
+<li><a href="#install-mysql">Automated MySQL Installation</a></li>
+</li>
+
+<h3><a name="allschemas"></a>Calculate Your Total MySQL Database Size</h3>
+<p>I use the following SQL script as an audit of for each current MySQL Database Instance.  You can use this for example on a daily basis to get an indication of the overall growth of your database.
+<br />This SQL uses the MySQL Information_schema that is available for MySQL Version 5.0 and higher.
+<br />For those using MySQL 4.x, using the CHECK TABLE STATUS for each schema and manually computing the same produces a similar result.
+</p>
+
+<h4>Usage</h4>
+<pre>
+$ wget http://ronaldbradford.com/mysql-dba/allschemas.sql
+$ mysql -u[user] -p  -v -v -v < allschemas.sql
+</pre>
+
+<h4>Output</h4>
+
+<p>
+The following as sample outputs from clients.
+</p>
+
+<pre>
++--------------------+-----------------+-----------------+-----------------+--------+
+| table_schema       | total_mb        | data_mb         | index_mb        | tables |
++--------------------+-----------------+-----------------+-----------------+--------+
+| xxxxxx_xxx         | 993088.84375000 | 776273.18750000 | 216815.65625000 |     54 |
+| information_schema |      0.00390625 |      0.00000000 |      0.00390625 |     17 |
++--------------------+-----------------+-----------------+-----------------+--------+
+2 rows in set (59.81 sec)
+</pre>
+
+
+<pre>
++----------------------------+----------------+----------------+---------------+--------+
+| table_schema               | total_mb       | data_mb        | index_mb      | tables |
++----------------------------+----------------+----------------+---------------+--------+
+| xxxxxxx_xxx_xxxx_xxx       | 45314.47730350 | 38458.88941288 | 6855.58789063 |   2359 |
+| xxxxxxx_xxx_xxxx_xxx       | 28758.38682079 | 24461.27060986 | 4297.11621094 |    275 |
+| xxxxxxx_xxx_xxxx_xxx       | 28732.41495800 | 24464.20304394 | 4268.21191406 |    368 |
+| xxxxxxx_xxx_xxxx_xxx       | 24586.48277569 | 20941.44176006 | 3645.04101563 |    302 |
+| xxxxxxx_xxx_xxxx_xxx       |  3128.63515377 |  2664.54726315 |  464.08789063 |     48 |
+| xxxxxxx_xxx_xxxx_xxx       |  2865.36613274 |  2440.44328117 |  424.92285156 |    265 |
+| xxxxxxx_xxx_xxxx_xxx       |  1635.16585350 |  1388.68831444 |  246.47753906 |   2034 |
+| xxxxxxx_xxx_xxxx_xxx       |  1442.15766239 |  1231.41840458 |  210.73925781 |     17 |
+...
++----------------------------+----------------+----------------+---------------+--------+
+74 rows in set (20.56 sec)
+</pre>
+
+<h3><a name="perschema"></a>Calculate Your Individual Schema Size</h3>
+<h4>Usage</h4>
+<pre>
+$ wget http://ronaldbradford.com/mysql-dba/perschema.sql
+$ mysql -u[user] -p -v -v -v [table-schema] < perschema.sql
+</pre>
+
+<h4>Output</h4>
+
+<pre>
++------------------+--------+------------+------------+----------------+--------------+--------------+--------------+
+| table_name       | engine | row_format | table_rows | avg_row_length | total_mb     | data_mb      | index_mb     |
++------------------+--------+------------+------------+----------------+--------------+--------------+--------------+
+| xxxxxxx          | InnoDB | Compact    |    1778523 |            314 | 658.39062500 | 533.84375000 | 124.54687500 |
+| xxxxxxxxx        | InnoDB | Compact    |     553266 |            846 | 472.25000000 | 446.75000000 |  25.50000000 |
+| xxxxxxx          | InnoDB | Compact    |     435892 |            884 | 392.25000000 | 367.81250000 |  24.43750000 |
+| xxxxxxxxxxxxxx   | InnoDB | Compact    |    1106547 |             65 | 133.26562500 |  68.59375000 |  64.67187500 |
+| xxxxxxxxxxxxxxxx | InnoDB | Compact    |      58281 |            531 |  30.34375000 |  29.51562500 |   0.82812500 |
+| xxxxxxxxxx       | InnoDB | Compact    |      68721 |            298 |  28.12500000 |  19.54687500 |   8.57812500 |
+...
+</pre>
+
+<p>
+<b>NOTE:</b>  The table_rows and corresponding avg_row_length is only approximate for Innodb tables.  These values under certain circumstances can be <a href="http://ronaldbradford.com/blog/mysql_information_schema-table_rows-out-by-a-factor-of-100x-2009-09-09/">wildly inaccurate</a>.  The data and index size are considered very accurate.
+</p>
+<h3><a name="log-stats"></a>Logging MySQL Stats</h4>
+
+<h4>Usage</h4>
+
+<pre>
+$ wget http://ronaldbradford.com/mysql-dba/log-mysql-stats.sh
+$ chmod +x log-mysql-stats.sh
+$ export LOG_DIR=`pwd`
+$ export MYSQL_AUTHENTICATION="-umonitor -psakila"
+$ ./log-mysql-stats.sh variables
+$ ./log-mysql-stats.sh status
+$ ./log-mysql-stats.sh processlist
+$ ./log-mysql-stats.sh innodbstatus
+$ ./log-mysql-stats.sh masterstatus
+$ ./log-mysql-stats.sh slavestatus
+</pre>
+<h4>Output</h4>
+
+<pre>
+$ more mysql.variables.090629.003542.txt 
+| date_time | 090629.003542 |
+| timezone | -0400 |
++---------------------------------+-----------------------------------------------------------+
+| Variable_name                   | Value                                                     |
++---------------------------------+-----------------------------------------------------------+
+| auto_increment_increment        | 1                                                         |
+| auto_increment_offset           | 1                                                         |
+| autocommit                      | ON                                                        |
+| automatic_sp_privileges         | ON                                                        |
+| back_log                        | 50                                                        |
+| basedir                         | /opt/mysql-5.1.25-rc-linux-x86_64-glibc23/                |
+| big_tables                      | OFF                                                       |
+| binlog_cache_size               | 32768                                                     |
+| binlog_format                   | MIXED                                                     |
+| bulk_insert_buffer_size         | 8388608                                                   |
+...
+</pre>
+
+
+<pre>
+$ more mysql.status.090629.003747.txt 
+| date_time | 090629.003747 |
+| timezone | -0400 |
++-----------------------------------+-------------+
+| Variable_name                     | Value       |
++-----------------------------------+-------------+
+| Aborted_clients                   | 4           |
+| Aborted_connects                  | 6037        |
+| Binlog_cache_disk_use             | 0           |
+| Binlog_cache_use                  | 0           |
+| Bytes_received                    | 2303295323  |
+| Bytes_sent                        | 50239245119 |
+| Com_admin_commands                | 0           |
+| Com_assign_to_keycache            | 0           |
+| Com_alter_db                      | 0           |
+| Com_alter_db_upgrade              | 0           |
+| Com_alter_event                   | 0           |
+| Com_alter_function                | 0           |
+| Com_alter_procedure               | 0           |
+| Com_alter_server                  | 0           |
+| Com_alter_table                   | 59          |
+| Com_alter_tablespace              | 0           |
+...
+</pre>
+
+
+<p>To implement logging in the real world.</p>
+
+<b>Installation</b>
+<pre>
+sudo su -
+useradd -m -s /bin/bash monitor
+mkdir /home/monitor/scripts
+cd /home/monitor/scripts
+wget http://ronaldbradford.com/mysql-dba/log-mysql-stats.sh
+chmod +x log-mysql-stats.sh
+mkdir -p /somedir/mysqlstatlogs
+chown monitor:monitor /somedir/mysqlstatlogs
+chown -R monitor:monitor /home/monitor
+</pre>
+
+<b>Configuration</b>
+<pre>
+su - monitor
+# -c Create Necessary MySQL Permissions
+# -u User with SUPER permissions, defaults to root
+scripts/log-mysql-stats.sh -udba -c
+</pre>
+
+<b>Testing</b>
+<pre>
+mkdir tmp
+LOG_DIR=tmp scripts/log-mysql-stats.sh -m all
+ls -l tmp
+rm -rf tmp
+</pre>
+
+<b>Operation</b>
+
+<pre>
+# m h  dom mon dow   command
+* * * * * LOG_DIR="/somedir/mysqlstatlogs" /home/monitor/scripts/log-mysql-stats.sh -m -l status innodbstatus masterstatus slavestatus
+0 * * * * LOG_DIR="/somedir/mysqlstatlogs" /home/monitor/scripts/log-mysql-stats.sh -m -l processlist
+0 0 * * * LOG_DIR="/somedir/mysqlstatlogs" /home/monitor/scripts/log-mysql-stats.sh -m -l variables
+0 0 * * * LOG_DIR="/somedir/mysqlstatlogs" /home/monitor/scripts/log-mysql-stats.sh -z
+</pre>
+
+<h3><a name="log-analysis"></a>Analyze MySQL statistics</h3>
+
+
+<pre>
+$ wget -O mysql-stats.sh http://ronaldbradford.com/mysql-dba/mysql-stats.sh
+$ chmod +x mysql-stats.sh
+$ export LOG_DIR=`pwd`
+$ ./mysql-stats.sh all
+</pre>
+
+<h3><a name="mysql-sessions">Gather Long/Locked MySQL Sessions</a></h3>
+
+<h4>Usage</h4>
+<pre>
+$ wget -O mysql-sessions.sh http://ronaldbradford.com/mysql-dba/mysql-sessions.sh
+$ chmod +x ./mysql-sessions.sh
+$ export MYSQL_AUTHENTICATION="-uusername -ppassword"
+$ ./mysql-sessions.sh
+</pre>
+
+<p>Under normal operations, the log file will capture any SQL statements found via SHOW FULL PROCESSLIST when they are caught in action.  Generally this is a few queries per sample. This is a list of SQL that you may want to analyze for slow queries for example.</p>
+<p>When Locking is found after a timeout (currently 5 seconds), all statements from the processlist are logged to a seperate log file. This enables you to look for the blocker that is causing the locking.</p>
+
+
+<h3><a name="install-mysql"></a>Install MySQL</h3>
+
+<h4>Usage</h4>
+<pre>
+$ wget -O meta.sh http://ronaldbradford.com/mysql-dba/meta.sh
+$ wget -O install-mysql.sh http://ronaldbradford.com/mysql-dba/install-mysql.sh
+$ chmod +x ./install-mysql.sh
+$ sudo ./install-mysql.sh -d [/environment] [-i [ip-address]]
+</pre>
+
+<p>where:</p>
+<ul>
+<li>
+  -d [/environment]  is the base directory of the environment in question, for simplicity, use a base directory (e.g. from /) with the environment name.  NOTE: Script is untested for directories that are not root level '/' directories.
+</li>
+<li>
+  -i [ip] is a virtual IP that is assigned to the database environment
+</li>
+</ul>
+
+<h4>Pre-requisites</h4>
+<ul>
+<li>This script must be run as the 'root' user, as it creates files and sets appropriate permissions.</li>
+<li>The base environment directory (e.g. /[environment]) must exist and be empty</li>
+<li>The Installed MySQL binary version must be in the /software directory</li>
+<li>The meta.sh file is required in the same directory as the install_mysql.sh file</li>
+</ul>
+
+<h3>Specific example</h3>
+<pre>
+$ sudo su -
+$ mkdir /software /db1
+$ cd /software
+$ wget http://dev.mysql.com/get/Downloads/MySQL-5.1/mysql-5.1.37-linux-x86_64-glibc23.tar.gz/from/http://mirror.trouble-free.net/mysql_mirror/
+$ mkdir /db1
+$ ./install-mysql.sh -d /db1
+</pre>
+
+<h4>Example Output</h4>
+<pre>
+# ./install-mysql.sh -d /db1
+16:50:55 INFO  Starting installation of MySQL
+16:50:55 WARN  IP not specified with -i, not binding to any IP
+16:50:55 WARN  No MySQL Version specified, using '5.1'
+16:50:55 INFO  Installing MySQL . . .
+16:50:55 INFO  Creating default MySQL user
+16:50:55 INFO  Group 'mysql' already exists
+16:50:55 INFO  User 'mysql' already exists
+16:50:55 INFO  Installing MySQL from binary tar file '/software/mysql-5.1.37-linux-x86_64-glibc23.tar.gz
+16:51:03 INFO  Setting MYSQL_HOME to '/db1/mysql'
+16:51:03 INFO  Installing mysql starter database
+16:51:13 INFO  Setting mysql directory ownership & permissions
+16:51:13 INFO  Configuring MySQL
+16:51:13 INFO  Setting MYSQL_HOME to '/db1/mysql'
+16:51:13 INFO  Generating my.cnf
+16:51:13 INFO  Configuring services for 'mysql_db1'
+16:51:15 INFO  Defining User Permissions
+16:51:15 INFO  Completed installation of MySQL
+
+</pre>
+
+A successful installation will result in:
+<ul>
+<li>MySQL installed and running in /db1</li>
+</ul>
+
+<pre>
+$ export MYSQL_HOME=/db1/mysql
+$ $MYSQL_HOME/bin/mysql -udba -psakila -h${IP} -e "SELECT VERSION();SHOW SCHEMAS;"
++------------+
+| VERSION()  |
++------------+
+| 5.1.37-log | 
++------------+
++--------------------+
+| Database           |
++--------------------+
+| information_schema | 
+| mysql              | 
+| test_db1           | 
++--------------------+
+</pre>
+
+<h4>Common Errors</h4>
+Not run as root
+<pre>
+    ./install_mysql.sh
+    14:11:05 INFO  Starting installation of MySQL
+    14:11:05 ERROR This script must be run as root
+    14:11:05 INFO  Exiting with status code of '1'
+</pre>
+
+Not specifying an environment directory with -d.
+
+<pre>
+    ./install_mysql.sh
+    14:14:16 INFO  Starting installation of MySQL
+    14:14:16 ERROR You must specify an install directory with -d
+    14:14:16 INFO  Exiting with status code of '1'
+</pre>
+
+Not specifying a binding IP Address with -i
+
+<pre>
+    ./install_mysql.sh -d /xxx
+    14:30:45 INFO  Starting installation of MySQL
+    14:30:45 ERROR You must specify a binding IP with -i
+    14:30:45 INFO  Exiting with status code of '1'
+</pre>
+
+ Specifying an environment directory that already contains an instance
+
+<pre>
+    ./install_mysql.sh -d /qa -i 192.168.1.22
+    14:33:33 INFO  Starting installation of MySQL
+    14:33:33 WARN  No MySQL Version specified, using '5.1'
+    14:33:33 ERROR A MySQL Instance at '/qa/mysql' has been detected, ensure no MySQL instance exists at '/qa'
+    14:33:33 INFO  Exiting with status code of '1'
+</pre>
+
+ Specifying an environment directory that does not exist.
+
+<pre>
+    /install_mysql.sh -d /xxx -i 192.168.1.22
+    14:34:29 INFO  Starting installation of MySQL
+    14:34:29 WARN  No MySQL Version specified, using '5.1'
+    14:34:29 ERROR Base deployment directory '/xxx' does not exist
+    14:34:29 INFO  Exiting with status code of '1'
+</pre>
+
+Specify an invaid version of MySQL to install
+
+<pre>
+    ./install_mysql.sh -d /xxx -i 192.168.1.22 -v 5.2
+    14:37:34 INFO  Starting installation of MySQL
+    14:37:34 ERROR Unable to find a '5.2' version of MySQL in '/software/'
+    14:37:34 INFO  Exiting with status code of '1'
+</pre>
+
+
+<h3>Unsupported Scripts</h3>
+
+
+<pre>
+$ wget http://ronaldbradford.com/mysql-dba/mysql-sessions.sh
+</pre>
+
+
+<pre>
+</pre>
+
+</div> <!-- wrapper -->
+</div> <!-- mysql-dba -->
+
+<ul id="footer">
+  <li><a href="/" class="home"><strong>Home</strong></a></li>
+  <li><a href="/mysql-consulting"><span class="consult"></span><strong>Consulting</strong></a></li>
+  <li><a href="/mysql-presentations"><span class="present"></span><strong>Presenting</strong></a></li>
+
+  <li><a href="/blog"><span class="write"></span><strong>Writing</strong></a></li>
+  <li><a href="/about"><span class="about"></span><strong>About</strong></a></li>
+  <li><a href="/contact"><span class="contact"></span><strong>Contact</strong></a></li>
+  <li><span style="margin-left:10px;color: #FFFFFF;"> Ronald Bradford - Opinions, Expertise, Passion.</style></li>
+</ul><!-- end footer -->
+<div style="clear: both"></div>
+<div class="copyright">
+&copy; Copyright 2007-2010. All Rights Reserved. All information is provided by <a href="/">Ronald Bradford</a> and does not reflect any affilations with present or past employers.
+</div>
+<div class="copyright">
+<a href="http://mysql.com">MySQL</a> is a registered trademark of <a href="http://sun.com">Sun Microsystems</a>. <br />
+Professional MySQL Consulting by Ronald Bradford provided on this site is not related in any way to <a href="http://mysql.com/consulting/">MySQL Consulting</a> packages offered by MySQL.
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-1035567-7");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+<!-- true= 1 q=--></body>
+</html>
