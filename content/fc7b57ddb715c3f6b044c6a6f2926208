@@ -1,0 +1,825 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+<title>djbdns - Continuous DNS service without continual software upgrades</title>
+<h1>djbdns - Continuous DNS service without continual software upgrades</h1>
+
+<link rel="Section" href="#This" title="This is tinydns.org" />
+<h2 id="This">This is tinydns.org</h2>
+
+<p>Please note that this website is tinydns.org.  It used to be
+accessible via djbdns.com or djbdns.org.  The holder of those two
+domain names registered them before I could.  For a time, he served up
+a frame linking to tinydns.org.  He then let the registration lapse,
+and now the usual search page idiots have it.  Thanks, guy.</p>
+
+<p>Note that djbdns is not subject to the DNS vulnerability announced July 8.  From the CERT Advisory: "Daniel J. Bernstein is credited with the original idea and
+implementation of randomized source ports in the DNS resolver."</p>
+
+<p>
+Mirrors:
+<link rel="Alternate" hreflang="en" href="http://djbdns.wdm.com" title="USA (Alaska)" />
+<a hreflang="en" href="http://djbdns.wdm.com">USA (Alaska)</a>
+<link rel="Alternate" hreflang="en" href="http://djbdns.md5.com.ar" title="Argentina" />
+<a hreflang="en" href="http://djbdns.md5.com.ar">Argentina</a>
+<link rel="Alternate" hreflang="en" href="http://djbdns.sericyb.com.au/" title="Australia 1" />
+<a hreflang="en" href="http://djbdns.sericyb.com.au/">Australia 1</a>
+<link rel="Alternate" hreflang="en" href="http://dnscache.planetmirror.com" title="Australia 2 (out-of-date)" />
+<a hreflang="en" href="http://dnscache.planetmirror.com">Australia 2 (out-of-date)</a>
+<link rel="Alternate" hreflang="en" href="http://mirrors.realroot.com/tinydns" title="Belgium" />
+<a hreflang="en" href="http://mirrors.realroot.com/tinydns">Belgium (broken as of 2004-08-29)</a>
+<link rel="Alternate" hreflang="en" href="http://djbdns.urc.bl.ac.yu/" title="Bosnia and Herzegovina" />
+<a hreflang="en" href="http://djbdns.urc.bl.ac.yu/">Bosnia and Herzegovina</a>
+<link rel="Alternate" hreflang="en" href="http://djbdns.diana.stormshadow.com" title="England" />
+<a hreflang="en" href="http://djbdns.diana.stormshadow.com">England</a>
+<link rel="Alternate" hreflang="en" href="http://djbdns.mirrors.bsd.net/" title="Germany" />
+<a hreflang="en" href="http://djbdns.mirrors.bsd.net/">Germany</a>
+<link rel="Alternate" hreflang="en" href="http://djbdns.now.ie/" title="Ireland" />
+<a hreflang="en" href="http://djbdns.now.ie/">Ireland</a>
+<link rel="Alternate" hreflang="en" href="http://www.morettoni.net/djbdns/" title="Italy" />
+<a hreflang="en" href="http://www.morettoni.net/djbdns/">Italy</a>
+<link rel="Alternate" hreflang="en" href="http://djbdns.psshee.com" title="Korea" />
+<a hreflang="en" href="http://djbdns.psshee.com">Korea</a>
+<link rel="Alternate" hreflang="en" href="http://mirror-djbdns.sstf.org" title="Poland" />
+<a hreflang="en" href="http://mirror-djbdns.sstf.org">Poland</a>
+<link rel="Alternate" hreflang="en" href="http://tinydns.kelt.si/" title="Slovenia" />
+<a hreflang="en" href="http://tinydns.kelt.si/">Slovenia</a>
+<link rel="Alternate" hreflang="en" href="http://djbdns.enderunix.org" title="Turkey" />
+<a hreflang="en" href="http://djbdns.enderunix.org">Turkey</a>
+<link rel="Alternate" hreflang="en" href="http://djbdns.cymraeg.org" title="Wales" />
+<a hreflang="en" href="http://djbdns.cymraeg.org">Wales (broken as of 2004-08-29)</a>
+
+<p>
+Other languages:
+<link rel="Alternate" hreflang="de" href="http://www.djbdns.de/" title="djbdns" />
+Sie suchen eine
+<a hreflang="de" href="http://www.djbdns.de/">deutschsprachige Seite</a>
+zu djbdns?
+<link rel="Alternate" hreflang="ja" href="http://djbdns.qmail.jp/" title="djbdns" />
+Or a
+<a hreflang="ja" href="http://djbdns.qmail.jp/">Japanese</a>
+one?
+<link rel="Alternate" hreflang="tr" href="http://www.enderunix.org/documents/djbdns_installation.html" title="djbdns" />
+Or a
+<a hreflang="tr" href="http://www.enderunix.org/documents/djbdns_installation.html">Turkish</a>
+one?
+<link rel="Alternate" hreflang="pt" href="http://www.atechs.com.br/tinydns.org" title="djbdns" />
+Or a
+<a hreflang="pt" href="http://www.atechs.com.br/tinydns.org">Brazilian Portugese</a>
+one ?
+</p>
+
+<p>
+This web site also has
+<a href="http://www.euronet.nl./~tekelenb/WWW/LINK/index.html">
+standard HTML 2.0 navigation facilities</a>,
+which you can use by
+<a href="http://homepages.tesco.net./~J.deBoynePollard/FGA/web-enable-browser-link-bar.html">
+enabling the link bar support in your web browser</a>,
+if you haven't already done so.
+</p>
+
+<link rel="Section" href="#Introduction" title="Introduction" />
+<h2 id="Introduction">Introduction</h2>
+
+<p>djbdns is a replacement for BIND.  It is secure, reliable, small,
+fast, etc etc etc.  Just like all of Dan Bernstein's <a
+href="http://cr.yp.to/">tools</a>.  Dan has <a
+href="http://cr.yp.to/djbdns.html">his own home page for djbdns</a>.  We've got this one
+so we can distribute our enhancements to djbdns.</p>
+
+<p>dnscache is a recursive resolver, intended to be listed in
+<samp>/etc/resolv.conf</samp>'s "nameserver" entry.  It makes DNS queries via UDP
+and TCP as needed. It imposes restrictions on what it will return;
+that's why it was written. It will only provide data obtained from
+authoritative servers.  These servers are found via a chain of
+delegations from authoritative servers starting from the configured-in
+roots. That's part of its security model.  If it were to do anything
+less, it would be subject to the same cache-poisoning style attacks
+that work on the current insecure DNS servers.</p>
+
+<p>tinydns does authoritative nameserving via UDP only; it does not do
+recursive nameserving, nor does it answer TCP queries (axfrdns does
+that). The only hosts that should ask tinydns for a host are recursive
+nameservers, such as those found in <samp>/etc/resolv.conf</samp>, like djbdns or
+BIND.  Tinydns should never be listed in <samp>/etc/resolv.conf</samp>. Tinydns
+interoperates properly with every authoritative and recursive
+nameserver I know of, and supporting all the standards needed to do
+so.</p>
+
+<p>axfrdns does authoritative nameserving via TCP, and is also the zone
+transfer server.  The zone transfer client is axfr-get.  Both of these use
+Dan Bernstein's ucspi-tcp helpers.  Why separate programs?  To limit
+security incursions, and because many sites do not need zone transfers.
+As BIND has shown, excessive functionality is a root <!-- sic --> to
+security disasters.</p>
+
+<p>Testimonials: lycos.  Any others?</p>
+
+<link rel="Section" href="#News" title="News" />
+<h2 id="News">News</h2>
+
+<ul>
+
+<li> <p> <strong>2006-03:</strong> <a
+href="http://www.isotf.org/news/DNS-Amplification-Attacks.pdf">DNS
+amplification attacks</a> are becoming more widespread.  Fortunately,
+the default installation of djbdns is immune to these kinds of
+attacks.  Tinydns doesn't do any recursive queries, so no
+amplification is possible.  Dnscache is not an open resolver by
+default.  In order for your dnscache installation to be open to
+queries from everyone, you would need to create many files of the form
+"#." in /service/dnscache/root/ip/.  Don't do that.
+
+<li> <p> <strong>2003-10:</strong>
+<a href="http://homepages.tesco.net./~J.deBoynePollard/FGA/verisign-internet-coup.html">
+"All your *.com and *.net are belong to us."</a>
+Verisign threatens to corrupt the Domain Name System
+again.  Late in the evening of 2003-09-15 they introduced wildcard *.com and
+*.net A records into the top-level domain name servers.  They resolved
+to 64.94.110.11.  They removed those records, but threaten to
+reinstate them.  Russ Nelson has written a patch to <a
+href="djbdns-1.05-ignoreip.patch">ignore this IP
+address</a>.  Turns out that about a dozen registrars are doing this,
+so you can <a href="djbdns-1.05-ignoreip2.patch">ignore multiple IP addresses</a>.
+Note that .name uses wildcard records legitimately, and so may some of
+the other registrars, e.g. the contract for .museum specifies that
+*.museum is expected.  The trouble with Verisign is that their
+contract does not.</p>
+
+</ul>
+
+<link rel="Section" href="#Articles" title="Articles" />
+<h2 id="Articles">Articles</h2>
+
+<ul>
+<li><a href="http://www.lwn.net/2001/features/djbdns.php3">LWN</a> - A look at djbdns
+<li><a href="http://www.kuro5hin.org/?op=displaystory;sid=2001/4/9/17053/40631">Kuro5hin</a> - Preventative DNS
+<li><a href="http://www.securityfocus.com/guest/17905">Security Focus</a> - BIND is insecure.
+</ul>
+
+<link rel="Section" href="#Support" title="Commercial Support" />
+<h2 id="Support">Commercial support</h2>
+
+Commercial support for djbdns is available:
+<ul>
+
+<li><a href="http://www.lightwerk.com/company/contact">LIGHTWERK</a>
+provides support for djbdns, qmail and most other Bernstein
+software. Support is mainly provided for Germany and nearby countries.
+
+<li><a href="http://www.quist.ca">Quist Consulting</a> provides
+support for djbdns.
+
+<li><a
+href="http://www.mnis.fr/home/service/djbdns/djbdns.html">MNIS</a>
+does support for djbdns in France.
+
+<li><a href="http://www.aidasystems.com/">AiDA Systems</a> provides
+djbdns support, by phone, online (remote via ssh), and on-site. Also,
+preconfigured/custom built djbdns and/or qmail servers.  Load
+balancing, Replication, virtual hosting and mysql support at
+affordable prices. It's time to give up buggy/insecure BIND. Call Now:
+(888)466-8171
+
+<li><a href="http://no-way.org/~fcu/services/">Flavio
+Curti</a> provides commercial support for djbdns in Switzerland.
+
+<li><a href="http://www.idealx.com/">IDEALX</a>
+offers support for djbdns in France and nearby countries.
+They also provide support for qmail, and other djbware.
+
+<li><a href="http://martin.paljak.pri.ee/">Martin
+Paljak</a> creates DNS solutions using djbdns.
+
+<li><a href="http://www.rwmnet.com.br">RWM
+Consultants</a> sells support for Debian GNU/Linux, IDS/Firewall,
+djbdns and qmail in Brasil.
+
+<li><a href="http://protectix.com/">Protectix,
+Inc.</a> provides remote and onsite commercial support for djbdns.
+Other services include outsourced DNS hosting and training on djbdns
+installation and maintenance.  Call us at (408) 877-2544.
+
+<li><a href="http://www.oeko.net">Oeko.neT</a> supports
+qmail, djbdns, and many other software packages, prefereably in the
+OpenSource area. Remote admin work, as well as e-mail and phone
+support and custom programming is available.
+
+<li><a href="http://www.enigma.ie/">Enigma Consulting
+Limited</a> sells support for qmail, djbdns, and other open source
+network infrastructure software. Remote and on-site management and
+installation, email and phone support is available. We operate mostly
+in Ireland and the UK.
+
+<li><a href="http://it-zone.org/unix.php">IT ZONE</a>
+does support for djbdns mostly in Poland and other European
+countries. They also provide remote (by telephone, internet) help for
+almost all GPL un*ix server tools and do remote administration.
+
+<li><a href="http://www.integricity.com">Integricity Corporation</a>
+provides djbdns consulting services in Asia and Europe
+(UK/France). Customised djbdns solutions for platforms such as FreeBSD,
+Linux and Solaris.
+
+<li><a href="http://eurotux.com/">EUROTUX
+Informatica, SA</a> is a company which focuses on offering consulting
+services; we support qmail (content and virus-scanning), djbdns,
+ezmlm, publicfile, apache, etc in various configurations. We operate
+mostly in Portugal, but provide remote access installations/support in
+Europe.
+
+<li><a href="http://www.Linugen.com">Linugen</a> provides professional
+support and integration services for djbdns and ldap integration in
+Europe.
+
+<li><A href="http://www.sekosystems.com">Sekosystems</A> is a german company
+specialized in consulting, integration, administration and security
+services for open source based systems. We provide commercial support
+for a wide range of open source software, including qmail and djbdns
+within Germany, Cameroon and nearby countries.
+
+<li><A href="http://www.linux4biz.net">Linux4biz</A>
+provide commercial support for qmail and djbdns. We also provide
+solutions and support for all email servers and internet security.
+
+<li><a href="http://www.optimat.com">Optima
+Technologies</a> provides consulting services (qmail, djbnds, Linux, content
+and virus scanning) in Spain. Our focus is reliability and security.
+Remote and on-site management andinstallation, email and phone support
+is available.
+
+<li><a href="http://www.podernet.com">PoderNet, S.A. de
+C.V.</a> provides professional support and consulting for djbdns, qmail,
+vpopmail and many other OpenSource software packages in Mexico.
+
+<li><A href="http://www.saffron.net">Saffron Solutions</A> is a 
+customer-focused IT services company offering computer system, network, 
+and security  consulting and systems integration.  Based in Boston, MA, 
+Saffron Solutions provides qmail, djbdns, and other open source 
+software support to customers in the US and Canada.
+
+<li><a href="http://www.tegtmeier.de/">Tegtmeier
+Internet Solutions</a> provides commercial support for djbdns in
+Germany. Focused on internet security, high availability and
+performance optimization.
+
+<li><a href="http://www.emuadmin.com/">Emuadmin</a>
+is a company specialized in the development of Internet solutions. We
+offer djbDNS services, from installation to performance optimization.
+
+<li><a href="http://www.deeproot.co.in">DeepRoot Linux</a> provides
+support for djbdns, qmail, other DJB / DJB-like software, gnu/Linux
+and Debian in India.
+
+<li><a href="http://www.rieger-cm.de/">RIEGER - Consulting &amp;
+Management</a> offers consulting, installaton and adminstrative
+services for qmail, djbdns and other software including help with
+general server tasks to customers located in Germany and nearby
+countries.
+
+<li><a href="http://www.atechs.com.br/">Alpha-Tech Solu&ccedil;&otilde;es</a> provides
+support for djbdns and open source software in general, as well as website
+development.
+
+
+</ul>
+
+<link rel="Section" href="#Documentation" title="Documentation" />
+<h2 id="Documentation">Documentation</h2>
+
+<ul>
+
+<li> Switching to djbdns because of BIND's bugs, or simple misfeatures
+like the format of the zone files?
+<ul>
+<li>
+Dan Bernstein has a web page for people
+<a href="http://cr.yp.to/djbdns/frombind.html">
+switching from BIND</a>.
+<li>
+<a href="http://flounder.net./djbdns/bind-to-djbdns.html">
+So has Adam McKenna</a>.
+</ul>
+
+<li> Felix von Leitner has a <a href="http://www.fefe.de/djbdns/">FAQ</a>.
+
+<li> Luis Toro Teijeiro has <a href="http://sourceforge.net/projects/djbdns-es/">
+translated the djbdns documentation into Spanish</a>.
+
+<li>Gerrit Pape has created
+<a href="http://smarden.org/pape/djb/">man pages</a>
+from Dan's documentation, augmenting it with a page for tinydns-edit
+which Dan doesn't document.
+
+<li> Jonathan de Boyne Pollard has both
+<a href="http://homepages.tesco.net./~J.deBoynePollard/FGA/djbdns-myths-dispelled.html">
+debunked several myths about djbdns</a> and
+<a href="http://homepages.tesco.net./~J.deBoynePollard/FGA/djbdns-problems.html">
+documented (and provided solutions for) some of its actual problems</a>.
+
+<li> Jonathan de Boyne Pollard has created a (very primitive)
+<a href="http://homepages.tesco.net./~J.deBoynePollard/FGA/djbdns-big-picture.html">
+djbdns "big picture"</a>.
+
+<li>Luca Morettoni wrote a djbdns
+<a href="http://morettoni.net/docs/djbdns.html">HOW-TO in Italian</a>.
+
+<li> MAENO Toshinori has translated the djbdns documentation into <a
+href="http://djbdns.qmail.jp/djbdns.html">Japanese</a>.
+
+<li> Henning Brauer has writen <a href="http://lifewithdjbdns.org./">Life with djbdns</a>.
+
+<li> Jack Howard has written a <a
+href="http://www.revival.stormshadow.com/unix/djbdns/">set of
+commands</a> which can be cut-n-pasted to fetch, compile, and install
+djbdns.  Configuration is still up to you, of course.
+
+<li>Johan Struijk has some <a href="http://www.showipaddress.com">web-based DNS query</a> tools.
+
+</ul>
+
+<link rel="Section" href="#Discussion" title="Discussion" />
+<h2 id="Discussion">Discussion</h2>
+
+<ul>
+
+<li> Dan has a <a href="mailto:dns-subscribe@list.cr.yp.to">mailing list</a> for djbdns.
+There's a <a href="http://marc.theaimsgroup.com/?l=djbdns&amp;r=1&amp;w=2">searchable
+archive</a> and <a href="news://news.gmane.org./gmane.network.djbdns">
+a newsgroup</a>.
+
+<li>
+Luca Morettoni and ZioBudda's staff have an <a
+href="http://lists.ziobudda.net/mailman/listinfo/djbdns-it">Italian
+mailing list</a>, with <a
+href="http://lists.ziobudda.net/pipermail/djbdns-it/">searchable
+archives</a>.
+
+<li> Please use
+<a href="http://homepages.tesco.net./~J.deBoynePollard/Softwares/djbdns/#showctl">
+tinydns-showctl and dnscache-showctl</a>, which are analogous to qmail's
+qmail-showctl, when you want to provide information
+about your djbdns configuration.
+
+</ul>
+
+<link rel="Section" href="#Contributions" title="Contributions" />
+<h2 id="Contributions">Contributions</h2>
+
+<p>A few people have contributed enhancements:</p>
+
+<h3 id="ContributedPackages">Packages</h3>
+
+<ul>
+
+<li>Mate Wierdl has an <a
+href="ftp://moni.msci.memphis.edu/pub/run/">RPM</a> of djbdns.  So
+does <a href="http://dustman.net/andy/djbware/">Andy Dustman</a>.
+
+<li>Gerrit Pape has <a
+href="http://smarden.org/pape/Debian/">Debian packages</a>.
+
+</ul>
+
+<h3 id="ContributedRRTypes">Convenience tools for various resource record types</h3>
+
+<p>
+djbdns supports all possible resource record types with a generic syntax.
+</p>
+
+<ul>
+
+<li>Rob Mayoff provides
+<a href="http://dqd.com/~mayoff/tools/djbdns/make-record.adp">
+a tool for generating SRV records and RP records</a>
+in the djbdns generic record syntax.
+
+<li>Michael Handler wrote a <a href="srv-patch">SRV patch</a>, which
+lets tinydns-data and axfr-get work natively with SRV records.  This
+patch also has a work-around for BIND's improper compression of PTR
+records.
+
+<li>Interested in DNS-LOC (inserting your location into your DNS)?
+djbdns <a href="dns-loc.html">supports DNS-LOC</a>.
+
+<li>Dan Peterson needed to <a
+href="http://danp.net/djbdns/tinydns-data-soa-contact.patch">set a SOA
+contact address</a> other than what tinydns-data sets, so he wrote a
+new data file record type, 'D'.  It defines the contact address to be used for all
+subsequent records.  An empty contact address means that tinydns-data
+should resume manufacturing a contact address.
+<span style="background-color: silver">
+Note, should you
+happen to care about such things: This record creates a
+context that prevents you from re-ordering the 'data' file.
+</span>
+<span style="background-color: silver">
+Also note that Dan now recommends simply using a pre-processor to generate 'Z' lines instead.
+</span>
+
+<li>Guilherme Balena Versiani has added support for <a
+href="http://mywebpage.netscape.com/guibv/">SRV+NAPTR</a>.
+
+<li>Anders Brownworth wants SRV and NAPTR records without patching
+djbdns, so he wrote a web page that <a
+href="http://www.anders.com/projects/sysadmin/djbdnsRecordBuilder/">builds
+generic SRV/NAPTR</a> records.
+
+<li>Thomas Mangin has a simple code sipset to <a
+href="http://thomas.mangin.com/#tag:link_djbdns_naptr_srv">generate
+SIP SRV and NAPTR</a> entries using the generic record format.
+
+<li>Anders Brownworth created an IPv6 (<a
+href="http://anders.com/projects/sysadmin/djbdnsRecordBuilder/#AAAA">AAAA</a>) record generator.
+
+<li>Adrian Ilarion Ciobanu has a <a href="http://pub.mud.ro/~cia/computing/tinydns-with-geoip-patch.html">geoip patch</a> for tinydns.
+
+<li>Jeremy Kister has an <a href="http://www.jeremykister.com/code/djbdns-1.05.isp.patch
+">all-in-one patch</a> for djbdns.
+
+</ul>
+
+<h3 id="ContributedLogging">Log management and analysis</h3>
+
+<p>djbdns server logs are formatted to be easily machine-readable, not
+human-readable.</p>
+
+<ul>
+
+<li>Faried Nawaz has a <a href="http://www.hungry.com/~fn/dnscache-log.pl.txt">DNScache logfile
+formatter</a>, and Kenji Rikitake modified it to be a <a
+href="tinydns-log.pl.txt">TinyDNS
+logfile formatter</a>.
+
+<li>Rob Mayoff has some notes on the <a
+href="http://dqd.com/~mayoff/notes/djbdns/tinydns-log.html">tinydns
+log file format</a> and the <a
+href="http://dqd.com/~mayoff/notes/djbdns/dnscache-log.html">dnscache
+log file format</a>.
+
+<li>Greg Ward wrote <a href="http://www.gerg.ca/hacks/parse_djbdns_log.html">parse_djbdns_log</a>,
+which parses both types of logfiles.
+
+<li>Ask Bj&#248;rn Hansen wrote <a href="http://develooper.com/code/tinydns-rrd/">Tinydns-RRD</a>.  It
+generates realtime graphs from your tinydns logs by using rrdtool. It
+works well with high traffic DNS servers.
+
+<li>Nate Campi has DNS <a href="http://www.campin.net/DNS/graph.html">traffic-graphing
+scripts</a>.
+
+<li>James Raftery has a patch to include <a
+href="http://romana.now.ie/#djbdns-cachestats">more cache
+stats</a>.
+
+</ul>
+
+<h3 id="ContributedDatabase">Database management</h3>
+
+<ul>
+
+<li>Web-based data editors:
+
+<ul>
+
+<li><a href="http://www.control-alt-del.org/code/suaveDNS">suaveDNS</a>
+
+<li><a href="http://www.vegadns.org">VegaDNS</a>
+
+<li><a href="http://www.nictool.com/">NicTool</a>
+
+<li><a href="http://osuosl.org/projects/maintain/">OSU OSL's Maintain</a>
+
+<li><a href="http://sauron.jyu.fi/">Sauron</a>, DNS &amp; DHCP
+
+</ul>
+
+<li>Magnus Bodin has written <a href="http://x42.com/software/valtz/">valtz</a>, a simple validation
+tool for tinydns-data zonefiles. Also able to filter file(s) from
+errors, not allowed zones and not allowed record types.
+
+<li>Jonathan de Boyne Pollard has written
+<a href="http://homepages.tesco.net./~J.deBoynePollard/Softwares/djbdns/#tinydns-data-semantic-error">
+a patch to tinydns-data to diagnose a greater range of data file errors</a>
+including some particularly common ones such as putting some values in the wrong fields.
+
+<li>Bal&aacute;zs Nagy has a modification to tinydns-data which causes it to
+<a
+href="http://iksz.hu/package/djbdns-conf/djbdns-1.05-multi_tinydns_data.patch">accept
+multiple filenames</a> on the command line.  Each file's timestamp is
+the default for all zones defined in that file.
+
+</ul>
+
+<h3 id="ContributedData">Data generation and conversion</h3>
+
+<ul>
+
+<li>Bennett Todd has a set of programs to <a href="http://bent.latency.net/">work with BIND zone
+files</a>.
+<ul>
+<li> tinydns-data-pull copies over a set of BIND files using ssh.
+<li> tinydns-data-compactor consolidates forward and reverse records.
+<li> tinydns-data-beautify sorts and combines like-records together.
+</ul>
+Andrew Pam has some <a href="http://www.sericyb.com.au/">patches</a>
+to it.
+
+<li>Henning Brauer has published his method for <a
+href="mysql-export">exporting DNS records</a> from a mysql database
+into tinydns's data file.
+
+<li>Dennis Fleurbaaij <a href="http://dennis.core-lan.nl/code/sql_2_tiny/index.html">exports DNS records from PostGres</a>
+
+<li>Kirill Miazine has his own <a href="http://km.krot.org/code/data-gen.tar.gz">tool to generate</a> the
+tinydns data file.
+
+<li>Ward Vandewege has a pre-processor to create a whole zone using a
+<a href="http://patch.be/djbdns/tinydns-predata.html">simple one-line syntax</a>.
+
+<li><a href="http://erat.org/">Daniel Erat</a> has written a small program to convert BIND zone files
+to tinydns-data format (for cases where AXFR isn't available).  It's
+available from his homepage.
+
+<li>Michael K. Stella has written a program to <a href="http://www.thismetalsky.org/magic/projects/dhcp_dns.html">copy
+dhcp information</a> into djbdns.
+
+<li><a href="http://ldap2dns.tiscover.com/">ldap2dns</a> is designed to write binary data.cdb files used by
+tinydns from data retrieved from an LDAP database.  Lynn Winebarger
+has a <a href="ldap2dns.patch.gz">patch for
+ldap2dns</a> (along with a script to translate named.conf and zone
+files to ldif) to support slave zones with autoaxfr.  It also adds the
+ability to output a tcprules set to support axfrdns.  It collates
+prefixes with more specific ip addresses so you don't get weird
+exclusions.
+
+</ul>
+
+<h3 id="ContributedPublication">DNS data publication</h3>
+
+<ul>
+
+<li>Bruce Guenter has <a
+href="http://em.ca/~bruceg/sqldjbdns/">sqldjbdns</a>, a SQL DNS server
+based on djbdns.
+
+<li>John Levine has a patch to rbldns which lets you have <a
+href="http://www.iecc.com/rbldns-patch.txt">A and TXT
+records in the root of the zone</a>.  This lets people access
+<samp>http://korea.services.net</samp> even though korea.services.net is the root of
+his DNSBL zone.
+
+<li>John M. Simpson has a patch to rbldns to return <a
+href="http://www.jms1.net/djbdns/rbldns-patch.html">per-record
+IP/TXT</a> information.
+
+<li>Jonathan de Boyne Pollard has written
+<a href="http://homepages.tesco.net./~J.deBoynePollard/Softwares/djbdns/#content-alias-chain-truncation">
+a patch to make tinydns and axfrdns publish complete CNAME answers</a>,
+in the way that other DNS server softwares do and that RFC 1034 describes.
+
+<li>"Mrs. Brisby" has written <a
+href="http://www.nimh.org/code/ldapdns/">ldapdns</a>.  ldapdns is a tool that
+gateways dns requests (which used to use a djbdns backend but no
+longer does) to a nearby ldap server.  It requires djbdns and openldap.
+<span style="background-color: silver">
+Note this is <em>not</em> ldap2dns, or even similar (except in name).
+ldap2dns works in tandem with tinydns, whereas with ldapdns, queries are
+answered based on LIVE information in the ldap server.
+Neither is it tinyldap (which is an LDAP server, not a DNS server).
+</span>
+
+<li>Gerrit Pape has a simply updated dynamic DNS solution, called <a
+href="http://smarden.org/tinydyndns/">tinydyndns</a>, which updates a
+DNS name whenever you check mail in a POP3 mailbox.
+
+<li>Bob Vincent wrote <a
+href="http://sourceforge.net/projects/tinyddns/">tinyddns</a>, which
+uses a client and server architecture for updating tinydns dynamically.
+
+</ul>
+
+<h3 id="ContributedLookup">DNS lookup</h3>
+
+<ul>
+
+<li>Uwe Ohse has a patch to <a
+href="http://www.ohse.de/uwe/patches/dnscache-0.61.okclient.patch">allow
+any client</a> to access DNScache.  He also has a patch to get <a
+href="http://www.ohse.de/uwe/patches/djbdns-1.05-dnsfilter-replace.diff">dnsfilter
+replace the IP address by the hostname</a>.  He also has a patch to
+cause tinydns to <a
+href="http://www.ohse.de/uwe/patches/djbdns-1.05-multiip.diff">bind to
+multiple IP addresses</a>.
+
+<li>Dan Peterson has a patch for dnscache so it can <a
+href="http://danp.net/djbdns/dnscache-multiple-ip.patch">bind to
+multiple IP addresses</a> and serve queries on those IP addresses from
+the same cache.
+
+<li>Matthias Andree has instructions on how to force dnscache to
+timeout if you have a <a
+href="http://home.pages.de/~mandree/dialup/djbdns.html">transient
+(aka dialup) Internet connection</a>.
+
+<li>Florent Guillaume has a patch to dnscache which lets you <a
+href="http://efge.free.fr//djbdns/">save and
+load</a> the cache.
+
+<li>Nikola Vladov has written <a
+href="http://riemann.fmi.uni-sofia.bg/docs/djbdns-dumpcache.html">djbdns-dumpcache</a>,
+which dumps and reloads the cache periodically, by way of finding the
+best cachesize.
+
+<li>Thomas Mangin has a <a
+href="http://thomas.mangin.com/#tag:link_djbdns_loadbalancing_patch">round-robin
+patch</a> for dnscache.
+<span style="background-color: silver">
+Note that this is for dnscache, not tinydns.
+</span>
+Jonathan de Boyne Pollard has written
+<a href="http://homepages.tesco.net./~J.deBoynePollard/FGA/dns-round-robin-is-useless.html">
+an explanation of why this almost certainly won't do what you really want</a>.
+
+<li>Laurent G. Bercot has a <a href="http://www.skarnet.org/software/djbdns-fwdzone/">patch to
+djbdns</a> to allow dnscache to resolve a name or forward it depending
+on the zone of the query.
+
+<li>Russ Nelson has written a patch to <a href="djbdns-1.05-ignoreip2.patch">convert given A responses into
+NXDOMAIN</a>.  This helps with registrars that improperly insert
+wildcard records (*cough* Verisign *cough*).
+
+<li>The list of ICANN's root servers that comes with djbdns
+is out of date.  Jonathan de Boyne Pollard has written
+<a href="http://homepages.tesco.net./~J.deBoynePollard/FGA/dns-updating-resolving-proxy-root-list.html#djbdns">
+instructions on how to bring this list up to date</a>.
+
+<li> The Open Root Server Confederation has a page on <a
+href="http://support.open-rsc.org./How_To/unix/djbdns/">configuring
+djbdns</a> to work with its root servers and thus to enable use of the augmented
+root.
+
+<li>Jonathan de Boyne Pollard has written
+<a href="http://homepages.tesco.net./~J.deBoynePollard/Softwares/djbdns/#dnscache-strict-forwardonly">
+a patch to prevent dnscache encountering loops in ${FORWARDONLY} mode</a>.
+
+<li>Jonathan de Boyne Pollard has written
+<a href="http://homepages.tesco.net./~J.deBoynePollard/Softwares/djbdns/#dnscacheip-space-separator">
+a patch to allow a more useful separator character in the ${DNSCACHEIP} environment variable</a>
+that the dns library in djbdns uses.
+
+<li>Jonathan de Boyne Pollard has written
+<a href="http://homepages.tesco.net./~J.deBoynePollard/Softwares/djbdns/#dnsqrx">
+dnsqrx</a>, which performs the task of dnsqr but allows one to explicitly specify the target server
+to be queried, like dnsq.
+
+<li>Jonathan de Boyne Pollard has written
+<a href="http://homepages.tesco.net./~J.deBoynePollard/Softwares/djbdns/#dnsnamex">
+a patch to add a dnsnamex command to djbdns</a>, which prints <em>all</em> of the names that an
+IP address maps to, instead of just the first one like dnsname does.
+
+<li>Jonathan de Boyne Pollard has written
+<a href="http://homepages.tesco.net./~J.deBoynePollard/Softwares/djbdns/#dcache-cname-handling">
+a patch to dnscache that improves its handling of CNAME resource records</a>.
+
+<li>djbdns is more than just a dnscache and a tinydns authoritative
+server.  It also has a dns client library.  Luca Morettoni has written
+<a href="http://morettoni.net/qmail-rblchk.en.html">qmail-rblchk</a>,
+which uses the DJB library for DNS query.  It's a good example for
+using the dns client library.
+
+</ul>
+
+<h3 id="ContributedXFR">Database replication via the "Zone transfer" mechanism</h3>
+
+<ul>
+
+<li>Jos Backus wrote a dnsnotify program to send out BIND notify
+messages.  James Raftery
+<a href="dnsnotify">modified it</a> to notify all
+servers, and set the AA bit.  It takes a zone and a list of slave
+addresses, builds a NOTIFY request and sends it to each of the slaves,
+printing the result. This in turn will cause each slave to do a SOA
+lookup and serial number comparison, followed by a zone transfer if
+the serial number has changed.  Further, Andrew Pam modified it to
+create <a
+href="http://www.sericyb.com.au/tinydns-notify">tinydns-notify</a>, in
+order to be able to send "NOTIFY" messages only to his slaves that are
+running BIND, and only when their zones have changed.  Brad Peczka has further modified it for machines with <a href="http://bradpeczka.com/code/tinydns-notify">multiple IP addresses</a>.
+
+<li>If you don't  have perl or NET::DNS,  you  may want  to use Joseph
+Tam's <a  href="http://www.math.ubc.ca/~tam/Software/dns-notify">dns-notify</a>
+program, written in C.
+
+<li>Luca Morettoni wrote <a
+href="http://morettoni.net/bsd/zonenotify-0.1.tar.gz">zonenotify</a>,
+which is a notify sender written in C.
+
+<li>Matt Armstrong wrote <a
+href="http://www.lickey.com/autoaxfr/">autoaxfr</a>.  It wraps
+axfr-get to read a control file.
+
+<li>Russ Nelson wrote <a href="axfr">axfr</a>.  Axfr builds tinydns's
+data file from a combination of single-zone files beginning with
+primary, and subdirectories of secondaried files beginning with axfr.
+The name of the subdirectory is the IP address of the primary.  Chris
+K. Young wrote a <a
+href="http://www.kernel-panic.org/~cky/axfr/axfr.1">man page</a>.
+Sean Hunter suggests add-* scripts of the following form:
+<pre>
+#!/bin/sh
+[ -f primary.$1 ] || touch primary.$1
+exec /usr/local/bin/tinydns-edit primary.$1 temp/primary.$1.new add alias ${1+"$@"}
+</pre>
+
+<li>Russ Nelson also wrote <a href="update-domains">update-domains</a>, which
+works with the axfr program to allow a DNS peer to publish their list
+of secondary domains on a web page.  He uses it in a crontab owned by tinydns like this:
+<pre>
+20 4 * * * cd root/217.160.170.133; http@ www.fte.to crynwr.txt | /usr/local/bin/update-domains
+</pre>
+
+<li>John R Levine wrote <a href="http://www.iecc.com/dnsrefresh">dnsrefresh</a>, a perl script
+that provides BIND style zone updates by looking at the refresh time
+and zone serials.  It's useful when your primary insists on runing
+BIND.
+
+<li>Luc Pardon has instructions to make <a href="http://www.fefe.de/dns/djbdns-1.05-ixfr.diff.gz"> axfrdns work
+with BIND9 slaves who use IXFR</a>.
+
+<li>John Gateley transfers zone files directly using a <a
+href="http://www.jfoo.net/jfooxfer.shtml">perl script</a> that handles
+split horizon elegantly.
+
+</ul>
+
+<h3 id="ContributedMisc">Miscellaneous contributions</h3>
+
+<ul>
+
+<li>Felix von Leitner has three packages
+<ul>
+<li>An <a href="http://www.fefe.de/dns/">ipv6 patch</a> for djbdns.
+<li>An <a href="http://www.fefe.de/ucspi/">ipv6 patch</a> for ucspi-tcp (for axfr).
+<li>His <a href="http://www.fefe.de/djb/">libdjb</a> packages up Dan's libraries.
+</ul>
+
+<li>Jul has written a <a href="http://js.hu./package/djbdns-conf.html">configuration tool</a>.
+
+<li>Lennert Buytenhek wrote a patch that causes tinydns to keep its
+mmap() of the data.cdb file open for at <a
+href="one-second.patch">most one second</a>, instead of the default
+one hundred queries.
+
+<li>Johnny Halfmoon has a binary <a href="http://milksnot.com/joomla/unix/djbdns-for-openwrt">package for OpenWRT</a>.
+
+</ul>
+
+<link rel="Section" href="#Other" title="Other DNS-related sites" />
+<h2 id="Other">Other (not djbdns-specific) DNS-related sites</h2>
+
+<ul>
+
+<li><a href="http://homepages.tesco.net./~J.deBoynePollard/FGA/#DNS">DNS Frequently Given Answers</a>
+<li><a href="http://www.dns.net/dnsrd/">DNS Resources Directory</a>
+<li><a href="http://www.crynwr.com/rfc1035/">RFC 1035</a>
+
+</ul>
+
+<link rel="Section" href="#Patches" title="Recommended patches" />
+<h2 id="Patches">Recommended patches</h2>
+
+<ul>
+
+<li>The definitions of errno in djbdns (and tcpserver)
+do not work with the newest glibc (2.3.1).  Debian and redhat are
+updating to this glibc.  Executables compiled with older glibc's (2.3)
+abort on startup, and recompilation with 2.3.1 is not possible.  Mate
+Wierdl has <a href="http://moni.csi.hu/pub/glibc-2.3.1/">patches</a> for some
+of djb's softwares.  The specific patch for djbdns is also
+<a href="djbdns-errno.patch">here</a>.
+Erwin Hoffmann points out that
+<a href="http://qmail.org/top.html#200403160">a one-line sed script</a>
+will fix most of DJB's software.
+
+<li>TCP queries have the potential to cause dnscache to catch a
+SIGPIPE if the remote side closes the socket before the write
+finishes.  This causes dnscache to exit.  There is a trivial <a
+href="http://marc.theaimsgroup.com/?l=djbdns&m=104812086607532&w=2">patch</a>
+[<a
+href="marc.theaimsgroup.com/?l=djbdns&m=104812086607532&w=2">local</a>]
+which causes djbdns to ignore SIGPIPE.
+
+</ul>
+
+<hr>
+<link rel="Author" title="Russell Nelson" href="mailto:nelson%40crynwr%2Ecom" />
+<address><a href="mailto:nelson@crynwr.com">Russell Nelson</a></address>
+Many improvements by <a href="http://homepages.tesco.net./~J.deBoynePollard/">Jonathan de Boyne Pollard</a><br>
+<!-- Created: Tue May 30 11:13:30 EDT 2000 -->
+<!-- hhmts start -->
+Last modified: Wed Dec  8 00:16:44 EST 2010
+<!-- hhmts end -->
+<p>
+<link rel="SHORTCUT ICON" href="djbdns.ico">
+<a href="http://tinydns.org/"><img src="powered-by-djbdns.gif" alt="Powered by djbdns"></a>
+</html>
