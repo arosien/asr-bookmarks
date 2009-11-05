@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>rush</title>
+  <link href="/stylesheets/main.css?1216236365" media="screen" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div id="header">
+    <div id="logobox">
+	  <div style="float: left"><a href="/"><img alt="Logo" src="/images/logo.png?1216236365" /></a></div>
+      <div id="tagline">
+        power of <span class="hilite">unix</span><br/>
+        elegance of <span class="hilite">ruby</span>
+      </div>
+    </div>
+
+    <ul id="navigation">
+      <li><a href="/">Overview</a></li><li><a href="/handbook">Handbook</a></li><li><a href="/rdoc/">RDoc</a></li><li><a href="http://rush.heroku.com/install">Install</a></li><li><a href="http://adam.blog.heroku.com/past/tags/rush">Blog</a></li><li><a href="http://groups.google.com/group/ruby-shell/topics">Mailing List</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+    <p>rush is a replacement for the unix shell (bash, zsh, etc) which uses pure Ruby syntax.  Grep through files, find and kill processes, copy files - everything you do in the shell, now in Ruby.  Previously if you wanted to count the number of classes in your project, you might use a bash command like:</p>
+
+<div class="bash">find myproj -name \*.rb | xargs grep '^\s*class' | wc -l</div>
+
+<p>In rush, this is:</p>
+
+<div class="rush">myproj['**/*.rb'].search(/^\s*class/).lines.size</div>
+
+<p>How about killing those pesky stray mongrels?  Before:</p>
+
+<div class="bash">kill `ps aux | grep mongrel_rails | grep -v grep | cut -c 10-20`</div>
+
+<p>After:</p>
+
+<div class="rush">processes.filter(:cmdline => /mongrel_rails/).kill</div>
+
+<p>But rush is more than just an interactive shell and a library: it can also control any number of remote machines from a single location.  Copy files or directories between servers as seamlessly as if it was all local.  bash and ssh, we love you, but your era is past.</p>
+
+<p>Example of remote access:</p>
+
+<div class="rush">local = Rush::Box.new('localhost')
+remote = Rush::Box.new('my.remote.server.com')
+local_dir = local['/Users/adam/myproj/']
+remote_dir = remote['/home/myproj/app/']
+
+local_dir.copy_to remote_dir
+remote_dir['**/.svn/'].each { |d| d.destroy }</div>
+
+<p>Clustering?  Well, if you insist:</p>
+
+<div class="rush">local_dir = Rush::Box.new('localhost')['/Users/adam/server_logs/'].create
+servers = %w(www1 www2 www3).map { |n| Rush::Box.new(n) }
+servers.each { |s| s['/var/log/nginx/access.log'].copy_to local_dir["#{s.host}_access.log"] }
+</div>
+
+<p><a href="/handbook/shell">More examples</a></p>
+
+  </div>
+</body>
+</html>
