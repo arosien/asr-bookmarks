@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>mysqlsla :: Parse, filter and sort MySQL slow, general and binary logs</title>
+<meta name="keywords" content="mysqlsla,parse,filter,sort,analyze,MySQL,slow,general,binary,log" />
+<meta name="description" content="mysqlsla parses, filters and sorts MySQL slow, general and binary logs." />
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<link rel="stylesheet" href="http://hackmysql.com/styles.css" type="text/css" />
+<style type="text/css">
+.him {border-bottom:2px solid #f07f00;}
+</style>
+
+<style type="text/css">
+ul {margin:0px; margin-top:10px;}
+li {padding-bottom:10px;}
+</style>
+</head>
+
+<body>
+<div id="Menu">
+   <div id="bt">
+   <a href="http://hackmysql.com">Hack MySQL</a> &lsaquo; <a class="him" style="color:#f07f00;" href="http://hackmysql.com/mysqlsla">mysqlsla</a> &rsaquo; <a href="scripts/mysqlsla-2.03.tar.gz">Download</a> &rsaquo; <a href="mysqlsla_guide">Guide</a> &rsaquo; <a href="mysqlsla_documentation">Documentation</a> &rsaquo; <a href="mysqlsla_filters">Filters</a> &rsaquo; <a href="mysqlsla_reports">Reports</a> &rsaquo; <a href="mysqlsla_replays">Replays</a> &rsaquo; <a href="udl">User-Defined Logs</a>   </div>
+   <div id="info">
+      <a class="not_him" href="blog/">Blog</a>&nbsp;&nbsp;&nbsp;
+      <a class="not_him" href="contact">Contact</a>&nbsp;&nbsp;&nbsp;
+      <a class="not_him" href="sitemap">Sitemap</a>
+      <a name="__top"></a>
+   </div>
+   <div style="clear:both; font-size:10pt; text-align:center; width:100%; padding:10px 0px 5px 0px;">
+      <b>This web site is no longer maintained.&nbsp;&nbsp;<a href="http://hackmysql.com/blog/2010/11/19/hack-mysql-is-longer-maintained/">Read why</a>.</b>
+   </div>
+</div>
+
+<div id="Content">
+<div id="c1"> 
+   <h1>mysqlsla</h1>
+   <div class="p">
+      <p>mysqlsla parses, filters, analyzes and sorts MySQL
+      <a href="http://dev.mysql.com/doc/refman/5.0/en/slow-query-log.html">slow</a>,
+      <a href="http://dev.mysql.com/doc/refman/5.0/en/query-log.html">general</a>,
+      <a href="http://dev.mysql.com/doc/refman/5.0/en/binary-log.html">binary</a> and
+      <a href="http://www.mysqlperformanceblog.com/2008/04/20/updated-msl-microslow-patch-installation-walk-through/">microslow patched</a>
+      logs in order to create a customizable report of the queries and their meta-property values.</p>
+      
+      <p>Since these reports are customizable, they can be used for human consumption
+      or be fed into other scripts to further analyze the queries. For example, to profile with
+      <a href="http://maatkit.sourceforge.net/doc/mk-query-profiler.html">mk-query-profiler</a>
+      (a script from Baron Schwartz's <a href="http://www.maatkit.org/">Maatkit</a>)
+      every unique SELECT statement using database foo from a slow log:</p>
+<pre>
+         mysqlsla -lt slow slow.log -R print-unique -mf "db=foo" -sf "+SELECT" | \
+         mk-query-profiler -separate -database foo
+</pre>
+      <p class="b">&nbsp;</p>
+      <p>In brief, mysqlsla is a liaison allowing other scripts easy access to queries
+      from a MySQL log. For a quick introduction to what mysqlsla is capable of doing,
+      take a glance at the <a href="mysqlsla_guide">guide</a>.</p>
+   </div>
+   <div style="clear:both;"></div>
+   <div style="width:50%; float:right;">
+      <h2>The mysqlsla Library</h2>
+      <div class="p">
+         <p>
+         &raquo; <a href="mysqlsla_guide">Guide</a>: Covers installation, basic usage, reports, special topics and advancing<br /><br />
+         &raquo; <a href="mysqlsla_documentation">Documentation</a>: Complete list of command line options, limitations, future features and bugs<br /><br />
+         &raquo; <a href="mysqlsla_filters">Filters</a>: Overview of mysqlsla v2 log filters<br /><br />
+         &raquo; <a href="mysqlsla_reports">Reports</a>: Creating and customizing mysqlsla v2 standard reports<br /><br />
+         &raquo; <a href="mysqlsla_replays">Replays</a>: Working with mysqlsla v2 log replays<br /><br />
+         &raquo; <a href="udl">User-Defined Logs (UDL)</a>: Creating mysqlsla v2 and MySQL::Log::ParseFilter user-defined logs
+         </p>
+      </div>
+   </div>
+   <h2>Download mysqlsla</h2>
+   <div class="p">
+      Current version: mysqlsla-2.03 (<a href="mysqlsla_changes.txt">Changes</a>)
+      <ul>
+         <li>Installer + man page: <a href="scripts/mysqlsla-2.03.tar.gz">mysqlsla-2.03.tar.gz</a></li>
+         <li>Script only: wget http://hackmysql.com/scripts/mysqlsla</li>
+      </ul>
+   </div>
+   <div style="clear:both;"></div>
+   <h2>v1.x Retired</h2>
+   <div class="p">
+      <p>Looking for mysqlsla v1.7a or 1.8-DEBUG? The v1 branch has been retired and is no longer supported.
+      The older versions can still be accessed at http://hackmysql.com/archive/.</p>
+   </div>
+</div>
+</div>
+<div id="footer">
+   Last updated: 2009-09-03
+</div>
+</body>
+</html>
