@@ -1,0 +1,645 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html dir='ltr' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+<script type="text/javascript">(function() { var a=window;function c(b){this.t={};this.tick=function(d,i,e){e=e?e:(new Date).getTime();this.t[d]=[e,i]};this.tick("start",null,b)}var f=new c;a.jstiming={Timer:c,load:f};try{var g=null;if(a.chrome&&a.chrome.csi)g=Math.floor(a.chrome.csi().pageT);if(g==null)if(a.gtbExternal)g=a.gtbExternal.pageT();if(g==null)if(a.external)g=a.external.pageT;if(g)a.jstiming.pt=g}catch(h){};a.tickAboveFold=function(b){b=b;var d=0;if(b.offsetParent){do d+=b.offsetTop;while(b=b.offsetParent)}b=d;b<=750&&a.jstiming.load.tick("aft")};var j=false;function k(){if(!j){j=true;a.jstiming.load.tick("firstScrollTime")}}a.addEventListener?a.addEventListener("scroll",k,false):a.attachEvent("onscroll",k);
+ })();</script>
+<meta content='true' name='MSSmartTagsPreventParsing'/>
+<meta content='blogger' name='generator'/>
+<link href='http://www.blogger.com/favicon.ico' rel='icon' type='image/vnd.microsoft.icon'/>
+<link href='http://google-opensource.blogspot.com/2008/05/export-git-project-to-google-code.html' rel='canonical'/>
+<link rel="alternate" type="application/atom+xml" title="Google Open Source Blog - Atom" href="http://google-opensource.blogspot.com/feeds/posts/default" />
+<link rel="alternate" type="application/rss+xml" title="Google Open Source Blog - RSS" href="http://google-opensource.blogspot.com/feeds/posts/default?alt=rss" />
+<link rel="service.post" type="application/atom+xml" title="Google Open Source Blog - Atom" href="http://www.blogger.com/feeds/8698702854482141883/posts/default" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.blogger.com/rsd.g?blogID=8698702854482141883" />
+<link rel="alternate" type="application/atom+xml" title="Google Open Source Blog - Atom" href="http://google-opensource.blogspot.com/feeds/5147731052265553468/comments/default" />
+<!--[if IE]> <script> (function() { var html5 = ("abbr,article,aside,audio,canvas,datalist,details," + "figure,footer,header,hgroup,mark,menu,meter,nav,output," + "progress,section,time,video").split(','); for (var i = 0; i < html5.length; i++) { document.createElement(html5[i]); } })(); </script> <![endif]-->
+<title>Export a Git Project to Google Code - Google Open Source Blog</title>
+<meta content='News about Google"s Open Source projects and programs' name='Description'/>
+<link href='http://www.google.com/uds/css/gsearch.css' rel='stylesheet' type='text/css'/>
+<link href='http://www.google.com/uds/css/gsearch_darkgrey.css' rel='stylesheet' type='text/css'/>
+<link href='http://www.google.com/css/gooey.css' rel='stylesheet' type='text/css'/>
+<link href='http://www.google.com/googleblogs/css/template_styles.css' rel='stylesheet' type='text/css'/>
+<link type='text/css' rel='stylesheet' href='http://www.blogger.com/static/v1/widgets/1743847221-widget_css_bundle.css' />
+ <link rel="stylesheet" type="text/css" href="http://www.blogger.com/dyn-css/authorization.css?targetBlogID=8698702854482141883&zx=4de26b46-bf48-45a5-bcc0-508d475340f8"/>
+<style type="text/css">#navbar-iframe { display:block }
+</style>
+
+<style id='page-skin-1' type='text/css'><!--
+
+.template_white #header-graphic .content, .template_white #header-graphic .bottom { background-image:url(http://www.google.com/googleblogs/images/headers/open_source_header_right.png);}
+.template_white #header-graphic h1.title{color:#EB8D32;}
+.template_white h2, .template_white .post h3 a {color:#EB8D32;}
+/*
+--></style>
+<script type='text/javascript'>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1870203-29']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<script type="text/javascript">
+if (window.jstiming) window.jstiming.load.tick('headEnd');
+</script></head>
+<body>
+<div class='navbar section' id='navbar'><div class='widget Navbar' id='Navbar1'><script type="text/javascript">
+    function setAttributeOnload(object, attribute, val) {
+      if(window.addEventListener) {
+        window.addEventListener("load",
+          function(){ object[attribute] = val; }, false);
+      } else {
+        window.attachEvent('onload', function(){ object[attribute] = val; });
+      }
+    }
+  </script>
+<iframe src="http://www.blogger.com/navbar.g?targetBlogID=8698702854482141883&amp;blogName=Google+Open+Source+Blog&amp;publishMode=PUBLISH_MODE_BLOGSPOT&amp;navbarType=BLUE&amp;layoutType=LAYOUTS&amp;searchRoot=http%3A%2F%2Fgoogle-opensource.blogspot.com%2Fsearch&amp;blogLocale=en_US&amp;homepageUrl=http%3A%2F%2Fgoogle-opensource.blogspot.com%2F&amp;targetPostID=5147731052265553468" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="30px" width="100%" id="navbar-iframe" allowtransparency="true" title="Blogger Navigation and Search"></iframe>
+<div></div></div></div>
+<div class='template_white' id='template_fixed'>
+<div id='main-wrapper'>
+<!-- skip links for text browsers -->
+<span id='skiplinks' style='display:none;'>
+<a href='#main'>skip to main </a> |
+<a href='#sidebar'>skip to sidebar</a>
+</span>
+<div id='header-graphic' style='width:100%;'>
+<a href='http://google-opensource.blogspot.com/' style='text-decoration:none;'>
+<div class='content'>
+<div class='section' id='header_titles'><div class='widget HTML' id='HTML26'>
+<div class='widget-content'>
+<h1 class='title'>Open Source at Google</h1>
+</div>
+</div><div class='widget HTML' id='HTML27'>
+<div class='widget-content'>
+<h1 class='subheader'>News about Google&#039;s Open Source projects and programs</h1>
+</div>
+</div></div>
+</div>
+<div class='bottom'><div></div></div>
+</a>
+</div>
+<br style='clear:both;'/>
+<div id='content-wrapper'>
+<div id='sidebar'>
+<div class='sidebar section' id='sidebar'><div class='widget HTML' id='HTML2'>
+<div class='widget-content'>
+<a href="http://google-opensource.blogspot.com/atom.xml"><img src="http://www.google.com/images/feed-icon.gif"/></a> <a href="http://google-opensource.blogspot.com/atom.xml">Site Feed</a><br/>
+<a href="http://fusion.google.com/add?feedurl=http://google-opensource.blogspot.com/atom.xml"><img border="0" alt="Add to Google" style="padding-top:5px;" width="104" src="http://buttons.googlesyndication.com/fusion/add.gif" height="17"/></a>
+<br/>
+<a href="http://feeds.feedburner.com/GoogleOpenSourceBlog"><img width="88" style="border:0" alt="" src="http://feeds.feedburner.com/~fc/GoogleOpenSourceBlog?bg=3300FF&amp;fg=FFCCFF&amp;anim=1" height="26"/></a>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=8698702854482141883&widgetType=HTML&widgetId=HTML2&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML2"));' target='configHTML2' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget HTML' id='HTML3'>
+<h2 class='title'>More Blogs from Google</h2>
+<div class='widget-content'>
+Visit our <a href="http://www.google.com/press/blogs/directory.html#tab0"> directory</a> for more information about Google blogs.
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=8698702854482141883&widgetType=HTML&widgetId=HTML3&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML3"));' target='configHTML3' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget Followers' id='Followers1'>
+<h2 class='title'>Followers</h2>
+<div class='widget-content'>
+<div id='Followers1-wrapper'>
+<div style='margin-right:2px;'>
+<script type="text/javascript">
+        if (!window.google || !google.friendconnect) {
+          document.write('<script type="text/javascript"' +
+              'src="http://www.google.com/friendconnect/script/friendconnect.js">' +
+              '</scr' + 'ipt>');
+        }
+      </script>
+<script type="text/javascript">
+      if (!window.registeredBloggerCallbacks) {
+        window.registeredBloggerCallbacks = true;
+
+        
+
+        
+        gadgets.rpc.register('requestReload', function() {
+          document.location.reload();
+        });
+
+        
+        gadgets.rpc.register('requestSignOut', function(siteId) {
+          
+          google.friendconnect.container.openSocialSiteId = siteId;
+          google.friendconnect.requestSignOut();
+        });
+      }
+    </script>
+<script type="text/javascript">
+    
+    function registerGetBlogUrls() {
+      gadgets.rpc.register('getBlogUrls', function() {
+        var holder = {};
+        
+          
+            
+            
+              holder.currentPost = "http://www.blogger.com/feeds/8698702854482141883/posts/default/5147731052265553468";
+            
+            
+            
+              holder.currentComments = "http://www.blogger.com/feeds/8698702854482141883/5147731052265553468/comments/default";
+            
+            holder.currentPostUrl = "";
+            holder.currentPostId = 5147731052265553468
+          
+          
+          
+            holder.postFeed = "http://www.blogger.com/feeds/8698702854482141883/posts/default";
+          
+          
+          
+            holder.commentFeed = "http://www.blogger.com/feeds/8698702854482141883/comments/default";
+          
+          holder.currentBlogUrl = "http://google-opensource.blogspot.com/";
+          holder.currentBlogId = "8698702854482141883";
+        
+        return holder;
+      });
+    }
+  </script>
+<script type="text/javascript">
+  if (!window.registeredCommonBloggerCallbacks) {
+    window.registeredCommonBloggerCallbacks = true;
+
+    gadgets.rpc.register('resize_iframe', function(height) {
+      var el = document.getElementById(this['f']);
+      if (el) {
+        el.style.height = height + 'px';
+      }
+    });
+
+    
+    gadgets.rpc.register('set_pref', function() {});
+
+    registerGetBlogUrls();
+  }
+  </script>
+<div id="div-ssw0dbp7azo1" style="width: 100%; "></div>
+<script type="text/javascript">
+    var skin = {};
+    skin['FACE_SIZE'] = '32';
+    skin['HEIGHT'] = "260";
+    skin['TITLE'] = "Followers";
+    skin['BORDER_COLOR'] = "transparent";
+    skin['ENDCAP_BG_COLOR'] = "transparent";
+    skin['ENDCAP_TEXT_COLOR'] = "#000000";
+    skin['ENDCAP_LINK_COLOR'] = "#000000";
+    skin['ALTERNATE_BG_COLOR'] = "transparent";
+    
+    skin['CONTENT_BG_COLOR'] = "transparent";
+    skin['CONTENT_LINK_COLOR'] = "#000000";
+    skin['CONTENT_TEXT_COLOR'] = "#000000";
+    skin['CONTENT_SECONDARY_LINK_COLOR'] = "#FFFFFF";
+    skin['CONTENT_SECONDARY_TEXT_COLOR'] = "#000000";
+    skin['CONTENT_HEADLINE_COLOR'] = "#000000";
+    skin['FONT_FACE'] = "Arial";
+    google.friendconnect.container.setParentUrl("/");
+    google.friendconnect.container["renderMembersGadget"](
+    {id: "div-ssw0dbp7azo1",
+     height: 260,
+     
+     
+     
+     site: "06754461107493205177",
+      
+     locale: 'en_US' },
+     skin);
+  </script>
+</div>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=8698702854482141883&widgetType=Followers&widgetId=Followers1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("Followers1"));' target='configFollowers1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div><div class='widget LinkList' id='LinkList3'>
+<h2>Stuff to read</h2>
+<div class='widget-content'>
+<ul>
+<li><a href='http://code.google.com/'>Google Code</a></li>
+<li><a href='http://google-code-updates.blogspot.com/'>Google Code-Updates</a></li>
+<li><a href='http://google-code-featured.blogspot.com/'>Google Code-Featured Projects</a></li>
+</ul>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=8698702854482141883&widgetType=LinkList&widgetId=LinkList3&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("LinkList3"));' target='configLinkList3' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div><div class='widget HTML' id='HTML5'>
+<h2 class='title'>More developer blog posts</h2>
+<div class='widget-content'>
+<div id="blog_posts">
+
+<script type="text/javascript">
+
+function build_posts(data) {
+  var container = document.getElementById('blog_posts');
+  var list = document.createElement('div');
+  // Loop through all data items returned
+  for (var i=0; i < data.items.length; i++) {
+  	
+    var item = data.items[i];
+var listElement= document.createElement('div');
+listElement.className="listelement";
+
+		var link = document.createElement('a');
+		link.appendChild(document.createTextNode(item.title));
+
+	link.href = item.alternate.href;
+        listElement.appendChild(link)
+	listElement.appendChild(document.createElement('br'));    
+       
+
+
+var bloglink = document.createElement('a');
+bloglink.appendChild(document.createTextNode(item.origin.title));
+bloglink.href = item.origin.htmlUrl;
+bloglink.className="smalllink";
+listElement.appendChild(bloglink);
+list.appendChild(listElement);
+
+
+ }
+  container.appendChild(list);
+}
+</script>
+
+
+<script src="http://www.google.com/reader/public/javascript/user/10949413115399023739/label/officialgoogleblogs-dev?n=5&callback=build_posts" type="text/javascript"></script>
+
+
+</div>
+
+<a href="http://www.google.com/reader/shared/user/10949413115399023739/label/officialgoogleblogs-dev">Read more...</a>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=8698702854482141883&widgetType=HTML&widgetId=HTML5&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML5"));' target='configHTML5' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget BlogArchive' id='BlogArchive1'>
+<h2>Archives</h2>
+<div class='widget-content'>
+<div id='ArchiveList'>
+<div id='BlogArchive1_ArchiveList'>
+<select id='BlogArchive1_ArchiveMenu'>
+<option value=''>Archives</option>
+<option value='http://google-opensource.blogspot.com/2010_12_01_archive.html'>December (6)</option>
+<option value='http://google-opensource.blogspot.com/2010_11_01_archive.html'>November (12)</option>
+<option value='http://google-opensource.blogspot.com/2010_10_01_archive.html'>October (10)</option>
+<option value='http://google-opensource.blogspot.com/2010_09_01_archive.html'>September (14)</option>
+<option value='http://google-opensource.blogspot.com/2010_08_01_archive.html'>August (10)</option>
+<option value='http://google-opensource.blogspot.com/2010_07_01_archive.html'>July (7)</option>
+<option value='http://google-opensource.blogspot.com/2010_06_01_archive.html'>June (10)</option>
+<option value='http://google-opensource.blogspot.com/2010_05_01_archive.html'>May (11)</option>
+<option value='http://google-opensource.blogspot.com/2010_04_01_archive.html'>April (14)</option>
+<option value='http://google-opensource.blogspot.com/2010_03_01_archive.html'>March (13)</option>
+<option value='http://google-opensource.blogspot.com/2010_02_01_archive.html'>February (8)</option>
+<option value='http://google-opensource.blogspot.com/2010_01_01_archive.html'>January (5)</option>
+<option value='http://google-opensource.blogspot.com/2009_12_01_archive.html'>December (6)</option>
+<option value='http://google-opensource.blogspot.com/2009_11_01_archive.html'>November (5)</option>
+<option value='http://google-opensource.blogspot.com/2009_10_01_archive.html'>October (11)</option>
+<option value='http://google-opensource.blogspot.com/2009_09_01_archive.html'>September (11)</option>
+<option value='http://google-opensource.blogspot.com/2009_08_01_archive.html'>August (8)</option>
+<option value='http://google-opensource.blogspot.com/2009_07_01_archive.html'>July (13)</option>
+<option value='http://google-opensource.blogspot.com/2009_06_01_archive.html'>June (6)</option>
+<option value='http://google-opensource.blogspot.com/2009_05_01_archive.html'>May (11)</option>
+<option value='http://google-opensource.blogspot.com/2009_04_01_archive.html'>April (16)</option>
+<option value='http://google-opensource.blogspot.com/2009_03_01_archive.html'>March (17)</option>
+<option value='http://google-opensource.blogspot.com/2009_02_01_archive.html'>February (10)</option>
+<option value='http://google-opensource.blogspot.com/2009_01_01_archive.html'>January (10)</option>
+<option value='http://google-opensource.blogspot.com/2008_12_01_archive.html'>December (10)</option>
+<option value='http://google-opensource.blogspot.com/2008_11_01_archive.html'>November (11)</option>
+<option value='http://google-opensource.blogspot.com/2008_10_01_archive.html'>October (13)</option>
+<option value='http://google-opensource.blogspot.com/2008_09_01_archive.html'>September (16)</option>
+<option value='http://google-opensource.blogspot.com/2008_08_01_archive.html'>August (12)</option>
+<option value='http://google-opensource.blogspot.com/2008_07_01_archive.html'>July (20)</option>
+<option value='http://google-opensource.blogspot.com/2008_06_01_archive.html'>June (14)</option>
+<option value='http://google-opensource.blogspot.com/2008_05_01_archive.html'>May (21)</option>
+<option value='http://google-opensource.blogspot.com/2008_04_01_archive.html'>April (16)</option>
+<option value='http://google-opensource.blogspot.com/2008_03_01_archive.html'>March (17)</option>
+<option value='http://google-opensource.blogspot.com/2008_02_01_archive.html'>February (17)</option>
+</select>
+</div>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=8698702854482141883&widgetType=BlogArchive&widgetId=BlogArchive1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("BlogArchive1"));' target='configBlogArchive1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div>
+<div class='widget HTML' id='HTML6'>
+<div class='widget-content'>
+<br/>
+The <i>Google Open Source Blog</i> is powered by Blogger. <a href="http://www.blogger.com/">Start your own weblog</a>.
+<br/><br/>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=8698702854482141883&widgetType=HTML&widgetId=HTML6&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML6"));' target='configHTML6' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget BloggerButton' id='BloggerButton1'>
+<div class='widget-content'>
+<a href='http://www.blogger.com'><img alt='Powered By Blogger' src='http://www.blogger.com/buttons/blogger-simple-white.gif'/></a>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=8698702854482141883&widgetType=BloggerButton&widgetId=BloggerButton1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("BloggerButton1"));' target='configBloggerButton1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div></div>
+</div>
+<div id='main-content'>
+<div class='main section' id='main'><div class='widget Blog' id='Blog1'>
+<div id='post-wrapper'>
+<div class='blog-posts hfeed'>
+<!-- google_ad_section_start -->
+<div class='post'>
+<a name='5147731052265553468'></a>
+<h3>
+<a href='http://google-opensource.blogspot.com/2008/05/export-git-project-to-google-code.html'>Export a Git Project to Google Code</a>
+</h3>
+<p class='post-subhead'>
+Tuesday, May 27, 2008 | 2:54 PM
+</p>
+<p class='post-subhead'>
+Labels:
+<a href='http://google-opensource.blogspot.com/search/label/git' rel='tag'>git</a>,
+<a href='http://google-opensource.blogspot.com/search/label/project%20hosting' rel='tag'>project hosting</a>,
+<a href='http://google-opensource.blogspot.com/search/label/svn' rel='tag'>svn</a>
+</p>
+<div class='post-body'>
+<p><span style="font-style: italic;" class="byline-author">By Benjamin Lynn, Google Developer Programs</span><br /><br />Git and Subversion can work together in many ways. Previously, we showed <a href="http://google-opensource.blogspot.com/2008/05/develop-with-git-on-google-code-project.html">how Git users can work with a project primarily managed by Subversion</a>. In this post, we describe one way to handle the converse: <a href="http://code.google.com/hosting/">Google Code</a> acts as a stable read-only Subversion mirror of a Git project. In this model, patches are first applied to the central Git repository and exported to Google Code later.<br /><br />Instead of merely providing a link to your repository, why not widen your audience with just a handful of commands? Open up your Git-hosted project to all Subversion users, whose patches can be integrated via Git.<br /><br />We presume some familiarity with Git, though blindly typing the commands below should produce acceptable results.<br /><h3>1. Create Subversion-aware Git clone</h3>Naturally, your official source tree lives on some Git-capable server, which we denote by <tt>$GIT_REPO</tt>. After <a href="http://code.google.com/hosting/createProject">creating a new Google Code project</a>, initialize an intermediary repository and fetch the Git tree:<br /><pre>$ git svn clone --username you https://your-project.googlecode.com/svn/trunk<br />$ cd trunk<br />$ git fetch $GIT_REPO</pre>The Subversion repository must be nonempty. A new Google Code project contains one revision by default, but if you reset it, you should also create a first revision.<br /><br />Create a temporary branch for the fetched repository, and tag its head:<br /><pre>$ git branch tmp $(cut -b-40 .git/FETCH_HEAD)<br />$ git tag -a -m "Last fetch" last tmp</pre><h3>2. Apply initial commit</h3>Unfortunately, Git treats the initial commit specially, and in particular, cannot rebase it. Work around this as follows:<br /><br /><pre>$ INIT_COMMIT=$(git log tmp --pretty=format:%H | tail -1)<br />$ git checkout $INIT_COMMIT .<br />$ git commit -C $INIT_COMMIT</pre><h3>3. Rebase and submit</h3>Apply all the other commits to the temporary branch, and make it the new master branch:<br /><pre>$ git rebase master tmp<br />$ git branch -M tmp master</pre>Lastly, commit the changes to Google Code:<br /><pre>$ git svn dcommit</pre>To more faithfully represent deleted subdirectories and copies of unmodified files, run <tt>dcommit</tt> with the options <tt>--rmdir</tt> and <tt>--find-copies-harder</tt>. Be aware the latter option can be expensive.<br /><h3>4. Update Google Code</h3>Later, export Git repository updates to Google Code as follows:<br /><br /><pre>$ git fetch $GIT_REPO<br />$ git branch tmp $(cut -b-40 .git/FETCH_HEAD)<br />$ git tag -a -m "Last fetch" newlast tmp<br />$ git rebase --onto master last tmp<br />$ git branch -M tmp master<br />$ git svn dcommit<br />$ mv .git/refs/tags/newlast .git/refs/tags/last</pre>For simplicity, we've exported directly to Google Code. It may be faster to first export to a local Subversion repository, and then <a href="http://code.google.com/support/bin/answer.py?answer=56673&amp;topic=10386">mirror it to Google Code via svnsync</a>.
+</p>
+</div>
+<div class='post-footer'>
+<p>
+<span class='post-footer-link'>
+</span>
+<span class='post-footer-link'>
+</span>
+<span class='post-footer-link'>
+ | <a href='http://www.blogger.com/email-post.g?blogID=8698702854482141883&postID=5147731052265553468' title='Email Post'>
+Email Post
+</a>
+</span></p>
+</div>
+</div>
+<div class='comments' id='comments'>
+<a name='comments'></a>
+<h4>
+7
+comments:
+</h4>
+<dl id='comments-block'>
+<dt class='comment-author openid-comment-icon' id='c3148512006797744552'>
+<a name='c3148512006797744552'></a>
+<p>
+<a href='http://stsquad.livejournal.com/' rel='nofollow'>stsquad</a>
+said...</p>
+</dt>
+<dd class='comment-body'>
+<p>This is all well and good but I spend most of my time converting from old legacy VC's to git. I hope you guys are considering what it will take to start hosting git repos. That would be the really useful feature :-)</p>
+</dd>
+<dd class='comment-footer'>
+<p class='comment-timestamp'>
+May 28, 2008 3:11 AM
+<span class='item-control blog-admin pid-53878285'>
+<a href='http://www.blogger.com/delete-comment.g?blogID=8698702854482141883&postID=3148512006797744552' title='Delete Comment'>
+<img src='http://www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</p>
+</dd>
+<dt class='comment-author blogger-comment-icon' id='c2010554014342515132'>
+<a name='c2010554014342515132'></a>
+<p>
+<a href='http://www.blogger.com/profile/08644487039766133215' rel='nofollow'>Llies</a>
+said...</p>
+</dt>
+<dd class='comment-body'>
+<p>Is there a chance of getting any of these initiatives on public subversion repository?</p>
+</dd>
+<dd class='comment-footer'>
+<p class='comment-timestamp'>
+October 5, 2008 12:31 PM
+<span class='item-control blog-admin pid-547689175'>
+<a href='http://www.blogger.com/delete-comment.g?blogID=8698702854482141883&postID=2010554014342515132' title='Delete Comment'>
+<img src='http://www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</p>
+</dd>
+<dt class='comment-author openid-comment-icon' id='c7612166586604055038'>
+<a name='c7612166586604055038'></a>
+<p>
+<a href='http://astraw.com/' rel='nofollow'>astraw.com</a>
+said...</p>
+</dt>
+<dd class='comment-body'>
+<p>Is anyone actually doing this? Can you give links to your git and svn repos so we can see how it's working?</p>
+</dd>
+<dd class='comment-footer'>
+<p class='comment-timestamp'>
+April 29, 2009 1:27 PM
+<span class='item-control blog-admin pid-1136397518'>
+<a href='http://www.blogger.com/delete-comment.g?blogID=8698702854482141883&postID=7612166586604055038' title='Delete Comment'>
+<img src='http://www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</p>
+</dd>
+<dt class='comment-author blogger-comment-icon' id='c3699478286876087062'>
+<a name='c3699478286876087062'></a>
+<p>
+<a href='http://www.blogger.com/profile/15789997984219590101' rel='nofollow'>Chris Kankiewicz</a>
+said...</p>
+</dt>
+<dd class='comment-body'>
+<p>I would love to see Google support hosting of Git repos as well.</p>
+</dd>
+<dd class='comment-footer'>
+<p class='comment-timestamp'>
+June 22, 2009 9:02 AM
+<span class='item-control blog-admin pid-826219940'>
+<a href='http://www.blogger.com/delete-comment.g?blogID=8698702854482141883&postID=3699478286876087062' title='Delete Comment'>
+<img src='http://www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</p>
+</dd>
+<dt class='comment-author blogger-comment-icon' id='c3415317931346079248'>
+<a name='c3415317931346079248'></a>
+<p>
+<a href='http://www.blogger.com/profile/17145286128205402750' rel='nofollow'>csexton</a>
+said...</p>
+</dt>
+<dd class='comment-body'>
+<p>I wanted to do something similar, but had problems with the &quot;git rebase --onto master last tmp&quot; step. I wound up using a modified process that I documented <a href="http://www.codeography.com/2010/03/17/howto-mirror-git-to-subversion.html" rel="nofollow">here</a></p>
+</dd>
+<dd class='comment-footer'>
+<p class='comment-timestamp'>
+March 23, 2010 1:19 PM
+<span class='item-control blog-admin pid-23954843'>
+<a href='http://www.blogger.com/delete-comment.g?blogID=8698702854482141883&postID=3415317931346079248' title='Delete Comment'>
+<img src='http://www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</p>
+</dd>
+<dt class='comment-author blogger-comment-icon' id='c8359677734420049855'>
+<a name='c8359677734420049855'></a>
+<p>
+<a href='http://www.blogger.com/profile/15402777661980514953' rel='nofollow'>l0b0</a>
+said...</p>
+</dt>
+<dd class='comment-body'>
+<p>It would be very nice if the article had used `git svn dcommit --dry-run`, to make sure the commits work before trying them.</p>
+</dd>
+<dd class='comment-footer'>
+<p class='comment-timestamp'>
+July 20, 2010 6:02 AM
+<span class='item-control blog-admin pid-180255023'>
+<a href='http://www.blogger.com/delete-comment.g?blogID=8698702854482141883&postID=8359677734420049855' title='Delete Comment'>
+<img src='http://www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</p>
+</dd>
+<dt class='comment-author blogger-comment-icon' id='c3091574277895966186'>
+<a name='c3091574277895966186'></a>
+<p>
+<a href='http://www.blogger.com/profile/18176768734553070826' rel='nofollow'>^!@</a>
+said...</p>
+</dt>
+<dd class='comment-body'>
+<p>This doc is sheer non sense.<br />git svn clone --username me  https://myproject.googlecode.com/svn/trunk<br />git: &#39;svn&#39; is not a git command. See &#39;git --help&#39;.<br /><br />Did you mean one of these?<br /> fsck<br /> show</p>
+</dd>
+<dd class='comment-footer'>
+<p class='comment-timestamp'>
+November 25, 2010 6:37 AM
+<span class='item-control blog-admin pid-1687659566'>
+<a href='http://www.blogger.com/delete-comment.g?blogID=8698702854482141883&postID=3091574277895966186' title='Delete Comment'>
+<img src='http://www.blogger.com/img/icon_delete13.gif'/>
+</a>
+</span>
+</p>
+</dd>
+</dl>
+<p class='comment-footer'>
+<a href='https://www.blogger.com/comment.g?blogID=8698702854482141883&postID=5147731052265553468' onclick=''>Post a Comment</a>
+</p>
+<div id='backlinks-container'>
+<div id='Blog1_backlinks-container'>
+<a name='links'></a><h4>
+</h4>
+<p class='comment-footer'>
+<a class='comment-link' href='' id='Blog1_backlinks-create-link' target='_blank'>
+</a>
+</p>
+</div>
+</div>
+</div>
+<!-- google_ad_section_end -->
+</div>
+<div class='blog-pager' id='blog-pager'><p>
+<a class='blog-pager-newer-link' href='http://google-opensource.blogspot.com/2008/05/heading-to-linuxtag-2008.html' id='Blog1_blog-pager-newer-link' title='Newer Post'>Newer Post</a>
+<a class='blog-pager-older-link' href='http://google-opensource.blogspot.com/2008/05/magic-of-open-source-at-google-io.html' id='Blog1_blog-pager-older-link' title='Older Post'>Older Post</a>
+<a class='home-link' href='http://google-opensource.blogspot.com/'>Home</a>
+</p>
+</div>
+<div class='clear'></div>
+<div class='post-feeds'>
+<div class='feed-links'>
+Subscribe to:
+<a class='feed-link' href='http://google-opensource.blogspot.com/feeds/5147731052265553468/comments/default' target='_blank' type='application/atom+xml'>Post Comments (Atom)</a>
+</div>
+</div>
+</div>
+</div></div>
+</div>
+</div>
+<!-- end content-wrapper -->
+</div>
+<!-- end outer-wrapper -->
+<div id='footer-graphic'>
+<div class='footer section' id='footer'><div class='widget HTML' id='HTML25'>
+<p class='widget-content'>
+&copy;2010 Google - <a href='http://google.com/intl/en/privacy.html'>Privacy Policy</a> - <a href='http://www.google.com/accounts/TOS?hl=en'>Terms of Service</a>
+</p>
+</div></div>
+</div></div>
+<script type="text/javascript">
+if (window.jstiming) window.jstiming.load.tick('widgetJsBefore');
+</script><script type="text/javascript" src="http://www.blogger.com/static/v1/widgets/512629240-widgets.js"></script>
+<script type='text/javascript'>
+if (typeof(BLOG_attachCsiOnload) != 'undefined' && BLOG_attachCsiOnload != null) { window['blogger_templates_experiment_id'] = "templatesV1";window['blogger_blog_id'] = '8698702854482141883';BLOG_attachCsiOnload('item_'); }_WidgetManager._Init('http://www.blogger.com/rearrange?blogID=8698702854482141883','http://google-opensource.blogspot.com/2008/05/export-git-project-to-google-code.html','8698702854482141883');
+_WidgetManager._SetPageActionUrl('http://www.blogger.com/display?blogID=8698702854482141883','McKPAwDBXbdhYv0nCtwtqf_W714:1292617156944','AOuZoY6gBJK7xpmFagqWcFK83i7HgxfsLw:1292617156944');
+_WidgetManager._SetDataContext([{'name': 'blog', 'data': {'title': 'Google Open Source Blog', 'pageType': 'item', 'url': 'http://google-opensource.blogspot.com/2008/05/export-git-project-to-google-code.html', 'canonicalUrl': 'http://google-opensource.blogspot.com/2008/05/export-git-project-to-google-code.html', 'homepageUrl': 'http://google-opensource.blogspot.com/', 'enabledCommentProfileImages': false, 'searchLabel': '', 'searchQuery': '', 'pageName': 'Export a Git Project to Google Code', 'pageTitle': 'Google Open Source Blog: Export a Git Project to Google Code', 'encoding': 'UTF-8', 'locale': 'en-US', 'isPrivate': false, 'isMobile': false, 'mobileClass': '', 'languageDirection': 'ltr', 'feedLinks': '\74link rel\75\42alternate\42 type\75\42application/atom+xml\42 title\75\42Google Open Source Blog - Atom\42 href\75\42http://google-opensource.blogspot.com/feeds/posts/default\42 /\76\n\74link rel\75\42alternate\42 type\75\42application/rss+xml\42 title\75\42Google Open Source Blog - RSS\42 href\75\42http://google-opensource.blogspot.com/feeds/posts/default?alt\75rss\42 /\76\n\74link rel\75\42service.post\42 type\75\42application/atom+xml\42 title\75\42Google Open Source Blog - Atom\42 href\75\42http://www.blogger.com/feeds/8698702854482141883/posts/default\42 /\76\n\74link rel\75\42EditURI\42 type\75\42application/rsd+xml\42 title\75\42RSD\42 href\75\42http://www.blogger.com/rsd.g?blogID\758698702854482141883\42 /\76\n\74link rel\75\42alternate\42 type\75\42application/atom+xml\42 title\75\42Google Open Source Blog - Atom\42 href\75\42http://google-opensource.blogspot.com/feeds/5147731052265553468/comments/default\42 /\76\n', 'meTag': '', 'openIdOpTag': '', 'imageSrcTag': '', 'latencyHeadScript': '\74script type\75\42text/javascript\42\76(function() { var a\75window;function c(b){this.t\75{};this.tick\75function(d,i,e){e\75e?e:(new Date).getTime();this.t[d]\75[e,i]};this.tick(\42start\42,null,b)}var f\75new c;a.jstiming\75{Timer:c,load:f};try{var g\75null;if(a.chrome\46\46a.chrome.csi)g\75Math.floor(a.chrome.csi().pageT);if(g\75\75null)if(a.gtbExternal)g\75a.gtbExternal.pageT();if(g\75\75null)if(a.external)g\75a.external.pageT;if(g)a.jstiming.pt\75g}catch(h){};a.tickAboveFold\75function(b){b\75b;var d\0750;if(b.offsetParent){do d+\75b.offsetTop;while(b\75b.offsetParent)}b\75d;b\74\075750\46\46a.jstiming.load.tick(\42aft\42)};var j\75false;function k(){if(!j){j\75true;a.jstiming.load.tick(\42firstScrollTime\42)}}a.addEventListener?a.addEventListener(\42scroll\42,k,false):a.attachEvent(\42onscroll\42,k);\n })();\74/script\076', 'mobileHeadScript': ''}}]);
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML25', 'footer', null, document.getElementById('HTML25'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML26', 'header_titles', null, document.getElementById('HTML26'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML27', 'header_titles', null, document.getElementById('HTML27'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML2', 'sidebar', null, document.getElementById('HTML2'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML3', 'sidebar', null, document.getElementById('HTML3'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_FollowersView', new _WidgetInfo('Followers1', 'sidebar', null, document.getElementById('Followers1'), {'title': 'Followers', 'codeSnippet': '\74script type\75\42text/javascript\42\76\n        if (!window.google || !google.friendconnect) {\n          document.write(\47\74script type\75\42text/javascript\42\47 +\n              \47src\75\42http://www.google.com/friendconnect/script/friendconnect.js\42\76\47 +\n              \47\74/scr\47 + \47ipt\76\47);\n        }\n      \74/script\76\n\74script type\75\42text/javascript\42\76\n      if (!window.registeredBloggerCallbacks) {\n        window.registeredBloggerCallbacks \75 true;\n\n        \n\n        \n        gadgets.rpc.register(\47requestReload\47, function() {\n          document.location.reload();\n        });\n\n        \n        gadgets.rpc.register(\47requestSignOut\47, function(siteId) {\n          \n          google.friendconnect.container.openSocialSiteId \75 siteId;\n          google.friendconnect.requestSignOut();\n        });\n      }\n    \74/script\76\n\74script type\75\42text/javascript\42\76\n    \n    function registerGetBlogUrls() {\n      gadgets.rpc.register(\47getBlogUrls\47, function() {\n        var holder \75 {};\n        \n          \n            \n            \n              holder.currentPost \75 \42http://www.blogger.com/feeds/8698702854482141883/posts/default/5147731052265553468\42;\n            \n            \n            \n              holder.currentComments \75 \42http://www.blogger.com/feeds/8698702854482141883/5147731052265553468/comments/default\42;\n            \n            holder.currentPostUrl \75 \42\42;\n            holder.currentPostId \75 5147731052265553468\n          \n          \n          \n            holder.postFeed \75 \42http://www.blogger.com/feeds/8698702854482141883/posts/default\42;\n          \n          \n          \n            holder.commentFeed \75 \42http://www.blogger.com/feeds/8698702854482141883/comments/default\42;\n          \n          holder.currentBlogUrl \75 \42http://google-opensource.blogspot.com/\42;\n          holder.currentBlogId \75 \428698702854482141883\42;\n        \n        return holder;\n      });\n    }\n  \74/script\76\n\74script type\75\42text/javascript\42\76\n  if (!window.registeredCommonBloggerCallbacks) {\n    window.registeredCommonBloggerCallbacks \75 true;\n\n    gadgets.rpc.register(\47resize_iframe\47, function(height) {\n      var el \75 document.getElementById(this[\47f\47]);\n      if (el) {\n        el.style.height \75 height + \47px\47;\n      }\n    });\n\n    \n    gadgets.rpc.register(\47set_pref\47, function() {});\n\n    registerGetBlogUrls();\n  }\n  \74/script\76\n\74div id\75\42div-19gn91em476lo\42 style\75\42width: 100%; \42\76\74/div\76\n\74script type\75\42text/javascript\42\76\n    var skin \75 {};\n    skin[\47FACE_SIZE\47] \75 \04732\47;\n    skin[\47HEIGHT\47] \75 \042260\42;\n    skin[\47TITLE\47] \75 \42Followers\42;\n    skin[\47BORDER_COLOR\47] \75 \42transparent\42;\n    skin[\47ENDCAP_BG_COLOR\47] \75 \42transparent\42;\n    skin[\47ENDCAP_TEXT_COLOR\47] \75 \42#000000\42;\n    skin[\47ENDCAP_LINK_COLOR\47] \75 \42#000000\42;\n    skin[\47ALTERNATE_BG_COLOR\47] \75 \42transparent\42;\n    \n    skin[\47CONTENT_BG_COLOR\47] \75 \42transparent\42;\n    skin[\47CONTENT_LINK_COLOR\47] \75 \42#000000\42;\n    skin[\47CONTENT_TEXT_COLOR\47] \75 \42#000000\42;\n    skin[\47CONTENT_SECONDARY_LINK_COLOR\47] \75 \42#FFFFFF\42;\n    skin[\47CONTENT_SECONDARY_TEXT_COLOR\47] \75 \42#000000\42;\n    skin[\47CONTENT_HEADLINE_COLOR\47] \75 \42#000000\42;\n    skin[\47FONT_FACE\47] \75 \42Arial\42;\n    google.friendconnect.container.setParentUrl(\42/\42);\n    google.friendconnect.container[\42renderMembersGadget\42](\n    {id: \42div-19gn91em476lo\42,\n     height: 260,\n     \n     \n     \n     site: \04206754461107493205177\42,\n      \n     locale: \47en_US\47 },\n     skin);\n  \74/script\076'}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_LinkListView', new _WidgetInfo('LinkList3', 'sidebar', null, document.getElementById('LinkList3'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML5', 'sidebar', null, document.getElementById('HTML5'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_BlogArchiveView', new _WidgetInfo('BlogArchive1', 'sidebar', null, document.getElementById('BlogArchive1'), {'languageDirection': 'ltr'}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML6', 'sidebar', null, document.getElementById('HTML6'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_BloggerButtonView', new _WidgetInfo('BloggerButton1', 'sidebar', null, document.getElementById('BloggerButton1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_NavbarView', new _WidgetInfo('Navbar1', 'navbar'));
+_WidgetManager._RegisterWidget('_BlogView', new _WidgetInfo('Blog1', 'main', null, document.getElementById('Blog1'), {'cmtInteractionsEnabled': false, 'commentInteractionIframeUrl': 'http://www.blogger.com/comment-interaction-iframe.g?blogId\758698702854482141883', 'showBacklinks': true, 'postId': '5147731052265553468', 'mobile': false}, 'displayModeFull'));
+</script>
+</body>
+</html>
