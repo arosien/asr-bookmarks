@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+	<title>Cloning a Git SVN Clone</title>
+	<meta name="author" content="Thomas Aylott">
+
+	<link rel="canonical" href="/articles/2008/04/22/cloning-a-git-svn-clone.html">
+	<link rel="openid.server" href="http://www.myopenid.com/server">
+<link rel="openid.delegate" href="http://subtlegradient.myopenid.com/">
+<meta http-equiv="X-XRDS-Location" content="http://subtlegradient.myopenid.com/xrds">
+
+<title>Projects by Thomas Aylott — subtleGradient</title>
+<!-- <link rel="alternate" href="/articles/atom.xml" title="Articles Atom Feed" type="application/atom+xml"> -->
+<link rel="alternate" href="http://feeds2.feedburner.com/subtlegradient/articles" title="Articles Atom Feed" type="application/atom+xml">
+
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="viewport" content="width=333, initial-scale=0.6667">
+
+<script src="/static/js/sx.js?2" type="text/javascript" charset="utf-8"> </script>
+
+	<meta name="description" content="Cloning a Git SVN Clone">
+	<meta name="keywords" content="about, and, available, been, both, can, clone, com, commit, creating, date, everything, figure, fork, from, git, github, good, how, http, into, keep, make, original, out, own, publicly, pull, push, repo, subtlegradient, subversion, svn, that, the, then, trying, way, with, you">
+</head>
+<body>
+<div id="nav">
+	<a rel="directory" href="/articles/">Articles</a>
+</div>
+<div id="content">
+<h1>Cloning a Git SVN Clone</h1>
+<p>I&#8217;ve been trying to figure out a good way to make a publicly available <code>git-svn</code> repo on <a href="http://github.com/subtlegradient">GitHub.com</a> that I can clone and then keep up to date with both the original svn repo and the GitHub repo and commit everything into my own fork.</p>
+<p>So, how do you go about creating a Git repo that can push and pull to and from both Git and Subversion?</p>
+<h3>Clone the public repo</h3>
+<pre>
+git clone git://github.com/drnic/ruby-tmbundle.git Ruby.tmbundle
+cd Ruby.tmbundle/
+</pre>
+<h3>Fork the repo. <em>optional</em></h3>
+<pre>
+git checkout master
+git remote rm origin
+git remote add origin git@github.com:subtleGradient/ruby-tmbundle.git
+git pull
+</pre>
+<h3>Set your subversion remote</h3>
+<p>Run this to set your subversion remote and pickup all your existing history asif you&#8217;d done a <code>git svn clone ...</code>.</p>
+<pre>
+git branch macromates
+git checkout macromates
+
+git svn init http://macromates.com/svn/Bundles/trunk/Bundles/Ruby.tmbundle -R svn
+cp .git/refs/remotes/origin/master .git/refs/remotes/git-svn
+git svn fetch
+</pre>
+<h4>This should give you&#8230;</h4>
+<pre class="result">...
+r9048 = a0bdcedd42f7ed1867d32120bbf92bab7b72f085
+r9051 = 4eb5fee1621549f676f9d5e085f1ccf03489e334
+r9362 = 28b1ea1529b071fa10ba458e816e4a9454f85d8a
+Done rebuilding .git/svn/git-svn/.rev_map.dfb7d73b-c2ec-0310-8fea-fb051d288c6d
+</pre>
+<h4>If you get this error&#8230;</h4>
+<pre class="error-result">
+Remote ref refs/remote/git-svn is tracked by
+  "svn-remote.svn.fetch=:refs/remotes/git-svn"
+and
+  "svn-remote.svn.fetch=:refs/remotes/git-svn"
+Please resolve this ambiguity in your git configuration file before continuing
+</pre>
+<p>&#8230; then you probably ran <code>git svn init</code> twice without passing in a new name for each one. You&#8217;ll have to remove the extra <code>fetch = :refs/remotes/git-svn</code> reference if your <code>.git/config</code> file.</p>
+<h3>Keeping up-to-date</h3>
+<p>Fetch from your public subversion repo&#8230;</p>
+<pre>
+git checkout macromates
+git svn fetch svn
+</pre>
+<p>Pull from your public Git origin&#8230;</p>
+<pre>
+git checkout master
+git pull origin master:master
+</pre>
+<p>Now you have two branches in the same Git repo that pull from a separate <span class="caps">SCM</span>.</p>
+<p><em><strong>Congrats</strong>, you so totally rock!</em></p>
+<h3>Back to <code>master</code></h3>
+<p>Once you&#8217;re done setting up and fetching changes from subversion, you should switch back to your <code>master</code> branch.</p>
+<pre>git checkout master</pre>
+<h3>That&#8217;s it!</h3>
+<p><em>Next time&#8230;</em> fetching, merging and pushing back!</p>
+</div>
+<div id="related-posts">
+	<h3>Related Articles</h3>
+	<ul>
+		
+		<li><span>29 Jul 2009</span> <a href="/articles/2009/07/29/css_position_fixed_for_ie6.html">CSS Position Fixed for IE6</a></li>
+		
+		<li><span>23 Jul 2009</span> <a href="/articles/2009/07/23/subtle_hover_css_inspect_bookmarklet.html">Subtle Hover CSS Inspect Bookmarklet</a></li>
+		
+		<li><span>22 Jun 2009</span> <a href="/articles/2009/06/22/replace_document_write_using_mootools.html">Replace document.write using MooTools</a></li>
+		
+		<li><span>21 Jun 2009</span> <a href="/articles/2009/06/21/testing_a_way_to_post_to_my_blog_quickly.html">Testing a way to post to my blog quickly</a></li>
+		
+		<li><span>21 Jun 2009</span> <a href="/articles/2009/06/21/jekyll_quick_post_shell_script.html">Jekyll quick post shell script</a></li>
+		
+		<li><span>09 Apr 2009</span> <a href="/articles/2009/04/09/mootools-subtle-templates.html">Blazing fast Semantic JS Templating with edit-in-place templates!</a></li>
+		
+		<li><span>07 Mar 2009</span> <a href="/articles/2009/03/07/subtleclickall-bookmarklet.html">SubtleClickAll Bookmarklet</a></li>
+		
+		<li><span>05 Dec 2008</span> <a href="/articles/2008/12/05/mootools-databinding-plugins-coming-soon.html">MooTools databinding plugins coming soon</a></li>
+		
+		<li><span>25 Oct 2008</span> <a href="/articles/2008/10/25/tabs-or-spaces.html">Tabs or Spaces?</a></li>
+		
+		<li><span>20 Oct 2008</span> <a href="/articles/2008/10/20/mootools-default-to-hide-fade-later.html">How to have a box default to hidden and then fade it in later</a></li>
+		
+	</ul>
+</div>
+
+</body>
+</html>
