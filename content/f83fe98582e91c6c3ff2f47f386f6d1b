@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Stopwatch</title>
+   <meta name="author" content="Alex Boisvert" />
+
+   <!-- syntax highlighting CSS -->
+   <link rel="stylesheet" href="css/syntax.css" type="text/css" />
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="css/screen.css" type="text/css" media="screen, projection" />
+
+   <link rel="SHORTCUT ICON" href="favicon.ico"/>
+   <link rel="icon" type="image/vnd.microsoft.icon" href="favicon.ico"/>
+
+   <!-- Typekit -->
+   <!--
+   <script type="text/javascript" src="http://use.typekit.com/jpd0pfm.js"></script>
+   <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+   -->
+
+   <!-- Bizographics -->
+   <script type="text/javascript">_bizo_data_partner_id = 336</script>
+   <script type="text/javascript" src="http://js.bizographics.com/convert_data.js"></script>
+
+</head>
+<body>
+
+<div class="site">
+  <div class="title">
+    <a href="/stopwatch"><img src="images/stopwatch.gif" alt="Stopwatch"</a>
+  </div>
+
+  <h2>Monitor your production Scala (and other <span class="caps">JVM</span>) applications.</h2>
+<p>This small Scala library can be used to determine application performance bottlenecks, user/application interactions, and application scalability. Each stopwatch gathers summary statistics such as hits, execution times (total, average, minimum, maximum, standard deviation), distribution, simultaneous requests or concurrent threads.</p>
+<h2>Usage</h2>
+<h3>Measuring your code</h3>
+<div class="highlight"><pre><code class="scala"><span class="k">import</span> <span class="nn">stopwatch.Stopwatch</span>
+
+<span class="c1">// A stopwatch surrounds your code</span>
+<span class="nc">Stopwatch</span><span class="o">(</span><span class="s">&quot;someName&quot;</span><span class="o">)</span> <span class="o">{</span>
+  <span class="c1">// code being timed</span>
+  <span class="n">doSomething</span><span class="o">()</span>
+  <span class="n">somethingElse</span><span class="o">()</span>
+<span class="o">}</span>
+</code></pre>
+</div><h3>Non-inlined code</h3>
+<p>Sometimes you want to measure the performance of an operation which is not emcompassed by a single code section.  You can then use the <code>start</code> and <code>stop</code> methods to delimit the scope of the operation.</p>
+<div class="highlight"><pre><code class="scala"><span class="c1">// get a stopwatch instance</span>
+<span class="k">val</span> <span class="n">stopwatch</span> <span class="k">=</span> <span class="nc">Stopwatch</span><span class="o">.</span><span class="n">start</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">)</span>
+
+<span class="c1">// and later, elsewhere in your code</span>
+<span class="c1">// use the same instance to signal completion</span>
+<span class="n">stopwatch</span><span class="o">.</span><span class="n">stop</span><span class="o">()</span>
+
+<span class="c1">// if there was an error, use error() instead</span>
+<span class="n">stopwatch</span><span class="o">.</span><span class="n">error</span><span class="o">()</span>
+</code></pre>
+</div><p>These <code>start</code>, <code>stop</code> and <code>error</code> methods can also be used directly by <span class="caps">JVM</span> languages other than Scala (e.g. Java, Closure, Groovy) to provide more idiomatic wrappers for inlined code measurement.</p>
+<h3>Groups</h3>
+<p><code>StopwatchGroup</code> &#8217;s are useful to organize stopwatches, avoid name clashes, and specify behavior for multiple stopwatches at once.</p>
+<p>The singleton <code>Stopwatch</code> object that has been used so far in the examples is actually the default <code>StopwatchGroup</code>.  You can define other stopwatch groups, each having their own distribution range and enabled/disabled state.</p>
+<p>By default, groups are disabled and have no defined range.</p>
+<div class="highlight"><pre><code class="scala"><span class="k">import</span> <span class="nn">stopwatch.Stopwatch</span>
+<span class="k">import</span> <span class="nn">stopwatch.StopwatchGroup</span>
+<span class="k">import</span> <span class="nn">stopwatch.TimeUnit._</span>
+
+<span class="k">val</span> <span class="n">incomingRequests</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">StopwatchGroup</span><span class="o">(</span><span class="s">&quot;Incoming Requests&quot;</span><span class="o">)</span>
+
+<span class="c1">// configure</span>
+<span class="n">incomingRequests</span><span class="o">.</span><span class="n">enabled</span> <span class="k">=</span> <span class="kc">true</span>
+<span class="n">incomingRequests</span><span class="o">.</span><span class="n">range</span> <span class="k">=</span> <span class="nc">StopwatchRange</span><span class="o">(</span><span class="mi">0</span> <span class="n">seconds</span><span class="o">,</span> <span class="mi">30</span> <span class="n">seconds</span><span class="o">,</span> <span class="mi">1000</span> <span class="n">millis</span><span class="o">)</span>
+
+<span class="c1">// usage for code blocks</span>
+<span class="n">incomingRequests</span><span class="o">(</span><span class="n">clientId</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">doStuffForClient</span><span class="o">()</span>
+<span class="o">}</span>
+</code></pre>
+</div><h3>Enabling and disabling</h3>
+<p>There are 3 ways to manage if and how stopwatches are enabled.</p>
+<p><strong>1) At the group level</strong></p>
+<p>As we have seen above, you can enable/disable stopwatches at the group level,</p>
+<div class="highlight"><pre><code class="scala"><span class="c1">// the default group</span>
+<span class="nc">Stopwatch</span><span class="o">.</span><span class="n">enabled</span> <span class="k">=</span> <span class="kc">true</span>
+
+<span class="c1">// or if you created your own group</span>
+<span class="n">myStopwatchGroup</span><span class="o">.</span><span class="n">enabled</span> <span class="k">=</span> <span class="kc">false</span>
+</code></pre>
+</div><p>By default, groups are disabled.  You must explicitly enable them to monitor your application.   Also, the group&#8217;s <code>enabled</code> property overrides stopwatches&#8217; <code>enabled</code> property (see below).</p>
+<p><strong>2) &#8220;On demand&#8221;</strong></p>
+<p>If a group is enabled and a new stopwatch name is used, the <code>enableOnDemand</code> property controls whether the new stopwatch is automatically enabled,</p>
+<div class="highlight"><pre><code class="scala"><span class="c1">// the default group</span>
+<span class="nc">Stopwatch</span><span class="o">.</span><span class="n">enableOnDemand</span> <span class="k">=</span> <span class="kc">true</span>
+
+<span class="c1">// or if you created your own group</span>
+<span class="n">myStopwatchGroup</span><span class="o">.</span><span class="n">enableOnDemand</span> <span class="k">=</span> <span class="kc">false</span>
+
+<span class="c1">// when enableOnDemand is false,</span>
+<span class="c1">// you must explicitly enable stopwatches</span>
+<span class="n">myStopwatchGroup</span><span class="o">.</span><span class="n">enable</span><span class="o">(</span><span class="s">&quot;someCode&quot;</span><span class="o">)</span>
+</code></pre>
+</div><p>Otherwise, non-preinitialized stopwatches are disabled by default.  If <code>enableOnDemand</code> is <code>false</code>, you must explicitly enable stopwatches (see below).</p>
+<p><strong>3) Individual stopwatches</strong></p>
+<p>In addition to enabling/disabling at the group level, you can also enable and disable individual stopwatches explicitly,</p>
+<div class="highlight"><pre><code class="scala"><span class="c1">// the default group</span>
+<span class="nc">Stopwatch</span><span class="o">.</span><span class="n">enable</span><span class="o">(</span><span class="s">&quot;myCode&quot;</span><span class="o">)</span>
+<span class="c1">// or...</span>
+<span class="nc">Stopwatch</span><span class="o">.</span><span class="n">disable</span><span class="o">(</span><span class="s">&quot;myCode&quot;</span><span class="o">)</span>
+
+<span class="c1">// if you created your own group</span>
+<span class="n">myStopwatchGroup</span><span class="o">.</span><span class="n">enable</span><span class="o">(</span><span class="s">&quot;myCode&quot;</span><span class="o">)</span>
+<span class="c1">// or ...</span>
+<span class="n">myStopwatchGroup</span><span class="o">.</span><span class="n">disable</span><span class="o">(</span><span class="s">&quot;myCode&quot;</span><span class="o">)</span>
+</code></pre>
+</div><h3>Time Distribution</h3>
+<p>You can define a time distribution range on stopwatch groups to plot execution time distribution graphs.</p>
+<div class="highlight"><pre><code class="scala"><span class="k">import</span> <span class="nn">stopwatch.Stopwatch</span>
+<span class="k">import</span> <span class="nn">stopwatch.StopwatchRange</span>
+<span class="k">import</span> <span class="nn">stopwatch.TimeUnit._</span>
+
+<span class="c1">// somewhere in your code, before using the stopwatch</span>
+<span class="c1">// distribution:  0s to 15s in 500ms intervals</span>
+<span class="nc">Stopwatch</span><span class="o">.</span><span class="n">range</span> <span class="k">=</span> <span class="nc">StopwatchRange</span><span class="o">(</span><span class="mi">0</span> <span class="n">seconds</span><span class="o">,</span> <span class="mi">15</span> <span class="n">seconds</span><span class="o">,</span> <span class="mi">500</span> <span class="n">millis</span><span class="o">)</span>
+</code></pre>
+</div><h3>Resetting statistics</h3>
+<p>You may programmatically reset the values of stopwatches if your application has multiple cycles or if you want to recalibrate after the <span class="caps">JVM</span> (&#8220;HotSpot compiler&#8221;) has had time to optimize your code.</p>
+<div class="highlight"><pre><code class="scala"><span class="k">import</span> <span class="nn">stopwatch.Stopwatch</span>
+
+<span class="nc">Stopwatch</span><span class="o">.</span><span class="n">reset</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">)</span>
+</code></pre>
+</div><h3>Displaying statistics</h3>
+<p>The &#8220;low-tech&#8221; way to display statistics is to use one of the <code>toString</code> methods: <code>toShortString</code>, <code>toMediumString</code>, <code>toLongString</code>.  This can be useful if you want to log statistics directly to the <code>Console</code> or through an existing logging frameworks, such as Log4J.</p>
+<div class="highlight"><pre><code class="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">stats</span> <span class="k">=</span> <span class="nc">Stopwatch</span><span class="o">.</span><span class="n">snapshot</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">)</span>
+
+<span class="c1">// summary only</span>
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">toShortString</span>
+<span class="n">res3</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="nc">Stopwatch</span> <span class="s">&quot;test&quot;</span> <span class="o">{</span><span class="n">hit</span><span class="o">=</span><span class="mi">2</span><span class="o">,</span> <span class="n">min</span><span class="o">=</span><span class="mi">1838</span><span class="n">ms</span><span class="o">,</span> <span class="n">avg</span><span class="o">=</span><span class="mi">2148</span><span class="n">ms</span><span class="o">,</span> <span class="n">max</span><span class="o">=</span><span class="mi">2457</span><span class="n">ms</span><span class="o">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">4296</span><span class="n">ms</span><span class="o">,</span> <span class="n">stdDev</span><span class="o">=</span><span class="mi">437</span><span class="n">ms</span><span class="o">}</span>
+</code></pre>
+</div><p><br/></p>
+<div class="highlight"><pre><code class="scala"><span class="c1">// includes thread info</span>
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">toMediumString</span>
+<span class="n">res4</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="nc">Stopwatch</span> <span class="s">&quot;test&quot;</span> <span class="o">{</span><span class="n">hits</span><span class="o">=</span><span class="mi">2</span><span class="o">,</span> <span class="n">throughput</span><span class="o">=</span><span class="mf">0.814</span><span class="o">/</span><span class="n">s</span><span class="o">,</span> <span class="n">minTime</span><span class="o">=</span><span class="mi">1838</span><span class="n">ms</span><span class="o">,</span> <span class="n">avgTime</span><span class="o">=</span><span class="mi">2148</span><span class="n">ms</span><span class="o">,</span> <span class="n">maxTime</span><span class="o">=</span><span class="mi">2457</span><span class="n">ms</span><span class="o">,</span> <span class="n">totalTime</span><span class="o">=</span><span class="mi">4296</span><span class="n">ms</span><span class="o">,</span> <span class="n">stdDev</span><span class="o">=</span><span class="mi">437</span><span class="n">ms</span><span class="o">,</span> <span class="n">currentThreads</span><span class="o">=</span><span class="mi">0</span><span class="o">,</span> <span class="n">avgThreads</span><span class="o">=</span><span class="mf">1.50</span><span class="o">,</span> <span class="n">maxThreads</span><span class="o">=</span><span class="mi">2</span><span class="o">,</span> <span class="n">first</span><span class="o">=</span><span class="mi">2009</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">21</span> <span class="mi">11</span><span class="k">:</span><span class="err">22</span><span class="kt">:</span><span class="err">54</span><span class="kt">.</span><span class="err">708</span> <span class="kt">PST</span><span class="o">,</span> <span class="n">last</span><span class="o">=</span><span class="mi">2009</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">21</span> <span class="mi">11</span><span class="k">:</span><span class="err">22</span><span class="kt">:</span><span class="err">57</span><span class="kt">.</span><span class="err">166</span> <span class="kt">PST</span><span class="o">}</span>
+</code></pre>
+</div><p><br/></p>
+<div class="highlight"><pre><code class="scala"><span class="c1">// includes threads + time distribution</span>
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">toLongString</span>
+<span class="n">res5</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="nc">Stopwatch</span> <span class="s">&quot;test&quot;</span> <span class="o">{</span><span class="n">hits</span><span class="o">=</span><span class="mi">2</span><span class="o">,</span> <span class="n">throughput</span><span class="o">=</span><span class="mf">0.814</span><span class="o">/</span><span class="n">s</span><span class="o">,</span> <span class="n">minTime</span><span class="o">=</span><span class="mi">1838</span><span class="n">ms</span><span class="o">,</span> <span class="n">avgTime</span><span class="o">=</span><span class="mi">2148</span><span class="n">ms</span><span class="o">,</span> <span class="n">maxTime</span><span class="o">=</span><span class="mi">2457</span><span class="n">ms</span><span class="o">,</span> <span class="n">totalTime</span><span class="o">=</span><span class="mi">4296</span><span class="n">ms</span><span class="o">,</span> <span class="n">stdDev</span><span class="o">=</span><span class="mi">437</span><span class="n">ms</span><span class="o">,</span> <span class="n">currentThreads</span><span class="o">=</span><span class="mi">0</span><span class="o">,</span> <span class="n">avgThreads</span><span class="o">=</span><span class="mf">1.50</span><span class="o">,</span> <span class="n">maxThreads</span><span class="o">=</span><span class="mi">2</span><span class="o">,</span> <span class="n">first</span><span class="o">=</span><span class="mi">2009</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">21</span> <span class="mi">11</span><span class="k">:</span><span class="err">22</span><span class="kt">:</span><span class="err">54</span><span class="kt">.</span><span class="err">708</span> <span class="kt">PST</span><span class="o">,</span> <span class="n">last</span><span class="o">=</span><span class="mi">2009</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">21</span> <span class="mi">11</span><span class="k">:</span><span class="err">22</span><span class="kt">:</span><span class="err">57</span><span class="kt">.</span><span class="err">166</span> <span class="kt">PST</span><span class="o">}</span> <span class="nc">Distribution</span> <span class="o">{</span><span class="n">under</span><span class="o">=</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">-</span><span class="mi">1000</span><span class="n">ms</span><span class="k">:</span> <span class="err">0</span><span class="o">,</span> <span class="mi">1000</span><span class="o">-</span><span class="mi">2000</span><span class="n">ms</span><span class="k">:</span> <span class="err">1</span><span class="o">,</span> <span class="mi">2000</span><span class="o">-</span><span class="mi">3000</span><span class="n">ms</span><span class="k">:</span> <span class="err">1</span><span class="o">,</span> <span class="mi">3000</span><span class="o">-</span><span class="mi">4000</span><span class="n">ms</span><span class="k">:</span> <span class="err">0</span><span class="o">,</span> <span class="mi">4000</span><span class="o">-</span><span class="mi">5000</span><span class="n">ms</span><span class="k">:</span> <span class="err">0</span><span class="o">,</span> <span class="mi">5000</span><span class="o">-</span><span class="mi">6000</span><span class="n">ms</span><span class="k">:</span> <span class="err">0</span><span class="o">,</span> <span class="mi">6000</span><span class="o">-</span><span class="mi">7000</span><span class="n">ms</span><span class="k">:</span> <span class="err">0</span><span class="o">,</span> <span class="mi">7000</span><span class="o">-</span><span class="mi">8000</span><span class="n">ms</span><span class="k">:</span> <span class="err">0</span><span class="o">,</span> <span class="mi">8000</span><span class="o">-</span><span class="mi">9000</span><span class="n">ms</span><span class="k">:</span> <span class="err">0</span><span class="o">,</span> <span class="mi">9000</span><span class="o">-</span><span class="mi">10000</span><span class="n">ms</span><span class="k">:</span> <span class="err">0</span><span class="o">,</span> <span class="n">over</span><span class="o">=</span><span class="mi">0</span><span class="o">}</span>
+</code></pre>
+</div><p>The standard <code>toString</code> method is equivalent to <code>toMediumString</code>.</p>
+<p>You can also use the <a href="StopwatchStatistic.html">StopwatchStatistic</a> interface to obtain only the information you need and display it differently.</p>
+<h2>Web Interface</h2>
+<p>The optional <code>stopwatch-web.jar</code> library provides a small embedded web server to monitor your application in a development/certification setting.  It does not yet provide any security beyond only opening &#8220;localhost&#8221; loopback-only port.</p>
+<p>You can embed the server by inserting the following code fragment in your application&#8217;s startup code:</p>
+<div class="highlight"><pre><code class="scala"><span class="k">import</span> <span class="nn">stopwatch.web.Server</span>
+
+<span class="k">val</span> <span class="n">server</span> <span class="k">=</span> <span class="k">new</span> <span class="n">stopwatch</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="nc">Server</span>
+
+<span class="c1">// register StopwatchGroups you want to monitor</span>
+<span class="n">server</span><span class="o">.</span><span class="n">groups</span> <span class="o">::=</span> <span class="nc">Stopwatch</span>
+<span class="n">server</span><span class="o">.</span><span class="n">groups</span> <span class="o">::=</span> <span class="n">myStopwatchGruop</span>
+
+<span class="c1">// configure port number</span>
+<span class="n">server</span><span class="o">.</span><span class="n">port</span> <span class="k">=</span> <span class="mi">9999</span>
+
+<span class="n">server</span><span class="o">.</span><span class="n">start</span><span class="o">()</span>
+</code></pre>
+</div><h3>Try it!</h3>
+<p>You can try a sample of the web server by running,</p>
+<div class="highlight"><pre><code class="sh">% scala -cp stopwatch-1.x.jar:stopwatch-web-1.x.jar stopwatch.web.SampleServer
+</code></pre>
+</div><p>If you point your browser to <a href="http://localhost:9999">http://localhost:9999</a>, you should see:</p>
+<p><a href="images/stopwatches.png"><img src="images/stopwatches-thumbnail.jpg" alt="" /></a></p>
+<p>and by clicking on the distribution sparklines, you will see more details about the distribution range:</p>
+<p><a href="images/distribution.png"><img src="images/distribution-thumbnail.jpg" alt="" /></a></p>
+<h2>TODO&#8217;s</h2>
+<ul>
+	<li>Improve web UI</li>
+	<li>Add doc section detailing performance</li>
+	<li>Prettify the distribution graph.  Colors are ugly.</li>
+</ul>
+<h2>Target platform</h2>
+<ul>
+	<li>Scala 2.7.4+ / 2.8+  (source compatible)</li>
+	<li><span class="caps">JVM</span> 1.5+</li>
+</ul>
+<p>Stopwatch does not rely on any 3rd-party library dependencies.</p>
+<h2>Mailing list</h2>
+<p>Questions?  Comments?  Join, browse or search the <a href="http://groups.google.com/group/scala-stopwatch">mailing list</a></p>
+<p>If you are a member of the mailing list, you can send messages directly to <a href="mailto:scala-stopwatch@googlegroups.com">scala-stopwatch@googlegroups.com</a></p>
+<h2>Version History</h2>
+<p>Version 1.0-<span class="caps">SNAPSHOT</span></p>
+<ul>
+	<li>Snapshot release until an official first release is made.</li>
+</ul>
+<h2>Download</h2>
+<p>Download jar files directly from the <a href="http://repo.alexboisvert.org/maven2/org/alexboisvert/stopwatch">Maven2 repository</a>.</p>
+<h2>Source Code</h2>
+<p>The official Github repository is at <a href="http://github.com/aboisvert/stopwatch">http://github.com/aboisvert/stopwatch</a>.</p>
+<p>Refer to the <a href="http://github.com/aboisvert/stopwatch/blob/master/README.md"><span class="caps">README</span>.md</a> for build instructions.</p>
+<h2>License</h2>
+<p>Stopwatch is is licensed under the terms of the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache Software License v2.0</a></p>
+
+  <div class="footer">
+    <div class="copyright">
+      <p>
+        Copyright (C) 2009-2010 by Alex Boisvert<br />
+      </p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
