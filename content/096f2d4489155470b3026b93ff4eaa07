@@ -1,0 +1,1837 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+<meta content='qnYO10qoA5cv0ziF6O+0G5fxkY2arx873N1YYg7ahcE=' name='verify-v1'/>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+<script type="text/javascript">(function() { var a=window;function c(b){this.t={};this.tick=function(d,i,e){e=e?e:(new Date).getTime();this.t[d]=[e,i]};this.tick("start",null,b)}var f=new c;a.jstiming={Timer:c,load:f};try{var g=null;if(a.chrome&&a.chrome.csi)g=Math.floor(a.chrome.csi().pageT);if(g==null)if(a.gtbExternal)g=a.gtbExternal.pageT();if(g==null)if(a.external)g=a.external.pageT;if(g)a.jstiming.pt=g}catch(h){};a.tickAboveFold=function(b){b=b;var d=0;if(b.offsetParent){do d+=b.offsetTop;while(b=b.offsetParent)}b=d;b<=750&&a.jstiming.load.tick("aft")};var j=false;function k(){if(!j){j=true;a.jstiming.load.tick("firstScrollTime")}}a.addEventListener?a.addEventListener("scroll",k,false):a.attachEvent("onscroll",k);
+ })();</script>
+<meta content='true' name='MSSmartTagsPreventParsing'/>
+<meta content='blogger' name='generator'/>
+<link href='http://www.blogger.com/favicon.ico' rel='icon' type='image/vnd.microsoft.icon'/>
+<link href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html' rel='canonical'/>
+<link rel="alternate" type="application/atom+xml" title="Wealthfront Engineering - Atom" href="http://eng.wealthfront.com/feeds/posts/default" />
+<link rel="alternate" type="application/rss+xml" title="Wealthfront Engineering - RSS" href="http://eng.wealthfront.com/feeds/posts/default?alt=rss" />
+<link rel="service.post" type="application/atom+xml" title="Wealthfront Engineering - Atom" href="http://www.blogger.com/feeds/6860706081016808951/posts/default" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.blogger.com/rsd.g?blogID=6860706081016808951" />
+<link rel="alternate" type="application/atom+xml" title="Wealthfront Engineering - Atom" href="http://eng.wealthfront.com/feeds/5263458011386611179/comments/default" />
+<!--[if IE]> <script> (function() { var html5 = ("abbr,article,aside,audio,canvas,datalist,details," + "figure,footer,header,hgroup,mark,menu,meter,nav,output," + "progress,section,time,video").split(','); for (var i = 0; i < html5.length; i++) { document.createElement(html5[i]); } })(); </script> <![endif]-->
+<title>Wealthfront Engineering: Actually Implementing Group Management Using ZooKeeper</title>
+<link type='text/css' rel='stylesheet' href='http://www.blogger.com/static/v1/widgets/1743847221-widget_css_bundle.css' />
+ <link rel="stylesheet" type="text/css" href="http://www.blogger.com/dyn-css/authorization.css?targetBlogID=6860706081016808951&zx=de9823f4-5ed8-4d4f-adb4-1b28aa452447"/>
+<style type="text/css">#navbar-iframe { display:block }
+</style>
+
+<style id='page-skin-1' type='text/css'><!--
+
+div.syntaxhighlighter {
+font-size: 0.75em !important;
+}
+/* ************ START OF CSS STYLING ************ */
+/* -----------------------------------------------------------------------
+Blogger Template Design: Fly Away
+Design by: Ourblogtemplates.com, April 2008
+Terms of Use: Free template with credit linked to Ourblogtemplates.com
+----------------------------------------------------------------------- */
+#navbar-iframe {
+display: none !important;
+}
+/* Variable definitions
+========================
+<Variable name="bodybgColor" description="Body Background Color"
+type="color" default="#FFBBE8">
+<Variable name="blogbgColor" description="Blog Background Color"
+type="color" default="#800040">
+<Variable name="blogBorderColor" description="Blog Border Color"
+type="color" default="#800040">
+<Variable name="contentbgColor" description="Content Background Color"
+type="color" default="#ffffff">
+<Variable name="contentBorderColor" description="Content Border Color"
+type="color" default="#ffffff">
+<Variable name="blogTitleColor" description="Blog Title Color"
+type="color" default="#800040">
+<Variable name="blogDescriptionColor" description="Blog Description Color"
+type="color" default="#800040">
+<Variable name="linkbarmainbgColor" description="Linkbar Main Background Color"
+type="color" default="#C94093">
+<Variable name="linkbarmainBorderColor" description="Linkbar Main Border Color"
+type="color" default="#C94093">
+<Variable name="linkbartextbgColor" description="Linkbar Text Background Color"
+type="color" default="#C94093">
+<Variable name="linkbarBorderColor" description="Linkbar Border Color"
+type="color" default="#9D1961">
+<Variable name="linkbarTextColor" description="Linkbar Text Color"
+type="color" default="#ffffff">
+<Variable name="linkbarHoverBgColor" description="Linkbar Hover Background Color"
+type="color" default="#ffffff">
+<Variable name="linkbarHoverTextColor" description="Linkbar Hover Text Color"
+type="color" default="#9D1961">
+<Variable name="postTitleColor" description="Post Title Color"
+type="color" default="#000000">
+<Variable name="postTitleBorderColor" description="Post Title Border Color"
+type="color" default="#000000">
+<Variable name="dateHeaderColor" description="Date Header Color"
+type="color" default="#000000">
+<Variable name="textColor" description="Text Color"
+type="color" default="#191919">
+<Variable name="mainLinkColor" description="Main Link Color"
+type="color" default="#333333">
+<Variable name="mainHoverLinkColor" description="Main Hover Link Color"
+type="color" default="#9D1961">
+<Variable name="mainVisitedLinkColor" description="Main Visited Link Color"
+type="color" default="#9D1961">
+<Variable name="blogQuoteColor" description="Blog Quote Color"
+type="color" default="#191919">
+<Variable name="codeTextColor" description="Code Text Color"
+type="color" default="#660000">
+<Variable name="postfooterBorderColor" description="Postfooter Border Color"
+type="color" default="#E590C8">
+<Variable name="postfooterTextColor" description="Postfooter Text Color"
+type="color" default="#b8659C">
+<Variable name="postfooterLinkColor" description="Postfooter Link Color"
+type="color" default="#b8659C">
+<Variable name="commentTabLinkColor" description="Comment Tab Link Color"
+type="color" default="#b8659C">
+<Variable name="feedlinksBorderColor" description="Feed Links Border Color"
+type="color" default="#9D1961">
+<Variable name="feedlinksColor" description="Feed Links Color"
+type="color" default="#9D1961">
+<Variable name="sidebar1bgColor" description="Sidebar Background Color"
+type="color" default="#FFBBE8">
+<Variable name="sidebar1HeaderBgColor" description="Sidebar Header Background Color"
+type="color" default="#FFBBE8">
+<Variable name="sidebar1HeaderBorderColor" description="Sidebar Header Border Color"
+type="color" default="#C94093">
+<Variable name="sidebar1HeaderColor" description="Sidebar Header Color"
+type="color" default="#000000">
+<Variable name="sidebar1TextColor" description="Sidebar Text Color"
+type="color" default="#9D1961">
+<Variable name="sidebar1LinkColor" description="Sidebar Link Color"
+type="color" default="#9D1961">
+<Variable name="sidebar1HoverLinkColor" description="Sidebar Hover Link Color"
+type="color" default="#000000">
+<Variable name="sidebar1VisitedLinkColor" description="Sidebar Visited Link Color"
+type="color" default="#000000">
+<Variable name="sidebarListLineColor" description="Sidebar List Line Color"
+type="color" default="#000000">
+<Variable name="commentAuthorBgColor" description="Comment Author Background Color"
+type="color" default="#9D1961">
+<Variable name="commentboxBorderColor" description="Comment Box Border Color"
+type="color" default="#C94093">
+<Variable name="commentTitleColor" description="Comment Header Color"
+type="color" default="#000000">
+<Variable name="commentauthorColor" description="Comment Author Color"
+type="color" default="#9D1961">
+<Variable name="commentTimeStampColor" description="Comment Timestamp Color"
+type="color" default="#C94093">
+<Variable name="commentTextColor" description="Comment Text Color"
+type="color" default="#4c4c4c">
+<Variable name="footerbgColor" description="Footer Background Color"
+type="color" default="#ffffff">
+<Variable name="footerBorderColor" description="Footer Border Color"
+type="color" default="#C94093">
+<Variable name="footerHeaderColor" description="Footer Header Color"
+type="color" default="#000000">
+<Variable name="footerTextColor" description="Footer Text Color"
+type="color" default="#C94093">
+<Variable name="footerHoverLinkColor" description="Footer Hover Link Color"
+type="color" default="#C94093">
+<Variable name="footerVisitedLinkColor" description="Footer Visited Link Color"
+type="color" default="#C94093">
+<Variable name="blogTitleFont" description="Blog Title Font"
+type="font"
+default="normal bold 273% Georgia, Times, serif"
+>
+<Variable name="blogDescriptionFont" description="Blog Description Font"
+type="font"
+default="normal normal 104% georgia,helvetica,verdana,Georgia, serif"
+>
+<Variable name="linkbarTextFont" description="Linkbar Text Font"
+type="font"
+default="normal normal 77% Verdana, sans-serif"
+>
+<Variable name="dateHeaderFont" description="Date Header Font"
+type="font"
+default="normal bold 117% Arial, sans-serif"
+>
+<Variable name="postTitleFont" description="Post Title Font"
+type="font"
+default="normal bold 180% Georgia, Times, serif"
+>
+<Variable name="textFont" description="Text Font"
+type="font"
+default="normal normal 90% Arial, sans-serif"
+>
+<Variable name="quoteFont" description="Blog Quote Font"
+type="font"
+default="normal normal 92% helvetica,tahoma,verdana,arial,times,Sans-serif"
+>
+<Variable name="sidebarHeaderFont" description="Sidebar Header Font"
+type="font"
+default="normal bold 117% Arial, sans-serif"
+>
+<Variable name="sidebarTextFont" description="Sidebar Text Font"
+type="font"
+default="normal normal 78% Arial, Verdana, sans-serif"
+>
+<Variable name="postfooterTextFont" description="Post-Footer Text Font"
+type="font"
+default="normal normal 93% Arial, sans-serif"
+>
+<Variable name="commentTitleFont" description="Comment Title Font"
+type="font"
+default="normal bold 120% Arial, sans-serif"
+>
+<Variable name="commentTextFont" description="Comment Text Font"
+type="font"
+default="normal normal 95% Arial, sans-serif"
+>
+<Variable name="footerHeaderFont" description="Footer Header Font"
+type="font"
+default="normal bold 131% Trebuchet, Trebuchet MS, Arial, sans-serif"
+>
+<Variable name="footerTextFont" description="Footer Text Font"
+type="font"
+default="normal normal 76% Trebuchet, Trebuchet MS, Arial, sans-serif"
+>
+*/
+/* -----   GLOBAL   ----- Blogger template design by Ourblogtemplates.com */
+body {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+text-align: center;
+color: #000000;
+background: #ffffff; /* url() repeat left top */
+background-attachment: fixed;
+font-family: arial,verdana,helvetica,tahoma,Sans-serif;
+font-size: 100%;
+width: 100%;
+}
+#outer-wrapper {
+margin: 0 auto;   /* to make the template lay in the screen center */
+padding: 0px 0px 0px 0px;
+margin-top: 0px;
+margin-bottom: 40px;
+position: relative;
+width: 100%;
+text-align: center;
+}
+#upper-wrapper {
+margin: 0;
+padding: 0;
+position: relative;
+text-align: center;
+width: 100%;
+height: 0px;
+}
+#blog-wrapper {
+margin: 0 auto;   /* to make the template lay in the screen center */
+margin-top: 20px;
+padding: 0px 0px 0px 0px;
+text-align: center;
+position: relative;
+width: 1040px;
+}
+#content-wrapper {
+margin: 0px 0px 0px 0px;
+padding: 5px 5px 5px 5px;
+width: 1028px;
+position: relative;
+text-align: center;
+background: #ffffff;
+border: 1px solid #ffffff;
+}
+#content {
+margin: 0px 0px 0px 0px;
+padding: 13px 0px 0px 13px;
+width: 1013px;
+text-align: left;
+background: #ffffff;
+border: 1px solid #ffffff;
+}
+#spacer {
+z-index: -1;
+clear: both;
+margin: -7px 0px 0px 0px;
+padding: 0;
+line-height: 0;
+min-height: 0;
+max-height: 0;
+z-index: -1;
+}
+/* global link attributes */
+a {
+color: #2D8930;
+text-decoration: underline;
+}
+a:hover {
+text-decoration: underline;
+color: #940f04;
+}
+a:visited {
+text-decoration: underline;
+color: #11593C;
+}
+/* setting margin of Blogger Navbar */
+#Navbar1 {
+margin: 0;
+padding: 0;
+}
+/* -----   HEADER   ----- Blogger template design by Ourblogtemplates.com */
+#header-wrapper {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+width: 1000px;
+}
+#header {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+}
+#header h1 {
+display: block;
+color: #11593C;
+font: normal normal 140% Verdana, sans-serif;
+text-align: left;
+margin: 0px 0px 0px 0px;
+padding: 50px 0px 0px 0px;
+}
+#header h1 a {
+text-decoration: none;
+color: #11593C;
+}
+#header h1 a:hover {
+text-decoration: none;
+color: #999999;
+}
+#header .description {
+display: block;
+color: #999999;
+font: normal normal 83% Georgia, Times, serif;
+text-align: left;
+margin: 1px 0px 0px 0px;
+padding: 1px 0px 10px 0px;
+}
+#header h1 p, #header .description p {margin:0;padding:0}
+#header a img {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+border: 0;
+position: absolute;
+top: 0px;
+left: 0px;
+}
+/* -----   LINKBAR   ----- Blogger template design by Ourblogtemplates.com */
+#linkbar {
+margin: 0px 0px 0px 0px;
+padding: 3px 0px 5px 0px;
+width: 1000px;
+position: relative;
+background: #11593C;
+border-top: 1px solid #11593C;
+border-bottom: 1px solid #11593C;
+}
+#linkbar ul {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 3px;
+text-align: left;
+list-style-type:none;
+}
+#linkbar li {
+display: inline;
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+}
+#linkbar h2 {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+display: none;
+visibility: hidden;
+}
+#linkbar a {
+clear: both;
+margin: 0px -4px 0px 0px;
+padding: 6px 15px 5px 15px;
+width:100%px;
+text-decoration:none;
+font: normal bold 76% Arial, sans-serif;
+color: #ffffff;
+background: #940f04;
+border-right: 1px solid #940f04;
+}
+#linkbar a:hover {
+color: #940f04;
+background: #ffffff;
+}
+/* -----   PICTURE  ----- */
+#picture-wrapper {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+width: 900px;
+background: #ff0000;
+margin-bottom: 0;
+}
+#picture {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+width: 900px;
+background: #ffffff;
+margin-bottom: 0;
+}
+.picture {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+margin-bottom: 0;
+}
+#picture .widget, .picture p {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+margin-bottom: 0;
+}
+#picture img {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+}
+#picture h2 {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+display: none;
+visibility: hidden;
+}
+/* -----   MAIN   ----- Blogger template design by Ourblogtemplates.com */
+#main-wrapper {
+float: left;
+position: relative;
+width: 715px;
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+overflow: hidden; /* fix for long non-text content breaking IE sidebar float */
+}
+#main {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+width: 711px;
+color: #000000;
+font: normal normal 99% Verdana, sans-serif;
+}
+#main .widget {
+margin: 0px 0px 10px 0px;
+padding: 20px 20px 0px 0px;
+}
+h2.date-header {
+margin: 5px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+text-align: left;
+color: #999999;
+font: normal normal 95% Arial, sans-serif;
+text-transform: uppercase;
+text-decoration: none;
+}
+.date-header span {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+}
+.post {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+line-height: 1.6em;
+text-align: left;
+}
+.post h3 {
+margin: 0px 0px 20px 0px;
+padding: 0px 0px 10px 0px;
+color: #000000;
+font: normal normal 222% Georgia, Times, serif;
+text-decoration: none;
+text-align: left;
+line-height: 1.6em;
+border-bottom: 1px solid #666666;
+}
+.post h3 a, .post h3 a:visited {
+color: #000000;
+text-decoration: none;
+}
+.post h3 a:hover {
+color: #940f04;
+text-decoration: none;
+}
+.post-body p {
+/* Fix bug in IE5/Win with italics in posts */
+margin: 0px 0px 0px 0px;
+padding: 3px 0px 3px 0px;
+display: inline; /* to fix floating-ads wrapping problem in IE */
+height: 1%;
+overflow: visible;
+}
+.post-body p a, .post-body p a:visited {
+color: #2D8930;
+text-decoration: underline;
+}
+.post-body a:hover {
+text-decoration: underline;
+color: #940f04;
+}
+.post ul {
+margin: 0px 0px 0px 0px;
+padding: 12px 0px 12px 30px;
+list-style-type: disc;
+line-height: 2.0em;
+font-size: 95%;
+}
+.post ol {
+margin: 0px 0px 0px 0px;
+padding: 12px 0px 12px 30px;
+line-height: 2.0em;
+font-size: 95%;
+}
+.post li {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+line-height: 1.5em;
+}
+a img {
+margin: 5px 5px 5px 5px;
+padding: 0px 0px 0px 0px;
+}
+/* -----   POST-FOOTER   ----- Blogger template design by Ourblogtemplates.com */
+.post-footer {
+display: block;
+margin: 15px 0px 20px 0px;
+padding: 0px 0px 10px 0px;
+text-align: left;
+font: normal normal 88% Verdana, sans-serif;
+color: #000000;
+font-weight: normal;
+line-height: 1.5em;
+text-decoration: none;
+border-bottom: 1px dotted #ffffff;
+}
+.post-footer-line {
+margin: 1px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+}
+.post-footer-line-1 {padding-top: 0px}
+.post-footer a {
+color: #999999;
+text-decoration: none;
+}
+.post-footer a:hover {
+text-decoration: none;
+color: #940f04;
+text-decoration: none;
+}
+.post-footer .post-comment-link a {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+color: #4c4c4c;
+font-weight: bold;
+text-transform: uppercase;
+}
+.post-footer .post-comment-link a:hover {
+text-decoration: none;
+color: #940f04;
+}
+#blog-pager {
+margin: 0px 0px 0px 0px;
+padding: 5px 0px 5px 0px;
+text-align: center;
+font-size: 95%;
+color: #666666;
+border-top: 1px dotted #ffffff;
+}
+#blog-pager a {color: #666666}
+#blog-pager a:hover {color: #940f04}
+#blog-pager-newer-link {
+float: left;
+margin: 0px 0px 0px 0px;
+padding-left: 3px;
+}
+#blog-pager-older-link {
+float: right;
+margin: 0px 0px 0px 0px;
+padding-right: 3px;
+}
+.feed-links {
+margin: 0px 0px 0px 0px;
+padding: 10px 3px 0px 3px;
+clear: both;
+line-height: 1.5em;
+text-align: left;
+font-size: 93%;
+color: #666666;
+}
+.feed-links a, .feed-links a:visited {color: #666666}
+.feed-links a:hover {color: #940f04}
+/* -----   SIDEBAR   ----- Blogger template design by Ourblogtemplates.com */
+#side-wrapper {
+float: left;
+margin: 0px 0px 0px 0px;
+padding: 25px 0px 0px 0px;
+width: 285px;
+background: #f8f8f8;
+word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+overflow: hidden; /* fix for long non-text content breaking IE sidebar float */
+}
+#sidebar-wrapper {
+float: left;
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+overflow: hidden; /* fix for long non-text content breaking IE sidebar float */
+}
+.sidebar {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+text-align: left;
+line-height: 1.4em;
+font: normal normal 67% Verdana, sans-serif;
+}
+#sidebar1 {
+width: 275px;
+margin: 0px 0px 3px 0px;
+padding: 10px 0px 0px 10px;
+color: #4c4c4c;
+background: #f8f8f8;
+}
+#sidebar1 .widget {
+margin: 0px 0px 20px 0px;
+padding: 0px 0px 3px 0px;
+}
+/* sidebar heading ----- Blogger template design by Ourblogtemplates.com */
+#sidebar1 h2 {
+margin: -10px -10px 10px -10px;
+padding: 7px 10px 7px 10px;
+text-align: left;
+color: #4c4c4c;
+font: normal bold 101% Verdana, sans-serif;
+text-transform: uppercase;
+background: #ffffff;
+border-top: 5px solid #e6e6e6;
+border-bottom: 1px solid #e6e6e6;
+text-align: left;
+}
+.sidebar ul, #BlogArchive1 ul {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+list-style-type: none;
+}
+.sidebar li, #BlogArchive1 li {
+margin: 0px 0px 0px 0px;
+padding: 5px 0px 5px 0px;
+line-height: 1.3em;
+border-bottom: 1px solid #f8f8f8;
+}
+#sidebar1 a {
+color: #666666;
+text-decoration: none;
+}
+#sidebar1 a:hover {
+text-decoration: none;
+color: #940f04;
+}
+#sidebar1 a:visited {
+text-decoration: none;
+color: #666666;
+}
+.sidebar a img {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+}
+/* -----   PROFILE   ----- Blogger template design by Ourblogtemplates.com */
+.profile-img a img {
+display: block;
+float: left;
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+clear: both;
+}
+.profile-textblock {
+margin: 0px 0px 0px 0px;
+padding: 10px 0px 10px 0px;
+clear: both;
+line-height: 1.4em;
+}
+.profile-data {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+font-weight: normal;
+font-style: italic;
+}
+.profile-datablock {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+}
+.profile-link {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+}
+/* -----   BLOCKQUOTE   ----- */
+blockquote {
+margin: 12px 30px 12px 20px;
+padding: 0px 0px 0px 10px;
+color: #000000;
+font: italic normal 99% Verdana, sans-serif;
+line-height: 1.6em;
+color: #000000;
+}
+/* -----   CODE   ----- */
+code {
+color: #000000;
+font-size: 110%;
+}
+/* -----   COMMENT   ----- Blogger template design by Ourblogtemplates.com */
+#comments {
+margin: 15px 0px -1px 0px;
+padding: 0px 0px 15px 0px;
+text-align: left;
+color: #666666;
+font: normal normal 105% Verdana, sans-serif;
+}
+/* comment-header */
+#comments h4 {
+margin: 0px 0px 0px 0px;
+padding: 15px 0px 0px 0px;
+color: #940f04;
+font: normal bold 101% Verdana, sans-serif;
+text-transform: uppercase;
+}
+.deleted-comment {
+font-style:italic;
+color:gray;
+margin: 3px 0px 3px 0px;
+}
+.comment-author {
+display: block;
+margin: 15px 0px 0px 0px;
+padding: 7px 10px 7px 10px;
+color: #940f04;
+background: #f8f8f8;
+border: 1px solid #e6e6e6;
+font-size: 135%;
+font-weight: bold;
+}
+.comment-author a {color: #940f04;}
+.comment-author a:hover {color: #940f04;}
+.comment-body {
+margin: 0px 0px 0px 0px;
+padding: 10px 0px 10px 50px;
+}
+.comment-footer {
+margin: 7px 0px 7px 0px;
+padding: 0px 0px 0px 0px;
+}
+.comment-timestamp {
+margin: 0px 0px 0px 10px;
+padding: 0px 0px 7px 10px;
+color: #999999;
+text-decoration: none;
+font-weight: normal;
+font-size: 74%;
+font-style: italic;
+}
+.comment-timestamp a {
+color: #999999;
+text-decoration: none;
+}
+.comment-body p {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+line-height: 1.6em;
+}
+#comments ul {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+list-style-type: disc;
+}
+#comments li {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+}
+a.comment-link {
+/* ie5.0/win doesn't apply padding to inline elements,
+so we hide these two declarations from it */
+padding: 0px 0px 0px 0px;
+}
+html>body a.comment-link {
+/* respecified, for ie5/mac's benefit */
+padding-left: 0px;
+}
+/* -----   ADS SECTION   ----- Blogger template design by Ourblogtemplates.com */
+#adsection-wrapper {
+clear: both;
+display: inline; /* handles IE margin bug */
+float: left;
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+text-align: center;
+width: 1000px;
+}
+#adsection {
+margin: 0px 0px 0px 0px;
+padding: 5px 5px 5px 5px;
+text-align: center;
+color: #000000;
+font: normal normal 99% Verdana, sans-serif;
+}
+/* -----   FOOTER   ----- Blogger template design by Ourblogtemplates.com */
+#footer-wrapper {
+clear: both;
+display: inline; /* handles IE margin bug */
+float: left;
+width: 1000px;
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+background: #940f04;
+border: 1px solid #940f04;
+}
+#footer {
+margin: 0px 0px 0px 0px;
+padding: 5px 20px 5px 20px;
+text-align: center;
+color: #ffffff;
+font: normal bold 67% Arial, sans-serif;
+line-height: 1.6em;
+}
+#footer h2 {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 3px 0px;
+color: #ffffff;
+font: normal bold 103% Arial, sans-serif;
+}
+#footer .widget {
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+}
+.footer a {
+color: #ffffff;
+text-decoration: none;
+}
+.footer a:hover {
+color: #940f04;
+text-decoration: none;
+}
+.footer a:visited {
+color: #ffffff;
+text-decoration: none;
+}
+/* -----   CREDIT   ----- */
+#credit {
+margin: 0px 0px 0px 0px;
+padding: 2px 0px 0px 0px;
+width: 100%;
+height: 26px;
+clear: both;
+font-family: verdana, helvetica;
+font-size: 70%;
+color: #555555;
+font-weight: normal;
+background: #000000;
+}
+#creditleft {
+margin: 0px 0px 0px 0px;
+padding: 7px 0px 0px 0px;
+height: 26px;
+position: relative;
+float: left;
+text-align: left;
+display: inline;
+width: 71%;
+background: #ffffff;
+}
+#creditright {
+margin: -33px 0px 0px 0px;
+padding: 7px 0px 0px 0px;
+height: 26px;
+position: relative;
+float: right;
+text-align:right;
+display: inline;
+width: 30%;
+background: #ffffff;
+}
+#creditleft p {
+margin: 0;
+padding: 0
+}
+#creditright p {
+margin: 0;
+padding: 0
+}
+#creditleft a, .creditleft a:hover, .creditleft a:visited {
+color: #555555;
+text-decoration: underline;
+}
+#creditright a, .creditright a:hover, .creditright a:visited {
+color: #555555;
+text-decoration: underline;
+}
+/* ************ END OF CSS STYLING ************ */
+/** Page structure tweaks for layout editor wireframe */
+body#layout #main,
+body#layout #sidebar {
+padding: 0;
+}
+
+--></style>
+<link href='http://alexgorbatchev.com/pub/sh/current/styles/shCore.css' rel='stylesheet' type='text/css'/>
+<link href='http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css' rel='stylesheet' type='text/css'/>
+<script src='http://alexgorbatchev.com/pub/sh/current/scripts/shCore.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/current/scripts/shBrushCpp.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/current/scripts/shBrushRuby.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/current/scripts/shBrushJScript.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/current/scripts/shBrushJava.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/current/scripts/shBrushScala.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/current/scripts/shBrushPython.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/current/scripts/shBrushXml.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/current/scripts/shBrushBash.js' type='text/javascript'></script>
+<script type='text/javascript'>
+     SyntaxHighlighter.config.bloggerMode = true;
+     SyntaxHighlighter.all();
+</script>
+<!-- iconj.com dynamic favicon code -->
+<link href='http://www.wealthfront.com/favicon.ico' rel='shortcut icon' type='image/x-icon'/>
+<link href='http://www.wealthfront.com/favicon.ico' rel='icon' type='image/gif'/>
+<link href='http://www.wealthfront.com/favicon.ico' rel='shortcut icon' type='image/ico'/>
+<!-- end of iconj.com dynamic favicon code -->
+<script type="text/javascript">
+if (window.jstiming) window.jstiming.load.tick('headEnd');
+</script></head>
+<body>
+<div class='navbar section' id='navbar'><div class='widget Navbar' id='Navbar1'><script type="text/javascript">
+    function setAttributeOnload(object, attribute, val) {
+      if(window.addEventListener) {
+        window.addEventListener("load",
+          function(){ object[attribute] = val; }, false);
+      } else {
+        window.attachEvent('onload', function(){ object[attribute] = val; });
+      }
+    }
+  </script>
+<iframe src="http://www.blogger.com/navbar.g?targetBlogID=6860706081016808951&amp;blogName=Wealthfront+Engineering&amp;publishMode=PUBLISH_MODE_HOSTED&amp;navbarType=BLUE&amp;layoutType=LAYOUTS&amp;searchRoot=http%3A%2F%2Feng.wealthfront.com%2Fsearch&amp;blogLocale=en&amp;homepageUrl=http%3A%2F%2Feng.wealthfront.com%2F&amp;targetPostID=5263458011386611179" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="30px" width="100%" id="navbar-iframe" allowtransparency="true" title="Blogger Navigation and Search"></iframe>
+<div></div></div></div>
+<div id='outer-wrapper'>
+<!-- skip links for text browsers -->
+<span id='skiplinks' style='display:none;'>
+<a href='#main'>skip to main </a> |
+<a href='#sidebar'>skip to sidebar</a>
+</span>
+<div id='upper-wrapper'></div>
+<div id='blog-wrapper'>
+<div id='content-wrapper'><div id='content'>
+<div id='header-wrapper'>
+<a href='http://eng.wealthfront.com/'>
+<div class='header section' id='header'><div class='widget Header' id='Header1'>
+<div id='header-inner'>
+<div class='titlewrapper'>
+<h1 class='title'>
+<a href='http://eng.wealthfront.com/'>Wealthfront Engineering</a>
+</h1>
+</div>
+<div class='descriptionwrapper'>
+<p class='description'><span>
+</span></p>
+</div>
+</div>
+</div></div>
+</a>
+</div>
+<div id='linkbar-wrapper'>
+<div class='linkbar section' id='linkbar'>
+</div>
+</div>
+<div style='clear: both;'></div>
+<div id='main-wrapper'>
+<div class='main section' id='main'><div class='widget Blog' id='Blog1'>
+<div class='blog-posts'>
+<!-- google_ad_section_start -->
+<h2 class='date-header'>Saturday, January 9, 2010</h2>
+<div class='post'>
+<a name='5263458011386611179'></a>
+<h3 class='post-title'>
+<a href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html'>Actually Implementing Group Management Using ZooKeeper</a>
+</h3>
+<div class='post-header-line-1'></div>
+<div class='post-body'>
+<p><a href="http://hadoop.apache.org/zookeeper/">ZooKeeper</a> offers, in the words of its documentation, "off-the-shelf... group management". The "off-the-shelf" part is inaccurate; it really offers the proper primitives to *implement* group management, but it's up to you to fill in a few missing pieces.<br /><br />I'll be describing one type of group management system I built at KaChing using ZooKeeper:<br /><ul><li>A group contains some logical service. The *meaning* of belonging to a group is typically "the instance is available for use by clients over the network".</li><li>Services can join and leave the group. The special case of a service crashing or a network outage needs to be handled as leaving the group.</li><li>Joined services share metadata about how to communicate with it, i.e., its IP address, base URL, etc.</li><li>Clients can ask what instances are in the group, i.e., available.</li><li>Clients are notified when group membership changes so they can mutate their local state.</li></ul>These map onto ZooKeeper as:<br /><ul><li>A group is a (permanent) node in the ZooKeeper hierarchy. Clients and services must be told the path to this node.</li><li>A services joins the group by creating an ephemeral node whose parent is the group node. By using an ephemeral node, if the service dies then the service is automatically removed from the group.</li><li>The ephemeral node's data contains the service metadata in some format like JSON, XML, <a href="http://hadoop.apache.org/avro/">Avro</a>, Protobufs, Thrift, etc. ZooKeeper has no equivalent of HTTP's "Content-Type" header to identify the metadata representation, so services and clients must agree upon the format in some manner.</li><li>Clients can query for the children of the group node to identify the members of the group.</li><li>Clients can place a <a href="http://hadoop.apache.org/zookeeper/docs/current/zookeeperProgrammers.html#ch_zkWatches">watch</a> on the group node to be notified if nodes have joined or left the group.</li></ul>To help with development I use <a href="http://github.com/sgroschupf/zkclient">zkclient</a> (pros: provides a much more natural interface to zk from Java compared to the actual ZooKeeper library, somewhat responsive committers; cons: some of the API semantics are difficult to understand, somewhat responsive committers). <a href="http://github.com/phunt/zkconf">zkconf</a> from Patrick Hunt makes it trivial to get zk running.<br /><br />I've looked a bit at <a href="http://github.com/rhavyn/norbert">norbert</a> from LinkedIn but the documentation is very slim (no README even!); from what I can make out from the code it seems to be well thought-out and provide a super-set of the system I've described. LinkedIn-ners, can you help a brother out?<br /><br /><span style="font-size:130%;">Bonus section: Service Manifest</span><br /><br />One downside to the system I've described is that it doesn't avoid the "rogue service": some service that shouldn't be running actually is running. It's happened to everyone before, don't be shy; you retired service X but it wasn't wiped from the servers and when the box rebooted some cron job restarted it.... oops.<br /><br />To handle this you need a service "manifest" that lists all the services that *should* be running, so clients can filter out group members that are available but shouldn't be. In ZooKeeper this can be a parallel tree to the group node that uses<br />permanent nodes rather than ephemeral nodes for group members, or just one permanent node whose data contains the group members, or some variation on that. And make sure you have your clients sound the alarm when a rogue service shows up.<br /><br />.. <a href="http://www.linkedin.com/in/arosien">Adam</a><br /><br />P.S. the Blogger post editor really really sucks.</p>
+<div style='clear: both;'></div>
+</div>
+<div class='post-footer'>
+<p class='post-footer-line post-footer-line-1'><span class='post-author'>
+Posted by
+Adam Rosien
+</span>
+<span class='post-timestamp'>
+at
+<a class='timestamp-link' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html' title='permanent link'>2:42 PM</a>
+</span>
+<span class='post-comment-link'>
+</span>
+<span class='post-icons'>
+<span class='item-control blog-admin pid-1479652481'>
+<a href='http://www.blogger.com/post-edit.g?blogID=6860706081016808951&postID=5263458011386611179' title='Edit Post'>
+<span class='quick-edit-icon'>&#160;</span>
+</a>
+</span>
+</span>
+</p>
+<p class='post-footer-line post-footer-line-2'><span class='post-labels'>
+Labels:
+<a href='http://eng.wealthfront.com/search/label/discovery' rel='tag'>discovery</a>,
+<a href='http://eng.wealthfront.com/search/label/java' rel='tag'>java</a>,
+<a href='http://eng.wealthfront.com/search/label/services' rel='tag'>services</a>,
+<a href='http://eng.wealthfront.com/search/label/zookeeper' rel='tag'>zookeeper</a>
+</span>
+</p>
+<p class='post-footer-line post-footer-line-3'></p>
+</div>
+</div>
+<div class='comments' id='comments'>
+<a name='comments'></a>
+<div id='disqus_thread'></div>
+<div id='disqus_post_title' style='display:none;'>Actually Implementing Group Management Using ZooKeeper</div>
+<div id='disqus_post_message' style='display:none;'><a href="http://hadoop.apache.org/zookeeper/">ZooKeeper</a> offers, in the words of its documentation, "off-the-shelf... group management". The "off-the-shelf" part is inaccurate; it really offers the proper primitives to *implement* group management, but it's up to you to fill in a few missing pieces.<br /><br />I'll be describing one type of group management system I built at KaChing using ZooKeeper:<br /><ul><li>A group contains some logical service. The *meaning* of belonging to a group is typically "the instance is available for use by clients over the network".</li><li>Services can join and leave the group. The special case of a service crashing or a network outage needs to be handled as leaving the group.</li><li>Joined services share metadata about how to communicate with it, i.e., its IP address, base URL, etc.</li><li>Clients can ask what instances are in the group, i.e., available.</li><li>Clients are notified when group membership changes so they can mutate their local state.</li></ul>These map onto ZooKeeper as:<br /><ul><li>A group is a (permanent) node in the ZooKeeper hierarchy. Clients and services must be told the path to this node.</li><li>A services joins the group by creating an ephemeral node whose parent is the group node. By using an ephemeral node, if the service dies then the service is automatically removed from the group.</li><li>The ephemeral node's data contains the service metadata in some format like JSON, XML, <a href="http://hadoop.apache.org/avro/">Avro</a>, Protobufs, Thrift, etc. ZooKeeper has no equivalent of HTTP's "Content-Type" header to identify the metadata representation, so services and clients must agree upon the format in some manner.</li><li>Clients can query for the children of the group node to identify the members of the group.</li><li>Clients can place a <a href="http://hadoop.apache.org/zookeeper/docs/current/zookeeperProgrammers.html#ch_zkWatches">watch</a> on the group node to be notified if nodes have joined or left the group.</li></ul>To help with development I use <a href="http://github.com/sgroschupf/zkclient">zkclient</a> (pros: provides a much more natural interface to zk from Java compared to the actual ZooKeeper library, somewhat responsive committers; cons: some of the API semantics are difficult to understand, somewhat responsive committers). <a href="http://github.com/phunt/zkconf">zkconf</a> from Patrick Hunt makes it trivial to get zk running.<br /><br />I've looked a bit at <a href="http://github.com/rhavyn/norbert">norbert</a> from LinkedIn but the documentation is very slim (no README even!); from what I can make out from the code it seems to be well thought-out and provide a super-set of the system I've described. LinkedIn-ners, can you help a brother out?<br /><br /><span style="font-size:130%;">Bonus section: Service Manifest</span><br /><br />One downside to the system I've described is that it doesn't avoid the "rogue service": some service that shouldn't be running actually is running. It's happened to everyone before, don't be shy; you retired service X but it wasn't wiped from the servers and when the box rebooted some cron job restarted it.... oops.<br /><br />To handle this you need a service "manifest" that lists all the services that *should* be running, so clients can filter out group members that are available but shouldn't be. In ZooKeeper this can be a parallel tree to the group node that uses<br />permanent nodes rather than ephemeral nodes for group members, or just one permanent node whose data contains the group members, or some variation on that. And make sure you have your clients sound the alarm when a rogue service shows up.<br /><br />.. <a href="http://www.linkedin.com/in/arosien">Adam</a><br /><br />P.S. the Blogger post editor really really sucks.</div>
+<script type='text/javascript'>
+                var disqus_url = 'http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html';
+                var disqus_title = document.getElementById('disqus_post_title').innerHTML;
+                var disqus_message = document.getElementById('disqus_post_message').innerHTML;
+        </script>
+<script src='http://disqus.com/forums/kachingengineering/embed.js' type='text/javascript'></script>
+<div id='backlinks-container'>
+<div id='Blog1_backlinks-container'>
+</div>
+</div>
+</div>
+<!-- google_ad_section_end -->
+</div>
+<div class='blog-pager' id='blog-pager'>
+<span id='blog-pager-newer-link'>
+<a class='blog-pager-newer-link' href='http://eng.wealthfront.com/2010/01/complement-tdd-with-mda.html' id='Blog1_blog-pager-newer-link' title='Newer Post'>Newer Post</a>
+</span>
+<span id='blog-pager-older-link'>
+<a class='blog-pager-older-link' href='http://eng.wealthfront.com/2010/01/flexible-log-monitoring-with-scribe.html' id='Blog1_blog-pager-older-link' title='Older Post'>Older Post</a>
+</span>
+<a class='home-link' href='http://eng.wealthfront.com/'>Home</a>
+</div>
+<div class='clear'></div>
+<div class='post-feeds'>
+</div>
+</div></div>
+</div>
+<div id='side-wrapper'>
+<div class='sidebar section' id='sidebar1'><div class='widget HTML' id='HTML2'>
+<div class='widget-content'>
+<center><a href="http://www.wealthfront.com/" style="border-style: none"><img src="https://www.wealthfront.com/images/wealthfront.1285203094.png" /></a><br />Formerly <b>kaChing</b></center>
+
+<center><a href="https://www.wealthfront.com/jobs"><span style="font-weight: bold;font-size:200%;" >We Are Hiring !</span></a></center>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=6860706081016808951&widgetType=HTML&widgetId=HTML2&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML2"));' target='configHTML2' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget HTML' id='HTML1'>
+<div class='widget-content'>
+<div id="twitter_div">
+<h2 style="display: none;">Twitter Updates</h2>
+<ul id="twitter_update_list"></ul>
+<a id="twitter-link" style="display:block;text-align:right;" href="http://twitter.com/kachingeng">follow @wltheng on Twitter</a>
+</div>
+<script src="http://twitter.com/javascripts/blogger.js" type="text/javascript"></script>
+<script src="http://twitter.com/statuses/user_timeline/wltheng.json?callback=twitterCallback2&amp;count=10" type="text/javascript"></script>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=6860706081016808951&widgetType=HTML&widgetId=HTML1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML1"));' target='configHTML1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget HTML' id='HTML3'>
+<div class='widget-content'>
+<center><a href="http://www.facebook.com/pages/Wealthfront-Engineering/173774639300750" target="_TOP" style="font-family: &quot;lucida grande&quot;,tahoma,verdana,arial,sans-serif; font-size: 11px; font-variant: normal; font-style: normal; font-weight: normal; color: #3B5998; text-decoration: none;" title="Wealthfront Engineering">Wealthfront Engineering Facebook Page</a><br/><a href="http://www.facebook.com/pages/Wealthfront-Engineering/173774639300750" target="_TOP" title="Wealthfront Engineering on Facebook"><img src="https://www.wealthfront.com/images/wealthfront.1285203094.png"  style="border: 0px;" /></a></center><br/>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=6860706081016808951&widgetType=HTML&widgetId=HTML3&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML3"));' target='configHTML3' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget Label' id='Label1'>
+<h2>Tags</h2>
+<div class='widget-content'>
+<ul>
+<li>
+<a href='http://eng.wealthfront.com/search/label/java'>java</a>
+
+        (22)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/continuous%20deployment'>continuous deployment</a>
+
+        (16)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/tests'>tests</a>
+
+        (15)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/lean%20startup'>lean startup</a>
+
+        (14)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/types'>types</a>
+
+        (10)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/tech%20talk'>tech talk</a>
+
+        (9)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/code%20quality'>code quality</a>
+
+        (5)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/scala'>scala</a>
+
+        (5)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/financial%20data'>financial data</a>
+
+        (4)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/guice'>guice</a>
+
+        (4)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/hibernate'>hibernate</a>
+
+        (4)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/jobs'>jobs</a>
+
+        (3)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/kawala'>kawala</a>
+
+        (3)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/monitoring'>monitoring</a>
+
+        (3)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/video'>video</a>
+
+        (3)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/DOM'>DOM</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/apps'>apps</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/database'>database</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/entity'>entity</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/front-end'>front-end</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/funny'>funny</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/generics'>generics</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/jQuery'>jQuery</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/javascript'>javascript</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/mysql'>mysql</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/nagios'>nagios</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/objective-c'>objective-c</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/operations'>operations</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/performance'>performance</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/programming%20languages'>programming languages</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/scribe'>scribe</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/services'>services</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/slides'>slides</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/sql'>sql</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/voldemort'>voldemort</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/wealthfront'>wealthfront</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/zookeeper'>zookeeper</a>
+
+        (2)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/agile'>agile</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/canvas'>canvas</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/contravariance'>contravariance</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/covariance'>covariance</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/cyclomatic%20complexity'>cyclomatic complexity</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/dashboards'>dashboards</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/datbase'>datbase</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/db'>db</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/dependency%20injection'>dependency injection</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/discovery'>discovery</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/eclipse'>eclipse</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/eric%20ries'>eric ries</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/esper'>esper</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/event'>event</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/faster'>faster</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/fix-it'>fix-it</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/garbage%20collection'>garbage collection</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/high%20frequency%20trading'>high frequency trading</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/humor'>humor</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/inversion%20of%20control'>inversion of control</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/ipad'>ipad</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/irc'>irc</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/java%20fluent%20expressiveness'>java fluent expressiveness</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/javadoc'>javadoc</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/json'>json</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/just%20kidding%20really'>just kidding really</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/kaching'>kaching</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/lpse'>lpse</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/management'>management</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/map'>map</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/memory%20management'>memory management</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/object%20pools'>object pools</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/out%20links'>out links</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/perf4j'>perf4j</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/pizza%20driven%20development'>pizza driven development</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/press'>press</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/protocol%20buffer'>protocol buffer</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/python'>python</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/ruby%20on%20rails'>ruby on rails</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/scala%20java%20javassist'>scala java javassist</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/security%20manager'>security manager</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/serialization'>serialization</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/svg'>svg</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/svn'>svn</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/trading'>trading</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/types%20java%20functional'>types java functional</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/typography'>typography</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/value'>value</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/vertical%20rhythm'>vertical rhythm</a>
+
+        (1)
+      </li>
+<li>
+<a href='http://eng.wealthfront.com/search/label/vml'>vml</a>
+
+        (1)
+      </li>
+</ul>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=6860706081016808951&widgetType=Label&widgetId=Label1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("Label1"));' target='configLabel1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div><div class='widget BlogArchive' id='BlogArchive1'>
+<h2>Archives</h2>
+<div class='widget-content'>
+<div id='ArchiveList'>
+<div id='BlogArchive1_ArchiveList'>
+<ul>
+<li class='archivedate expanded'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=close&toggle=YEARLY-1262332800000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy toggle-open'>&#9660; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/search?updated-min=2010-01-01T00%3A00%3A00-08%3A00&updated-max=2011-01-01T00%3A00%3A00-08%3A00&max-results=50'>2010</a>
+            (<span class='post-count'>84</span>)
+          
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1291190400000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2010_12_01_archive.html'>December</a>
+            (<span class='post-count'>5</span>)
+          
+<ul class='posts'>
+<li><a href='http://eng.wealthfront.com/2010/12/factory-fixtures.html'>Factory &gt; Fixtures</a></li>
+<li><a href='http://eng.wealthfront.com/2010/12/expressive-java-fluent-interfaces.html'>Expressive Java &amp; Fluent Interfaces</a></li>
+<li><a href='http://eng.wealthfront.com/2010/12/using-monadic-rainbow-tables-for.html'>Using Monadic Rainbow Tables for Eventually Consis...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/12/irc-bots-for-laziness-impatience-and.html'>IRC bots for Laziness, Impatience, and Continuous ...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/12/trust-but-remind.html'>Trust, but Remind</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1288594800000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2010_11_01_archive.html'>November</a>
+            (<span class='post-count'>12</span>)
+          
+<ul class='posts'>
+<li><a href='http://eng.wealthfront.com/2010/11/when-canvas-doesnt-cut-it-raphaeljs.html'>When Canvas doesn&#39;t cut it: Raphael.js</a></li>
+<li><a href='http://eng.wealthfront.com/2010/11/circular-dependencies-between-hibernate.html'>Circular dependencies between entities</a></li>
+<li><a href='http://eng.wealthfront.com/2010/11/arrhythmiajs-new-take-on-rhythm.html'>Arrhythmia.js, a new take on rhythm validation</a></li>
+<li><a href='http://eng.wealthfront.com/2010/11/de2ops-video-q-continuous-deployment.html'>dev2ops Video Q&amp;A: Continuous Deployment requires ...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/11/continuous-deployment-talk-at-yahoo.html'>Continuous Deployment talk at Yahoo! Large Scale P...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/11/gui-testing-without-gooey-parts.html'>GUI Testing, Without The Gooey Parts</a></li>
+<li><a href='http://eng.wealthfront.com/2010/11/monitoring-long-running-mysql-queries.html'>Monitoring Long Running MySQL Queries with Nagios</a></li>
+<li><a href='http://eng.wealthfront.com/2010/11/less-io-for-your-java-unit-tests.html'>Less IO for your Unit Tests with a Java SecurityMa...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/11/computation-there-is-no-try.html'>Computation: &quot;There is no try&quot;</a></li>
+<li><a href='http://eng.wealthfront.com/2010/11/if-you-ever-write-varags-method.html'>If you ever write a varags method...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/11/evolve-or-die-start-ups-and-dealing.html'>Evolve or die: Start-ups and &#8220;Dealing with Darwin&#8221;...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/11/shoo-messiness-away-with-fix-it-day.html'>A Fix-It Day with Cyclomatic Complexity</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1285916400000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2010_10_01_archive.html'>October</a>
+            (<span class='post-count'>8</span>)
+          
+<ul class='posts'>
+<li><a href='http://eng.wealthfront.com/2010/10/stop-wasting-peoples-time.html'>Stop wasting people&#39;s time!</a></li>
+<li><a href='http://eng.wealthfront.com/2010/10/migrating-hibernate-bag-to-hibernate.html'>Migrating a Hibernate Bag to a Hibernate List</a></li>
+<li><a href='http://eng.wealthfront.com/2010/10/experience-of-serializing-financial.html'>Experience of serializing financial domain objects...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/10/relaxing-visibilities-using-javassist.html'>Relaxing visibilities using Javassist</a></li>
+<li><a href='http://eng.wealthfront.com/2010/10/live-broadcast-for-lean-startup-for.html'>Live Broadcast for Lean Startup for Geeks at Wealt...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/10/wealthfront-track-at-silicon-valley.html'>Wealthfront track at the Silicon Valley Code Camp</a></li>
+<li><a href='http://eng.wealthfront.com/2010/10/jquery-right-way.html'>jQuery the Right Way</a></li>
+<li><a href='http://eng.wealthfront.com/2010/10/big-bang-release-kaching-is-now.html'>Big Bang Release - kaChing is now Wealthfront</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1283324400000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2010_09_01_archive.html'>September</a>
+            (<span class='post-count'>6</span>)
+          
+<ul class='posts'>
+<li><a href='http://eng.wealthfront.com/2010/09/agile-test-driven-development-in-matlab.html'>Agile, test-driven development in... MATLAB?</a></li>
+<li><a href='http://eng.wealthfront.com/2010/09/lean-startup-for-geeks-at-kaching-with.html'>Lean Startup for Geeks at kaChing with Eric Ries</a></li>
+<li><a href='http://eng.wealthfront.com/2010/09/practical-scalajava-interoperability-by.html'>Practical Scala/Java interoperability by small exa...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/09/when-garbage-collection-is-failure-for.html'>When Garbage Collection is Failure</a></li>
+<li><a href='http://eng.wealthfront.com/2010/09/keeping-trunk-stable.html'>Keeping the trunk stable</a></li>
+<li><a href='http://eng.wealthfront.com/2010/09/devops-cafe-on-continuous-deployment.html'>DevOps Cafe on Continuous Deployment and Operation...</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1280646000000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2010_08_01_archive.html'>August</a>
+            (<span class='post-count'>9</span>)
+          
+<ul class='posts'>
+<li><a href='http://eng.wealthfront.com/2010/08/models-they-make-everything-look-good.html'>Models, they make everything look good</a></li>
+<li><a href='http://eng.wealthfront.com/2010/08/type-inference-puzzler.html'>Type inference puzzler</a></li>
+<li><a href='http://eng.wealthfront.com/2010/08/creating-typeliterals-in-scala.html'>Creating TypeLiterals in Scala</a></li>
+<li><a href='http://eng.wealthfront.com/2010/08/had-great-lean-startup-tgif-at-kaching.html'>Had a great Lean Startup TGIF at kaChing</a></li>
+<li><a href='http://eng.wealthfront.com/2010/08/august-coolness.html'>August Coolness</a></li>
+<li><a href='http://eng.wealthfront.com/2010/08/no-downtime-database-schema-changes.html'>No Downtime Database Schema Changes</a></li>
+<li><a href='http://eng.wealthfront.com/2010/08/type-safe-bit-fields-using-higher.html'>Type Safe Bit Fields Using Higher-Kinded Polymorph...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/08/lean-startup-tgif-at-kaching.html'>Lean Startup TGIF at kaChing</a></li>
+<li><a href='http://eng.wealthfront.com/2010/07/how-to-get-job-at-kaching.html'>How to Get a Job at Wealthfront</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1277967600000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2010_07_01_archive.html'>July</a>
+            (<span class='post-count'>8</span>)
+          
+<ul class='posts'>
+<li><a href='http://eng.wealthfront.com/2010/07/i-can-has-invariant-mapz.html'>I Can Has Invariant Mapz?</a></li>
+<li><a href='http://eng.wealthfront.com/2010/07/we-need-more-than-one-why-programming.html'>We Need More Than One; Why Programming Languages M...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/07/prezi-on-continuous-deployment-at.html'>Prezi on Continuous Deployment at kaChing</a></li>
+<li><a href='http://eng.wealthfront.com/2010/07/elsewhere-next-generation-java.html'>Elsewhere: Next Generation Java Programming Style</a></li>
+<li><a href='http://eng.wealthfront.com/2010/07/oakland-ebig-hosting-kaching-to-talk.html'>Oakland eBIG hosting kaChing to talk about Continu...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/07/siliconvalley-codecamp-2010.html'>SiliconValley CodeCamp 2010</a></li>
+<li><a href='http://eng.wealthfront.com/2010/07/murder-your-darlings.html'>Murder Your Darlings</a></li>
+<li><a href='http://eng.wealthfront.com/2010/07/mimicking-abstract-classes-with.html'>Mimicking Abstract Classes with Objective-C</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1275375600000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2010_06_01_archive.html'>June</a>
+            (<span class='post-count'>7</span>)
+          
+<ul class='posts'>
+<li><a href='http://eng.wealthfront.com/2010/06/happy-30000-commits-kaching.html'>Happy 30,000 Commits, kaChing</a></li>
+<li><a href='http://eng.wealthfront.com/2010/06/iterate-like-whirling-dervish.html'>Iterate Like a Whirling Dervish</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1272697200000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2010_05_01_archive.html'>May</a>
+            (<span class='post-count'>13</span>)
+          
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1270105200000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2010_04_01_archive.html'>April</a>
+            (<span class='post-count'>6</span>)
+          
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1267430400000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2010_03_01_archive.html'>March</a>
+            (<span class='post-count'>2</span>)
+          
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1265011200000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2010_02_01_archive.html'>February</a>
+            (<span class='post-count'>3</span>)
+          
+</li>
+</ul>
+<ul>
+<li class='archivedate expanded'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=close&toggle=MONTHLY-1262332800000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy toggle-open'>&#9660; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2010_01_01_archive.html'>January</a>
+            (<span class='post-count'>5</span>)
+          
+<ul class='posts'>
+<li><a href='http://eng.wealthfront.com/2010/01/amusing-log-message.html'>Amusing log message</a></li>
+<li><a href='http://eng.wealthfront.com/2010/01/complement-tdd-with-mda.html'>Complement TDD with MDA</a></li>
+<li><a href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html'>Actually Implementing Group Management Using ZooKe...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/01/flexible-log-monitoring-with-scribe.html'>Flexible Log Monitoring with Scribe, Esper, and Na...</a></li>
+<li><a href='http://eng.wealthfront.com/2010/01/subversion-backup.html'>Subversion Backup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=YEARLY-1230796800000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/search?updated-min=2009-01-01T00%3A00%3A00-08%3A00&updated-max=2010-01-01T00%3A00%3A00-08%3A00&max-results=20'>2009</a>
+            (<span class='post-count'>20</span>)
+          
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1259654400000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2009_12_01_archive.html'>December</a>
+            (<span class='post-count'>3</span>)
+          
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1257058800000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2009_11_01_archive.html'>November</a>
+            (<span class='post-count'>8</span>)
+          
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html?widgetType=BlogArchive&widgetId=BlogArchive1&action=toggle&dir=open&toggle=MONTHLY-1254380400000&toggleopen=MONTHLY-1262332800000'>
+<span class='zippy'>&#9658; </span>
+</a>
+<a class='post-count-link' href='http://eng.wealthfront.com/2009_10_01_archive.html'>October</a>
+            (<span class='post-count'>9</span>)
+          
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=6860706081016808951&widgetType=BlogArchive&widgetId=BlogArchive1&action=editWidget' onclick='return _WidgetManager._PopupConfig(document.getElementById("BlogArchive1"));' target='configBlogArchive1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div>
+</div>
+</div>
+<!-- end mainside-wrapper -->
+<!-- spacer for skins that sets sidebar and main to be the same height-->
+<div style='clear: both;'></div>
+<div id='adsection-wrapper'>
+<div class='adsection section' id='adsection'></div>
+</div>
+<div style='clear: both;'></div>
+<div id='footer-wrapper'>
+<div class='footer section' id='footer'>
+</div>
+</div>
+<div style='clear: both;'></div>
+</div></div>
+<!-- end content-wrapper -->
+</div>
+<!-- end blog-wrapper -->
+</div>
+<!-- end outer-wrapper -->
+<!-- Please don't remove the credits below as we spent many hours creating this blogger template. It's only reasonable that you keep the link to Ourblogtemplates.com. -->
+<div id='credit'>
+<div id='creditright'>
+<p>&#160;&#160;&#169;<a href='http://www.wealthfront.com'>Wealthfront</a>&#160;&#160;</p>
+</div>
+</div>
+<!-- end credit -->
+<script type='text/javascript'>
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type='text/javascript'>
+try {
+var pageTracker = _gat._getTracker("UA-11240416-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- Include the Google Friend Connect javascript library. -->
+<!--script src='http://www.google.com/friendconnect/script/friendconnect.js' type='text/javascript'/-->
+<!-- Define the div tag where the gadget will be inserted. -->
+<!--div id='div-3945153668316085188'/-->
+<!-- Render the gadget into a div. -->
+<!--script type='text/javascript'> var skin = {}; skin[&#39;BORDER_COLOR&#39;] = &#39;#cccccc&#39;; skin[&#39;ENDCAP_BG_COLOR&#39;] = &#39;#e0ecff&#39;; skin[&#39;ENDCAP_TEXT_COLOR&#39;] = &#39;#333333&#39;; skin[&#39;ENDCAP_LINK_COLOR&#39;] = &#39;#0000cc&#39;; skin[&#39;ALTERNATE_BG_COLOR&#39;] = &#39;#ffffff&#39;; skin[&#39;CONTENT_BG_COLOR&#39;] = &#39;#ffffff&#39;; skin[&#39;CONTENT_LINK_COLOR&#39;] = &#39;#0000cc&#39;; skin[&#39;CONTENT_TEXT_COLOR&#39;] = &#39;#333333&#39;; skin[&#39;CONTENT_SECONDARY_LINK_COLOR&#39;] = &#39;#7777cc&#39;; skin[&#39;CONTENT_SECONDARY_TEXT_COLOR&#39;] = &#39;#666666&#39;; skin[&#39;CONTENT_HEADLINE_COLOR&#39;] = &#39;#333333&#39;; skin[&#39;POSITION&#39;] = &#39;bottom&#39;; google.friendconnect.container.setParentUrl(&#39;/&#39; /* location of rpc_relay.html and canvas.html */); google.friendconnect.container.renderSocialBar( { id: &#39;div-3945153668316085188&#39;, site: &#39;12884765680266464695&#39;, &#39;view-params&#39;:{&quot;showWall&quot;:&quot;false&quot;} }, skin); </script-->
+<!-- +disqus -->
+<!-- -disqus -->
+<script type="text/javascript">
+if (window.jstiming) window.jstiming.load.tick('widgetJsBefore');
+</script><script type="text/javascript" src="http://www.blogger.com/static/v1/widgets/512629240-widgets.js"></script>
+<script type='text/javascript'>
+if (typeof(BLOG_attachCsiOnload) != 'undefined' && BLOG_attachCsiOnload != null) { window['blogger_templates_experiment_id'] = "templatesV1";window['blogger_blog_id'] = '6860706081016808951';BLOG_attachCsiOnload('item_'); }_WidgetManager._Init('http://www.blogger.com/rearrange?blogID=6860706081016808951','http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html','6860706081016808951');
+_WidgetManager._SetPageActionUrl('http://www.blogger.com/display?blogID=6860706081016808951','szPW4nE-LHY4vgEb3hGRXMmfTEk:1292617133658','AOuZoY72wjVLaz8eq2vmN6imgQ1RgwovvQ:1292617133659');
+_WidgetManager._SetDataContext([{'name': 'blog', 'data': {'title': 'Wealthfront Engineering', 'pageType': 'item', 'url': 'http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html', 'canonicalUrl': 'http://eng.wealthfront.com/2010/01/actually-implementing-group-management.html', 'homepageUrl': 'http://eng.wealthfront.com/', 'enabledCommentProfileImages': true, 'searchLabel': '', 'searchQuery': '', 'pageName': 'Actually Implementing Group Management Using ZooKeeper', 'pageTitle': 'Wealthfront Engineering: Actually Implementing Group Management Using ZooKeeper', 'encoding': 'UTF-8', 'locale': 'en', 'isPrivate': false, 'isMobile': false, 'mobileClass': '', 'languageDirection': 'ltr', 'feedLinks': '\74link rel\75\42alternate\42 type\75\42application/atom+xml\42 title\75\42Wealthfront Engineering - Atom\42 href\75\42http://eng.wealthfront.com/feeds/posts/default\42 /\76\n\74link rel\75\42alternate\42 type\75\42application/rss+xml\42 title\75\42Wealthfront Engineering - RSS\42 href\75\42http://eng.wealthfront.com/feeds/posts/default?alt\75rss\42 /\76\n\74link rel\75\42service.post\42 type\75\42application/atom+xml\42 title\75\42Wealthfront Engineering - Atom\42 href\75\42http://www.blogger.com/feeds/6860706081016808951/posts/default\42 /\76\n\74link rel\75\42EditURI\42 type\75\42application/rsd+xml\42 title\75\42RSD\42 href\75\42http://www.blogger.com/rsd.g?blogID\0756860706081016808951\42 /\76\n\74link rel\75\42alternate\42 type\75\42application/atom+xml\42 title\75\42Wealthfront Engineering - Atom\42 href\75\42http://eng.wealthfront.com/feeds/5263458011386611179/comments/default\42 /\76\n', 'meTag': '', 'openIdOpTag': '', 'imageSrcTag': '', 'latencyHeadScript': '\74script type\75\42text/javascript\42\76(function() { var a\75window;function c(b){this.t\75{};this.tick\75function(d,i,e){e\75e?e:(new Date).getTime();this.t[d]\75[e,i]};this.tick(\42start\42,null,b)}var f\75new c;a.jstiming\75{Timer:c,load:f};try{var g\75null;if(a.chrome\46\46a.chrome.csi)g\75Math.floor(a.chrome.csi().pageT);if(g\75\75null)if(a.gtbExternal)g\75a.gtbExternal.pageT();if(g\75\75null)if(a.external)g\75a.external.pageT;if(g)a.jstiming.pt\75g}catch(h){};a.tickAboveFold\75function(b){b\75b;var d\0750;if(b.offsetParent){do d+\75b.offsetTop;while(b\75b.offsetParent)}b\75d;b\74\075750\46\46a.jstiming.load.tick(\42aft\42)};var j\75false;function k(){if(!j){j\75true;a.jstiming.load.tick(\42firstScrollTime\42)}}a.addEventListener?a.addEventListener(\42scroll\42,k,false):a.attachEvent(\42onscroll\42,k);\n })();\74/script\076', 'mobileHeadScript': ''}}]);
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML2', 'sidebar1', null, document.getElementById('HTML2'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML1', 'sidebar1', null, document.getElementById('HTML1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML3', 'sidebar1', null, document.getElementById('HTML3'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_LabelView', new _WidgetInfo('Label1', 'sidebar1', null, document.getElementById('Label1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_BlogArchiveView', new _WidgetInfo('BlogArchive1', 'sidebar1', null, document.getElementById('BlogArchive1'), {'languageDirection': 'ltr'}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HeaderView', new _WidgetInfo('Header1', 'header'));
+_WidgetManager._RegisterWidget('_NavbarView', new _WidgetInfo('Navbar1', 'navbar'));
+_WidgetManager._RegisterWidget('_BlogView', new _WidgetInfo('Blog1', 'main', null, document.getElementById('Blog1'), {'cmtInteractionsEnabled': false, 'commentInteractionIframeUrl': 'http://www.blogger.com/comment-interaction-iframe.g?blogId\0756860706081016808951', 'mobile': false}, 'displayModeFull'));
+</script>
+</body>
+</html>
