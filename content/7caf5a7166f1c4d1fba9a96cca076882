@@ -1,0 +1,1773 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>ShrinkWrap - JBoss Community</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /> 
+
+<script type="text/javascript">
+    if (top != self) {
+        var isSafeTopUrl = false;
+        try {
+            var topUrl = top.location.href;
+            var topUrlQsIdx = topUrl.indexOf('?');
+            if (topUrlQsIdx > 0) {
+                topUrl = topUrl.substring(0, topUrlQsIdx);
+            }
+            topUrl = topUrl.toLowerCase();
+
+            var safeTopUrls = new Array(
+                'http://community.jboss.org/skin-basic.jspa',
+                'http://community.jboss.org/skin-advanced.jspa',
+                'http://community.jboss.org/skin-advanced!UploadSkinZip.jspa',
+                'http://community.jboss.org/skin-palette.jspa',
+                'http://community.jboss.org/skin-palette!start.jspa'
+            );
+            for (var i = 0; i < safeTopUrls.length; i++) {
+                if (safeTopUrls[i].toLowerCase() == topUrl) {
+                    isSafeTopUrl = true;
+                    break;
+                }
+            }
+        } catch (err) {
+        }
+        if (!isSafeTopUrl) top.location = location;
+    }
+</script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="en-US" />
+<meta name="keywords" content="shrinkwrap" />
+
+<link rel="search"
+    href="/opensearch.xml"
+    title="Community"
+    type="application/opensearchdescription+xml"/>
+
+
+<link rel="Shortcut Icon" href="http://www.jboss.org/dms/content/common/icons/favicons/shrinkwrap_icon_16x"/>
+
+    <!-- Google Analytics part -->
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(
+        ['_setAccount', 'UA-10980360-1'],
+        ['_trackPageview']
+      );
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+    
+
+
+    <script type="text/javascript">
+        (function() {
+            var prepareUrl = function(url) {
+                if (url.indexOf(";") > 0) {
+                    url = url.substring(0, url.indexOf(";"));
+                }
+                if (url.charAt(url.length - 1) == '/') {
+                    url = url.substring(0, url.length - 1);
+                }
+                return url
+            };
+            if (typeof(window._jive_base_url) == "undefined") {
+                window._jive_base_url = prepareUrl("/")
+            }
+            if (typeof(window._jive_resource_url) == "undefined") {
+                window._jive_resource_url = prepareUrl("http://community.jboss.org/4.5.3/")
+            }
+                if (typeof(window._jive_current_user) == "undefined") {
+                    window._jive_current_user = {
+                        anonymous: true,
+                        username: 'ANONYMOUS',
+                        ID: '-1',
+                        enabled: true,
+                        avatarID: '-1',
+                        displayName: ''
+                    };
+                }
+
+
+
+        })();
+
+        var _jive_effective_user_id = "-1";
+        var _jive_auth_token ="no-user";
+        var _jive_locale = "en_US";
+
+    </script>
+
+
+<script type="text/javascript">
+    function KJS(config) { this._path = (config && config.path) || ''; this._d = {}; }
+    KJS.prototype = {
+        require: function(/* deps */) {
+            var ms = Array.prototype.slice.call(arguments), fn;
+            if (typeof ms[ms.length - 1] == 'function') { fn = ms.pop(); }
+            for (var i = 0; i < ms.length; i++) {
+                this.sat(ms[i] +'--required');
+            }
+            if (fn) {
+                this.run(fn, ms);
+            }
+        },
+        load: function(file, depends, satisfies) {
+            var kjs = this,
+                s = (satisfies || []).concat(file.split('?')[0]),
+                satisfy = function(body) {
+                    kjs.embed(body);
+                    var i;
+                    while (i = s.shift()) { kjs.sat(i); }
+                };
+            if (!kjs.isSat(s)) {
+                this.get(this._path + file, function(body) {
+                    depends && depends.length ?
+                        kjs.run(function() { satisfy(body); }, depends) :
+                        satisfy(body);
+                });
+            }
+        },
+        run: function(fn, depends, satisfies) {
+            var kjs = this, ifn,
+                s = satisfies || [],
+                fn_with_satisfies = s.length ?
+                    function() { fn(); var i; while (i = s.pop()) { kjs.sat(i); } } : fn;
+            if (!kjs.isSat(s)) {
+                if (!depends.length) {
+                    fn_with_satisfies();
+                } else if (1 == depends.length) {
+                    ifn = fn_with_satisfies;
+                } else {
+                    var c = depends.length;
+                    ifn = function() { if (!--c) { fn_with_satisfies(); } };
+                }
+                var i;
+                while (i = depends.pop()) {
+                    if (true === this._d[i]) { ifn(); }
+                    else {
+                        this._d[i] = this._d[i] ?
+                        function(ofn, nfn) {
+                            return function() { ofn(); nfn(); };
+                        }(this._d[i], ifn) : ifn;
+                    }
+                }
+            }
+        },
+        get: function(url, fn) {
+            var t;
+            try {
+                t = new XMLHttpRequest();
+            } catch(_) {
+                try {
+                    t = new ActiveXObject('Msxml2.XMLHTTP');
+                } catch(_) {
+                    t = new ActiveXObject('Microsoft.XMLHTTP');
+                }
+            }
+            t.open('GET', url, true);
+            t.onreadystatechange = function() {
+                if (4 == t.readyState) {
+                    fn(t.responseText);
+                    t.onreadystatechange = function(){};
+                }
+            };
+            t.send();
+        },
+        embed: function(body) {
+            eval(body);
+        },
+        sat: function(dep) {
+            if (this._d[dep] && true !== this._d[dep]) { this._d[dep](); }
+            this._d[dep] = true;
+        },
+        isSat: function(deps) {
+            var c = 0;
+            for (var i; i < deps.length; i++) {
+                if (this._d[deps[i]]) { count++; }
+            }
+            return c > 0 && c === deps.length
+        }
+    };
+    var kjs = new KJS();
+</script>
+
+    
+      
+      
+    <script type="text/javascript">
+        window.SPELL_LANGS = "English (Canada)=en_ca,English (United Kingdom)=en_gb,+English (United States)=en_us,French=fr,French (Canada)=fr_ca,German=de,Italian=it,Spanish=es";
+        window.CS_BASE_URL = "";
+        window.CS_RESOURCE_BASE_URL = "http://community.jboss.org/4.5.3";
+        window.tinyMCEPreInit = {
+            suffix : "_src",
+            base : CS_BASE_URL + "/resources/scripts/tiny_mce3"
+        };
+        if (typeof(_jive_project_i18n) == "undefined") {
+            var _jive_project_i18n = new Array();
+            _jive_project_i18n['project.calendar.task'] = "Task";
+            _jive_project_i18n['project.calendar.tasks'] = "Tasks";
+            _jive_project_i18n['project.calendar.checkpoint'] = "Checkpoint";
+            _jive_project_i18n['project.calendar.checkpoints'] = "Checkpoints";
+            _jive_project_i18n['global.edit'] = "Edit";
+            _jive_project_i18n['global.delete'] = "Delete";
+            _jive_project_i18n['project.task.mark.complete'] = "Mark complete";
+            _jive_project_i18n['project.task.assign.to.me'] = "Assign to me";
+            _jive_project_i18n['task.incomplete.link'] = "Incomplete";
+            _jive_project_i18n['project.checkPoint.create.link'] = "Create a checkpoint";
+            _jive_project_i18n['project.task.create.link'] = "Create a task";
+        }
+    </script>
+     
+
+
+
+
+    
+
+
+
+    
+<script type="text/javascript">
+kjs.run(function() {
+kjs.load('http://community.jboss.org/4.5.3/resources/scripts/gen/c7fadafd4f5a35d8e442368965aaad0f.js', [  ]);
+kjs.run(function() {
+        Zapatec.Calendar._TT["DEF_DATE_FORMAT"] = "%m/%d/%Y";
+
+
+}, [ 'http://community.jboss.org/4.5.3/resources/scripts/gen/c7fadafd4f5a35d8e442368965aaad0f.js' ], [ 'Zapatec.Calendar' ]);
+}, [ 'Zapatec.Calendar--required' ]);
+</script>
+    
+    <script type="text/javascript">
+        var profileShortUrl = "/profile-short.jspa";
+        var profileLoadingTooltip = "Loading user profile";
+        var profileErrorTooltip = "There was an error loading that profile information.";
+
+        var projectChooserUrl = "/project-chooser!input.jspa";
+
+        var containerShortUrl = "/container-short.jspa";
+        var containerLoadingTooltip = "Loading place information.";
+        var containerErrorTooltip = "There was an error loading that place information.";
+
+        var videoShortUrl = "/view-video-short.jspa";
+        var videoLoadingTooltip = "video.tooltip.loading";
+        var videoErrorTooltip = "video.tooltip.error";
+
+        var followErrorMessage = "An internal error ocurred while following the project or space.";
+
+        (function() {
+            var originalWrite = document.write;
+            document.write = function() {
+                if(typeof $j != 'undefined' && $j.isReady) {
+                    console.warn("document.write called after document was loaded: ", arguments);
+                }
+                else {
+                    // In IE before version 8 `document.write()` does not
+                    // implement Function methods, like `apply()`.
+                    return Function.prototype.apply.call(originalWrite, document, arguments);
+                }
+            }
+        })();        
+    </script>
+
+
+
+
+
+    <link rel="stylesheet" href="http://community.jboss.org/4.5.3/styles/jive-global.css" type="text/css" media="all" />
+    <!-- <link rel="stylesheet" href="/styles/jive-icons-legacy.css" type="text/css" media="all" /> -->
+    <link rel="stylesheet" href="http://community.jboss.org/4.5.3/styles/jive-icons.css" type="text/css" media="all" />
+
+        <link rel="stylesheet" href="/plugins/wiki/resources/wiki-plugin.css" type="text/css" media="all" />
+
+
+
+
+    <!--[if IE 6]>
+    <style type="text/css">
+    /* hack for IE6's lack of alpha PNG support */
+    #jive-wrapper .ie6png {
+        filter: expression(function(e){
+            e.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=" +
+                (e.tagName=='IMG' ? e.src : e.currentStyle.backgroundImage.split('\"')[1]) + ")",
+            e.runtimeStyle.backgroundImage = "none",
+            e.src = "/images/transparent.png"
+        }(this));
+    }
+    </style>
+
+    <link rel="stylesheet" href="http://community.jboss.org/4.5.3/styles/jive-icons-ie.css" type="text/css" media="all" />
+    <![endif]-->
+
+
+<script type="text/javascript" src="http://community.jboss.org/4.5.3/resources/scripts/gen/db234b7c4d1c25d8c6571f7afe84af9d.js"></script>
+<script type="text/javascript">
+        // begin list of custom CSS
+        jive.rte.defaultStyles = new Array();
+            jive.rte.defaultStyles.push("/plugins/wiki/resources/wiki-plugin.css");
+        // end list of custom CSS
+
+
+            var jiveControl = new jive.model.Controller();
+
+
+if (dwr == null) var dwr = {};
+if (dwr.engine == null) dwr.engine = {};
+if (DWREngine == null) var DWREngine = dwr.engine;
+
+dwr.engine._origScriptSessionId = "37CBD86AB0DD195187C6C2D2A081A45B";
+dwr.engine._sessionCookieName = "JSESSIONID"; // JSESSIONID
+dwr.engine._allowGetForSafariButMakeForgeryEasier = "true";
+dwr.engine._scriptTagProtection = "throw 'allowScriptTagRemoting is false.';";
+dwr.engine._defaultPath = "/dwr/interface";
+dwr.engine._pollWithXhr = "false";
+
+
+    (function() {
+        var options = {
+            friendsRange : 20,
+            everyoneRange : 20,
+            youUsername : 'ANONYMOUS',
+            youID : -1,
+            isGuest : true
+        };
+
+        var i18n = {
+            acclaimLikingLike : "Like",
+            acclaimLikingUnlike : "Liked",
+            acclaimLikedNone : "None",
+            acclaimLikingLiked : "Person Liked This",
+            acclaimLikingLikedPlural : "People Liked This",
+            acclaimPeopleLiked : "People who liked this",
+            acclaimLikedYou : "You",
+            acclaimLikedFriends : "Friends",
+            acclaimLikedEveryone : "Everyone Else",
+            globalMore : "More",
+            globalClose : "Close"
+        };
+
+        new jive.Acclaim(options, i18n);
+    })();
+
+
+        var quickuserprofile = new QuickUserProfile("jive-note-user-body", profileShortUrl, profileLoadingTooltip,
+                profileErrorTooltip);
+        var jiveprojectchooser = new JiveProjectChooser(projectChooserUrl);
+        var quickcontainersummary = new QuickContainerSummary("jive-note-container-body", containerShortUrl,
+                containerLoadingTooltip, containerErrorTooltip);
+        var quickviewvideo = new QuickViewVideo("jive-note-video-body", videoShortUrl, videoLoadingTooltip,
+                videoErrorTooltip);
+
+        var jiveFollow = new jive.Follow(followErrorMessage);
+
+
+</script>
+
+<script type="text/javascript" src="http://community.jboss.org/4.5.3/resources/scripts/gen/a3ae3b891de6a381ed87c265d0ce2348.js"></script>
+<script type="text/javascript">
+    window.errorHandlerMessage = "An error occurred:";
+
+    window.editorErrorHandler = function(message, exception) {
+        // if the message is something other than a timeout, show the message plus the error code
+        if (message.indexOf('Timeout') == -1) {
+            $j('#dwr-error-text').text(errorHandlerMessage + ' Error Code: ' + message);
+            $j('#dwr-error-table').fadeIn();
+            setTimeout(function() {
+                $j('#dwr-error-table').fadeOut();
+            }, 10000);
+        }
+    };
+
+
+    
+    if(typeof(tinyMCE) != "undefined"){ // could be Safari 2, which dies with tinyMCE
+        tinyMCE.addI18n('en.jivemacros',{
+                    "unused.jive.key" : "nothing."
+        });
+    }
+    if(typeof(tinyMCE) != "undefined"){ // could be Safari 2, which dies with tinyMCE
+        tinyMCE.addI18n('en.jivemacros',{
+                    "unused.jive.key" : "nothing."
+        });
+    }
+    if(typeof(tinyMCE) != "undefined"){ // could be Safari 2, which dies with tinyMCE
+        tinyMCE.addI18n('en.jivemacros',{
+                    "unused.jive.key" : "nothing."
+        });
+    }
+    if(typeof(tinyMCE) != "undefined"){ // could be Safari 2, which dies with tinyMCE
+        tinyMCE.addI18n('en.jivemacros',{
+                    "unused.jive.key" : "nothing."
+        });
+    }
+    if(typeof(tinyMCE) != "undefined"){ // could be Safari 2, which dies with tinyMCE
+        tinyMCE.addI18n('en.jivemacros',{
+                    "unused.jive.key" : "nothing."
+        });
+    }
+    if(typeof(tinyMCE) != "undefined"){ // could be Safari 2, which dies with tinyMCE
+        tinyMCE.addI18n('en.jivemacros',{
+                    "unused.jive.key" : "nothing."
+        });
+    }
+    if(typeof(tinyMCE) != "undefined"){ // could be Safari 2, which dies with tinyMCE
+        tinyMCE.addI18n('en.jivemacros',{
+                    "unused.jive.key" : "nothing."
+        });
+    }
+    if(typeof(tinyMCE) != "undefined"){ // could be Safari 2, which dies with tinyMCE
+        tinyMCE.addI18n('en.jivemacros',{
+                    "unused.jive.key" : "nothing."
+        });
+    }
+
+
+        window.RawHTMLSaveFunction = function(element_id, html, body){
+            var text = $j('#wysiwygtext');
+            if (text.is(':not(:visible)')) {
+                return html;
+            }else{
+                return text.val();
+            }
+        }
+        jive.rte.multiRTE = new Array();
+
+        window.refreshLinks = function() {
+            jive.rte.multiRTE.forEach(function(rteID) {
+                if ($j('#' + rteID + '_parent').length < 1) {
+                    // safari 2, text only
+                    $j('#' + rteID + '_toggle_html').hide();
+                    $j('#jivePreferredEditorModeLinkHREF').hide();
+                    return;
+                }
+
+                if(currentMode == 'rawhtml') {
+                    $j('#' + rteID + '_toggle_html').css('display', 'block');
+                }else{
+                    $j('#' + rteID + '_toggle_html').hide();
+                }
+
+                if (preferredMode == currentMode) {
+                    $j('#jivePreferredEditorModeLinkHREF').hide();
+                } else {
+                    $j('#jivePreferredEditorModeLinkHREF').css('display', 'block');
+                }
+            });
+        }
+
+    window.editor = new jive.ext.y.HashTable();
+
+
+       
+jive.rte.macros.push(new jive.rte.Macro("color","","TEXT", true, false, [], [{name: "0",value: ""},{name: "__default_attr",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("size","","TEXT", true, false, [], [{name: "0",value: ""},{name: "__default_attr",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("font","","TEXT", true, false, [], [{name: "0",value: ""},{name: "__default_attr",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("toc","","IMAGE", true, true, [], [], true,false));
+jive.rte.macros.push(new jive.rte.Macro("code","","TEXT", false, true, [{ name: "sql", deleteAll: true, params: [{ name: "__default_attr", value :"sql"} ]},{ name: "html", deleteAll: true, params: [{ name: "__default_attr", value :"html"} ]},{ name: "xml", deleteAll: true, params: [{ name: "__default_attr", value :"xml"} ]},{ name: "java", deleteAll: true, params: [{ name: "__default_attr", value :"java"} ]},{ name: "plain", deleteAll: true, params: [{ name: "__default_attr", value :"plain"} ]}], [{name: "__default_attr",value: ["sql","html","xml","java","plain"]}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("noformat","","TEXT", true, false, [], [], true,false));
+jive.rte.macros.push(new jive.rte.Macro("thread","thread/","INLINE", true, false, [], [{name: "id",value: ""},{name: "0",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("message","message/","INLINE", true, false, [], [{name: "id",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("external-site","bookmarks/","INLINE", false, false, [], [{name: "id",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("document","docs/","INLINE", true, false, [], [{name: "id",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("microblog","status/","INLINE", true, false, [], [{name: "id",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("polls","polls/","INLINE", true, false, [], [{name: "id",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("blogpost","blogs/","INLINE", true, false, [], [{name: "id",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("blog","blogs/","INLINE", true, false, [], [{name: "id",value: ""},{name: "name",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("community","community/","INLINE", true, false, [], [{name: "id",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("space","community/","INLINE", true, false, [], [{name: "id",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("user","","INLINE", true, false, [], [{name: "id",value: ""},{name: "username",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("project","project/","INLINE", true, false, [], [{name: "id",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("task","view-task.jspa?task=","INLINE", true, false, [], [{name: "id",value: ""},{name: "0",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("group","groups/","INLINE", true, false, [], [{name: "id",value: ""},{name: "__default_attr",value: ""},{name: "title",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("quote","","TEXT", false, true, [], [{name: "title",value: ""},{name: "__default_attr",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("vimeo","","IMAGE", false, false, [], [{name: "__default_attr",value: ""},{name: "width",value: ""},{name: "height",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("veoh","","IMAGE", false, false, [], [{name: "__default_attr",value: ""},{name: "width",value: ""},{name: "height",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("dailymotion","","IMAGE", false, false, [], [{name: "__default_attr",value: ""},{name: "width",value: ""},{name: "height",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("google","","IMAGE", false, false, [], [{name: "__default_attr",value: ""},{name: "width",value: ""},{name: "height",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("youtube","","IMAGE", false, false, [], [{name: "__default_attr",value: ""},{name: "width",value: ""},{name: "height",value: ""}], true,false));
+jive.rte.macros.push(new jive.rte.Macro("wiki","","TEXT", false, true, [], [], true,true));
+
+
+
+</script>
+<script type="text/javascript" src="http://community.jboss.org/4.5.3/resources/scripts/gen/672f4f71d0f6010623a6237605751379.js"></script>
+<script type="text/javascript">
+var _jive_video_picker__url = "?container=2193&containerType=14"
+var _jive_images_enabled = false;
+
+
+    
+    function toggleFeatured() {
+
+        ToggleFeatured.toggleFeatured(102, 14138, 2193, 14, {
+            callback:function(featured) {
+
+                if (featured) {
+                    $j('#featured-toggle-unfeature').show();
+                    $j('#featured-toggle-feature').hide();
+                } else {
+                    $j('#featured-toggle-unfeature').hide();
+                    $j('#featured-toggle-feature').show();
+                }
+
+
+
+                Jive.AlertMessage('content-featured-notify', {
+                    beforeStart:function() {
+                        if (featured) {
+                            $j('#content-featured-notify').html('<div><span class="jive-icon-med jive-icon-info"></span>This item is now featured!</div>');
+                           
+                        } else {
+                            $j('#content-featured-notify').html('<div><span class="jive-icon-med jive-icon-info"></span>You have removed this from featured content.</div>');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+        $j(function() {
+            $j("#jive-view-picker").change();
+        });
+
+        $j(function() {
+            var tooltipUrl = "/view-favorite-tooltip.jspa";
+            $j("#jive-bookmark-sidebar .jive-avatar").livequery(function() {
+                var favoriteId = $j(this).parents("li").attr("id").slice("favorite-".length);
+                $j(this).tooltip("bookmark", tooltipUrl + "?favorite=" + favoriteId);
+            });
+        });
+
+
+      function getMoreLikeThis() {
+        new jive.MoreLikeThisApp.Main({
+            objectType: 102,
+            objectID: 14138,
+            containerID: "jive-more-like-this-102-14138",
+            numResults: 5,
+            noContentMessage: "No similar content found",
+            errorMessage: "Unable to retrieve content from the server:"
+        });
+      }
+
+
+</script>
+
+    
+    
+
+	<link rel="stylesheet" href="http://community.jboss.org/4.5.3/styles/jive-content.css" type="text/css" media="all" />
+
+        <link rel="alternate" type="application/atom+xml"
+            title="ShrinkWrap Version History Feed"
+            href="/community/feeds/document-history/DOC-14138" />
+
+        <link rel="alternate" type="application/atom+xml"
+            title="ShrinkWrap Comments Feed"
+            href="/community/feeds/document-comments/DOC-14138" />
+
+    
+        
+
+
+
+    <script type="text/javascript">
+        var documentID = 14138;
+
+        function publishDraft() {
+            $j('#documentPublishForm').submit();
+        }
+
+        function restoreVersion(version) {
+           if (confirm('Are you sure you want to restore this version of the article text?')){
+                $j('#documentRestoreForm').submit();
+           }
+        }
+
+        function deleteDocument() {
+            if (confirm('Are you sure you want to delete this article?')){
+                $j('#documentDeleteForm').submit();
+            }
+        }
+    </script>
+
+    <!-- BEGIN action bar, only for non-binary documents -->
+
+    
+
+    <!-- END action bar -->
+
+
+
+<!-- JBoss.ORG common CSS -->   
+    <link rel="stylesheet" href="http://static.jboss.org/ffe/4.2.4.1/theme/css/common/org_common.css" type="text/css" media="screen"  />
+<!-- Custom.css - KEEP THIS BELOW all other stylesheets for ultimate overwrite -->
+    <link rel="stylesheet" href="http://static.jboss.org/ffe/4.2.4.1/theme/css/sbs/custom.css" type="text/css" media="screen"  />
+
+</head>
+<body class="jive-body-content jive-body-content-document" >
+
+
+<a href="#jive-body" class="jive-skip-nav">Skip navigation</a>
+
+    <div id="jive-compliance" class=""style="display:none">
+        <span class="jive-icon-med "></span>
+        
+    </div>
+
+    <div id="jive-wrapper" class="clearfix">
+<!-- COMMON HEADER -->
+<div id="ORGheader">
+<h1><a href="http://www.jboss.org/">JBoss Community</a></h1>
+  <!-- Primary Navigation -->
+  <div id="primarynav">
+    <ul class="sf-menu">
+        <li id="primary-nav-home"> <a class="menu-title sf-with-ul" href="http://www.jboss.org/">Home</a>
+          <ul class="level1">
+          <span>
+        <li class="leaf"><a id="primary-nav-home-community" href="http://community.jboss.org/">Community</a></li>
+        <li class="leaf"><a id="primary-nav-home-user-groups" href="http://www.jboss.org/usergroups">User Groups</a></li>
+        <li class="leaf"><a id="primary-nav-home-events" href="http://www.jboss.org/events">Events</a></li>
+        <li class="leaf"><a id="primary-nav-home-feeds" href="http://planet.jboss.org/">Blogs</a></li>
+        <li class="leaf"><a id="primary-nav-home-articles" href="http://java.dzone.com/category/tags/jboss">Articles</a></li>
+        <li class="leaf"><a id="primary-nav-home-books" href="http://www.jboss.org/books">Books</a></li>       
+        <li class="leaf"><a id="primary-nav-home-help" href="http://www.jboss.org/help">Help</a></li>
+</span>
+          </ul>
+        </li>
+        <li id="primary-nav-members"> <a class="menu-title" href="http://community.jboss.org/people">Members</a>
+          <ul class="level1">
+<span>
+        <li class="leaf"><a id="primary-nav-members-new-members" href="http://community.jboss.org/people?sort=creationDate&amp;showDisabledUsers=false&amp;showExternalUsers=false&amp;resultTypes=COMMUNITY&amp;start=0&amp;onlineOnly=false&amp;recentlyAddedOnly=true">Recently joined</a></li>
+        <li class="leaf"><a id="primary-nav-members-developers" href="http://community.jboss.org/groups/developers">Developers</a></li>
+        <li class="leaf"><a id="primary-nav-members-testers" href="http://community.jboss.org/groups/testers">Testers</a></li>
+        <li class="leaf"><a id="primary-nav-members-writers" href="http://community.jboss.org/groups/writers">Writers</a></li>
+        <li class="leaf"><a id="primary-nav-members-speakers" href="http://community.jboss.org/groups/speakers">Speakers</a></li>
+        <li class="leaf"><a id="primary-nav-members-groups" href="http://community.jboss.org/groups">Groups</a></li>
+        <li class="leaf"><a id="primary-nav-members-contributor" href="https://cla.jboss.org">Sign CLA</a></li>
+</span>          </ul>
+        </li>
+        <li id="primary-nav-projects"> <a class="menu-title sf-with-ul" href="http://www.jboss.org/projects">Projects</a>
+          <ul class="level1">
+<span>
+        <li class="leaf"><a id="primary-nav-projects-matrix" href="http://www.jboss.org/projects/matrix">Index</a></li>
+        <li class="open"><a id="primary-nav-projects-web-interface" class="sf-with-ul unlinked">Web Interface</a>                
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-gatein" href="http://www.jboss.org/gatein"><span class="project-icon-med gatein_icon_16x"></span>GateIn</a></li>
+            <li class="leaf"><a id="primary-nav-projects-richfaces" href="http://www.jboss.org/richfaces"><span class="project-icon-med richfaces_icon_16x"></span>RichFaces</a></li>
+            <li class="leaf"><a id="primary-nav-projects-portletbridge" href="http://www.jboss.org/portletbridge"><span class="project-icon-med jbossportal_icon_16x"></span>Portlet Bridge</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-programming-model" class="sf-with-ul unlinked">Programming Model</a>
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-switchyard" href="http://www.jboss.org/switchyard"><span class="project-icon-med switchyard_icon_16x"></span>SwitchYard</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossesb" href="http://www.jboss.org/jbossesb"><span class="project-icon-med blank_icon_16x"></span>ESB</a></li>
+            <li class="leaf"><a id="primary-nav-projects-weld" href="http://seamframework.org/Weld"><span class="project-icon-med weld_icon_16x"></span>Weld</a></li>
+            <li class="leaf"><a id="primary-nav-projects-seam" href="http://seamframework.org/"><span class="project-icon-med seam_icon_16x"></span>Seam</a></li>
+            <li class="leaf"><a id="primary-nav-projects-ejb3" href="http://www.jboss.org/ejb3"><span class="project-icon-med blank_icon_16x"></span>EJB3</a></li>
+            <li class="leaf"><a id="primary-nav-projects-snowdrop" href="http://www.jboss.org/snowdrop"><span class="project-icon-med snowdrop_icon_16x"></span>Snowdrop</a></li>
+            <li class="leaf"><a id="primary-nav-projects-resteasy" href="http://www.jboss.org/resteasy"><span class="project-icon-med resteasy_icon_16x"></span>RESTEasy</a></li>
+            <li class="leaf"><a id="primary-nav-projects-torquebox" href="http://torquebox.org/"><span class="project-icon-med torquebox_icon_16x"></span>TorqueBox</a></li>
+            <li class="leaf"><a id="primary-nav-projects-errai" href="http://www.jboss.org/errai"><span class="project-icon-med errai_icon_16x"></span>Errai</a></li>
+            <li class="leaf"><a id="primary-nav-projects-railo" href="http://www.getrailo.org/"><span class="project-icon-med railo_icon_16x"></span>Railo</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-services" class="sf-with-ul unlinked">Services</a>
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-drools" href="http://www.jboss.org/drools"><span class="project-icon-med drools_icon_16x"></span>Drools</a></li>
+            <li class="open"><a id="primary-nav-projects-hibernate" class="sf-with-ul" href="http://core.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Hibernate Core</a>
+              <ul>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-annotations" href="http://annotations.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Annotations</a></li>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-entity-manager" href="http://entitymanager.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Entity Manager</a></li>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-shards" href="http://shards.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Shards</a></li>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-validator" href="http://validator.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Validator</a></li>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-search" href="http://search.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Search</a></li>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-envers" href="http://www.jboss.org/envers"><span class="project-icon-med hibernate_icon_16x"></span>Envers</a></li>
+                <li class="leaf"><a id="primary-nav-projects-hibernate-tools" href="http://tools.hibernate.org"><span class="project-icon-med hibernate_icon_16x"></span>Tools</a></li>
+              </ul>
+            </li>
+            <li class="leaf"><a id="primary-nav-projects-infinispan" href="http://www.jboss.org/infinispan"><span class="project-icon-med infinispan_icon_16x"></span>Infinispan</a></li>
+            <li class="leaf"><a id="primary-nav-projects-hornetq" href="http://www.jboss.org/hornetq"><span class="project-icon-med hornetQ_icon_16x"></span>HornetQ</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbpm" href="http://www.jboss.org/jbpm"><span class="project-icon-med jbpm_icon_16x"></span>jBPM</a></li>
+            <li class="leaf"><a id="primary-nav-projects-riftsaw" href="http://www.jboss.org/riftsaw"><span class="project-icon-med riftsaw_icon_16x"></span>RiftSaw</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jgroups" href="http://www.jgroups.org/"><span class="project-icon-med jgroups_icon_16x"></span>JGroups</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbosstm" href="http://www.jboss.org/jbosstm"><span class="project-icon-med blank_icon_16x"></span>Transactions</a></li>
+            <li class="leaf"><a id="primary-nav-projects-blacktie" href="http://www.jboss.org/blacktie"><span class="project-icon-med blacktie_icon_16x"></span>Blacktie</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossws" href="http://www.jboss.org/jbossws"><span class="project-icon-med blank_icon_16x"></span>Web Services</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossremoting" href="http://www.jboss.org/jbossremoting"><span class="project-icon-med blank_icon_16x"></span>Remoting</a></li>
+            <li class="leaf"><a id="primary-nav-projects-picketbox" href="http://www.jboss.org/picketbox"><span class="project-icon-med picketbox_icon_16x"></span>PicketBox</a></li>
+            <li class="leaf"><a id="primary-nav-projects-picketlink" href="http://www.jboss.org/picketlink"><span class="project-icon-med picketlink_icon_16x"></span>PicketLink</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbosssso" href="http://www.jboss.org/jbosssso"><span class="project-icon-med blank_icon_16x"></span>Federated SSO</a></li>
+            <li class="leaf"><a id="primary-nav-projects-ironjacamar" href="http://www.jboss.org/ironjacamar"><span class="project-icon-med ironjacamar_icon_16x"></span>IronJacamar</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossclustering" href="http://www.jboss.org/jbossclustering"><span class="project-icon-med blank_icon_16x"></span>Clustering</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossmarshalling" href="http://www.jboss.org/jbossmarshalling"><span class="project-icon-med blank_icon_16x"></span>Marshalling</a></li>
+            <li class="leaf"><a id="primary-nav-projects-serialization" href="http://www.jboss.org/serialization"><span class="project-icon-med blank_icon_16x"></span>Serialization</a></li>
+            <li class="leaf"><a id="primary-nav-projects-tohu" href="http://www.jboss.org/tohu"><span class="project-icon-med tohu_icon_16x"></span>Tohu</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-servers" class="sf-with-ul unlinked">Servers</a>
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-jbossas" href="http://www.jboss.org/jbossas"><span class="project-icon-med blank_icon_16x"></span>Application Server</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossweb" href="http://www.jboss.org/jbossweb"><span class="project-icon-med blank_icon_16x"></span>Web</a></li>
+            <li class="leaf"><a id="primary-nav-projects-teiid" href="http://www.jboss.org/teiid"><span class="project-icon-med teiid_icon_16x"></span>Teiid</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mobicentsjainslee" href="http://www.mobicents.org/slee/intro.html"><span class="project-icon-med mobicents_icon_16x"></span>Mobicents JAIN SLEE</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mobicentssipservlets" href="http://www.mobicents.org/products_sip_servlets.html"><span class="project-icon-med mobicents_icon_16x"></span>Mobicents Sip Servlets</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mobicentsmedia" href="http://www.mobicents.org/mms/mms-main.html"><span class="project-icon-med mobicents_icon_16x"></span>Mobicents Media</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mobicentssippresence" href="http://www.jboss.org/mobicents"><span class="project-icon-med mobicents_icon_16x"></span>Mobicents SIP Presence</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mobicentsdiameter" href="http://www.jboss.org/mobicents"><span class="project-icon-med mobicents_icon_16x"></span>Mobicents Diameter</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossmc" href="http://www.jboss.org/jbossmc"><span class="project-icon-med jbossmc_icon_16x"></span>Microcontainer</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-management" class="sf-with-ul unlinked">Management</a>
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-jopr" href="http://www.jboss.org/jopr"><span class="project-icon-med jopr_icon_16x"></span>Jopr</a></li>
+            <li class="leaf"><a id="primary-nav-projects-embjopr" href="http://www.jboss.org/embjopr"><span class="project-icon-med embeddedjopr_icon_16x"></span>Embedded Jopr</a></li>
+            <li class="leaf"><a id="primary-nav-projects-modeshape" href="http://www.jboss.org/modeshape"><span class="project-icon-med modeshape_icon_16x"></span>ModeShape</a></li>
+            <li class="leaf"><a id="primary-nav-projects-overlord" href="http://www.jboss.org/overlord"><span class="project-icon-med overlord_icon_16x"></span>Overlord</a></li>
+            <li class="leaf"><a id="primary-nav-projects-guvnor" href="http://www.jboss.org/guvnor"><span class="project-icon-med guvnor_icon_16x"></span>Guvnor</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-cloud" class="sf-with-ul unlinked">Cloud</a>
+          <ul class="level2">
+            <li class="open"><a id="primary-nav-projects-stormgrind" class="sf-with-ul" href="http://www.jboss.org/stormgrind"><span class="project-icon-med blank_icon_16x"></span>StormGrind</a>
+              <ul>
+                <li class="leaf"><a id="primary-nav-projects-cirras" href="http://www.jboss.org/stormgrind/projects/cirras"><span class="project-icon-med cirras_icon_16x"></span>CirrAS</a></li>
+              </ul>
+	           </li>
+            <li class="leaf"><a id="primary-nav-projects-boxgrinder" href="http://www.jboss.org/boxgrinder"><span class="project-icon-med boxgrinder_icon_16x"></span>BoxGrinder</a></li>
+            <li class="leaf"><a id="primary-nav-projects-steamcannon" href="http://steamcannon.org"><span class="project-icon-med blank_icon_16x"></span>SteamCannon</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-tools-testing" class="sf-with-ul unlinked">Tools &amp; Testing</a>
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-tools" href="http://www.jboss.org/tools"><span class="project-icon-med tools_icon_16x"></span>Tools</a></li>
+            <li class="leaf"><a id="primary-nav-projects-teiiddesigner" href="http://www.jboss.org/teiiddesigner"><span class="project-icon-med teiid_icon_16x"></span>Teiid Designer</a></li>
+            <li class="leaf"><a id="primary-nav-projects-arquillian" href="http://www.jboss.org/arquillian"><span class="project-icon-med arquillian_icon_16x"></span>Arquillian</a></li>
+            <li class="leaf"><a id="primary-nav-projects-shrinkwrap" href="http://www.jboss.org/shrinkwrap"><span class="project-icon-med shrinkwrap_icon_16x"></span>ShrinkWrap</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jsfunit" href="http://www.jboss.org/jsfunit"><span class="project-icon-med blank_icon_16x"></span>JSFUnit</a></li>
+            <li class="leaf"><a id="primary-nav-projects-tattletale" href="http://www.jboss.org/tattletale"><span class="project-icon-med tattletale_icon_16x"></span>Tattletale</a></li>
+            <li class="leaf"><a id="primary-nav-projects-byteman" href="http://www.jboss.org/byteman"><span class="project-icon-med blank_icon_16x"></span>Byteman</a></li>
+            <li class="leaf"><a id="primary-nav-projects-scribble" href="http://www.jboss.org/scribble"><span class="project-icon-med scribble_icon_16x"></span>Scribble</a></li>
+            <li class="leaf"><a id="primary-nav-projects-savara" href="http://www.jboss.org/savara"><span class="project-icon-med savara_icon_16x"></span>Savara</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossprofiler" href="http://www.jboss.org/jbossprofiler"><span class="project-icon-med blank_icon_16x"></span>Profiler</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mass" href="http://www.jboss.org/mass"><span class="project-icon-med mass_icon_16x"></span>Mass</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossdtf" href="http://www.jboss.org/jbossdtf"><span class="project-icon-med blank_icon_16x"></span>Distributed Test Framework</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-other" class="sf-with-ul unlinked">Other</a>
+          <ul class="level2">
+            <li class="leaf"><a id="primary-nav-projects-pressgang" href="http://www.jboss.org/pressgang"><span class="project-icon-med pressgang_icon_16x"></span>PressGang</a></li>
+            <li class="leaf"><a id="primary-nav-projects-mod_cluster" href="http://www.jboss.org/mod_cluster"><span class="project-icon-med blank_icon_16x"></span>mod_cluster</a></li>
+            <li class="leaf"><a id="primary-nav-projects-netty" href="http://www.jboss.org/netty"><span class="project-icon-med blank_icon_16x"></span>Netty</a></li>
+            <li class="leaf"><a id="primary-nav-projects-xnio" href="http://www.jboss.org/xnio"><span class="project-icon-med xnio_icon_16x"></span>XNIO</a></li>
+            <li class="leaf"><a id="primary-nav-projects-javassist" href="http://www.jboss.org/javassist"><span class="project-icon-med blank_icon_16x"></span>Javassist</a></li>
+            <li class="leaf"><a id="primary-nav-projects-wise" href="http://www.jboss.org/wise"><span class="project-icon-med wise_icon_16x"></span>Wise</a></li>
+            <li class="leaf"><a id="primary-nav-projects-maven-jdocbook" href="http://www.jboss.org/maven-jdocbook-plugin"><span class="project-icon-med blank_icon_16x"></span>maven-jdocbook-plugin</a></li>
+            <li class="leaf"><a id="primary-nav-projects-maven-jdocbook-style" href="http://www.jboss.org/maven-jdocbook-style-plugin"><span class="project-icon-med blank_icon_16x"></span>maven-jdocbook-style-plugin</a></li>
+            <li class="leaf"><a id="primary-nav-projects-maven-retro-plugin" href="http://www.jboss.org/maven-jboss-retro-plugin"><span class="project-icon-med blank_icon_16x"></span>maven-jboss-retro-plugin</a></li>
+            <li class="leaf"><a id="primary-nav-projects-maven-buildmagic-thirdparty" href="http://www.jboss.org/maven-buildmagic-thirdparty-plugin"><span class="project-icon-med blank_icon_16x"></span>maven-buildmagic-thirdparty-plugin</a></li>
+            <li class="leaf"><a id="primary-nav-projects-apiviz" href="http://www.jboss.org/apiviz"><span class="project-icon-med blank_icon_16x"></span>APIviz</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbosscommon" href="http://www.jboss.org/jboss-common"><span class="project-icon-med blank_icon_16x"></span>Common</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossretro" href="http://www.jboss.org/jbossretro"><span class="project-icon-med blank_icon_16x"></span>Retro</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossforums" href="http://www.jboss.org/jbossforums"><span class="project-icon-med jbossportal_icon_16x"></span>Forums</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbosswiki" href="http://www.jboss.org/jbosswiki"><span class="project-icon-med jbossportal_icon_16x"></span>Wiki</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossblog" href="http://www.jboss.org/jbossblog"><span class="project-icon-med jbossportal_icon_16x"></span>Blog</a></li>
+          </ul>
+        </li>
+        <li class="open"><a id="primary-nav-projects-archive" class="sf-with-ul unlinked">Archive</a>
+          <ul class="level2">
+            <li class="open"><a id="primary-nav-projects-jbossportal" href="http://www.jboss.org/jbossportal" class="sf-with-ul unlinked"><span class="project-icon-med jbossportal_icon_16x"></span>Portal</a>
+              <ul>
+                <li class="leaf"><a id="primary-nav-projects-portlet-container" href="http://www.jboss.org/portletcontainer"><span class="project-icon-med jbossportal_icon_16x"></span>Portlet Container</a></li>
+              </ul>
+      	    </li>
+            <li class="leaf"><a id="primary-nav-projects-jbossmessaging" href="http://www.jboss.org/jbossmessaging"><span class="project-icon-med blank_icon_16x"></span>Messaging</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbosscache" href="http://www.jboss.org/jbosscache"><span class="project-icon-med blank_icon_16x"></span>Cache</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossaop" href="http://www.jboss.org/jbossaop"><span class="project-icon-med blank_icon_16x"></span>AOP</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossiiop" href="http://www.jboss.org/jbossiiop"><span class="project-icon-med blank_icon_16x"></span>IIOP</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jdcom" href="http://www.jboss.org/jdcom"><span class="project-icon-med blank_icon_16x"></span>jDCOM</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jbossjmx" href="http://www.jboss.org/jbossjmx"><span class="project-icon-med blank_icon_16x"></span>JMX</a></li>
+            <li class="leaf"><a id="primary-nav-projects-jrunit" href="http://www.jboss.org/jrunit"><span class="project-icon-med blank_icon_16x"></span>JRunit</a></li>
+            <li class="leaf"><a id="primary-nav-projects-gravel" href="http://www.jboss.org/gravel"><span class="project-icon-med blank_icon_16x"></span>Gravel</a></li>
+            <li class="leaf"><a id="primary-nav-projects-kosmos" href="http://www.jboss.org/kosmos"><span class="project-icon-med blank_icon_16x"></span>Kosmos</a></li>
+            <li class="leaf"><a id="primary-nav-projects-shotoku" href="http://www.jboss.org/shotoku"><span class="project-icon-med blank_icon_16x"></span>Shotoku</a></li>
+            <li class="leaf"><a id="primary-nav-projects-davcache" href="http://www.jboss.org/davcache"><span class="project-icon-med blank_icon_16x"></span>DavCache</a></li>
+            <li class="leaf"><a id="primary-nav-projects-reportingservices" href="http://www.jboss.org/reportingservices"><span class="project-icon-med blank_icon_16x"></span>Reporting Services</a></li>
+            <li class="leaf"><a id="primary-nav-projects-portletswap" href="http://www.jboss.org/portletswap"><span class="project-icon-med blank_icon_16x"></span>Portlet Swap</a></li>
+            <li class="leaf"><a id="primary-nav-projects-metajizer" href="http://www.jboss.org/metajizer"><span class="project-icon-med blank_icon_16x"></span>Metajizer</a></li>
+          </ul>
+        </li>
+</span>
+          </ul>
+        </li>
+        <li class="enterprise"> <a class="menu-title" href="http://www.jboss.com/products">Products</a>
+          <ul class="level1">
+<span>
+        <li class="open"><a class="sf-with-ul unlinked">Enterprise Platforms</a>
+          <ul class="level2">
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/application">Application Platform</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/webplatform">Web Platform</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/webserver">Web Server</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/portals">Portal Platform</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/soa">SOA Platform</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/brms">Business Rules Management System</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/dataservices">Data Services Platform</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/platforms/communications">Communications Platform</a></li>
+          </ul>
+        </li>
+        <li class="open"><a class="sf-with-ul unlinked">Development Tools and Frameworks</a>
+          <ul class="level2">
+            <li class="leaf"><a href="http://www.jboss.com/products/devstudio">Developer Studio</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/hibernate">Hibernate Framework</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/seam">Seam Framework</a></li>
+            <li class="leaf"><a href="http://www.jboss.com/products/wfk">JBoss Web Framework Kit</a></li>
+          </ul>
+        </li>
+        <li class="open"><a class="sf-with-ul unlinked">Management</a>
+          <ul class="level2">
+            <li class="leaf"><a href="http://www.jboss.com/products/jbosson">JBoss Operations Network</a></li>
+          </ul>
+        </li>
+        <li class="leaf"><a href="http://www.jboss.com/downloads/">Downloads</a></li>
+</span>
+          </ul>
+        </li>
+    </ul>
+  </div><!-- END of primarynav -->
+<!-- Utility controls -->
+<div id='utilitynav' style="vertical-align: top">
+
+  <form class="nomargin" id="TopSearch" action="" onsubmit="" method="get" >
+    <input type="hidden" id="searchArea" name="searchArea" value="" />
+    <input type="hidden" id="as_sitesearch" name="as_sitesearch" value="jboss.org" />
+    <ul>
+            <li><a href="https://community.jboss.org/login.jspa">Login</a> | </li>
+      <li><a href="http://www.jboss.org/index.html?op=checkage&module=user">Register</a> | </li>
+      <li id="storelink"><a href="http://www.jboss.org/coolstuff">Cool Stuff</a></li>
+      <li id="search-field">
+        <input 
+                            style="width:143px; height:14px;" 
+                            id="q" 
+                            name="q" 
+                            type="text" 
+                            onfocus="this.value= (this.value=='Search Project Pages' || this.value=='Search the Community') ? '' : this.value" 
+                            onblur="this.value= (this.value=='') ? 'Search the site' : (this.value; setSelected();)" 
+                            onmouseover="dropdownmenu(this, event, search, '150px')" 
+                            onmouseout="delayhidemenu()"
+                            onkeydown="submitonEnter(event);"
+                            value="Search the Community" />
+        <input 
+                            style="width:16px; height:16px;" 
+                            type="image" 
+                            value="go" 
+                            src="http://static.jboss.org/theme/images/common/ico_searcharrow.png" 
+                            align="middle"  />
+      </li>
+    </ul>
+  </form>
+</div>
+</div><!-- END of ORGheader -->
+
+
+<!-- ORG header javascript -->
+<script type="text/javascript" src="http://static.jboss.org/ffe/4.2.4.1/theme/includes/org_header.js"></script>
+<!-- END of ORG header javascript -->
+<!-- END COMMON HEADER -->
+
+      <div id="contentcontainer">
+        <div id="container_grey">
+
+<!-- BEGIN header -->
+
+
+<!-- Project banner -->
+  <div id="proj_announce-whole">
+    <img src="http://www.jboss.org/dms/shrinkwrap/images/shrinkwrap-banner.png" alt="ShrinkWrap">
+    <div id="proj_logo-neg"><h2>ShrinkWrap</h2></div>
+    <div id="proj_tagline-neg"></div>
+  </div>
+  <div style="clear: both;">
+
+<!-- Navigation menu -->
+
+<div id="proj_nav">
+<!-- JBoss.ORG Horizontal MENU -->
+
+
+<div id="proj_nav" class="" >
+<ul class="sf-menu" >
+
+
+    <li class="open">
+
+
+        <a href="http://www.jboss.org/shrinkwrap" class="menu-title">Overview</a>
+            
+
+
+    </li>
+
+
+    <li class="open">
+
+
+        <a href="http://www.jboss.org/shrinkwrap/downloads" class="menu-title">Downloads</a>
+        
+
+
+    </li>
+    
+
+    <li class="open">
+
+
+        <a href="http://docs.jboss.org/shrinkwrap" class="menu-title">Documentation</a>
+        
+
+
+    </li>
+    
+
+    <li class="current">
+        
+
+        <a href="http://www.jboss.org/community/docs/DOC-14138" class="menu-title">Community</a>
+            
+          
+                <ul class="level1">
+
+            <li class="leaf"><a href="http://www.jboss.org/community/docs/DOC-14138">Wiki</a></li>
+            <li class="leaf"><a href="http://community.jboss.org/en/shrinkwrap?view=discussions">User Forum</a></li>
+            <li class="leaf"><a href="http://community.jboss.org/en/shrinkwrap/dev?view=discussions">Developer Forum</a></li>
+            <li class="leaf"><a href="https://lists.jboss.org/mailman/listinfo/shrinkwrap-issues">Mailing Lists</a></li>
+            <li class="leaf"><a href="irc://irc.freenode.net:6667/#jbosstesting">Chat</a></li>
+                
+
+                </ul>
+                
+            
+        
+    </li>
+
+
+    <li class="open">
+
+
+        <a href="https://jira.jboss.org/jira/browse/SHRINKWRAP" class="menu-title">Issue Tracker</a>
+
+
+
+    </li>
+    
+
+    <li class="open">
+
+
+        <a href="https://svn.jboss.org/repos/common/shrinkwrap/trunk/" class="menu-title">Source Code</a>
+
+            
+                <ul class="level1">
+
+            <li class="leaf"><a href="http://anonsvn.jboss.org/repos/common/shrinkwrap/trunk/">Anonymous SVN</a></li>
+            <li class="leaf"><a href="http://fisheye.jboss.org/browse/JBossCommon/shrinkwrap">FishEye</a></li>
+
+
+                </ul>
+                
+
+
+    </li>
+
+
+    <li id="buildmenu" class="open">
+
+
+        <a href="http://hudson.jboss.org/hudson/job/ShrinkWrap/" class="menu-title">Build</a>
+            
+
+
+    </li>
+
+        <li class="" id="search-field">
+            <form action="http://www.google.com/search?" method="get" class="nomargin"><input
+                   value="Search project pages" 
+                   onblur="this.value= (this.value=='') ? 'Search project pages' : this.value" 
+                   onfocus="this.value= (this.value=='Search project pages') ? '' : this.value" name="q" id="q" 
+                   style="width: 146px; height: 14px;" type="text"><input value="jboss.org" name="as_sitesearch" type="hidden"><input
+                   src="http://www.jboss.org/theme/images/common/ico_searcharrow.png" 
+                   value="go" style="width: 16px; height: 16px; margin-top: -6px;" 
+                   type="image" align="middle">
+            </form>
+        </li>
+</ul>
+</div>
+
+<script type="text/javascript">
+  highlightProjectByCode('shrinkwrap');
+</script>
+
+<!-- END JBoss.ORG Horizontal MENU -->
+</div>
+<!-- END header -->
+
+
+<!-- BEGIN user bar -->
+<div id="proj-user-bar-wrapper">
+<div class="dogear"> <div class="overhang-sbs">&nbsp;</div> </div>
+    <div id="jive-userbar">
+<div id="jive-userbar-login">
+    <form action="$/cs_login"
+          method="post" name="loginform" autocomplete="off">
+        
+        
+
+        <span class="jive-userbar-login-welcome" id="jiveLoginWelcome">
+            <span class="jive-userbar-login-guest">
+            Welcome, Guest
+            </span>
+
+            <span class="jive-userbar-login-loginlink">
+                <a href="#" onClick="jivetoggleLogin(); return false;">Login</a>
+            </span>
+
+            <span class="jive-userbar-login-new">
+                <a href="/login!input.jspa?registerOnly=true">Register</a>
+            </span>
+        </span>
+
+        <span class="jive-userbar-login-form" id="jiveLoginForm" style="display: none;">
+
+            <span class="jive-userbar-login-username">
+                <label for="login-username">
+Username:                </label>
+                <a href="forgot-username!input.jspa" title="I forgot my username ">(?)</a>
+                <input type="text" name="username" size="20" maxlength="150" value="" tabindex="1"
+                               id="login-username" />
+            </span>
+
+            <span class="jive-userbar-login-password">
+                <label for="login-password">
+Password:                </label>
+                <a href="emailPasswordToken!input.jspa" title="I forgot my password ">(?)</a>
+                <input type="password" name="password" size="20" maxlength="150" value="" tabindex="2"
+                               id="login-password" />
+            </span>
+
+            <span class="jive-userbar-login-auto">
+                <input type="checkbox" name="autoLogin" id="login-auto" value="true" tabindex="3" />
+                <label for="login-auto">Remember Me</label>
+            </span>
+
+            <span class="jive-userbar-login-submit">
+                <input type="submit" name="login" value="Login" tabindex="4"
+                       class="jive-login-button" />
+                <input type="reset" name="doCancel" value="Cancel" tabindex="5"
+                               class="jive-cancel-button" onclick="jivetoggleLogin();" />
+            </span>
+        </span>
+
+    </form>
+</div>        <div id="jive-userbar-right">
+<div id="jive-userbar-search">
+    <form action="/search.jspa" method="get" id="jive-userbar-search-form">
+        <input type="hidden" name="peopleEnabled" value="true"/>
+
+        <input type="hidden" name="userID"/>
+        <input type="hidden" name="containerType"/>
+        <input type="hidden" name="container"/>
+        <input type="hidden" name="spotlight" value="false"/>
+        <label for="jive-query"
+               class="j-508-label">Search for:</label>
+        <input type="text" id="jive-query" name="q" value="" accesskey="4" class="jive-userbar-search-field"
+               autocomplete="off"/>
+        <button type="submit" value="Search Tags"
+                class="jive-userbar-search-button">Search</button>
+    </form>
+
+    <div id="jive-spotlight-search-container"></div>
+    <script type="text/javascript">
+        var containerType = 14;
+        var containerID = 2193;
+
+        $j('#jive-userbar-search-form').submit(function() {
+            var query = $j('#jive-query').val();
+            var isWildcard = query.charAt(query.length-1) == '*';
+            if (query && !isWildcard) {
+                $j('#jive-userbar-search-form input[name=spotlight]').val("true");
+            }
+        });
+    </script>
+</div>        </div>
+    </div>
+
+</div>
+<!-- END user bar -->
+
+        <div id="jive-body">
+
+<!-- BEGIN breadcrumb -->
+<div id="jive-breadcrumb">
+
+
+    <span>
+
+
+
+                <a href="/">Community</a> &gt; 
+
+                <a href="/community/shrinkwrap"
+                   >ShrinkWrap</a> &gt; 
+
+
+        <a class='jive-breadcrumb-last' href="/community/shrinkwrap?view=documents">Articles</a></span>
+</div>
+<!-- END breadcrumb -->
+
+            
+
+    <!-- BEGIN header & intro  -->
+    <div id="jive-body-intro">
+        <div id="jive-body-intro-content">
+            
+            <a href="/community/shrinkwrap?view=documents"><span class="jive-icon-sml jive-icon-arrow-generic-up"></span>
+                    Up to Articles in ShrinkWrap
+            </a>
+
+        </div>
+    </div>
+    <!-- END header & intro -->
+
+    <!-- BEGIN main body -->
+    <div id="jive-body-main">
+
+        <!-- BEGIN main body column -->
+        <div id="jive-body-maincol-container">
+
+            <div id="jive-body-maincol">
+
+
+                <div id="thread.watch.notify" class="jive-info-box" style="display:none"></div>
+
+                <div id="content-featured-notify" class="jive-info-box" style="display:none"></div>
+
+
+
+
+
+
+
+
+<!-- BEGIN document -->
+<div class="jive-content clearfix">
+    <div class="jive-content-header clearfix">
+        <div class="jive-wiki-post-moderating jive-content-header-moderating">
+            <span class="jive-icon-med jive-icon-moderation"></span>Currently Being Moderated
+        </div>
+        <div class="jive-content-title">
+            <h2><span class="jive-icon-big jive-icon-document"></span>ShrinkWrap</h2>
+        </div>
+        <div class="jive-content-header-version">
+            VERSION 39&nbsp;
+                <a href="/wiki/ShrinkWrap/diff?secondVersionNumber=39" title="Click to view article history"><img class="jive-icon-sml jive-icon-search" src="http://community.jboss.org/4.5.3/images/transparent.png" alt="Click to view article history" /></a>
+
+
+        </div>
+		<div class="jive-content-header-details">
+
+Created on: Sep 16, 2009 7:25 PM by
+<a href="/people/ALRubinger"
+data-externalId=""
+data-username="ALRubinger"
+data-avatarId="1876"
+id="jive-21712997101365312728"
+onmouseover="var presence = null; quickuserprofile.getUserProfileTooltip( 2171, presence );"
+onmouseout="quickuserprofile.cancelTooltip();"
+class="jiveTT-hover-user jive-username-link"
+>Andrew Rubinger</a>            <span>-</span>
+Last Modified:&nbsp;
+Jul 26, 2010 10:27 AM
+by <a href="/people/ALRubinger"
+data-externalId=""
+data-username="ALRubinger"
+data-avatarId="1876"
+id="jive-21712997101366053728"
+onmouseover="var presence = null; quickuserprofile.getUserProfileTooltip( 2171, presence );"
+onmouseout="quickuserprofile.cancelTooltip();"
+class="jiveTT-hover-user jive-username-link"
+>Andrew Rubinger</a>		</div>
+
+	</div>
+	<div class="jive-content-body">
+
+
+<!-- [DocumentBodyStart:612a363c-42c9-49a0-b124-2b03c4385b99] --><div class="jive-rendered-content"><h4>Skip the Build!</h4><p>Shrinkwrap provides a simple API to assemble archives like JARs, WARs, and EARs in Java.</p><h5 style="text-align: left;">Introduction</h5><p>Packaging specifications such as Java Archives (JAR) and Enterprise Archives (EAR) are standard mechanisms for declaring a collection of Classes and resources into one unit.&#160; Often these are intended to be run directly or deployed into a web or application server.&#160; Archives carry with them implicit metadata regarding their structure, from which concerns like ClassLoading scope and manifest parameters may be inferred.</p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p>However useful, archives typically require the addition of a build step within the development lifecycle, either via a script or extra tool.&#160; The ShrinkWrap project provides a simple API to programmatically assemble archives in code, optionally allowing for export into ZIP or Exploded File formats.&#160; This makes is very fast to prototype "virtual" archives from resources scattered about the classpath, the filesystem or remote URLs.</p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><h5 style="text-align: left;">Modules</h5><table border="1" cellpadding="3" cellspacing="0"><tbody><tr><th align="center" style="background-color:#6690BC;;background-color:#6690BC" valign="middle"><span style="color: #ffffff;"><strong>Module Name<br/></strong></span></th><th align="center" style="background-color:#6690BC;;background-color:#6690BC" valign="middle"><span style="color: #ffffff;"><strong>Maven2 ID<br/></strong></span></th><th align="center" style="background-color:#6690BC;;background-color:#6690BC" valign="middle"><span style="color: #ffffff;"><strong>Status<br/></strong></span></th></tr><tr><td style="">api</td><td style="">org.jboss.shrinkwrap:shrinkwrap-api</td><td style="">Development In Use</td></tr><tr><td style="">build</td><td style="">org.jboss.shrinkwrap:shrinkwrap-build</td><td style="">Development In Use</td></tr><tr><td style="">extension-glassfish</td><td style="">org.jboss.shrinkwrap:shrinkwrap-extension-glassfish</td><td style="">Prototyping</td></tr><tr><td style="">extension-jetty</td><td style="">org.jboss.shrinkwrap:shrinkwrap-extension-jetty</td><td style="">Prototyping</td></tr><tr><td style="">impl-base</td><td style="">org.jboss.shrinkwrap:shrinkwrap-impl-base</td><td style="">Development In Use</td></tr><tr><td style="">spi</td><td style="">org.jboss.shrinkwrap:shrinkwrap-spi</td><td style="">Development In Use</td></tr><tr><td style="">doc/reference</td><td style="">org.jboss.shrinkwrap:shrinkwrap-reference-guide</td><td style="">Development In Use</td></tr></tbody></table><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><h5 style="text-align: left;">Project Information</h5><table border="1" cellpadding="3" cellspacing="0"><tbody><tr><td style="">Main Project Page</td><td style=""><a class="jive-link-external-small" href="http://jboss.org/shrinkwrap">http://jboss.org/shrinkwrap</a></td></tr><tr><td style="">Obtaining Binaries</td><td style=""><a class="jive-link-wiki-small" href="http://community.jboss.org/docs/DOC-14667">ShrinkWrap | Downloads And Maven2 Configuration</a></td></tr><tr><td style="">Anonymous SCM</td><td style=""><a class="jive-link-anchor-small">git://github.com/shrinkwrap/shrinkwrap.git</a></td></tr><tr><td style="">Committer SCM</td><td style=""><a class="jive-link-anchor-small">git@github.com:shrinkwrap/shrinkwrap.git</a></td></tr><tr><td style="">Issue Tracking</td><td style=""><a class="jive-link-external-small" href="https://jira.jboss.org/jira/browse/SHRINKWRAP">https://jira.jboss.org/jira/browse/SHRINKWRAP</a></td></tr><tr><td style="">Releases Repo</td><td style=""><a class="jive-link-external-small" href="https://repository.jboss.org/nexus/content/groups/public/org/jboss/shrinkwrap/">https://repository.jboss.org/nexus/content/groups/public/org/jboss/shrinkwrap/</a></td></tr><tr><td style="">API Documentation</td><td style=""><a class="jive-link-external-small" href="http://docs.jboss.org/shrinkwrap">http://docs.jboss.org/shrinkwrap</a></td></tr><tr><td style="">User Forum</td><td style=""><a class="" href="http://community.jboss.org/en/shrinkwrap">http://community.jboss.org/en/shrinkwrap</a></td></tr><tr><td style="">Development Forum</td><td style=""><a class="" href="http://community.jboss.org/en/shrinkwrap/dev">http://community.jboss.org/en/shrinkwrap/dev</a></td></tr><tr><td style="">Development Instructions</td><td style=""><p><a class="jive-link-wiki-small" href="http://community.jboss.org/docs/DOC-14304">ShrinkWrap | Development and Contribution</a></p></td></tr><tr><td style="">Release Process</td><td style=""><a class="jive-link-wiki-small" href="http://community.jboss.org/docs/DOC-14342">ShrinkWrap | Release Process</a></td></tr><tr><td style="">Release Planning</td><td style=""><a class="jive-link-wiki-small" href="http://community.jboss.org/docs/DOC-14466">ShrinkWrap | Release Planning</a></td></tr><tr><td style="">Artwork</td><td style=""><a class="jive-link-external-small" href="http://www.jboss.org/files/jbosslabs/design/shrinkwrap/index.htm">http://www.jboss.org/files/jbosslabs/design/shrinkwrap/index.htm</a></td></tr><tr><td style="">Continuous Integration</td><td style=""><a class="jive-link-external-small" href="http://hudson.jboss.org/hudson/job/ShrinkWrap/">http://hudson.jboss.org/hudson/job/ShrinkWrap/</a></td></tr><tr><td style="">Project Lead</td><td style=""><a class="jive-link-profile-small" href="http://community.jboss.org/people/ALRubinger">Andrew Rubinger</a></td></tr><tr><td style="">Contributors</td><td style=""><a class="jive-link-profile-small" href="http://community.jboss.org/people/johnbailey">John Bailey</a><p><a class="jive-link-profile-small" href="http://community.jboss.org/people/aslak">Aslak Knutsen</a></p></td></tr></tbody></table><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><h5 style="text-align: left;">Release Plan</h5><table border="1" cellpadding="3" cellspacing="0"><tbody><tr><td style="">0.1.x</td><td style=""><span style="color: #999999;">Retired</span></td><td style="">Prototyping and Development Series</td></tr><tr><td style="">1.0.0-alpha-x</td><td style=""><span style="color: #339966;">In Process</span></td><td style="">Early-access Release Series used primarily for testing integration and gathering community input</td></tr><tr><td style="">1.0.0-beta-x</td><td style=""><span style="color: #ffcc00;">Short-term</span></td><td style="">Candidate for Frozen APIs, feature-complete</td></tr><tr><td style="">1.0.0-cr-x</td><td style=""><span style="color: #ffcc00;">Short-term</span></td><td style="">Release Candidates; APIs Frozen</td></tr><tr><td style="">1.0.0</td><td style="">Future</td><td style="">Promoted from re-tag of a release candidate; Stable</td></tr><tr><td style="">1.0.x</td><td style="">Future</td><td style="">Incremental Patch Releases; no API changes, backwards-compatible</td></tr><tr><td style="">1.x.y</td><td style=""><span style="color: #999999;">Unscheduled</span></td><td style="">New feature; backwards-compatibility preserved</td></tr><tr><td style="">2.0.0-alpha-x</td><td style=""><span style="color: #999999;">Unscheduled</span></td><td style="">Overhaul, refactoring.&#160; Features may be added/dropped, API contract disappears</td></tr></tbody></table><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><h5>Sample Code</h5><p><em><br/></em></p><p><em>Make an EJB3 JAR from Classes visible from the Thread Context ClassLoader</em></p><!--[CodeBlockStart:27bc8505-6b1c-42f9-a519-2365c118431f]--><pre class="jive-pre"><code class="jive-code jive-java"><font color="darkgreen">// Make a name for the JAR</font>
+String name = <font color="red">"slsb.jar"</font>;
+<font color="darkgreen">// Create and add classes to the JAR</font>
+JavaArchive archive = ShrinkWrap.create(JavaArchive.class, name)
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; .addClasses(OutputBean.class, OutputLocalBusiness.class);
+</code></pre><!--[CodeBlockEnd:27bc8505-6b1c-42f9-a519-2365c118431f]--><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><em>Log out the full contents of an archive in "ls -l" form (useful for debugging)</em></p><!--[CodeBlockStart:bbb375a9-2542-468b-9e72-9a3d3f7a3669]--><pre class="jive-pre"><code class="jive-code jive-java">Archive&lt;?&gt; archive = <font color="navy"><b>null</b></font>; <font color="darkgreen">// Assume we have one</font>
+archive.toString(<font color="navy"><b>true</b></font>); <font color="darkgreen">// Verbose flag</font>
+<font color="darkgreen">/*
+
+ Will make output:
+
+ slsb.jar:
+ /org/jboss/embedded/testsuite/fulldep/ejb3/slsb/OutputLocalBusiness.class
+ /org/jboss/embedded/testsuite/fulldep/ejb3/slsb/OutputBean.class
+
+*/</font>
+</code></pre><!--[CodeBlockEnd:bbb375a9-2542-468b-9e72-9a3d3f7a3669]--><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><em>Add a ClassLoader resource, assigning it a specific location (Path) within the Archive</em></p><!--[CodeBlockStart:d919666e-c10f-4e48-8d88-cebe86798e9f]--><pre class="jive-pre"><code class="jive-code jive-java">JavaArchive archive = ShrinkWrap.create(JavaArchive.class, <font color="red">"archive.jar"</font>);
+Path pathToMetaInf = Paths.create(<font color="red">"META-INF"</font>);
+Path pathToEjbJar = Paths.create(pathToMetaInf,<font color="red">"ejb-jar.xml"</font>); <font color="darkgreen">// Could also have done&#160; Paths.create("META-INF/ejb-jar.xml")</font>
+ archive.addResource(<font color="red">"resources/myEjbJar.xml"</font>, pathToEjbJar);
+</code></pre><!--[CodeBlockEnd:d919666e-c10f-4e48-8d88-cebe86798e9f]--><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><em>Make a simple WAR with webapp descriptor, a Servlet, and a JSP</em></p><!--[CodeBlockStart:68bc4ab9-e317-4507-96d0-b1a51dab02de]--><pre class="jive-pre"><code class="jive-code jive-java"><font color="navy"><b>final</b></font> Class&lt;?&gt; servletClass = JspForwardingServlet.class;
+<font color="navy"><b>final</b></font> WebArchive archive = ShrinkWrap.create(WebArchive.class, name);
+archive.setWebXML(PATH_ACTUAL_WEB_XML)
+&#160;&#160;&#160;&#160;&#160;&#160; .addResource(PATH_JSP)
+&#160;&#160;&#160;&#160;&#160;&#160; .addClass(servletClass);
+</code></pre><!--[CodeBlockEnd:68bc4ab9-e317-4507-96d0-b1a51dab02de]--><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><em>Write an Archive to the Filesystem in ZIP encoding (JAR/EAR/WAR, etc)</em></p><!--[CodeBlockStart:334f2a16-287f-42fe-a953-3494e807d605]--><pre class="jive-pre"><code class="jive-code jive-java"><font color="darkgreen">// Export to the Filesystem as a real JAR</font>
+InputStream zipStream = archive.as(ZipExporter.class).exportZip();
+<font color="darkgreen">// Get a FileOutputStream and then write the contents of "zipStream" to it</font>
+</code></pre><!--[CodeBlockEnd:334f2a16-287f-42fe-a953-3494e807d605]--><p><em><br/></em></p><p><em>Write an Archive as exploded form to the Filesystem</em></p><!--[CodeBlockStart:977312c1-8698-4362-b2f0-385ebdbe2c54]--><pre class="jive-pre"><code class="jive-code jive-java">File destinationDir = <font color="navy"><b>null</b></font>; <font color="darkgreen">// Directory to which we'll export</font>
+archive.as(ExplodedExporter.class).exportExploded(destinationDir);
+</code></pre><!--[CodeBlockEnd:977312c1-8698-4362-b2f0-385ebdbe2c54]--><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><em>Read an Archive from the Filesystem in ZIP encoding (JAR/EAR/WAR, etc)</em></p><!--[CodeBlockStart:3f992489-c803-4976-8d6c-2ef9e9dd34d3]--><pre class="jive-pre"><code class="jive-code jive-java">ZipFile existingZipFile = ..
+<font color="darkgreen">// Import from the Filesystem as a real JAR</font>
+JavaArchive archive = ShrinkWrap.create(ZipImporter.class, <font color="red">"archive.jar"</font>)
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; .importZip(existingZipFile)
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; .as(JavaArchive.class);
+</code></pre><!--[CodeBlockEnd:3f992489-c803-4976-8d6c-2ef9e9dd34d3]--><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><em>Read an Archive from a exploded directory on the Filesystem</em></p><!--[CodeBlockStart:9f4edc48-5d84-40b2-9a5e-66ca240b1ca3]--><pre class="jive-pre"><code class="jive-code jive-java">File sourceDir = <font color="navy"><b>null</b></font>; <font color="darkgreen">// Directory from which we'll import</font>
+archive.as(ExplodedImporter.class).importExploded(sourceDir);
+</code></pre><!--[CodeBlockEnd:9f4edc48-5d84-40b2-9a5e-66ca240b1ca3]--><div> </div><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><em>Deploy an Archive directly to a Deployable Container (ie. JBoss Embedded)</em></p><!--[CodeBlockStart:53f424c0-c2ce-4b56-a8c4-4ee3aa3ef283]--><pre class="jive-pre"><code class="jive-code jive-java">JBossASEmbeddedServer server = <font color="navy"><b>null</b></font>; <font color="darkgreen">// From somewhere</font>
+Archive&lt;?&gt; archive = <font color="navy"><b>null</b></font>; <font color="darkgreen">// From somewhere</font>
+server.deploy(archive);
+<font color="darkgreen">// Do some testing, then undeploy</font>
+server.undeploy(archive);
+</code></pre><!--[CodeBlockEnd:53f424c0-c2ce-4b56-a8c4-4ee3aa3ef283]--><h5 style="text-align: left;"></h5><h5 style="text-align: left;">API Guide</h5><p>There are two main entry points to the ShrinkWrap api:</p><ul><li>ShrinkWrap<ul></ul><ul><li>Main entry point into the ShrinkWrap system. Provides shortcut mechanism to create Archives of different type under a default Domain.</li></ul></li><li>ArchivePaths<ul><li><div><li>A common factory for creating ArchivePath objects</li></div></li></ul><ul></ul></li></ul><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p>Generically speaking,the central types in the ShrinkWrap are:</p><ul><li>Archive&#160;&#160;&#160; <ul><li>A Collection of resources (Assets), each with its own naming context / filename (ArchivePath)</li></ul></li><li>Asset <ul><li>A generic resource, collection of bytes</li><li>This term is used instead of "Resource" because "Resource" may be used in some contexts to mean "ClassLoader resource"</li></ul></li><li>ArchivePath<ul><li>Name/location within an archive under which an asset may be stored</li></ul></li><li>Assignable<ul><li>general interface for representing entities such as Archives as different extension types</li></ul></li></ul><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><a href="http://community.jboss.org/servlet/JiveServlet/showImage/102-14138-39-1546/shrinkwrap_api.png"><img alt="shrinkwrap_api.png" class="jive-image-thumbnail jive-image" height="201" src="http://community.jboss.org/servlet/JiveServlet/downloadImage/102-14138-39-1546/450-201/shrinkwrap_api.png" width="450"/></a></p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p>In practice, it's actually more convenient to support the addition of some contrete types like ClassLoader resources, URLs, or Classes than by adding Assets themselves.&#160; To handle this there are archive extensions targeted for these uses, called "Containers".</p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><ul><li>ClassContainer <ul><li>Supports addition of classes and packages</li></ul></li><li>EnterpriseContainer <ul><li>Supports addition of: <ul><li>application.xml</li><li>Application Resources</li><li>Whole modules (other archives)</li></ul></li></ul></li><li>LibraryContainer <ul><li>Supports addition of libraries</li></ul></li><li>ManifestContainer <ul><li>Supports addition of META-INF/MANIFEST.MF and manifest resources under META-INF</li></ul></li><li>ResourceContainer <ul><li>Supports addition of ClassLoader resources</li></ul></li><li>WebContainer <ul><li>Supports addition of: <ul><li>WEB-INF/web.xml</li><li>WEB-INF resources</li></ul></li></ul></li></ul><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><a href="http://community.jboss.org/servlet/JiveServlet/showImage/102-14138-39-1547/shrinkwrap_containers.png"><img alt="shrinkwrap_containers.png" class="jive-image-thumbnail jive-image" height="299" src="http://community.jboss.org/servlet/JiveServlet/downloadImage/102-14138-39-1547/450-299/shrinkwrap_containers.png" width="450"/></a></p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p>From these container extensions we may compose into specification extensions.&#160; These will be the types used most frequently from an end-user perspective.</p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><em>JavaArchive (JAR)</em></p><p><a href="http://community.jboss.org/servlet/JiveServlet/showImage/102-14138-39-1548/shrinkwrap_jar.png"><img alt="shrinkwrap_jar.png" class="jive-image" height="195" src="http://community.jboss.org/servlet/JiveServlet/downloadImage/102-14138-39-1548/450-195/shrinkwrap_jar.png" width="450"/></a></p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><em>Enterprise Archive (EAR)<br/></em></p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><a href="http://community.jboss.org/servlet/JiveServlet/showImage/102-14138-39-1549/shrinkwrap_ear.png"><img alt="shrinkwrap_ear.png" class="jive-image" height="253" src="http://community.jboss.org/servlet/JiveServlet/downloadImage/102-14138-39-1549/450-253/shrinkwrap_ear.png" width="450"/></a></p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><em>Web Archive (WAR)</em></p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><p><a href="http://community.jboss.org/servlet/JiveServlet/showImage/102-14138-39-1550/shrinkwrap_war.png"><img alt="shrinkwrap_war.png" class="jive-image" height="260" src="http://community.jboss.org/servlet/JiveServlet/downloadImage/102-14138-39-1550/450-260/shrinkwrap_war.png" width="450"/></a></p><p style="min-height: 8pt; height: 8pt; padding: 0px;">&#160;</p><h5>Related</h5><ul style="text-align: left;"><li><a class="jive-link-wiki-small" href="http://community.jboss.org/docs/DOC-13843">JBoss Embedded AS</a></li><li><a class="jive-link-wiki-small" href="http://community.jboss.org/docs/DOC-14376">Arquillian</a></li></ul></div><!-- [DocumentBodyEnd:612a363c-42c9-49a0-b124-2b03c4385b99] -->
+
+<!-- BEGIN attachments -->
+<!-- END attachments -->
+
+<div id="previewable-binary-viewer"></div>
+	</div>
+    <div class="jive-content-footer clearfix">
+
+
+    <!-- BEGIN content details -->
+        <span class="jive-content-footer-item jive-content-footer-acclaim">
+
+<div id="acclaim-container-102-14138-" class="acclaim-container">
+    <div id="jive-acclaim-like-container-102-14138-" data-uniqueKey="102-14138-" data-ratingType="like" data-hasVoted="false" data-likes="0" class="acclaim-like-container">
+         <span class="jive-icon-sml jive-icon-like"></span>Like
+         (<a href="#" id="jive-acclaim-likedlink-102-14138-"  class=" jive-acclaim-likedlink">0</a>)
+    </div>
+</div>        </span>
+
+     
+        <span class="jive-content-footer-item">
+            16539&nbsp;Views
+        </span>
+
+        
+
+
+
+    <!-- BEGIN view/add/edit tags -->
+    <span class="jive-content-footer-item jive-content-footer-tags">
+            <span class="jive-icon-sml jive-icon-tag"></span>Tags: <span id="jive-edit-inline-add-none" style="display:none;">none</span> <span style="display:none;" id="jive-edit-inline-placeholder"> (<a href="#" class="jive-edit-inline-tags-link">add</a>)</span>
+
+            <span class="jive-thread-post-details-tags" id="jive-thread-post-details-tags_D3vFfm">
+                    <a href="/community/shrinkwrap?view=tags&tags=shrinkwrap">shrinkwrap</a>
+            </span>
+    </span>
+    <!-- END view/add/edit tags -->
+<!-- END content -->
+
+    </div>
+</div>
+<!-- END document -->
+        <div class="jive-content-rating clearfix" data-guid="KIHPGXU9MOJWF8FD24KTX3GA5PA8LSXH">
+
+<script type='text/javascript'>
+    $j(document).ready(function() {
+
+        var i18n = {
+            avgUserRatingTitlei18n : "Average User Rating",
+            avgUserRatingLabeli18n : "Average User Rating",
+            rateRatingLabel : "rating",
+            rateRatingPluralLabel : "s",
+            myRatingLabel : "My Rating:",
+            rateRatingsLabel : "ratings",
+            ratingSavingText : "Saving...",
+            rateSavedText : "Saved.",
+            rateRatingSaved : "Rating Saved!",
+            writeAReview : "Write a review",
+            commentOnRating : "Comment on your rating",
+            formSubmitPleaseWait:'Please Wait ...'
+        };
+
+        new jive.Rate(14, 2193, 102, 14138, 'doc', i18n, true, 'KIHPGXU9MOJWF8FD24KTX3GA5PA8LSXH');
+    });
+
+</script>
+
+        </div>
+
+
+
+    <script>
+        </script>
+
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="http://community.jboss.org/4.5.3/styles/tiny_mce3/plugins/inlinepopups/skins/clearlooks2/window.css" />
+
+
+
+    
+
+
+
+
+
+            </div>
+        </div>
+        <!-- END main body column -->
+
+
+        <!-- BEGIN sidebar column -->
+        <div id="jive-body-sidebarcol-container">
+
+            <div id="jive-body-sidebarcol">
+
+
+<div id="jive-action-sidebar" class="jive-sidebar jive-box jive-sidebar-actions jive-box-actions">
+
+
+    <div class="jive-box-header">
+        <h4 id="jive-action-sidebar-tab-header_document-actions-tab">Actions</h4>
+    </div>
+    <div id="jive-action-sidebar-body" class="jive-sidebar-body jive-sidebar-body-actions jive-box-body">
+
+        <div id="jive-action-sidebar-tab-_document-actions-tab"
+             class="jive-action-sidebar-tab-first"
+ >
+
+
+
+            <ul id="jive-action-sidebar-tab-list_document-actions-tab" class=" jive-icon-list">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <li id="jive-link-thread-print" style=""
+                        ><a href="/wiki/ShrinkWrap?decorator=print"
+rel="nofollow"
+onclick=""
+title="">
+<span class="jive-icon-med jive-icon-print-preview"></span>
+View full screen
+</a></li>
+
+
+
+
+                <li id="jboss-link-sharethis" style="">
+                        <span class="st_sharethis" st_url="http://sharethis.com" displayText="ShareThis"></span>
+                </li>
+
+                <li id="jboss-link-document-permlink" style=""
+                        ><a href="/docs/DOC-14138"
+rel="nofollow"
+onclick=""
+title="">
+<span class="jive-icon-med link-permlink"></span>
+Permanent link
+</a></li>
+            </ul>
+        </div> <!-- /#jive-action-sidebar-tab-_id -->
+    </div>
+
+</div>
+
+
+<div class="jive-box jive-sidebar">
+	<div class="jive-box-header jive-sidebar-header">
+		<h4>Bookmarked By (2)</h4>
+	</div>
+	<div class="jive-sidebar-byline">
+        <form id="view-favorite-activity-form" action="/view-favorite-activity.jspa">
+            <input type="hidden" name="object" value="14138"/>
+            <input type="hidden" name="contentObjectType" value="102"/>
+            <label for="jive-view-picker">View:</label>
+            <select id="jive-view-picker" name="view">
+                <option value="everyone">Everyone</option>
+                <option value="notes">Only Notes</option>
+            </select>
+            <input type="hidden" name="page" value="1"/>
+        </form>
+    </div>
+    <div class="jive-box-body jive-sidebar-body clearfix" id="jive-bookmark-sidebar">
+        <div id="jive-bookmark-avatars-container">
+            <div class="jive-sidebar-footer view-previous">
+                <a href="#" class="jive-less">Previous</a>
+            </div>
+            <div id="jive-bookmark-list"
+                class="jive-avatar-list pageable-container clearfix fixedheight">
+            </div>
+
+            <div class="jive-sidebar-footer view-next">
+                <a class="jive-more" href="#">Next</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <!-- BEGIN sidebar box 'More Like This' -->
+
+    <div class="jive-box jive-sidebar">
+        <div class="jive-box-header jive-sidebar-header">
+            <h4>More Like This</h4>
+        </div>
+        <div class="jive-box-body jive-sidebar-body jive-sidebar-body-morelikethis">
+            <ul class="jive-icon-list" id="jive-more-like-this-102-14138">
+                <li><a href="#" onclick="getMoreLikeThis()">Get similar content</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- END sidebar box 'More Like This' -->
+
+    
+    
+
+<!-- BEGIN sidebar box 'Incoming Links' -->
+<div class="jive-box jive-sidebar">
+    <div class="jive-box-header jive-sidebar-header">
+        <h4>Incoming Links</h4>
+    </div>
+    <div class="jive-box-body jive-sidebar-body jive-sidebar-body-incominglinks">
+        <ul class="jive-icon-list">
+                        <li>
+                            <a href="http://community.jboss.org/docs/DOC-13843">
+                            <span class="jive-icon-med jive-icon-document"></span>
+                                JBoss Embedded AS
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://community.jboss.org/docs/DOC-14267">
+                            <span class="jive-icon-med jive-icon-document"></span>
+                                AS 6.0.0.M1 Status Executive Summary
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://community.jboss.org/docs/DOC-14269">
+                            <span class="jive-icon-med jive-icon-document"></span>
+                                JBoss Bootstrap | AS Embedded Implementation and API
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://community.jboss.org/docs/DOC-14376">
+                            <span class="jive-icon-med jive-icon-document"></span>
+                                Arquillian
+                            </a>
+                        </li>
+        </ul>
+    </div>
+</div>
+<!-- END sidebar box 'Incoming Links' -->
+
+
+        
+        
+        
+        
+        
+
+<!-- BEGIN sidebar box 'User Content' -->
+<div class="jive-box jive-sidebar">
+    <div class="jive-box-header jive-sidebar-header">
+        <h4>More by Andrew Rubinger</h4>
+    </div>
+    <div class="jive-box-body jive-sidebar-body jive-sidebar-body-usercontent">
+        <ul class="jive-icon-list">
+                    <li>
+                        <a href="/thread/153973"
+                        ><span class="jive-icon-med jive-icon-discussion"></span>TAR Library Name</a>
+                    </li>
+                    <li>
+                        <a href="/thread/153513"
+                        ><span class="jive-icon-med jive-icon-discussion"></span>JavaArchive to VirtualFile</a>
+                    </li>
+                    <li>
+                        <a href="/thread/152875"
+                        ><span class="jive-icon-med jive-icon-discussion"></span>Automatic creation of MANIFEST.MF</a>
+                    </li>
+                    <li>
+                        <a href="/thread/152643"
+                        ><span class="jive-icon-med jive-icon-discussion"></span>Archives class not in the API anymore</a>
+                    </li>
+                    <li>
+                        <a href="/wiki/ShrinkWrapDownloadsAndMaven2Configuration"
+                        ><span class="jive-icon-med jive-icon-document"></span>ShrinkWrap | Downloads And Maven2 Configuration</a>
+                    </li>
+        </ul>
+        <div class="jive-sidebar-viewall">
+            <a href="/people/ALRubinger" class="font-color-meta j-link-viewall"><strong>View Andrew Rubinger's profile</strong></a>
+        </div>
+    </div>
+</div>
+<!-- END sidebar box 'User Content' -->
+
+
+            </div>
+
+        </div>
+        <!-- END sidebar column -->
+
+
+    </div>
+
+
+
+        </div>
+
+        <div id="one-col-corners"></div>
+
+        </div><!-- END container_grey-->
+
+    </div>
+
+
+<div id="projsubnav_footer" class="clearfix" >
+<ul class="" >
+
+
+    <li class="open">
+
+
+        <a href="http://www.jboss.org/shrinkwrap" class="menu-title">Overview</a>
+            
+
+
+    </li>
+
+
+    <li class="open">
+
+
+        <a href="http://www.jboss.org/shrinkwrap/downloads" class="menu-title">Downloads</a>
+        
+
+
+    </li>
+    
+
+    <li class="open">
+
+
+        <a href="http://docs.jboss.org/shrinkwrap" class="menu-title">Documentation</a>
+        
+
+
+    </li>
+    
+
+    <li class="open">
+        
+
+        <a href="http://www.jboss.org/community/docs/DOC-14138" class="menu-title">Community</a>
+            
+          
+                <ul class="level1">
+
+            <li class="leaf"><a href="http://www.jboss.org/community/docs/DOC-14138">Wiki</a></li>
+            <li class="leaf"><a href="http://community.jboss.org/en/shrinkwrap?view=discussions">User Forum</a></li>
+            <li class="leaf"><a href="http://community.jboss.org/en/shrinkwrap/dev?view=discussions">Developer Forum</a></li>
+            <li class="leaf"><a href="https://lists.jboss.org/mailman/listinfo/shrinkwrap-issues">Mailing Lists</a></li>
+            <li class="leaf"><a href="irc://irc.freenode.net:6667/#jbosstesting">Chat</a></li>
+                
+
+                </ul>
+                
+            
+        
+    </li>
+
+
+    <li class="open">
+
+
+        <a href="https://jira.jboss.org/jira/browse/SHRINKWRAP" class="menu-title">Issue Tracker</a>
+
+
+
+    </li>
+    
+
+    <li class="open">
+
+
+        <a href="https://svn.jboss.org/repos/common/shrinkwrap/trunk/" class="menu-title">Source Code</a>
+
+            
+                <ul class="level1">
+
+            <li class="leaf"><a href="http://anonsvn.jboss.org/repos/common/shrinkwrap/trunk/">Anonymous SVN</a></li>
+            <li class="leaf"><a href="http://fisheye.jboss.org/browse/JBossCommon/shrinkwrap">FishEye</a></li>
+
+
+                </ul>
+                
+
+
+    </li>
+
+
+    <li id="buildmenu" class="open">
+
+
+        <a href="http://hudson.jboss.org/hudson/job/ShrinkWrap/" class="menu-title">Build</a>
+            
+
+
+    </li>
+
+</ul>
+</div>
+
+
+    <!-- BEGIN footer -->
+<div class="footer">
+  <p>
+    <a href="http://www.jboss.org/about.html">About Us</a>   |   
+    <a href="http://www.jboss.org/contact.html">Contact Us</a>   |   
+    <a href="http://www.redhat.com/about/careers">Careers</a>   |   
+    <a href="http://www.jboss.com/">JBoss Enterprise</a>   |   
+    <a href="http://www.redhat.com/">Red Hat</a>  
+  </p>
+  <p>Powered by 
+    <a href="http://www.magnolia-cms.com">Magnolia</a>,  
+    <a href="http://www.jivesoftware.com/poweredby/">SBS</a>,  
+    <a href="http://www.jboss.com/products/platforms/application">JBoss EAP</a>, and 
+    <a href="http://www.redhat.com/rhel/">RHEL</a>.
+  </p>
+</div>    <!-- END footer -->
+ 
+
+
+<div id="jiveTT-note-user" class="jive-tooltip2 notedefault snp-mouseoffset"  >
+	<div class="jive-tooltip2-mid j-mini-modal">
+		<div class="jive-tooltip2-mid-padding j-modal-content clearfix" id="jive-note-user-body"></div>
+	</div>
+<!--[if lt IE 7]><iframe src="javascript:false;" class="ieselectfix"></iframe><![endif]--></div>
+
+<div id="jiveTT-note-video" class="jive-tooltip2 notedefault snp-mouseoffset"  >
+	<div class="jive-tooltip2-mid j-mini-modal">
+		<div class="jive-tooltip2-mid-padding j-modal-content clearfix" id="jive-note-video-body"></div>
+	</div>
+<!--[if lt IE 7]><iframe src="javascript:false;" class="ieselectfix"></iframe><![endif]--></div>
+
+<div id="jivecontainerTT-note-container" class="jive-tooltip2 notedefault snp-mouseoffset"  >
+	<div class="jive-tooltip2-mid j-mini-modal">
+		<div class="jive-tooltip2-mid-padding j-modal-content clearfix" id="jive-note-container-body"></div>
+	</div>
+<!--[if lt IE 7]><iframe src="javascript:false;" class="ieselectfix"></iframe><![endif]--></div>
+
+
+
+
+    
+
+
+
+
+<script type="text/javascript">
+    var jivespotlightsearch = new JiveSpotlightSearch("#jive-query", "#jive-spotlight-search-container",
+    "/spotlight-search.jspa", containerType, containerID);
+
+
+</script>
+
+
+
+
+<script type="text/javascript" src="http://static.jboss.org/ffe/4.2.4.1/theme/js/common/superfish-search-only-20101019.js"></script>
+<script type="text/javascript">
+    // initialise Superfish 
+    $j(document).ready(function() {
+        $j('ul.sf-menu').superfish({
+            delay:       300,                             // one second delay on mouseout 
+            animation:   {opacity:'show',height:'show'},  // fade-in and slide-down animation 
+            speed:       'fast',                          // faster animation speed 
+            autoArrows:  false,                           // disable generation of arrow mark-up 
+            dropShadows: false                            // disable drop shadows 
+        }); 
+    });
+</script>
+
+<script id="m2lwst" src="https://inquiries.redhat.com/wt/m2lwst.js"></script>
+<script language="javascript">
+   _m2lTracker.tenantId ='108';
+   _m2lTracker.tenantCode ='redhat';
+   _m2lTracker.category['1']='jboss.org';
+   _m2lTracker.track();
+</script>
+<!-- SiteCatalyst code version: H.21. 
+Copyright 1996-2010 Adobe, Inc. All Rights Reserved 
+More info available at http://www.omniture.com --> 
+<div id="oTags"> 
+<!-- // **************************** CHANGE PAT BELOW TO YOUR SERVERS PATH --> 
+<script type="text/javascript" src="http://www.redhat.com/j/s_code.js"></script> 
+
+<script><!-- 
+/* You may give each page an identifying name, server, and channel on 
+the next lines. */ 
+/* E-commerce Variables */ 
+
+/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/ 
+var s_code=s.t();if(s_code)document.write(s_code)//--></script> 
+
+<script language="JavaScript" type="text/javascript"><!-- 
+if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-') 
+
+//--></script><noscript><a href="http://www.omniture.com" title="Web 
+Analytics"><img src="https://smtrcs.redhat.com/b/ss/redhatjbossorg/1/H.21--NS/0?[AQB]&cdp=3&[AQE]" 
+height="1" width="1" border="0" alt="" /></a></noscript> 
+
+<!--/DO NOT REMOVE/--> 
+</div> 
+<!-- End SiteCatalyst code version: H.21. -->
+<!-- ShareThis Script -->
+<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisher:'0c0850b9-23f0-4286-b05a-7593cc190675'});</script>
+</body>
+</html>
