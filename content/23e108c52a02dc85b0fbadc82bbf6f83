@@ -1,0 +1,134 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>dtach</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+<body>
+  <h1>dtach - A program that emulates the detach feature of screen</h1>
+
+dtach is a tiny program that emulates the detach feature of screen,
+allowing you to run a program in an environment that is protected from
+the controlling terminal and attach to it later. dtach does not keep
+track of the contents of the screen, and thus works best with programs
+that know how to redraw themselves. <p>
+
+dtach does not, however, have the other features of screen, such as its
+support of multiple terminals or its terminal emulation support. This
+makes dtach extremely tiny compared to screen, making it more easily
+audited for bugs and security holes, and also allows it to fit in
+environments where space is limited, such as on rescue disks. <p>
+
+dtach has many possible uses, even though it is tiny. With dtach, you can:
+<ul>
+<li>Attach multiple times to the same program. Access to the dtach session is
+    controlled through the Unix filesystem permissions; thus, you can
+    trivially allow other people to watch your session.
+<li>Run a program in an environment that is protected from the controlling
+    terminal. This means that, for instance, the program running under dtach
+    would not be affected by the terminal being disconnected for some reason.
+<li>Run programs such as emacs, which tend to want full control
+    over the terminal. dtach mostly acts as a relay, and does not mangle the
+    text between the application and your terminal.
+<li>Suspend dtach without suspending the running program. dtach can
+    handle the suspend key itself instead of passing it to the running
+    program, which may be useful for certain programs such as ircII.
+</ul>
+
+<hr>
+The latest version of dtach is version 0.8, which you can fetch 
+<a href="http://prdownloads.sourceforge.net/dtach/dtach-0.8.tar.gz?download">here</a>.
+Other download formats may be available at the sourceforge
+<a href="https://sourceforge.net/project/showfiles.php?group_id=36489">download area</a> for dtach.
+
+<p>
+
+The changes in version 0.8 are: <p>
+<ul>
+<li>When using dtach -A or dtach -c, the master will now wait until the client
+    attaches before trying to read from the program being executed. This avoids
+    a race condition when the program prints something and exits before the
+    client can attach itself.
+<li>Instead of exiting quietly, dtach will now report any errors that occur
+    while trying to execute the program.
+<li>dtach -n can now be used without a terminal.
+<li>dtach -A will now try to detect and remove stale sockets.
+<li>Removed a Linux-specific escape sequence from the code that restores the
+    original terminal settings.
+<li>Changed dtach.1 to use \- for the dashes in command line options, and
+    fix an ambiguous backslash.
+<li>Use non-blocking mode in the master process, and avoid data loss by ensuring
+    that at least one attaching client succesfully completes a write.
+<li>Fix -e ^&lt;char&gt; to work with lowercase characters.
+</ul>
+
+The changes in version 0.7 are: <p>
+<ul>
+<li>The redraw method can now be explicitly specified on the command line
+    (either no redraw at all, the old ^L character method, and the new WINCH
+    signal method), since many programs only handle one or the other properly.
+<li>Changed the default redraw method back to the old ^L character method.
+<li>Changed the attach code to check the return value of select more carefully.
+<li>Changed the SIGWINCH handler to reinstall itself, to handle systems that
+    always reset the handler.
+<li>Added more proper process group handling.
+</ul>
+
+The changes in version 0.6 are: <p>
+<ul>
+<li>Redraws are now handled by sending the child process a WINCH signal instead
+    of by sending a ^L character. This should help prevent line-oriented
+    programs (such as bash) from clearing the screen excessively.
+<li>Flow control is now disabled when setting raw mode on the terminal.
+<li>Switched to using select instead of poll.
+<li>Changed some exits to exit succesfully instead of non-sucessfully.
+<li>Updated my email address.
+<li>Updated to Autoconf 2.59, renaming some files in the process.
+</ul>
+
+The changes in version 0.5 are: <p>
+<ul>
+<li>Fix fd leakage.
+<li>Prevent atexit from being called twice on dtach -A.
+</ul>
+
+The changes in version 0.4 are: <p>
+<ul>
+<li>Slightly improved README and dtach.1
+<li>Portability updates thanks to sourceforge's compile farm. dtach should now
+    work on: FreeBSD, Debian/alpha, Debian/sparc, Debian/PPC, and Solaris.
+</ul>
+
+The changes in version 0.3 are: <p>
+
+<ul>
+<li>Fixed a typo in dtach.1
+<li>Changed the attach code so that it tells the master when a suspend occurs.
+<li>Decreased the client &lt;-&gt; master packet size.
+<li>Changed the master to send a stream of text to attaching clients instead
+  of sending a huge packet all the time.
+<li>Use getrlimit and dynamically allocate the data structures, if possible.
+<li>Added some more autoconf checks.
+<li>Initial sourceforge release.
+</ul>
+
+You can also obtain information on how to access the CVS tree
+<a href="http://sourceforge.net/cvs/?group_id=36489">here</a>, and access
+the sourceforge project page
+<a href="http://sourceforge.net/projects/dtach">here</a>. <p>
+
+You can send any comments or questions about dtach to the <a
+href="mailto:crigler@users.sourceforge.net">author</a>. Comments and
+suggestions are welcome.
+
+<hr>
+dtach is Copyright &copy; 2004-2008 Ned T. Crigler, and is under the GNU General
+Public License. <p>
+
+<a href="http://sourceforge.net/projects/dtach">
+   <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=36489&type=10"
+   width="80" height="31" border="0" alt="Get dtach at SourceForge.net. Fast,
+   secure and Free Open Source software downloads"></a>
+</body>
+</html>
