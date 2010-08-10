@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="description" content="HawtDispatch: The libdispatch style API for Java and Scala">
+    <meta name="keywords" content="HawtDispatch,scala,java">
+    <meta name="author" content="HawtDispatch">
+
+    <link href="styles/impact/css/pygmentize.css" rel="stylesheet" type="text/css">
+    <link href="styles/impact/css/site.css" rel="stylesheet" type="text/css">
+    
+    <title>HawtDispatch</title>
+
+
+
+</head>
+<body>
+  
+  <div id="navigation">
+  	<div class="wrapper">
+      <ul><li class="webgen-menu-level1 webgen-menu-item-selected"><span>HawtDispatch</span></li><li class="webgen-menu-level1"><a href="download.html">Download</a></li><li class="webgen-menu-level1"><a href="source.html">Source</a></li><li class="webgen-menu-level1"><a href="community.html">Community</a></li><li class="webgen-menu-level1"><a href="support.html">Support</a></li><li class="webgen-menu-level1"><a href="http://hawtdispatch.fusesource.org/maven/1.0/hawtdispatch/apidocs/index.html">API</a></li></ul>
+  	</div>
+  </div>
+  
+
+  <div id="overview">
+    <div class="wrapper">
+      
+      <div class="logo">
+        <img alt="HawtDispatch logo" src="images/project-logo.png">
+      </div>
+      
+      <div class="message">
+        <h1>HawtDispatch</h1>
+HawtDispatch: The libdispatch style API for Java and Scala
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <div id='content'>
+  	<div class='wrapper'>
+      <p>HawtDispatch is a small ( less than 100k ) thread pooling and NIO handling framework API modeled after the <code>libdispatch</code> API that Apple created to power the Grand Central Dispatch (GCD) technology in OS X. It allows you to more easily develop multi-threaded applications which can more easily scale to take advantage of all the processing cores on your machine. At the same time, it&#8217;s development model simplifies solving many of the problems that plague multi-threaded NIO development.</p>
+
+<h2 id='features'>Features</h2>
+<div style='font-size: 90%;'>
+<ul>
+<li>Java 1.5 API</li>
+
+<li>Scala 2.8 API</li>
+
+<li>Thread Pooling</li>
+
+<li>Delayed Task Execution</li>
+
+<li>Priority Task Execution</li>
+
+<li>NIO Handling</li>
+</ul>
+</div>
+<h1 id='usage_guide'>Usage Guide</h1>
+<div class='maruku_toc'><ul style='list-style: none;'><li><a href='#the_dispatchqueue'>The DispatchQueue</a><ul style='list-style: none;'><li><a href='#handy_imports'>Handy imports</a></li><li><a href='#submitting_runnable_objects'>Submitting Runnable Objects</a></li></ul></li><li><a href='#dispatch_sources'>Dispatch Sources</a><ul style='list-style: none;'><li><a href='#nio_dispatch_source'>NIO Dispatch Source</a></li><li><a href='#custom_dispatch_source'>Custom Dispatch Source</a></li></ul></li><li><a href='#restrictions_on_executed_runnables'>Restrictions on Executed Runnables</a></li><li><a href='#common_patterns'>Common Patterns</a><ul style='list-style: none;'><li><a href='#protecting_mutable_state'>Protecting Mutable State</a></li><li><a href='#asynchronous_cleanup'>Asynchronous Cleanup</a></li></ul></li><li><a href='#references'>References</a></li></ul></div>
+<h2 id='the_dispatchqueue'>The DispatchQueue</h2>
+
+<p>The most important objects in the HawtDispatch API, are the <a href='http://hawtdispatch.fusesource.org/maven/1.0/hawtdispatch/apidocs/org/fusesource/hawtdispatch/DispatchQueue.html'>DispatchQueue</a> objects. They are Executor objects which will execute submitted runnable objects at a later time. They come in 2 flavors:</p>
+
+<ul>
+<li>
+<p><strong>Concurrent Dispatch Queue</strong>: The tasks submitted to the concurrent dispatch queues will execute concurrently and therefore must be thread safe. The order of execution of the tasks is non deterministic. There are only 3 concurrent queues shared system wide. One for each priority level and can be accessed using the <a href='http://hawtdispatch.fusesource.org/maven/1.0/hawtdispatch/apidocs/org/fusesource/hawtdispatch/Dispatch.html#getGlobalQueue(org.fusesource.hawtdispatch.DispatchPriority)'><code>Dispatch.getGlobalQueue</code></a> method.</p>
+
+<p>Example: <div class='compare'><div class='compare-left'><h3>In Java</h3><div class='syntax'><div class='highlight'><pre><span class='n'>DispatchQueue</span> <span class='n'>queue</span> <span class='o'>=</span> <span class='n'>getGlobalQueue</span><span class='o'>(</span><span class='n'>HIGH</span><span class='o'>);</span>&#x000A;</pre></div>&#x000A;</div></div><div class='compare-right'><h3>In Scala</h3><div class='syntax'><div class='highlight'><pre><span class='k'>val</span> <span class='n'>queue</span> <span class='k'>=</span> <span class='n'>getGlobalQueue</span><span class='o'>(</span><span class='nc'>HIGH</span><span class='o'>)</span>&#x000A;</pre></div>&#x000A;</div></div><br class='clear' /></div></p>
+</li>
+
+<li>
+<p><strong>Serial Dispatch Queue</strong>: Execute the submitted runnable tasks in FIFO order. A serial dispatch queue will only invoke one runnable at a time, but independent queues may each execute their runnable objects concurrently with respect to each other. Serial dispatch queues are created by the application using the <a href='http://hawtdispatch.fusesource.org/maven/1.0/hawtdispatch/apidocs/org/fusesource/hawtdispatch/Dispatch.html#createQueue(java.lang.String)'><code>Dispatch.createQueue</code></a> method.</p>
+
+<p>Example: <div class='compare'><div class='compare-left'><h3>In Java</h3><div class='syntax'><div class='highlight'><pre><span class='n'>DispatchQueue</span> <span class='n'>queue</span> <span class='o'>=</span> <span class='n'>createQueue</span><span class='o'>(</span><span class='s'>&quot;My queue&quot;</span><span class='o'>);</span>&#x000A;</pre></div>&#x000A;</div></div><div class='compare-right'><h3>In Scala</h3><div class='syntax'><div class='highlight'><pre><span class='k'>val</span> <span class='n'>queue</span> <span class='k'>=</span> <span class='n'>createQueue</span><span class='o'>(</span><span class='s'>&quot;My Queue&quot;</span><span class='o'>)</span>&#x000A;</pre></div>&#x000A;</div></div><br class='clear' /></div></p>
+</li>
+</ul>
+
+<h3 id='handy_imports'>Handy imports</h3>
+
+<p>The examples in this document assume that you have added the following imports:</p>
+<div class='wide'>
+<div class='compare'><div class='compare-left'><h3>In Java</h3><div class='syntax'><div class='highlight'><pre><span class='kn'>import</span> <span class='nn'>org.fusesource.hawtdispatch.*</span><span class='o'>;</span>&#x000A;<span class='kn'>import</span> <span class='nn'>static</span> <span class='n'>org</span><span class='o'>.</span><span class='na'>fusesource</span><span class='o'>.</span><span class='na'>hawtdispatch</span><span class='o'>.</span><span class='na'>Dispatch</span><span class='o'>.*;</span>&#x000A;</pre></div>&#x000A;</div></div><div class='compare-right'><h3>In Scala</h3><div class='syntax'><div class='highlight'><pre><span class='k'>import</span> <span class='nn'>_root_.org.fusesource.hawtdispatch._</span><span class='o'>;</span>&#x000A;<span class='k'>import</span> <span class='nn'>_root_.org.fusesource.hawtdispatch.ScalaDispatch._</span><span class='o'>;</span>&#x000A;</pre></div>&#x000A;</div></div><br class='clear' /></div>
+
+</div>
+<h3 id='submitting_runnable_objects'>Submitting Runnable Objects</h3>
+
+<p>Once you have a reference to a queue object you can use it to perform some asynchronous processing. The Scala queue object is enriched with several helpers to make enqueuing async tasks easier. Example:</p>
+<div class='compare'><div class='compare-left'><h3>In Java</h3><div class='syntax'><div class='highlight'><pre><span class='n'>queue</span><span class='o'>.</span><span class='na'>execute</span><span class='o'>(</span><span class='k'>new</span> <span class='n'>Runnable</span><span class='o'>(){</span>&#x000A;  <span class='kd'>public</span> <span class='kt'>void</span> <span class='nf'>run</span><span class='o'>()</span> <span class='o'>{</span>&#x000A;    <span class='n'>System</span><span class='o'>.</span><span class='na'>out</span><span class='o'>.</span><span class='na'>println</span><span class='o'>(</span><span class='s'>&quot;Hi!&quot;</span><span class='o'>);</span>&#x000A;  <span class='o'>}</span>&#x000A;<span class='o'>});</span>&#x000A;</pre></div>&#x000A;</div></div><div class='compare-right'><h3>in Scala</h3><div class='syntax'><div class='highlight'><pre><span class='n'>queue</span> <span class='o'>{</span>&#x000A;  <span class='nc'>System</span><span class='o'>.</span><span class='n'>out</span><span class='o'>.</span><span class='n'>println</span><span class='o'>(</span><span class='s'>&quot;Hi!&quot;</span><span class='o'>);</span>&#x000A;<span class='o'>}</span>&#x000A;<span class='c1'>// or</span>&#x000A;<span class='n'>queue</span> <span class='o'>&lt;&lt;</span> <span class='o'>^{</span>&#x000A;  <span class='nc'>System</span><span class='o'>.</span><span class='n'>out</span><span class='o'>.</span><span class='n'>println</span><span class='o'>(</span><span class='s'>&quot;Hi!&quot;</span><span class='o'>);</span>&#x000A;<span class='o'>}</span>&#x000A;<span class='c1'>// or</span>&#x000A;<span class='o'>^{</span>&#x000A;  <span class='nc'>System</span><span class='o'>.</span><span class='n'>out</span><span class='o'>.</span><span class='n'>println</span><span class='o'>(</span><span class='s'>&quot;Hi!&quot;</span><span class='o'>);</span>&#x000A;<span class='o'>}</span> <span class='o'>&gt;&gt;:</span> <span class='n'>queue</span>&#x000A;</pre></div>&#x000A;</div></div><br class='clear' /></div>
+<p>The <code>^{ .... }</code> block syntax in the Scala example is browed from the GCD. It produces a regular Java Runnable object.</p>
+
+<h2 id='dispatch_sources'>Dispatch Sources</h2>
+
+<p>A Dispatch Source is used trigger the execution of task on a queue based on an external event. They are usually used to integrate with external IO events from NIO, but you can also use a custom Dispatch Source to coalesce multiple application generated events into a single event which triggers an async task.</p>
+
+<p>Dispatch sources are initially created in a suspended state. Once its&#8217; created and you have configured it&#8217;s event handler, you should call the <a href='http://hawtdispatch.fusesource.org/maven/1.0/hawtdispatch/apidocs/org/fusesource/hawtdispatch/Suspendable.html#resume()'><code>DispatchSource.resume</code></a> method so that it is executed on the specified queue. If you later want to stop processing events for a period of time, call the <a href='http://hawtdispatch.fusesource.org/maven/1.0/hawtdispatch/apidocs/org/fusesource/hawtdispatch/Suspendable.html#suspend()'><code>DispatchSource.suspend</code></a> method.</p>
+
+<h3 id='nio_dispatch_source'>NIO Dispatch Source</h3>
+
+<p>NIO integration is accomplished via a <a href='http://hawtdispatch.fusesource.org/maven/1.0/hawtdispatch/apidocs/org/fusesource/hawtdispatch/DispatchSource.html'>DispatchSource</a> object which is created using the <a href='http://hawtdispatch.fusesource.org/maven/1.0/hawtdispatch/apidocs/org/fusesource/hawtdispatch/Dispatch.html#createSource(java.nio.channels.SelectableChannel,%20int,%20org.fusesource.hawtdispatch.DispatchQueue)'><code>Dispatch.createSource</code></a> method. You supply it the <a href='http://java.sun.com/j2se/1.5.0/docs/api/java/nio/channels/SelectableChannel.html'><code>SelectableChannel</code></a> and the operations your interested in receiving events for like <a href='http://java.sun.com/j2se/1.5.0/docs/api/java/nio/channels/SelectionKey.html#OP_READ'><code>OP_READ</code></a> or <a href='http://java.sun.com/j2se/1.5.0/docs/api/java/nio/channels/SelectionKey.html#OP_WRITE'><code>OP_WRITE</code></a> and when it&#8217;s that NIO event is raised, it will execute a runnable callback you configure on a dispatch queue you specify. HawtDispatch takes care of setting up and managing the NIO selectors and selector keys for you.</p>
+
+<p>Example:</p>
+<div class='wide'>
+<div class='compare'><div class='compare-left'><h3>In Java</h3><div class='syntax'><div class='highlight'><pre><span class='n'>SelectableChannel</span> <span class='n'>channel</span> <span class='o'>=</span> <span class='o'>...</span>&#x000A;<span class='n'>DispatchQueue</span> <span class='n'>queue</span> <span class='o'>=</span> <span class='n'>createQueue</span><span class='o'>()</span>&#x000A;<span class='n'>DispatchSource</span> <span class='n'>source</span> <span class='o'>=</span> <span class='n'>createSource</span><span class='o'>(</span><span class='n'>channel</span><span class='o'>,</span> <span class='n'>OP_READ</span><span class='o'>,</span> <span class='n'>queue</span><span class='o'>);</span>&#x000A;<span class='n'>source</span><span class='o'>.</span><span class='na'>setEventHandler</span><span class='o'>(</span><span class='k'>new</span> <span class='n'>Runnable</span><span class='o'>(){</span>&#x000A;  <span class='kd'>public</span> <span class='kt'>void</span> <span class='nf'>run</span><span class='o'>()</span> <span class='o'>{</span>&#x000A;    <span class='n'>ByteBuffer</span> <span class='n'>buffer</span> <span class='o'>=</span> <span class='n'>ByteBuffer</span><span class='o'>.</span><span class='na'>allocate</span><span class='o'>(</span><span class='mi'>1024</span><span class='o'>);</span>&#x000A;    <span class='kt'>int</span> <span class='n'>count</span><span class='o'>;</span>&#x000A;    <span class='k'>while</span><span class='o'>(</span> <span class='o'>(</span><span class='n'>c</span><span class='o'>=</span><span class='n'>channel</span><span class='o'>.</span><span class='na'>read</span><span class='o'>(</span><span class='n'>buffer</span><span class='o'>))</span> <span class='o'>&gt;</span> <span class='mi'>0</span> <span class='o'>)</span> <span class='o'>{</span>&#x000A;      <span class='c1'>// just dump it to the console</span>&#x000A;      <span class='n'>System</span><span class='o'>.</span><span class='na'>out</span><span class='o'>.</span><span class='na'>write</span><span class='o'>(</span><span class='n'>buffer</span><span class='o'>.</span><span class='na'>array</span><span class='o'>(),</span> <span class='n'>buffer</span><span class='o'>.</span><span class='na'>offset</span><span class='o'>(),</span> <span class='n'>buffer</span><span class='o'>.</span><span class='na'>position</span><span class='o'>());</span>&#x000A;    <span class='o'>}</span>&#x000A;  <span class='o'>}</span>&#x000A;<span class='o'>});</span>&#x000A;<span class='n'>source</span><span class='o'>.</span><span class='na'>resume</span><span class='o'>();</span>&#x000A;</pre></div>&#x000A;</div></div><div class='compare-right'><h3>In Scala</h3><div class='syntax'><div class='highlight'><pre><span class='k'>val</span> <span class='n'>channel</span><span class='k'>:</span><span class='kt'>SelectableChannel</span> <span class='o'>=</span> <span class='o'>...</span>&#x000A;<span class='k'>val</span> <span class='n'>queue</span> <span class='k'>=</span> <span class='n'>createQueue</span>&#x000A;<span class='k'>val</span> <span class='n'>source</span> <span class='k'>=</span> <span class='n'>createSource</span><span class='o'>(</span><span class='n'>channel</span><span class='o'>,</span> <span class='nc'>OP_READ</span><span class='o'>,</span> <span class='n'>queue</span><span class='o'>)</span>&#x000A;<span class='n'>source</span><span class='o'>.</span><span class='n'>setEventHandler</span><span class='o'>(^{</span>&#x000A;  <span class='k'>val</span> <span class='n'>buffer</span> <span class='k'>=</span> <span class='nc'>ByteBuffer</span><span class='o'>.</span><span class='n'>allocate</span><span class='o'>(</span><span class='mi'>1024</span><span class='o'>)</span>&#x000A;  <span class='k'>var</span> <span class='n'>count</span><span class='o'>=</span><span class='mi'>0</span>&#x000A;  <span class='k'>while</span><span class='o'>(</span> <span class='o'>(</span><span class='n'>c</span><span class='o'>=</span><span class='n'>channel</span><span class='o'>.</span><span class='n'>read</span><span class='o'>(</span><span class='n'>buffer</span><span class='o'>))</span> <span class='o'>&gt;</span> <span class='mi'>0</span> <span class='o'>)</span> <span class='o'>{</span>&#x000A;    <span class='c1'>// just dump it to the console</span>&#x000A;    <span class='nc'>System</span><span class='o'>.</span><span class='n'>out</span><span class='o'>.</span><span class='n'>write</span><span class='o'>(</span><span class='n'>buffer</span><span class='o'>.</span><span class='n'>array</span><span class='o'>(),</span> <span class='n'>buffer</span><span class='o'>.</span><span class='n'>offset</span><span class='o'>(),</span> <span class='n'>buffer</span><span class='o'>.</span><span class='n'>position</span><span class='o'>());</span>&#x000A;  <span class='o'>}</span>&#x000A;<span class='o'>});</span>&#x000A;<span class='n'>source</span><span class='o'>.</span><span class='n'>resume</span>&#x000A;</pre></div>&#x000A;</div></div><br class='clear' /></div>
+
+</div>
+<h3 id='custom_dispatch_source'>Custom Dispatch Source</h3>
+
+<p>A Custom Dispatch Source is used to coalesce multiple application generated events into a single event which triggers an async task. By using a Custom Dispatch Source you reduce the amount of cross thread contention since multiple events generated by one thread are passed to the processing thread as a single batch.</p>
+
+<p>When you create a custom dispatch source, you provide it an aggregator which controls how events are coalesced. The supplied aggregators are:</p>
+
+<ul>
+<li><strong><code>EventAggregators.INTEGER_ADD</code></strong> : Merges integer events by adding them</li>
+
+<li><strong><code>EventAggregators.LONG_ADD</code></strong> : Merges long events by adding them</li>
+
+<li><strong><code>EventAggregators.INTEGER_OR</code></strong> : Merges integer events by bit wise or&#8217;ing them</li>
+
+<li><strong><code>EventAggregators.linkedList()</code></strong> : Merges Object events by adding them to a LinkedList</li>
+</ul>
+
+<p>Event producers can call the <code>merge(event)</code> method on the custom dispatch source to supply it data. Calling the merge method will cause the event handler Runnable configured on the dispatch source to be executed. When it is executed, it you should use the custom dispatch source <code>getData()</code> method to access the merged event. The <code>getData()</code> should only be called from the configured event handler.</p>
+<div class='wide'>
+<div class='compare'><div class='compare-left'><h3>In Java</h3><div class='syntax'><div class='highlight'><pre><span class='kd'>final</span> <span class='n'>Semaphore</span> <span class='n'>done</span> <span class='o'>=</span> <span class='k'>new</span> <span class='n'>Semaphore</span><span class='o'>(</span><span class='mi'>1</span><span class='o'>-(</span><span class='mi'>1000</span><span class='o'>*</span><span class='mi'>1000</span><span class='o'>));</span>&#x000A;&#x000A;<span class='n'>DispatchQueue</span> <span class='n'>queue</span> <span class='o'>=</span> <span class='n'>createQueue</span><span class='o'>();</span>&#x000A;<span class='kd'>final</span> <span class='n'>CustomDispatchSource</span><span class='o'>&lt;</span><span class='n'>Integer</span><span class='o'>,</span> <span class='n'>Integer</span><span class='o'>&gt;</span> <span class='n'>source</span> <span class='o'>=</span> <span class='n'>createSource</span><span class='o'>(</span><span class='n'>EventAggregators</span><span class='o'>.</span><span class='na'>INTEGER_ADD</span><span class='o'>,</span> <span class='n'>queue</span><span class='o'>);</span>&#x000A;<span class='n'>source</span><span class='o'>.</span><span class='na'>setEventHandler</span><span class='o'>(</span><span class='k'>new</span> <span class='n'>Runnable</span><span class='o'>()</span> <span class='o'>{</span>&#x000A;  <span class='kd'>public</span> <span class='kt'>void</span> <span class='nf'>run</span><span class='o'>()</span> <span class='o'>{</span>&#x000A;    <span class='kt'>int</span> <span class='n'>count</span> <span class='o'>=</span> <span class='n'>source</span><span class='o'>.</span><span class='na'>getData</span><span class='o'>();</span>&#x000A;    <span class='n'>System</span><span class='o'>.</span><span class='na'>out</span><span class='o'>.</span><span class='na'>println</span><span class='o'>(</span><span class='s'>&quot;got: &quot;</span> <span class='o'>+</span> <span class='n'>count</span><span class='o'>);</span>&#x000A;    <span class='n'>done</span><span class='o'>.</span><span class='na'>release</span><span class='o'>(</span><span class='n'>count</span><span class='o'>);</span>&#x000A;  <span class='o'>}</span>&#x000A;<span class='o'>});</span>&#x000A;<span class='n'>source</span><span class='o'>.</span><span class='na'>resume</span><span class='o'>();</span>&#x000A;&#x000A;<span class='c1'>// Produce 1,000,000 concurrent merge events</span>&#x000A;<span class='k'>for</span> <span class='o'>(</span><span class='kt'>int</span> <span class='n'>i</span> <span class='o'>=</span> <span class='mi'>0</span><span class='o'>;</span> <span class='n'>i</span> <span class='o'>&lt;</span> <span class='mi'>1000</span><span class='o'>;</span> <span class='n'>i</span><span class='o'>++)</span> <span class='o'>{</span>&#x000A;  <span class='n'>getGlobalQueue</span><span class='o'>().</span><span class='na'>execute</span><span class='o'>(</span><span class='k'>new</span> <span class='n'>Runnable</span><span class='o'>()</span> <span class='o'>{</span>&#x000A;    <span class='kd'>public</span> <span class='kt'>void</span> <span class='nf'>run</span><span class='o'>()</span> <span class='o'>{</span>&#x000A;      <span class='k'>for</span> <span class='o'>(</span><span class='kt'>int</span> <span class='n'>j</span> <span class='o'>=</span> <span class='mi'>0</span><span class='o'>;</span> <span class='n'>j</span> <span class='o'>&lt;</span> <span class='mi'>1000</span><span class='o'>;</span> <span class='n'>j</span><span class='o'>++)</span> <span class='o'>{</span>&#x000A;        <span class='n'>source</span><span class='o'>.</span><span class='na'>merge</span><span class='o'>(</span><span class='mi'>1</span><span class='o'>);</span>&#x000A;      <span class='o'>}</span>&#x000A;    <span class='o'>}</span>&#x000A;  <span class='o'>});</span>&#x000A;<span class='o'>}</span>&#x000A;&#x000A;<span class='c1'>// Wait for all the event to arrive.</span>&#x000A;<span class='n'>done</span><span class='o'>.</span><span class='na'>acquire</span><span class='o'>();</span>&#x000A;</pre></div>&#x000A;</div></div><div class='compare-right'><h3>In Scala</h3><div class='syntax'><div class='highlight'><pre><span class='k'>val</span> <span class='n'>done</span> <span class='k'>=</span> <span class='k'>new</span> <span class='nc'>Semaphore</span><span class='o'>(</span><span class='mi'>1</span> <span class='o'>-</span> <span class='o'>(</span><span class='mi'>1000</span> <span class='o'>*</span> <span class='mi'>1000</span><span class='o'>))</span>&#x000A;&#x000A;<span class='k'>val</span> <span class='n'>queue</span> <span class='k'>=</span> <span class='n'>createQueue</span><span class='o'>()</span>&#x000A;<span class='k'>val</span> <span class='n'>source</span> <span class='k'>=</span> <span class='n'>createSource</span><span class='o'>(</span><span class='nc'>EventAggregators</span><span class='o'>.</span><span class='nc'>INTEGER_ADD</span><span class='o'>,</span> <span class='n'>queue</span><span class='o'>)</span>&#x000A;<span class='n'>source</span><span class='o'>.</span><span class='n'>setEventHandler</span><span class='o'>(^{</span>&#x000A;  <span class='k'>val</span> <span class='n'>count</span> <span class='k'>=</span> <span class='n'>source</span><span class='o'>.</span><span class='n'>getData</span><span class='o'>()</span>&#x000A;  <span class='n'>println</span><span class='o'>(</span><span class='s'>&quot;got: &quot;</span> <span class='o'>+</span> <span class='n'>count</span><span class='o'>)</span>&#x000A;  <span class='n'>done</span><span class='o'>.</span><span class='n'>release</span><span class='o'>(</span><span class='n'>count</span><span class='o'>.</span><span class='n'>intValue</span><span class='o'>)</span>&#x000A;<span class='o'>});</span>&#x000A;<span class='n'>source</span><span class='o'>.</span><span class='n'>resume</span><span class='o'>();</span>&#x000A;&#x000A;<span class='c1'>// Produce 1,000,000 concurrent merge events</span>&#x000A;<span class='k'>for</span> <span class='o'>(</span><span class='n'>i</span> <span class='k'>&lt;-</span> <span class='mi'>0</span> <span class='n'>until</span> <span class='mi'>1000</span><span class='o'>)</span> <span class='o'>{</span>&#x000A;  <span class='n'>globalQueue</span> <span class='o'>{</span>&#x000A;    <span class='k'>for</span> <span class='o'>(</span><span class='n'>j</span> <span class='k'>&lt;-</span> <span class='mi'>0</span> <span class='n'>until</span> <span class='mi'>1000</span><span class='o'>)</span> <span class='o'>{</span>&#x000A;      <span class='n'>source</span><span class='o'>.</span><span class='n'>merge</span><span class='o'>(</span><span class='mi'>1</span><span class='o'>)</span>&#x000A;    <span class='o'>}</span>&#x000A;  <span class='o'>}</span>&#x000A;<span class='o'>}</span>&#x000A;&#x000A;<span class='c1'>// Wait for all the event to arrive.</span>&#x000A;<span class='n'>done</span><span class='o'>.</span><span class='n'>acquire</span><span class='o'>()</span>&#x000A;</pre></div>&#x000A;</div></div><br class='clear' /></div>
+
+</div>
+<p>On an 8 core machine you would see output similar to: <div class='syntax'><div class='highlight'><pre>got: 167000&#x000A;got: 103000&#x000A;got: 103000&#x000A;got: 163000&#x000A;got: 119000&#x000A;got: 109000&#x000A;got: 111000&#x000A;got: 125000&#x000A;</pre></div>&#x000A;</div></p>
+
+<h2 id='restrictions_on_executed_runnables'>Restrictions on Executed Runnables</h2>
+
+<p>All runnable actions executed asynchronously by HawtDispatch should be non-blocking and avoid waiting on any synchronized objects. If a blocking call has to performed, it should be done asynchronously in a new thread not managed by HawtDispatch.</p>
+
+<h2 id='common_patterns'>Common Patterns</h2>
+
+<h3 id='protecting_mutable_state'>Protecting Mutable State</h3>
+
+<p>A common pattern that shows up to use a serial queue to synchronize access to the mutable state of an object. Example:</p>
+<div class='syntax'><div class='highlight'><pre>  <span class='k'>class</span> <span class='nc'>MyCounter</span> <span class='o'>{</span>&#x000A;    <span class='k'>val</span> <span class='n'>queue</span> <span class='k'>=</span> <span class='n'>createQueue</span><span class='o'>()</span>&#x000A;    <span class='k'>var</span> <span class='n'>counter</span> <span class='k'>=</span> <span class='mi'>0</span><span class='o'>;</span>&#x000A;    &#x000A;    <span class='k'>def</span> <span class='n'>add</span><span class='o'>(</span><span class='n'>value</span><span class='k'>:</span><span class='kt'>Int</span><span class='o'>)</span> <span class='k'>=</span> <span class='o'>^{</span>&#x000A;      <span class='n'>counter</span> <span class='o'>+=</span> <span class='n'>value</span>&#x000A;    <span class='o'>}</span> <span class='o'>&gt;&gt;:</span> <span class='n'>queue</span>&#x000A;    &#x000A;    <span class='k'>def</span> <span class='n'>sub</span><span class='o'>(</span><span class='n'>value</span><span class='k'>:</span><span class='kt'>Int</span><span class='o'>)</span> <span class='k'>=</span> <span class='o'>^{</span>&#x000A;      <span class='n'>counter</span> <span class='o'>-=</span> <span class='n'>value</span>&#x000A;    <span class='o'>}</span> <span class='o'>&gt;&gt;:</span> <span class='n'>queue</span>&#x000A;  <span class='o'>}</span>&#x000A;</pre></div>&#x000A;</div>
+<h3 id='asynchronous_cleanup'>Asynchronous Cleanup</h3>
+
+<p>On many occasions there is a resource associated with concurrent processing, and it needs to be released/cleaned up once the concurrent processing has completed.</p>
+
+<p>This can be easily done by configuring a disposer callback on the dispatch queue or dispatch source. These object support being reference counted using the <a href='http://hawtdispatch.fusesource.org/maven/1.0/hawtdispatch/apidocs/org/fusesource/hawtdispatch/Retained.html#retain()'><code>retain</code></a> and <a href='http://hawtdispatch.fusesource.org/maven/1.0/hawtdispatch/apidocs/org/fusesource/hawtdispatch/Retained.html#release()'><code>release</code></a> method calls. They are initially created with a retain count of 1.<br />Once the retain count reaches zero, the disposer runnable is executed on the associated queue.</p>
+
+<p>The following example tries to simulate a case were multiple concurrent tasks are using a shared resource and once they finish executing that shared resource gets closed.</p>
+<div class='syntax'><div class='highlight'><pre><span class='k'>val</span> <span class='n'>stream</span><span class='k'>:</span><span class='kt'>PrintStream</span> <span class='o'>=</span> <span class='o'>...</span>&#x000A;<span class='k'>val</span> <span class='n'>queue</span> <span class='k'>=</span> <span class='n'>createQueue</span><span class='o'>()</span>&#x000A;<span class='n'>queue</span><span class='o'>.</span><span class='n'>setDisposer</span><span class='o'>(^{</span> <span class='n'>stream</span><span class='o'>.</span><span class='n'>close</span> <span class='o'>})</span>&#x000A;&#x000A;<span class='k'>for</span><span class='o'>(</span> <span class='n'>i</span> <span class='k'>&lt;-</span> <span class='mi'>1</span> <span class='n'>to</span> <span class='mi'>10</span> <span class='o'>)</span> <span class='o'>{</span>&#x000A;  <span class='n'>queue</span><span class='o'>.</span><span class='n'>retain</span>&#x000A;  <span class='n'>getGlobalQueue</span> <span class='o'>&lt;&lt;</span> <span class='o'>^</span> <span class='o'>{</span>&#x000A;    <span class='c1'>// Concurrently compute some values and send then to </span>&#x000A;    <span class='c1'>// the stream.</span>&#x000A;    <span class='k'>val</span> <span class='n'>value</span> <span class='k'>=</span> <span class='s'>&quot;Hello &quot;</span><span class='o'>+</span><span class='n'>i</span>&#x000A;    <span class='n'>queue</span> <span class='o'>&lt;&lt;</span> <span class='o'>^{</span> <span class='n'>stream</span><span class='o'>.</span><span class='n'>println</span><span class='o'>(</span><span class='n'>value</span><span class='o'>)</span> <span class='o'>}</span>&#x000A;    <span class='c1'>// the stream is closed once the last release executes.</span>&#x000A;    <span class='n'>queue</span><span class='o'>.</span><span class='n'>release</span>&#x000A;  <span class='o'>}</span>&#x000A;<span class='o'>}</span>&#x000A;<span class='n'>queue</span><span class='o'>.</span><span class='n'>release</span>&#x000A;</pre></div>&#x000A;</div>
+<p>Its&#8217; also important to note that the enqueued runnable objects increment the retain counter. The following version of the above example also only closes the stream after all the values are sent to the stream:</p>
+<div class='syntax'><div class='highlight'><pre><span class='k'>val</span> <span class='n'>stream</span><span class='k'>:</span><span class='kt'>PrintStream</span> <span class='o'>=</span> <span class='o'>...</span>&#x000A;<span class='k'>val</span> <span class='n'>queue</span> <span class='k'>=</span> <span class='n'>createQueue</span><span class='o'>()</span>&#x000A;<span class='n'>queue</span><span class='o'>.</span><span class='n'>setDisposer</span><span class='o'>(^{</span> <span class='n'>stream</span><span class='o'>.</span><span class='n'>close</span> <span class='o'>})</span>&#x000A;<span class='k'>for</span><span class='o'>(</span> <span class='n'>i</span> <span class='k'>&lt;-</span> <span class='mi'>1</span> <span class='n'>to</span> <span class='mi'>10</span> <span class='o'>)</span> <span class='o'>{</span>&#x000A;  <span class='k'>val</span> <span class='n'>value</span> <span class='k'>=</span> <span class='s'>&quot;Hello &quot;</span><span class='o'>+</span><span class='n'>i</span>&#x000A;  <span class='n'>queue</span> <span class='o'>&lt;&lt;</span> <span class='o'>^{</span> <span class='n'>stream</span><span class='o'>.</span><span class='n'>println</span><span class='o'>(</span><span class='n'>value</span><span class='o'>)</span> <span class='o'>}</span>&#x000A;<span class='o'>}</span>&#x000A;<span class='n'>queue</span><span class='o'>.</span><span class='n'>release</span>&#x000A;</pre></div>&#x000A;</div>
+<h2 id='references'>References</h2>
+
+<ul>
+<li><a href='http://github.com/chirino/hawtdispatch/blob/master/hawtdispatch-example/src/main/scala/org/fusesource/hawtdispatch/example/EchoServer.scala#L34'>Echo Server Example</a> Source code for a simple TCP based echo server.</li>
+
+<li><a href='stomp-example.html'>STOMP Broker Example</a> Overview of a more complex networking server example.</li>
+
+<li><a href='http://hawtdispatch.fusesource.org/maven/1.0/hawtdispatch/apidocs/org/fusesource/hawtdispatch/package-summary.html'>Java API</a></li>
+
+<li><a href='http://hawtdispatch.fusesource.org/maven/1.0/hawtdispatch-scala/scaladocs/index.html'>Scala API</a></li>
+</ul>
+  	</div>
+  </div>
+
+
+
+
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1347593-12");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+</body>
+</html>
