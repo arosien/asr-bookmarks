@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>XML Utilities</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<meta name="robots" content="index,follow"/>
+	<meta name="description" content="Provides a set of developer tools for working with XML. This page can beautify (pretty-print) XML, apply arbitrary xPaths to an XML document, and apply an XSL stylesheet to an XML document. All work is done by the browser, in javascript." />
+	<meta name="keywords" content="xml, xsl, xslt, xpath, beautify, pretty print, developer tool, xpath tester online" />
+	<link rel="canonical" href="http://chris.photobooks.com/xml/default.htm" />
+	<link rel="stylesheet" type="text/css" href="/glibrary/yui_2.6.0/build/reset-fonts/reset-fonts.css" />
+	<link rel="stylesheet" type="text/css" href="/glibrary/yui_2.6.0/build/base/base.css" />
+	<link rel="stylesheet" type="text/css" href="default.css" />
+	<script type="text/javascript" src="min.js"></script>
+	<!--
+	<script type="text/javascript" src="/glibrary/yui_2.6.0/build/yuiloader-dom-event/yuiloader-dom-event.js"></script>
+	<script type="text/javascript" src="/glibrary/yui_2.6.0/build/selector/selector-beta-min.js"></script>
+	<script type="text/javascript">Event.throwErrors = true;</script>
+	<script type="text/javascript" src="utilities.js"></script>
+	<script type="text/javascript" src="layout.js"></script>
+	<script type="text/javascript" src="beautify.js"></script>
+	<script type="text/javascript" src="xpath.js"></script>
+	<script type="text/javascript" src="xslt.js"></script>
+	-->
+</head>
+<body class="beautify rawView">
+
+<!--
+To do:
+ 1. Utilize Gears / HTML5 for background processing.
+    Blocked: Neither Gears nor HTML5 supports XML objects on background
+    threads, so unless I want to build my own parser (uh, no)...
+ 2. Utilize Gears / HTML5 to enable users to drag / drop a file and render its
+    contents.  This would be SO COOL.
+ 3. Use Gears / HTML5 to provide file save / restore?
+ 4. XSD schema validation?? Man, who uses that? No "easy" way to do this in JS
+    that I can see. This may require server-side processing, but can that be
+    done safely?  What if somebody uploads a 100meg XML?  Is that going to take
+    100meg of server RAM? Are there security issues to worry about? What about
+    user trust (i.e., why would they want to give me their xml files?)
+ 5. Server-side XSL / xPath? Can this be done securely? See above concerns!
+ 6. Ability to make hyperlinks to a specific view: "Share this" result with
+    others. Will require server-side assistance...
+-->
+
+	<div id="xmlContainer">
+		<h2>
+			<label for="xmlInput">XML Input:</label>
+		</h2>
+
+		<div>
+			<textarea id="xmlInput"
+				rows="10" cols="50"
+				spellcheck="false"
+				tabindex="10"></textarea>
+		</div>
+	</div>
+
+	<div id="xpathContainer">
+		<h2>
+			<label for="xpathInput">XPath Input:</label>
+		</h2>
+		<p>
+			<input type="text" id="xpathInput" tabindex="20" />
+		</p>
+		<div id="xPathNSContainer"></div>
+		<button id="xpathRefreshNS">Refresh</button>
+	</div>
+
+	<div id="xslContainer">
+		<h2>
+			<label for="xslInput">XSLT Input:</label>
+		</h2>
+		<p>
+			<textarea id="xslInput"
+				rows="10" cols="50"
+				spellcheck="false"
+				tabindex="30">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;xsl:stylesheet version="1.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+	&lt;xsl:output method="xml" /&gt;
+
+	&lt;xsl:template match="@* | node()"&gt;
+		&lt;xsl:copy&gt;
+			&lt;xsl:apply-templates select="@* | node()"/&gt;
+		&lt;/xsl:copy&gt;
+	&lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</textarea>
+		</p>
+	</div>
+
+	<div id="outputContainer">
+		<h2>
+			Output:
+			<span id="outputOptions">
+				<a href="#null">select all</a>
+				<a href="#null" id="outputAsTree">tree view</a>
+				<a href="#null" id="outputAsList">list view</a>
+				<a href="#null" id="outputAsRaw">raw view</a>
+			</span>
+		</h2>
+		<div id="output" class="syntax"></div>
+	</div>
+
+	<div id="options">
+		<h2>Options</h2>
+		<p>
+			<label>
+				<input type="radio"
+					name="mode"
+					value="beautify"
+					checked="checked"
+					tabindex="50"
+					accesskey="b" />
+				<u>B</u>eautify
+			</label><br />
+			<label>
+				<input type="radio"
+					name="mode"
+					value="xPath"
+					tabindex="60"
+					accesskey="p" />
+				X<u>P</u>ath
+			</label>
+			<br />
+			<label>
+				<input type="radio"
+					name="mode"
+					value="xsl"
+					tabindex="70"
+					accesskey="x" />
+				<u>X</u>SLT
+			</label>
+		</p>
+
+		<button id="opt_render" tabindex="40" accesskey="r"><u>R</u>ender</button>
+
+		<h3>Contact Me</h3>
+		<p>
+			<a href="mailto:nielsen.chris@gmail.com">nielsen.chris</a><br />
+			<a href="http://chris-nielsen.blogspot.com/">Entropy Reduction</a>
+		</p>
+
+		<h3>See Also</h3>
+		<p>
+			<a href="/json/default.htm">JSON Utilities</a><br />
+			<a href="/regex/default.htm">RegEx Utilities</a>
+		</p>
+
+	</div>
+
+	<!-- Display the xPath of an element when the user clicks on it in the
+	     output of a "Beautify" render. -->
+	<div id="outputXPath" class="syntax"></div>
+
+	<script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+	<script type="text/javascript">
+		var pageTracker = _gat._getTracker("UA-5037510-1");
+		pageTracker._initData();
+		pageTracker._trackPageview();
+	</script>
+
+</body>
+</html>
