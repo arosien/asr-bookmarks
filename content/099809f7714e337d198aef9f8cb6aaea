@@ -1,0 +1,401 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8"></meta>
+<title>Scalasti, a Scala interface to the Java StringTemplate library</title>
+<link href="http://bmc.github.com/stylesheets/style.css" media="screen" rel="stylesheet" type="text/css"/>
+<link href="stylesheets/style.css" media="screen" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+
+<div class="header">
+  <table class="banner">
+    <tr valign="bottom">
+      <td class="banner-image" width="82"><img src="http://bmc.github.com/images/clapper-logo.png" width="82" height="81"/></td>
+      <td class="banner-title"><span class="title">Scalasti, a Scala interface to the Java StringTemplate library</span></td>
+    </tr>
+  </table>
+
+  <div class="linktabs">
+    <span class="linktab"><a href="index.html">Home</a></span>
+    <span class="linktab"><a href="http://github.com/bmc/scalasti">Code</a></span>
+    <span class="linktab"><a href="http://www.clapper.org/software/">Other Software</a></span>
+  </div>
+
+  <br clear="all"/>
+  
+
+</div>
+
+
+<script type="text/javascript" src="http://bmc.github.com/js/toc.js">
+<!-- -->
+</script>
+
+<div id="content" class="site">
+
+<div id="tocBlock">
+<span id="tocHeading">Table of Contents</span>
+<div id="toc"></div>
+</div>
+
+<h1 id='introduction'>Introduction</h1>
+
+<p>Scalasti is a <a href='http://www.scala-lang.org/'>Scala</a> interface to the <a href='http://www.stringtemplate.org/'>StringTemplate</a> Java template library. It provides a subset of the features of <a href='http://www.stringtemplate.org/'>StringTemplate</a>, using a more Scala-friendly syntax.</p>
+
+<h1 id='rationale'>Rationale</h1>
+
+<p><a href='http://www.stringtemplate.org/'>StringTemplate</a> is a Java-based template engines, comparable in functionality to APIs like <a href='http://code.google.com/closure/templates/index.html'>Google&#8217;s Closure Templates</a>, <a href='http://www.freemarker.org/'>FreeMarker</a> and <a href='http://velocity.apache.org/'>Velocity</a>. There are also Scala-based template engines, such as <a href='http://scalate.fusesource.org/'>Scalate</a> (a powerful template language that bills itself as being &#8220;like JSP without the crap, but with added Scala coolness.&#8221;)</p>
+
+<p>The problem with most template languages, though, is that they&#8217;re a little (or a lot) too powerful. As Terence Parr, creator of StringTemplate, wrote, in his paper <a href='http://www.cs.usfca.edu/~parrt/papers/mvc.templates.pdf'><em>Enforcing Strict Model-View Separation in Template Engines</em></a>:</p>
+
+<blockquote>
+<p>The mantra of every experienced web application developer is the same: thou shalt separate business logic from display. Ironically, almost all template engines allow violation of this separation principle, which is the very impetus for HTML template engine development. This situation is due mostly to a lack of formal definition of separation and fear that enforcing separation emasculates a template’s power.</p>
+
+<p>&#8230;</p>
+
+<p>Without exception, programmers espouse separation of logic and display as an ideal principle. In practice, however, programmers and engine producers are loath to enforce separation, fearing loss of power resulting in a crucial page that they cannot generate while satisfying the principle. Instead, they encour- age rather than enforce the principle, leaving themselves a gaping “backdoor” to avoid insufficient page generation power. Unfortunately, under deadline pressure, programmers will use this backdoor routinely as an expedient if it is available to them, thus, entangling logic and display.</p>
+
+<p>&#8230;</p>
+
+<p>The opposite situation is more common where programmers em- bed business logic in their templates as an expedient to avoid having to update their data model. Given a Turing-complete template programming language, programmers are tempted to add logic directly where they need it in the template instead of having the data model do the logic and passing in the boolean result, thereby, decoupling the view from the model.</p>
+</blockquote>
+
+<p>Allowing arbitrary and powerful code in a template just invites disaster. I want a solid template language that is:</p>
+
+<ul>
+<li>free of side-effects, and</li>
+
+<li>reduces or eliminates the temptation to put business logic in the template.</li>
+</ul>
+
+<p>StringTemplate fits the bill nicely.</p>
+
+<p>I want to use StringTemplate from Scala, which is eminently feasible, since there&#8217;s a Java version of StringTemplate. However, StringTemplate relies on <code>java.util.Collection</code> classes, such as <code>java.util.Map</code> and <code>java.util.List</code>; these classes are clumsy to use in Scala, compared to their Scala counterparts. I created the Scalasti wrapper interface to expose StringTemplate capabilities in a more Scala-friendly way.</p>
+
+<h1 id='installation'>Installation</h1>
+
+<p>The easiest way to install the Scalasti library is to download a pre-compiled jar from the <a href='http://www.scala-tools.org/repo-releases/'>Scala Tools Maven repository</a>. However, you can also get certain build tools to download it for you automatically.</p>
+
+<h2 id='installing_for_maven'>Installing for Maven</h2>
+
+<p>If you&#8217;re using <a href='http://maven.apache.org/'>Maven</a>, you can simply tell Maven to get Scalasti from the <a href='http://www.scala-tools.org/repo-releases/'>Scala Tools Maven repository</a>. The relevant pieces of information are:</p>
+
+<ul>
+<li>Group ID: <code>clapper.org</code></li>
+
+<li>Artifact ID: <code>scalasti_2.8.1</code></li>
+
+<li>Version: <code>0.5.1</code></li>
+
+<li>Type: <code>jar</code></li>
+
+<li>Repository: <code>http://scala-tools.org/repo-releases</code></li>
+</ul>
+
+<p>Here&#8217;s a sample Maven POM &#8220;dependency&#8221; snippet:</p>
+
+<pre><code>&lt;repositories&gt;
+  &lt;repository&gt;
+    &lt;id&gt;scala-tools.org&lt;/id&gt;
+      &lt;name&gt;Scala-tools Maven2 Repository&lt;/name&gt;
+      &lt;url&gt;http://scala-tools.org/repo-releases&lt;/url&gt;
+  &lt;/repository&gt;
+&lt;/repositories&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;org.clapper&lt;/groupId&gt;
+  &lt;artifactId&gt;scalasti_2.8.0&lt;/artifactId&gt;
+  &lt;version&gt;0.5.1&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+
+<p>Scala 2.8.1.RC1 is also supported in version 0.5.1.</p>
+
+<p>For more information on using Maven and Scala, see Josh Suereth&#8217;s <a href='http://www.scala-lang.org/node/345'>Scala Maven Guide</a>.</p>
+
+<h2 id='using_with_sbt'>Using with SBT</h2>
+
+<p>If you&#8217;re using <a href='http://code.google.com/p/simple-build-tool'>SBT</a> to build your code, place the following line in your project file (i.e., the Scala file in your <code>project/build/</code> directory):</p>
+
+<pre><code>val scalasti = &quot;org.clapper&quot; %% &quot;scalasti&quot; % &quot;0.5.1&quot;</code></pre>
+
+<p><strong>NOTES:</strong></p>
+
+<ol>
+<li>
+<p>The first doubled percent is <em>not</em> a typo. It tells SBT to treat Scalasti as a cross-built library and automatically inserts the Scala version you&#8217;re using into the artifact ID. It will <em>only</em> work if you are building with Scala 2.8.0 or 2.8.1. See the <a href='http://code.google.com/p/simple-build-tool/wiki/CrossBuild'>SBT cross-building</a> page for details.</p>
+</li>
+
+<li>
+<p>Prior to version 0.3, you also had to specify the location of the <em>clapper.org</em> custom Maven repository. With version 0.3, however, ClassUtil is now being published to the <a href='http://www.scala-tools.org/repo-releases/'>Scala Tools Maven repository</a>, which SBT automatically searches.</p>
+</li>
+</ol>
+
+<h1 id='building_from_source'>Building from Source</h1>
+
+<h2 id='source_code_repository'>Source Code Repository</h2>
+
+<p>The source code for the Scalasti library is maintained on <a href='http://github.com/bmc/'>GitHub</a>. To clone the repository, run this command:</p>
+
+<pre><code>git clone git://github.com/bmc/scalasti.git</code></pre>
+
+<h2 id='build_requirements'>Build Requirements</h2>
+
+<p>Building the Scalasti library requires <a href='http://code.google.com/p/simple-build-tool'>SBT</a>. Install SBT, as described at the SBT web site.</p>
+
+<h2 id='building_scalasti'>Building Scalasti</h2>
+
+<p>Assuming you have an <code>sbt</code> shell script (or .BAT file, for <em>[shudder]</em> Windows), first run:</p>
+
+<pre><code>sbt update</code></pre>
+
+<p>That command will pull down the external jars on which the Scalasti library depends. After that step, build the library with:</p>
+
+<pre><code>sbt compile test package</code></pre>
+
+<p>The resulting jar file will be in the top-level <code>target</code> directory.</p>
+
+<h1 id='runtime_requirements'>Runtime Requirements</h1>
+
+<p>Scalasti requires the following libraries to be available at runtime, for some, or all, of its methods.</p>
+
+<ul>
+<li>The main <a href='http://asm.ow2.org/'>ASM</a> library (version 3), e.g., <code>asm-3.2.jar</code></li>
+
+<li>The <a href='http://asm.ow2.org/'>ASM</a> commons library (version 3), e.g., <code>asm-commons-3.2.jar</code></li>
+
+<li>The <a href='http://bmc.github.com/grizzled-scala/'>Grizzled Scala</a> library</li>
+
+<li>The <a href='http://bmc.github.com/grizzled-slf4j/'>Grizzled SLF4J</a> library, for logging</li>
+
+<li>The <a href='http://slf4j.org/'>SLF4J</a> API library, for logging (e.g., <code>slf4j-api-1.5.11.jar</code>)</li>
+
+<li>An SLF4J implementation, such as <a href='http://logback.qos.ch/'>Logback</a> or <a href='http://bmc.github.com/avsl/'>AVSL</a>, if you want logging.</li>
+</ul>
+
+<p>Maven and <a href='http://code.google.com/p/simple-build-tool'>SBT</a> should automatically download these libraries for you.</p>
+
+<h1 id='using_scalasti'>Using Scalasti</h1>
+
+<p>The Scalasti API provides simple wrappers around the most common classes in the <a href='http://www.stringtemplate.org/'>StringTemplate</a> API. For various reasons, subclassing the StringTemplate classes is non-trivial, so Scalasti&#8217;s classes are wrappers that delegate their operations to the wrapped StringTemplate object. Since Scalasti does not provide the full suite of capabilities available in the actual StringTemplate classes, you can, at any point, retrieve a copy of the actual underlying StringTemplate API object, so you can interact directly with it.</p>
+
+<h2 id='simple_examples'>Simple Examples</h2>
+
+<p>Create a template group that will read templates from a directory:</p>
+
+<pre><code>val group = new StringTemplateGroup(&quot;mygroup&quot;, new File(&quot;/tmp&quot;))
+val template = group.template(&quot;mytemplate&quot;)</code></pre>
+
+<p>Create a template group that will load templates from the CLASSPATH:</p>
+
+<pre><code>val grp = new StringTemplateGroup(&quot;mygroup&quot;)
+val template = group.template(&quot;org/clapper/templates/mytemplate&quot;)</code></pre>
+
+<p>Set attribute values one by one:</p>
+
+<pre><code>// A single-valued attribute:
+template.setAttribute(&quot;title&quot;, &quot;Employees&quot;)
+
+// A multi-valued attribute:
+template.setAttribute(&quot;employees&quot;, &quot;Moe&quot;, &quot;Larry&quot;, &quot;Curley&quot;)</code></pre>
+
+<p>Set attribute values all at once:</p>
+
+<pre><code>template.setAttributes(Map(&quot;title&quot; -&gt; &quot;Employees&quot;,
+                           &quot;employees&quot; -&gt; List(&quot;Moe&quot;, &quot;Larry&quot;, &quot;Curley&quot;)))</code></pre>
+
+<p>Change how an attribute is rendered:</p>
+
+<pre><code>class HexValue(l: long)
+class HexValueRenderer extends AttributeRenderer[HexValue]
+{
+    def toString(v: HexValue) = &quot;0x&quot; + v.toHexString
+}
+
+val memoryLocation: Long = ...
+template.setAttribute(&quot;hexidecimal address&quot;, new HexValue(memoryLocation))
+template.setAttribute(&quot;decimal address&quot;, memoryLocation)
+template.registerRenderer(new HexValueRenderer)</code></pre>
+
+<p>Render a template with its current set of attributes:</p>
+
+<pre><code>println(template.toString)</code></pre>
+
+<h2 id='support_for_aggregates'>Support for Aggregates</h2>
+
+<p>The underlying <a href='http://www.stringtemplate.org/'>StringTemplate</a> API supports the notion of aggregates&#8211;attributes that, themselves, have attributes. <a href='http://www.stringtemplate.org/'>StringTemplate</a> supports aggregates via Java Bean objects and <a href='http://www.antlr.org/wiki/display/ST/Expressions#Expressions-Automaticaggregatecreation'>automatic aggregates</a>. Scalasti also supports Java Bean objects and automatic aggregates, but it adds support for two other kinds of aggregates:</p>
+
+<ul>
+<li>mapped aggregates: aggregates created, on the fly, from maps that are recursively wrapped in Java Beans</li>
+
+<li>bean attributes: Scala objects that are recursively wrapped, on the fly, in Java Beans</li>
+</ul>
+
+<p>You&#8217;ll find more information on these two enhanced forms of aggregates further down in this document.</p>
+
+<p>There are two forms of the <code>setAggregate()</code> method, as described below.</p>
+
+<h3 id='automatic_aggregates'>Automatic aggregates</h3>
+
+<p>As the StringTemplate documentation puts it:</p>
+
+<blockquote>
+<p>Creating one-off data aggregates is a pain, you have to define a new class just to associate two pieces of data. <code>StringTemplate makes</code> it easy to group data during <code>setAttribute()</code> calls. You may pass in an aggregrate attribute name to <code>setAttribute()</code> with the data to aggregate [as in this Java code fragment]:</p>
+
+<pre><code>   StringTemplate st = new StringTemplate(&quot;$items:{$it.(\&quot;last\&quot;)$, $it.(\&quot;first\&quot;)$\n}$&quot;);
+   st.setAttribute(&quot;items.{first,last}&quot;, &quot;John&quot;, &quot;Smith&quot;);
+   st.setAttribute(&quot;items.{first,last}&quot;, &quot;Baron&quot;, &quot;Von Munchhausen&quot;);
+   String expecting = &quot;Smith, John\nVon Munchhausen, Baron\n&quot;;</code></pre>
+</blockquote>
+
+<p>Scalasti provides support for these automatic aggregates, though, for clarity, Scalasti names the methods <code>setAggregate()</code>, instead of overloading <code>setAttribute()</code> for aggregates.</p>
+
+<p>The first form of <code>StringTemplate.setAggregate()</code> handles automatic aggregates. The automatic aggregates mirrors, almost exactly, what the underlying StringTemplate library does:</p>
+
+<pre><code>def setAggregate(aggrSpec: String, values: Any*): StringTemplate</code></pre>
+
+<p>It sets an automatic aggregate from the specified arguments, returning the template, for convenience. An automatic aggregate looks like an object from within a template, but it isn&#8217;t backed by a bean. Instead, you specify the aggregate with a special syntax. For example, the following code defines an aggregate attribute called <code>name</code>, with two fields, <code>first</code> and <code>last</code>. Those fields can be interpolated within a template via <code>$item.first$</code> and <code>$item.last$</code>.</p>
+
+<pre><code>val st = new StringTemplate( ... )
+st.setAggregate(&quot;name.{first,last}&quot;, &quot;Moe&quot;, &quot;Howard&quot;)</code></pre>
+
+<p>That aggregate permits the following template references:</p>
+
+<pre><code>$name.first$
+$name.last$</code></pre>
+
+<p>Setting the same aggregate multiple times results in a list of aggregates:</p>
+
+<pre><code>val st = new StringTemplate( ... )
+st.setAggregate(&quot;name.{first,last}&quot;, &quot;Moe&quot;, &quot;Howard&quot;)
+st.setAggregate(&quot;name.{first,last}&quot;, &quot;Larry&quot;, &quot;Fine&quot;)
+st.setAggregate(&quot;name.{first,last}&quot;, &quot;Curley&quot;, &quot;Howard&quot;)</code></pre>
+
+<p>Note, however, that this syntax does not support nested aggregates. That is, there is no way, using automatic aggregates, to produce an attribute that can be referenced like this:</p>
+
+<pre><code>$foo.outer.inner$</code></pre>
+
+<p>For that capability, you need mapped aggregates. (See next section.)</p>
+
+<h3 id='mapped_aggregates'>Mapped Aggregates</h3>
+
+<p>Scalasti adds another form of aggregate attribute called a &#8220;mapped aggregate&#8221;. Mapped aggregates are simply aggregate attributes created from Scala maps. The supplied map&#8217;s keys are used as the fields of the aggregate. The mapped aggregates feature allows you to create a map, like this:</p>
+
+<pre><code>st.setAggregate(&quot;myfield&quot;, Map(&quot;foo&quot; -&gt; List(1, 2), &quot;bar&quot; -&gt; &quot;barski&quot;))</code></pre>
+
+<p>and then access it in the template like this:</p>
+
+<pre><code>$myfield.bar$
+&lt;ul&gt;
+  $myfield.foo:{ item | &lt;li&gt;$listitem(item)$&lt;/li&gt;$\n$}$
+&lt;/ul&gt;</code></pre>
+
+<p>The second form of the <code>StringTemplate.setAggregate()</code> method handles mapped aggregates:</p>
+
+<pre><code>def setAggregate(attrName: String, valueMap: Map[String, Any]): StringTemplate</code></pre>
+
+<p>With this version of <code>setAggregate()</code>, the supplied map&#8217;s keys are used as the fields of the aggregate. With a mapped aggregate, Scalasti actually translates the map into a Java Bean, which it then uses to set the attribute. Because Scalasti recursively converts all maps it finds (as long as they are of type <code>Map[String, Any]</code>), a mapped attribute can handle nested attribute references.</p>
+
+<p><strong>NOTE</strong>: The underlying <a href='http://www.stringtemplate.org/'>StringTemplate</a> library does <em>not</em> support the notion of a mapped aggregate; mapped aggregates are a Scalasti add-on.</p>
+
+<p>For example, given this map:</p>
+
+<pre><code>Map(&quot;foo&quot; -&gt; List(1, 2), &quot;bar&quot; -&gt; &quot;barski&quot;)</code></pre>
+
+<p>and the name &#8220;mystuff&#8221;, this method will produce the equivalent of the following call:</p>
+
+<pre><code>template.setAggregate(&quot;mystuff.{foo, bar}&quot;, List(1, 2), &quot;barski&quot;)</code></pre>
+
+<p>However, it does so by creating a Java Bean, not by using the underlying StringTemplate library&#8217;s automatic aggregate feature.</p>
+
+<p>In addition, mapped aggregates support nested maps. For instance, this code fragment:</p>
+
+<pre><code>val attrMap = Map(&quot;foo&quot;   -&gt; &quot;FOO&quot;,
+                  &quot;alien&quot; -&gt; Map(&quot;firstName&quot; -&gt; &quot;John&quot;,
+                                 &quot;lastName&quot;  -&gt; &quot;Smallberries&quot;))
+template.setAggregate(&quot;thing&quot;, attrMap)</code></pre>
+
+<p>will make the following values available in a template:</p>
+
+<pre><code>$thing.foo$                  # expands to &quot;FOO&quot;
+$things.alien.firstName$     # expands to &quot;John&quot;
+$things.alien.lastName$      # expands to &quot;Smallberries&quot;</code></pre>
+
+<p>To convert the map to a Java Bean, Scalasti uses the <a href='http://bmc.github.com/classutil/'>ClassUtil</a> library&#8217;s <a href='http://bmc.github.com/classutil/#generating_java_beans_from_scala_maps'><code>MapToBean</code></a> capability.</p>
+
+<h3 id='scala_bean_aggregates'>Scala Bean Aggregates</h3>
+
+<p>Normally, StringTemplate expects non-primitive attributes to be either collections or Java Beans. In Scala, you can force a class to have Java Bean getters and setters by marking fields with the <code>@BeanProperty</code> annotation. However, sometimes that&#8217;s annoying or even impossible. For example, if you have an instance of a final Scala class from some third party API, you can&#8217;t necessarily change that class to add <code>@BeanProperty</code> to the fields you want StringTemplate to see; writing a wrapper class is usually your only option. Similarly, if you have a Scala case class, often expressed in a single line of code, extending it to multiple lines of code, just to add <code>@BeanProperty</code>, is annoying.</p>
+
+<p>To solve this problem, Scalasti provides a couple variants of a <code>makeBeanAttribute()</code> method, which takes a Scala object and recursively wraps it in a Java Bean, before passing it to StringTemplate. Here are the declarations for <code>makeBeanAttribute()</code>:</p>
+
+<pre><code>def makeBeanAttribute[T](attrName: String, values: T*): StringTemplate
+def makeBeanAttribute[T](attrName: String, values: Iterator[T]): StringTemplate</code></pre>
+
+<p>Unlike the <code>setAttribute()</code> methods, the <code>makeBeanAttribute()</code> methods automatically convert the Scala object values to Java Beans, using the <a href='http://bmc.github.com/classutil/'>ClassUtil</a> library&#8217;s <code>ScalaObjectToBean</code> capability. Thus, using <code>makeBeanAttribute()</code> allows you to pass Scala objects to StringTemplate, without using the <code>@BeanProperty</code> annotation to generate Java Bean getters for StringTemplate to use.</p>
+
+<p><strong>NOTE</strong>: This capability requires the presence of the ASM byte code generation library at runtime.</p>
+
+<p>Here&#8217;s an example, adapted from the Scalasti unit tests.</p>
+
+<pre><code>case class Outer(inner: String, x: Int)
+case class Thing(outer: Outer, okay: String)
+case class Foo(bar: String, baz: Int)
+
+val template = &quot;$thing.outer.inner$ $foo.bar$ $foo.baz$ &quot; +
+               &quot;$thing.outer.x$ $thing.okay$&quot;
+
+val thing = Thing(Outer(&quot;some string thing&quot;, 10), &quot;OKAY&quot;)
+val foo = Foo(&quot;BARSKI&quot;, 42)
+
+val st = new StringTemplate(template).makeBeanAttribute(&quot;thing&quot;, thing).
+                                      makeBeanAttribute(&quot;foo&quot;, foo)
+println(st.toString)
+
+// Prints: some string thing BARSKI 42 10 OKAY</code></pre>
+
+<h2 id='api_documentation'>API Documentation</h2>
+
+<p>The Scaladoc-generated the <a href='api/'>API documentation</a> is available locally. In addition, you can generate your own version with:</p>
+
+<pre><code>sbt doc</code></pre>
+
+<h2 id='additional_documentation'>Additional Documentation</h2>
+
+<p>Consult the <a href='http://www.antlr.org/wiki/display/ST/StringTemplate+Documentation'>StringTemplate documentation</a> for complete details on creating, deploying, and using StringTemplate templates.</p>
+
+<h1 id='author'>Author</h1>
+
+<p><a href='mailto:bmc@clapper.org'>Brian M. Clapper</a></p>
+
+<h1 id='contributing_to_scalasti'>Contributing to Scalasti</h1>
+
+<p>Scalasti is still under development. If you have suggestions or contributions, feel free to fork the <a href='http://github.com/bmc/scalasti'>Scalasti repository</a>, make your changes, and send me a pull request.</p>
+
+<h1 id='copyright_and_license'>Copyright and License</h1>
+
+<p>Scalasti is copyright &#169; 2010 Brian M. Clapper and is released under a <a href='license.html'>BSD License</a>.</p>
+
+<h1 id='patches'>Patches</h1>
+
+<p>I gladly accept patches from their original authors. Feel free to email patches to me or to fork the <a href='http://github.com/bmc/scalasti'>Scalasti repository</a> and send me a pull request. Along with any patch you send:</p>
+
+<ul>
+<li>Please state that the patch is your original work.</li>
+
+<li>Please indicate that you license the work to the Scalasti project under a <a href='license.html'>BSD License</a>.</li>
+</ul>
+
+</div>
+
+<script type="text/javascript">
+createTOC();
+</script>
+
+ 
+</body>
+</html>
+
