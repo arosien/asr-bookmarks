@@ -1,0 +1,545 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">  -->
+
+
+<html  lang="en"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+<title>PGN Viewer</title> 
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link rel="stylesheet" type="text/css" href="/js/external/yui/build/assets/skins/sam/yui-skins.vers438.css"/>
+<link type="text/css" rel="stylesheet" href="/css/main-all.vers438.css"/>
+
+
+<!--
+<link type="text/css" rel="stylesheet" href="/css/fauxconsole.css"/>
+<script type="text/javascript" src="/js/external/fauxconsole.js" ></script> -->
+
+<script type="text/javascript" src="/js/main-all.vers438.js"></script>
+
+
+
+<!--   <script type="text/javascript" src="/js/external/ejschart/EJSChart.js"> </script> -->
+     <script type="text/javascript" src="/js/pgnpage-all.vers438.js"></script>
+     <link type="text/css" rel="stylesheet" href="/css/board-min.vers438.css"/>
+
+<script>
+YAHOO.util.Event.onContentReady("chesstempoMenu", function () {
+
+
+    var oMenuBar = new YAHOO.widget.MenuBar("chesstempoMenu", { 
+      autosubmenudisplay: true, 
+          hidedelay: 350, 
+          showdelay: 150,
+          lazyload: true });
+
+    oMenuBar.render();
+
+});
+
+</script>
+
+
+</head> 
+<body id="body" class="yui-skin-sam">
+<div id="doc3" class="yui-t2"> 
+
+<link  href="//fonts.googleapis.com/css?family=Droid+Sans:regular,bold" rel="stylesheet" type="text/css" >
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-64837-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+
+<div id="hd" class="header">
+ <div id="title-header">
+  <h1 id="header-title">Chess <span>T</span>empo</h1>
+ </div>
+
+ <div id="user-info">
+
+<div style="float:left;"> <!-- user ratings and translator dropdown -->
+
+
+<div style="padding-right:5px;float:left;"> <!-- language selector -->
+<form id="langForm" method="post" action="http://chesstempo.com/pgn-viewer.html">
+<img align="top" width="24" height="24" src="/images/globe-green.vers1.png"/> <select style="padding-top:3px;padding-bottom:3px;" id="langSelection">
+      <option  value="de_DE">Deutsch</option>
+   <option selected="" value="en_US">English</option>
+   <option  value="es_ES">Español</option>
+   <option  value="fr_FR">Français</option>
+   <option  value="it_IT">Italiano</option>
+   <option  value="nl_NL">Nederlands</option>
+   <option  value="pl_PL">Polski</option>
+   <option  value="pt_BR">Português</option>
+   <option  value="sv_SE">Svenska</option>
+   <option  value="tr_TR">Türkçe</option>
+
+</select>
+ <!-- <input id="chooseLanguageButton" type="submit" value="Choose"/> -->
+</form>
+</div> <!-- lang selector form div end -->
+ <div style="float:left;padding-left:4px;" id="user-ratings-div"></div>
+</div> <!-- ratings/lang selector div -->
+
+
+<div style="padding-left:4px;float:left;"> <!-- login/logout div -->
+  <form id="loginForm" method="post" action="http://chesstempo.com/pgn-viewer.html">
+<div id="loginUI">
+
+Username: <input id="usernameField" value="" name="username"/><br/>
+Password: <input id="passwordField" type="password" value="" name="password"/><br/>
+<span id="loginError"></span>
+    <input id="loginButton" type="submit" value="Login"/>
+/
+    <a id="registerButton" href="/registration.html">Register</a>
+<input id="page" type="hidden" name="page" value="pgn-viewer"/>
+<br/>
+    <a id="lostPassButton" href="/chess-forum/index.php?action=reminder">Lost Password</a>
+</div> <!-- end loginUI -->
+</form>
+
+
+<div style="float:right;" id="logoutUI" class="initially_hidden">
+ <div id="user-details-div">
+ </div>
+<br/>
+<div> 
+    <span id="logoutButton">Logout</span>  
+
+
+<span id="prefsButton">Preferences</span>
+
+<script>
+
+
+ProblemSetTree = function(treeId,probtree)
+{
+  function create_problem_set_tree(parentNode,children)
+  {
+    var t="";
+    for (var i=0;i<children.length;i++)
+    {
+      var child = children[i];
+      var expand = false;
+      // Auto open Rated branch of tree.
+      if (child.id=="1" && child.leaf=="false")
+      {
+        expand = true;
+      }
+      var node = new YAHOO.widget.TextNode({ label:child.label,labelStr:child.label,id:child.id,leaf:child.leaf},parentNode,expand);
+      create_problem_set_tree(node,child.children);
+    }
+  }
+  
+  var ourtree = new YAHOO.widget.TreeView(treeId);
+  var root = ourtree.getRoot(); 
+  create_problem_set_tree(root,probtree.root.children);
+  ourtree.draw();
+// Trees with TextNodes will fire an event for when the label is clicked: 
+  ourtree.subscribe("labelClick", function(node) 
+               { 
+                 if (node.data.leaf=="true")
+                 {
+                   YAHOO.util.Dom.setStyle(ourtree.getEl(),"display","none");
+                   YAHOO.util.Dom.get(treeId+"Name").innerHTML=node.data.labelStr;
+                   YAHOO.util.Dom.get(treeId+"Value").value=node.data.id;
+                   var numProbs = YAHOO.util.Dom.get("num_problems");
+                   if (numProbs)
+                     numProbs.innerHTML="";
+                 }
+               }); 
+  function doSelectSet()
+  {
+    if (YAHOO.util.Dom.getStyle(ourtree.getEl(),"display")=="none")
+    {
+      YAHOO.util.Dom.setStyle(ourtree.getEl(),"display","block");
+      ourtree.draw();  
+    }
+    else
+    {
+      YAHOO.util.Dom.setStyle(ourtree.getEl(),"display","block");
+  }
+
+  }
+  YAHOO.util.Event.addListener(treeId+"SelectSet", "click", doSelectSet,
+                               this,true
+                               );
+}
+
+
+</script>
+
+
+</div>
+
+</div><!-- end logoutUI -->
+
+</div> <!-- end login/logout/user info div -->
+
+</div> <!-- end userInfo -->
+<div class="reset"></div>
+
+<style>
+.yui-skin-sam .visible .yuimenuitemlabel ,.yui-skin-sam .visible .yuimenubaritemlabel { 
+ cursor: pointer; 
+} 
+</style>
+<div style="font-size:14px;">
+<div id="chesstempoMenu" class="yuimenubar yuimenubarnav">
+   <div class="bd">
+   <ul class="first-of-type">
+   
+   <li class="yuimenubaritem first-of-type"><a class="yuimenubaritemlabel" href="/">Home</a>
+   </li>
+
+   <li class="yuimenubaritem first-of-type"><a class="yuimenubaritemlabel" href="/chess-tactics.html">Training</a>
+   <div id="training" class="yuimenu">
+   <div class="bd">
+   <ul>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chess-tactics.html">Chess Tactics</a></li>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chess-endgames.html">Chess Endgames</a></li>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/tactical-motifs.html">Tactical Motifs</a></li>
+   </ul>
+   </div>
+   </div>
+   </li>
+
+   <li class="yuimenubaritem first-of-type"><a class="yuimenubaritemlabel" href="/chess-problems.html">Problems</a>
+   <div id="problems" class="yuimenu">
+   <div class="bd">
+   <ul>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chess-problems.html?r=11#problemSearch">Problem Search</a></li>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chess-problems.html?r=12#allComments">All Problem Comments</a></li>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chess-forum/tactics_problems/problem_comment_guidelines-t660.0.html">Problem Comment Guidelines</a></li>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chess-forum/tactics_problems/tagging_guidelines-t1024.0.html">Problem Tagging Guidelines</a></li>
+   </ul>
+   </div>
+   </div>
+   </li>
+
+   <li class="yuimenubaritem first-of-type"><a class="yuimenubaritemlabel" href="/play-computer.html">Playing</a>
+   <div id="playing" class="yuimenu">
+   <div class="bd">
+   <ul>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/play-computer.html">Play Against Computer</a></li>
+   </ul>
+   </div>
+   </div>
+   </li>
+
+   <li class="yuimenubaritem"><a class="yuimenubaritemlabel" href="/game-database.html">Chess Database</a>
+   <div id="database" class="yuimenu">
+   <div class="bd">                    
+   <ul>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/game-database.html">Chess Games</a></li>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chess-openings.html">Chess Openings</a></li>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chess-players.html">Chess Players</a></li>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/database-comments.html">Database Comments</a></li>
+   </ul>
+   </div>
+   </div>
+   </li> 
+
+   <li class="yuimenubaritem first-of-type"><a class="yuimenubaritemlabel" href="/chess-statistics.html">My Stats</a>
+
+   </li>
+
+
+   <li class="yuimenubaritem first-of-type"><a class="yuimenubaritemlabel" href="/memberships.html">Members</a>
+   <div id="members" class="yuimenu">
+   <div class="bd">
+   <ul>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/memberships.html">Premium Membership</a></li>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/users-list.html">Users</a></li>
+   </ul>
+   </div>
+   </div>
+   </li>
+
+   <li class="yuimenubaritem first-of-type"><a class="yuimenubaritemlabel" href="/widgets.html">Resources</a>
+   <div id="resources" class="yuimenu">
+   <div class="bd">
+   <ul>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/widgets.html">Widgets</a></li>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/pgn-viewer.html">PGN Viewer</a></li>
+   </ul>
+   </div>
+   </div>
+   </li>
+
+   <li class="yuimenubaritem first-of-type"><a class="yuimenubaritemlabel" href="/chess-forum">Forum</a>
+   <div id="forum" class="yuimenu">
+   <div class="bd">
+   <ul>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chess-forum">Forum Home</a></li>
+                                                                                                    <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chess-forum/index.php?action=recent">Recent Posts</a></li>
+   </ul>
+   </div>
+   </div>
+   </li>
+
+   <li class="yuimenubaritem first-of-type"><a target="_blank" class="yuimenubaritemlabel" href="/user-guide/en/index.html">Help</a>
+   <div id="help" class="yuimenu">
+   <div class="bd">
+   <ul>
+   <li class="yuimenuitem"><a target="_blank" class="yuimenuitemlabel" href="/user-guide/en/index.html">User Guide</a></li>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/faq.html">FAQ</a></li>
+   <li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chess-forum/help_and_support-b26.0/">Help & Support Forum</a></li>
+   </ul>
+   </div>
+   </div>
+   </li>
+
+
+ 
+</ul>
+</div>
+</div>
+
+</div></div> <!-- header --> 
+
+<div style="padding-top:10px;" id="bd" class="mybody">
+
+<div id="demopgndiv" style="display:none;">
+[Event ""]
+[Site ""]
+[Date "2001.??.??"]
+[Round "?"]
+[White "Kasparov Garry"]
+[Black "Bareev Evgeny"]
+[Result "1-0"]
+[WhiteElo "2838"]
+[BlackElo "2719"]
+[ECO "C05"]
+
+1. e4 e6 2. d4 d5 3. Nd2 c5 4. Ngf3 Nf6 5. e5 Nfd7 6. c3 Nc6 7. Bd3 Qb6 8.
+O-O g6 9. dxc5 Nxc5 10. Nb3 Nxd3 11. Qxd3 Bg7 12. Bf4 O-O 13. Qd2 Bd7 14.
+Rfe1 a5 15. Bh6 a4 16. Bxg7 Kxg7 17. Nbd4 Na5 18. Rab1 Nc4 19. Qf4 Qd8 20.
+h4 h6 21. Qg3 Qe7 22. Ne2 Kh7 23. Nf4 Rg8 24. Re2 Raf8 25. Rbe1 Rc8 26. Nh2
+g5 27. Nh5 gxh4 28. Qh3 Rg5 29. Nf6+ Kg7 30. f4 Rg6 31. Nhg4 Rh8 32. Nh5+
+Kf8 33. Ngf6 Bc6 34. Qxh4 a3 35. b3 Nb2 36. Kh2 Qc5 37. Re3 d4 38. Rg3 dxc3
+39. Rxg6 fxg6 40. Nd7+ Bxd7 41. Qf6+ 1-0
+</div>
+<script>
+var pgnViewer = new PgnViewer({ boardName: "demo",
+      //pgnFile: '/pgn/test3.pgn',//testmultiple.pgn',
+      pgnFile: '/pgn/testmultiple.pgn',
+      //pgnDiv : 'demopgndiv',
+      //pgnFile: '/pgn/test2.pgn',
+      //pgnFile: '/pgn/testmultiple2.pgn',
+      //pollPGNMilliseconds: 5000,
+      //gotoEndOnRefresh: true,
+      highlightFromTo: true,
+      showCoordinates: true,
+      movesFormat: "main_on_own_line",
+      autoScrollMoves: true,
+      //showBracketsOnVariation: false,
+      hideBracketsOnTopLevelVariation: true,
+      moveAnimationLength: 0.3,
+      newlineForEachMainMove: false,
+      //variationStartString: '[',
+      //variationEndString: ']',
+
+      pieceSet: 'merida', pieceSize: 55});
+
+insertPGN = function()
+{
+   var formObject = YAHOO.util.Dom.get("pgnStringForm");
+   var textArea = formObject["pgn"];
+   if (textArea)
+   {
+       var p = textArea.value;
+       if (p && p.length>0)
+           pgnViewer.setupFromPgn(p);
+   }
+};
+
+uploadPGN = function()
+{
+    
+    var formObject = YAHOO.util.Dom.get("pgnfileForm");
+    YAHOO.util.Connect.setForm(formObject,true);
+    YAHOO.util.Connect.asyncRequest('POST', "/requests/pgnfile.php",
+                                    {
+                                    upload: function(o) {
+                                            var p = o.responseText;
+                                            pgnViewer.setupFromPgn(p);
+
+                                        },
+                                            failure: function(o) {
+                                        }
+                                            });
+    
+
+};
+
+YAHOO.util.Event.addListener("uploadPGN", "click", 
+                            uploadPGN);
+YAHOO.util.Dom.setStyle("uploadPGN","cursor","pointer");
+
+YAHOO.util.Event.addListener("insertPGN", "click", 
+                             insertPGN);
+YAHOO.util.Dom.setStyle("uploadPGN","cursor","pointer");
+
+
+
+</script>
+
+ <div id="yui-main"> 
+  <div class="yui-b">
+    <div class="yui-gc">
+     <div class="yui-u first content"> 
+                     <!-- user stats --> 
+
+
+
+ <div id="pgnview">
+
+         <div id="demo-container"></div>
+
+<form id="pgnStringForm" method="POST" encType="multipart/form-data">
+
+  Enter PGN Text:<br/>  <textarea rows="4" cols="45" name="pgn"></textarea>
+<br/>
+  <span id="insertPGN" title="Load PGN" class="button">Load PGN</span>
+<!-- <input type="submit" name="submit" value="Submit" > -->
+</form>  
+
+<br/>
+<br/>
+  Or<br/>
+
+<form id="pgnfileForm" method="POST" encType="multipart/form-data">
+
+  Enter PGN File:<br/>  <INPUT name="pgnFile" type="file">
+  <span id="uploadPGN" title="Upload PGN File" class="inline-button">Upload PGN</span>
+<!-- <input type="submit" name="submit" value="Submit" > -->
+</form>  
+
+<br/>
+
+  <h1>PGN Viewer</h1>
+<br/>
+
+<div>
+
+  Chess Tempo's PGN viewer is Javascript code which allows you to either view PGN format games on the Chess Tempo site, or embed the viewer into your own website. The viewer should currently be considered Beta quality. There may be some legal PGN forms that it chokes on (please send me any PGN files it has trouble displaying) and it may misbehave on pages with unusual (or as yet untested) layouts.
+</div>
+<br/>
+<div>
+  Read about <a href="/pgn-usage.html">how to use the PGN Viewer</a> on your own web page. Or see <a href="/pgn-examples.html">examples of the PGN Viewer in action.</a></div>
+
+<br/>
+
+
+ <div> 
+<div>
+  
+<h2>Features in current version</h2>
+<ul class="ourlist">
+<li style="list-style-type: disc;">Multiple games per PGN file</li>
+<li>Multiple boards per page</li>
+<li>PGN comments/annotations</li>
+<li>Recursive Annotation Variations (i.e. alternative lines)</li>
+<li>FEN tag supported for arbitrary starting positions</li>
+<li>Support for subset of Numerical Annotation Glyphs (NAGs, e.g. ? !?)</li>
+<li>Multiple board size and piece styles</li>
+<li>Option for automatically playing through all game moves</li>
+<li>Alternative move display formats</li>
+<li>CSS controlled layout</li>
+<li>Animated piece moves</li>
+<li>Optional Row and column labels</li>
+<li>Drag and drop piece moves (to make next move in game)</li>
+<li>Optional Highlighting of from/to squares</li>
+<li>Optional Highlighting of valid squares when dragging pieces</li>
+<li>Display of taken pieces</li>
+<li>Read moves from PGN file on server or embed PGN directly into webpage
+</li>
+</ul>
+</div>
+<br/>
+
+<div>
+  
+<h2>Features to be added in future versions</h2>
+<ul class="ourlist">
+<li>Crosstable support</li>
+<li>Visual hints such as move direction arrows etc</li>
+<li>Record moves mode with PGN output</li>
+<li>Allow embedded board snapshots in move display</li>
+<li>Configurable Board flipping (current version auto-flips if first mover is black).</li>
+</ul>
+</div>
+
+<br/>
+
+</div>
+
+<div>
+  
+<h2>Acknowledgements</h2>
+<br>
+John Syer has been kind enough to contribute the following improvements to the PGN Viewer:<br/>
+<ul class="ourlist">
+<li>Taken Piece Display.</li>
+<li>Optional display of game details fields.</li>
+<li>Incremental game loading to avoid blocking UI when loading large game sets.</li>
+</ul>
+
+</div>
+
+
+</div> <!-- end pgn view -->
+     </div> <!-- end yui-u first content -->
+     <div class="yui-u right-nav"> 
+                     <!-- right nav bar -->
+
+     </div> 
+    </div>
+  </div> 
+ </div>
+ <div class="left-nav yui-b"> <!-- Left nav bar -->
+        <div id="demo-moves" style="overflow:auto;height:350px;"></div>
+<div id="left-nav-ad">
+<script type="text/javascript"><!--
+google_ad_client = "pub-1236207907472465";
+//125x125
+google_ad_slot = "4638422383";
+google_ad_width = 125;
+google_ad_height = 125;
+//--></script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+<!--
+<div id="demo-piecestaken"></div>
+<div id="demo-progress"></div>
+-->
+ </div> 
+</div> <!-- bd,mybody --> 
+    <div id="ft" class="cs-footer">Copyright (C) Chess Tempo 2007,2008,2009,2010. | <span><a href="/privacy.html">Privacy</a> | <a href="/tos.html">Terms of Service</a> | <a href="/contact.html">Contact</a></span></div> <!-- cs-footer --> 
+
+
+</div>  <!-- doc -->
+<!--<div id="pieceDragDiv"></div> -->
+</body> 
+</html>
+
+
+
