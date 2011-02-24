@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Webdis, an HTTP interface for Redis with JSON output</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+		<link rel="stylesheet" href="webdis.css" type="text/css" />
+		<style media="only screen and (device-width: 768px)">
+body {
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+		</style>
+		<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Crimson+Text' rel='stylesheet' type='text/css'>
+	</head>
+	<body id="top">
+		<header>
+		<h1 class="title">Webdis</h1>
+		<p class="subtitle">A fast HTTP interface for Redis</p>
+		</header>
+
+		<section id="schema">
+		<div id="browser"><div></div><!-- FAQ: why is it a chrome logo? A: the colors go better with the redis logo.--></div>
+			<span id="plus">+</span>
+			<div id="redis"></div>
+		</section>
+
+		<section class="top" id="features">
+		<h2>Features</h2>
+		<ul>
+			<li><a href="#http" onclick="smoothScroll('http')">Simple HTTP</a></li>
+			<li><a href="#json" onclick="smoothScroll('json')">JSON(P) output, and other formats</a></li>
+			<li><a href="#pubsub" onclick="smoothScroll('pubsub')">Chunked pub/sub</a></li>
+			<li><a href="#acl" onclick="smoothScroll('acl')">Access Control by IP+mask or HTTP Auth</a></li>
+			<li><a href="#more" onclick="smoothScroll('more')">And more...</a></li>
+		</ul>
+		</section>
+
+		<section class="top" id="install">
+		<h2>Install</h2>
+		<output>$ git clone git://github.com/nicolasff/webdis.git
+		
+$ cd webdis
+
+$ make
+
+$ ./webdis &amp;</output>
+		</section>
+
+		<hr class="clear"/>
+
+		<section class="feature"><div>
+			<a id="github" href="https://github.com/nicolasff/webdis">Follow Webdis on github.</a>
+		</div></section>
+		
+		<section class="feature" id="http">
+			<h2>HTTP</h2>
+			<div>
+			Webdis is a simple HTTP server which forwards commands to Redis and sends the reply back using a format of your choice.
+			Accessing <code>/COMMAND/arg0/arg1/.../argN[.ext]</code> on Webdis executes the command on Redis and returns the response; the <a href="#json" onclick="smoothScroll('json');">reply format</a> can be changed with the optional extension (<code>.json</code>, <code>.txt</code>&hellip;)
+			<p>
+			<h3>Return codes:</h3>
+			</p>
+			<ul>
+				<li>Successful requests are sent with <code>200 OK</code>.</li>
+
+				<li>Webdis adds ETags when possible, and uses <code>304 Not Modified</code> when <code>If-None-Match</code> is sent with the same ETag.</li>
+				<li>If the <a href="#acl" onclick="smoothScroll('acl')">ACL</a> forbids the use of a command, Webdis replies with <code>403 Forbidden</code>.</li>
+				<li>Verbs other than GET,POST,OPTIONS trigger a <code>405 Method Not Allowed</code>.</li>
+			</ul>
+			<p>
+			<h3>File upload with PUT:</h3>
+			</p><p>
+			Because the URI format is quite limited, Webdis can read its last argument from a file when it is sent using HTTP PUT. To do this with cURL, use <code>curl --upload-file my-data.bin http://127.0.0.1:7379/SET/my-key</code>. Note how the SET command has only one parameter instead of two, the last one being the file’s data.
+			</p>
+			</div>
+			<a href="#top" class="top" onclick="smoothScroll('top');">to the top</a>
+		</section>
+
+		<section class="feature" id="json">
+			<h2>JSON(P) and friends</h2>
+			<div>
+			By default, Webdis replies are JSON objects containing a single item, mapping the requested command name to the Redis reply. The following JSON types are used:
+			<ul>
+				<li>Redis string → JSON string (GET, LPOP...)</li>
+				<li>Redis multi-bulk data → JSON list (LRANGE, SMEMBERS...)</li>
+				<li>Redis integer → JSON integer (INCR...)</li>
+				<li>Redis status, error → list [bool, string] (PING, SET...)</li>
+			</ul>
+			The <code>?jsonp</code> query string parameter adds an optional wrapping function, transforming the reply into a <a href="">JSONP</a> call. This makes it possible to include Webdis in Javascript apps.
+			<br><br>
+			A few other formats are supported:
+			<ul>
+				<li>Text with the <code>.txt</code> extension, served as <code>text/plain</code>. Only strings are returned.</li>
+				<li>HTML, XML, PNG, JPEG, PDF served with their extensions.</li>
+				<li>BSON <code>.bson</code> extension, served as <code>application/bson</code>.</li>
+				<li>Raw Redis protocol with the <code>.raw</code> extension.</li>
+			</ul>
+			For unsupported file formats, the <code>?type=</code> query string parameter allows you to serve strings as any content-type.
+			</div>
+			<a href="#top" class="top" onclick="smoothScroll('top');">to the top</a>
+		</section>
+
+		<section class="feature" id="pubsub">
+			<h2>Publish, subscribe</h2>
+			<div>
+				Webdis exposes Redis PUB/SUB channels to HTTP clients, forwarding messages in the channel as they are published by Redis. This is done using <a href="http://en.wikipedia.org/wiki/Chunked_transfer_encoding">chunked transfer encoding</a>.
+				<br><br>
+				In the near future, Webdis will provide HTML5 WebSocket access to pub/sub channels.
+			</div>
+			<a href="#top" class="top" onclick="smoothScroll('top');">to the top</a>
+		</section>
+
+		<section class="feature" id="acl">
+			<h2>Access control</h2>
+			<div>
+			Because some Redis commands can write data, exposing Webdis to clients on the web might not be a good idea. Fortunately, an ACL system matches a profile type to a list of permissions. Each access control setting can match clients by IP + range, by HTTP Auth, or by both, and lists the commands they are able and unable to execute.<br>
+			This lets you disable write commands for the public, whilst still keeping a full access from your network.
+			<br>
+<code class="conf">
+	"acl": [
+		{
+			"disabled":	["SET", "DEBUG", "FLUSHDB", "FLUSHALL"]
+		},
+
+		{
+			"ip":		"192.168.0.0/16",
+			"enabled":	["SET"]
+		},
+
+		{
+			"http_basic_auth":	"root:p4ssw0rd1",
+			"enabled":		["FLUSHDB"]
+		}
+	]
+</code>
+			
+			</div>
+			<a href="#top" class="top" onclick="smoothScroll('top');">to the top</a>
+		</section>
+
+		<section class="feature" id="more">
+			<h2>More!</h2>
+			<div>
+				Also supported:
+				<ul>
+					<li>HTTP Pipelining</li>
+					<li>Connections to Redis using TCP or UNIX sockets</li>
+					<li>Restricted user/group</li>
+					<li>Logs, contributed by Michael Bernstein</li>
+					<li>Cross-Origin Request Sharing (<a href="http://dev.w3.org/2006/waf/access-control/">CORS</a>) for XmlHttpRequest2</li>
+					<li>Daemonize on start</li>
+				</ul>
+			</div>
+			<a href="#top" class="top" onclick="smoothScroll('top');">to the top</a>
+		</section>
+
+		<footer>
+		Webdis is &copy; <a href="http://twitter.com/yowgi">Nicolas Favre-Félix</a> 2011,
+			distributed under the <a href="https://github.com/nicolasff/webdis/raw/master/COPYING">2-clause BSD License</a>.
+		</footer>
+
+		<script type="text/javascript">
+
+		// code from http://www.itnewb.com/v/Creating-the-Smooth-Scroll-Effect-with-JavaScript
+
+		function currentYPosition() {
+			// Firefox, Chrome, Opera, Safari
+			if (self.pageYOffset) return self.pageYOffset;
+			// Internet Explorer 6 - standards mode
+			if (document.documentElement && document.documentElement.scrollTop)
+				return document.documentElement.scrollTop;
+			// Internet Explorer 6, 7 and 8
+			if (document.body.scrollTop) return document.body.scrollTop;
+			return 0;
+		}
+		function elmYPosition(eID) {
+			var elm = document.getElementById(eID);
+			var y = elm.offsetTop;
+			var node = elm;
+			while (node.offsetParent && node.offsetParent != document.body) {
+				node = node.offsetParent;
+				y += node.offsetTop;
+			} return y;
+		}
+
+		function smoothScroll(eID) {
+			var startY = currentYPosition();
+			var stopY = elmYPosition(eID);
+			var distance = stopY > startY ? stopY - startY : startY - stopY;
+			if (distance < 100) {
+				scrollTo(0, stopY); return;
+			}
+			var speed = Math.round(distance / 100);
+			if (speed >= 20) speed = 20;
+			var step = Math.round(distance / 25);
+			var leapY = stopY > startY ? startY + step : startY - step;
+			var timer = 0;
+			if (stopY > startY) {
+				for ( var i=startY; i<stopY; i+=step ) {
+					setTimeout("window.scrollTo(0, "+leapY+")", timer * speed);
+					leapY += step; if (leapY > stopY) leapY = stopY; timer++;
+				} return;
+			}
+			for ( var i=startY; i>stopY; i-=step ) {
+				setTimeout("window.scrollTo(0, "+leapY+")", timer * speed);
+				leapY -= step; if (leapY < stopY) leapY = stopY; timer++;
+			}
+		}
+		</script>
+
+		<script type="text/javascript">
+
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-535388-5']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+			 var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			 ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			 })();
+		</script>
+	</body>
+</html>
