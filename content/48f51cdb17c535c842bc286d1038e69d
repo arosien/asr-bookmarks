@@ -1,0 +1,586 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://gmpg.org/xfn/11">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+
+	<title>Win-Vector Blog &raquo; Learn Logistic Regression (and beyond)</title>
+	<link rel="alternate" type="application/rss+xml" title="RSS 2.0 - all posts" href="http://www.win-vector.com/blog/feed/" />
+	<link rel="alternate" type="application/rss+xml" title="RSS 2.0 - all comments" href="http://www.win-vector.com/blog/comments/feed/" />
+	<link rel="pingback" href="http://www.win-vector.com/blog/xmlrpc.php" />
+
+	<!-- style START -->
+	<!-- default style -->
+	<style type="text/css" media="screen">@import url( http://www.win-vector.com/blog/wp-content/themes/inove/style.css );</style>
+	<!-- for translations -->
+		<!--[if IE]>
+		<link rel="stylesheet" href="http://www.win-vector.com/blog/wp-content/themes/inove/ie.css" type="text/css" media="screen" />
+	<![endif]-->
+	<!-- style END -->
+
+	<!-- script START -->
+	<script type="text/javascript" src="http://www.win-vector.com/blog/wp-content/themes/inove/js/base.js"></script>
+	<script type="text/javascript" src="http://www.win-vector.com/blog/wp-content/themes/inove/js/menu.js"></script>
+	<!-- script END -->
+
+					
+	<script type="text/javascript">//<![CDATA[
+	// Google Analytics for WordPress by Yoast v4.0.13 | http://yoast.com/wordpress/google-analytics/
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount','UA-4693235-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	//]]></script>
+<link rel='stylesheet' id='sociable-front-css-css'  href='http://www.win-vector.com/blog/wp-content/plugins/sociable/sociable.css?ver=3.1.2' type='text/css' media='all' />
+<script type='text/javascript' src='http://www.win-vector.com/blog/wp-includes/js/l10n.js?ver=20101110'></script>
+<script type='text/javascript' src='http://www.win-vector.com/blog/wp-content/plugins/sociable/addtofavorites.js?ver=3.1.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.win-vector.com/blog/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.win-vector.com/blog/wp-includes/wlwmanifest.xml" /> 
+<link rel='index' title='Win-Vector Blog' href='http://www.win-vector.com/blog/' />
+<link rel='start' title='New Paper' href='http://www.win-vector.com/blog/2007/06/new-paper/' />
+<link rel='prev' title='A Personal Perspective on Machine Learning' href='http://www.win-vector.com/blog/2010/10/a-personal-perspective-on-machine-learning/' />
+<link rel='next' title='Large Data Logistic Regression (with example Hadoop code)' href='http://www.win-vector.com/blog/2010/12/large-data-logistic-regression-with-example-hadoop-code/' />
+<meta name="generator" content="WordPress 3.1.2" />
+<link rel='canonical' href='http://www.win-vector.com/blog/2010/11/learn-a-powerful-machine-learning-tool-logistic-regression-and-beyond/' />
+<link rel='shortlink' href='http://wp.me/pgDAl-ps' />
+</head>
+
+
+<body>
+<!-- wrap START -->
+<div id="wrap">
+
+<!-- container START -->
+<div id="container"  >
+
+<!-- header START -->
+<div id="header">
+
+	<!-- banner START -->
+		<!-- banner END -->
+
+	<div id="caption">
+		<h1 id="title"><a href="http://www.win-vector.com/blog/">Win-Vector Blog</a></h1>
+		<div id="tagline">The Applied Theorist&#039;s Point of View</div>
+	</div>
+
+	<div class="fixed"></div>
+</div>
+<!-- header END -->
+
+<!-- navigation START -->
+<div id="navigation">
+	<!-- menus START -->
+	<ul id="menus">
+		<li class="page_item"><a class="home" title="Home" href="http://www.win-vector.com/blog/">Home</a></li>
+		<li class="page_item page-item-2"><a href="http://www.win-vector.com/blog/about/" title="About">About</a></li>
+<li class="page_item page-item-1362"><a href="http://www.win-vector.com/blog/popular-articles/" title="Popular Articles">Popular Articles</a></li>
+		<li><a class="lastmenu" href="javascript:void(0);"></a></li>
+	</ul>
+	<!-- menus END -->
+
+	<!-- searchbox START -->
+	<div id="searchbox">
+					<form action="http://www.win-vector.com/blog" method="get">
+				<div class="content">
+					<input type="text" class="textfield" name="s" size="24" value="" />
+					<input type="submit" class="button" value="" />
+				</div>
+			</form>
+			</div>
+<script type="text/javascript">
+//<![CDATA[
+	var searchbox = MGJS.$("searchbox");
+	var searchtxt = MGJS.getElementsByClassName("textfield", "input", searchbox)[0];
+	var searchbtn = MGJS.getElementsByClassName("button", "input", searchbox)[0];
+	var tiptext = "Type text to search here...";
+	if(searchtxt.value == "" || searchtxt.value == tiptext) {
+		searchtxt.className += " searchtip";
+		searchtxt.value = tiptext;
+	}
+	searchtxt.onfocus = function(e) {
+		if(searchtxt.value == tiptext) {
+			searchtxt.value = "";
+			searchtxt.className = searchtxt.className.replace(" searchtip", "");
+		}
+	}
+	searchtxt.onblur = function(e) {
+		if(searchtxt.value == "") {
+			searchtxt.className += " searchtip";
+			searchtxt.value = tiptext;
+		}
+	}
+	searchbtn.onclick = function(e) {
+		if(searchtxt.value == "" || searchtxt.value == tiptext) {
+			return false;
+		}
+	}
+//]]>
+</script>
+	<!-- searchbox END -->
+
+	<div class="fixed"></div>
+</div>
+<!-- navigation END -->
+
+<!-- content START -->
+<div id="content">
+
+	<!-- main START -->
+	<div id="main">
+
+
+	<div id="postpath">
+		<a title="Go to homepage" href="http://www.win-vector.com/blog/">Home</a>
+		 &gt; <a href="http://www.win-vector.com/blog/category/applications/" title="View all posts in Applications" rel="category tag">Applications</a>, <a href="http://www.win-vector.com/blog/category/statistics/" title="View all posts in Statistics" rel="category tag">Statistics</a>, <a href="http://www.win-vector.com/blog/category/tutorials/" title="View all posts in Tutorials" rel="category tag">Tutorials</a>		 &gt; Learn Logistic Regression (and beyond)	</div>
+
+	<div class="post" id="post-1578">
+		<h2>Learn Logistic Regression (and beyond)</h2>
+		<div class="info">
+			<span class="date">November 22nd, 2010</span>
+			<span class="author"><a href="http://www.win-vector.com/blog/author/john-mount/" title="Posts by John Mount">John Mount</a></span>									<div class="fixed"></div>
+		</div>
+		<div class="content">
+			<p>One of the current best tools in the machine learning toolbox is the 1930s statistical technique called logistic regression.  We explain how to add professional quality logistic regression to your analytic repertoire and describe a bit beyond that.<span id="more-1578"></span><br />
+A statistical analyst working on data tends to deliberately start simple move cautiously to more complicated methods.  When first encountering data it is best to think in terms of visualization and exploratory data analysis (in the sense of Tukey).  But in the end the analyst is expected to deliver actionable decision procedures- not just pretty charts.  To get actionable advice the analyst will move up to more complicated tools like pivot tables and Naive Bayes.  Once the problem requires control of interactions and dependencies the analyst must move away from these tools and towards the more complicated statistical tools like standard regression, decision trees and logistic regression.  Beyond that we have machine learning tools such as: kernel methods, boosting, bagging, decision trees and support vector machines.  Which tool is best depends a lot on the situation- and the prepared analyst can quickly try many techniques.  Logistic regression is often a winning method and we will use this article to discuss logistic regression a bit deeper.  By the end of this writeup you should be able to use standard tools to perform a logistic regression and know some of the limitations you will want to work beyond.</p>
+<p>Logistic regression was invented in the late 1930s by statisticians Ronald Fisher and Frank Yates.  The definitive resource on this (and other generalized linear models) is Alan Agresti &#8220;Categorical Data Analysis&#8221; 2002, New York, Wiley-Interscience.   Logistic regression is a &#8220;categorical&#8221; tool in that it is used to predict categories (fraud/not-fraud, good/bad &#8230;) instead of numeric scores (like standard regression).  For example: consider the &#8220;car&#8221; data set from the <a target="_blank" href="http://archive.ics.uci.edu/ml/" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','archive.ics.uci.edu']);">UCI machine learning database</a> ( <a  target="_blank" href="http://archive.ics.uci.edu/ml/machine-learning-databases/car/" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','archive.ics.uci.edu']);">data</a>, <a target="_blank" href="http://archive.ics.uci.edu/ml/machine-learning-databases/car/car.names" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','archive.ics.uci.edu']);">description</a> ).  The data is taken from a consumer review of cars.  Each car is summarized by 6 attributes ( price, maintenance costs, doors, storage size, seating and safety ); there is also a conclusion column that contains the final overall recommendation (unacceptable, acceptable,  good, very good).  The machine learning problem is to infer the reviewer&#8217;s relative importance or weight of each feature.  This could be used to influence a cost constrained design of a future car.  This dataset was originally used to demonstrate hierarchical and decision tree based expert systems.  But logistic regression can quickly derive interesting results.</p>
+<p>Let us perform a complete analysis together (at least in our imaginations if not with our actual computers).  First download and install the excellent free analysts workbench called <a target="_blan" href="http://www.R-project.org/" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','www.R-project.org']);">&#8220;R&#8221;</a>.  This software package is an implementation of John Chambers&#8217; S language (a statistical language designed to allow for self-service statistics to relieve some of Chambers&#8217; consulting responsibilities) and a near relative of the SPlus system.  This system is powerful and has a number of very good references (our current favorite being <a href="http://oreilly.com/catalog/9780596801717" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','oreilly.com']);">Joseph Adler &#8220;R in a nutshell&#8221; 2009, O&#8217;Reilly Media</a>).  Using R  we can build an interesting model in 2 lines of code.</p>
+<p>After installing R start the program and copy the following line into the R command shell.</p>
+<pre>
+CarData <- read.table(url('http://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data'),
+    sep=',',col.names=c('buying','maintenance','doors','persons','lug_boot','safety','rating'))
+</pre>
+<p>This has downloaded the car data directly from the UCI database and added a header line so we can refer to variables by name.  To see roll-ups or important summaries of our data we could just type in "summary(CarData)."  But we will move on with the promised modeling.  Now type in the following line:</p>
+<pre>
+logisticModel <- glm(rating!='unacc' ~ buying + maintenance + doors + persons + lug_boot +safety,
+    family=binomial(link = "logit"),data=CarData)
+</pre>
+<p>We now have a complete logistic model.  To examine this model we type "summary(logisticModel)".  And see the following (rather intimidating) summary:</p>
+<pre>
+Coefficients:
+                  Estimate Std. Error z value Pr(>|z|)
+(Intercept)       -28.4255  1257.5255  -0.023    0.982
+buyinglow           5.0481     0.5670   8.904  < 2e-16 ***
+buyingmed           3.9218     0.4842   8.100 5.49e-16 ***
+buyingvhigh        -2.0662     0.3747  -5.515 3.49e-08 ***
+maintenancelow      3.4064     0.4692   7.261 3.86e-13 ***
+maintenancemed      3.4064     0.4692   7.261 3.86e-13 ***
+maintenancevhigh   -2.8254     0.4145  -6.816 9.36e-12 ***
+doors3              1.8556     0.4042   4.591 4.41e-06 ***
+doors4              2.4816     0.4278   5.800 6.62e-09 ***
+doors5more          2.4816     0.4278   5.800 6.62e-09 ***
+persons4           29.9652  1257.5256   0.024    0.981
+personsmore        29.5843  1257.5255   0.024    0.981
+lug_bootmed        -1.5172     0.3758  -4.037 5.40e-05 ***
+lug_bootsmall      -4.4476     0.4750  -9.363  < 2e-16 ***
+safetylow         -30.5045  1300.3428  -0.023    0.981
+safetymed          -3.0044     0.3577  -8.400  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+</pre>
+<p>We also saw the cryptic warning message "glm.fit: fitted probabilities numerically 0 or 1 occurred" which we will discuss later.  Returning to our result we see a left column that is formed by concatenating variable names and variable values (values are called "levels" when they are strings).  For example the label "buyinglow" is a combination of "buying" and "low" meaning a low purchase price.  The next column (and the last one we will dig into) is the score associated with this combination of variable and level.  The interpretation is that a care that has "buyinglow" is given a 5.0481 point score bonus.  Whereas a car with "safetylow" is given a -30.5045 scoring penalty.  In fact the complete prediction procedure for a new car is to look the levels specified for all 6 variables and add up the correct scores (plus the "(Intercept)" score of  -28.4255 which is used as an initial score).  Any value not found is assumed to be zero.  This summed-up score is called the "link" and is essentially the model prediction.  Positive link values are associated with acceptable cars and negative link values are associated with unacceptable cars.  For example the first car in our data set is:</p>
+<pre>
+  buying maintenance doors persons lug_boot safety rating
+   vhigh       vhigh     2       2    small    low  unacc
+</pre>
+<p>According to the columns: we see above our scoring procedure assigns a very bad score of -68 to this car- correctly predicting the "unacc" rating.  We can examine the error rates of our model with the single line:</p>
+<pre>
+table(CarData$rating,predict(logisticModel,type='response')>=0.5)
+</pre>
+<p>While yields the result:</p>
+<pre>
+        FALSE TRUE
+  acc      32  352
+  good      0   69
+  unacc  1166   44
+  vgood     0   65
+</pre>
+<p>This diagram is called a "contingency table" and is a very powerful summary.  The rows are labeled with the ratings assigned at training time (unacceptable, acceptable, good and very good).  The columns FALSE and TRUE  denote the model predicted the car was unacceptable or at least acceptable.  From the row "unacc" we see that 1166 of the 1166+44 unacceptable cars were correctly predicted FALSE (or not at least acceptable).  Also notice the only face negatives are the 32 FALSEs in the "acc" row- none of the good or very good cars were predicted to be unacceptable.  We can also look at this graphically:</p>
+<pre>
+library(lattice)
+densityplot(predict(logisticModel,type='link'),groups=CarData$rating!='unacc',auto.key=T)
+</pre>
+<p>Which yields the following graph:</p>
+<p><center><br />
+<img src="http://www.win-vector.com/blog/wp-content/uploads/2010/11/density1.png" alt="density1.png" border="0" width="525" height="525" /><br />
+</center></p>
+<p>This is an area density chart.  Each car that was defined as being unacceptable adds a single blue circle to the bottom of the chart.  Each car that was defined as being acceptable adds a single magenta circle to the bottom of the chart.  The left-right position of each circle is the link score the model assigned to the circle.  There are so many circles that they start to overlap into solid smudges.  To help with this charting software adds the density curves above the circles.  Density curves are a lot like histograms- the height of the curve indicates what fraction of the circles of the same color are under that region of the curve.  So we can see most of the blue circles are in 3 clusters centered at -55, -30 and -5 while the magenta circles are largely clustered around +5.  From a chart like this you can see that a decision procedure of saying a link score above zero is good and below zero is bad would be pretty accurate (most of the blue is to the left and most of the magenta is to the right).  In fact this rule would be over 95% accurate (though accuracy is not a be-all measure, see: <a target="_none" href="http://www.win-vector.com/blog/2009/11/i-dont-think-that-means-what-you-think-it-means-statistics-to-english-translation-part-1-accuracy-measures/" >Accuracy Measures</a>).</p>
+<p>So far so good.  We have built a model that accurately predicts conclusions based on inputs (so it could be used to generate new ratings) and furthermore our model has visible "Estimate" coefficients that report the relative strength of each feature (which we could use prescriptively in valuing trade-offs in designing a new car).  Except we need to go back to the warning message: "glm.fit: fitted probabilities numerically 0 or 1 occurred."  For a logistic regression the only way the model fitter can encounter "probabilities numerically 0 or 1" is if the link score was out of a reasonable range of zero (say +-20).  Remember we saw link scores as low as -68.  With a link score of -68 the probability of the car in question being acceptable is around 2*10^-16.  This from a training set that only included 1728 items (so really can not be expected to see events much rarer than one in a thousand. We are deliberately confusing two different types of probabilities here- but it is a good way to think). </p>
+<p>What is the cause of these extreme link scores?  Extreme coefficient estimates.  The +29.96 preference for "persons4" (cars that seat 4) is a huge vote that swamps out effects from purchase price and maintenance cost.  The model has over fit and made some dangerous extreme assumptions.  What causes this are variable and level combinations that have no falsification in the data set.  For example: suppose only one car had the variable level "person4" and that car happened to be acceptable.  The logistic modeling package could always raise the link score of that single car by putting a bit more weight on the "person4" estimate.  Since this variable level shows up only in positive  examples (and in this case only one example) there is absolutely no penalty for increasing the coefficient.  Logistic regression models are built by an optimizer.  And when an optimizer finds a situation with no penalty- it abuses the situation to no end.  This is what the warning was reporting.  All link numbers map to probabilities between zero and one; only ridiculously large link values map to probabilities near one (and only ridiculously small values map to probabilities near zero).  The optimizer was caught trying to make some of the coefficients "run away" or "run to infinity."  There are some additional diagnostic signs (such as the large coefficients, large standard errors and low significant levels), but there is no advice offered by the system in how to deal with this.  The standard methods are to suppress problem variables and levels (or suppress data with the problem variables and levels present) from the model.  But this is inefficient in that the only way we have of preventing a variable from appearing to be too useful is not to use it.  These are exactly the variables we do not want to eliminate from the model, but they are unsafe to keep in the model (their presence can cause unreliable predictions on new data not seen during training).</p>
+<p>What can we do to fix this?  We need to ensure that running a coefficient to infinity is not without cost.  One way to achieve this would be something like Laplace smoothing where we enter two made-up data items: one that has every level set on and is acceptable and one that has every level set on and is unacceptable.  Unfortunately there is no easy way to do this from the user-layer in R.  For example each datum can only have one value set for each categorical variable- so we can't define a datum that has all features on.  Another way to fix this would be to directly penalize large coefficients (like Tychonoff regularization in linear algebra).  Explicit regularization is a good idea and very much in the current style.  Again, unfortunately, the R user layer does not expose a regularization control to the user.  But one of the advantages of logistic regression is that it is relatively easy to implement (harder than Naive Bayes or standard regression in that it needs and optimizer, but easier than SVM in that the optimizer is fairly trivial).</p>
+<p>The logistic regression optimizer works to find a model of probabilities p() that maximizes the sum:</p>
+<p><center><br />
+<img src="http://www.win-vector.com/blog/wp-content/uploads/2010/11/cost1.png" alt="cost1.png" border="0" width="644" height="56" /><br />
+</center></p>
+<p>Or in english: assign large probabilities to examples known to be positive and small probabilities to examples known to be negative.  Now the logistic model assigns probabilities using a function of the form:</p>
+<p><center><br />
+<img src="http://www.win-vector.com/blog/wp-content/uploads/2010/11/p.png" alt="p.png" border="0" width="244" height="83" /><br />
+</center></p>
+<p>The beta is the model parameters and the x is the data associated with a given example.  The dot product of beta and x is the link score we saw earlier.  The rest of the function is called the sigmoid (also used by neural nets) and its inverse is called the "logit" which is where logistic regression gets its name.  Now this particular function (and others have the so-called "canonical link") has the property that the gradient (the vector of derivative directions indicating the direction of most rapid score improvement) is particularly beautiful.  The vector gradient is:</p>
+<p><center><br />
+<img src="http://www.win-vector.com/blog/wp-content/uploads/2010/11/grad1.png" alt="grad1.png" border="0" width="410" height="56" /><br />
+</center></p>
+<p>This quantity is a vector because it is a weighted sum over the data_i (which are all vectors of feature values and value/level indicators).  As we expect the gradient to be zero at an optimal point we now have a set of equations we expect to be simultaneously satisfied at the optimal model parameters.  In fact these equations are enough to essentially determine the model- find parameter values that satisfy all of this vector equation and you have found the model (this is usually done by the Newton–Raphson method or by Fisher Scoring).  As an aside this is also the set of equations that the maximum entropy method must specify; which is why for probability problems maximum entropy and logistic regression models are essentially identical.  </p>
+<p>If we directly add a penalty for large coefficients to our original scoring function as below:</p>
+<p><center><br />
+<img src="http://www.win-vector.com/blog/wp-content/uploads/2010/11/cost2.png" alt="cost2.png" border="0" width="731" height="56" /><br />
+</center></p>
+<p>Beta is (again) our model weights (laid out in the same order as the per-datum variables) and epsilon (>=0) is the new user control for regularization.  A small positive epsilon will cause regularization without great damage to model performance (for our example we used epsilon = 0.1). Now our optimal gradient equations (or set of conditions we must meet) become:</p>
+<p><center><br />
+<img src="http://www.win-vector.com/blog/wp-content/uploads/2010/11/grad2b.png" alt="grad2b.png" border="0" width="485" height="56" /><br />
+</center></p>
+<p>Or- instead of the model having to reproduce all know feature summaries (if a feature is on in 30% of the positive training data then it must be on for 30% of the modeled positive probabilities) we now have a slop term of 2 epsilon beta.  To the extent a coefficient is large its matching summary is allowed slack (making it harder for the summary to drive the coefficient to infinity).  This system of equations is as easy to solve as the original system (a slightly different update is used in the Newton-Raphson method) and we get a solution as below:</p>
+<pre>
+variable	kind		level	value
+		Intercept		-2.071592578277024
+buying		Categorical	high	-1.8456895489650629
+buying		Categorical	low	2.024816396087424
+buying		Categorical	med	1.257553912038549
+buying		Categorical	vhigh	-3.508273337437926
+doors		Categorical	2	-1.8414721595612646
+doors		Categorical	3	-0.391932359146582
+doors		Categorical	4	0.08090597021546056
+doors		Categorical	5more	0.08090597021546052
+lug_boot	Categorical	big	0.8368739895290729
+lug_boot	Categorical	med	-0.2858686820997001
+lug_boot	Categorical	small	-2.62259788570632
+maintenance	Categorical	high	-1.274387434600252
+maintenance	Categorical	low	1.3677275941857292
+maintenance	Categorical	med	1.3677275941857292
+maintenance	Categorical	vhigh	-3.5326603320481342
+persons		Categorical	2	-8.360699258777752
+persons		Categorical	4	3.2937880724973065
+persons		Categorical	more	2.9953186080035197
+safety		Categorical	high	4.160122946359636
+safety		Categorical	low	-8.028169713081502
+safety		Categorical	med	1.7964541884449603
+</pre>
+<p>This model has essentially identical performance and much smaller coefficients.  From a performance point of view this is essentially the same model.  What has changed is the model no longer is able to pick up a small bonus by "piling on" a coefficient.  For example moving a link value to infinity moves the probabilities from 0.999 to 1.0 which in turn moves the data penalty (assuming the data point is positive) from log(0.999) to log(1.0) or from -0.001 to 0.0.  The approximate 1/1000 score improvement is offset by a penalty proportional to the size of the coefficient- making the useless "adding of nines" no longer worth it.  Or, as has become famous with large margin classifiers, it is important to improve what the model does on probability estimates near 0.5 not estimates already near 0 or 1.</p>
+<p> As expected: the coefficients are significantly different than the standard logistic regression.  For example the original model has 3 variables with extreme levels (the intercept, number of passengers and safety) while the new model sees only extreme values (but much smaller) for number of persons and safety (which are likely correlated).  Also consider the difference between the buying levels low and very high in the original model (5 - -2 = 7) and in the new model (2 - -3.5 = 5.5) differ by 1.5 or around 3 of the reported standard deviations (indicating the significance summaries are not enough to certify the location of model parameters).  It is not just that all of the coefficients have shifted, many of the differences are smaller (and others are not- changing the emphasis of the model).  We don not want to overstate differences- we are not so much looking for something better than standard logistic regression as adding an automatic safety that saves us both the effort and loss of predictive power found in fixing models by suppressing unusually distributed (but useful) variables and levels.</p>
+<p>An analyst is well served to have logistic regression (and the density plots plus contingency table summaries) as ready tools.  These methods will take you quite far.  And if you start hitting the limits of these tools you can, as we do, bring in custom tools that allow for explicit regularization yielding effective and reliable results.</p>
+
+<div class="sociable">
+<div class="sociable_tagline">
+<strong>Share and Enjoy:</strong>
+</div>
+<ul>
+	<li class="sociablefirst"><a rel="nofollow"  target="_blank" href="http://digg.com/submit?phase=2&amp;url=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F&amp;title=Learn%20Logistic%20Regression%20%28and%20beyond%29&amp;bodytext=One%20of%20the%20current%20best%20tools%20in%20the%20machine%20learning%20toolbox%20is%20the%201930s%20statistical%20technique%20called%20logistic%20regression.%20%20We%20explain%20how%20to%20add%20professional%20quality%20logistic%20regression%20to%20your%20analytic%20repertoire%20and%20describe%20a%20bit%20beyond%20that.%0AA" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','digg.com']);" title="Digg"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="Digg" alt="Digg" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-235px -1px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://delicious.com/post?url=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F&amp;title=Learn%20Logistic%20Regression%20%28and%20beyond%29&amp;notes=One%20of%20the%20current%20best%20tools%20in%20the%20machine%20learning%20toolbox%20is%20the%201930s%20statistical%20technique%20called%20logistic%20regression.%20%20We%20explain%20how%20to%20add%20professional%20quality%20logistic%20regression%20to%20your%20analytic%20repertoire%20and%20describe%20a%20bit%20beyond%20that.%0AA" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','delicious.com']);" title="del.icio.us"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="del.icio.us" alt="del.icio.us" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-199px -1px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://www.facebook.com/share.php?u=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F&amp;t=Learn%20Logistic%20Regression%20%28and%20beyond%29" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','www.facebook.com']);" title="Facebook"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="Facebook" alt="Facebook" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-343px -1px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://www.google.com/bookmarks/mark?op=edit&amp;bkmk=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F&amp;title=Learn%20Logistic%20Regression%20%28and%20beyond%29&amp;annotation=One%20of%20the%20current%20best%20tools%20in%20the%20machine%20learning%20toolbox%20is%20the%201930s%20statistical%20technique%20called%20logistic%20regression.%20%20We%20explain%20how%20to%20add%20professional%20quality%20logistic%20regression%20to%20your%20analytic%20repertoire%20and%20describe%20a%20bit%20beyond%20that.%0AA" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','www.google.com']);" title="Google Bookmarks"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="Google Bookmarks" alt="Google Bookmarks" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-91px -19px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="mailto:?subject=Learn%20Logistic%20Regression%20%28and%20beyond%29&amp;body=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F" title="email"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif"  title="email" alt="email" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-325px -1px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://slashdot.org/bookmark.pl?title=Learn%20Logistic%20Regression%20%28and%20beyond%29&amp;url=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','slashdot.org']);" title="Slashdot"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="Slashdot" alt="Slashdot" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-145px -55px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://www.stumbleupon.com/submit?url=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F&amp;title=Learn%20Logistic%20Regression%20%28and%20beyond%29" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','www.stumbleupon.com']);" title="StumbleUpon"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="StumbleUpon" alt="StumbleUpon" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-217px -55px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://technorati.com/faves?add=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','technorati.com']);" title="Technorati"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="Technorati" alt="Technorati" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-271px -55px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F&amp;title=Learn%20Logistic%20Regression%20%28and%20beyond%29&amp;source=Win-Vector+Blog+The+Applied+Theorist%26%23039%3Bs+Point+of+View&amp;summary=One%20of%20the%20current%20best%20tools%20in%20the%20machine%20learning%20toolbox%20is%20the%201930s%20statistical%20technique%20called%20logistic%20regression.%20%20We%20explain%20how%20to%20add%20professional%20quality%20logistic%20regression%20to%20your%20analytic%20repertoire%20and%20describe%20a%20bit%20beyond%20that.%0AA" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','www.linkedin.com']);" title="LinkedIn"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="LinkedIn" alt="LinkedIn" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-1px -37px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://www.newsvine.com/_tools/seed&amp;save?u=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F&amp;h=Learn%20Logistic%20Regression%20%28and%20beyond%29" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','www.newsvine.com']);" title="NewsVine"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="NewsVine" alt="NewsVine" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-217px -37px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://bookmarks.yahoo.com/toolbar/savebm?u=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F&amp;t=Learn%20Logistic%20Regression%20%28and%20beyond%29&opener=bm&amp;ei=UTF-8&amp;d=One%20of%20the%20current%20best%20tools%20in%20the%20machine%20learning%20toolbox%20is%20the%201930s%20statistical%20technique%20called%20logistic%20regression.%20%20We%20explain%20how%20to%20add%20professional%20quality%20logistic%20regression%20to%20your%20analytic%20repertoire%20and%20describe%20a%20bit%20beyond%20that.%0AA" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','bookmarks.yahoo.com']);" title="Yahoo! Bookmarks"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="Yahoo! Bookmarks" alt="Yahoo! Bookmarks" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-145px -73px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://buzz.yahoo.com/submit/?submitUrl=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F&amp;submitHeadline=Learn%20Logistic%20Regression%20%28and%20beyond%29&amp;submitSummary=One%20of%20the%20current%20best%20tools%20in%20the%20machine%20learning%20toolbox%20is%20the%201930s%20statistical%20technique%20called%20logistic%20regression.%20%20We%20explain%20how%20to%20add%20professional%20quality%20logistic%20regression%20to%20your%20analytic%20repertoire%20and%20describe%20a%20bit%20beyond%20that.%0AA&amp;submitCategory=science&amp;submitAssetType=text" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','buzz.yahoo.com']);" title="Yahoo! Buzz"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="Yahoo! Buzz" alt="Yahoo! Buzz" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-127px -73px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://www.friendfeed.com/share?title=Learn%20Logistic%20Regression%20%28and%20beyond%29&amp;link=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','www.friendfeed.com']);" title="FriendFeed"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="FriendFeed" alt="FriendFeed" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-37px -19px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://twitter.com/home?status=Learn%20Logistic%20Regression%20%28and%20beyond%29%20-%20http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','twitter.com']);" title="Twitter"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="Twitter" alt="Twitter" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-343px -55px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://news.ycombinator.com/submitlink?u=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F&amp;t=Learn%20Logistic%20Regression%20%28and%20beyond%29" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','news.ycombinator.com']);" title="HackerNews"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="HackerNews" alt="HackerNews" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-127px -19px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://www.propeller.com/submit/?url=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','www.propeller.com']);" title="Propeller"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="Propeller" alt="Propeller" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-1px -55px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://www.tumblr.com/share?v=3&amp;u=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F&amp;t=Learn%20Logistic%20Regression%20%28and%20beyond%29&amp;s=One%20of%20the%20current%20best%20tools%20in%20the%20machine%20learning%20toolbox%20is%20the%201930s%20statistical%20technique%20called%20logistic%20regression.%20%20We%20explain%20how%20to%20add%20professional%20quality%20logistic%20regression%20to%20your%20analytic%20repertoire%20and%20describe%20a%20bit%20beyond%20that.%0AA" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','www.tumblr.com']);" title="Tumblr"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="Tumblr" alt="Tumblr" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-325px -55px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://www.win-vector.com/blog/feed/"  title="RSS"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="RSS" alt="RSS" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-73px -55px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  target="_blank" href="http://twitter.com/home/?status=tip%20@Techmeme%20http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F%20Learn%20Logistic%20Regression%20%28and%20beyond%29" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','twitter.com']);" title="Suggest to Techmeme via Twitter"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="Suggest to Techmeme via Twitter" alt="Suggest to Techmeme via Twitter" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-253px -55px" class="sociable-hovers" /></a></li>
+	<li><a rel="nofollow"  href="javascript:AddToFavorites();" title="Add to favorites"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif"  title="Add to favorites" alt="Add to favorites" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-181px -73px" class="sociable-hovers" /></a></li>
+	<li class="sociablelast"><a rel="nofollow"  target="_blank" href="http://reddit.com/submit?url=http%3A%2F%2Fwww.win-vector.com%2Fblog%2F2010%2F11%2Flearn-a-powerful-machine-learning-tool-logistic-regression-and-beyond%2F&amp;title=Learn%20Logistic%20Regression%20%28and%20beyond%29" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','reddit.com']);" title="Reddit"><img src="http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.gif" title="Reddit" alt="Reddit" style="width: 16px; height: 16px; background: transparent url(http://www.win-vector.com/blog/wp-content/plugins/sociable/images/services-sprite.png) no-repeat; background-position:-55px -55px" class="sociable-hovers" /></a></li>
+</ul>
+</div>
+
+
+<p>Related posts:<ol><li><a href='http://www.win-vector.com/blog/2010/12/large-data-logistic-regression-with-example-hadoop-code/' rel='bookmark' title='Permanent Link: Large Data Logistic Regression (with example Hadoop code)'>Large Data Logistic Regression (with example Hadoop code)</a></li>
+<li><a href='http://www.win-vector.com/blog/2009/11/r-examine-objects-tutorial/' rel='bookmark' title='Permanent Link: R examine objects tutorial'>R examine objects tutorial</a></li>
+<li><a href='http://www.win-vector.com/blog/2009/01/exciting-technique-1-the-r-language/' rel='bookmark' title='Permanent Link: Exciting Technique #1: The &#8220;R&#8221; language.'>Exciting Technique #1: The &#8220;R&#8221; language.</a></li>
+<li><a href='http://www.win-vector.com/blog/2009/04/the-data-enrichment-method/' rel='bookmark' title='Permanent Link: The Data Enrichment Method'>The Data Enrichment Method</a></li>
+<li><a href='http://www.win-vector.com/blog/2009/12/cru-graph-yet-again-with-r/' rel='bookmark' title='Permanent Link: CRU graph yet again (with R)'>CRU graph yet again (with R)</a></li>
+</ol></p>			<div class="fixed"></div>
+		</div>
+		<div class="under">
+			<span class="categories">Categories: </span><span><a href="http://www.win-vector.com/blog/category/applications/" title="View all posts in Applications" rel="category tag">Applications</a>, <a href="http://www.win-vector.com/blog/category/statistics/" title="View all posts in Statistics" rel="category tag">Statistics</a>, <a href="http://www.win-vector.com/blog/category/tutorials/" title="View all posts in Tutorials" rel="category tag">Tutorials</a></span>			<span class="tags">Tags: </span><span><a href="http://www.win-vector.com/blog/tag/learn-a-powerful-machine-learning-tool/" rel="tag">Learn a Powerful Machine Learning Tool</a>, <a href="http://www.win-vector.com/blog/tag/logistic-regression/" rel="tag">Logistic Regression</a>, <a href="http://www.win-vector.com/blog/tag/max-ent/" rel="tag">Max-Ent</a>, <a href="http://www.win-vector.com/blog/tag/maximum-entropy/" rel="tag">Maximum Entropy</a>, <a href="http://www.win-vector.com/blog/tag/r/" rel="tag">R</a>, <a href="http://www.win-vector.com/blog/tag/regularization/" rel="tag">Regularization</a>, <a href="http://www.win-vector.com/blog/tag/statistics/" rel="tag">Statistics</a></span>		</div>
+	</div>
+
+	<!-- related posts START -->
+		<!-- related posts END -->
+
+	<script type="text/javascript" src="http://www.win-vector.com/blog/wp-content/themes/inove/js/comment.js"></script>
+
+
+
+
+	<div class="messagebox">
+		Comments are closed.	</div>
+
+	<div id="postnavi">
+		<span class="prev"><a href="http://www.win-vector.com/blog/2010/12/large-data-logistic-regression-with-example-hadoop-code/" rel="next">Large Data Logistic Regression (with example Hadoop code)</a></span>
+		<span class="next"><a href="http://www.win-vector.com/blog/2010/10/a-personal-perspective-on-machine-learning/" rel="prev">A Personal Perspective on Machine Learning</a></span>
+		<div class="fixed"></div>
+	</div>
+
+
+	</div>
+	<!-- main END -->
+
+	
+<!-- sidebar START -->
+<div id="sidebar">
+
+<!-- sidebar north START -->
+<div id="northsidebar" class="sidebar">
+
+	<!-- feeds -->
+	<div class="widget widget_feeds">
+		<div class="content">
+			<div id="subscribe">
+				<a rel="external nofollow" id="feedrss" title="Subscribe to this blog..." href="http://www.win-vector.com/blog/feed/"><abbr title="Really Simple Syndication">RSS</abbr></a>
+									<ul id="feed_readers">
+						<li id="google_reader"><a rel="external nofollow" class="reader" title="Subscribe with Google" href="http://fusion.google.com/add?feedurl=http://www.win-vector.com/blog/feed/"><span>Google</span></a></li>
+						<li id="youdao_reader"><a rel="external nofollow" class="reader" title="Subscribe with Youdao" href="http://reader.youdao.com/#url=http://www.win-vector.com/blog/feed/"><span>Youdao</span></a></li>
+						<li id="xianguo_reader"><a rel="external nofollow" class="reader" title="Subscribe with Xian Guo" href="http://www.xianguo.com/subscribe.php?url=http://www.win-vector.com/blog/feed/"><span>Xian Guo</span></a></li>
+						<li id="zhuaxia_reader"><a rel="external nofollow" class="reader" title="Subscribe with Zhua Xia" href="http://www.zhuaxia.com/add_channel.php?url=http://www.win-vector.com/blog/feed/"><span>Zhua Xia</span></a></li>
+						<li id="yahoo_reader"><a rel="external nofollow" class="reader" title="Subscribe with My Yahoo!"	href="http://add.my.yahoo.com/rss?url=http://www.win-vector.com/blog/feed/"><span>My Yahoo!</span></a></li>
+						<li id="newsgator_reader"><a rel="external nofollow" class="reader" title="Subscribe with newsgator"	href="http://www.newsgator.com/ngs/subscriber/subfext.aspx?url=http://www.win-vector.com/blog/feed/"><span>newsgator</span></a></li>
+						<li id="bloglines_reader"><a rel="external nofollow" class="reader" title="Subscribe with Bloglines"	href="http://www.bloglines.com/sub/http://www.win-vector.com/blog/feed/"><span>Bloglines</span></a></li>
+						<li id="inezha_reader"><a rel="external nofollow" class="reader" title="Subscribe with iNezha"	href="http://inezha.com/add?url=http://www.win-vector.com/blog/feed/"><span>iNezha</span></a></li>
+					</ul>
+							</div>
+						<div class="fixed"></div>
+		</div>
+	</div>
+
+	<!-- showcase -->
+	
+<div id="text-88752763" class="widget widget_text"><h3>Subscribe</h3>			<div class="textwidget"><a href="http://www.win-vector.com/blog/feed/" >subscribe</a></div>
+		</div><div id="text-88752761" class="widget widget_text"><h3>Credit</h3>			<div class="textwidget"><p>Win-Vector Blog (The Applied Theorist's Point of View) is part of <a href="http://www.win-vector.com/" >Win-Vector LLC</a>, authors <a href="http://www.win-vector.com/Staff/JohnMount/JohnMount.html" >John Mount</a> and <a href="http://www.win-vector.com/Staff/NinaZumel/NinaZumel.html" >Nina Zumel</a>.</p>
+<p>All material Copyright <a href="http://www.win-vector.com/" >Win-Vector LLC</a>.</p>
+</div>
+		</div><div id="pages-2" class="widget widget_pages"><h3>Pages</h3>		<ul>
+			<li class="page_item page-item-2"><a href="http://www.win-vector.com/blog/about/" title="About">About</a></li>
+<li class="page_item page-item-1362"><a href="http://www.win-vector.com/blog/popular-articles/" title="Popular Articles">Popular Articles</a></li>
+		</ul>
+		</div>		<div id="recent-posts-2" class="widget widget_recent_entries">		<h3>Recent Posts</h3>		<ul>
+				<li><a href="http://www.win-vector.com/blog/2011/04/brevity-is-a-virtue/" title="Brevity is a Virtue">Brevity is a Virtue</a></li>
+				<li><a href="http://www.win-vector.com/blog/2011/04/do-your-tools-support-production-or-complexity/" title="Do your tools support production or complexity?">Do your tools support production or complexity?</a></li>
+				<li><a href="http://www.win-vector.com/blog/2011/03/blog-slowdown/" title="Blog  Slowdown">Blog  Slowdown</a></li>
+				<li><a href="http://www.win-vector.com/blog/2011/02/the-cranky-guide-to-trying-r-packages/" title="The cranky guide to trying R packages">The cranky guide to trying R packages</a></li>
+				<li><a href="http://www.win-vector.com/blog/2011/01/sql-screwdriver/" title="SQL Screwdriver">SQL Screwdriver</a></li>
+				</ul>
+		</div><div id="tag_cloud-3" class="widget widget_tag_cloud"><h3>Tags</h3><div class="tagcloud"><a href='http://www.win-vector.com/blog/tag/adsense/' class='tag-link-51' title='2 topics' style='font-size: 11.6pt;'>AdSense</a>
+<a href='http://www.win-vector.com/blog/tag/adsense-channel/' class='tag-link-74' title='2 topics' style='font-size: 11.6pt;'>AdSense Channel</a>
+<a href='http://www.win-vector.com/blog/tag/amazon-elastic-mapreduce/' class='tag-link-201' title='2 topics' style='font-size: 11.6pt;'>Amazon Elastic MapReduce</a>
+<a href='http://www.win-vector.com/blog/tag/automatic-differentiation/' class='tag-link-170' title='2 topics' style='font-size: 11.6pt;'>Automatic Differentiation</a>
+<a href='http://www.win-vector.com/blog/tag/big-data/' class='tag-link-176' title='2 topics' style='font-size: 11.6pt;'>Big Data</a>
+<a href='http://www.win-vector.com/blog/tag/bubble/' class='tag-link-25' title='1 topic' style='font-size: 8pt;'>Bubble</a>
+<a href='http://www.win-vector.com/blog/tag/cloud-computing/' class='tag-link-75' title='2 topics' style='font-size: 11.6pt;'>Cloud Computing</a>
+<a href='http://www.win-vector.com/blog/tag/computers/' class='tag-link-44' title='2 topics' style='font-size: 11.6pt;'>Computers</a>
+<a href='http://www.win-vector.com/blog/tag/conjugate-gradient/' class='tag-link-164' title='2 topics' style='font-size: 11.6pt;'>Conjugate Gradient</a>
+<a href='http://www.win-vector.com/blog/tag/copula/' class='tag-link-23' title='1 topic' style='font-size: 8pt;'>Copula</a>
+<a href='http://www.win-vector.com/blog/tag/data-mining/' class='tag-link-80' title='2 topics' style='font-size: 11.6pt;'>Data Mining</a>
+<a href='http://www.win-vector.com/blog/tag/dynamic-programming/' class='tag-link-57' title='4 topics' style='font-size: 16pt;'>Dynamic Programming</a>
+<a href='http://www.win-vector.com/blog/tag/external-sorting/' class='tag-link-21' title='1 topic' style='font-size: 8pt;'>External Sorting</a>
+<a href='http://www.win-vector.com/blog/tag/finance/' class='tag-link-8' title='3 topics' style='font-size: 14pt;'>Finance</a>
+<a href='http://www.win-vector.com/blog/tag/genetic-art/' class='tag-link-42' title='2 topics' style='font-size: 11.6pt;'>genetic art</a>
+<a href='http://www.win-vector.com/blog/tag/google/' class='tag-link-53' title='3 topics' style='font-size: 14pt;'>Google</a>
+<a href='http://www.win-vector.com/blog/tag/hadoop/' class='tag-link-197' title='2 topics' style='font-size: 11.6pt;'>Hadoop</a>
+<a href='http://www.win-vector.com/blog/tag/ibm/' class='tag-link-32' title='1 topic' style='font-size: 8pt;'>IBM</a>
+<a href='http://www.win-vector.com/blog/tag/information-taker/' class='tag-link-27' title='2 topics' style='font-size: 11.6pt;'>Information Taker</a>
+<a href='http://www.win-vector.com/blog/tag/logistic-regression/' class='tag-link-192' title='2 topics' style='font-size: 11.6pt;'>Logistic Regression</a>
+<a href='http://www.win-vector.com/blog/tag/machine-learning/' class='tag-link-100' title='4 topics' style='font-size: 16pt;'>Machine Learning</a>
+<a href='http://www.win-vector.com/blog/tag/map-reduce/' class='tag-link-20' title='2 topics' style='font-size: 11.6pt;'>Map Reduce</a>
+<a href='http://www.win-vector.com/blog/tag/mathematical-bedside-reading/' class='tag-link-97' title='7 topics' style='font-size: 20pt;'>Mathematical Bedside Reading</a>
+<a href='http://www.win-vector.com/blog/tag/mergers/' class='tag-link-70' title='2 topics' style='font-size: 11.6pt;'>Mergers</a>
+<a href='http://www.win-vector.com/blog/tag/online-advertising/' class='tag-link-67' title='2 topics' style='font-size: 11.6pt;'>Online Advertising</a>
+<a href='http://www.win-vector.com/blog/tag/online-libraries/' class='tag-link-62' title='2 topics' style='font-size: 11.6pt;'>Online Libraries</a>
+<a href='http://www.win-vector.com/blog/tag/optimization/' class='tag-link-165' title='2 topics' style='font-size: 11.6pt;'>Optimization</a>
+<a href='http://www.win-vector.com/blog/tag/organization/' class='tag-link-29' title='1 topic' style='font-size: 8pt;'>Organization</a>
+<a href='http://www.win-vector.com/blog/tag/portfolio-theory/' class='tag-link-127' title='2 topics' style='font-size: 11.6pt;'>Portfolio Theory</a>
+<a href='http://www.win-vector.com/blog/tag/price-taker/' class='tag-link-26' title='1 topic' style='font-size: 8pt;'>Price Taker</a>
+<a href='http://www.win-vector.com/blog/tag/quants/' class='tag-link-24' title='1 topic' style='font-size: 8pt;'>Quants</a>
+<a href='http://www.win-vector.com/blog/tag/r/' class='tag-link-22' title='9 topics' style='font-size: 22pt;'>R</a>
+<a href='http://www.win-vector.com/blog/tag/regression/' class='tag-link-79' title='3 topics' style='font-size: 14pt;'>Regression</a>
+<a href='http://www.win-vector.com/blog/tag/scala/' class='tag-link-163' title='2 topics' style='font-size: 11.6pt;'>Scala</a>
+<a href='http://www.win-vector.com/blog/tag/sharpe-ratio/' class='tag-link-31' title='2 topics' style='font-size: 11.6pt;'>Sharpe Ratio</a>
+<a href='http://www.win-vector.com/blog/tag/significance/' class='tag-link-116' title='2 topics' style='font-size: 11.6pt;'>significance</a>
+<a href='http://www.win-vector.com/blog/tag/sorting-in-anger/' class='tag-link-10' title='1 topic' style='font-size: 8pt;'>Sorting in Anger</a>
+<a href='http://www.win-vector.com/blog/tag/sorting-with-anger/' class='tag-link-11' title='1 topic' style='font-size: 8pt;'>Sorting With Anger</a>
+<a href='http://www.win-vector.com/blog/tag/statistics/' class='tag-link-6' title='8 topics' style='font-size: 21pt;'>Statistics</a>
+<a href='http://www.win-vector.com/blog/tag/technical-papers/' class='tag-link-55' title='3 topics' style='font-size: 14pt;'>Technical Papers</a>
+<a href='http://www.win-vector.com/blog/tag/theorist/' class='tag-link-30' title='2 topics' style='font-size: 11.6pt;'>Theorist</a>
+<a href='http://www.win-vector.com/blog/tag/tools/' class='tag-link-162' title='2 topics' style='font-size: 11.6pt;'>Tools</a>
+<a href='http://www.win-vector.com/blog/tag/volunteers/' class='tag-link-28' title='1 topic' style='font-size: 8pt;'>Volunteers</a>
+<a href='http://www.win-vector.com/blog/tag/win-vector/' class='tag-link-15' title='1 topic' style='font-size: 8pt;'>Win-Vector</a>
+<a href='http://www.win-vector.com/blog/tag/winvector/' class='tag-link-14' title='1 topic' style='font-size: 8pt;'>WinVector</a></div>
+</div><div id="text-88752762" class="widget widget_text"><h3>Comment Policy</h3>			<div class="textwidget">All comments are held for moderation.  Only comments that will be interesting to other readers will be considered for posting.  Comments that are irrelevant, offensive or link-spam will be deleted.  Also we do use a mechanical comment spam filter, and would like to apologize in advance for any comments that get lost to the filter.</div>
+		</div></div>
+<!-- sidebar north END -->
+
+<div id="centersidebar">
+
+	<!-- sidebar east START -->
+	<div id="eastsidebar" class="sidebar">
+	
+		<!-- categories -->
+		<div class="widget widget_categories">
+			<h3>Categories</h3>
+			<ul>
+					<li class="cat-item cat-item-3"><a href="http://www.win-vector.com/blog/category/administrativia/" title="View all posts filed under Administrativia">Administrativia</a>
+</li>
+	<li class="cat-item cat-item-17"><a href="http://www.win-vector.com/blog/category/applications/" title="View all posts filed under Applications">Applications</a>
+</li>
+	<li class="cat-item cat-item-114"><a href="http://www.win-vector.com/blog/category/coding/" title="View all posts filed under Coding">Coding</a>
+</li>
+	<li class="cat-item cat-item-5"><a href="http://www.win-vector.com/blog/category/computer-science/" title="View all posts filed under Computer Science">Computer Science</a>
+</li>
+	<li class="cat-item cat-item-44"><a href="http://www.win-vector.com/blog/category/computers/" title="View all posts filed under Computers">Computers</a>
+</li>
+	<li class="cat-item cat-item-16"><a href="http://www.win-vector.com/blog/category/exciting-techniques/" title="View all posts filed under Exciting Techniques">Exciting Techniques</a>
+</li>
+	<li class="cat-item cat-item-13"><a href="http://www.win-vector.com/blog/category/expository-writing/" title="View all posts filed under Expository Writing">Expository Writing</a>
+</li>
+	<li class="cat-item cat-item-8"><a href="http://www.win-vector.com/blog/category/finance/" title="View all posts filed under Finance">Finance</a>
+</li>
+	<li class="cat-item cat-item-7"><a href="http://www.win-vector.com/blog/category/history/" title="View all posts filed under History">History</a>
+</li>
+	<li class="cat-item cat-item-12"><a href="http://www.win-vector.com/blog/category/mathematics/" title="View all posts filed under Mathematics">Mathematics</a>
+</li>
+	<li class="cat-item cat-item-4"><a href="http://www.win-vector.com/blog/category/opinion/" title="View all posts filed under Opinion">Opinion</a>
+</li>
+	<li class="cat-item cat-item-59"><a href="http://www.win-vector.com/blog/category/programming/" title="View all posts filed under Programming">Programming</a>
+</li>
+	<li class="cat-item cat-item-46"><a href="http://www.win-vector.com/blog/category/public-service-article/" title="View all posts filed under Public Service Article">Public Service Article</a>
+</li>
+	<li class="cat-item cat-item-54"><a href="http://www.win-vector.com/blog/category/quantitative-finance/" title="View all posts filed under Quantitative Finance">Quantitative Finance</a>
+</li>
+	<li class="cat-item cat-item-18"><a href="http://www.win-vector.com/blog/category/rants/" title="View all posts filed under Rants">Rants</a>
+</li>
+	<li class="cat-item cat-item-6"><a href="http://www.win-vector.com/blog/category/statistics/" title="View all posts filed under Statistics">Statistics</a>
+</li>
+	<li class="cat-item cat-item-102"><a href="http://www.win-vector.com/blog/category/statistics-to-english-translation/" title="View all posts filed under Statistics To English Translation">Statistics To English Translation</a>
+</li>
+	<li class="cat-item cat-item-113"><a href="http://www.win-vector.com/blog/category/tutorials/" title="View all posts filed under Tutorials">Tutorials</a>
+</li>
+			</ul>
+		</div>
+
+		</div>
+	<!-- sidebar east END -->
+
+	<!-- sidebar west START -->
+	<div id="westsidebar" class="sidebar">
+	
+		<!-- blogroll -->
+		<div class="widget widget_links">
+			<h3>Blogroll</h3>
+			<ul>
+				<li><a href="http://www.geneticart.org/" rel="me" title="Online Genetic Art Since 1994" target="_blank" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://www.geneticart.org/']);">GeneticArt.org</a></li>
+<li><a href="http://www.mzlabs.com/" rel="me" title="John Mount and Nina Zumel papers" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://www.mzlabs.com/']);">mzlabs.com</a></li>
+<li><a href="http://www.win-vector.com/" rel="me" title="Win-Vector LLC main site">Win-Vector LLC</a></li>
+			</ul>
+		</div>
+
+		</div>
+	<!-- sidebar west END -->
+	<div class="fixed"></div>
+</div>
+
+<!-- sidebar south START -->
+<div id="southsidebar" class="sidebar">
+
+	<!-- archives -->
+	<div class="widget">
+		<h3>Archives</h3>
+					<ul>
+					<li><a href='http://www.win-vector.com/blog/2011/04/' title='April 2011'>April 2011</a></li>
+	<li><a href='http://www.win-vector.com/blog/2011/03/' title='March 2011'>March 2011</a></li>
+	<li><a href='http://www.win-vector.com/blog/2011/02/' title='February 2011'>February 2011</a></li>
+	<li><a href='http://www.win-vector.com/blog/2011/01/' title='January 2011'>January 2011</a></li>
+	<li><a href='http://www.win-vector.com/blog/2010/12/' title='December 2010'>December 2010</a></li>
+	<li><a href='http://www.win-vector.com/blog/2010/11/' title='November 2010'>November 2010</a></li>
+	<li><a href='http://www.win-vector.com/blog/2010/10/' title='October 2010'>October 2010</a></li>
+	<li><a href='http://www.win-vector.com/blog/2010/09/' title='September 2010'>September 2010</a></li>
+	<li><a href='http://www.win-vector.com/blog/2010/08/' title='August 2010'>August 2010</a></li>
+	<li><a href='http://www.win-vector.com/blog/2010/07/' title='July 2010'>July 2010</a></li>
+	<li><a href='http://www.win-vector.com/blog/2010/06/' title='June 2010'>June 2010</a></li>
+	<li><a href='http://www.win-vector.com/blog/2010/05/' title='May 2010'>May 2010</a></li>
+	<li><a href='http://www.win-vector.com/blog/2010/04/' title='April 2010'>April 2010</a></li>
+	<li><a href='http://www.win-vector.com/blog/2010/03/' title='March 2010'>March 2010</a></li>
+	<li><a href='http://www.win-vector.com/blog/2010/02/' title='February 2010'>February 2010</a></li>
+	<li><a href='http://www.win-vector.com/blog/2010/01/' title='January 2010'>January 2010</a></li>
+	<li><a href='http://www.win-vector.com/blog/2009/12/' title='December 2009'>December 2009</a></li>
+	<li><a href='http://www.win-vector.com/blog/2009/11/' title='November 2009'>November 2009</a></li>
+	<li><a href='http://www.win-vector.com/blog/2009/10/' title='October 2009'>October 2009</a></li>
+	<li><a href='http://www.win-vector.com/blog/2009/09/' title='September 2009'>September 2009</a></li>
+	<li><a href='http://www.win-vector.com/blog/2009/08/' title='August 2009'>August 2009</a></li>
+	<li><a href='http://www.win-vector.com/blog/2009/07/' title='July 2009'>July 2009</a></li>
+	<li><a href='http://www.win-vector.com/blog/2009/06/' title='June 2009'>June 2009</a></li>
+	<li><a href='http://www.win-vector.com/blog/2009/05/' title='May 2009'>May 2009</a></li>
+	<li><a href='http://www.win-vector.com/blog/2009/04/' title='April 2009'>April 2009</a></li>
+	<li><a href='http://www.win-vector.com/blog/2009/03/' title='March 2009'>March 2009</a></li>
+	<li><a href='http://www.win-vector.com/blog/2009/02/' title='February 2009'>February 2009</a></li>
+	<li><a href='http://www.win-vector.com/blog/2009/01/' title='January 2009'>January 2009</a></li>
+	<li><a href='http://www.win-vector.com/blog/2008/11/' title='November 2008'>November 2008</a></li>
+	<li><a href='http://www.win-vector.com/blog/2008/10/' title='October 2008'>October 2008</a></li>
+	<li><a href='http://www.win-vector.com/blog/2008/09/' title='September 2008'>September 2008</a></li>
+	<li><a href='http://www.win-vector.com/blog/2008/08/' title='August 2008'>August 2008</a></li>
+	<li><a href='http://www.win-vector.com/blog/2008/06/' title='June 2008'>June 2008</a></li>
+	<li><a href='http://www.win-vector.com/blog/2008/05/' title='May 2008'>May 2008</a></li>
+	<li><a href='http://www.win-vector.com/blog/2008/04/' title='April 2008'>April 2008</a></li>
+	<li><a href='http://www.win-vector.com/blog/2008/03/' title='March 2008'>March 2008</a></li>
+	<li><a href='http://www.win-vector.com/blog/2008/02/' title='February 2008'>February 2008</a></li>
+	<li><a href='http://www.win-vector.com/blog/2007/10/' title='October 2007'>October 2007</a></li>
+	<li><a href='http://www.win-vector.com/blog/2007/06/' title='June 2007'>June 2007</a></li>
+			</ul>
+			</div>
+
+	<!-- meta -->
+	<div class="widget">
+		<h3>Meta</h3>
+		<ul>
+						<li><a href="http://www.win-vector.com/blog/wp-login.php">Log in</a></li>
+		</ul>
+	</div>
+
+</div>
+<!-- sidebar south END -->
+
+</div>
+<!-- sidebar END -->
+	<div class="fixed"></div>
+</div>
+<!-- content END -->
+
+<!-- footer START -->
+<div id="footer">
+	<a id="gotop" href="#" onclick="MGJS.goTop();return false;">Top</a>
+	<a id="powered" href="http://wordpress.org/">WordPress</a>
+	<div id="copyright">
+		Copyright &copy; 2007-2011 Win-Vector Blog	</div>
+	<div id="themeinfo">
+		Theme by <a href="http://www.neoease.com/">NeoEase</a>. Valid <a href="http://validator.w3.org/check?uri=referer">XHTML 1.1</a> and <a href="http://jigsaw.w3.org/css-validator/check/referer?profile=css3">CSS 3</a>.	</div>
+</div>
+<!-- footer END -->
+
+</div>
+<!-- container END -->
+</div>
+<!-- wrap END -->
+
+<!--stats_footer_test--><script src="http://stats.wordpress.com/e-201117.js" type="text/javascript"></script>
+<script type="text/javascript">
+st_go({blog:'3965417',v:'ext',post:'1578'});
+var load_cmc = function(){linktracker_init(3965417,1578,2);};
+if ( typeof addLoadEvent != 'undefined' ) addLoadEvent(load_cmc);
+else load_cmc();
+</script>
+
+</body>
+</html>
+
+
+<!-- Dynamic Page Served (once) in 0.573 seconds -->
+<!-- Cached page served by WP-Cache -->
