@@ -1,0 +1,240 @@
+<html>
+<head>
+<title>Log.io - Real-time log monitoring in your browser</title>
+<link rel="stylesheet" type="text/css" href="logio.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="jquery.noisy.min.js"/></script>
+<script>
+
+$(document).ready(function() {
+  $('body').noisy({
+    intensity: 0.5, 
+    size: 200, 
+    opacity: 0.08,
+    monochrome: false
+  });
+});
+
+</script>
+<style type="text/css">
+
+
+</style>
+</head>
+<body>
+
+<div id="container">
+
+<div id="left">
+
+<div id="header">
+
+<div id="logo">
+<img src="logo.gif"/>
+</div>
+
+<div id="subheader">
+<p>Real-time log monitoring in your browser</p>
+<p class="sub">Powered by
+<a href="http://nodejs.org">node.js</a> +
+<a href="http://socket.io">socket.io</a></p>
+</div>
+
+
+</div><!-- #header -->
+
+
+<div id="screenshot">
+<a href="http://logio.org:8998" title="Try a demo">
+<img src="screenshot.gif" width="560" height="341"/>
+</a>
+</div><!-- #screenshot -->
+
+<div class="box">
+<h3>Dependencies</h3>
+<ul>
+<li><a href="http://www.nodejs.org/#download">node.js</a> (&gt;0.4.x)</li>
+<li><a href="http://senchalabs.github.com/connect/">connect.js</a> (&gt;1.3.0)</li>
+<li><a href="http://documentcloud.github.com/underscore/">underscore.js</a> (&gt;1.1.5)</li>
+<li><a href="https://github.com/LearnBoost/Socket.IO-node">Socket.IO-node</a> (&gt;0.6.x)</li>
+<li><a href="https://github.com/remy/Socket.io-node-client">Socket.io-node-client</a></li>
+</ul>
+</div>
+
+<div class="box">
+<h3>Install log server on machine A</h3>
+<br/>
+<h4>1. Download source</h4>
+<div class="code">git clone git://github.com/NarrativeScience/Log.io.git log.io
+</div>
+</div>
+
+<div class="box">
+<h4>2. Verify dependencies</h4>
+<div class="code">cd log.io/bin
+./configure
+</div>
+</div>
+
+<div class="box">
+<h4>3. Install & launch server</h4>
+<div class="code">sudo ./install/server
+</div>
+</div>
+
+<div class="box">
+<h4>4. Browse to:</h4>
+<div class="code">http://&lt;machine_a.host.com&gt;:8998
+</div>
+</div>
+
+<br/>
+<div class="box">
+<h3>Install log harvester on machine B</h3>
+<br/>
+<h4>1. Download source</h4>
+<div class="code">git clone git://github.com/NarrativeScience/Log.io.git log.io
+</div>
+</div>
+
+<div class="box">
+<h4>2. Verify dependencies</h4>
+<div class="code">cd log.io/bin
+./configure
+</div>
+</div>
+
+<div class="box">
+<h4>3. Install harvester</h4>
+<div class="code">sudo ./install/harvester
+</div>
+</div>
+
+<div class="box">
+<h4>4. Configure harvester (/etc/log.io/harvester.conf)</h4>
+</div>
+
+<div class="box">
+<h4>5. Start harvester</h4>
+<div class="code">sudo /etc/init.d/log.io-harvester start
+</div>
+</div>
+
+<br/>
+<div class="box comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'logio'; // required: replace example with your forum shortname
+
+    // The following are highly recommended additional parameters. Remove the slashes in front to use.
+    var disqus_identifier = '/logio/feedback/20110601';
+    var disqus_url = 'http://logio.org';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<div id="footer">
+Log.io by <a href="http://github.com/msmathers">Mike Smathers</a> at <a href="http://github.com/NarrativeScience">Narrative Science</a>. Copyright <a href="http://www.narrativescience.com/">Narrative Science, Inc.</a> 2011.
+<br/>
+The release of the Log.io software is governed by the <a href="apache_license.html">Apache 2.0 license</a>.
+<br/>
+Portions of the Log.io software were obtained under the <a href="other_licenses.html">following licenses</a>.
+</div>
+
+</div> <!-- # left -->
+
+<div id="right">
+
+<div class="box">
+<a name="why"></a>
+<h3>Why do you need Log.io?</h3>
+<p>Your infrastructure has <b>hundreds of log files spread across dozens of machines</b>.  For monitoring deployments and troubleshooting, you need to <b>instantly see composite streams of log messages</b> in a single user interface.</p>
+</div>
+
+<div class="box">
+<a name="how"></a>
+<h3>How does Log.io work?</h3>
+<p><b>Harvesters</b> watch log files for changes,
+send new log messages to the <b>server</b>, which broadcasts to <b>web clients</b>. Users create <b>stream and history screens</b> to view and search log messages.</p>
+</div>
+
+<div class="box">
+<h3>Low latency, no persistence</h3>
+<p>Log.io has no persistence layer.  Harvesters are informed of file changes via <b>inotify</b>, and
+log messages hop from harvester to server to web client via <b>socket.io</b>.  The result is fast; internal 
+benchmarks have exceeded <b>5000 messages/sec</b>.
+</div>
+
+<div class="box">
+<h3>Create ad hoc log streams</h3>
+<p>Users can instantly <b>combine log files across multiple machines</b> into a single stream or view the last 1000 lines of any watched file.
+Users can also search & traverse logs via regex queries.</p>
+</div>
+
+<div class="box">
+<h3>Bandwidth conservation</h3>
+<p>Server and harvesters will only transmit over the wire if a web client is asking for log data. This improves UI performance while reducing bandwidth consumption.
+</p>
+</div>
+
+<div class="box">
+<h3>Compatibility</h3>
+<p>Web client has been tested in <b>Chrome</b>, <b>Safari</b>, and <b>Firefox</b>. Harvester & Server have been tested on <b>Ubuntu 10.10</b>.</p>
+</div>
+
+<div class="box">
+<h3>Want to contribute?</h3>
+<p>Here are some features we've been considering:</p>
+<br/>
+<p><b>Richer UI interactions.</b> Grep & awk log streams, minimize screens, hide & group machine clusters.</p>
+<br/>
+<p><b>Visualizations.</b> Sparklines for log files & machines, custom activity graphs.</p>
+<br/>
+<p><b>URL bookmarks.</b> Update URL when building streams for easy bookmarking.</p>
+<br/>
+<p><b>Mobile, dashboard displays.</b> UI support for iOS & Android, large monitors.</p>
+<br/>
+<p><b>More stream colors.</b> So far we've only got 10. Lend us your palettes!</p>
+</div>
+
+<div class="box">
+<h3>What is Log.io NOT?</h3>
+<p><b>Log.io was designed specifically for live monitoring of log files.</b>  It is not intended to operate on any other input sources beside files.  It is not intended to store, archive or index log messages, nor is it intended for historical or aggregate analysis.</p>
+</div>
+
+<div class="box">
+<h3>Questions, suggestions?</h3>
+<a class="mailto" href="mailto:logio-feedback@narrativescience.com">logio-feedback@narrativescience.com</a>
+</div>
+
+</div><!-- #right -->
+
+</div><!-- #container -->
+
+<a href="https://github.com/NarrativeScience/Log.io"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://d3nwyuy0nl342s.cloudfront.net/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>
+
+</body>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15759681-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</html>
